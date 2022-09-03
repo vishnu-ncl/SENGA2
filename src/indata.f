@@ -40,8 +40,8 @@ C     -------------------------------------------------------------------------
 #ifdef HDF5
       USE HDF5IO
 #endif
-      INCLUDE 'com_senga2.h'
-      INCLUDE 'com_espect.h'
+      USE com_espect
+      USE com_senga
 C     -------------------------------------------------------------------------
 
 

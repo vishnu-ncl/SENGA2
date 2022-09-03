@@ -54,7 +54,7 @@ C       NO CALL TO HDF5 SUBROUTINES CAN BE MADE AFTER.
 
         SUBROUTINE CREATE_H5DUMP_FILES()
 #ifdef HDF5
-        INCLUDE 'com_senga2.h'
+        USE com_senga
           INTEGER ERR, I
           LOGICAL EXISTS
           INTEGER(HID_T) SPACE_ID, DSET_ID,PLIST_ID
@@ -136,7 +136,7 @@ C       NO CALL TO HDF5 SUBROUTINES CAN BE MADE AFTER.
 C UMOD DATA I/O START
         SUBROUTINE CREATE_H5DATA_FILES()
 #ifdef HDF5
-        INCLUDE 'com_senga2.h'
+        USE com_senga
           INTEGER ERR, I
           LOGICAL EXISTS
           INTEGER(HID_T) SPACE_ID, DSET_ID,PLIST_ID
@@ -218,7 +218,7 @@ C UMOD DATA I/O END
 
         SUBROUTINE READ_H5DUMP_FILES()
 #ifdef HDF5
-          INCLUDE 'com_senga2.h'
+          USE com_senga
           INTEGER ERR, CONSTS(4)
           INTEGER(HID_T) DSET_ID,FILE_ID,PLIST_ID,SPACE_ID,MEMSPACE_ID
           INTEGER(HSIZE_T) COUNT(5), DIMS1(1), DIMS3(3), DIMS4(4)
@@ -366,7 +366,7 @@ C UMOD DATA I/O END
 
         SUBROUTINE WRITE_H5_DUMPFILE()
 #ifdef HDF5
-          INCLUDE 'com_senga2.h'
+          USE com_senga
           INTEGER ERR, CONSTS(4)
           INTEGER(HID_T) DSET_ID,FILE_ID,PLIST_ID,SPACE_ID,MEMSPACE_ID
           INTEGER(HSIZE_T) COUNT(5), DIMS1(1), DIMS3(3), DIMS4(4)

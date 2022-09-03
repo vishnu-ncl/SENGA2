@@ -34,7 +34,7 @@ C     -------------------------------------------------------------------------
 #ifdef HDF5
       USE hdf5io
 #endif
-      INCLUDE 'com_senga2.h'
+      USE com_senga
 C     -------------------------------------------------------------------------
 
 
@@ -361,6 +361,15 @@ C     TIME STEP HISTORY
       IF(IPROC.EQ.0)THEN
         WRITE(*,'(I7,1PE12.4,I5)')ITIME,TSTEP,INDERR
       ENDIF
+     
+      IF(IPROC.EQ.5)THEN
+        WRITE(*,'(a,I7,a,F16.8)') 
+     + 'test_drhs: (step=',ITIME,') value: ',drhs(5,jstal,kstal)
+        WRITE(*,'(a,I7,a,F16.8)')
+     + 'test_erhs: (step=',ITIME,') value: ',erhs(6,jstal,kstal)
+        WRITE(*,'(a,I7,a,F16.8)')
+     + 'test_urhs: (step=',ITIME,') value: ',urhs(7,jstal,kstal)
+      ENDIF 
 
 C     ========================================================================= 
 

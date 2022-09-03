@@ -22,10 +22,10 @@ FFLAGS = -O3 -Wall -mcmodel=medium
 #FFLAGS = -pg -O3 -fno-silent -Wimplicit -Wall
 
 # Source files
-SRC =   senga2.f rhscal.f rhsvel.f lincom.f fincom.f \
+SRC =   rhscal.f lincom.f fincom.f \
 	temper.f tempin.f chrate.f chemin.f diffin.f radcal.f radcin.f \
 	hdf5io.f indata.f contin.f output.f finish.f \
-	dfinit.f dfbydx.f dfbydy.f dfbydz.f d2fdx2.f d2fdy2.f d2fdz2.f \
+	dfbydx.f d2fdx2.f d2fdy2.f d2fdz2.f \
 	d2fdxy.f d2fdxz.f d2fdyz.f dfmstr.f \
 	flinit.f fltrem.f filtrx.f filtry.f filtrz.f \
 	dtinit.f adaptt.f \
@@ -45,8 +45,8 @@ SRC =   senga2.f rhscal.f rhsvel.f lincom.f fincom.f \
 	zeroxl.f zeroxr.f zeroyl.f zeroyr.f zerozl.f zerozr.f \
 	ardump.f ardums.f chkarr.f chkary.f
 
-# Include files
-INC = com_senga2.h com_espect.h
+SRC_F90 = com_espect.F90 com_senga2.F90 senga2.F90 \
+	rhsvel.F90 dfinit.F90 dfbydy.F90 dfbydz.F90
 
 # Libraries: need separate compilation in their own subdirectories
 # FFTs; random number generators
@@ -55,15 +55,19 @@ LIBS = fftlib/fftlib.a rndlib/rndlib.a parlib/parlib.a -lm
 
 # Object files are the same as the source files but with .o rather than .f
 OBJS=$(SRC:.f=.o)
+OBJS_F90=$(SRC_F90:.F90=.o)
 
 # Default compilation of .f files to .o
 .f.o: $(FC) $(INC) -c $<
 
+%.o: %.F90
+	$(FC) -c $<
+
 # Full make of SENGA2
 all: senga2
 
-senga2: $(OBJS) 
-	$(FC) $(OBJS) -o senga2 $(LIBS)
+senga2: $(OBJS_F90) $(OBJS) 
+	$(FC) $(OBJS) $(OBJS_F90) -o senga2 $(LIBS)
 
 # Add -pg for profiling
 #senga2: $(OBJS) 
