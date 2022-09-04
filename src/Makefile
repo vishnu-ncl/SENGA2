@@ -23,12 +23,12 @@ FFLAGS = -O3 -Wall -mcmodel=medium
 
 # Source files
 SRC =   rhscal.f lincom.f fincom.f \
-	temper.f tempin.f chrate.f chemin.f diffin.f radcal.f radcin.f \
-	hdf5io.f indata.f contin.f output.f finish.f \
+	temper.f chrate.f chemin.f diffin.f radcal.f radcin.f \
+	hdf5io.f contin.f finish.f \
 	dfbydx.f d2fdx2.f d2fdy2.f d2fdz2.f \
 	d2fdxy.f d2fdxz.f d2fdyz.f dfmstr.f \
-	flinit.f fltrem.f filtrx.f filtry.f filtrz.f \
-	dtinit.f adaptt.f \
+	fltrem.f filtrx.f filtry.f filtrz.f \
+	adaptt.f \
 	turbin.f turbft.f fftsym.f fftf3d.f \
 	espect.f espini.f espovk.f espksq.f integf.f \
 	flamin.f erfunc.f \
@@ -39,14 +39,14 @@ SRC =   rhscal.f lincom.f fincom.f \
 	bcutyr.f bcttyr.f bcdtyr.f bcytyr.f \
 	bcutzl.f bcttzl.f bcdtzl.f bcytzl.f \
 	bcutzr.f bcttzr.f bcdtzr.f bcytzr.f \
-	pardom.f parfer.f \
 	cxhalo.f cyhalo.f czhalo.f cxhals.f cyhals.f czhals.f \
 	exhalo.f inhalo.f exhals.f inhals.f \
 	zeroxl.f zeroxr.f zeroyl.f zeroyr.f zerozl.f zerozr.f \
 	ardump.f ardums.f chkarr.f chkary.f
 
 SRC_F90 = com_espect.F90 com_senga2.F90 senga2.F90 \
-	rhsvel.F90 dfinit.F90 dfbydy.F90 dfbydz.F90
+	rhsvel.F90 dfinit.F90 dfbydy.F90 dfbydz.F90 pardom.F90 indata.F90 \
+    dtinit.F90 parfer.F90 tempin.F90 flinit.F90 output.F90
 
 # Libraries: need separate compilation in their own subdirectories
 # FFTs; random number generators
