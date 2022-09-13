@@ -26,19 +26,18 @@ SRC =   rhscal.f lincom.f fincom.f \
 	temper.f chrate.f chemin.f diffin.f radcal.f radcin.f \
 	hdf5io.f contin.f finish.f \
 	dfbydx.f d2fdx2.f \
-	adaptt.f \
 	turbin.f turbft.f fftsym.f fftf3d.f \
 	espect.f espini.f espovk.f espksq.f integf.f \
 	flamin.f erfunc.f \
 	bcinit.f bounds.f boundt.f bountt.f \
-	bcutxl.f bcttxl.f bcdtxl.f bcytxl.f bctixl.f buftxl.f fftixl.f \
-	bcutxr.f bcttxr.f bcdtxr.f bcytxr.f \
-	bcutyl.f bcttyl.f bcdtyl.f bcytyl.f \
-	bcutyr.f bcttyr.f bcdtyr.f bcytyr.f \
-	bcutzl.f bcttzl.f bcdtzl.f bcytzl.f \
-	bcutzr.f bcttzr.f bcdtzr.f bcytzr.f \
+	bcutxl.f bcytxl.f buftxl.f fftixl.f \
+	bcutxr.f bcytxr.f \
+	bcutyl.f bcytyl.f \
+	bcutyr.f bcytyr.f \
+	bcutzl.f bcytzl.f \
+	bcutzr.f bcytzr.f \
 	cxhalo.f cyhalo.f czhalo.f cxhals.f cyhals.f czhals.f \
-	ardump.f ardums.f chkarr.f chkary.f
+	chkarr.f chkary.f
 
 SRC_F90 = data_type.F90 com_espect.F90 com_senga2.F90 senga2.F90 \
 	rhsvel.F90 dfinit.F90 dfbydy.F90 dfbydz.F90 pardom.F90 indata.F90 \
@@ -46,7 +45,10 @@ SRC_F90 = data_type.F90 com_espect.F90 com_senga2.F90 senga2.F90 \
     d2fdy2.F90 d2fdz2.F90 \
     d2fdxy.F90 d2fdxz.F90 d2fdyz.F90 dfmstr.F90 \
     exhalo.F90 inhalo.F90 exhals.F90 inhals.F90 \
-    zeroxl.F90 zeroxr.F90 zeroyl.F90 zeroyr.F90 zerozl.F90 zerozr.F90 
+    zeroxl.F90 zeroxr.F90 zeroyl.F90 zeroyr.F90 zerozl.F90 zerozr.F90 \
+    adaptt.F90 ardums.F90 bcdtxl.F90 bcdtxr.F90 bcdtyl.F90 bcdtyr.F90 \
+    bcdtzl.F90 bcdtzr.F90 bctixl.F90 bcttxl.F90 bcttxr.F90 bcttyl.F90 \
+    bcttyr.F90 bcttzl.F90 bcttzr.F90 ardump.F90
 
 # Libraries: need separate compilation in their own subdirectories
 # FFTs; random number generators
