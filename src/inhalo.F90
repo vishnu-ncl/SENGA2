@@ -29,6 +29,7 @@ SUBROUTINE inhalo(bigarr,buffer,indexl,indexr,  &
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
+use data_types
 use com_senga
 !     -------------------------------------------------------------------------
 
@@ -36,8 +37,8 @@ use com_senga
 !     ARGUMENTS
 !     =========
 
-REAL(KIND=8), INTENT(OUT)            :: bigarr(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
-REAL(KIND=8), INTENT(IN)             :: buffer(nparay)
+REAL(KIND=dp), INTENT(OUT)            :: bigarr(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
+REAL(KIND=dp), INTENT(IN)             :: buffer(nparay)
 INTEGER, INTENT(IN)                      :: indexl
 INTEGER, INTENT(IN)                      :: indexr
 INTEGER, INTENT(IN)                      :: jndexl

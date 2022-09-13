@@ -30,13 +30,14 @@ SUBROUTINE rhsvel
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
+use data_types
 use com_senga
 !     -------------------------------------------------------------------------
 
 
 !     LOCAL DATA
 !     ==========
-REAL(KIND=8) :: fornow,prefer
+REAL(KIND=dp) :: fornow,prefer
 INTEGER :: ic,jc,kc
 
 

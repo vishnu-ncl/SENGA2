@@ -40,10 +40,9 @@ SRC =   rhscal.f lincom.f fincom.f \
 	cxhalo.f cyhalo.f czhalo.f cxhals.f cyhals.f czhals.f \
 	ardump.f ardums.f chkarr.f chkary.f
 
-SRC_F90 = com_espect.F90 com_senga2.F90 senga2.F90 \
+SRC_F90 = data_type.F90 com_espect.F90 com_senga2.F90 senga2.F90 \
 	rhsvel.F90 dfinit.F90 dfbydy.F90 dfbydz.F90 pardom.F90 indata.F90 \
     dtinit.F90 parfer.F90 tempin.F90 flinit.F90 output.F90 \
-    fltrem.F90 filtrx.F90 filtry.F90 filtrz.F90 \
     d2fdy2.F90 d2fdz2.F90 \
     d2fdxy.F90 d2fdxz.F90 d2fdyz.F90 dfmstr.F90 \
     exhalo.F90 inhalo.F90 exhals.F90 inhals.F90 \

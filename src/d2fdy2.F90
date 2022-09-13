@@ -29,6 +29,7 @@ SUBROUTINE d2fdy2(functn,fderiv)
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
+use data_types
 use com_senga
 !     -------------------------------------------------------------------------
 
@@ -36,8 +37,8 @@ use com_senga
 !     ARGUMENTS
 !     =========
 
-REAL(KIND=8), INTENT(IN OUT)         :: functn(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
-REAL(KIND=8), INTENT(OUT)            :: fderiv(nxsize,nysize,nzsize)
+REAL(KIND=dp), INTENT(IN OUT)         :: functn(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
+REAL(KIND=dp), INTENT(OUT)            :: fderiv(nxsize,nysize,nzsize)
 
 
 

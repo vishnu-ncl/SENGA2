@@ -44,6 +44,7 @@ SUBROUTINE indata
 use hdf5io
 #endif
 use com_espect
+use data_types
 use com_senga
 !     -------------------------------------------------------------------------
 
@@ -65,19 +66,19 @@ INTEGER :: lenlin
 PARAMETER(lenlin = 79)
 
 !     THERMO DATA INTERVAL-MATCHING TOLERANCE
-REAL(KIND=8) :: tttol
-PARAMETER(tttol = 0.0010_8)
+REAL(KIND=dp) :: tttol
+PARAMETER(tttol = 0.0010_dp)
 
 
 !     LOCAL DATA
 !     ==========
-REAL(KIND=8) :: dyrin(nspcmx)
-REAL(KIND=8) :: ctrans(nspcmx,4)
-REAL(KIND=8) :: dtrans(nspcmx)
-REAL(KIND=8) :: rtin,durin,dvrin,dwrin,derin
-REAL(KIND=8) :: ttemp(5),ttold(5)
-REAL(KIND=8) :: fornow
-REAL(KIND=8) :: combo1,combo2,combo3
+REAL(KIND=dp) :: dyrin(nspcmx)
+REAL(KIND=dp) :: ctrans(nspcmx,4)
+REAL(KIND=dp) :: dtrans(nspcmx)
+REAL(KIND=dp) :: rtin,durin,dvrin,dwrin,derin
+REAL(KIND=dp) :: ttemp(5),ttold(5)
+REAL(KIND=dp) :: fornow
+REAL(KIND=dp) :: combo1,combo2,combo3
 INTEGER :: iindex,ipower,icoef1,icoef2
 INTEGER :: ic,jc,kc,ispec,istep,itint,icp
 INTEGER :: jspec,ncount
@@ -978,7 +979,7 @@ CALL create_h5dump_files
 
 !     SET VALUE OF PI
 !     ---------------
-pi = 3.14159265358979323846_8
+pi = 3.14159265358979323846_dp
 
 !     SET VALUE OF LN(10)
 !     -------------------
