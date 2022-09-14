@@ -1,0 +1,74 @@
+SUBROUTINE bcytxr
+ 
+! Code converted using TO_F90 by Alan Miller
+! Date: 2022-09-14  Time: 11:15:12
+
+!     *************************************************************************
+
+!     BCYTXR
+!     ======
+
+!     AUTHOR
+!     ------
+!     R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
+
+!     CHANGE RECORD
+!     -------------
+!     30-DEC-2003:  CREATED
+
+!     DESCRIPTION
+!     -----------
+!     DNS CODE SENGA2
+!     EVALUATES TIME-DEPENDENT BOUNDARY CONDITIONS FOR MASS FRACTIONS
+!     AND THEIR TIME DERIVATIVES
+
+!     X-DIRECTION RIGHT-HAND END
+
+!     *************************************************************************
+
+
+!     GLOBAL DATA
+!     ===========
+!     -------------------------------------------------------------------------
+use data_types
+use com_senga
+!     -------------------------------------------------------------------------
+
+
+!     LOCAL DATA
+!     ==========
+INTEGER :: jc,kc
+INTEGER :: ispec
+
+
+!     BEGIN
+!     =====
+
+!     =========================================================================
+
+!     RK TIME INCREMENT IS HELD IN RKTIM(IRKSTP)
+
+!     =========================================================================
+
+!     EVALUATE AND RETURN STRYXR,DYDTXR
+DO ispec = 1,nspec
+  
+  DO kc = kstal,kstol
+    DO jc = jstal,jstol
+      
+!           SET MASS FRACTIONS TO CONSTANT (INITIAL) VALUES
+      stryxr(jc,kc,ispec) = yrin(ispec)
+      
+!           SET MASS FRACTION TIME DERIVATIVES TO ZERO
+      dydtxr(jc,kc,ispec) = zero
+      
+    END DO
+  END DO
+  
+END DO
+
+!     =========================================================================
+
+
+RETURN
+END SUBROUTINE bcytxr

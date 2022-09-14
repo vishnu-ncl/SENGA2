@@ -24,20 +24,13 @@ FFLAGS = -O3 -Wall -mcmodel=medium
 # Source files
 SRC =   rhscal.f lincom.f fincom.f \
 	temper.f chrate.f chemin.f diffin.f radcal.f radcin.f \
-	hdf5io.f contin.f finish.f \
+	hdf5io.f contin.f \
+    bcinit.f bounds.f bountt.f boundt.f \
 	dfbydx.f d2fdx2.f \
 	turbin.f turbft.f fftsym.f fftf3d.f \
-	espect.f espini.f espovk.f espksq.f integf.f \
-	flamin.f erfunc.f \
-	bcinit.f bounds.f boundt.f bountt.f \
-	bcutxl.f bcytxl.f buftxl.f fftixl.f \
-	bcutxr.f bcytxr.f \
-	bcutyl.f bcytyl.f \
-	bcutyr.f bcytyr.f \
-	bcutzl.f bcytzl.f \
-	bcutzr.f bcytzr.f \
-	cxhalo.f cyhalo.f czhalo.f cxhals.f cyhals.f czhals.f \
-	chkarr.f chkary.f
+	espini.f integf.f \
+	flamin.f \
+	fftixl.f
 
 SRC_F90 = data_type.F90 com_espect.F90 com_senga2.F90 senga2.F90 \
 	rhsvel.F90 dfinit.F90 dfbydy.F90 dfbydz.F90 pardom.F90 indata.F90 \
@@ -48,7 +41,12 @@ SRC_F90 = data_type.F90 com_espect.F90 com_senga2.F90 senga2.F90 \
     zeroxl.F90 zeroxr.F90 zeroyl.F90 zeroyr.F90 zerozl.F90 zerozr.F90 \
     adaptt.F90 ardums.F90 bcdtxl.F90 bcdtxr.F90 bcdtyl.F90 bcdtyr.F90 \
     bcdtzl.F90 bcdtzr.F90 bctixl.F90 bcttxl.F90 bcttxr.F90 bcttyl.F90 \
-    bcttyr.F90 bcttzl.F90 bcttzr.F90 ardump.F90
+    bcttyr.F90 bcttzl.F90 bcttzr.F90 ardump.F90 \
+    bcutxl.F90 bcutxr.F90 bcutyl.F90 bcutyr.F90 \
+    bcutzl.F90 bcutzr.F90 bcytxl.F90 bcytxr.F90 bcytyl.F90 bcytyr.F90 \
+    bcytzr.F90 buftxl.F90 chkarr.F90 chkary.F90 cxhalo.F90 cxhals.F90 \
+    cyhalo.F90 cyhals.F90 czhalo.F90 czhals.F90 erfunc.F90 espect.F90 \
+    espksq.F90 espovk.F90 finish.F90 bcytzl.F90
 
 # Libraries: need separate compilation in their own subdirectories
 # FFTs; random number generators
