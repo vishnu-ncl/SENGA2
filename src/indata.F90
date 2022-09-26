@@ -77,7 +77,7 @@ REAL(KIND=dp) :: ctrans(nspcmx,4)
 REAL(KIND=dp) :: dtrans(nspcmx)
 REAL(KIND=dp) :: rtin,durin,dvrin,dwrin,derin
 REAL(KIND=dp) :: ttemp(5),ttold(5)
-REAL(KIND=dp) :: fornow
+REAL(KIND=dp) :: fornow,tmplog
 REAL(KIND=dp) :: combo1,combo2,combo3
 INTEGER :: iindex,ipower,icoef1,icoef2
 INTEGER :: ic,jc,kc,ispec,istep,itint,icp
@@ -979,11 +979,11 @@ CALL create_h5dump_files
 
 !     SET VALUE OF PI
 !     ---------------
-pi = 3.14159265358979323846_dp
+pi = FOUR*ATAN(ONE)
 
 !     SET VALUE OF LN(10)
 !     -------------------
-clnten = LOG(1.0D1)
+clnten = LOG(10.0_dp)
 
 !     TIME STEPPING
 !     -------------

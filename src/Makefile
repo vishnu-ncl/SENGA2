@@ -26,7 +26,6 @@ SRC =   rhscal.f lincom.f fincom.f \
 	temper.f chrate.f chemin.f diffin.f radcal.f radcin.f \
 	hdf5io.f contin.f \
     bcinit.f bounds.f bountt.f boundt.f \
-	dfbydx.f d2fdx2.f \
 	turbin.f turbft.f fftsym.f fftf3d.f \
 	espini.f integf.f \
 	flamin.f \
@@ -46,7 +45,7 @@ SRC_F90 = data_type.F90 com_espect.F90 com_senga2.F90 senga2.F90 \
     bcutzl.F90 bcutzr.F90 bcytxl.F90 bcytxr.F90 bcytyl.F90 bcytyr.F90 \
     bcytzr.F90 buftxl.F90 chkarr.F90 chkary.F90 cxhalo.F90 cxhals.F90 \
     cyhalo.F90 cyhals.F90 czhalo.F90 czhals.F90 erfunc.F90 espect.F90 \
-    espksq.F90 espovk.F90 finish.F90 bcytzl.F90
+    espksq.F90 espovk.F90 finish.F90 bcytzl.F90 dfbydx.F90 d2fdx2.F90
 
 # Libraries: need separate compilation in their own subdirectories
 # FFTs; random number generators
@@ -61,7 +60,7 @@ OBJS_F90=$(SRC_F90:.F90=.o)
 .f.o: $(FC) $(INC) -c $<
 
 %.o: %.F90
-	$(FC) -c $<
+	$(FC) -O3 -c $<
 
 # Full make of SENGA2
 all: senga2
