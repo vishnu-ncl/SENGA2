@@ -22,14 +22,7 @@ FFLAGS = -O3 -Wall -mcmodel=medium
 #FFLAGS = -pg -O3 -fno-silent -Wimplicit -Wall
 
 # Source files
-SRC =   rhscal.f lincom.f fincom.f \
-	temper.f chrate.f chemin.f diffin.f radcal.f radcin.f \
-	hdf5io.f contin.f \
-    bcinit.f bounds.f bountt.f boundt.f \
-	turbin.f turbft.f fftsym.f fftf3d.f \
-	espini.f integf.f \
-	flamin.f \
-	fftixl.f
+SRC = 
 
 SRC_F90 = data_type.F90 com_espect.F90 com_senga2.F90 senga2.F90 \
 	rhsvel.F90 dfinit.F90 dfbydy.F90 dfbydz.F90 pardom.F90 indata.F90 \
@@ -45,7 +38,15 @@ SRC_F90 = data_type.F90 com_espect.F90 com_senga2.F90 senga2.F90 \
     bcutzl.F90 bcutzr.F90 bcytxl.F90 bcytxr.F90 bcytyl.F90 bcytyr.F90 \
     bcytzr.F90 buftxl.F90 chkarr.F90 chkary.F90 cxhalo.F90 cxhals.F90 \
     cyhalo.F90 cyhals.F90 czhalo.F90 czhals.F90 erfunc.F90 espect.F90 \
-    espksq.F90 espovk.F90 finish.F90 bcytzl.F90 dfbydx.F90 d2fdx2.F90
+    espksq.F90 espovk.F90 finish.F90 bcytzl.F90 dfbydx.F90 d2fdx2.F90 \
+    rhscal.F90 lincom.F90 fincom.F90 \
+    temper.F90 chrate.F90 chemin.F90 diffin.F90 radcal.F90 radcin.F90 \
+    hdf5io.F90 contin.F90 \
+    bcinit.F90 bounds.F90 bountt.F90 boundt.F90 \
+    turbin.F90 turbft.F90 fftsym.F90 fftf3d.F90 \
+    espini.F90 integf.F90 \
+    flamin.F90 \
+    fftixl.F90
 
 # Libraries: need separate compilation in their own subdirectories
 # FFTs; random number generators
