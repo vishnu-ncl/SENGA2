@@ -1,7 +1,11 @@
 SUBROUTINE dfinit
+    use OPS_Fortran_Reference
+    use OPS_CONSTANTS
+
+    use, intrinsic :: ISO_C_BINDING
  
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-02  Time: 15:43:38
+    ! Code converted using TO_F90 by Alan Miller
+    ! Date: 2022-09-02  Time: 15:43:38
 
 !     *************************************************************************
 
@@ -525,6 +529,133 @@ acbczr(4) = dcoef1*ovdelz
 
 !     =========================================================================
 
+#ifdef OPS_WITH_CUDAFOR
+    acoffx_opsconstant = acoffx
+    bcoffx_opsconstant = bcoffx
+    ccoffx_opsconstant = ccoffx
+    dcoffx_opsconstant = dcoffx
+    ecoffx_opsconstant = ecoffx
 
-RETURN
+    acof1x_opsconstant = acof1x
+    bcof1x_opsconstant = bcof1x
+    ccof1x_opsconstant = ccof1x
+    dcof1x_opsconstant = dcof1x
+
+    acof2x_opsconstant = acof2x
+    bcof2x_opsconstant = bcof2x
+    ccof2x_opsconstant = ccof2x
+    dcof2x_opsconstant = dcof2x
+
+    acof3x_opsconstant = acof3x
+    bcof3x_opsconstant = bcof3x
+
+    acof4x_opsconstant = acof4x
+    bcof4x_opsconstant = bcof4x
+    ccof4x_opsconstant = ccof4x
+
+    acof5x_opsconstant = acof5x
+    bcof5x_opsconstant = bcof5x
+    ccof5x_opsconstant = ccof5x
+    dcof5x_opsconstant = dcof5x
+
+    ovdelx_opsconstant = ovdelx
+
+    acofsx_opsconstant = acofsx
+    bcofsx_opsconstant = bcofsx
+    ccofsx_opsconstant = ccofsx
+    dcofsx_opsconstant = dcofsx
+    ecofsx_opsconstant = ecofsx
+
+    acfs1x_opsconstant = acfs1x
+    bcfs1x_opsconstant = bcfs1x
+    ccfs1x_opsconstant = ccfs1x
+    dcfs1x_opsconstant = dcfs1x
+    ecfs1x_opsconstant = ecfs1x
+
+    acfs2x_opsconstant = acfs2x
+    bcfs2x_opsconstant = bcfs2x
+    ccfs2x_opsconstant = ccfs2x
+    dcfs2x_opsconstant = dcfs2x
+    ecfs2x_opsconstant = ecfs2x
+
+    acfs3x_opsconstant = acfs3x
+    bcfs3x_opsconstant = bcfs3x
+
+    acfs4x_opsconstant = acfs4x
+    bcfs4x_opsconstant = bcfs4x
+    ccfs4x_opsconstant = ccfs4x
+
+    acfs5x_opsconstant = acfs5x
+    bcfs5x_opsconstant = bcfs5x
+    ccfs5x_opsconstant = ccfs5x
+    dcfs5x_opsconstant = dcfs5x
+
+    ovdlx2_opsconstant = ovdlx2
+
+#endif
+
+
+
+    call ops_decl_const("acoffx", 1, "double", acoffx)
+    call ops_decl_const("bcoffx", 1, "double", bcoffx)
+    call ops_decl_const("ccoffx", 1, "double", ccoffx)
+    call ops_decl_const("dcoffx", 1, "double", dcoffx)
+    call ops_decl_const("ecoffx", 1, "double", ecoffx)
+
+    call ops_decl_const("acof1x", 1, "double", acof1x)
+    call ops_decl_const("bcof1x", 1, "double", bcof1x)
+    call ops_decl_const("ccof1x", 1, "double", ccof1x)
+    call ops_decl_const("dcof1x", 1, "double", dcof1x)
+
+    call ops_decl_const("acof2x", 1, "double", acof2x)
+    call ops_decl_const("bcof2x", 1, "double", bcof2x)
+    call ops_decl_const("ccof2x", 1, "double", ccof2x)
+    call ops_decl_const("dcof2x", 1, "double", dcof2x)
+
+    call ops_decl_const("acof3x", 1, "double", acof3x)
+    call ops_decl_const("bcof3x", 1, "double", bcof3x)
+
+    call ops_decl_const("acof4x", 1, "double", acof4x)
+    call ops_decl_const("bcof4x", 1, "double", bcof4x)
+    call ops_decl_const("ccof4x", 1, "double", ccof4x)
+
+    call ops_decl_const("acof5x", 1, "double", acof5x)
+    call ops_decl_const("bcof5x", 1, "double", bcof5x)
+    call ops_decl_const("ccof5x", 1, "double", ccof5x)
+    call ops_decl_const("dcof5x", 1, "double", dcof5x)
+
+    call ops_decl_const("ovdelx", 1, "double", ovdelx)
+
+    call ops_decl_const("acofsx", 1, "double", acofsx)
+    call ops_decl_const("bcofsx", 1, "double", bcofsx)
+    call ops_decl_const("ccofsx", 1, "double", ccofsx)
+    call ops_decl_const("dcofsx", 1, "double", dcofsx)
+    call ops_decl_const("ecofsx", 1, "double", ecofsx)
+
+    call ops_decl_const("acfs1x", 1, "double", acfs1x)
+    call ops_decl_const("bcfs1x", 1, "double", bcfs1x)
+    call ops_decl_const("ccfs1x", 1, "double", ccfs1x)
+    call ops_decl_const("dcfs1x", 1, "double", dcfs1x)
+    call ops_decl_const("ecfs1x", 1, "double", ecfs1x)
+
+    call ops_decl_const("acfs2x", 1, "double", acfs2x)
+    call ops_decl_const("bcfs2x", 1, "double", bcfs2x)
+    call ops_decl_const("ccfs2x", 1, "double", ccfs2x)
+    call ops_decl_const("dcfs2x", 1, "double", dcfs2x)
+    call ops_decl_const("ecfs2x", 1, "double", ecfs2x)
+
+    call ops_decl_const("acfs3x", 1, "double", acfs3x)
+    call ops_decl_const("bcfs3x", 1, "double", bcfs3x)
+
+    call ops_decl_const("acfs4x", 1, "double", acfs4x)
+    call ops_decl_const("bcfs4x", 1, "double", bcfs4x)
+    call ops_decl_const("ccfs4x", 1, "double", ccfs4x)
+
+    call ops_decl_const("acfs5x", 1, "double", acfs5x)
+    call ops_decl_const("bcfs5x", 1, "double", bcfs5x)
+    call ops_decl_const("ccfs5x", 1, "double", ccfs5x)
+    call ops_decl_const("dcfs5x", 1, "double", dcfs5x)
+
+    call ops_decl_const("ovdlx2", 1, "double", ovdlx2)
+
 END SUBROUTINE dfinit

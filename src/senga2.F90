@@ -64,7 +64,12 @@ PROGRAM senga2
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use com_senga
+    use OPS_Fortran_Reference
+    use OPS_CONSTANTS
+
+    use, intrinsic :: ISO_C_BINDING
+
+    use com_senga
 !     -------------------------------------------------------------------------
 
 
@@ -81,6 +86,9 @@ INTEGER :: jtime,jrkstp
 
 !     INITIALISATION
 !     ==============
+
+    call ops_init(2)
+
 !     PARALLEL DOMAIN DECOMPOSITION
 CALL pardom
 
@@ -90,6 +98,8 @@ CALL indata
 !     RECORD INITIAL CONDITIONS
 CALL output
 
+
+    call ops_data_init
 !     =========================================================================
 
 !     TIME STEP LOOP
@@ -202,6 +212,6 @@ CALL finish
 
 !     =========================================================================
 
+call ops_exit( )
 
-STOP
 END PROGRAM senga2

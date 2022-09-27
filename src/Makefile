@@ -1,31 +1,11 @@
-#
-# make file for SENGA2
-#
-# RSC 08-JAN-2005 LAM/MPI implementation
-# RSC 12-JUN-2008 SUSE/MPICH implementation
-#
 
-# Fortran compiler
-FC = mpif90 -g -fcheck=all -cpp
-#FC = h5pfc -g -fcheck=all -DHDF5 -cpp
+include $(OPS_INSTALL_PATH)/../makefiles/Makefile.common
+include $(OPS_INSTALL_PATH)/../makefiles/Makefile.mpi
+include $(OPS_INSTALL_PATH)/../makefiles/Makefile.cuda
+include $(OPS_INSTALL_PATH)/../makefiles/Makefile.hdf5
 
-# Quick non-optimized compile
-#FFLAGS = -g -fno-silent -ftrapping-math -ftrapv -Wimplicit -Wall
-
-# Non-optimized compile with profiling
-#FFLAGS = -pg -fno-silent -ftrapping-math -ftrapv -Wimplicit -Wall
-
-# Optimized compile
-FFLAGS = -O3 -Wall -mcmodel=medium
-
-# Optimized compile with profiling
-#FFLAGS = -pg -O3 -fno-silent -Wimplicit -Wall
-
-# Source files
-SRC = 
-
-SRC_F90 = data_type.F90 com_espect.F90 com_senga2.F90 senga2.F90 \
-	rhsvel.F90 dfinit.F90 dfbydy.F90 dfbydz.F90 pardom.F90 indata.F90 \
+OTHER_FILES = data_type.F90 constants.F90 com_espect.F90 com_senga2.F90 \
+	rhsvel.F90 dfbydy.F90 dfbydz.F90 pardom.F90 indata.F90 \
     dtinit.F90 parfer.F90 tempin.F90 flinit.F90 output.F90 \
     d2fdy2.F90 d2fdz2.F90 \
     d2fdxy.F90 d2fdxz.F90 d2fdyz.F90 dfmstr.F90 \
@@ -38,7 +18,7 @@ SRC_F90 = data_type.F90 com_espect.F90 com_senga2.F90 senga2.F90 \
     bcutzl.F90 bcutzr.F90 bcytxl.F90 bcytxr.F90 bcytyl.F90 bcytyr.F90 \
     bcytzr.F90 buftxl.F90 chkarr.F90 chkary.F90 cxhalo.F90 cxhals.F90 \
     cyhalo.F90 cyhals.F90 czhalo.F90 czhals.F90 erfunc.F90 espect.F90 \
-    espksq.F90 espovk.F90 finish.F90 bcytzl.F90 dfbydx.F90 d2fdx2.F90 \
+    espksq.F90 espovk.F90 finish.F90 bcytzl.F90 \
     rhscal.F90 lincom.F90 fincom.F90 \
     temper.F90 chrate.F90 chemin.F90 diffin.F90 radcal.F90 radcin.F90 \
     hdf5io.F90 contin.F90 \
@@ -48,31 +28,14 @@ SRC_F90 = data_type.F90 com_espect.F90 com_senga2.F90 senga2.F90 \
     flamin.F90 \
     fftixl.F90
 
-# Libraries: need separate compilation in their own subdirectories
-# FFTs; random number generators
-# MPI libraries
-LIBS = fftlib/fftlib.a rndlib/rndlib.a parlib/parlib.a -lm
+OPS_FILES = senga2.F90 com_ops_senga2.F90 ops_data_init.F90 dfinit.F90 dfbydx.F90 d2fdx2.F90
 
-# Object files are the same as the source files but with .o rather than .f
-OBJS=$(SRC:.f=.o)
-OBJS_F90=$(SRC_F90:.F90=.o)
+OPS_GENERATED = senga2_ops.F90 com_ops_senga2_ops.F90 ops_data_init_ops.F90 dfinit_ops.F90 dfbydx_ops.F90 d2fdx2_ops.F90
 
-# Default compilation of .f files to .o
-.f.o: $(FC) $(INC) -c $<
+APP_LIBS = fftlib/fftlib.a rndlib/rndlib.a parlib/parlib.a -lm
 
-%.o: %.F90
-	$(FC) -O3 -c $<
+APP = senga2
+MAIN_SRC=senga2
 
-# Full make of SENGA2
-all: senga2
+include $(OPS_INSTALL_PATH)/../makefiles/Makefile.f_app
 
-senga2: $(OBJS_F90) $(OBJS) 
-	$(FC) $(OBJS) $(OBJS_F90) -o senga2 $(LIBS)
-
-# Add -pg for profiling
-#senga2: $(OBJS) 
-#	$(FC) $(OBJS) -pg -o senga2 $(LIBS)
-
-# Command to clean up after
-clean: 
-	rm -f *.o senga2 core *.mod

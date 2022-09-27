@@ -38,6 +38,7 @@ SUBROUTINE rhscal
 !     -------------------------------------------------------------------------
 use data_types
 use com_senga
+use com_ops_senga
 !     -------------------------------------------------------------------------
 
 
@@ -140,7 +141,7 @@ END IF
 !     --------------------
 !     URHS,VRHS,WRHS CONTAIN RHO U, RHO V, RHO W
 
-CALL dfbydx(urhs,store1)
+CALL dfbydx(d_urhs,d_store1)
 CALL dfbydy(vrhs,store2)
 CALL dfbydz(wrhs,store3)
 
@@ -277,7 +278,7 @@ DO kc = kstab,kstob
   END DO
 END DO
 
-CALL dfbydx(store7,store1)
+CALL dfbydx(d_store7,d_store1)
 
 !     D/DY RHO V E
 !     RHO V E IS PARALLEL
@@ -323,7 +324,7 @@ END DO
 !     ----------------------------
 !     HALF RHO U.DEL E
 
-CALL dfbydx(erhs,store1)
+CALL dfbydx(d_erhs,d_store1)
 CALL dfbydy(erhs,store2)
 CALL dfbydz(erhs,store3)
 
@@ -350,7 +351,7 @@ END DO
 !     ---------------------------
 
 !     TEMPERATURE GRADIENTS
-CALL dfbydx(trun,store1)
+CALL dfbydx(d_trun,d_store1)
 CALL dfbydy(trun,store2)
 CALL dfbydz(trun,store3)
 
@@ -499,7 +500,7 @@ IF(flmavt)THEN
 END IF
 
 !     CONDUCTIVITY GRADIENTS
-CALL dfbydx(store7,store4)
+CALL dfbydx(d_store7,d_store4)
 CALL dfbydy(store7,store5)
 CALL dfbydz(store7,store6)
 
@@ -629,7 +630,7 @@ END IF
 !     SECOND DERIVATIVE TERMS
 
 !     TEMPERATURE SECOND DERIVATIVES
-CALL d2fdx2(trun,store1)
+CALL d2fdx2(d_trun,d_store1)
 CALL d2fdy2(trun,store2)
 CALL d2fdz2(trun,store3)
 
@@ -822,10 +823,10 @@ IF(flmixw)THEN
     END DO
   END DO
   
-  CALL dfbydx(store7,wd1x)
+  CALL dfbydx(d_store7,d_wd1x)
   CALL dfbydy(store7,wd1y)
   CALL dfbydz(store7,wd1z)
-  CALL d2fdx2(store7,wd2x)
+  CALL d2fdx2(d_store7,d_wd2x)
   CALL d2fdy2(store7,wd2y)
   CALL d2fdz2(store7,wd2z)
   
@@ -843,10 +844,10 @@ IF(flmixp)THEN
       END DO
     END DO
   END DO
-  CALL dfbydx(store7,pd1x)
+  CALL dfbydx(d_store7,d_pd1x)
   CALL dfbydy(store7,pd1y)
   CALL dfbydz(store7,pd1z)
-  CALL d2fdx2(store7,pd2x)
+  CALL d2fdx2(d_store7,d_pd2x)
   CALL d2fdy2(store7,pd2y)
   CALL d2fdz2(store7,pd2z)
   
@@ -856,10 +857,10 @@ END IF
 IF(flmixt)THEN
   
 !       TRANSP CONTAINS LN(T/TDIFGB)
-  CALL dfbydx(transp,td1x)
+  CALL dfbydx(d_transp,d_td1x)
   CALL dfbydy(transp,td1y)
   CALL dfbydz(transp,td1z)
-  CALL d2fdx2(transp,td2x)
+  CALL d2fdx2(d_transp,d_td2x)
   CALL d2fdy2(transp,td2y)
   CALL d2fdz2(transp,td2z)
   
@@ -924,7 +925,7 @@ DO ispec = 1,nspec
       END DO
     END DO
   END DO
-  CALL dfbydx(store7,store1)
+  CALL dfbydx(d_store7,d_store1)
   
 !       D/DY RHO V Y
 !       RHO V Y IS PARALLEL
@@ -982,7 +983,7 @@ DO ispec = 1,nspec
       END DO
     END DO
   END DO
-  CALL dfbydx(store7,store1)
+  CALL dfbydx(d_store7,d_store1)
   CALL dfbydy(store7,store2)
   CALL dfbydz(store7,store3)
 !                                                         STORE1,2,3 = DYDX,Y,Z
@@ -1365,7 +1366,7 @@ DO ispec = 1,nspec
 !       DIFFUSIVITY GRADIENT TERMS
   
 !       DIFFUSIVITY GRADIENTS
-  CALL dfbydx(store7,store4)
+  CALL dfbydx(d_store7,d_store4)
   CALL dfbydy(store7,store5)
   CALL dfbydz(store7,store6)
   
@@ -1436,7 +1437,7 @@ DO ispec = 1,nspec
 !       SPECIES ENTHALPY GRADIENT TERMS
   
 !       SPECIES ENTHALPY GRADIENTS
-  CALL dfbydx(utmp,store4)
+  CALL dfbydx(d_utmp,d_store4)
   CALL dfbydy(utmp,store5)
   CALL dfbydz(utmp,store6)
   
@@ -1619,7 +1620,7 @@ DO ispec = 1,nspec
       END DO
     END DO
   END DO
-  CALL d2fdx2(store7,store1)
+  CALL d2fdx2(d_store7,d_store1)
   CALL d2fdy2(store7,store2)
   CALL d2fdz2(store7,store3)
   
@@ -1720,7 +1721,7 @@ DO ispec = 1,nspec
 !         DIFFUSIVITY GRADIENT TERMS
     
 !         DIFFUSIVITY GRADIENTS
-    CALL dfbydx(store7,store1)
+    CALL dfbydx(d_store7,d_store1)
     CALL dfbydy(store7,store2)
     CALL dfbydz(store7,store3)
     
@@ -2030,7 +2031,7 @@ DO ispec = 1,nspec
 !         DIFFUSIVITY GRADIENT TERMS
     
 !         DIFFUSIVITY GRADIENTS
-    CALL dfbydx(store7,store1)
+    CALL dfbydx(d_store7,d_store1)
     CALL dfbydy(store7,store2)
     CALL dfbydz(store7,store3)
     
@@ -2339,7 +2340,7 @@ DO ispec = 1,nspec
 !         DIFFUSIVITY GRADIENT TERMS
     
 !         DIFFUSIVITY GRADIENTS
-    CALL dfbydx(store7,store1)
+    CALL dfbydx(d_store7,d_store1)
     CALL dfbydy(store7,store2)
     CALL dfbydz(store7,store3)
     
@@ -2416,7 +2417,7 @@ DO ispec = 1,nspec
 !         SPECIES ENTHALPY GRADIENT TERMS
     
 !         EVALUATE SPECIES ENTHALPY GRADIENTS USING STORE4,5,6
-    CALL dfbydx(utmp,store4)
+    CALL dfbydx(d_utmp,d_store4)
     CALL dfbydy(utmp,store5)
     CALL dfbydz(utmp,store6)
     
@@ -2881,7 +2882,7 @@ END DO
 !     E-EQUATION: FURTHER HEAT FLUX TERMS
 !     -----------------------------------
 !     MIXTURE ENTHALPY GRADIENTS
-CALL dfbydx(wtmp,store1)
+CALL dfbydx(d_wtmp,d_store1)
 CALL dfbydy(wtmp,store2)
 CALL dfbydz(wtmp,store3)
 
@@ -3008,7 +3009,7 @@ DO ispec = 1,nspec
       END DO
     END DO
   END DO
-  CALL dfbydx(store7,store1)
+  CALL dfbydx(d_store7,d_store1)
   CALL dfbydy(store7,store2)
   CALL dfbydz(store7,store3)
   
@@ -3062,7 +3063,7 @@ END DO
 !     X-DIRECTION: DRHODX
 IF(fxlcnv.OR.fxrcnv)THEN
   
-  CALL dfbydx(drhs,store1)
+  CALL dfbydx(d_drhs,d_store1)
   
   IF(fxlcnv)THEN
     DO kc = kstal,kstol

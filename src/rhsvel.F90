@@ -32,6 +32,7 @@ SUBROUTINE rhsvel
 !     -------------------------------------------------------------------------
 use data_types
 use com_senga
+use com_ops_senga
 !     -------------------------------------------------------------------------
 
 
@@ -161,7 +162,7 @@ END DO
 
 !     D/DX RHO U U
 !     STRAIGHT INTO STORE4 FOR NOW
-CALL dfbydx(store7,store4)
+CALL dfbydx(d_store7,d_store4)
 
 
 !     U-EQUATION: CONVECTIVE TERMS
@@ -186,7 +187,7 @@ END DO
 !     D/DY RHO V U
 !     D/DX RHO U V
 CALL dfbydy(store7,store1)
-CALL dfbydx(store7,store5)
+CALL dfbydx(d_store7,d_store5)
 
 
 !     U-EQUATION: CONVECTIVE TERMS
@@ -222,7 +223,7 @@ END DO
 !     D/DZ RHO W U
 !     D/DX RHO U W
 CALL dfbydz(store7,store1)
-CALL dfbydx(store7,store6)
+CALL dfbydx(d_store7,d_store6)
 
 
 !     U-EQUATION: CONVECTIVE TERMS
@@ -347,7 +348,7 @@ END DO
 !     VELOCITY NORMAL DERIVATIVES
 !     ---------------------------
 !     DUDX,DVDY,DWDZ
-CALL dfbydx(utmp,store1)
+CALL dfbydx(d_utmp,d_store1)
 CALL dfbydy(vtmp,store2)
 CALL dfbydz(wtmp,store3)
 !                                                   STORE1,2,3 = DUDX,DVDY,DWDZ
@@ -548,7 +549,7 @@ DO kc = kstab,kstob
 END DO
 
 !     8DX,8DY,8DZ
-CALL dfbydx(store7,store4)
+CALL dfbydx(d_store7,d_store4)
 CALL dfbydy(store7,store5)
 CALL dfbydz(store7,store6)
 !                                                   STORE1,2,3 = DUDX,DVDY,DWDZ
@@ -770,7 +771,7 @@ END DO
 
 !     VISCOSITY GRADIENT: X COMPONENT
 !     ------------------
-CALL dfbydx(transp,store4)
+CALL dfbydx(d_transp,d_store4)
 !                                                   STORE1,2,3 = DUDX,DVDY,DWDZ
 !                                                                STORE4 = DMUDX
 !                                                           STORE6 = TAUXXb,e,f
@@ -1039,7 +1040,7 @@ END DO
 
 !     DVDX
 !     ----
-CALL dfbydx(vtmp,store2)
+CALL dfbydx(d_vtmp,d_store2)
 
 
 !     COLLECT VELOCITY DERIVATIVES FOR BCs
@@ -1239,7 +1240,7 @@ END DO
 !     =========================================================================
 
 !     D2VDX2
-CALL d2fdx2(vtmp,store3)
+CALL d2fdx2(d_vtmp,d_store3)
 
 !     D2UDXY+D2VDX2
 DO kc = kstal,kstol
@@ -1356,7 +1357,7 @@ END DO
 
 !     DWDX
 !     ----
-CALL dfbydx(wtmp,store2)
+CALL dfbydx(d_wtmp,d_store2)
 
 
 !     COLLECT VELOCITY DERIVATIVES FOR BCs
@@ -1557,7 +1558,7 @@ END DO
 !     =========================================================================
 
 !     D2WDX2
-CALL d2fdx2(wtmp,store3)
+CALL d2fdx2(d_wtmp,d_store3)
 
 !     D2UDXZ+D2WDX2
 DO kc = kstal,kstol
@@ -1957,7 +1958,7 @@ END DO
 !     VELOCITY SECOND NORMAL DERIVATIVE TERMS
 !     ---------------------------------------
 !     D2UDX2,D2VDY2,D2WDZ2
-CALL d2fdx2(utmp,store1)
+CALL d2fdx2(d_utmp,d_store1)
 CALL d2fdy2(vtmp,store2)
 CALL d2fdz2(wtmp,store3)
 
