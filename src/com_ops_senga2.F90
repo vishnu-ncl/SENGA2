@@ -15,6 +15,8 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_wd1z, d_pd1z, d_td1z
 
     TYPE(ops_dat) :: d_wd2x, d_pd2x, d_td2x
+    TYPE(ops_dat) :: d_wd2y, d_pd2y, d_td2y
+    TYPE(ops_dat) :: d_wd2z, d_pd2z, d_td2z
 
     TYPE(ops_dat) :: d_urhs, d_drhs, d_erhs, d_wrhs, d_vrhs
     TYPE(ops_dat) :: d_utmp, d_vtmp, d_wtmp, d_trun, d_transp, d_store7

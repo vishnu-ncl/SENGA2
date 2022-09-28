@@ -186,7 +186,7 @@ END DO
 
 !     D/DY RHO V U
 !     D/DX RHO U V
-CALL dfbydy(store7,store1)
+CALL dfbydy(d_store7,d_store1)
 CALL dfbydx(d_store7,d_store5)
 
 
@@ -222,7 +222,7 @@ END DO
 
 !     D/DZ RHO W U
 !     D/DX RHO U W
-CALL dfbydz(store7,store1)
+CALL dfbydz(d_store7,d_store1)
 CALL dfbydx(d_store7,d_store6)
 
 
@@ -257,7 +257,7 @@ DO kc = kstab,kstob
 END DO
 
 !     D/DY RHO V V
-CALL dfbydy(store7,store1)
+CALL dfbydy(d_store7,d_store1)
 
 
 !     V-EQUATION: CONVECTIVE TERMS
@@ -290,8 +290,8 @@ END DO
 
 !     D/DZ RHO W V
 !     D/DY RHO V W
-CALL dfbydz(store7,store1)
-CALL dfbydy(store7,store2)
+CALL dfbydz(d_store7,d_store1)
+CALL dfbydy(d_store7,d_store2)
 
 
 !     V-EQUATION: CONVECTIVE TERMS
@@ -326,7 +326,7 @@ DO kc = kstab,kstob
 END DO
 
 !     D/DZ RHO W W
-CALL dfbydz(store7,store1)
+CALL dfbydz(d_store7,d_store1)
 
 
 !     W-EQUATION: CONVECTIVE TERMS
@@ -349,8 +349,8 @@ END DO
 !     ---------------------------
 !     DUDX,DVDY,DWDZ
 CALL dfbydx(d_utmp,d_store1)
-CALL dfbydy(vtmp,store2)
-CALL dfbydz(wtmp,store3)
+CALL dfbydy(d_vtmp,d_store2)
+CALL dfbydz(d_wtmp,d_store3)
 !                                                   STORE1,2,3 = DUDX,DVDY,DWDZ
 !                                           STORE4,5,6 = U,V,W CONVECTIVE TERMS
 !                                                          U,V,WRHS = RHO U,V,W
@@ -550,8 +550,8 @@ END DO
 
 !     8DX,8DY,8DZ
 CALL dfbydx(d_store7,d_store4)
-CALL dfbydy(store7,store5)
-CALL dfbydz(store7,store6)
+CALL dfbydy(d_store7,d_store5)
+CALL dfbydz(d_store7,d_store6)
 !                                                   STORE1,2,3 = DUDX,DVDY,DWDZ
 !                                                   STORE4,5,6 = 8DX,8DY,8DZ
 !     =========================================================================
@@ -859,7 +859,7 @@ END DO
 
 !     VISCOSITY GRADIENT: Y COMPONENT
 !     ------------------
-CALL dfbydy(transp,store5)
+CALL dfbydy(d_transp,d_store5)
 !                                                   STORE1,2,3 = DUDX,DVDY,DWDZ
 !                                                            STORE4,5 = DMUDX,Y
 !                                                           STORE6 = TAUYYb,e,f
@@ -947,7 +947,7 @@ END DO
 
 !     VISCOSITY GRADIENT: Z COMPONENT
 !     ------------------
-CALL dfbydz(transp,store6)
+CALL dfbydz(d_transp,d_store6)
 
 !                                                        STORE4,5,6 = DMUDX,Y,Z
 !                                                           STORE1 = TAUZZb,e,f
@@ -992,7 +992,7 @@ END DO
 
 !     DUDY
 !     ----
-CALL dfbydy(utmp,store1)
+CALL dfbydy(d_utmp,d_store1)
 
 
 !     COLLECT VELOCITY DERIVATIVE FOR BCs
@@ -1188,7 +1188,7 @@ END DO
 !     =========================================================================
 
 !     D2UDY2
-CALL d2fdy2(utmp,store3)
+CALL d2fdy2(d_utmp,d_store3)
 
 !     D2UDY2+D2VDXY
 DO kc = kstal,kstol
@@ -1309,7 +1309,7 @@ END DO
 
 !     DUDZ
 !     ----
-CALL dfbydz(utmp,store1)
+CALL dfbydz(d_utmp,d_store1)
 
 
 !     COLLECT VELOCITY DERIVATIVES FOR BCs
@@ -1505,7 +1505,7 @@ END DO
 !     =========================================================================
 
 !     D2UDZ2
-CALL d2fdz2(utmp,store3)
+CALL d2fdz2(d_utmp,d_store3)
 
 !     D2UDZ2+D2WDXZ
 DO kc = kstal,kstol
@@ -1628,7 +1628,7 @@ END DO
 !     =========================================================================
 
 !     DVDZ
-CALL dfbydz(vtmp,store1)
+CALL dfbydz(d_vtmp,d_store1)
 
 
 !     COLLECT VELOCITY DERIVATIVES FOR BCs
@@ -1678,7 +1678,7 @@ END DO
 !     =========================================================================
 
 !     DWDY
-CALL dfbydy(wtmp,store2)
+CALL dfbydy(d_wtmp,d_store2)
 
 
 !     COLLECT VELOCITY DERIVATIVES FOR BCs
@@ -1833,7 +1833,7 @@ END DO
 !     =========================================================================
 
 !     D2VDZ2
-CALL d2fdz2(vtmp,store3)
+CALL d2fdz2(d_vtmp,d_store3)
 
 !     D2VDZ2+D2WDYZ
 DO kc = kstal,kstol
@@ -1886,7 +1886,7 @@ END DO
 !     =========================================================================
 
 !     D2WDY2
-CALL d2fdy2(wtmp,store3)
+CALL d2fdy2(d_wtmp,d_store3)
 
 !     D2VDYZ+D2WDY2
 DO kc = kstal,kstol
@@ -1959,8 +1959,8 @@ END DO
 !     ---------------------------------------
 !     D2UDX2,D2VDY2,D2WDZ2
 CALL d2fdx2(d_utmp,d_store1)
-CALL d2fdy2(vtmp,store2)
-CALL d2fdz2(wtmp,store3)
+CALL d2fdy2(d_vtmp,d_store2)
+CALL d2fdz2(d_wtmp,d_store3)
 
 !     BOUNDARY CONDITIONS
 !     BC IN X: TAUXX,Xa TERM ZERO ON END POINTS

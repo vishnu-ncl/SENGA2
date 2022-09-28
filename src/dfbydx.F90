@@ -122,10 +122,8 @@ END IF
 !     =======
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
     call ops_par_loop(dfbydx_kernel_scaling, "dfbydx_scaling", senga_grid, 3, rangexyz,  &
-                      ops_arg_dat(functn, 1, s3d_000, "real(dp)", OPS_READ),  &
                       ops_arg_dat(fderiv, 1, s3d_000, "real(dp)", OPS_WRITE))
 !     =========================================================================
 
 
-RETURN
 END SUBROUTINE dfbydx

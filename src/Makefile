@@ -5,9 +5,8 @@ include $(OPS_INSTALL_PATH)/../makefiles/Makefile.cuda
 include $(OPS_INSTALL_PATH)/../makefiles/Makefile.hdf5
 
 OTHER_FILES = data_type.F90 constants.F90 com_espect.F90 com_senga2.F90 \
-	rhsvel.F90 dfbydy.F90 dfbydz.F90 pardom.F90 indata.F90 \
+	rhsvel.F90 pardom.F90 indata.F90 \
     dtinit.F90 parfer.F90 tempin.F90 flinit.F90 output.F90 \
-    d2fdy2.F90 d2fdz2.F90 \
     d2fdxy.F90 d2fdxz.F90 d2fdyz.F90 dfmstr.F90 \
     exhalo.F90 inhalo.F90 exhals.F90 inhals.F90 \
     zeroxl.F90 zeroxr.F90 zeroyl.F90 zeroyr.F90 zerozl.F90 zerozr.F90 \
@@ -28,9 +27,11 @@ OTHER_FILES = data_type.F90 constants.F90 com_espect.F90 com_senga2.F90 \
     flamin.F90 \
     fftixl.F90
 
-OPS_FILES = senga2.F90 com_ops_senga2.F90 ops_data_init.F90 dfinit.F90 dfbydx.F90 d2fdx2.F90
+OPS_FILES = senga2.F90 com_ops_senga2.F90 ops_data_init.F90 dfinit.F90 dfbydx.F90 d2fdx2.F90 \
+    dfbydy.F90 dfbydz.F90 d2fdy2.F90 d2fdz2.F90
 
-OPS_GENERATED = senga2_ops.F90 com_ops_senga2_ops.F90 ops_data_init_ops.F90 dfinit_ops.F90 dfbydx_ops.F90 d2fdx2_ops.F90
+OPS_GENERATED = senga2_ops.F90 com_ops_senga2_ops.F90 ops_data_init_ops.F90 dfinit_ops.F90 dfbydx_ops.F90 d2fdx2_ops.F90 \
+    dfbydy_ops.F90 dfbydz_ops.F90 d2fdy2_ops.F90 d2fdz2_ops.F90
 
 APP_LIBS = fftlib/fftlib.a rndlib/rndlib.a parlib/parlib.a -lm
 

@@ -142,8 +142,8 @@ END IF
 !     URHS,VRHS,WRHS CONTAIN RHO U, RHO V, RHO W
 
 CALL dfbydx(d_urhs,d_store1)
-CALL dfbydy(vrhs,store2)
-CALL dfbydz(wrhs,store3)
+CALL dfbydy(d_vrhs,d_store2)
+CALL dfbydz(d_wrhs,d_store3)
 
 DO kc = kstal,kstol
   DO jc = jstal,jstol
@@ -291,7 +291,7 @@ DO kc = kstab,kstob
     END DO
   END DO
 END DO
-CALL dfbydy(store7,store2)
+CALL dfbydy(d_store7,d_store2)
 
 !     D/DZ RHO W E
 !     RHO W E IS PARALLEL
@@ -304,7 +304,7 @@ DO kc = kstab,kstob
     END DO
   END DO
 END DO
-CALL dfbydz(store7,store3)
+CALL dfbydz(d_store7,d_store3)
 
 !     COLLECT DIV RHO U E IN STORE4 FOR NOW
 DO kc = kstal,kstol
@@ -325,8 +325,8 @@ END DO
 !     HALF RHO U.DEL E
 
 CALL dfbydx(d_erhs,d_store1)
-CALL dfbydy(erhs,store2)
-CALL dfbydz(erhs,store3)
+CALL dfbydy(d_erhs,d_store2)
+CALL dfbydz(d_erhs,d_store3)
 
 !     COLLECT ALL CONVECTIVE TERMS IN ERHS
 DO kc = kstal,kstol
@@ -352,8 +352,8 @@ END DO
 
 !     TEMPERATURE GRADIENTS
 CALL dfbydx(d_trun,d_store1)
-CALL dfbydy(trun,store2)
-CALL dfbydz(trun,store3)
+CALL dfbydy(d_trun,d_store2)
+CALL dfbydz(d_trun,d_store3)
 
 !                                                         STORE1,2,3 = DTDX,Y,Z
 !     =========================================================================
@@ -501,8 +501,8 @@ END IF
 
 !     CONDUCTIVITY GRADIENTS
 CALL dfbydx(d_store7,d_store4)
-CALL dfbydy(store7,store5)
-CALL dfbydz(store7,store6)
+CALL dfbydy(d_store7,d_store5)
+CALL dfbydz(d_store7,d_store6)
 
 !     BOUNDARY CONDITIONS
 !     BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
@@ -631,8 +631,8 @@ END IF
 
 !     TEMPERATURE SECOND DERIVATIVES
 CALL d2fdx2(d_trun,d_store1)
-CALL d2fdy2(trun,store2)
-CALL d2fdz2(trun,store3)
+CALL d2fdy2(d_trun,d_store2)
+CALL d2fdz2(d_trun,d_store3)
 
 !     BOUNDARY CONDITIONS
 !     BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
@@ -824,11 +824,11 @@ IF(flmixw)THEN
   END DO
   
   CALL dfbydx(d_store7,d_wd1x)
-  CALL dfbydy(store7,wd1y)
-  CALL dfbydz(store7,wd1z)
+  CALL dfbydy(d_store7,d_wd1y)
+  CALL dfbydz(d_store7,d_wd1z)
   CALL d2fdx2(d_store7,d_wd2x)
-  CALL d2fdy2(store7,wd2y)
-  CALL d2fdz2(store7,wd2z)
+  CALL d2fdy2(d_store7,d_wd2y)
+  CALL d2fdz2(d_store7,d_wd2z)
   
 END IF
 
@@ -845,11 +845,11 @@ IF(flmixp)THEN
     END DO
   END DO
   CALL dfbydx(d_store7,d_pd1x)
-  CALL dfbydy(store7,pd1y)
-  CALL dfbydz(store7,pd1z)
+  CALL dfbydy(d_store7,d_pd1y)
+  CALL dfbydz(d_store7,d_pd1z)
   CALL d2fdx2(d_store7,d_pd2x)
-  CALL d2fdy2(store7,pd2y)
-  CALL d2fdz2(store7,pd2z)
+  CALL d2fdy2(d_store7,d_pd2y)
+  CALL d2fdz2(d_store7,d_pd2z)
   
 END IF
 
@@ -858,11 +858,11 @@ IF(flmixt)THEN
   
 !       TRANSP CONTAINS LN(T/TDIFGB)
   CALL dfbydx(d_transp,d_td1x)
-  CALL dfbydy(transp,td1y)
-  CALL dfbydz(transp,td1z)
+  CALL dfbydy(d_transp,d_td1y)
+  CALL dfbydz(d_transp,d_td1z)
   CALL d2fdx2(d_transp,d_td2x)
-  CALL d2fdy2(transp,td2y)
-  CALL d2fdz2(transp,td2z)
+  CALL d2fdy2(d_transp,d_td2y)
+  CALL d2fdz2(d_transp,d_td2z)
   
 END IF
 
@@ -938,7 +938,7 @@ DO ispec = 1,nspec
       END DO
     END DO
   END DO
-  CALL dfbydy(store7,store2)
+  CALL dfbydy(d_store7,d_store2)
   
 !       D/DZ RHO W Y
 !       RHO W Y IS PARALLEL
@@ -951,7 +951,7 @@ DO ispec = 1,nspec
       END DO
     END DO
   END DO
-  CALL dfbydz(store7,store3)
+  CALL dfbydz(d_store7,d_store3)
   
 !       COLLECT DIV RHO U Y IN RATE FOR NOW
   DO kc = kstal,kstol
@@ -984,8 +984,8 @@ DO ispec = 1,nspec
     END DO
   END DO
   CALL dfbydx(d_store7,d_store1)
-  CALL dfbydy(store7,store2)
-  CALL dfbydz(store7,store3)
+  CALL dfbydy(d_store7,d_store2)
+  CALL dfbydz(d_store7,d_store3)
 !                                                         STORE1,2,3 = DYDX,Y,Z
 !                                                         RATE = Y SOURCE TERMS
 !                                                           VTMP = DIV CORR VEL
@@ -1367,8 +1367,8 @@ DO ispec = 1,nspec
   
 !       DIFFUSIVITY GRADIENTS
   CALL dfbydx(d_store7,d_store4)
-  CALL dfbydy(store7,store5)
-  CALL dfbydz(store7,store6)
+  CALL dfbydy(d_store7,d_store5)
+  CALL dfbydz(d_store7,d_store6)
   
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
@@ -1438,8 +1438,8 @@ DO ispec = 1,nspec
   
 !       SPECIES ENTHALPY GRADIENTS
   CALL dfbydx(d_utmp,d_store4)
-  CALL dfbydy(utmp,store5)
-  CALL dfbydz(utmp,store6)
+  CALL dfbydy(d_utmp,d_store5)
+  CALL dfbydz(d_utmp,d_store6)
   
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
@@ -1621,8 +1621,8 @@ DO ispec = 1,nspec
     END DO
   END DO
   CALL d2fdx2(d_store7,d_store1)
-  CALL d2fdy2(store7,store2)
-  CALL d2fdz2(store7,store3)
+  CALL d2fdy2(d_store7,d_store2)
+  CALL d2fdz2(d_store7,d_store3)
   
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
@@ -1722,8 +1722,8 @@ DO ispec = 1,nspec
     
 !         DIFFUSIVITY GRADIENTS
     CALL dfbydx(d_store7,d_store1)
-    CALL dfbydy(store7,store2)
-    CALL dfbydz(store7,store3)
+    CALL dfbydy(d_store7,d_store2)
+    CALL dfbydz(d_store7,d_store3)
     
 !         BOUNDARY CONDITIONS
 !         BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
@@ -2032,8 +2032,8 @@ DO ispec = 1,nspec
     
 !         DIFFUSIVITY GRADIENTS
     CALL dfbydx(d_store7,d_store1)
-    CALL dfbydy(store7,store2)
-    CALL dfbydz(store7,store3)
+    CALL dfbydy(d_store7,d_store2)
+    CALL dfbydz(d_store7,d_store3)
     
 !         BOUNDARY CONDITIONS
 !         BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
@@ -2341,8 +2341,8 @@ DO ispec = 1,nspec
     
 !         DIFFUSIVITY GRADIENTS
     CALL dfbydx(d_store7,d_store1)
-    CALL dfbydy(store7,store2)
-    CALL dfbydz(store7,store3)
+    CALL dfbydy(d_store7,d_store2)
+    CALL dfbydz(d_store7,d_store3)
     
 !         BOUNDARY CONDITIONS
 !         BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
@@ -2418,8 +2418,8 @@ DO ispec = 1,nspec
     
 !         EVALUATE SPECIES ENTHALPY GRADIENTS USING STORE4,5,6
     CALL dfbydx(d_utmp,d_store4)
-    CALL dfbydy(utmp,store5)
-    CALL dfbydz(utmp,store6)
+    CALL dfbydy(d_utmp,d_store5)
+    CALL dfbydz(d_utmp,d_store6)
     
 !         BOUNDARY CONDITIONS
 !         BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
@@ -2883,8 +2883,8 @@ END DO
 !     -----------------------------------
 !     MIXTURE ENTHALPY GRADIENTS
 CALL dfbydx(d_wtmp,d_store1)
-CALL dfbydy(wtmp,store2)
-CALL dfbydz(wtmp,store3)
+CALL dfbydy(d_wtmp,d_store2)
+CALL dfbydz(d_wtmp,d_store3)
 
 !     BOUNDARY CONDITIONS
 !     BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
@@ -3010,8 +3010,8 @@ DO ispec = 1,nspec
     END DO
   END DO
   CALL dfbydx(d_store7,d_store1)
-  CALL dfbydy(store7,store2)
-  CALL dfbydz(store7,store3)
+  CALL dfbydy(d_store7,d_store2)
+  CALL dfbydz(d_store7,d_store3)
   
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
@@ -3091,7 +3091,7 @@ END IF
 !     Y-DIRECTION: DRHODY
 IF(fylcnv.OR.fyrcnv)THEN
   
-  CALL dfbydy(drhs,store2)
+  CALL dfbydy(d_drhs,d_store2)
   
   IF(fylcnv)THEN
     DO kc = kstal,kstol
@@ -3119,7 +3119,7 @@ END IF
 !     Z-DIRECTION: DRHODZ
 IF(fzlcnv.OR.fzrcnv)THEN
   
-  CALL dfbydz(drhs,store3)
+  CALL dfbydz(d_drhs,d_store3)
   
   IF(fzlcnv)THEN
     DO jc = jstal,jstol

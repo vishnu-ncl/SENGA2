@@ -230,26 +230,12 @@ SUBROUTINE d2fdx2_kernel_rhpoint_4th_onesided(functn, fderiv)
 
 END SUBROUTINE d2fdx2_kernel_rhpoint_4th_onesided
 
-SUBROUTINE d2fdx2_kernel_scaling(functn, fderiv)
+SUBROUTINE d2fdx2_kernel_scaling(fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
     real(kind=dp), dimension(1) :: fderiv
         
-    fderiv(OPS_ACC2(0,0,0)) = fderiv(OPS_ACC2(0,0,0))*ovdlx2
+    fderiv(OPS_ACC1(0,0,0)) = fderiv(OPS_ACC1(0,0,0))*ovdlx2
 
 END SUBROUTINE d2fdx2_kernel_scaling
-
-
-
-
-
-
-
-
-
-
-
-
-
