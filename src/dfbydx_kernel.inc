@@ -46,9 +46,9 @@ SUBROUTINE dfbydx_kernel_lhpoint_4th_mixed(functn, fderiv)
 
 !   lh point plus 1: 4th order mixed
     fdiffa = functn(OPS_ACC1(-1,0,0)) - functn(OPS_ACC1(0,0,0))
-    fdiffb = functn(OPS_ACC1( 1,0,0)) - functn(OPS_ACC1(0,0,0))
-    fdiffc = functn(OPS_ACC1( 2,0,0)) - functn(OPS_ACC1(0,0,0))
-    fdiffd = functn(OPS_ACC1( 3,0,0)) - functn(OPS_ACC1(0,0,0))
+    fdiffb = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(0,0,0))
+    fdiffc = functn(OPS_ACC1(2,0,0)) - functn(OPS_ACC1(0,0,0))
+    fdiffd = functn(OPS_ACC1(3,0,0)) - functn(OPS_ACC1(0,0,0))
     fderiv(OPS_ACC2(0,0,0)) = acof2x*fdiffa + bcof2x*fdiffb  &
           + ccof2x*fdiffc + dcof2x*fdiffd
 
@@ -163,7 +163,7 @@ SUBROUTINE dfbydx_kernel_rhpoint_4th_mixed(functn, fderiv)
     real(kind=dp) :: fdiffa, fdiffb, fdiffc, fdiffd
 
 !   rh point minus 1: 4th order mixed
-    fdiffa = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1( 1,0,0))
+    fdiffa = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(1,0,0))
     fdiffb = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(-1,0,0))
     fdiffc = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(-2,0,0))
     fdiffd = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(-3,0,0))

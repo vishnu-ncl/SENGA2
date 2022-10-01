@@ -281,28 +281,18 @@ PARAMETER(nobc=0,nbound=1,nperi=2)
 
 !     COEFFICIENTS OF SPATIAL DIFFERENCING SCHEMES
 REAL(KIND=dp) :: acoeff,bcoeff,ccoeff,dcoeff,ecoeff,  &
-    acoffy,bcoffy,ccoffy,dcoffy,ecoffy,  &
-    acoffz,bcoffz,ccoffz,dcoffz,ecoffz, acoef1,bcoef1,ccoef1,dcoef1,  &
-    acof1y,bcof1y,ccof1y,dcof1y,  &
-    acof1z,bcof1z,ccof1z,dcof1z, acoef2,bcoef2,ccoef2,dcoef2,  &
-    acof2y,bcof2y,ccof2y,dcof2y,  &
-    acof2z,bcof2z,ccof2z,dcof2z, acoef3,bcoef3,  &
-    acof3y,bcof3y,acof3z,bcof3z, acoef4,bcoef4,ccoef4,  &
-    acof4y,bcof4y,ccof4y,  &
-    acof4z,bcof4z,ccof4z, acoef5,bcoef5,ccoef5,dcoef5,  &
-    acof5y,bcof5y,ccof5y,dcof5y,  &
-    acof5z,bcof5z,ccof5z,dcof5z, acoefs,bcoefs,ccoefs,dcoefs,ecoefs,  &
-    acofsy,bcofsy,ccofsy,dcofsy,ecofsy,  &
-    acofsz,bcofsz,ccofsz,dcofsz,ecofsz, acofs1,bcofs1,ccofs1,dcofs1,ecofs1,  &
-    acfs1y,bcfs1y,ccfs1y,dcfs1y,ecfs1y,  &
-    acfs1z,bcfs1z,ccfs1z,dcfs1z,ecfs1z, acofs2,bcofs2,ccofs2,dcofs2,ecofs2,  &
-    acfs2y,bcfs2y,ccfs2y,dcfs2y,ecfs2y,  &
-    acfs2z,bcfs2z,ccfs2z,dcfs2z,ecfs2z, acofs3,bcofs3,  &
-    acfs3y,bcfs3y,acfs3z,bcfs3z, acofs4,bcofs4,ccofs4,  &
-    acfs4y,bcfs4y,ccfs4y,  &
-    acfs4z,bcfs4z,ccfs4z, acofs5,bcofs5,ccofs5,dcofs5,  &
-    acfs5y,bcfs5y,ccfs5y,dcfs5y,  &
-    acfs5z,bcfs5z,ccfs5z,dcfs5z, acoefx,bcoefx,ccoefx,dcoefx,ecoefx,  &
+    acoef1,bcoef1,ccoef1,dcoef1,  &
+    acoef2,bcoef2,ccoef2,dcoef2,  &
+    acoef3,bcoef3,  &
+    acoef4,bcoef4,ccoef4,  &
+    acoef5,bcoef5,ccoef5,dcoef5,  &
+    acoefs,bcoefs,ccoefs,dcoefs,ecoefs,  &
+    acofs1,bcofs1,ccofs1,dcofs1,ecofs1,  &
+    acofs2,bcofs2,ccofs2,dcofs2,ecofs2,  &
+    acofs3,bcofs3,  &
+    acofs4,bcofs4,ccofs4,  &
+    acofs5,bcofs5,ccofs5,dcofs5,  &
+    acoefx,bcoefx,ccoefx,dcoefx,ecoefx,  &
     acofxy,bcofxy,ccofxy,dcofxy,ecofxy, acofxz,bcofxz,ccofxz,dcofxz,ecofxz,  &
     acofyz,bcofyz,ccofyz,dcofyz,ecofyz,  &
     acofx1,bcofx1,acofy1,bcofy1,acofz1,bcofz1, acf1xy,bcf1xy,ccf1xy,dcf1xy,  &
@@ -316,35 +306,24 @@ REAL(KIND=dp) :: acoeff,bcoeff,ccoeff,dcoeff,ecoeff,  &
     acofc1,bcofc1,ccofc1,dcofc1, acofc2,bcofc2,ccofc2,dcofc2,  &
     acc1xy,bcc1xy,ccc1xy,dcc1xy, acc1xz,bcc1xz,ccc1xz,dcc1xz,  &
     acc1yz,bcc1yz,ccc1yz,dcc1yz, acc2xy,bcc2xy,ccc2xy,dcc2xy,  &
-    acc2xz,bcc2xz,ccc2xz,dcc2xz, acc2yz,bcc2yz,ccc2yz,dcc2yz,  &
-    ovdely,ovdelz,ovdly2,ovdlz2
+    acc2xz,bcc2xz,ccc2xz,dcc2xz, acc2yz,bcc2yz,ccc2yz,dcc2yz
 
 !     SPATIAL DERIVATIVE END CONDITIONS
 INTEGER :: nendxl,nendxr,nendyl,nendyr,nendzl,nendzr
 
 COMMON/dfdiff/acoeff,bcoeff,ccoeff,dcoeff,ecoeff,  &
-    acoffy,bcoffy,ccoffy,dcoffy,ecoffy,  &
-    acoffz,bcoffz,ccoffz,dcoffz,ecoffz, acoef1,bcoef1,ccoef1,dcoef1,  &
-    acof1y,bcof1y,ccof1y,dcof1y,  &
-    acof1z,bcof1z,ccof1z,dcof1z, acoef2,bcoef2,ccoef2,dcoef2,  &
-    acof2y,bcof2y,ccof2y,dcof2y,  &
-    acof2z,bcof2z,ccof2z,dcof2z, acoef3,bcoef3,  &
-    acof3y,bcof3y,acof3z,bcof3z, acoef4,bcoef4,ccoef4,  &
-    acof4y,bcof4y,ccof4y,  &
-    acof4z,bcof4z,ccof4z, acoef5,bcoef5,ccoef5,dcoef5,  &
-    acof5y,bcof5y,ccof5y,dcof5y,  &
-    acof5z,bcof5z,ccof5z,dcof5z, acoefs,bcoefs,ccoefs,dcoefs,ecoefs,  &
-    acofsy,bcofsy,ccofsy,dcofsy,ecofsy,  &
-    acofsz,bcofsz,ccofsz,dcofsz,ecofsz, acofs1,bcofs1,ccofs1,dcofs1,ecofs1,  &
-    acfs1y,bcfs1y,ccfs1y,dcfs1y,ecfs1y,  &
-    acfs1z,bcfs1z,ccfs1z,dcfs1z,ecfs1z, acofs2,bcofs2,ccofs2,dcofs2,ecofs2,  &
-    acfs2y,bcfs2y,ccfs2y,dcfs2y,ecfs2y,  &
-    acfs2z,bcfs2z,ccfs2z,dcfs2z,ecfs2z, acofs3,bcofs3,  &
-    acfs3y,bcfs3y,acfs3z,bcfs3z, acofs4,bcofs4,ccofs4,  &
-    acfs4y,bcfs4y,ccfs4y,  &
-    acfs4z,bcfs4z,ccfs4z, acofs5,bcofs5,ccofs5,dcofs5,  &
-    acfs5y,bcfs5y,ccfs5y,dcfs5y,  &
-    acfs5z,bcfs5z,ccfs5z,dcfs5z, acoefx,bcoefx,ccoefx,dcoefx,ecoefx,  &
+    acoef1,bcoef1,ccoef1,dcoef1,  &
+    acoef2,bcoef2,ccoef2,dcoef2,  &
+    acoef3,bcoef3,  &
+    acoef4,bcoef4,ccoef4,  &
+    acoef5,bcoef5,ccoef5,dcoef5,  &
+    acoefs,bcoefs,ccoefs,dcoefs,ecoefs,  &
+    acofs1,bcofs1,ccofs1,dcofs1,ecofs1,  &
+    acofs2,bcofs2,ccofs2,dcofs2,ecofs2,  &
+    acofs3,bcofs3,  &
+    acofs4,bcofs4,ccofs4,  &
+    acofs5,bcofs5,ccofs5,dcofs5,  &
+    acoefx,bcoefx,ccoefx,dcoefx,ecoefx,  &
     acofxy,bcofxy,ccofxy,dcofxy,ecofxy, acofxz,bcofxz,ccofxz,dcofxz,ecofxz,  &
     acofyz,bcofyz,ccofyz,dcofyz,ecofyz,  &
     acofx1,bcofx1,acofy1,bcofy1,acofz1,bcofz1, acf1xy,bcf1xy,ccf1xy,dcf1xy,  &
@@ -359,7 +338,6 @@ COMMON/dfdiff/acoeff,bcoeff,ccoeff,dcoeff,ecoeff,  &
     acc1xy,bcc1xy,ccc1xy,dcc1xy, acc1xz,bcc1xz,ccc1xz,dcc1xz,  &
     acc1yz,bcc1yz,ccc1yz,dcc1yz, acc2xy,bcc2xy,ccc2xy,dcc2xy,  &
     acc2xz,bcc2xz,ccc2xz,dcc2xz, acc2yz,bcc2yz,ccc2yz,dcc2yz,  &
-    ovdely,ovdelz,ovdly2,ovdlz2,  &
     nendxl,nendxr,nendyl,nendyr,nendzl,nendzr
 
 !     DFDIFF-------------------------------------------------------------------
