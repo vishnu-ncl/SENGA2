@@ -795,8 +795,8 @@ END DO
 
 !     BOUNDARY CONDITIONS
 !     BC IN X: TAUXX,X TERM ZERO ON END POINTS
-IF(fxlvsn)CALL zeroxl(store6)
-IF(fxrvsn)CALL zeroxr(store6)
+IF(fxlvsn)CALL zeroxl(d_store6)
+IF(fxrvsn)CALL zeroxr(d_store6)
 
 DO kc = kstal,kstol
   DO jc = jstal,jstol
@@ -883,8 +883,8 @@ END DO
 
 !     BOUNDARY CONDITIONS
 !     BC IN Y: TAUYY,Y TERM ZERO ON END POINTS
-IF(fylvsn)CALL zeroyl(store6)
-IF(fyrvsn)CALL zeroyr(store6)
+IF(fylvsn)CALL zeroyl(d_store6)
+IF(fyrvsn)CALL zeroyr(d_store6)
 
 DO kc = kstal,kstol
   DO jc = jstal,jstol
@@ -971,8 +971,8 @@ END DO
 
 !     BOUNDARY CONDITIONS
 !     BC IN Z: TAUZZ,Z TERM ZERO ON END POINTS
-IF(fzlvsn)CALL zerozl(store1)
-IF(fzrvsn)CALL zerozr(store1)
+IF(fzlvsn)CALL zerozl(d_store1)
+IF(fzrvsn)CALL zerozr(d_store1)
 
 DO kc = kstal,kstol
   DO jc = jstal,jstol
@@ -1131,8 +1131,8 @@ END DO
 
 !     BOUNDARY CONDITIONS
 !     BC IN X: TAUXX,X TERMS ZERO ON END POINTS
-IF(fxlvsn)CALL zeroxl(store3)
-IF(fxrvsn)CALL zeroxr(store3)
+IF(fxlvsn)CALL zeroxl(d_store3)
+IF(fxrvsn)CALL zeroxr(d_store3)
 
 DO kc = kstal,kstol
   DO jc = jstal,jstol
@@ -1168,8 +1168,8 @@ END DO
 
 !     BOUNDARY CONDITIONS
 !     BC IN Y: TAUYY,Y TERMS ZERO ON END POINTS
-IF(fylvsn)CALL zeroyl(store3)
-IF(fyrvsn)CALL zeroyr(store3)
+IF(fylvsn)CALL zeroyl(d_store3)
+IF(fyrvsn)CALL zeroyr(d_store3)
 
 DO kc = kstal,kstol
   DO jc = jstal,jstol
@@ -1221,8 +1221,8 @@ END DO
 
 !     BOUNDARY CONDITIONS
 !     BC IN Y: TAUXY,Y TERM ZERO ON END POINTS
-IF(fylvst)CALL zeroyl(store3)
-IF(fyrvst)CALL zeroyr(store3)
+IF(fylvst)CALL zeroyl(d_store3)
+IF(fyrvst)CALL zeroyr(d_store3)
 
 DO kc = kstal,kstol
   DO jc = jstal,jstol
@@ -1273,8 +1273,8 @@ END DO
 
 !     BOUNDARY CONDITIONS
 !     BC IN X: TAUYX,X TERM ZERO ON END POINTS
-IF(fxlvst)CALL zeroxl(store3)
-IF(fxrvst)CALL zeroxr(store3)
+IF(fxlvst)CALL zeroxl(d_store3)
+IF(fxrvst)CALL zeroxr(d_store3)
 
 DO kc = kstal,kstol
   DO jc = jstal,jstol
@@ -1448,8 +1448,8 @@ END DO
 
 !     BOUNDARY CONDITIONS
 !     BC IN X: TAUXX,X TERMS ZERO ON END POINTS
-IF(fxlvsn)CALL zeroxl(store3)
-IF(fxrvsn)CALL zeroxr(store3)
+IF(fxlvsn)CALL zeroxl(d_store3)
+IF(fxrvsn)CALL zeroxr(d_store3)
 
 DO kc = kstal,kstol
   DO jc = jstal,jstol
@@ -1485,8 +1485,8 @@ END DO
 
 !     BOUNDARY CONDITIONS
 !     BC IN Z: TAUZZ,Z TERMS ZERO ON END POINTS
-IF(fzlvsn)CALL zerozl(store3)
-IF(fzrvsn)CALL zerozr(store3)
+IF(fzlvsn)CALL zerozl(d_store3)
+IF(fzrvsn)CALL zerozr(d_store3)
 
 DO kc = kstal,kstol
   DO jc = jstal,jstol
@@ -1538,8 +1538,8 @@ END DO
 
 !     BOUNDARY CONDITIONS
 !     BC IN Y: TAUXZ,Z TERM ZERO ON END POINTS
-IF(fzlvst)CALL zerozl(store3)
-IF(fzrvst)CALL zerozr(store3)
+IF(fzlvst)CALL zerozl(d_store3)
+IF(fzrvst)CALL zerozr(d_store3)
 
 DO kc = kstal,kstol
   DO jc = jstal,jstol
@@ -1591,8 +1591,8 @@ END DO
 
 !     BOUNDARY CONDITIONS
 !     BC IN X: TAUZX,X TERM ZERO ON END POINTS
-IF(fxlvst)CALL zeroxl(store3)
-IF(fxrvst)CALL zeroxr(store3)
+IF(fxlvst)CALL zeroxl(d_store3)
+IF(fxrvst)CALL zeroxr(d_store3)
 
 DO kc = kstal,kstol
   DO jc = jstal,jstol
@@ -1774,8 +1774,8 @@ END DO
 
 !     BOUNDARY CONDITIONS
 !     BC IN Y: TAUYY,2 TERMS ZERO ON END POINTS
-IF(fylvsn)CALL zeroyl(store3)
-IF(fyrvsn)CALL zeroyr(store3)
+IF(fylvsn)CALL zeroyl(d_store3)
+IF(fyrvsn)CALL zeroyr(d_store3)
 
 DO kc = kstal,kstol
   DO jc = jstal,jstol
@@ -1812,8 +1812,8 @@ END DO
 
 !     BOUNDARY CONDITIONS
 !     BC IN Z: TAUZZ,Z TERMS ZERO ON END POINTS
-IF(fzlvsn)CALL zerozl(store3)
-IF(fzrvsn)CALL zerozr(store3)
+IF(fzlvsn)CALL zerozl(d_store3)
+IF(fzrvsn)CALL zerozr(d_store3)
 
 DO kc = kstal,kstol
   DO jc = jstal,jstol
@@ -1866,8 +1866,8 @@ END DO
 
 !     BOUNDARY CONDITIONS
 !     BC IN Z: TAUYZ,Z TERM ZERO ON END POINTS
-IF(fzlvst)CALL zerozl(store3)
-IF(fzrvst)CALL zerozr(store3)
+IF(fzlvst)CALL zerozl(d_store3)
+IF(fzrvst)CALL zerozr(d_store3)
 
 DO kc = kstal,kstol
   DO jc = jstal,jstol
@@ -1919,8 +1919,8 @@ END DO
 
 !     BOUNDARY CONDITIONS
 !     BC IN Y: TAUZY,Y TERM ZERO ON END POINTS
-IF(fylvst)CALL zeroyl(store3)
-IF(fyrvst)CALL zeroyr(store3)
+IF(fylvst)CALL zeroyl(d_store3)
+IF(fyrvst)CALL zeroyr(d_store3)
 
 DO kc = kstal,kstol
   DO jc = jstal,jstol
@@ -1964,14 +1964,14 @@ CALL d2fdz2(d_wtmp,d_store3)
 
 !     BOUNDARY CONDITIONS
 !     BC IN X: TAUXX,Xa TERM ZERO ON END POINTS
-IF(fxlvsn)CALL zeroxl(store1)
-IF(fxrvsn)CALL zeroxr(store1)
+IF(fxlvsn)CALL zeroxl(d_store1)
+IF(fxrvsn)CALL zeroxr(d_store1)
 !     BC IN Y: TAUYY,Ya TERM ZERO ON END POINTS
-IF(fylvsn)CALL zeroyl(store2)
-IF(fyrvsn)CALL zeroyr(store2)
+IF(fylvsn)CALL zeroyl(d_store2)
+IF(fyrvsn)CALL zeroyr(d_store2)
 !     BC IN Z: TAUZZ,Za TERM ZERO ON END POINTS
-IF(fzlvsn)CALL zerozl(store3)
-IF(fzrvsn)CALL zerozr(store3)
+IF(fzlvsn)CALL zerozl(d_store3)
+IF(fzrvsn)CALL zerozr(d_store3)
 
 
 !     U-EQUATION: VISCOUS STRESS TERMS

@@ -1,64 +1,37 @@
 SUBROUTINE zerozl(farray)
- 
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-05  Time: 10:55:51
 
-!     *************************************************************************
+use OPS_Fortran_Reference
 
-!     ZEROZL
-!     ======
+    use OPS_CONSTANTS
+    use, intrinsic :: ISO_C_BINDING
 
-!     AUTHOR
-!     ------
-!     R.S.CANT
-
-!     CHANGE RECORD
-!     -------------
-!     01-AUG-1996:  CREATED
-!     06-JUL-2003:  RSC MODIFIED FOR SENGA2
-
-!     DESCRIPTION
-!     -----------
-!     DNS CODE SENGA2
-!     ZEROS THE Z-WISE LEFT END ELEMENTS OF THE ARRAY
-
-!     *************************************************************************
-
-
-!     GLOBAL DATA
-!     ===========
-!     -------------------------------------------------------------------------
-use com_senga
-!     -------------------------------------------------------------------------
+    use data_types
+    use com_senga
+    use com_ops_senga
 
 
 !     ARGUMENTS
 !     =========
 
-DOUBLE PRECISION, INTENT(OUT)            :: farray(nxsize,nysize,nzsize)
+    TYPE(ops_dat) :: farray
 
 
 
 !     LOCAL DATA
 !     ==========
-INTEGER :: ic,jc
-
+INTEGER :: rangexyz(6)
 
 !     BEGIN
 !     =====
 
 !     =========================================================================
 
-DO jc = jstal,jstol
-  DO ic = istal,istol
-    
-    farray(ic,jc,kstal) = zero
-    
-  END DO
-END DO
+    rangexyz = (/istal,istol, jstal,jstol, kstal,kstal/)
+    call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(farray, 1, s3d_000, "real(dp)", OPS_WRITE))
+
 
 !     =========================================================================
+ 
 
-
-RETURN
 END SUBROUTINE zerozl

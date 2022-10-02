@@ -456,7 +456,6 @@ END DO
 !     THERMAL CONDUCTIVITY
 
 IF(flmavt)THEN
-  
   DO kc = kstab,kstob
     DO jc = jstab,jstob
       DO ic = istab,istob
@@ -506,15 +505,15 @@ CALL dfbydz(d_store7,d_store6)
 
 !     BOUNDARY CONDITIONS
 !     BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-IF(fxlcon)CALL zeroxl(store4)
-IF(fxrcon)CALL zeroxr(store4)
+IF(fxlcon)CALL zeroxl(d_store4)
+IF(fxrcon)CALL zeroxr(d_store4)
 !     BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-IF(fylcon)CALL zeroyl(store5)
-IF(fyrcon)CALL zeroyr(store5)
+IF(fylcon)CALL zeroyl(d_store5)
+IF(fyrcon)CALL zeroyr(d_store5)
 !     BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
 !     RSC/TDD BUG FIX FZLCON
-IF(fzlcon)CALL zerozl(store6)
-IF(fzrcon)CALL zerozr(store6)
+IF(fzlcon)CALL zerozl(d_store6)
+IF(fzrcon)CALL zerozr(d_store6)
 
 DO kc = kstal,kstol
   DO jc = jstal,jstol
@@ -636,15 +635,15 @@ CALL d2fdz2(d_trun,d_store3)
 
 !     BOUNDARY CONDITIONS
 !     BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-IF(fxlcon)CALL zeroxl(store1)
-IF(fxrcon)CALL zeroxr(store1)
+IF(fxlcon)CALL zeroxl(d_store1)
+IF(fxrcon)CALL zeroxr(d_store1)
 !     BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-IF(fylcon)CALL zeroyl(store2)
-IF(fyrcon)CALL zeroyr(store2)
+IF(fylcon)CALL zeroyl(d_store2)
+IF(fyrcon)CALL zeroyr(d_store2)
 !     BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
 !     RSC 28-JUN-2015 BUG FIX FZLCON
-IF(fzlcon)CALL zerozl(store3)
-IF(fzrcon)CALL zerozr(store3)
+IF(fzlcon)CALL zerozl(d_store3)
+IF(fzrcon)CALL zerozr(d_store3)
 
 !     COLLECT CONDUCTIVITY TERMS
 DO kc = kstal,kstol
@@ -1372,14 +1371,14 @@ DO ispec = 1,nspec
   
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fxldif)CALL zeroxl(store4)
-  IF(fxrdif)CALL zeroxr(store4)
+  IF(fxldif)CALL zeroxl(d_store4)
+  IF(fxrdif)CALL zeroxr(d_store4)
 !       BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fyldif)CALL zeroyl(store5)
-  IF(fyrdif)CALL zeroyr(store5)
+  IF(fyldif)CALL zeroyl(d_store5)
+  IF(fyrdif)CALL zeroyr(d_store5)
 !       BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fzldif)CALL zerozl(store6)
-  IF(fzrdif)CALL zerozr(store6)
+  IF(fzldif)CALL zerozl(d_store6)
+  IF(fzrdif)CALL zerozr(d_store6)
   
   DO kc = kstal,kstol
     DO jc = jstal,jstol
@@ -1401,14 +1400,14 @@ DO ispec = 1,nspec
   
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-  IF(fxladb)CALL zeroxl(store4)
-  IF(fxradb)CALL zeroxr(store4)
+  IF(fxladb)CALL zeroxl(d_store4)
+  IF(fxradb)CALL zeroxr(d_store4)
 !       BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-  IF(fyladb)CALL zeroyl(store5)
-  IF(fyradb)CALL zeroyr(store5)
+  IF(fyladb)CALL zeroyl(d_store5)
+  IF(fyradb)CALL zeroyr(d_store5)
 !       BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-  IF(fzladb)CALL zerozl(store6)
-  IF(fzradb)CALL zerozr(store6)
+  IF(fzladb)CALL zerozl(d_store6)
+  IF(fzradb)CALL zerozr(d_store6)
   
 !       E EQUATION
   DO kc = kstal,kstol
@@ -1443,25 +1442,25 @@ DO ispec = 1,nspec
   
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fxldif)CALL zeroxl(store4)
-  IF(fxrdif)CALL zeroxr(store4)
+  IF(fxldif)CALL zeroxl(d_store4)
+  IF(fxrdif)CALL zeroxr(d_store4)
 !       BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fyldif)CALL zeroyl(store5)
-  IF(fyrdif)CALL zeroyr(store5)
+  IF(fyldif)CALL zeroyl(d_store5)
+  IF(fyrdif)CALL zeroyr(d_store5)
 !       BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fzldif)CALL zerozl(store6)
-  IF(fzrdif)CALL zerozr(store6)
+  IF(fzldif)CALL zerozl(d_store6)
+  IF(fzrdif)CALL zerozr(d_store6)
   
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-  IF(fxladb)CALL zeroxl(store4)
-  IF(fxradb)CALL zeroxr(store4)
+  IF(fxladb)CALL zeroxl(d_store4)
+  IF(fxradb)CALL zeroxr(d_store4)
 !       BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-  IF(fyladb)CALL zeroyl(store5)
-  IF(fyradb)CALL zeroyr(store5)
+  IF(fyladb)CALL zeroyl(d_store5)
+  IF(fyradb)CALL zeroyr(d_store5)
 !       BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-  IF(fzladb)CALL zerozl(store6)
-  IF(fzradb)CALL zerozr(store6)
+  IF(fzladb)CALL zerozl(d_store6)
+  IF(fzradb)CALL zerozr(d_store6)
   
   DO kc = kstal,kstol
     DO jc = jstal,jstol
@@ -1626,14 +1625,14 @@ DO ispec = 1,nspec
   
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fxldif)CALL zeroxl(store1)
-  IF(fxrdif)CALL zeroxr(store1)
+  IF(fxldif)CALL zeroxl(d_store1)
+  IF(fxrdif)CALL zeroxr(d_store1)
 !       BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fyldif)CALL zeroyl(store2)
-  IF(fyrdif)CALL zeroyr(store2)
+  IF(fyldif)CALL zeroyl(d_store2)
+  IF(fyrdif)CALL zeroyr(d_store2)
 !       BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fzldif)CALL zerozl(store3)
-  IF(fzrdif)CALL zerozr(store3)
+  IF(fzldif)CALL zerozl(d_store3)
+  IF(fzrdif)CALL zerozr(d_store3)
   
   DO kc = kstal,kstol
     DO jc = jstal,jstol
@@ -1654,14 +1653,14 @@ DO ispec = 1,nspec
   
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-  IF(fxladb)CALL zeroxl(store1)
-  IF(fxradb)CALL zeroxr(store1)
+  IF(fxladb)CALL zeroxl(d_store1)
+  IF(fxradb)CALL zeroxr(d_store1)
 !       BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-  IF(fyladb)CALL zeroyl(store2)
-  IF(fyradb)CALL zeroyr(store2)
+  IF(fyladb)CALL zeroyl(d_store2)
+  IF(fyradb)CALL zeroyr(d_store2)
 !       BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-  IF(fzladb)CALL zerozl(store3)
-  IF(fzradb)CALL zerozr(store3)
+  IF(fzladb)CALL zerozl(d_store3)
+  IF(fzradb)CALL zerozr(d_store3)
   
 !       E EQUATION
   DO kc = kstal,kstol
@@ -1727,14 +1726,14 @@ DO ispec = 1,nspec
     
 !         BOUNDARY CONDITIONS
 !         BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fxldif)CALL zeroxl(store1)
-    IF(fxrdif)CALL zeroxr(store1)
+    IF(fxldif)CALL zeroxl(d_store1)
+    IF(fxrdif)CALL zeroxr(d_store1)
 !         BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fyldif)CALL zeroyl(store2)
-    IF(fyrdif)CALL zeroyr(store2)
+    IF(fyldif)CALL zeroyl(d_store2)
+    IF(fyrdif)CALL zeroyr(d_store2)
 !         BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fzldif)CALL zerozl(store3)
-    IF(fzrdif)CALL zerozr(store3)
+    IF(fzldif)CALL zerozl(d_store3)
+    IF(fzrdif)CALL zerozr(d_store3)
     
     DO kc = kstal,kstol
       DO jc = jstal,jstol
@@ -1755,14 +1754,14 @@ DO ispec = 1,nspec
     
 !         BOUNDARY CONDITIONS
 !         BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fxladb)CALL zeroxl(store1)
-    IF(fxradb)CALL zeroxr(store1)
+    IF(fxladb)CALL zeroxl(d_store1)
+    IF(fxradb)CALL zeroxr(d_store1)
 !         BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fyladb)CALL zeroyl(store2)
-    IF(fyradb)CALL zeroyr(store2)
+    IF(fyladb)CALL zeroyl(d_store2)
+    IF(fyradb)CALL zeroyr(d_store2)
 !         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fzladb)CALL zerozl(store3)
-    IF(fzradb)CALL zerozr(store3)
+    IF(fzladb)CALL zerozl(d_store3)
+    IF(fzradb)CALL zerozr(d_store3)
     
 !         E EQUATION
     DO kc = kstal,kstol
@@ -1786,25 +1785,25 @@ DO ispec = 1,nspec
     
 !         BOUNDARY CONDITIONS
 !         BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fxldif)CALL zeroxl(store4)
-    IF(fxrdif)CALL zeroxr(store4)
+    IF(fxldif)CALL zeroxl(d_store4)
+    IF(fxrdif)CALL zeroxr(d_store4)
 !         BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fyldif)CALL zeroyl(store5)
-    IF(fyrdif)CALL zeroyr(store5)
+    IF(fyldif)CALL zeroyl(d_store5)
+    IF(fyrdif)CALL zeroyr(d_store5)
 !         BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fzldif)CALL zerozl(store6)
-    IF(fzrdif)CALL zerozr(store6)
+    IF(fzldif)CALL zerozl(d_store6)
+    IF(fzrdif)CALL zerozr(d_store6)
     
 !         BOUNDARY CONDITIONS
 !         BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fxladb)CALL zeroxl(store4)
-    IF(fxradb)CALL zeroxr(store4)
+    IF(fxladb)CALL zeroxl(d_store4)
+    IF(fxradb)CALL zeroxr(d_store4)
 !         BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fyladb)CALL zeroyl(store5)
-    IF(fyradb)CALL zeroyr(store5)
+    IF(fyladb)CALL zeroyl(d_store5)
+    IF(fyradb)CALL zeroyr(d_store5)
 !         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fzladb)CALL zerozl(store6)
-    IF(fzradb)CALL zerozr(store6)
+    IF(fzladb)CALL zerozl(d_store6)
+    IF(fzradb)CALL zerozr(d_store6)
     
     DO kc = kstal,kstol
       DO jc = jstal,jstol
@@ -1938,14 +1937,14 @@ DO ispec = 1,nspec
     
 !         BOUNDARY CONDITIONS
 !         BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fxldif)CALL zeroxl(wd2x)
-    IF(fxrdif)CALL zeroxr(wd2x)
+    IF(fxldif)CALL zeroxl(d_wd2x)
+    IF(fxrdif)CALL zeroxr(d_wd2x)
 !         BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fyldif)CALL zeroyl(wd2y)
-    IF(fyrdif)CALL zeroyr(wd2y)
+    IF(fyldif)CALL zeroyl(d_wd2y)
+    IF(fyrdif)CALL zeroyr(d_wd2y)
 !         BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fzldif)CALL zerozl(wd2z)
-    IF(fzrdif)CALL zerozr(wd2z)
+    IF(fzldif)CALL zerozl(d_wd2z)
+    IF(fzrdif)CALL zerozr(d_wd2z)
     
     DO kc = kstal,kstol
       DO jc = jstal,jstol
@@ -1966,14 +1965,14 @@ DO ispec = 1,nspec
     
 !         BOUNDARY CONDITIONS
 !         BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fxladb)CALL zeroxl(wd2x)
-    IF(fxradb)CALL zeroxr(wd2x)
+    IF(fxladb)CALL zeroxl(d_wd2x)
+    IF(fxradb)CALL zeroxr(d_wd2x)
 !         BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fyladb)CALL zeroyl(wd2y)
-    IF(fyradb)CALL zeroyr(wd2y)
+    IF(fyladb)CALL zeroyl(d_wd2y)
+    IF(fyradb)CALL zeroyr(d_wd2y)
 !         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fzladb)CALL zerozl(wd2z)
-    IF(fzradb)CALL zerozr(wd2z)
+    IF(fzladb)CALL zerozl(d_wd2z)
+    IF(fzradb)CALL zerozr(d_wd2z)
     
 !         E EQUATION
     DO kc = kstal,kstol
@@ -2037,14 +2036,14 @@ DO ispec = 1,nspec
     
 !         BOUNDARY CONDITIONS
 !         BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fxldif)CALL zeroxl(store1)
-    IF(fxrdif)CALL zeroxr(store1)
+    IF(fxldif)CALL zeroxl(d_store1)
+    IF(fxrdif)CALL zeroxr(d_store1)
 !         BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fyldif)CALL zeroyl(store2)
-    IF(fyrdif)CALL zeroyr(store2)
+    IF(fyldif)CALL zeroyl(d_store2)
+    IF(fyrdif)CALL zeroyr(d_store2)
 !         BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fzldif)CALL zerozl(store3)
-    IF(fzrdif)CALL zerozr(store3)
+    IF(fzldif)CALL zerozl(d_store3)
+    IF(fzrdif)CALL zerozr(d_store3)
     
     DO kc = kstal,kstol
       DO jc = jstal,jstol
@@ -2065,14 +2064,14 @@ DO ispec = 1,nspec
     
 !         BOUNDARY CONDITIONS
 !         BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fxladb)CALL zeroxl(store1)
-    IF(fxradb)CALL zeroxr(store1)
+    IF(fxladb)CALL zeroxl(d_store1)
+    IF(fxradb)CALL zeroxr(d_store1)
 !         BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fyladb)CALL zeroyl(store2)
-    IF(fyradb)CALL zeroyr(store2)
+    IF(fyladb)CALL zeroyl(d_store2)
+    IF(fyradb)CALL zeroyr(d_store2)
 !         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fzladb)CALL zerozl(store3)
-    IF(fzradb)CALL zerozr(store3)
+    IF(fzladb)CALL zerozl(d_store3)
+    IF(fzradb)CALL zerozr(d_store3)
     
 !         E EQUATION
     DO kc = kstal,kstol
@@ -2096,25 +2095,25 @@ DO ispec = 1,nspec
     
 !         BOUNDARY CONDITIONS
 !         BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fxldif)CALL zeroxl(store4)
-    IF(fxrdif)CALL zeroxr(store4)
+    IF(fxldif)CALL zeroxl(d_store4)
+    IF(fxrdif)CALL zeroxr(d_store4)
 !         BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fyldif)CALL zeroyl(store5)
-    IF(fyrdif)CALL zeroyr(store5)
+    IF(fyldif)CALL zeroyl(d_store5)
+    IF(fyrdif)CALL zeroyr(d_store5)
 !         BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fzldif)CALL zerozl(store6)
-    IF(fzrdif)CALL zerozr(store6)
+    IF(fzldif)CALL zerozl(d_store6)
+    IF(fzrdif)CALL zerozr(d_store6)
     
 !         BOUNDARY CONDITIONS
 !         BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fxladb)CALL zeroxl(store4)
-    IF(fxradb)CALL zeroxr(store4)
+    IF(fxladb)CALL zeroxl(d_store4)
+    IF(fxradb)CALL zeroxr(d_store4)
 !         BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fyladb)CALL zeroyl(store5)
-    IF(fyradb)CALL zeroyr(store5)
+    IF(fyladb)CALL zeroyl(d_store5)
+    IF(fyradb)CALL zeroyr(d_store5)
 !         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fzladb)CALL zerozl(store6)
-    IF(fzradb)CALL zerozr(store6)
+    IF(fzladb)CALL zerozl(d_store6)
+    IF(fzradb)CALL zerozr(d_store6)
     
     DO kc = kstal,kstol
       DO jc = jstal,jstol
@@ -2248,14 +2247,14 @@ DO ispec = 1,nspec
     
 !         BOUNDARY CONDITIONS
 !         BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fxldif)CALL zeroxl(pd2x)
-    IF(fxrdif)CALL zeroxr(pd2x)
+    IF(fxldif)CALL zeroxl(d_pd2x)
+    IF(fxrdif)CALL zeroxr(d_pd2x)
 !         BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fyldif)CALL zeroyl(pd2y)
-    IF(fyrdif)CALL zeroyr(pd2y)
+    IF(fyldif)CALL zeroyl(d_pd2y)
+    IF(fyrdif)CALL zeroyr(d_pd2y)
 !         BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fzldif)CALL zerozl(pd2z)
-    IF(fzrdif)CALL zerozr(pd2z)
+    IF(fzldif)CALL zerozl(d_pd2z)
+    IF(fzrdif)CALL zerozr(d_pd2z)
     
     DO kc = kstal,kstol
       DO jc = jstal,jstol
@@ -2276,14 +2275,14 @@ DO ispec = 1,nspec
     
 !         BOUNDARY CONDITIONS
 !         BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fxladb)CALL zeroxl(pd2x)
-    IF(fxradb)CALL zeroxr(pd2x)
+    IF(fxladb)CALL zeroxl(d_pd2x)
+    IF(fxradb)CALL zeroxr(d_pd2x)
 !         BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fyladb)CALL zeroyl(pd2y)
-    IF(fyradb)CALL zeroyr(pd2y)
+    IF(fyladb)CALL zeroyl(d_pd2y)
+    IF(fyradb)CALL zeroyr(d_pd2y)
 !         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fzladb)CALL zerozl(pd2z)
-    IF(fzradb)CALL zerozr(pd2z)
+    IF(fzladb)CALL zerozl(d_pd2z)
+    IF(fzradb)CALL zerozr(d_pd2z)
     
 !         E EQUATION
     DO kc = kstal,kstol
@@ -2346,14 +2345,14 @@ DO ispec = 1,nspec
     
 !         BOUNDARY CONDITIONS
 !         BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fxldif)CALL zeroxl(store1)
-    IF(fxrdif)CALL zeroxr(store1)
+    IF(fxldif)CALL zeroxl(d_store1)
+    IF(fxrdif)CALL zeroxr(d_store1)
 !         BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fyldif)CALL zeroyl(store2)
-    IF(fyrdif)CALL zeroyr(store2)
+    IF(fyldif)CALL zeroyl(d_store2)
+    IF(fyrdif)CALL zeroyr(d_store2)
 !         BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fzldif)CALL zerozl(store3)
-    IF(fzrdif)CALL zerozr(store3)
+    IF(fzldif)CALL zerozl(d_store3)
+    IF(fzrdif)CALL zerozr(d_store3)
     
     DO kc = kstal,kstol
       DO jc = jstal,jstol
@@ -2389,14 +2388,14 @@ DO ispec = 1,nspec
     
 !         BOUNDARY CONDITIONS
 !         BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fxladb)CALL zeroxl(store1)
-    IF(fxradb)CALL zeroxr(store1)
+    IF(fxladb)CALL zeroxl(d_store1)
+    IF(fxradb)CALL zeroxr(d_store1)
 !         BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fyladb)CALL zeroyl(store2)
-    IF(fyradb)CALL zeroyr(store2)
+    IF(fyladb)CALL zeroyl(d_store2)
+    IF(fyradb)CALL zeroyr(d_store2)
 !         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fzladb)CALL zerozl(store3)
-    IF(fzradb)CALL zerozr(store3)
+    IF(fzladb)CALL zerozl(d_store3)
+    IF(fzradb)CALL zerozr(d_store3)
     
 !         E EQUATION
     DO kc = kstal,kstol
@@ -2423,25 +2422,25 @@ DO ispec = 1,nspec
     
 !         BOUNDARY CONDITIONS
 !         BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fxldif)CALL zeroxl(store4)
-    IF(fxrdif)CALL zeroxr(store4)
+    IF(fxldif)CALL zeroxl(d_store4)
+    IF(fxrdif)CALL zeroxr(d_store4)
 !         BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fyldif)CALL zeroyl(store5)
-    IF(fyrdif)CALL zeroyr(store5)
+    IF(fyldif)CALL zeroyl(d_store5)
+    IF(fyrdif)CALL zeroyr(d_store5)
 !         BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fzldif)CALL zerozl(store6)
-    IF(fzrdif)CALL zerozr(store6)
+    IF(fzldif)CALL zerozl(d_store6)
+    IF(fzrdif)CALL zerozr(d_store6)
     
 !         BOUNDARY CONDITIONS
 !         BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fxladb)CALL zeroxl(store4)
-    IF(fxradb)CALL zeroxr(store4)
+    IF(fxladb)CALL zeroxl(d_store4)
+    IF(fxradb)CALL zeroxr(d_store4)
 !         BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fyladb)CALL zeroyl(store5)
-    IF(fyradb)CALL zeroyr(store5)
+    IF(fyladb)CALL zeroyl(d_store5)
+    IF(fyradb)CALL zeroyr(d_store5)
 !         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fzladb)CALL zerozl(store6)
-    IF(fzradb)CALL zerozr(store6)
+    IF(fzladb)CALL zerozl(d_store6)
+    IF(fzradb)CALL zerozr(d_store6)
     
     DO kc = kstal,kstol
       DO jc = jstal,jstol
@@ -2807,14 +2806,14 @@ DO ispec = 1,nspec
     
 !         BOUNDARY CONDITIONS
 !         BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fxldif)CALL zeroxl(td2x)
-    IF(fxrdif)CALL zeroxr(td2x)
+    IF(fxldif)CALL zeroxl(d_td2x)
+    IF(fxrdif)CALL zeroxr(d_td2x)
 !         BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fyldif)CALL zeroyl(td2y)
-    IF(fyrdif)CALL zeroyr(td2y)
+    IF(fyldif)CALL zeroyl(d_td2y)
+    IF(fyrdif)CALL zeroyr(d_td2y)
 !         BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fzldif)CALL zerozl(td2z)
-    IF(fzrdif)CALL zerozr(td2z)
+    IF(fzldif)CALL zerozl(d_td2z)
+    IF(fzrdif)CALL zerozr(d_td2z)
     
     DO kc = kstal,kstol
       DO jc = jstal,jstol
@@ -2835,14 +2834,14 @@ DO ispec = 1,nspec
     
 !         BOUNDARY CONDITIONS
 !         BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fxladb)CALL zeroxl(td2x)
-    IF(fxradb)CALL zeroxr(td2x)
+    IF(fxladb)CALL zeroxl(d_td2x)
+    IF(fxradb)CALL zeroxr(d_td2x)
 !         BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fyladb)CALL zeroyl(td2y)
-    IF(fyradb)CALL zeroyr(td2y)
+    IF(fyladb)CALL zeroyl(d_td2y)
+    IF(fyradb)CALL zeroyr(d_td2y)
 !         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fzladb)CALL zerozl(td2z)
-    IF(fzradb)CALL zerozr(td2z)
+    IF(fzladb)CALL zerozl(d_td2z)
+    IF(fzradb)CALL zerozr(d_td2z)
     
 !         E EQUATION
     DO kc = kstal,kstol
@@ -2888,25 +2887,25 @@ CALL dfbydz(d_wtmp,d_store3)
 
 !     BOUNDARY CONDITIONS
 !     BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-IF(fxldif)CALL zeroxl(store1)
-IF(fxrdif)CALL zeroxr(store1)
+IF(fxldif)CALL zeroxl(d_store1)
+IF(fxrdif)CALL zeroxr(d_store1)
 !     BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-IF(fyldif)CALL zeroyl(store2)
-IF(fyrdif)CALL zeroyr(store2)
+IF(fyldif)CALL zeroyl(d_store2)
+IF(fyrdif)CALL zeroyr(d_store2)
 !     BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-IF(fzldif)CALL zerozl(store3)
-IF(fzrdif)CALL zerozr(store3)
+IF(fzldif)CALL zerozl(d_store3)
+IF(fzrdif)CALL zerozr(d_store3)
 
 !     BOUNDARY CONDITIONS
 !     BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-IF(fxladb)CALL zeroxl(store1)
-IF(fxradb)CALL zeroxr(store1)
+IF(fxladb)CALL zeroxl(d_store1)
+IF(fxradb)CALL zeroxr(d_store1)
 !     BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-IF(fyladb)CALL zeroyl(store2)
-IF(fyradb)CALL zeroyr(store2)
+IF(fyladb)CALL zeroyl(d_store2)
+IF(fyradb)CALL zeroyr(d_store2)
 !     BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-IF(fzladb)CALL zerozl(store3)
-IF(fzradb)CALL zerozr(store3)
+IF(fzladb)CALL zerozl(d_store3)
+IF(fzradb)CALL zerozr(d_store3)
 
 !     TRANSFER DIV CORR VEL TO TEMPORARY STORE
 DO kc = kstal,kstol
@@ -2921,14 +2920,14 @@ END DO
 
 !     BOUNDARY CONDITIONS
 !     BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-IF(fxladb)CALL zeroxl(store4)
-IF(fxradb)CALL zeroxr(store4)
+IF(fxladb)CALL zeroxl(d_store4)
+IF(fxradb)CALL zeroxr(d_store4)
 !     BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-IF(fyladb)CALL zeroyl(store4)
-IF(fyradb)CALL zeroyr(store4)
+IF(fyladb)CALL zeroyl(d_store4)
+IF(fyradb)CALL zeroyr(d_store4)
 !     BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-IF(fzladb)CALL zerozl(store4)
-IF(fzradb)CALL zerozr(store4)
+IF(fzladb)CALL zerozl(d_store4)
+IF(fzradb)CALL zerozr(d_store4)
 
 !     DIV RHO VCORR HMIX
 DO kc = kstal,kstol
@@ -3015,14 +3014,14 @@ DO ispec = 1,nspec
   
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fxldif)CALL zeroxl(store1)
-  IF(fxrdif)CALL zeroxr(store1)
+  IF(fxldif)CALL zeroxl(d_store1)
+  IF(fxrdif)CALL zeroxr(d_store1)
 !       BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fyldif)CALL zeroyl(store2)
-  IF(fyrdif)CALL zeroyr(store2)
+  IF(fyldif)CALL zeroyl(d_store2)
+  IF(fyrdif)CALL zeroyr(d_store2)
 !       BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fzldif)CALL zerozl(store3)
-  IF(fzrdif)CALL zerozr(store3)
+  IF(fzldif)CALL zerozl(d_store3)
+  IF(fzrdif)CALL zerozr(d_store3)
   
 !       DIV RHO VCORR Y
 !       STORE Y SOURCE TERMS IN YRHS
