@@ -1,51 +1,27 @@
 SUBROUTINE d2fdxy(functn,fderiv)
+
+use OPS_Fortran_Reference
+
+    use OPS_CONSTANTS
+    use, intrinsic :: ISO_C_BINDING
+
+    use data_types
+    use com_senga
+    use com_ops_senga
+
+    TYPE(ops_dat) :: functn, fderiv
  
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-05  Time: 11:29:02
-
-!     *************************************************************************
-
-!     D2FDXY
-!     ======
-
-!     AUTHOR
-!     ------
-!     R.S.CANT
-
-!     CHANGE RECORD
-!     -------------
-!     01-AUG-1996:  CREATED
-!     15-APR-2003:  RSC MODIFIED FOR SENGA2
-!     10-OCT-2004:  RSC NULL VERSION
-
-!     DESCRIPTION
-!     -----------
-!     DNS CODE SENGA2
-!     EVALUATES SECOND XY-DERIVATIVE OF SPECIFIED FUNCTION
-
-!     *************************************************************************
-
-
-!     GLOBAL DATA
-!     ===========
-!     -------------------------------------------------------------------------
-use data_types
-use com_senga
-!     -------------------------------------------------------------------------
-
 
 !     ARGUMENTS
 !     =========
-
-REAL(KIND=dp), INTENT(IN OUT)         :: functn(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
-REAL(KIND=dp), INTENT(OUT)            :: fderiv(nxsize,nysize,nzsize)
 
 
 
 
 !     LOCAL DATA
 !     ==========
-INTEGER :: ic,jc,kc
+INTEGER :: istart,ifinis,jstart,jfinis
+INTEGER :: rangexyz(6)
 
 
 !     BEGIN
@@ -53,18 +29,27 @@ INTEGER :: ic,jc,kc
 
 !     =========================================================================
 
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      fderiv(ic,jc,kc) = zero
-      
-    END DO
-  END DO
-END DO
+!     END CONDITIONS
+!     ==============
+istart = istal
+ifinis = istol
+jstart = jstal
+jfinis = jstol
+IF(nendxl == nbound)    istart = istap5
+IF(nendxr == nbound)    ifinis = istom5
+IF(nendyl == nbound)    jstart = jstap5
+IF(nendyr == nbound)    jfinis = jstom5
 
+
+    if(nyglbl == 1) then
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(d2fdxy_kernel_null, "d2fdxy_null", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(fderiv, 1, s3d_000, "real(dp)", OPS_WRITE))
+    else
+
+    end if
+ 
 !     =========================================================================
 
 
-RETURN
 END SUBROUTINE d2fdxy

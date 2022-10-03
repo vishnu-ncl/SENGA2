@@ -1103,10 +1103,10 @@ DO kc = kstal,kstol
 END DO
 
 !     D2UDXY
-CALL d2fdxy(utmp,store1)
+CALL d2fdxy(d_utmp,d_store1)
 
 !     D2VDXY
-CALL d2fdxy(vtmp,store2)
+CALL d2fdxy(d_vtmp,d_store2)
 !                                                               STORE1 = D2UDXY
 !                                                               STORE2 = D2VDXY
 !                                                          STORE7 = (DUDY+DVDX)
@@ -1420,10 +1420,10 @@ DO kc = kstal,kstol
 END DO
 
 !     D2UDXZ
-CALL d2fdxz(utmp,store1)
+CALL d2fdxz(d_utmp,d_store1)
 
 !     D2WDXZ
-CALL d2fdxz(wtmp,store2)
+CALL d2fdxz(d_wtmp,d_store2)
 !                                                               STORE1 = D2UDXZ
 !                                                               STORE2 = D2WDXZ
 !                                                          STORE7 = (DUDZ+DWDX)
@@ -1744,10 +1744,10 @@ DO kc = kstal,kstol
 END DO
 
 !     D2VDYZ
-CALL d2fdyz(vtmp,store1)
+CALL d2fdyz(d_vtmp,d_store1)
 
 !     D2WDYZ
-CALL d2fdyz(wtmp,store2)
+CALL d2fdyz(d_wtmp,d_store2)
 
 !                                                               STORE1 = D2VDYZ
 !                                                               STORE2 = D2WDYZ
