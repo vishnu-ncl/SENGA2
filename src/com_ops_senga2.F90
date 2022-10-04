@@ -8,7 +8,9 @@ MODULE com_ops_senga
 
     TYPE(ops_block) :: senga_grid
 
-    TYPE(ops_dat) :: d_store1, d_store2, d_store3, d_store4, d_store5, d_store6
+    TYPE(ops_dat) :: d_store1, d_store2, d_store3, d_store4, d_store5, d_store6, d_divm
+    
+    TYPE(ops_dat) :: d_ucor, d_vcor, d_wcor
     
     TYPE(ops_dat) :: d_wd1x, d_pd1x, d_td1x
     TYPE(ops_dat) :: d_wd1y, d_pd1y, d_td1y
@@ -18,8 +20,11 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_wd2y, d_pd2y, d_td2y
     TYPE(ops_dat) :: d_wd2z, d_pd2z, d_td2z
 
-    TYPE(ops_dat) :: d_urhs, d_drhs, d_erhs, d_wrhs, d_vrhs
-    TYPE(ops_dat) :: d_utmp, d_vtmp, d_wtmp, d_trun, d_transp, d_store7
+    TYPE(ops_dat) :: d_drhs, d_urhs, d_vrhs, d_wrhs, d_erhs
+    
+    TYPE(ops_dat) :: d_wmomix, d_difmix, d_tdrmix
+    
+    TYPE(ops_dat) :: d_utmp, d_vtmp, d_wtmp, d_prun, d_trun, d_transp, d_store7
 
     TYPE(ops_stencil) :: s3d_000
     TYPE(ops_stencil) :: s3d_000_to_p400_x, s3d_000_to_m400_x

@@ -77,6 +77,12 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, store4, d_store4, "real(dp)", "STORE4")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, store5, d_store5, "real(dp)", "STORE5")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, store6, d_store6, "real(dp)", "STORE6")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, divm, d_divm, "real(dp)", "DIVM")
+
+    
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, ucor, d_ucor, "real(dp)", "UCOR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, vcor, d_vcor, "real(dp)", "VCOR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, wcor, d_wcor, "real(dp)", "WCOR")
 
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, wd1x, d_wd1x, "real(dp)", "WD1X")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, pd1x, d_pd1x, "real(dp)", "PD1X")
@@ -102,21 +108,27 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, pd2z, d_pd2z, "real(dp)", "PD2Z")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, td2z, d_td2z, "real(dp)", "TD2Z")
 
+
     d_size = (/nxsize, nysize, nzsize/)
     d_m = (/-nhalox,-nhaloy,-nhaloz/)
     d_p = (/nhalox,nhaloy,nhaloz/)
-    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, urhs, d_urhs, "real(dp)", "URHS")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, drhs, d_drhs, "real(dp)", "DRHS")
-    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, erhs, d_erhs, "real(dp)", "ERHS")
-    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, wrhs, d_wrhs, "real(dp)", "WRHS")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, urhs, d_urhs, "real(dp)", "URHS")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, vrhs, d_vrhs, "real(dp)", "VRHS")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, wrhs, d_wrhs, "real(dp)", "WRHS")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, erhs, d_erhs, "real(dp)", "ERHS")
 
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, utmp, d_utmp, "real(dp)", "UTMP")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, vtmp, d_vtmp, "real(dp)", "VTMP")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, wtmp, d_wtmp, "real(dp)", "WTMP")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, prun, d_prun, "real(dp)", "PRUN")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, trun, d_trun, "real(dp)", "TRUN")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, transp, d_transp, "real(dp)", "TRANSP")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, store7, d_store7, "real(dp)", "STORE7")
+
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, wmomix, d_wmomix, "real(dp)", "WMOMIX")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, difmix, d_difmix, "real(dp)", "DIFMIX")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, tdrmix, d_tdrmix, "real(dp)", "TDRMIX")
 
 !   Declare OPS Stencil
     call ops_decl_stencil( 3, 1, a3d_000, s3d_000, "0,0,0")

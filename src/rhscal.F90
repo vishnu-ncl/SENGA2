@@ -1,5 +1,15 @@
 SUBROUTINE rhscal
- 
+
+    use OPS_Fortran_Reference
+
+    use OPS_CONSTANTS
+    use, intrinsic :: ISO_C_BINDING
+
+    use data_types
+    use com_senga
+    use com_ops_senga
+
+
 ! Code converted using TO_F90 by Alan Miller
 ! Date: 2022-09-26  Time: 15:26:16
 
@@ -36,9 +46,7 @@ SUBROUTINE rhscal
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
-use com_senga
-use com_ops_senga
+
 !     -------------------------------------------------------------------------
 
 
@@ -49,7 +57,7 @@ real(kind=dp) :: fornow,combo1,combo2,combo3
 INTEGER :: ic,jc,kc,ispec
 INTEGER :: itint,icp,iindex,ipower,icoef1,icoef2
 LOGICAL :: flmtds
-
+INTEGER :: rangexyz(6)
 
 !     BEGIN
 !     =====
@@ -145,16 +153,14 @@ CALL dfbydx(d_urhs,d_store1)
 CALL dfbydy(d_vrhs,d_store2)
 CALL dfbydz(d_wrhs,d_store3)
 
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      divm(ic,jc,kc) = store1(ic,jc,kc) + store2(ic,jc,kc)  &
-          + store3(ic,jc,kc)
-      
-    END DO
-  END DO
-END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    
+    call ops_par_loop(compute_kernel_AequalsBCDplus, "A=B+C+D", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_divm, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ)) 
+
 !                                                              ALL STORES CLEAR
 !     =========================================================================
 !     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -168,15 +174,11 @@ END DO
 
 !     ERHS CONTAINS RHO E: CONVERT TO E
 !     E IS PARALLEL
-DO kc = kstalt,kstolt
-  DO jc = jstalt,jstolt
-    DO ic = istalt,istolt
-      
-      erhs(ic,jc,kc) = erhs(ic,jc,kc)/drhs(ic,jc,kc)
-      
-    END DO
-  END DO
-END DO
+    rangexyz = (/istalt,istolt,jstalt,jstolt,kstalt,kstolt/)
+    call ops_par_loop(compute_kernel_AequalsAdivB, "A=A/B", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ))
+
 !                                                              ALL STORES CLEAR
 !     =========================================================================
 
@@ -250,15 +252,12 @@ END IF
 !     HALF E DIV RHO U
 
 !     COLLECT E DIV RHO U IN STORE4 FOR NOW
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      store4(ic,jc,kc) = erhs(ic,jc,kc)*divm(ic,jc,kc)
-      
-    END DO
-  END DO
-END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(compute_kernel_AequalsBmulC, "A=B*C", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_divm, 1, s3d_000, "real(dp)", OPS_READ))
+    
 !                                                          STORE4 = E DIV RHO U
 !     =========================================================================
 
@@ -268,55 +267,42 @@ END DO
 
 !     D/DX RHO U E
 !     RHO U E IS PARALLEL
-DO kc = kstab,kstob
-  DO jc = jstab,jstob
-    DO ic = istab,istob
-      
-      store7(ic,jc,kc) = erhs(ic,jc,kc)*urhs(ic,jc,kc)
-      
-    END DO
-  END DO
-END DO
+    rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+    call ops_par_loop(compute_kernel_AequalsBmulC, "A=B*C", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_READ))
 
 CALL dfbydx(d_store7,d_store1)
 
 !     D/DY RHO V E
 !     RHO V E IS PARALLEL
-DO kc = kstab,kstob
-  DO jc = jstab,jstob
-    DO ic = istab,istob
-      
-      store7(ic,jc,kc) = erhs(ic,jc,kc)*vrhs(ic,jc,kc)
-      
-    END DO
-  END DO
-END DO
+    rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+    call ops_par_loop(compute_kernel_AequalsBmulC, "A=B*C", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_READ))
+    
 CALL dfbydy(d_store7,d_store2)
 
 !     D/DZ RHO W E
 !     RHO W E IS PARALLEL
-DO kc = kstab,kstob
-  DO jc = jstab,jstob
-    DO ic = istab,istob
-      
-      store7(ic,jc,kc) = erhs(ic,jc,kc)*wrhs(ic,jc,kc)
-      
-    END DO
-  END DO
-END DO
+    rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+    call ops_par_loop(compute_kernel_AequalsBmulC, "A=B*C", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_READ))
+
 CALL dfbydz(d_store7,d_store3)
 
 !     COLLECT DIV RHO U E IN STORE4 FOR NOW
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      store4(ic,jc,kc) = store4(ic,jc,kc) + store1(ic,jc,kc)  &
-          + store2(ic,jc,kc) + store3(ic,jc,kc)
-      
-    END DO
-  END DO
-END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(compute_kernel_AequalsABCDplus, "A=A+B+C+D", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+
 !                                            STORE4 = E DIV RHO U + DIV RHO U E
 !     =========================================================================
 
@@ -775,30 +761,28 @@ END IF
 
 !     ZERO THE ACCUMULATORS FOR THE DIFFUSION CORRECTION VELOCITY
 !     AND ITS DIVERGENCE
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      ucor(ic,jc,kc) = zero
-      vcor(ic,jc,kc) = zero
-      wcor(ic,jc,kc) = zero
-      vtmp(ic,jc,kc) = zero
-      
-    END DO
-  END DO
-END DO
+
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_ucor, 1, s3d_000, "real(dp)", OPS_WRITE))
+
+    call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_vcor, 1, s3d_000, "real(dp)", OPS_WRITE))
+
+    call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_wcor, 1, s3d_000, "real(dp)", OPS_WRITE))
+
+    call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE))
+    
 
 !     ZERO THE ACCUMULATOR FOR THE MIXTURE ENTHALPY
 !     MIXTURE H IS PARALLEL
-DO kc = kstab,kstob
-  DO jc = jstab,jstob
-    DO ic = istab,istob
-      
-      wtmp(ic,jc,kc) = zero
-      
-    END DO
-  END DO
-END DO
+
+    rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+    call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_WRITE))
+
 !                                                          RATE = REACTION RATE
 !                                                           VTMP = DIV CORR VEL
 !                                                       WTMP = MIXTURE H
@@ -820,8 +804,8 @@ IF(flmixw)THEN
         
       END DO
     END DO
-  END DO
-  
+  END DO   
+   
   CALL dfbydx(d_store7,d_wd1x)
   CALL dfbydy(d_store7,d_wd1y)
   CALL dfbydz(d_store7,d_wd1z)
@@ -833,7 +817,6 @@ END IF
 
 !     PRESSURE
 IF(flmixp)THEN
-  
   DO kc = kstab,kstob
     DO jc = jstab,jstob
       DO ic = istab,istob
@@ -843,6 +826,7 @@ IF(flmixp)THEN
       END DO
     END DO
   END DO
+  
   CALL dfbydx(d_store7,d_pd1x)
   CALL dfbydy(d_store7,d_pd1y)
   CALL dfbydz(d_store7,d_pd1z)
@@ -1167,16 +1151,10 @@ DO ispec = 1,nspec
     
 !         THERMAL DIFFUSION RATIO FOR EACH SPECIES
 !         RELATIVE TO CURRENT SPECIES
-    
-    DO kc = kstab,kstob
-      DO jc = jstab,jstob
-        DO ic = istab,istob
-          
-          tdrmix(ic,jc,kc) = zero
-          
-        END DO
-      END DO
-    END DO
+  
+    rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+    call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_tdrmix, 1, s3d_000, "real(dp)", OPS_WRITE))
     
     DO jspec = 1, nspec
       
@@ -1213,17 +1191,22 @@ DO ispec = 1,nspec
 !       =======================================================================
   
 !       DIFFUSION CORRECTION VELOCITY
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        ucor(ic,jc,kc) = ucor(ic,jc,kc) + store7(ic,jc,kc)*store1(ic,jc,kc)
-        vcor(ic,jc,kc) = vcor(ic,jc,kc) + store7(ic,jc,kc)*store2(ic,jc,kc)
-        wcor(ic,jc,kc) = wcor(ic,jc,kc) + store7(ic,jc,kc)*store3(ic,jc,kc)
-        
-      END DO
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_ucor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &    
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
+
+    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_vcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
+
+    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_wcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+
 !                                                         STORE1,2,3 = DYDX,Y,Z
 !                                                          STORE7 = DIFFUSIVITY
 !                                                         RATE = Y SOURCE TERMS
@@ -1600,15 +1583,11 @@ DO ispec = 1,nspec
   
 !       SPECIES MASS FRACTION SECOND DERIVATIVES
 !       MOVE DIFFUSIVITY TO STORE4
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        store4(ic,jc,kc) = store7(ic,jc,kc)
-        
-      END DO
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
+
 !       MOVE MASS FRACTION TO STORE7
   DO kc = kstab,kstob
     DO jc = jstab,jstob
@@ -1701,18 +1680,21 @@ DO ispec = 1,nspec
     
 !         DIFFUSION CORRECTION VELOCITY
 !         FIRST DERIVATIVES OF LN(MIXTURE MOLAR MASS) ALREADY STORED
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          ucor(ic,jc,kc) = ucor(ic,jc,kc) + store7(ic,jc,kc)*wd1x(ic,jc,kc)
-          vcor(ic,jc,kc) = vcor(ic,jc,kc) + store7(ic,jc,kc)*wd1y(ic,jc,kc)
-          wcor(ic,jc,kc) = wcor(ic,jc,kc) + store7(ic,jc,kc)*wd1z(ic,jc,kc)
-          
-        END DO
-      END DO
-    END DO
-    
+   rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_ucor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_wd1x, 1, s3d_000, "real(dp)", OPS_READ))
+
+    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_vcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_wd1y, 1, s3d_000, "real(dp)", OPS_READ))
+
+    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_wcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_wd1z, 1, s3d_000, "real(dp)", OPS_READ)) 
     
 !         Y EQUATION: DIFFUSIVE TERMS
 !         E EQUATION: FURTHER HEAT FLUX TERMS
@@ -2011,19 +1993,22 @@ DO ispec = 1,nspec
     
 !         DIFFUSION CORRECTION VELOCITY
 !         FIRST DERIVATIVES OF LN(PRESSURE) ALREADY STORED
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          ucor(ic,jc,kc) = ucor(ic,jc,kc) + store7(ic,jc,kc)*pd1x(ic,jc,kc)
-          vcor(ic,jc,kc) = vcor(ic,jc,kc) + store7(ic,jc,kc)*pd1y(ic,jc,kc)
-          wcor(ic,jc,kc) = wcor(ic,jc,kc) + store7(ic,jc,kc)*pd1z(ic,jc,kc)
-          
-        END DO
-      END DO
-    END DO
-    
-    
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_ucor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_pd1x, 1, s3d_000, "real(dp)", OPS_READ))
+
+    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_vcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_pd1y, 1, s3d_000, "real(dp)", OPS_READ))
+
+    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_wcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_pd1z, 1, s3d_000, "real(dp)", OPS_READ))
+
 !         Y EQUATION: DIFFUSIVE TERMS
 !         E EQUATION: FURTHER HEAT FLUX TERMS
     
@@ -2320,19 +2305,22 @@ DO ispec = 1,nspec
     
 !         DIFFUSION CORRECTION VELOCITY
 !         FIRST DERIVATIVES OF LN(TEMPERATURE) ALREADY STORED
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          ucor(ic,jc,kc) = ucor(ic,jc,kc) + store7(ic,jc,kc)*td1x(ic,jc,kc)
-          vcor(ic,jc,kc) = vcor(ic,jc,kc) + store7(ic,jc,kc)*td1y(ic,jc,kc)
-          wcor(ic,jc,kc) = wcor(ic,jc,kc) + store7(ic,jc,kc)*td1z(ic,jc,kc)
-          
-        END DO
-      END DO
-    END DO
-    
-    
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_ucor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_td1x, 1, s3d_000, "real(dp)", OPS_READ))
+
+    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_vcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_td1y, 1, s3d_000, "real(dp)", OPS_READ))
+
+    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_wcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_td1z, 1, s3d_000, "real(dp)", OPS_READ))
+
 !         Y EQUATION: DIFFUSIVE TERMS
 !         E EQUATION: FURTHER HEAT FLUX TERMS
     
@@ -2908,15 +2896,10 @@ IF(fzladb)CALL zerozl(d_store3)
 IF(fzradb)CALL zerozr(d_store3)
 
 !     TRANSFER DIV CORR VEL TO TEMPORARY STORE
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      store4(ic,jc,kc) = vtmp(ic,jc,kc)
-      
-    END DO
-  END DO
-END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ))
 
 !     BOUNDARY CONDITIONS
 !     BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
