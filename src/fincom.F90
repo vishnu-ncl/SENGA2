@@ -1,4 +1,13 @@
 SUBROUTINE fincom
+
+    use OPS_Fortran_Reference
+
+    use OPS_CONSTANTS
+    use, intrinsic :: ISO_C_BINDING
+
+    use data_types
+    use com_senga
+    use com_ops_senga
  
 ! Code converted using TO_F90 by Alan Miller
 ! Date: 2022-09-26  Time: 15:25:43
@@ -29,14 +38,13 @@ SUBROUTINE fincom
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
-use com_senga
 !     -------------------------------------------------------------------------
 
 
 !     LOCAL DATA
 !     ==========
 INTEGER :: ic,jc,kc,ispec
+integer :: rangexyz(6)
 
 !     -------------------------------------------------------------------------
 
@@ -54,86 +62,61 @@ INTEGER :: ic,jc,kc,ispec
 
 !     DENSITY
 !     ----------
-DO kc = kstald,kstold
-  DO jc = jstald,jstold
-    DO ic = istald,istold
-      
-      derr(ic,jc,kc) = derr(ic,jc,kc) + rkerr(nrkstp)*drhs(ic,jc,kc)
-      
-      drun(ic,jc,kc) = drun(ic,jc,kc) + rklhs(nrkstp)*drhs(ic,jc,kc)
-      drhs(ic,jc,kc) = drun(ic,jc,kc)
-      
-    END DO
-  END DO
-END DO
+    rangexyz = (/istald,istold,jstald,jstold,kstald,kstold/)
+    call ops_par_loop(fincom_kernel_main, "fincom_main", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_derr, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_drun, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(rkerr(nrkstp), 1, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(rklhs(nrkstp), 1, "real(dp)", OPS_READ))
 
 !     -------------------------------------------------------------------------
 
 !     U VELOCITY
 !     ----------
-DO kc = kstalu,kstolu
-  DO jc = jstalu,jstolu
-    DO ic = istalu,istolu
-      
-      uerr(ic,jc,kc) = uerr(ic,jc,kc) + rkerr(nrkstp)*urhs(ic,jc,kc)
-      
-      urun(ic,jc,kc) = urun(ic,jc,kc) + rklhs(nrkstp)*urhs(ic,jc,kc)
-      urhs(ic,jc,kc) = urun(ic,jc,kc)
-      
-    END DO
-  END DO
-END DO
+    rangexyz = (/istalu,istolu,jstalu,jstolu,kstalu,kstolu/)
+    call ops_par_loop(fincom_kernel_main, "fincom_main", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_uerr, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_urun, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(rkerr(nrkstp), 1, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(rklhs(nrkstp), 1, "real(dp)", OPS_READ))
 
 !     -------------------------------------------------------------------------
 
 !     V-VELOCITY
 !     ----------
-DO kc = kstalv,kstolv
-  DO jc = jstalv,jstolv
-    DO ic = istalv,istolv
-      
-      verr(ic,jc,kc) = verr(ic,jc,kc) + rkerr(nrkstp)*vrhs(ic,jc,kc)
-      
-      vrun(ic,jc,kc) = vrun(ic,jc,kc) + rklhs(nrkstp)*vrhs(ic,jc,kc)
-      vrhs(ic,jc,kc) = vrun(ic,jc,kc)
-      
-    END DO
-  END DO
-END DO
+    rangexyz = (/istalv,istolv,jstalv,jstolv,kstalv,kstolv/)
+    call ops_par_loop(fincom_kernel_main, "fincom_main", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_verr, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_vrun, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(rkerr(nrkstp), 1, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(rklhs(nrkstp), 1, "real(dp)", OPS_READ))
 
 !     -------------------------------------------------------------------------
 
 !     W-VELOCITY
 !     ----------
-DO kc = kstalw,kstolw
-  DO jc = jstalw,jstolw
-    DO ic = istalw,istolw
-      
-      werr(ic,jc,kc) = werr(ic,jc,kc) + rkerr(nrkstp)*wrhs(ic,jc,kc)
-      
-      wrun(ic,jc,kc) = wrun(ic,jc,kc) + rklhs(nrkstp)*wrhs(ic,jc,kc)
-      wrhs(ic,jc,kc) = wrun(ic,jc,kc)
-      
-    END DO
-  END DO
-END DO
+    rangexyz = (/istalw,istolw,jstalw,jstolw,kstalw,kstolw/)
+    call ops_par_loop(fincom_kernel_main, "fincom_main", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_werr, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_wrun, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(rkerr(nrkstp), 1, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(rklhs(nrkstp), 1, "real(dp)", OPS_READ))
 
 !     -------------------------------------------------------------------------
 
 !     STAGNATION INTERNAL ENERGY
 !     --------------------------
-DO kc = kstale,kstole
-  DO jc = jstale,jstole
-    DO ic = istale,istole
-      
-      eerr(ic,jc,kc) = eerr(ic,jc,kc) + rkerr(nrkstp)*erhs(ic,jc,kc)
-      
-      erun(ic,jc,kc) = erun(ic,jc,kc) + rklhs(nrkstp)*erhs(ic,jc,kc)
-      erhs(ic,jc,kc) = erun(ic,jc,kc)
-      
-    END DO
-  END DO
-END DO
+    rangexyz = (/istale,istole,jstale,jstole,kstale,kstole/)
+    call ops_par_loop(fincom_kernel_main, "fincom_main", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_eerr, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_erun, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(rkerr(nrkstp), 1, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(rklhs(nrkstp), 1, "real(dp)", OPS_READ))
 
 !     -------------------------------------------------------------------------
 
