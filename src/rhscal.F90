@@ -518,94 +518,63 @@ END DO
 !     ---------------------------
 !     WALL BC: THERMAL CONDUCTION TERMS
 IF(fxlcnw)THEN
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      fornow = zero
-      DO ic = istap1,istow
-        
-        fornow = fornow + acbcxl(ic-1)*store7(ic,jc,kc)*store1(ic,jc,kc)
-        
-      END DO
-      erhs(istal,jc,kc) = erhs(istal,jc,kc) + fornow
-      
-    END DO
-  END DO
+
+    rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(heat_flux_kernel_thermal_fxlcnw, "HEAT FLUX: Thermal fxlcnw", senga_grid, 3, rangexyz,  &
+                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                ops_arg_dat(d_store1, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
+                ops_arg_dat(d_store7, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
+                ops_arg_gbl(acbcxl, 1, "real(dp)", OPS_READ))
+
 END IF
 IF(fxrcnw)THEN
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      fornow = zero
-      DO ic = istaw,istom1
-        
-        fornow = fornow + acbcxr(istol-ic)*store7(ic,jc,kc)*store1(ic,jc,kc)
-        
-      END DO
-      erhs(istol,jc,kc) = erhs(istol,jc,kc) + fornow
-      
-    END DO
-  END DO
+
+    rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(heat_flux_kernel_thermal_fxrcnw, "HEAT FLUX: Thermal fxrcnw", senga_grid, 3, rangexyz,  &
+                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                ops_arg_dat(d_store1, 1, s3d_m100_to_m400_x, "real(dp)", OPS_READ), &
+                ops_arg_dat(d_store7, 1, s3d_m100_to_m400_x, "real(dp)", OPS_READ), &
+                ops_arg_gbl(acbcxr, 1, "real(dp)", OPS_READ))
+
 END IF
 IF(fylcnw)THEN
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      fornow = zero
-      DO jc = jstap1,jstow
-        
-        fornow = fornow + acbcyl(jc-1)*store7(ic,jc,kc)*store2(ic,jc,kc)
-        
-      END DO
-      erhs(ic,jstal,kc) = erhs(ic,jstal,kc) + fornow
-      
-    END DO
-  END DO
+
+    rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+    call ops_par_loop(heat_flux_kernel_thermal_fylcnw, "HEAT FLUX: Thermal fylcnw", senga_grid, 3, rangexyz,  &
+                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                ops_arg_dat(d_store2, 1, s3d_p010_to_p040_y, "real(dp)", OPS_READ), &
+                ops_arg_dat(d_store7, 1, s3d_p010_to_p040_y, "real(dp)", OPS_READ), &
+                ops_arg_gbl(acbcyl, 1, "real(dp)", OPS_READ))
+
 END IF
 IF(fyrcnw)THEN
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      fornow = zero
-      DO jc = jstaw,jstom1
-        
-        fornow = fornow + acbcyr(jstol-jc)*store7(ic,jc,kc)*store2(ic,jc,kc)
-        
-      END DO
-      erhs(ic,jstol,kc) = erhs(ic,jstol,kc) + fornow
-      
-    END DO
-  END DO
+
+    rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+    call ops_par_loop(heat_flux_kernel_thermal_fyrcnw, "HEAT FLUX: Thermal fyrcnw", senga_grid, 3, rangexyz,  &
+                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                ops_arg_dat(d_store2, 1, s3d_m010_to_m040_y, "real(dp)", OPS_READ), &
+                ops_arg_dat(d_store7, 1, s3d_m010_to_m040_y, "real(dp)", OPS_READ), &
+                ops_arg_gbl(acbcyr, 1, "real(dp)", OPS_READ))
+
 END IF
 IF(fzlcnw)THEN
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      fornow = zero
-      DO kc = kstap1,kstow
-        
-        fornow = fornow + acbczl(kc-1)*store7(ic,jc,kc)*store3(ic,jc,kc)
-        
-      END DO
-      erhs(ic,jc,kstal) = erhs(ic,jc,kstal) + fornow
-      
-    END DO
-  END DO
+
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+    call ops_par_loop(heat_flux_kernel_thermal_fzlcnw, "HEAT FLUX: Thermal fzlcnw", senga_grid, 3, rangexyz,  &
+                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                ops_arg_dat(d_store3, 1, s3d_p001_to_p004_z, "real(dp)", OPS_READ), &
+                ops_arg_dat(d_store7, 1, s3d_p001_to_p004_z, "real(dp)", OPS_READ), &
+                ops_arg_gbl(acbczl, 1, "real(dp)", OPS_READ))    
+
 END IF
 IF(fzrcnw)THEN
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      fornow = zero
-      DO kc = kstaw,kstom1
-        
-        fornow = fornow + acbczr(kstol-kc)*store7(ic,jc,kc)*store3(ic,jc,kc)
-        
-      END DO
-      erhs(ic,jc,kstol) = erhs(ic,jc,kstol) + fornow
-      
-    END DO
-  END DO
+
+    rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+    call ops_par_loop(heat_flux_kernel_thermal_fzrcnw, "HEAT FLUX: Thermal fzrcnw", senga_grid, 3, rangexyz,  &
+                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                ops_arg_dat(d_store3, 1, s3d_m001_to_m004_z, "real(dp)", OPS_READ), &
+                ops_arg_dat(d_store7, 1, s3d_m001_to_m004_z, "real(dp)", OPS_READ), &
+                ops_arg_gbl(acbczr, 1, "real(dp)", OPS_READ))
 END IF
 
 !     =========================================================================
