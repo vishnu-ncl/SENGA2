@@ -54,7 +54,7 @@ INTEGER :: ic,jc
 DO jc = jstal,jstol
   DO ic = istal,istol
     
-    strtzl(ic,jc) = trin
+    strtzl(ic,jc,1) = trin
     
     dtdtzl(ic,jc) = zero
     
@@ -69,7 +69,7 @@ IF(nsbczl == nsbcw2)THEN
   DO jc = jstal,jstol
     DO ic = istal,istol
       
-      strtzl(ic,jc) = rzlprm(1)
+      strtzl(ic,jc,1) = rzlprm(1)
       
       dtdtzl(ic,jc) = zero
       

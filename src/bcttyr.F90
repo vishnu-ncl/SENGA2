@@ -54,7 +54,7 @@ INTEGER :: ic,kc
 DO kc = kstal,kstol
   DO ic = istal,istol
     
-    strtyr(ic,kc) = trin
+    strtyr(ic,1,kc) = trin
     
     dtdtyr(ic,kc) = zero
     
@@ -69,7 +69,7 @@ IF(nsbcyr == nsbcw2)THEN
   DO kc = kstal,kstol
     DO ic = istal,istol
       
-      strtyr(ic,kc) = ryrprm(1)
+      strtyr(ic,1,kc) = ryrprm(1)
       
       dtdtyr(ic,kc) = zero
       

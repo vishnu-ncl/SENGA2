@@ -55,7 +55,7 @@ DO jc = jstal,jstol
   DO ic = istal,istol
     
 !         SET DENSITY TO CONSTANT (INITIAL) VALUE
-    strdzr(ic,jc) = drin
+    strdzr(ic,jc,1) = drin
     
 !         SET DENSITY TIME DERIVATIVE TO ZERO
     dddtzr(ic,jc) = zero

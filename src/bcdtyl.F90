@@ -55,7 +55,7 @@ DO kc = kstal,kstol
   DO ic = istal,istol
     
 !         SET DENSITY TO CONSTANT (INITIAL) VALUE
-    strdyl(ic,kc) = drin
+    strdyl(ic,1,kc) = drin
     
 !         SET DENSITY TIME DERIVATIVE TO ZERO
     dddtyl(ic,kc) = zero

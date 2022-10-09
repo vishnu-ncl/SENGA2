@@ -22,14 +22,32 @@ MODULE com_ops_senga
 
     TYPE(ops_dat) :: d_drun, d_urun, d_vrun, d_wrun, d_erun
     TYPE(ops_dat) :: d_drhs, d_urhs, d_vrhs, d_wrhs, d_erhs
-    TYPE(ops_dat) :: d_derr, d_uerr, d_verr, d_werr, d_eerr
-    
+    TYPE(ops_dat) :: d_derr, d_uerr, d_verr, d_werr, d_eerr 
     
     TYPE(ops_dat) :: d_wmomix, d_difmix, d_tdrmix
     
     TYPE(ops_dat) :: d_utmp, d_vtmp, d_wtmp, d_prun, d_trun, d_transp, d_store7
 
+    TYPE(ops_dat) :: d_bcl2xl, d_bcl2xr
+    TYPE(ops_dat) :: d_bcltxl, d_bcltxr
+    TYPE(ops_dat) :: d_strdxl, d_strtxl, d_strdxr, d_strtxr
+    TYPE(ops_dat) :: d_strexl, d_strgxl, d_strrxl, d_strexr, d_strgxr, d_strrxr
+    
+    TYPE(ops_dat) :: d_bcl2yl, d_bcl2yr
+    TYPE(ops_dat) :: d_bcltyl, d_bcltyr
+    TYPE(ops_dat) :: d_strdyl, d_strdyr, d_strtyl, d_strtyr
+    TYPE(ops_dat) :: d_streyl, d_streyr, d_strgyl, d_strgyr, d_strryl, d_strryr
+
+    TYPE(ops_dat) :: d_bcl2zl, d_bcl2zr
+    TYPE(ops_dat) :: d_bcltzl, d_bcltzr
+    TYPE(ops_dat) :: d_strdzl, d_strtzl, d_strdzr, d_strtzr
+    TYPE(ops_dat) :: d_strezl, d_strgzl, d_strrzl, d_strezr, d_strgzr, d_strrzr
+
     TYPE(ops_stencil) :: s3d_000
+
+    TYPE(ops_stencil) :: s3d_000_strid3d_x, s3d_000_strid3d_y, s3d_000_strid3d_z
+    TYPE(ops_stencil) :: s3d_000_strid3d_xy, s3d_000_strid3d_xz, s3d_000_strid3d_yz
+
     TYPE(ops_stencil) :: s3d_000_to_p400_x, s3d_000_to_m400_x
     TYPE(ops_stencil) :: s3d_000_to_p500_x, s3d_000_to_m500_x
     TYPE(ops_stencil) :: s3d_p100_to_p400_x, s3d_m100_to_m400_x

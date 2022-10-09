@@ -55,7 +55,7 @@ DO kc = kstal,kstol
   DO jc = jstal,jstol
     
 !         SET DENSITY TO CONSTANT (INITIAL) VALUE
-    strdxr(jc,kc) = drin
+    strdxr(1,jc,kc) = drin
     
 !         SET DENSITY TIME DERIVATIVE TO ZERO
     dddtxr(jc,kc) = zero

@@ -633,13 +633,13 @@ COMMON/bcdifw/acbcxl,acbcxr,acbcyl,acbcyr,acbczl,acbczr
 REAL(KIND=dp) ::  &
     bclyxl(nysize,nzsize,nspcmx),stryxl(nysize,nzsize,nspcmx),  &
     dydtxl(nysize,nzsize,nspcmx),ratexl(nysize,nzsize,nspcmx),  &
-    strhxl(nysize,nzsize,nspcmx), bcl1xl(nysize,nzsize),bcl2xl(nysize,nzsize),  &
+    strhxl(nysize,nzsize,nspcmx), bcl1xl(nysize,nzsize),bcl2xl(1,nysize,nzsize),  &
     bcl3xl(nysize,nzsize),bcl4xl(nysize,nzsize),  &
-    bcl5xl(nysize,nzsize),bcltxl(nysize,nzsize),  &
+    bcl5xl(nysize,nzsize),bcltxl(1,nysize,nzsize),  &
     struxl(nysize,nzsize),strvxl(nysize,nzsize),  &
     strwxl(nysize,nzsize),strpxl(nysize,nzsize),  &
-    strdxl(nysize,nzsize),strtxl(nysize,nzsize),  &
-    strexl(nysize,nzsize),strgxl(nysize,nzsize), strrxl(nysize,nzsize),  &
+    strdxl(1,nysize,nzsize),strtxl(1,nysize,nzsize),  &
+    strexl(1,nysize,nzsize),strgxl(1,nysize,nzsize), strrxl(1,nysize,nzsize),  &
     dudtxl(nysize,nzsize),dvdtxl(nysize,nzsize),  &
     dwdtxl(nysize,nzsize),dtdtxl(nysize,nzsize), dddtxl(nysize,nzsize),  &
     acouxl(nysize,nzsize),ova2xl(nysize,nzsize),  &
@@ -654,13 +654,13 @@ COMMON/nbccxl/bclyxl,stryxl,dydtxl,ratexl,strhxl,  &
 REAL(KIND=dp) ::  &
     bclyxr(nysize,nzsize,nspcmx),stryxr(nysize,nzsize,nspcmx),  &
     dydtxr(nysize,nzsize,nspcmx),ratexr(nysize,nzsize,nspcmx),  &
-    strhxr(nysize,nzsize,nspcmx), bcl1xr(nysize,nzsize),bcl2xr(nysize,nzsize),  &
+    strhxr(nysize,nzsize,nspcmx), bcl1xr(nysize,nzsize),bcl2xr(1,nysize,nzsize),  &
     bcl3xr(nysize,nzsize),bcl4xr(nysize,nzsize),  &
-    bcl5xr(nysize,nzsize),bcltxr(nysize,nzsize),  &
+    bcl5xr(nysize,nzsize),bcltxr(1,nysize,nzsize),  &
     struxr(nysize,nzsize),strvxr(nysize,nzsize),  &
     strwxr(nysize,nzsize),strpxr(nysize,nzsize),  &
-    strdxr(nysize,nzsize),strtxr(nysize,nzsize),  &
-    strexr(nysize,nzsize),strgxr(nysize,nzsize), strrxr(nysize,nzsize),  &
+    strdxr(1,nysize,nzsize),strtxr(1,nysize,nzsize),  &
+    strexr(1,nysize,nzsize),strgxr(1,nysize,nzsize), strrxr(1,nysize,nzsize),  &
     dudtxr(nysize,nzsize),dvdtxr(nysize,nzsize),  &
     dwdtxr(nysize,nzsize),dtdtxr(nysize,nzsize), dddtxr(nysize,nzsize),  &
     acouxr(nysize,nzsize),ova2xr(nysize,nzsize),  &
@@ -676,13 +676,13 @@ COMMON/nbccxr/bclyxr,stryxr,dydtxr,ratexr,strhxr,  &
 REAL(KIND=dp) ::  &
     bclyyl(nxsize,nzsize,nspcmx),stryyl(nxsize,nzsize,nspcmx),  &
     dydtyl(nxsize,nzsize,nspcmx),rateyl(nxsize,nzsize,nspcmx),  &
-    strhyl(nxsize,nzsize,nspcmx), bcl1yl(nxsize,nzsize),bcl2yl(nxsize,nzsize),  &
+    strhyl(nxsize,nzsize,nspcmx), bcl1yl(nxsize,nzsize),bcl2yl(nxsize,1,nzsize),  &
     bcl3yl(nxsize,nzsize),bcl4yl(nxsize,nzsize),  &
-    bcl5yl(nxsize,nzsize),bcltyl(nxsize,nzsize),  &
+    bcl5yl(nxsize,nzsize),bcltyl(nxsize,1,nzsize),  &
     struyl(nxsize,nzsize),strvyl(nxsize,nzsize),  &
     strwyl(nxsize,nzsize),strpyl(nxsize,nzsize),  &
-    strdyl(nxsize,nzsize),strtyl(nxsize,nzsize),  &
-    streyl(nxsize,nzsize),strgyl(nxsize,nzsize), strryl(nxsize,nzsize),  &
+    strdyl(nxsize,1,nzsize),strtyl(nxsize,1,nzsize),  &
+    streyl(nxsize,1,nzsize),strgyl(nxsize,1,nzsize), strryl(nxsize,1,nzsize),  &
     dudtyl(nxsize,nzsize),dvdtyl(nxsize,nzsize),  &
     dwdtyl(nxsize,nzsize),dtdtyl(nxsize,nzsize), dddtyl(nxsize,nzsize),  &
     acouyl(nxsize,nzsize),ova2yl(nxsize,nzsize),  &
@@ -697,13 +697,13 @@ COMMON/nbccyl/bclyyl,stryyl,dydtyl,rateyl,strhyl,  &
 REAL(KIND=dp) ::  &
     bclyyr(nxsize,nzsize,nspcmx),stryyr(nxsize,nzsize,nspcmx),  &
     dydtyr(nxsize,nzsize,nspcmx),rateyr(nxsize,nzsize,nspcmx),  &
-    strhyr(nxsize,nzsize,nspcmx), bcl1yr(nxsize,nzsize),bcl2yr(nxsize,nzsize),  &
+    strhyr(nxsize,nzsize,nspcmx), bcl1yr(nxsize,nzsize),bcl2yr(nxsize,1,nzsize),  &
     bcl3yr(nxsize,nzsize),bcl4yr(nxsize,nzsize),  &
-    bcl5yr(nxsize,nzsize),bcltyr(nxsize,nzsize),  &
+    bcl5yr(nxsize,nzsize),bcltyr(nxsize,1,nzsize),  &
     struyr(nxsize,nzsize),strvyr(nxsize,nzsize),  &
     strwyr(nxsize,nzsize),strpyr(nxsize,nzsize),  &
-    strdyr(nxsize,nzsize),strtyr(nxsize,nzsize),  &
-    streyr(nxsize,nzsize),strgyr(nxsize,nzsize), strryr(nxsize,nzsize),  &
+    strdyr(nxsize,1,nzsize),strtyr(nxsize,1,nzsize),  &
+    streyr(nxsize,1,nzsize),strgyr(nxsize,1,nzsize), strryr(nxsize,1,nzsize),  &
     dudtyr(nxsize,nzsize),dvdtyr(nxsize,nzsize),  &
     dwdtyr(nxsize,nzsize),dtdtyr(nxsize,nzsize), dddtyr(nxsize,nzsize),  &
     acouyr(nxsize,nzsize),ova2yr(nxsize,nzsize),  &
@@ -719,13 +719,13 @@ COMMON/nbccyr/bclyyr,stryyr,dydtyr,rateyr,strhyr,  &
 REAL(KIND=dp) ::  &
     bclyzl(nxsize,nysize,nspcmx),stryzl(nxsize,nysize,nspcmx),  &
     dydtzl(nxsize,nysize,nspcmx),ratezl(nxsize,nysize,nspcmx),  &
-    strhzl(nxsize,nysize,nspcmx), bcl1zl(nxsize,nysize),bcl2zl(nxsize,nysize),  &
+    strhzl(nxsize,nysize,nspcmx), bcl1zl(nxsize,nysize),bcl2zl(nxsize,nysize,1),  &
     bcl3zl(nxsize,nysize),bcl4zl(nxsize,nysize),  &
-    bcl5zl(nxsize,nysize),bcltzl(nxsize,nysize),  &
+    bcl5zl(nxsize,nysize),bcltzl(nxsize,nysize,1),  &
     struzl(nxsize,nysize),strvzl(nxsize,nysize),  &
     strwzl(nxsize,nysize),strpzl(nxsize,nysize),  &
-    strdzl(nxsize,nysize),strtzl(nxsize,nysize),  &
-    strezl(nxsize,nysize),strgzl(nxsize,nysize), strrzl(nxsize,nysize),  &
+    strdzl(nxsize,nysize,1),strtzl(nxsize,nysize,1),  &
+    strezl(nxsize,nysize,1),strgzl(nxsize,nysize,1), strrzl(nxsize,nysize,1),  &
     dudtzl(nxsize,nysize),dvdtzl(nxsize,nysize),  &
     dwdtzl(nxsize,nysize),dtdtzl(nxsize,nysize), dddtzl(nxsize,nysize),  &
     acouzl(nxsize,nysize),ova2zl(nxsize,nysize),  &
@@ -740,13 +740,13 @@ COMMON/nbcczl/bclyzl,stryzl,dydtzl,ratezl,strhzl,  &
 REAL(KIND=dp) ::  &
     bclyzr(nxsize,nysize,nspcmx),stryzr(nxsize,nysize,nspcmx),  &
     dydtzr(nxsize,nysize,nspcmx),ratezr(nxsize,nysize,nspcmx),  &
-    strhzr(nxsize,nysize,nspcmx), bcl1zr(nxsize,nysize),bcl2zr(nxsize,nysize),  &
+    strhzr(nxsize,nysize,nspcmx), bcl1zr(nxsize,nysize),bcl2zr(nxsize,nysize,1),  &
     bcl3zr(nxsize,nysize),bcl4zr(nxsize,nysize),  &
-    bcl5zr(nxsize,nysize),bcltzr(nxsize,nysize),  &
+    bcl5zr(nxsize,nysize),bcltzr(nxsize,nysize,1),  &
     struzr(nxsize,nysize),strvzr(nxsize,nysize),  &
     strwzr(nxsize,nysize),strpzr(nxsize,nysize),  &
-    strdzr(nxsize,nysize),strtzr(nxsize,nysize),  &
-    strezr(nxsize,nysize),strgzr(nxsize,nysize), strrzr(nxsize,nysize),  &
+    strdzr(nxsize,nysize,1),strtzr(nxsize,nysize,1),  &
+    strezr(nxsize,nysize,1),strgzr(nxsize,nysize,1), strrzr(nxsize,nysize,1),  &
     dudtzr(nxsize,nysize),dvdtzr(nxsize,nysize),  &
     dwdtzr(nxsize,nysize),dtdtzr(nxsize,nysize), dddtzr(nxsize,nysize),  &
     acouzr(nxsize,nysize),ova2zr(nxsize,nysize),  &

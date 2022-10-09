@@ -105,7 +105,7 @@ IF(fxlcnv)THEN
           
           itint = 1
           1000            CONTINUE
-          IF(strtxl(jc,kc) > tinthi(itint,ispec))THEN
+          IF(strtxl(1,jc,kc) > tinthi(itint,ispec))THEN
             IF(itint < ntint(ispec))THEN
               itint = itint + 1
               GO TO 1000
@@ -156,15 +156,15 @@ IF(fxlcnv)THEN
           itint = 1 +MOD(itndex(istal,jc,kc,iindex),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
-            fornow = fornow*strtxl(jc,kc) + amasch(icp,itint,ispec)
+            fornow = fornow*strtxl(1,jc,kc) + amasch(icp,itint,ispec)
           END DO
           fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
-              + fornow*strtxl(jc,kc)
+              + fornow*strtxl(1,jc,kc)
           
           yrhs(istal,jc,kc,ispec) = drhs(istal,jc,kc)*stryxl(jc,kc,ispec)
           
           erhs(istal,jc,kc) = erhs(istal,jc,kc)  &
-              + (fornow-rgspec(ispec)*strtxl(jc,kc))*yrhs(istal,jc,kc,ispec)
+              + (fornow-rgspec(ispec)*strtxl(1,jc,kc))*yrhs(istal,jc,kc,ispec)
           
         END DO
       END DO
@@ -190,11 +190,11 @@ IF(fxlcnv)THEN
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
-        drhs(istal,jc,kc) = strdxl(jc,kc)
+        drhs(istal,jc,kc) = strdxl(1,jc,kc)
         
-        urhs(istal,jc,kc) = strdxl(jc,kc)*struxl(jc,kc)
-        vrhs(istal,jc,kc) = strdxl(jc,kc)*strvxl(jc,kc)
-        wrhs(istal,jc,kc) = strdxl(jc,kc)*strwxl(jc,kc)
+        urhs(istal,jc,kc) = strdxl(1,jc,kc)*struxl(jc,kc)
+        vrhs(istal,jc,kc) = strdxl(1,jc,kc)*strvxl(jc,kc)
+        wrhs(istal,jc,kc) = strdxl(1,jc,kc)*strwxl(jc,kc)
         
       END DO
     END DO
@@ -208,7 +208,7 @@ IF(fxlcnv)THEN
       DO kc = kstal,kstol
         DO jc = jstal,jstol
           
-          yrhs(istal,jc,kc,ispec) = strdxl(jc,kc)*stryxl(jc,kc,ispec)
+          yrhs(istal,jc,kc,ispec) = strdxl(1,jc,kc)*stryxl(jc,kc,ispec)
           
         END DO
       END DO
@@ -265,7 +265,7 @@ IF(fxlcnv)THEN
           
           itint = 1
           1100            CONTINUE
-          IF(strtxl(jc,kc) > tinthi(itint,ispec))THEN
+          IF(strtxl(1,jc,kc) > tinthi(itint,ispec))THEN
             IF(itint < ntint(ispec))THEN
               itint = itint + 1
               GO TO 1100
@@ -312,13 +312,13 @@ IF(fxlcnv)THEN
           itint = 1 +MOD(itndex(istal,jc,kc,iindex),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
-            fornow = fornow*strtxl(jc,kc) + amasch(icp,itint,ispec)
+            fornow = fornow*strtxl(1,jc,kc) + amasch(icp,itint,ispec)
           END DO
           fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
-              + fornow*strtxl(jc,kc)
+              + fornow*strtxl(1,jc,kc)
           
           erhs(istal,jc,kc) = erhs(istal,jc,kc)  &
-              + (fornow-rgspec(ispec)*strtxl(jc,kc))*yrhs(istal,jc,kc,ispec)
+              + (fornow-rgspec(ispec)*strtxl(1,jc,kc))*yrhs(istal,jc,kc,ispec)
           
         END DO
       END DO
@@ -384,7 +384,7 @@ IF(fxrcnv)THEN
           
           itint = 1
           1500            CONTINUE
-          IF(strtxr(jc,kc) > tinthi(itint,ispec))THEN
+          IF(strtxr(1,jc,kc) > tinthi(itint,ispec))THEN
             IF(itint < ntint(ispec))THEN
               itint = itint + 1
               GO TO 1500
@@ -435,15 +435,15 @@ IF(fxrcnv)THEN
           itint = 1 +MOD(itndex(istol,jc,kc,iindex),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
-            fornow = fornow*strtxr(jc,kc) + amasch(icp,itint,ispec)
+            fornow = fornow*strtxr(1,jc,kc) + amasch(icp,itint,ispec)
           END DO
           fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
-              + fornow*strtxr(jc,kc)
+              + fornow*strtxr(1,jc,kc)
           
           yrhs(istol,jc,kc,ispec) = drhs(istol,jc,kc)*stryxr(jc,kc,ispec)
           
           erhs(istol,jc,kc) = erhs(istol,jc,kc)  &
-              + (fornow-rgspec(ispec)*strtxr(jc,kc))*yrhs(istol,jc,kc,ispec)
+              + (fornow-rgspec(ispec)*strtxr(1,jc,kc))*yrhs(istol,jc,kc,ispec)
           
         END DO
       END DO
@@ -469,11 +469,11 @@ IF(fxrcnv)THEN
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
-        drhs(istol,jc,kc) = strdxr(jc,kc)
+        drhs(istol,jc,kc) = strdxr(1,jc,kc)
         
-        urhs(istol,jc,kc) = strdxr(jc,kc)*struxr(jc,kc)
-        vrhs(istol,jc,kc) = strdxr(jc,kc)*strvxr(jc,kc)
-        wrhs(istol,jc,kc) = strdxr(jc,kc)*strwxr(jc,kc)
+        urhs(istol,jc,kc) = strdxr(1,jc,kc)*struxr(jc,kc)
+        vrhs(istol,jc,kc) = strdxr(1,jc,kc)*strvxr(jc,kc)
+        wrhs(istol,jc,kc) = strdxr(1,jc,kc)*strwxr(jc,kc)
         
       END DO
     END DO
@@ -487,7 +487,7 @@ IF(fxrcnv)THEN
       DO kc = kstal,kstol
         DO jc = jstal,jstol
           
-          yrhs(istol,jc,kc,ispec) = strdxr(jc,kc)*stryxr(jc,kc,ispec)
+          yrhs(istol,jc,kc,ispec) = strdxr(1,jc,kc)*stryxr(jc,kc,ispec)
           
         END DO
       END DO
@@ -544,7 +544,7 @@ IF(fxrcnv)THEN
           
           itint = 1
           1600            CONTINUE
-          IF(strtxr(jc,kc) > tinthi(itint,ispec))THEN
+          IF(strtxr(1,jc,kc) > tinthi(itint,ispec))THEN
             IF(itint < ntint(ispec))THEN
               itint = itint + 1
               GO TO 1600
@@ -591,13 +591,13 @@ IF(fxrcnv)THEN
           itint = 1 +MOD(itndex(istol,jc,kc,iindex),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
-            fornow = fornow*strtxr(jc,kc) + amasch(icp,itint,ispec)
+            fornow = fornow*strtxr(1,jc,kc) + amasch(icp,itint,ispec)
           END DO
           fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
-              + fornow*strtxr(jc,kc)
+              + fornow*strtxr(1,jc,kc)
           
           erhs(istol,jc,kc) = erhs(istol,jc,kc)  &
-              + (fornow-rgspec(ispec)*strtxr(jc,kc))*yrhs(istol,jc,kc,ispec)
+              + (fornow-rgspec(ispec)*strtxr(1,jc,kc))*yrhs(istol,jc,kc,ispec)
           
         END DO
       END DO
@@ -669,7 +669,7 @@ IF(fylcnv)THEN
           
           itint = 1
           2000            CONTINUE
-          IF(strtyl(ic,kc) > tinthi(itint,ispec))THEN
+          IF(strtyl(ic,1,kc) > tinthi(itint,ispec))THEN
             IF(itint < ntint(ispec))THEN
               itint = itint + 1
               GO TO 2000
@@ -720,15 +720,15 @@ IF(fylcnv)THEN
           itint = 1 +MOD(itndex(ic,jstal,kc,iindex),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
-            fornow = fornow*strtyl(ic,kc) + amasch(icp,itint,ispec)
+            fornow = fornow*strtyl(ic,1,kc) + amasch(icp,itint,ispec)
           END DO
           fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
-              + fornow*strtyl(ic,kc)
+              + fornow*strtyl(ic,1,kc)
           
           yrhs(ic,jstal,kc,ispec) = drhs(ic,jstal,kc)*stryyl(ic,kc,ispec)
           
           erhs(ic,jstal,kc) = erhs(ic,jstal,kc)  &
-              + (fornow-rgspec(ispec)*strtyl(ic,kc))*yrhs(ic,jstal,kc,ispec)
+              + (fornow-rgspec(ispec)*strtyl(ic,1,kc))*yrhs(ic,jstal,kc,ispec)
           
         END DO
       END DO
@@ -754,11 +754,11 @@ IF(fylcnv)THEN
     DO kc = kstal,kstol
       DO ic = istal,istol
         
-        drhs(ic,jstal,kc) = strdyl(ic,kc)
+        drhs(ic,jstal,kc) = strdyl(ic,1,kc)
         
-        urhs(ic,jstal,kc) = strdyl(ic,kc)*struyl(ic,kc)
-        vrhs(ic,jstal,kc) = strdyl(ic,kc)*strvyl(ic,kc)
-        wrhs(ic,jstal,kc) = strdyl(ic,kc)*strwyl(ic,kc)
+        urhs(ic,jstal,kc) = strdyl(ic,1,kc)*struyl(ic,kc)
+        vrhs(ic,jstal,kc) = strdyl(ic,1,kc)*strvyl(ic,kc)
+        wrhs(ic,jstal,kc) = strdyl(ic,1,kc)*strwyl(ic,kc)
         
       END DO
     END DO
@@ -772,7 +772,7 @@ IF(fylcnv)THEN
       DO kc = kstal,kstol
         DO ic = istal,istol
           
-          yrhs(ic,jstal,kc,ispec) = strdyl(ic,kc)*stryyl(ic,kc,ispec)
+          yrhs(ic,jstal,kc,ispec) = strdyl(ic,1,kc)*stryyl(ic,kc,ispec)
           
         END DO
       END DO
@@ -829,7 +829,7 @@ IF(fylcnv)THEN
           
           itint = 1
           2100            CONTINUE
-          IF(strtyl(ic,kc) > tinthi(itint,ispec))THEN
+          IF(strtyl(ic,1,kc) > tinthi(itint,ispec))THEN
             IF(itint < ntint(ispec))THEN
               itint = itint + 1
               GO TO 2100
@@ -876,13 +876,13 @@ IF(fylcnv)THEN
           itint = 1 +MOD(itndex(ic,jstal,kc,iindex),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
-            fornow = fornow*strtyl(ic,kc) + amasch(icp,itint,ispec)
+            fornow = fornow*strtyl(ic,1,kc) + amasch(icp,itint,ispec)
           END DO
           fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
-              + fornow*strtyl(ic,kc)
+              + fornow*strtyl(ic,1,kc)
           
           erhs(ic,jstal,kc) = erhs(ic,jstal,kc)  &
-              + (fornow-rgspec(ispec)*strtyl(ic,kc))*yrhs(ic,jstal,kc,ispec)
+              + (fornow-rgspec(ispec)*strtyl(ic,1,kc))*yrhs(ic,jstal,kc,ispec)
           
         END DO
       END DO
@@ -954,7 +954,7 @@ IF(fyrcnv)THEN
           
           itint = 1
           2500            CONTINUE
-          IF(strtyr(ic,kc) > tinthi(itint,ispec))THEN
+          IF(strtyr(ic,1,kc) > tinthi(itint,ispec))THEN
             IF(itint < ntint(ispec))THEN
               itint = itint + 1
               GO TO 2500
@@ -1005,15 +1005,15 @@ IF(fyrcnv)THEN
           itint = 1 +MOD(itndex(ic,jstol,kc,iindex),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
-            fornow = fornow*strtyr(ic,kc) + amasch(icp,itint,ispec)
+            fornow = fornow*strtyr(ic,1,kc) + amasch(icp,itint,ispec)
           END DO
           fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
-              + fornow*strtyr(ic,kc)
+              + fornow*strtyr(ic,1,kc)
           
           yrhs(ic,jstol,kc,ispec) = drhs(ic,jstol,kc)*stryyr(ic,kc,ispec)
           
           erhs(ic,jstol,kc) = erhs(ic,jstol,kc)  &
-              + (fornow-rgspec(ispec)*strtyr(ic,kc))*yrhs(ic,jstol,kc,ispec)
+              + (fornow-rgspec(ispec)*strtyr(ic,1,kc))*yrhs(ic,jstol,kc,ispec)
           
         END DO
       END DO
@@ -1039,11 +1039,11 @@ IF(fyrcnv)THEN
     DO kc = kstal,kstol
       DO ic = istal,istol
         
-        drhs(ic,jstol,kc) = strdyr(ic,kc)
+        drhs(ic,jstol,kc) = strdyr(ic,1,kc)
         
-        urhs(ic,jstol,kc) = strdyr(ic,kc)*struyr(ic,kc)
-        vrhs(ic,jstol,kc) = strdyr(ic,kc)*strvyr(ic,kc)
-        wrhs(ic,jstol,kc) = strdyr(ic,kc)*strwyr(ic,kc)
+        urhs(ic,jstol,kc) = strdyr(ic,1,kc)*struyr(ic,kc)
+        vrhs(ic,jstol,kc) = strdyr(ic,1,kc)*strvyr(ic,kc)
+        wrhs(ic,jstol,kc) = strdyr(ic,1,kc)*strwyr(ic,kc)
         
       END DO
     END DO
@@ -1057,7 +1057,7 @@ IF(fyrcnv)THEN
       DO kc = kstal,kstol
         DO ic = istal,istol
           
-          yrhs(ic,jstol,kc,ispec) = strdyr(ic,kc)*stryyr(ic,kc,ispec)
+          yrhs(ic,jstol,kc,ispec) = strdyr(ic,1,kc)*stryyr(ic,kc,ispec)
           
         END DO
       END DO
@@ -1114,7 +1114,7 @@ IF(fyrcnv)THEN
           
           itint = 1
           2600            CONTINUE
-          IF(strtyr(ic,kc) > tinthi(itint,ispec))THEN
+          IF(strtyr(ic,1,kc) > tinthi(itint,ispec))THEN
             IF(itint < ntint(ispec))THEN
               itint = itint + 1
               GO TO 2600
@@ -1161,13 +1161,13 @@ IF(fyrcnv)THEN
           itint = 1 +MOD(itndex(ic,jstol,kc,iindex),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
-            fornow = fornow*strtyr(ic,kc) + amasch(icp,itint,ispec)
+            fornow = fornow*strtyr(ic,1,kc) + amasch(icp,itint,ispec)
           END DO
           fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
-              + fornow*strtyr(ic,kc)
+              + fornow*strtyr(ic,1,kc)
           
           erhs(ic,jstol,kc) = erhs(ic,jstol,kc)  &
-              + (fornow-rgspec(ispec)*strtyr(ic,kc))*yrhs(ic,jstol,kc,ispec)
+              + (fornow-rgspec(ispec)*strtyr(ic,1,kc))*yrhs(ic,jstol,kc,ispec)
           
         END DO
       END DO
@@ -1239,7 +1239,7 @@ IF(fzlcnv)THEN
           
           itint = 1
           3000            CONTINUE
-          IF(strtzl(ic,jc) > tinthi(itint,ispec))THEN
+          IF(strtzl(ic,jc,1) > tinthi(itint,ispec))THEN
             IF(itint < ntint(ispec))THEN
               itint = itint + 1
               GO TO 3000
@@ -1290,15 +1290,15 @@ IF(fzlcnv)THEN
           itint = 1 +MOD(itndex(ic,jc,kstal,iindex),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
-            fornow = fornow*strtzl(ic,jc) + amasch(icp,itint,ispec)
+            fornow = fornow*strtzl(ic,jc,1) + amasch(icp,itint,ispec)
           END DO
           fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
-              + fornow*strtzl(ic,jc)
+              + fornow*strtzl(ic,jc,1)
           
           yrhs(ic,jc,kstal,ispec) = drhs(ic,jc,kstal)*stryzl(ic,jc,ispec)
           
           erhs(ic,jc,kstal) = erhs(ic,jc,kstal)  &
-              + (fornow-rgspec(ispec)*strtzl(ic,jc))*yrhs(ic,jc,kstal,ispec)
+              + (fornow-rgspec(ispec)*strtzl(ic,jc,1))*yrhs(ic,jc,kstal,ispec)
           
         END DO
       END DO
@@ -1324,11 +1324,11 @@ IF(fzlcnv)THEN
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        drhs(ic,jc,kstal) = strdzl(ic,jc)
+        drhs(ic,jc,kstal) = strdzl(ic,jc,1)
         
-        urhs(ic,jc,kstal) = strdzl(ic,jc)*struzl(ic,jc)
-        vrhs(ic,jc,kstal) = strdzl(ic,jc)*strvzl(ic,jc)
-        wrhs(ic,jc,kstal) = strdzl(ic,jc)*strwzl(ic,jc)
+        urhs(ic,jc,kstal) = strdzl(ic,jc,1)*struzl(ic,jc)
+        vrhs(ic,jc,kstal) = strdzl(ic,jc,1)*strvzl(ic,jc)
+        wrhs(ic,jc,kstal) = strdzl(ic,jc,1)*strwzl(ic,jc)
         
       END DO
     END DO
@@ -1342,7 +1342,7 @@ IF(fzlcnv)THEN
       DO jc = jstal,jstol
         DO ic = istal,istol
           
-          yrhs(ic,jc,kstal,ispec) = strdzl(ic,jc)*stryzl(ic,jc,ispec)
+          yrhs(ic,jc,kstal,ispec) = strdzl(ic,jc,1)*stryzl(ic,jc,ispec)
           
         END DO
       END DO
@@ -1399,7 +1399,7 @@ IF(fzlcnv)THEN
           
           itint = 1
           3100            CONTINUE
-          IF(strtzl(ic,jc) > tinthi(itint,ispec))THEN
+          IF(strtzl(ic,jc,1) > tinthi(itint,ispec))THEN
             IF(itint < ntint(ispec))THEN
               itint = itint + 1
               GO TO 3100
@@ -1446,13 +1446,13 @@ IF(fzlcnv)THEN
           itint = 1 +MOD(itndex(ic,jc,kstal,iindex),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
-            fornow = fornow*strtzl(ic,jc) + amasch(icp,itint,ispec)
+            fornow = fornow*strtzl(ic,jc,1) + amasch(icp,itint,ispec)
           END DO
           fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
-              + fornow*strtzl(ic,jc)
+              + fornow*strtzl(ic,jc,1)
           
           erhs(ic,jc,kstal) = erhs(ic,jc,kstal)  &
-              + (fornow-rgspec(ispec)*strtzl(ic,jc))*yrhs(ic,jc,kstal,ispec)
+              + (fornow-rgspec(ispec)*strtzl(ic,jc,1))*yrhs(ic,jc,kstal,ispec)
           
         END DO
       END DO
@@ -1524,7 +1524,7 @@ IF(fzrcnv)THEN
           
           itint = 1
           3500            CONTINUE
-          IF(strtzr(ic,jc) > tinthi(itint,ispec))THEN
+          IF(strtzr(ic,jc,1) > tinthi(itint,ispec))THEN
             IF(itint < ntint(ispec))THEN
               itint = itint + 1
               GO TO 3500
@@ -1575,15 +1575,15 @@ IF(fzrcnv)THEN
           itint = 1 +MOD(itndex(ic,jc,kstol,iindex),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
-            fornow = fornow*strtzr(ic,jc) + amasch(icp,itint,ispec)
+            fornow = fornow*strtzr(ic,jc,1) + amasch(icp,itint,ispec)
           END DO
           fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
-              + fornow*strtzr(ic,jc)
+              + fornow*strtzr(ic,jc,1)
           
           yrhs(ic,jc,kstol,ispec) = drhs(ic,jc,kstol)*stryzr(ic,jc,ispec)
           
           erhs(ic,jc,kstol) = erhs(ic,jc,kstol)  &
-              + (fornow-rgspec(ispec)*strtzr(ic,jc))*yrhs(ic,jc,kstol,ispec)
+              + (fornow-rgspec(ispec)*strtzr(ic,jc,1))*yrhs(ic,jc,kstol,ispec)
           
         END DO
       END DO
@@ -1609,11 +1609,11 @@ IF(fzrcnv)THEN
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        drhs(ic,jc,kstol) = strdzr(ic,jc)
+        drhs(ic,jc,kstol) = strdzr(ic,jc,1)
         
-        urhs(ic,jc,kstol) = strdzr(ic,jc)*struzr(ic,jc)
-        vrhs(ic,jc,kstol) = strdzr(ic,jc)*strvzr(ic,jc)
-        wrhs(ic,jc,kstol) = strdzr(ic,jc)*strwzr(ic,jc)
+        urhs(ic,jc,kstol) = strdzr(ic,jc,1)*struzr(ic,jc)
+        vrhs(ic,jc,kstol) = strdzr(ic,jc,1)*strvzr(ic,jc)
+        wrhs(ic,jc,kstol) = strdzr(ic,jc,1)*strwzr(ic,jc)
         
       END DO
     END DO
@@ -1627,7 +1627,7 @@ IF(fzrcnv)THEN
       DO jc = jstal,jstol
         DO ic = istal,istol
           
-          yrhs(ic,jc,kstol,ispec) = strdzr(ic,jc)*stryzr(ic,jc,ispec)
+          yrhs(ic,jc,kstol,ispec) = strdzr(ic,jc,1)*stryzr(ic,jc,ispec)
           
         END DO
       END DO
@@ -1684,7 +1684,7 @@ IF(fzrcnv)THEN
           
           itint = 1
           3600            CONTINUE
-          IF(strtzr(ic,jc) > tinthi(itint,ispec))THEN
+          IF(strtzr(ic,jc,1) > tinthi(itint,ispec))THEN
             IF(itint < ntint(ispec))THEN
               itint = itint + 1
               GO TO 3600
@@ -1731,13 +1731,13 @@ IF(fzrcnv)THEN
           itint = 1 +MOD(itndex(ic,jc,kstol,iindex),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
-            fornow = fornow*strtzr(ic,jc) + amasch(icp,itint,ispec)
+            fornow = fornow*strtzr(ic,jc,1) + amasch(icp,itint,ispec)
           END DO
           fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
-              + fornow*strtzr(ic,jc)
+              + fornow*strtzr(ic,jc,1)
           
           erhs(ic,jc,kstol) = erhs(ic,jc,kstol)  &
-              + (fornow-rgspec(ispec)*strtzr(ic,jc))*yrhs(ic,jc,kstol,ispec)
+              + (fornow-rgspec(ispec)*strtzr(ic,jc,1))*yrhs(ic,jc,kstol,ispec)
           
         END DO
       END DO

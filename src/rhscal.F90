@@ -79,68 +79,68 @@ CALL temper
 
 !     X-DIRECTION
 IF(fxlcnv)THEN
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      strgxl(jc,kc) = transp(istal,jc,kc)
-      strrxl(jc,kc) = store7(istal,jc,kc)/drhs(istal,jc,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_CPandGAS_xdir, "COLLECT CP AND GAS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strgxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_strrxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fxrcnv)THEN
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      strgxr(jc,kc) = transp(istol,jc,kc)
-      strrxr(jc,kc) = store7(istol,jc,kc)/drhs(istol,jc,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_CPandGAS_xdir, "COLLECT CP AND GAS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strgxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_strrxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
 END IF
 
 !     Y-DIRECTION
 IF(fylcnv)THEN
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      strgyl(ic,kc) = transp(ic,jstal,kc)
-      strryl(ic,kc) = store7(ic,jstal,kc)/drhs(ic,jstal,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_CPandGAS_ydir, "COLLECT CP AND GAS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strgyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_strryl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fyrcnv)THEN
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      strgyr(ic,kc) = transp(ic,jstol,kc)
-      strryr(ic,kc) = store7(ic,jstol,kc)/drhs(ic,jstol,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_CPandGAS_ydir, "COLLECT CP AND GAS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strgyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_strryr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
 END IF
 
 !     Z-DIRECTION
 IF(fzlcnv)THEN
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      strgzl(ic,jc) = transp(ic,jc,kstal)
-      strrzl(ic,jc) = store7(ic,jc,kstal)/drhs(ic,jc,kstal)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+    call ops_par_loop(boundary_kernel_CPandGAS_zdir, "COLLECT CP AND GAS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strgzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_strrzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fzrcnv)THEN
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      strgzr(ic,jc) = transp(ic,jc,kstol)
-      strrzr(ic,jc) = store7(ic,jc,kstol)/drhs(ic,jc,kstol)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+    call ops_par_loop(boundary_kernel_CPandGAS_zdir, "COLLECT CP AND GAS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strgzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_strrzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
 END IF
 !                                                              ALL STORES CLEAR
 !     =========================================================================
@@ -187,62 +187,50 @@ CALL dfbydz(d_wrhs,d_store3)
 
 !     X-DIRECTION
 IF(fxlcnv)THEN
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      strexl(jc,kc) = erhs(istal,jc,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_internalenergy_xdir, "COLLECT INTERNAL ENERGY FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strexl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fxrcnv)THEN
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      strexr(jc,kc) = erhs(istol,jc,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_internalenergy_xdir, "COLLECT INTERNAL ENERGY FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strexr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
 END IF
 
 !     Y-DIRECTION
 IF(fylcnv)THEN
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      streyl(ic,kc) = erhs(ic,jstal,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_internalenergy_ydir, "COLLECT INTERNAL ENERGY FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_streyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fyrcnv)THEN
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      streyr(ic,kc) = erhs(ic,jstol,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_internalenergy_ydir, "COLLECT INTERNAL ENERGY FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_streyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
 END IF
 
 !     Z-DIRECTION
 IF(fzlcnv)THEN
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      strezl(ic,jc) = erhs(ic,jc,kstal)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+    call ops_par_loop(boundary_kernel_internalenergy_zdir, "COLLECT INTERNAL ENERGY FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strezl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fzrcnv)THEN
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      strezr(ic,jc) = erhs(ic,jc,kstol)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+    call ops_par_loop(boundary_kernel_internalenergy_zdir, "COLLECT INTERNAL ENERGY FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strezr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
 END IF
 !                                                              ALL STORES CLEAR
 !     =========================================================================
@@ -257,7 +245,7 @@ END IF
                     ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_divm, 1, s3d_000, "real(dp)", OPS_READ))
-    
+
 !                                                          STORE4 = E DIV RHO U
 !     =========================================================================
 
@@ -349,68 +337,63 @@ CALL dfbydz(d_trun,d_store3)
 
 !     X-DIRECTION
 IF(fxlcnv)THEN
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      strtxl(jc,kc) = trun(istal,jc,kc)
-      bcltxl(jc,kc) = store1(istal,jc,kc)
-      
-    END DO
-  END DO
+
+    rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_temperature_xdir, "COLLECT TEMPERATURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bcltxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fxrcnv)THEN
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      strtxr(jc,kc) = trun(istol,jc,kc)
-      bcltxr(jc,kc) = store1(istol,jc,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_temperature_xdir, "COLLECT TEMPERATURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bcltxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
 END IF
 
 !     Y-DIRECTION
 IF(fylcnv)THEN
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      strtyl(ic,kc) = trun(ic,jstal,kc)
-      bcltyl(ic,kc) = store2(ic,jstal,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_temperature_ydir, "COLLECT TEMPERATURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bcltyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fyrcnv)THEN
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      strtyr(ic,kc) = trun(ic,jstol,kc)
-      bcltyr(ic,kc) = store2(ic,jstol,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_temperature_ydir, "COLLECT TEMPERATURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bcltyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
 END IF
 
 !     Z-DIRECTION
 IF(fzlcnv)THEN
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      strtzl(ic,jc) = trun(ic,jc,kstal)
-      bcltzl(ic,jc) = store3(ic,jc,kstal)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+    call ops_par_loop(boundary_kernel_temperature_zdir, "COLLECT TEMPERATURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bcltzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fzrcnv)THEN
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      strtzr(ic,jc) = trun(ic,jc,kstol)
-      bcltzr(ic,jc) = store3(ic,jc,kstol)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+    call ops_par_loop(boundary_kernel_temperature_zdir, "COLLECT TEMPERATURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bcltzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
 END IF
 !                                                         STORE1,2,3 = DTDX,Y,Z
 !     =========================================================================
@@ -2534,21 +2517,17 @@ DO ispec = 1,nspec
 !           E-EQUATION: HEAT FLUX TERMS
 !           WALL BC: ADIABATIC WALL
       IF(fxlcnw)THEN
-        DO kc = kstal,kstol
-          DO jc = jstal,jstol
-            
-            fornow = zero
-            DO ic = istap1,istow
-              
-              combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
-              fornow = fornow  &
-                  + acbcxl(ic-1)*combo1*store7(ic,jc,kc)*td1x(ic,jc,kc)
-              
-            END DO
-            erhs(istal,jc,kc) = erhs(istal,jc,kc) + rgspec(ispec)*fornow
-            
-          END DO
-        END DO
+
+        rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(heat_flux_kernel_soret_fxlcnw, "HEAT FLUX: Soret and DUFOUR fxlcnw", senga_grid, 3, rangexyz,  &
+                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                ops_arg_dat(d_trun, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
+                ops_arg_dat(d_tdrmix, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
+                ops_arg_dat(d_store7, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
+                ops_arg_dat(d_td1x, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
+                ops_arg_gbl(acbcxl, 1, "real(dp)", OPS_READ), &
+                ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ))
+
       END IF
       IF(fxrcnw)THEN
         DO kc = kstal,kstol
@@ -3017,24 +2996,22 @@ IF(fxlcnv.OR.fxrcnv)THEN
   CALL dfbydx(d_drhs,d_store1)
   
   IF(fxlcnv)THEN
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        strdxl(jc,kc) = drhs(istal,jc,kc)
-        bcl2xl(jc,kc) = store1(istal,jc,kc)
-        
-      END DO
-    END DO
+    rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_density_xdir, "COLLECT DENSITY AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
   END IF
   IF(fxrcnv)THEN
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        strdxr(jc,kc) = drhs(istol,jc,kc)
-        bcl2xr(jc,kc) = store1(istol,jc,kc)
-        
-      END DO
-    END DO
+    rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_density_xdir, "COLLECT DENSITY AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bcl2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
   END IF
   
 END IF
@@ -3045,24 +3022,22 @@ IF(fylcnv.OR.fyrcnv)THEN
   CALL dfbydy(d_drhs,d_store2)
   
   IF(fylcnv)THEN
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        strdyl(ic,kc) = drhs(ic,jstal,kc)
-        bcl2yl(ic,kc) = store2(ic,jstal,kc)
-        
-      END DO
-    END DO
+    rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_density_ydir, "COLLECT DENSITY AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bcl2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
   END IF
   IF(fyrcnv)THEN
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        strdyr(ic,kc) = drhs(ic,jstol,kc)
-        bcl2yr(ic,kc) = store2(ic,jstol,kc)
-        
-      END DO
-    END DO
+    rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_density_ydir, "COLLECT DENSITY AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bcl2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
   END IF
   
 END IF
@@ -3073,24 +3048,22 @@ IF(fzlcnv.OR.fzrcnv)THEN
   CALL dfbydz(d_drhs,d_store3)
   
   IF(fzlcnv)THEN
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        strdzl(ic,jc) = drhs(ic,jc,kstal)
-        bcl2zl(ic,jc) = store3(ic,jc,kstal)
-        
-      END DO
-    END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+    call ops_par_loop(boundary_kernel_density_zdir, "COLLECT DENSITY AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bcl2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
   END IF
   IF(fzrcnv)THEN
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        strdzr(ic,jc) = drhs(ic,jc,kstol)
-        bcl2zr(ic,jc) = store3(ic,jc,kstol)
-        
-      END DO
-    END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+    call ops_par_loop(boundary_kernel_density_zdir, "COLLECT DENSITY AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bcl2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
   END IF
   
 END IF

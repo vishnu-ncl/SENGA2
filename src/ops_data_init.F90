@@ -12,6 +12,15 @@ SUBROUTINE ops_data_init()
 
 
     INTEGER a3d_000(3)    /0,0,0/
+
+    integer stride3d_x(3) /1,0,0/
+    integer stride3d_y(3) /0,1,0/
+    integer stride3d_z(3) /0,0,1/
+    
+    integer stride3d_xy(3) /1,1,0/
+    integer stride3d_xz(3) /1,0,1/
+    integer stride3d_yz(3) /0,1,1/
+
     INTEGER a3d_000_to_p400_x(15) /0,0,0, 1,0,0, 2,0,0, 3,0,0, 4,0,0/
     INTEGER a3d_000_to_m400_x(15) /0,0,0, -1,0,0, -2,0,0, -3,0,0, -4,0,0/
 
@@ -87,7 +96,6 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, store5, d_store5, "real(dp)", "STORE5")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, store6, d_store6, "real(dp)", "STORE6")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, divm, d_divm, "real(dp)", "DIVM")
-
     
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, ucor, d_ucor, "real(dp)", "UCOR")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, vcor, d_vcor, "real(dp)", "VCOR")
@@ -150,9 +158,72 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, difmix, d_difmix, "real(dp)", "DIFMIX")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, tdrmix, d_tdrmix, "real(dp)", "TDRMIX")
 
+!   Boundary
+    d_size = (/1, nysize, nzsize/)
+    d_m = (/0,0,0/)
+    d_p = (/0,0,0/)
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, bcl2xl, d_bcl2xl, "real(dp)", "BCL2XL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, bcl2xr, d_bcl2xr, "real(dp)", "BCL2XR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, bcltxl, d_bcltxl, "real(dp)", "BCLTXL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, bcltxr, d_bcltxr, "real(dp)", "BCLTXR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strdxl, d_strdxl, "real(dp)", "STRDXL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strdxr, d_strdxr, "real(dp)", "STRDXR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strtxl, d_strtxl, "real(dp)", "STRTXL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strtxr, d_strtxr, "real(dp)", "STRTXR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strexl, d_strexl, "real(dp)", "STREXL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strexr, d_strexr, "real(dp)", "STREXR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strgxl, d_strgxl, "real(dp)", "STRGXL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strgxr, d_strgxr, "real(dp)", "STRGXR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strrxl, d_strrxl, "real(dp)", "STRRXL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strrxr, d_strrxr, "real(dp)", "STRRXR")
+
+    d_size = (/nxsize, 1, nzsize/)
+    d_m = (/0,0,0/)
+    d_p = (/0,0,0/)
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, bcl2yl, d_bcl2yl, "real(dp)", "BCL2YL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, bcl2yr, d_bcl2yr, "real(dp)", "BCL2YR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, bcltyl, d_bcltyl, "real(dp)", "BCLTYL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, bcltyr, d_bcltyr, "real(dp)", "BCLTYR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strdyl, d_strdyl, "real(dp)", "STRDYL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strdyr, d_strdyr, "real(dp)", "STRDYR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strtyl, d_strtyl, "real(dp)", "STRTYL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strtyr, d_strtyr, "real(dp)", "STRTYR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, streyl, d_streyl, "real(dp)", "STREYL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, streyr, d_streyr, "real(dp)", "STREYR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strgyl, d_strgyl, "real(dp)", "STRGYL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strgyr, d_strgyr, "real(dp)", "STRGYR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strryl, d_strryl, "real(dp)", "STRRYL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strryr, d_strryr, "real(dp)", "STRRYR")
+    
+    d_size = (/nxsize, nysize, 1/)
+    d_m = (/0,0,0/)
+    d_p = (/0,0,0/)
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, bcl2zl, d_bcl2zl, "real(dp)", "BCL2ZL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, bcl2zr, d_bcl2zr, "real(dp)", "BCL2ZR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, bcltzl, d_bcltzl, "real(dp)", "BCLTZL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, bcltzr, d_bcltzr, "real(dp)", "BCLTZR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strdzl, d_strdzl, "real(dp)", "STRDZL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strdzr, d_strdzr, "real(dp)", "STRDZR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strtzl, d_strtzl, "real(dp)", "STRTZL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strtzr, d_strtzr, "real(dp)", "STRTZR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strezl, d_strezl, "real(dp)", "STREZL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strezr, d_strezr, "real(dp)", "STREZR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strgzl, d_strgzl, "real(dp)", "STRGZL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strgzr, d_strgzr, "real(dp)", "STRGZR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strrzl, d_strrzl, "real(dp)", "STRRZL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strrzr, d_strrzr, "real(dp)", "STRRZR")
+
 !   Declare OPS Stencil
     call ops_decl_stencil( 3, 1, a3d_000, s3d_000, "0,0,0")
 
+    call ops_decl_strided_stencil( 3, 1, a3d_000, stride3d_x, s3d_000_strid3d_x, "stride 3D X dir")
+    call ops_decl_strided_stencil( 3, 1, a3d_000, stride3d_y, s3d_000_strid3d_y, "stride 3D Y dir")
+    call ops_decl_strided_stencil( 3, 1, a3d_000, stride3d_z, s3d_000_strid3d_z, "stride 3D Z dir")
+
+    call ops_decl_strided_stencil( 3, 1, a3d_000, stride3d_xy, s3d_000_strid3d_xy, "stride 3D XY dir")
+    call ops_decl_strided_stencil( 3, 1, a3d_000, stride3d_xz, s3d_000_strid3d_xz, "stride 3D XZ dir")
+    call ops_decl_strided_stencil( 3, 1, a3d_000, stride3d_yz, s3d_000_strid3d_yz, "stride 3D YZ dir")
+!------------------------------------------------------------------------------------------------------
     call ops_decl_stencil( 3, 5, a3d_000_to_p400_x, s3d_000_to_p400_x, "0,0,0 to 4,0,0")
     call ops_decl_stencil( 3, 5, a3d_000_to_m400_x, s3d_000_to_m400_x, "0,0,0 to -4,0,0")
     
@@ -172,7 +243,7 @@ SUBROUTINE ops_data_init()
 
     call ops_decl_stencil( 3,  6, a3d_p400_to_m100_x, s3d_p400_to_m100_x, "4,0,0 to -1,0,0")
     call ops_decl_stencil( 3,  6, a3d_p100_to_m400_x, s3d_p100_to_m400_x, "1,0,0 to -4,0,0")
-!-------------------------------------------------------------------------------------
+!-----------------------------------------------------------------------------------------------------
     call ops_decl_stencil( 3, 5, a3d_000_to_p040_y, s3d_000_to_p040_y, "0,0,0 to 0,4,0")
     call ops_decl_stencil( 3, 5, a3d_000_to_m040_y, s3d_000_to_m040_y, "0,0,0 to  0,-4,0")
 

@@ -54,7 +54,7 @@ INTEGER :: jc,kc
 DO kc = kstal,kstol
   DO jc = jstal,jstol
     
-    strtxr(jc,kc) = trin
+    strtxr(1,jc,kc) = trin
     
     dtdtxr(jc,kc) = zero
     
@@ -69,7 +69,7 @@ IF(nsbcxr == nsbcw2)THEN
   DO kc = kstal,kstol
     DO jc = jstal,jstol
       
-      strtxr(jc,kc) = rxrprm(1)
+      strtxr(1,jc,kc) = rxrprm(1)
       
       dtdtxr(jc,kc) = zero
       
