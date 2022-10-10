@@ -56,9 +56,9 @@ IF(nyrprm(1) == 1)THEN
   DO kc = kstal,kstol
     DO ic = istal,istol
       
-      struyr(ic,kc) = zero
-      strvyr(ic,kc) = ryrprm(1)
-      strwyr(ic,kc) = zero
+      struyr(ic,1,kc) = zero
+      strvyr(ic,1,kc) = ryrprm(1)
+      strwyr(ic,1,kc) = zero
       
       dudtyr(ic,kc) = zero
       dvdtyr(ic,kc) = zero

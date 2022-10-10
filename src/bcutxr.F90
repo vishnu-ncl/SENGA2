@@ -61,9 +61,9 @@ IF(nxrprm(1) == 1)THEN
   DO kc = kstal,kstol
     DO jc = jstal,jstol
       
-      struxr(jc,kc) = rxrprm(1)
-      strvxr(jc,kc) = zero
-      strwxr(jc,kc) = zero
+      struxr(1,jc,kc) = rxrprm(1)
+      strvxr(1,jc,kc) = zero
+      strwxr(1,jc,kc) = zero
       
       dudtxr(jc,kc) = zero
       dvdtxr(jc,kc) = zero
@@ -86,9 +86,9 @@ IF(nxrprm(1) == 2)THEN
   DO kc = kstal,kstol
     DO jc = jstal,jstol
       
-      struxr(jc,kc) = rxrprm(1)*SIN(argmnt)
-      strvxr(jc,kc) = zero
-      strwxr(jc,kc) = zero
+      struxr(1,jc,kc) = rxrprm(1)*SIN(argmnt)
+      strvxr(1,jc,kc) = zero
+      strwxr(1,jc,kc) = zero
       
       dudtxr(jc,kc) = fornow*rxrprm(1)*COS(argmnt)
       dvdtxr(jc,kc) = zero

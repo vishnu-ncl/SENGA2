@@ -56,9 +56,9 @@ IF(nylprm(1) == 1)THEN
   DO kc = kstal,kstol
     DO ic = istal,istol
       
-      struyl(ic,kc) = zero
-      strvyl(ic,kc) = rylprm(1)
-      strwyl(ic,kc) = zero
+      struyl(ic,1,kc) = zero
+      strvyl(ic,1,kc) = rylprm(1)
+      strwyl(ic,1,kc) = zero
       
       dudtyl(ic,kc) = zero
       dvdtyl(ic,kc) = zero

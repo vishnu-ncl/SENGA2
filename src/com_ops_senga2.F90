@@ -28,20 +28,29 @@ MODULE com_ops_senga
     
     TYPE(ops_dat) :: d_utmp, d_vtmp, d_wtmp, d_prun, d_trun, d_transp, d_store7
 
-    TYPE(ops_dat) :: d_bcl2xl, d_bcl2xr
-    TYPE(ops_dat) :: d_bcltxl, d_bcltxr
-    TYPE(ops_dat) :: d_strdxl, d_strtxl, d_strdxr, d_strtxr
-    TYPE(ops_dat) :: d_strexl, d_strgxl, d_strrxl, d_strexr, d_strgxr, d_strrxr
-    
-    TYPE(ops_dat) :: d_bcl2yl, d_bcl2yr
-    TYPE(ops_dat) :: d_bcltyl, d_bcltyr
-    TYPE(ops_dat) :: d_strdyl, d_strdyr, d_strtyl, d_strtyr
-    TYPE(ops_dat) :: d_streyl, d_streyr, d_strgyl, d_strgyr, d_strryl, d_strryr
+    TYPE(ops_dat) :: d_bcl1xl, d_bcl2xl, d_bcl3xl, d_bcl4xl, d_bcl5xl, d_bcltxl
+    TYPE(ops_dat) :: d_bcl1xr, d_bcl2xr, d_bcl3xr, d_bcl4xr, d_bcl5xr, d_bcltxr
 
-    TYPE(ops_dat) :: d_bcl2zl, d_bcl2zr
-    TYPE(ops_dat) :: d_bcltzl, d_bcltzr
-    TYPE(ops_dat) :: d_strdzl, d_strtzl, d_strdzr, d_strtzr
-    TYPE(ops_dat) :: d_strezl, d_strgzl, d_strrzl, d_strezr, d_strgzr, d_strrzr
+    TYPE(ops_dat) :: d_struxl, d_strvxl, d_strwxl, d_strpxl, d_strdxl, d_strtxl
+    TYPE(ops_dat) :: d_strexl, d_strgxl, d_strrxl
+    TYPE(ops_dat) :: d_struxr, d_strvxr, d_strwxr, d_strpxr, d_strdxr, d_strtxr
+    TYPE(ops_dat) :: d_strexr, d_strgxr, d_strrxr
+
+    TYPE(ops_dat) :: d_bcl1yl, d_bcl2yl, d_bcl3yl, d_bcl4yl, d_bcl5yl, d_bcltyl
+    TYPE(ops_dat) :: d_bcl1yr, d_bcl2yr, d_bcl3yr, d_bcl4yr, d_bcl5yr, d_bcltyr
+
+    TYPE(ops_dat) :: d_struyl, d_strvyl, d_strwyl, d_strpyl, d_strdyl, d_strtyl
+    TYPE(ops_dat) :: d_streyl, d_strgyl, d_strryl
+    TYPE(ops_dat) :: d_struyr, d_strvyr, d_strwyr, d_strpyr, d_strdyr, d_strtyr
+    TYPE(ops_dat) :: d_streyr, d_strgyr, d_strryr
+
+    TYPE(ops_dat) :: d_bcl1zl, d_bcl2zl, d_bcl3zl, d_bcl4zl, d_bcl5zl, d_bcltzl
+    TYPE(ops_dat) :: d_bcl1zr, d_bcl2zr, d_bcl3zr, d_bcl4zr, d_bcl5zr, d_bcltzr
+
+    TYPE(ops_dat) :: d_struzl, d_strvzl, d_strwzl, d_strpzl, d_strdzl, d_strtzl
+    TYPE(ops_dat) :: d_strezl, d_strgzl, d_strrzl
+    TYPE(ops_dat) :: d_struzr, d_strvzr, d_strwzr, d_strpzr, d_strdzr, d_strtzr
+    TYPE(ops_dat) :: d_strezr, d_strgzr, d_strrzr
 
     TYPE(ops_stencil) :: s3d_000
 

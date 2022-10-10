@@ -138,3 +138,112 @@ SUBROUTINE boundary_kernel_density_zdir(drhs,store,strdz,bcl2z)
     bcl2z(OPS_ACC4(0,0,0)) = store(OPS_ACC2(0,0,0))
 
 END SUBROUTINE boundary_kernel_density_zdir
+
+SUBROUTINE boundary_kernel_velcomp_xdir(utmp,vtmp,wtmp,strux,strvx,strwx)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1), intent(in) :: utmp,vtmp,wtmp
+    real(kind=dp), dimension(1) :: strux,strvx,strwx
+    
+    strux(OPS_ACC4(0,0,0)) = utmp(OPS_ACC1(0,0,0))
+    strvx(OPS_ACC5(0,0,0)) = vtmp(OPS_ACC2(0,0,0))
+    strwx(OPS_ACC6(0,0,0)) = wtmp(OPS_ACC3(0,0,0))
+
+END SUBROUTINE boundary_kernel_velcomp_xdir
+
+SUBROUTINE boundary_kernel_velcomp_ydir(utmp,vtmp,wtmp,struy,strvy,strwy)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1), intent(in) :: utmp,vtmp,wtmp
+    real(kind=dp), dimension(1) :: struy,strvy,strwy
+
+    struy(OPS_ACC4(0,0,0)) = utmp(OPS_ACC1(0,0,0))
+    strvy(OPS_ACC5(0,0,0)) = vtmp(OPS_ACC2(0,0,0))
+    strwy(OPS_ACC6(0,0,0)) = wtmp(OPS_ACC3(0,0,0))
+
+END SUBROUTINE boundary_kernel_velcomp_ydir
+
+SUBROUTINE boundary_kernel_velcomp_zdir(utmp,vtmp,wtmp,struz,strvz,strwz)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1), intent(in) :: utmp,vtmp,wtmp
+    real(kind=dp), dimension(1) :: struz,strvz,strwz
+
+    struz(OPS_ACC4(0,0,0)) = utmp(OPS_ACC1(0,0,0))
+    strvz(OPS_ACC5(0,0,0)) = vtmp(OPS_ACC2(0,0,0))
+    strwz(OPS_ACC6(0,0,0)) = wtmp(OPS_ACC3(0,0,0))
+
+END SUBROUTINE boundary_kernel_velcomp_zdir
+
+SUBROUTINE boundary_kernel_pressure_xdir(prun,store4,strpx,bcl5x)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1), intent(in) :: prun,store4
+    real(kind=dp), dimension(1) :: strpx,bcl5x
+
+    strpx(OPS_ACC3(0,0,0)) = prun(OPS_ACC1(0,0,0))
+    bcl5x(OPS_ACC4(0,0,0)) = store4(OPS_ACC2(0,0,0))
+
+END SUBROUTINE boundary_kernel_pressure_xdir
+
+SUBROUTINE boundary_kernel_pressure_ydir(prun,store5,strpy,bcl5y)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1), intent(in) :: prun,store5
+    real(kind=dp), dimension(1) :: strpy,bcl5y
+
+    strpy(OPS_ACC3(0,0,0)) = prun(OPS_ACC1(0,0,0))
+    bcl5y(OPS_ACC4(0,0,0)) = store5(OPS_ACC2(0,0,0))
+
+END SUBROUTINE boundary_kernel_pressure_ydir
+
+SUBROUTINE boundary_kernel_pressure_zdir(prun,store6,strpz,bcl5z)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1), intent(in) :: prun,store6
+    real(kind=dp), dimension(1) :: strpz,bcl5z
+
+    strpz(OPS_ACC3(0,0,0)) = prun(OPS_ACC1(0,0,0))
+    bcl5z(OPS_ACC4(0,0,0)) = store6(OPS_ACC2(0,0,0))
+
+END SUBROUTINE boundary_kernel_pressure_zdir
+
+SUBROUTINE boundary_kernel_velderiv_xdir(store,bclx)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1), intent(in) :: store
+    real(kind=dp), dimension(1) :: bclx
+
+    bclx(OPS_ACC2(0,0,0)) = store(OPS_ACC1(0,0,0))
+
+END SUBROUTINE boundary_kernel_velderiv_xdir
+
+SUBROUTINE boundary_kernel_velderiv_ydir(store,bcly)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1), intent(in) :: store
+    real(kind=dp), dimension(1) :: bcly
+
+    bcly(OPS_ACC2(0,0,0)) = store(OPS_ACC1(0,0,0))
+
+END SUBROUTINE boundary_kernel_velderiv_ydir
+
+SUBROUTINE boundary_kernel_velderiv_zdir(store,bclz)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1), intent(in) :: store
+    real(kind=dp), dimension(1) :: bclz
+
+    bclz(OPS_ACC2(0,0,0)) = store(OPS_ACC1(0,0,0))
+
+END SUBROUTINE boundary_kernel_velderiv_zdir
+

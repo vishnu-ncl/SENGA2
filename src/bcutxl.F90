@@ -66,11 +66,11 @@ IF(nxlprm(1) == 1)THEN
   DO kc = kstal,kstol
     DO jc = jstal,jstol
       
-      struxl(jc,kc) = rxlprm(1)
+      struxl(1,jc,kc) = rxlprm(1)
 !            FORNOW = REAL(JC)*DELTAY/(HALF*YGDLEN)
 !            STRUXL(JC,KC) = RXLPRM(1)*TANH(FORNOW)
-      strvxl(jc,kc) = zero
-      strwxl(jc,kc) = zero
+      strvxl(1,jc,kc) = zero
+      strwxl(1,jc,kc) = zero
       
       dudtxl(jc,kc) = zero
       dvdtxl(jc,kc) = zero
@@ -93,9 +93,9 @@ IF(nxlprm(1) == 2)THEN
   DO kc = kstal,kstol
     DO jc = jstal,jstol
       
-      struxl(jc,kc) = rxlprm(1)*SIN(argmnt)
-      strvxl(jc,kc) = zero
-      strwxl(jc,kc) = zero
+      struxl(1,jc,kc) = rxlprm(1)*SIN(argmnt)
+      strvxl(1,jc,kc) = zero
+      strwxl(1,jc,kc) = zero
       
       dudtxl(jc,kc) = fornow*rxlprm(1)*COS(argmnt)
       dvdtxl(jc,kc) = zero
@@ -134,9 +134,9 @@ IF(nxlprm(1) == 3)THEN
   DO kc = kstal,kstol
     DO jc = jstal,jstol
       
-      struxl(jc,kc) = zero
-      strvxl(jc,kc) = zero
-      strwxl(jc,kc) = zero
+      struxl(1,jc,kc) = zero
+      strvxl(1,jc,kc) = zero
+      strwxl(1,jc,kc) = zero
       
       dudtxl(jc,kc) = zero
       dvdtxl(jc,kc) = zero
@@ -160,9 +160,9 @@ IF(nxlprm(1) == 3)THEN
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
-        struxl(jc,kc) = struxl(jc,kc) + ufxl(iic,jc,kc)*sinval
-        strvxl(jc,kc) = strvxl(jc,kc) + vfxl(iic,jc,kc)*sinval
-        strwxl(jc,kc) = strwxl(jc,kc) + wfxl(iic,jc,kc)*sinval
+        struxl(1,jc,kc) = struxl(1,jc,kc) + ufxl(iic,jc,kc)*sinval
+        strvxl(1,jc,kc) = strvxl(1,jc,kc) + vfxl(iic,jc,kc)*sinval
+        strwxl(1,jc,kc) = strwxl(1,jc,kc) + wfxl(iic,jc,kc)*sinval
         
         dudtxl(jc,kc) = dudtxl(jc,kc) - realkx*ufxl(iic,jc,kc)*cosval
         dvdtxl(jc,kc) = dvdtxl(jc,kc) - realkx*vfxl(iic,jc,kc)*cosval
@@ -192,9 +192,9 @@ IF(nxlprm(1) == 3)THEN
         sinval = SIN(argval)
         iim = 1
         
-        struxl(jc,kc) = struxl(jc,kc) + half*ufxl(iim,jc,kc)*cosval
-        strvxl(jc,kc) = strvxl(jc,kc) + half*vfxl(iim,jc,kc)*cosval
-        strwxl(jc,kc) = strwxl(jc,kc) + half*wfxl(iim,jc,kc)*cosval
+        struxl(1,jc,kc) = struxl(1,jc,kc) + half*ufxl(iim,jc,kc)*cosval
+        strvxl(1,jc,kc) = strvxl(1,jc,kc) + half*vfxl(iim,jc,kc)*cosval
+        strwxl(1,jc,kc) = strwxl(1,jc,kc) + half*wfxl(iim,jc,kc)*cosval
         
       END DO
     END DO
@@ -218,11 +218,11 @@ IF(nxlprm(1) == 3)THEN
         iim = ic
         iic = ic+1
         
-        struxl(jc,kc) = struxl(jc,kc) + ufxl(iim,jc,kc)*cosval  &
+        struxl(1,jc,kc) = struxl(1,jc,kc) + ufxl(iim,jc,kc)*cosval  &
             + ufxl(iic,jc,kc)*sinval
-        strvxl(jc,kc) = strvxl(jc,kc) + vfxl(iim,jc,kc)*cosval  &
+        strvxl(1,jc,kc) = strvxl(1,jc,kc) + vfxl(iim,jc,kc)*cosval  &
             + vfxl(iic,jc,kc)*sinval
-        strwxl(jc,kc) = strwxl(jc,kc) + wfxl(iim,jc,kc)*cosval  &
+        strwxl(1,jc,kc) = strwxl(1,jc,kc) + wfxl(iim,jc,kc)*cosval  &
             + wfxl(iic,jc,kc)*sinval
         
         dudtxl(jc,kc) = dudtxl(jc,kc) + realkx*(ufxl(iim,jc,kc)*sinval  &
@@ -258,9 +258,9 @@ IF(nxlprm(1) == 3)THEN
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
-        struxl(jc,kc) = struxl(jc,kc) + ufxl(iim,jc,kc)*cosval
-        strvxl(jc,kc) = strvxl(jc,kc) + vfxl(iim,jc,kc)*cosval
-        strwxl(jc,kc) = strwxl(jc,kc) + wfxl(iim,jc,kc)*cosval
+        struxl(1,jc,kc) = struxl(1,jc,kc) + ufxl(iim,jc,kc)*cosval
+        strvxl(1,jc,kc) = strvxl(1,jc,kc) + vfxl(iim,jc,kc)*cosval
+        strwxl(1,jc,kc) = strwxl(1,jc,kc) + wfxl(iim,jc,kc)*cosval
         
         dudtxl(jc,kc) = dudtxl(jc,kc) + realkx*ufxl(iim,jc,kc)*sinval
         dvdtxl(jc,kc) = dvdtxl(jc,kc) + realkx*vfxl(iim,jc,kc)*sinval
@@ -291,11 +291,11 @@ IF(nxlprm(1) == 3)THEN
         DO jc = jstal,jstol
           
           ncount = ncount + 1
-          struxl(jc,kc) = struxl(jc,kc) + parray(ncount)
+          struxl(1,jc,kc) = struxl(1,jc,kc) + parray(ncount)
           ncount = ncount + 1
-          strvxl(jc,kc) = strvxl(jc,kc) + parray(ncount)
+          strvxl(1,jc,kc) = strvxl(1,jc,kc) + parray(ncount)
           ncount = ncount + 1
-          strwxl(jc,kc) = strwxl(jc,kc) + parray(ncount)
+          strwxl(1,jc,kc) = strwxl(1,jc,kc) + parray(ncount)
           ncount = ncount + 1
           dudtxl(jc,kc) = dudtxl(jc,kc) + parray(ncount)
           ncount = ncount + 1
@@ -313,9 +313,9 @@ IF(nxlprm(1) == 3)THEN
       DO jc = jstal,jstol
         
 !             VELOCITIES
-        struxl(jc,kc) = struxl(jc,kc)*scauxl
-        strvxl(jc,kc) = strvxl(jc,kc)*scauxl
-        strwxl(jc,kc) = strwxl(jc,kc)*scauxl
+        struxl(1,jc,kc) = struxl(1,jc,kc)*scauxl
+        strvxl(1,jc,kc) = strvxl(1,jc,kc)*scauxl
+        strwxl(1,jc,kc) = strwxl(1,jc,kc)*scauxl
         
 !             DERIVATIVES
         dudtxl(jc,kc) = dudtxl(jc,kc)*scduxl
@@ -323,7 +323,7 @@ IF(nxlprm(1) == 3)THEN
         dwdtxl(jc,kc) = dwdtxl(jc,kc)*scduxl
         
 !             ADD MEAN VELOCITY
-        struxl(jc,kc) = struxl(jc,kc) + bvelxl
+        struxl(1,jc,kc) = struxl(1,jc,kc) + bvelxl
         
 !             CONVERT SPATIAL TO TEMPORAL DERIVATIVES
         dudtxl(jc,kc) = dudtxl(jc,kc)*svelxl
@@ -342,11 +342,11 @@ IF(nxlprm(1) == 3)THEN
       DO jc = jstal,jstol
         
         ncount = ncount + 1
-        parray(ncount) = struxl(jc,kc)
+        parray(ncount) = struxl(1,jc,kc)
         ncount = ncount + 1
-        parray(ncount) = strvxl(jc,kc)
+        parray(ncount) = strvxl(1,jc,kc)
         ncount = ncount + 1
-        parray(ncount) = strwxl(jc,kc)
+        parray(ncount) = strwxl(1,jc,kc)
         ncount = ncount + 1
         parray(ncount) = dudtxl(jc,kc)
         ncount = ncount + 1

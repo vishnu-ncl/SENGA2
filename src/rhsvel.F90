@@ -84,74 +84,74 @@ INTEGER :: rangexyz(6)
 
 !     X-DIRECTION
 IF(fxlcnv)THEN
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      struxl(jc,kc) = utmp(istal,jc,kc)
-      strvxl(jc,kc) = vtmp(istal,jc,kc)
-      strwxl(jc,kc) = wtmp(istal,jc,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_velcomp_xdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fxrcnv)THEN
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      struxr(jc,kc) = utmp(istol,jc,kc)
-      strvxr(jc,kc) = vtmp(istol,jc,kc)
-      strwxr(jc,kc) = wtmp(istol,jc,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_velcomp_xdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
 END IF
 
 !     Y-DIRECTION
 IF(fylcnv)THEN
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      struyl(ic,kc) = utmp(ic,jstal,kc)
-      strvyl(ic,kc) = vtmp(ic,jstal,kc)
-      strwyl(ic,kc) = wtmp(ic,jstal,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_velcomp_ydir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_struyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_strwyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fyrcnv)THEN
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      struyr(ic,kc) = utmp(ic,jstol,kc)
-      strvyr(ic,kc) = vtmp(ic,jstol,kc)
-      strwyr(ic,kc) = wtmp(ic,jstol,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_velcomp_ydir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
 END IF
 
 !     Z-DIRECTION
 IF(fzlcnv)THEN
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      struzl(ic,jc) = utmp(ic,jc,kstal)
-      strvzl(ic,jc) = vtmp(ic,jc,kstal)
-      strwzl(ic,jc) = wtmp(ic,jc,kstal)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+    call ops_par_loop(boundary_kernel_velcomp_zdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fzrcnv)THEN
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      struzr(ic,jc) = utmp(ic,jc,kstol)
-      strvzr(ic,jc) = vtmp(ic,jc,kstol)
-      strwzr(ic,jc) = wtmp(ic,jc,kstol)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+    call ops_par_loop(boundary_kernel_velcomp_zdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_struzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_strvzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
 END IF
 
 !     =========================================================================
@@ -332,62 +332,50 @@ CALL dfbydz(d_wtmp,d_store3)
 
 !     X-DIRECTION: DUDX
 IF(fxlcnv)THEN
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      bcl1xl(jc,kc) = store1(istal,jc,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_velderiv_xdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_bcl1xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fxrcnv)THEN
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      bcl1xr(jc,kc) = store1(istol,jc,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_velderiv_xdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
 END IF
 
 !     Y-DIRECTION: DVDY
 IF(fylcnv)THEN
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      bcl1yl(ic,kc) = store2(ic,jstal,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_velderiv_ydir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_bcl1yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fyrcnv)THEN
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      bcl1yr(ic,kc) = store2(ic,jstol,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_velderiv_ydir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
 END IF
 
 !     Z-DIRECTION: DWDZ
 IF(fzlcnv)THEN
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      bcl1zl(ic,jc) = store3(ic,jc,kstal)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+    call ops_par_loop(boundary_kernel_velderiv_zdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_bcl1zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fzrcnv)THEN
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      bcl1zr(ic,jc) = store3(ic,jc,kstol)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+    call ops_par_loop(boundary_kernel_velderiv_zdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
 END IF
 
 !     =========================================================================
@@ -508,68 +496,62 @@ CALL dfbydz(d_store7,d_store6)
 
 !     X-DIRECTION: P AND 8DX
 IF(fxlcnv)THEN
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      strpxl(jc,kc) = prun(istal,jc,kc)
-      bcl5xl(jc,kc) = store4(istal,jc,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_pressure_xdir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strpxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fxrcnv)THEN
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      strpxr(jc,kc) = prun(istol,jc,kc)
-      bcl5xr(jc,kc) = store4(istol,jc,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_pressure_xdir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strpxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bcl5xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
 END IF
 
 !     Y-DIRECTION: P AND 8DY
 IF(fylcnv)THEN
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      strpyl(ic,kc) = prun(ic,jstal,kc)
-      bcl5yl(ic,kc) = store5(ic,jstal,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_pressure_ydir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strpyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fyrcnv)THEN
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      strpyr(ic,kc) = prun(ic,jstol,kc)
-      bcl5yr(ic,kc) = store5(ic,jstol,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_pressure_ydir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strpyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bcl5yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
 END IF
 
 !     Z-DIRECTION: P AND 8DZ
 IF(fzlcnv)THEN
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      strpzl(ic,jc) = prun(ic,jc,kstal)
-      bcl5zl(ic,jc) = store6(ic,jc,kstal)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+    call ops_par_loop(boundary_kernel_pressure_zdir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strpzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fzrcnv)THEN
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      strpzr(ic,jc) = prun(ic,jc,kstol)
-      bcl5zr(ic,jc) = store6(ic,jc,kstol)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+    call ops_par_loop(boundary_kernel_pressure_zdir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strpzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bcl5zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
 END IF
 
 !     =========================================================================
@@ -908,22 +890,18 @@ CALL dfbydy(d_utmp,d_store1)
 !     -----------------------------------
 !     Y-DIRECTION: DUDY
 IF(fylcnv)THEN
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      bcl3yl(ic,kc) = store1(ic,jstal,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_velderiv_ydir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_bcl3yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fyrcnv)THEN
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      bcl3yr(ic,kc) = store1(ic,jstol,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_velderiv_ydir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_bcl3yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
 END IF
 !                                                                 STORE1 = DUDY
 !                                                        STORE4,5,6 = DMUDX,Y,Z
@@ -956,22 +934,18 @@ CALL dfbydx(d_vtmp,d_store2)
 !     ------------------------------------
 !     X-DIRECTION: DVDX
 IF(fxlcnv)THEN
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      bcl3xl(jc,kc) = store2(istal,jc,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_velderiv_xdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_bcl3xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fxrcnv)THEN
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      bcl3xr(jc,kc) = store2(istol,jc,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_velderiv_xdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_bcl3xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
 END IF
 !                                                                 STORE1 = DUDY
 !                                                                 STORE2 = DVDX
@@ -1209,22 +1183,18 @@ CALL dfbydz(d_utmp,d_store1)
 !     ------------------------------------
 !     Z-DIRECTION: DUDZ
 IF(fzlcnv)THEN
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      bcl3zl(ic,jc) = store1(ic,jc,kstal)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+    call ops_par_loop(boundary_kernel_velderiv_zdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_bcl3zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fzrcnv)THEN
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      bcl3zr(ic,jc) = store1(ic,jc,kstol)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+    call ops_par_loop(boundary_kernel_velderiv_zdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_bcl3zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
 END IF
 !                                                                 STORE1 = DUDZ
 !                                                        STORE4,5,6 = DMUDX,Y,Z
@@ -1257,22 +1227,18 @@ CALL dfbydx(d_wtmp,d_store2)
 !     ------------------------------------
 !     X-DIRECTION: DWDX
 IF(fxlcnv)THEN
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      bcl4xl(jc,kc) = store2(istal,jc,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_velderiv_xdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_bcl4xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fxrcnv)THEN
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      bcl4xr(jc,kc) = store2(istol,jc,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_velderiv_xdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_bcl4xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
 END IF
 !                                                                 STORE1 = DUDZ
 !                                                                 STORE2 = DWDX
@@ -1513,22 +1479,18 @@ CALL dfbydz(d_vtmp,d_store1)
 
 !     Z-DIRECTION: DVDZ
 IF(fzlcnv)THEN
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      bcl4zl(ic,jc) = store1(ic,jc,kstal)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+    call ops_par_loop(boundary_kernel_velderiv_zdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_bcl4zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fzrcnv)THEN
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      bcl4zr(ic,jc) = store1(ic,jc,kstol)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+    call ops_par_loop(boundary_kernel_velderiv_zdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_bcl4zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
 END IF
 !                                                                 STORE1 = DVDZ
 !                                                            TRANSP = VISCOSITY
@@ -1563,22 +1525,18 @@ CALL dfbydy(d_wtmp,d_store2)
 
 !     Y-DIRECTION: DWDY
 IF(fylcnv)THEN
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      bcl4yl(ic,kc) = store2(ic,jstal,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_velderiv_ydir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_bcl4yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
 END IF
 IF(fyrcnv)THEN
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      bcl4yr(ic,kc) = store2(ic,jstol,kc)
-      
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+    call ops_par_loop(boundary_kernel_velderiv_ydir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_bcl4yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
 END IF
 !                                                                 STORE1 = DVDZ
 !                                                                 STORE2 = DWDY

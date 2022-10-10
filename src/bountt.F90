@@ -131,9 +131,9 @@ IF(fxlcnv)THEN
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
-        urhs(istal,jc,kc) = drhs(istal,jc,kc)*struxl(jc,kc)
-        vrhs(istal,jc,kc) = drhs(istal,jc,kc)*strvxl(jc,kc)
-        wrhs(istal,jc,kc) = drhs(istal,jc,kc)*strwxl(jc,kc)
+        urhs(istal,jc,kc) = drhs(istal,jc,kc)*struxl(1,jc,kc)
+        vrhs(istal,jc,kc) = drhs(istal,jc,kc)*strvxl(1,jc,kc)
+        wrhs(istal,jc,kc) = drhs(istal,jc,kc)*strwxl(1,jc,kc)
         
         urun(istal,jc,kc) = urhs(istal,jc,kc)
         vrun(istal,jc,kc) = vrhs(istal,jc,kc)
@@ -143,8 +143,8 @@ IF(fxlcnv)THEN
         verr(istal,jc,kc) = zero
         werr(istal,jc,kc) = zero
         
-        erhs(istal,jc,kc) = half*(struxl(jc,kc)*struxl(jc,kc)  &
-            + strvxl(jc,kc)*strvxl(jc,kc) + strwxl(jc,kc)*strwxl(jc,kc))
+        erhs(istal,jc,kc) = half*(struxl(1,jc,kc)*struxl(1,jc,kc)  &
+            + strvxl(1,jc,kc)*strvxl(1,jc,kc) + strwxl(1,jc,kc)*strwxl(1,jc,kc))
         erhs(istal,jc,kc) = drhs(istal,jc,kc)*erhs(istal,jc,kc)
         
       END DO
@@ -217,9 +217,9 @@ IF(fxlcnv)THEN
       DO jc = jstal,jstol
         
         drhs(istal,jc,kc) = strdxl(1,jc,kc)
-        urhs(istal,jc,kc) = strdxl(1,jc,kc)*struxl(jc,kc)
-        vrhs(istal,jc,kc) = strdxl(1,jc,kc)*strvxl(jc,kc)
-        wrhs(istal,jc,kc) = strdxl(1,jc,kc)*strwxl(jc,kc)
+        urhs(istal,jc,kc) = strdxl(1,jc,kc)*struxl(1,jc,kc)
+        vrhs(istal,jc,kc) = strdxl(1,jc,kc)*strvxl(1,jc,kc)
+        wrhs(istal,jc,kc) = strdxl(1,jc,kc)*strwxl(1,jc,kc)
         
         drun(istal,jc,kc) = drhs(istal,jc,kc)
         urun(istal,jc,kc) = urhs(istal,jc,kc)
@@ -270,9 +270,9 @@ IF(fxlcnv)THEN
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
-        urhs(istal,jc,kc) = drhs(istal,jc,kc)*struxl(jc,kc)
-        vrhs(istal,jc,kc) = drhs(istal,jc,kc)*strvxl(jc,kc)
-        wrhs(istal,jc,kc) = drhs(istal,jc,kc)*strwxl(jc,kc)
+        urhs(istal,jc,kc) = drhs(istal,jc,kc)*struxl(1,jc,kc)
+        vrhs(istal,jc,kc) = drhs(istal,jc,kc)*strvxl(1,jc,kc)
+        wrhs(istal,jc,kc) = drhs(istal,jc,kc)*strwxl(1,jc,kc)
         
         urun(istal,jc,kc) = urhs(istal,jc,kc)
         vrun(istal,jc,kc) = vrhs(istal,jc,kc)
@@ -335,9 +335,9 @@ IF(fxlcnv)THEN
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
-        urhs(istal,jc,kc) = drhs(istal,jc,kc)*struxl(jc,kc)
-        vrhs(istal,jc,kc) = drhs(istal,jc,kc)*strvxl(jc,kc)
-        wrhs(istal,jc,kc) = drhs(istal,jc,kc)*strwxl(jc,kc)
+        urhs(istal,jc,kc) = drhs(istal,jc,kc)*struxl(1,jc,kc)
+        vrhs(istal,jc,kc) = drhs(istal,jc,kc)*strvxl(1,jc,kc)
+        wrhs(istal,jc,kc) = drhs(istal,jc,kc)*strwxl(1,jc,kc)
         
         urun(istal,jc,kc) = urhs(istal,jc,kc)
         vrun(istal,jc,kc) = vrhs(istal,jc,kc)
@@ -347,8 +347,8 @@ IF(fxlcnv)THEN
         verr(istal,jc,kc) = zero
         werr(istal,jc,kc) = zero
         
-        erhs(istal,jc,kc) = half*(struxl(jc,kc)*struxl(jc,kc)  &
-            + strvxl(jc,kc)*strvxl(jc,kc) + strwxl(jc,kc)*strwxl(jc,kc))
+        erhs(istal,jc,kc) = half*(struxl(1,jc,kc)*struxl(1,jc,kc)  &
+            + strvxl(1,jc,kc)*strvxl(1,jc,kc) + strwxl(1,jc,kc)*strwxl(1,jc,kc))
         erhs(istal,jc,kc) = drhs(istal,jc,kc)*erhs(istal,jc,kc)
         
       END DO
@@ -473,9 +473,9 @@ IF(fxrcnv)THEN
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
-        urhs(istol,jc,kc) = drhs(istol,jc,kc)*struxr(jc,kc)
-        vrhs(istol,jc,kc) = drhs(istol,jc,kc)*strvxr(jc,kc)
-        wrhs(istol,jc,kc) = drhs(istol,jc,kc)*strwxr(jc,kc)
+        urhs(istol,jc,kc) = drhs(istol,jc,kc)*struxr(1,jc,kc)
+        vrhs(istol,jc,kc) = drhs(istol,jc,kc)*strvxr(1,jc,kc)
+        wrhs(istol,jc,kc) = drhs(istol,jc,kc)*strwxr(1,jc,kc)
         
         urun(istol,jc,kc) = urhs(istol,jc,kc)
         vrun(istol,jc,kc) = vrhs(istol,jc,kc)
@@ -485,8 +485,8 @@ IF(fxrcnv)THEN
         verr(istol,jc,kc) = zero
         werr(istol,jc,kc) = zero
         
-        erhs(istol,jc,kc) = half*(struxr(jc,kc)*struxr(jc,kc)  &
-            + strvxr(jc,kc)*strvxr(jc,kc) + strwxr(jc,kc)*strwxr(jc,kc))
+        erhs(istol,jc,kc) = half*(struxr(1,jc,kc)*struxr(1,jc,kc)  &
+            + strvxr(1,jc,kc)*strvxr(1,jc,kc) + strwxr(1,jc,kc)*strwxr(1,jc,kc))
         erhs(istol,jc,kc) = drhs(istol,jc,kc)*erhs(istol,jc,kc)
         
       END DO
@@ -559,9 +559,9 @@ IF(fxrcnv)THEN
       DO jc = jstal,jstol
         
         drhs(istol,jc,kc) = strdxr(1,jc,kc)
-        urhs(istol,jc,kc) = strdxr(1,jc,kc)*struxr(jc,kc)
-        vrhs(istol,jc,kc) = strdxr(1,jc,kc)*strvxr(jc,kc)
-        wrhs(istol,jc,kc) = strdxr(1,jc,kc)*strwxr(jc,kc)
+        urhs(istol,jc,kc) = strdxr(1,jc,kc)*struxr(1,jc,kc)
+        vrhs(istol,jc,kc) = strdxr(1,jc,kc)*strvxr(1,jc,kc)
+        wrhs(istol,jc,kc) = strdxr(1,jc,kc)*strwxr(1,jc,kc)
         
         drun(istol,jc,kc) = drhs(istol,jc,kc)
         urun(istol,jc,kc) = urhs(istol,jc,kc)
@@ -613,9 +613,9 @@ IF(fxrcnv)THEN
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
-        urhs(istol,jc,kc) = drhs(istol,jc,kc)*struxr(jc,kc)
-        vrhs(istol,jc,kc) = drhs(istol,jc,kc)*strvxr(jc,kc)
-        wrhs(istol,jc,kc) = drhs(istol,jc,kc)*strwxr(jc,kc)
+        urhs(istol,jc,kc) = drhs(istol,jc,kc)*struxr(1,jc,kc)
+        vrhs(istol,jc,kc) = drhs(istol,jc,kc)*strvxr(1,jc,kc)
+        wrhs(istol,jc,kc) = drhs(istol,jc,kc)*strwxr(1,jc,kc)
         
         urun(istol,jc,kc) = urhs(istol,jc,kc)
         vrun(istol,jc,kc) = vrhs(istol,jc,kc)
@@ -679,9 +679,9 @@ IF(fxrcnv)THEN
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
-        urhs(istol,jc,kc) = drhs(istol,jc,kc)*struxr(jc,kc)
-        vrhs(istol,jc,kc) = drhs(istol,jc,kc)*strvxr(jc,kc)
-        wrhs(istol,jc,kc) = drhs(istol,jc,kc)*strwxr(jc,kc)
+        urhs(istol,jc,kc) = drhs(istol,jc,kc)*struxr(1,jc,kc)
+        vrhs(istol,jc,kc) = drhs(istol,jc,kc)*strvxr(1,jc,kc)
+        wrhs(istol,jc,kc) = drhs(istol,jc,kc)*strwxr(1,jc,kc)
         
         urun(istol,jc,kc) = urhs(istol,jc,kc)
         vrun(istol,jc,kc) = vrhs(istol,jc,kc)
@@ -691,8 +691,8 @@ IF(fxrcnv)THEN
         verr(istol,jc,kc) = zero
         werr(istol,jc,kc) = zero
         
-        erhs(istol,jc,kc) = half*(struxr(jc,kc)*struxr(jc,kc)  &
-            + strvxr(jc,kc)*strvxr(jc,kc) + strwxr(jc,kc)*strwxr(jc,kc))
+        erhs(istol,jc,kc) = half*(struxr(1,jc,kc)*struxr(1,jc,kc)  &
+            + strvxr(1,jc,kc)*strvxr(1,jc,kc) + strwxr(1,jc,kc)*strwxr(1,jc,kc))
         erhs(istol,jc,kc) = drhs(istol,jc,kc)*erhs(istol,jc,kc)
         
       END DO
@@ -823,9 +823,9 @@ IF(fylcnv)THEN
     DO kc = kstal,kstol
       DO ic = istal,istol
         
-        urhs(ic,jstal,kc) = drhs(ic,jstal,kc)*struyl(ic,kc)
-        vrhs(ic,jstal,kc) = drhs(ic,jstal,kc)*strvyl(ic,kc)
-        wrhs(ic,jstal,kc) = drhs(ic,jstal,kc)*strwyl(ic,kc)
+        urhs(ic,jstal,kc) = drhs(ic,jstal,kc)*struyl(ic,1,kc)
+        vrhs(ic,jstal,kc) = drhs(ic,jstal,kc)*strvyl(ic,1,kc)
+        wrhs(ic,jstal,kc) = drhs(ic,jstal,kc)*strwyl(ic,1,kc)
         
         urun(ic,jstal,kc) = urhs(ic,jstal,kc)
         vrun(ic,jstal,kc) = vrhs(ic,jstal,kc)
@@ -835,8 +835,8 @@ IF(fylcnv)THEN
         verr(ic,jstal,kc) = zero
         werr(ic,jstal,kc) = zero
         
-        erhs(ic,jstal,kc) = half*(struyl(ic,kc)*struyl(ic,kc)  &
-            + strvyl(ic,kc)*strvyl(ic,kc) + strwyl(ic,kc)*strwyl(ic,kc))
+        erhs(ic,jstal,kc) = half*(struyl(ic,1,kc)*struyl(ic,1,kc)  &
+            + strvyl(ic,1,kc)*strvyl(ic,1,kc) + strwyl(ic,1,kc)*strwyl(ic,1,kc))
         erhs(ic,jstal,kc) = drhs(ic,jstal,kc)*erhs(ic,jstal,kc)
         
       END DO
@@ -909,9 +909,9 @@ IF(fylcnv)THEN
       DO ic = istal,istol
         
         drhs(ic,jstal,kc) = strdyl(ic,1,kc)
-        urhs(ic,jstal,kc) = strdyl(ic,1,kc)*struyl(ic,kc)
-        vrhs(ic,jstal,kc) = strdyl(ic,1,kc)*strvyl(ic,kc)
-        wrhs(ic,jstal,kc) = strdyl(ic,1,kc)*strwyl(ic,kc)
+        urhs(ic,jstal,kc) = strdyl(ic,1,kc)*struyl(ic,1,kc)
+        vrhs(ic,jstal,kc) = strdyl(ic,1,kc)*strvyl(ic,1,kc)
+        wrhs(ic,jstal,kc) = strdyl(ic,1,kc)*strwyl(ic,1,kc)
         
         drun(ic,jstal,kc) = drhs(ic,jstal,kc)
         urun(ic,jstal,kc) = urhs(ic,jstal,kc)
@@ -962,9 +962,9 @@ IF(fylcnv)THEN
     DO kc = kstal,kstol
       DO ic = istal,istol
         
-        urhs(ic,jstal,kc) = drhs(ic,jstal,kc)*struyl(ic,kc)
-        vrhs(ic,jstal,kc) = drhs(ic,jstal,kc)*strvyl(ic,kc)
-        wrhs(ic,jstal,kc) = drhs(ic,jstal,kc)*strwyl(ic,kc)
+        urhs(ic,jstal,kc) = drhs(ic,jstal,kc)*struyl(ic,1,kc)
+        vrhs(ic,jstal,kc) = drhs(ic,jstal,kc)*strvyl(ic,1,kc)
+        wrhs(ic,jstal,kc) = drhs(ic,jstal,kc)*strwyl(ic,1,kc)
         
         urun(ic,jstal,kc) = urhs(ic,jstal,kc)
         vrun(ic,jstal,kc) = vrhs(ic,jstal,kc)
@@ -1027,9 +1027,9 @@ IF(fylcnv)THEN
     DO kc = kstal,kstol
       DO ic = istal,istol
         
-        urhs(ic,jstal,kc) = drhs(ic,jstal,kc)*struyl(ic,kc)
-        vrhs(ic,jstal,kc) = drhs(ic,jstal,kc)*strvyl(ic,kc)
-        wrhs(ic,jstal,kc) = drhs(ic,jstal,kc)*strwyl(ic,kc)
+        urhs(ic,jstal,kc) = drhs(ic,jstal,kc)*struyl(ic,1,kc)
+        vrhs(ic,jstal,kc) = drhs(ic,jstal,kc)*strvyl(ic,1,kc)
+        wrhs(ic,jstal,kc) = drhs(ic,jstal,kc)*strwyl(ic,1,kc)
         
         urun(ic,jstal,kc) = urhs(ic,jstal,kc)
         vrun(ic,jstal,kc) = vrhs(ic,jstal,kc)
@@ -1039,8 +1039,8 @@ IF(fylcnv)THEN
         verr(ic,jstal,kc) = zero
         werr(ic,jstal,kc) = zero
         
-        erhs(ic,jstal,kc) = half*(struyl(ic,kc)*struyl(ic,kc)  &
-            + strvyl(ic,kc)*strvyl(ic,kc) + strwyl(ic,kc)*strwyl(ic,kc))
+        erhs(ic,jstal,kc) = half*(struyl(ic,1,kc)*struyl(ic,1,kc)  &
+            + strvyl(ic,1,kc)*strvyl(ic,1,kc) + strwyl(ic,1,kc)*strwyl(ic,1,kc))
         erhs(ic,jstal,kc) = drhs(ic,jstal,kc)*erhs(ic,jstal,kc)
         
       END DO
@@ -1171,9 +1171,9 @@ IF(fyrcnv)THEN
     DO kc = kstal,kstol
       DO ic = istal,istol
         
-        urhs(ic,jstol,kc) = drhs(ic,jstol,kc)*struyr(ic,kc)
-        vrhs(ic,jstol,kc) = drhs(ic,jstol,kc)*strvyr(ic,kc)
-        wrhs(ic,jstol,kc) = drhs(ic,jstol,kc)*strwyr(ic,kc)
+        urhs(ic,jstol,kc) = drhs(ic,jstol,kc)*struyr(ic,1,kc)
+        vrhs(ic,jstol,kc) = drhs(ic,jstol,kc)*strvyr(ic,1,kc)
+        wrhs(ic,jstol,kc) = drhs(ic,jstol,kc)*strwyr(ic,1,kc)
         
         urun(ic,jstol,kc) = urhs(ic,jstol,kc)
         vrun(ic,jstol,kc) = vrhs(ic,jstol,kc)
@@ -1183,8 +1183,8 @@ IF(fyrcnv)THEN
         verr(ic,jstol,kc) = zero
         werr(ic,jstol,kc) = zero
         
-        erhs(ic,jstol,kc) = half*(struyr(ic,kc)*struyr(ic,kc)  &
-            + strvyr(ic,kc)*strvyr(ic,kc) + strwyr(ic,kc)*strwyr(ic,kc))
+        erhs(ic,jstol,kc) = half*(struyr(ic,1,kc)*struyr(ic,1,kc)  &
+            + strvyr(ic,1,kc)*strvyr(ic,1,kc) + strwyr(ic,1,kc)*strwyr(ic,1,kc))
         erhs(ic,jstol,kc) = drhs(ic,jstol,kc)*erhs(ic,jstol,kc)
         
       END DO
@@ -1257,9 +1257,9 @@ IF(fyrcnv)THEN
       DO ic = istal,istol
         
         drhs(ic,jstol,kc) = strdyr(ic,1,kc)
-        urhs(ic,jstol,kc) = strdyr(ic,1,kc)*struyr(ic,kc)
-        vrhs(ic,jstol,kc) = strdyr(ic,1,kc)*strvyr(ic,kc)
-        wrhs(ic,jstol,kc) = strdyr(ic,1,kc)*strwyr(ic,kc)
+        urhs(ic,jstol,kc) = strdyr(ic,1,kc)*struyr(ic,1,kc)
+        vrhs(ic,jstol,kc) = strdyr(ic,1,kc)*strvyr(ic,1,kc)
+        wrhs(ic,jstol,kc) = strdyr(ic,1,kc)*strwyr(ic,1,kc)
         
         drun(ic,jstol,kc) = drhs(ic,jstol,kc)
         urun(ic,jstol,kc) = urhs(ic,jstol,kc)
@@ -1311,9 +1311,9 @@ IF(fyrcnv)THEN
     DO kc = kstal,kstol
       DO ic = istal,istol
         
-        urhs(ic,jstol,kc) = drhs(ic,jstol,kc)*struyr(ic,kc)
-        vrhs(ic,jstol,kc) = drhs(ic,jstol,kc)*strvyr(ic,kc)
-        wrhs(ic,jstol,kc) = drhs(ic,jstol,kc)*strwyr(ic,kc)
+        urhs(ic,jstol,kc) = drhs(ic,jstol,kc)*struyr(ic,1,kc)
+        vrhs(ic,jstol,kc) = drhs(ic,jstol,kc)*strvyr(ic,1,kc)
+        wrhs(ic,jstol,kc) = drhs(ic,jstol,kc)*strwyr(ic,1,kc)
         
         urun(ic,jstol,kc) = urhs(ic,jstol,kc)
         vrun(ic,jstol,kc) = vrhs(ic,jstol,kc)
@@ -1377,9 +1377,9 @@ IF(fyrcnv)THEN
     DO kc = kstal,kstol
       DO ic = istal,istol
         
-        urhs(ic,jstol,kc) = drhs(ic,jstol,kc)*struyr(ic,kc)
-        vrhs(ic,jstol,kc) = drhs(ic,jstol,kc)*strvyr(ic,kc)
-        wrhs(ic,jstol,kc) = drhs(ic,jstol,kc)*strwyr(ic,kc)
+        urhs(ic,jstol,kc) = drhs(ic,jstol,kc)*struyr(ic,1,kc)
+        vrhs(ic,jstol,kc) = drhs(ic,jstol,kc)*strvyr(ic,1,kc)
+        wrhs(ic,jstol,kc) = drhs(ic,jstol,kc)*strwyr(ic,1,kc)
         
         urun(ic,jstol,kc) = urhs(ic,jstol,kc)
         vrun(ic,jstol,kc) = vrhs(ic,jstol,kc)
@@ -1389,8 +1389,8 @@ IF(fyrcnv)THEN
         verr(ic,jstol,kc) = zero
         werr(ic,jstol,kc) = zero
         
-        erhs(ic,jstol,kc) = half*(struyr(ic,kc)*struyr(ic,kc)  &
-            + strvyr(ic,kc)*strvyr(ic,kc) + strwyr(ic,kc)*strwyr(ic,kc))
+        erhs(ic,jstol,kc) = half*(struyr(ic,1,kc)*struyr(ic,1,kc)  &
+            + strvyr(ic,1,kc)*strvyr(ic,1,kc) + strwyr(ic,1,kc)*strwyr(ic,1,kc))
         erhs(ic,jstol,kc) = drhs(ic,jstol,kc)*erhs(ic,jstol,kc)
         
       END DO
@@ -1521,9 +1521,9 @@ IF(fzlcnv)THEN
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        urhs(ic,jc,kstal) = drhs(ic,jc,kstal)*struzl(ic,jc)
-        vrhs(ic,jc,kstal) = drhs(ic,jc,kstal)*strvzl(ic,jc)
-        wrhs(ic,jc,kstal) = drhs(ic,jc,kstal)*strwzl(ic,jc)
+        urhs(ic,jc,kstal) = drhs(ic,jc,kstal)*struzl(ic,jc,1)
+        vrhs(ic,jc,kstal) = drhs(ic,jc,kstal)*strvzl(ic,jc,1)
+        wrhs(ic,jc,kstal) = drhs(ic,jc,kstal)*strwzl(ic,jc,1)
         
         urun(ic,jc,kstal) = urhs(ic,jc,kstal)
         vrun(ic,jc,kstal) = vrhs(ic,jc,kstal)
@@ -1533,8 +1533,8 @@ IF(fzlcnv)THEN
         verr(ic,jc,kstal) = zero
         werr(ic,jc,kstal) = zero
         
-        erhs(ic,jc,kstal) = half*(struzl(ic,jc)*struzl(ic,jc)  &
-            + strvzl(ic,jc)*strvzl(ic,jc) + strwzl(ic,jc)*strwzl(ic,jc))
+        erhs(ic,jc,kstal) = half*(struzl(ic,jc,1)*struzl(ic,jc,1)  &
+            + strvzl(ic,jc,1)*strvzl(ic,jc,1) + strwzl(ic,jc,1)*strwzl(ic,jc,1))
         erhs(ic,jc,kstal) = drhs(ic,jc,kstal)*erhs(ic,jc,kstal)
         
       END DO
@@ -1607,9 +1607,9 @@ IF(fzlcnv)THEN
       DO ic = istal,istol
         
         drhs(ic,jc,kstal) = strdzl(ic,jc,1)
-        urhs(ic,jc,kstal) = strdzl(ic,jc,1)*struzl(ic,jc)
-        vrhs(ic,jc,kstal) = strdzl(ic,jc,1)*strvzl(ic,jc)
-        wrhs(ic,jc,kstal) = strdzl(ic,jc,1)*strwzl(ic,jc)
+        urhs(ic,jc,kstal) = strdzl(ic,jc,1)*struzl(ic,jc,1)
+        vrhs(ic,jc,kstal) = strdzl(ic,jc,1)*strvzl(ic,jc,1)
+        wrhs(ic,jc,kstal) = strdzl(ic,jc,1)*strwzl(ic,jc,1)
         
         drun(ic,jc,kstal) = drhs(ic,jc,kstal)
         urun(ic,jc,kstal) = urhs(ic,jc,kstal)
@@ -1661,9 +1661,9 @@ IF(fzlcnv)THEN
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        urhs(ic,jc,kstal) = drhs(ic,jc,kstal)*struzl(ic,jc)
-        vrhs(ic,jc,kstal) = drhs(ic,jc,kstal)*strvzl(ic,jc)
-        wrhs(ic,jc,kstal) = drhs(ic,jc,kstal)*strwzl(ic,jc)
+        urhs(ic,jc,kstal) = drhs(ic,jc,kstal)*struzl(ic,jc,1)
+        vrhs(ic,jc,kstal) = drhs(ic,jc,kstal)*strvzl(ic,jc,1)
+        wrhs(ic,jc,kstal) = drhs(ic,jc,kstal)*strwzl(ic,jc,1)
         
         urun(ic,jc,kstal) = urhs(ic,jc,kstal)
         vrun(ic,jc,kstal) = vrhs(ic,jc,kstal)
@@ -1727,9 +1727,9 @@ IF(fzlcnv)THEN
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        urhs(ic,jc,kstal) = drhs(ic,jc,kstal)*struzl(ic,jc)
-        vrhs(ic,jc,kstal) = drhs(ic,jc,kstal)*strvzl(ic,jc)
-        wrhs(ic,jc,kstal) = drhs(ic,jc,kstal)*strwzl(ic,jc)
+        urhs(ic,jc,kstal) = drhs(ic,jc,kstal)*struzl(ic,jc,1)
+        vrhs(ic,jc,kstal) = drhs(ic,jc,kstal)*strvzl(ic,jc,1)
+        wrhs(ic,jc,kstal) = drhs(ic,jc,kstal)*strwzl(ic,jc,1)
         
         urun(ic,jc,kstal) = urhs(ic,jc,kstal)
         vrun(ic,jc,kstal) = vrhs(ic,jc,kstal)
@@ -1739,8 +1739,8 @@ IF(fzlcnv)THEN
         verr(ic,jc,kstal) = zero
         werr(ic,jc,kstal) = zero
         
-        erhs(ic,jc,kstal) = half*(struzl(ic,jc)*struzl(ic,jc)  &
-            + strvzl(ic,jc)*strvzl(ic,jc) + strwzl(ic,jc)*strwzl(ic,jc))
+        erhs(ic,jc,kstal) = half*(struzl(ic,jc,1)*struzl(ic,jc,1)  &
+            + strvzl(ic,jc,1)*strvzl(ic,jc,1) + strwzl(ic,jc,1)*strwzl(ic,jc,1))
         erhs(ic,jc,kstal) = drhs(ic,jc,kstal)*erhs(ic,jc,kstal)
         
       END DO
@@ -1871,9 +1871,9 @@ IF(fzrcnv)THEN
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        urhs(ic,jc,kstol) = drhs(ic,jc,kstol)*struzr(ic,jc)
-        vrhs(ic,jc,kstol) = drhs(ic,jc,kstol)*strvzr(ic,jc)
-        wrhs(ic,jc,kstol) = drhs(ic,jc,kstol)*strwzr(ic,jc)
+        urhs(ic,jc,kstol) = drhs(ic,jc,kstol)*struzr(ic,jc,1)
+        vrhs(ic,jc,kstol) = drhs(ic,jc,kstol)*strvzr(ic,jc,1)
+        wrhs(ic,jc,kstol) = drhs(ic,jc,kstol)*strwzr(ic,jc,1)
         
         urun(ic,jc,kstol) = urhs(ic,jc,kstol)
         vrun(ic,jc,kstol) = vrhs(ic,jc,kstol)
@@ -1883,8 +1883,8 @@ IF(fzrcnv)THEN
         verr(ic,jc,kstol) = zero
         werr(ic,jc,kstol) = zero
         
-        erhs(ic,jc,kstol) = half*(struzr(ic,jc)*struzr(ic,jc)  &
-            + strvzr(ic,jc)*strvzr(ic,jc) + strwzr(ic,jc)*strwzr(ic,jc))
+        erhs(ic,jc,kstol) = half*(struzr(ic,jc,1)*struzr(ic,jc,1)  &
+            + strvzr(ic,jc,1)*strvzr(ic,jc,1) + strwzr(ic,jc,1)*strwzr(ic,jc,1))
         erhs(ic,jc,kstol) = drhs(ic,jc,kstol)*erhs(ic,jc,kstol)
         
       END DO
@@ -1957,9 +1957,9 @@ IF(fzrcnv)THEN
       DO ic = istal,istol
         
         drhs(ic,jc,kstol) = strdzr(ic,jc,1)
-        urhs(ic,jc,kstol) = strdzr(ic,jc,1)*struzr(ic,jc)
-        vrhs(ic,jc,kstol) = strdzr(ic,jc,1)*strvzr(ic,jc)
-        wrhs(ic,jc,kstol) = strdzr(ic,jc,1)*strwzr(ic,jc)
+        urhs(ic,jc,kstol) = strdzr(ic,jc,1)*struzr(ic,jc,1)
+        vrhs(ic,jc,kstol) = strdzr(ic,jc,1)*strvzr(ic,jc,1)
+        wrhs(ic,jc,kstol) = strdzr(ic,jc,1)*strwzr(ic,jc,1)
         
         drun(ic,jc,kstol) = drhs(ic,jc,kstol)
         urun(ic,jc,kstol) = urhs(ic,jc,kstol)
@@ -2011,9 +2011,9 @@ IF(fzrcnv)THEN
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        urhs(ic,jc,kstol) = drhs(ic,jc,kstol)*struzr(ic,jc)
-        vrhs(ic,jc,kstol) = drhs(ic,jc,kstol)*strvzr(ic,jc)
-        wrhs(ic,jc,kstol) = drhs(ic,jc,kstol)*strwzr(ic,jc)
+        urhs(ic,jc,kstol) = drhs(ic,jc,kstol)*struzr(ic,jc,1)
+        vrhs(ic,jc,kstol) = drhs(ic,jc,kstol)*strvzr(ic,jc,1)
+        wrhs(ic,jc,kstol) = drhs(ic,jc,kstol)*strwzr(ic,jc,1)
         
         urun(ic,jc,kstol) = urhs(ic,jc,kstol)
         vrun(ic,jc,kstol) = vrhs(ic,jc,kstol)
@@ -2077,9 +2077,9 @@ IF(fzrcnv)THEN
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        urhs(ic,jc,kstol) = drhs(ic,jc,kstol)*struzr(ic,jc)
-        vrhs(ic,jc,kstol) = drhs(ic,jc,kstol)*strvzr(ic,jc)
-        wrhs(ic,jc,kstol) = drhs(ic,jc,kstol)*strwzr(ic,jc)
+        urhs(ic,jc,kstol) = drhs(ic,jc,kstol)*struzr(ic,jc,1)
+        vrhs(ic,jc,kstol) = drhs(ic,jc,kstol)*strvzr(ic,jc,1)
+        wrhs(ic,jc,kstol) = drhs(ic,jc,kstol)*strwzr(ic,jc,1)
         
         urun(ic,jc,kstol) = urhs(ic,jc,kstol)
         vrun(ic,jc,kstol) = vrhs(ic,jc,kstol)
@@ -2089,8 +2089,8 @@ IF(fzrcnv)THEN
         verr(ic,jc,kstol) = zero
         werr(ic,jc,kstol) = zero
         
-        erhs(ic,jc,kstol) = half*(struzr(ic,jc)*struzr(ic,jc)  &
-            + strvzr(ic,jc)*strvzr(ic,jc) + strwzr(ic,jc)*strwzr(ic,jc))
+        erhs(ic,jc,kstol) = half*(struzr(ic,jc,1)*struzr(ic,jc,1)  &
+            + strvzr(ic,jc,1)*strvzr(ic,jc,1) + strwzr(ic,jc,1)*strwzr(ic,jc,1))
         erhs(ic,jc,kstol) = drhs(ic,jc,kstol)*erhs(ic,jc,kstol)
         
       END DO

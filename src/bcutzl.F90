@@ -56,9 +56,9 @@ IF(nzlprm(1) == 1)THEN
   DO jc = jstal,jstol
     DO ic = istal,istol
       
-      struzl(ic,jc) = zero
-      strvzl(ic,jc) = zero
-      strwzl(ic,jc) = rzlprm(1)
+      struzl(ic,jc,1) = zero
+      strvzl(ic,jc,1) = zero
+      strwzl(ic,jc,1) = rzlprm(1)
       
       dudtzl(ic,jc) = zero
       dvdtzl(ic,jc) = zero
