@@ -303,17 +303,16 @@ CALL dfbydy(d_erhs,d_store2)
 CALL dfbydz(d_erhs,d_store3)
 
 !     COLLECT ALL CONVECTIVE TERMS IN ERHS
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      erhs(ic,jc,kc) = -half*(store4(ic,jc,kc)  &
-          + store1(ic,jc,kc)*urhs(ic,jc,kc) + store2(ic,jc,kc)*vrhs(ic,jc,kc)  &
-          + store3(ic,jc,kc)*wrhs(ic,jc,kc))
-      
-    END DO
-  END DO
-END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(complexmath_kernel_eqone, "A = -half*(B+C*D+E*F+G*H)", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_READ))
 
 !     -------------------------------------
 !     E EQUATION: CONVECTIVE TERMS COMPLETE
@@ -484,15 +483,16 @@ IF(fyrcon)CALL zeroyr(d_store5)
 IF(fzlcon)CALL zerozl(d_store6)
 IF(fzrcon)CALL zerozr(d_store6)
 
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      erhs(ic,jc,kc) = erhs(ic,jc,kc) +(store4(ic,jc,kc)*store1(ic,jc,kc)  &
-          + store5(ic,jc,kc)*store2(ic,jc,kc) + store6(ic,jc,kc)*store3(ic,jc,kc))
-    END DO
-  END DO
-END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(complexmath_kernel_eqtwo, "A = A+(B*C+D*E+F*G)", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+
 !                                                         STORE1,2,3 = DTDX,Y,Z
 !                                                         STORE7 = CONDUCTIVITY
 !     =========================================================================
@@ -584,17 +584,13 @@ IF(fzlcon)CALL zerozl(d_store3)
 IF(fzrcon)CALL zerozr(d_store3)
 
 !     COLLECT CONDUCTIVITY TERMS
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      erhs(ic,jc,kc) = erhs(ic,jc,kc) +(store1(ic,jc,kc)  &
-          + store2(ic,jc,kc) + store3(ic,jc,kc))  &
-          *store7(ic,jc,kc)
-      
-    END DO
-  END DO
-END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(complexmath_kernel_eqthree, "A = A+(B+C+D)*E", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
 
 !     ---------------------------------------------------
 !     E-EQUATION: FURTHER HEAT FLUX TERMS EVALUATED BELOW
@@ -1038,15 +1034,12 @@ DO ispec = 1,nspec
 !       TRANSP CONTAINS CONDUCTIVITY/CP
 !       STORE DIFFUSIVITY IN STORE7 FOR NOW
 !       Y DIFFUSIVITY IS PARALLEL
-  DO kc = kstab,kstob
-    DO jc = jstab,jstob
-      DO ic = istab,istob
-        
-        store7(ic,jc,kc) = transp(ic,jc,kc)*olewis(ispec)
-        
-      END DO
-    END DO
-  END DO
+    rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+    call ops_par_loop(compute_kernel_AequalsBmulvar, "A=B*val", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(olewis(ispec), 1, "real(dp)", OPS_READ))
+
 !                                                         STORE1,2,3 = DYDX,Y,Z
 !                                                          STORE7 = DIFFUSIVITY
 !                                                         RATE = Y SOURCE TERMS
@@ -1278,18 +1271,14 @@ DO ispec = 1,nspec
 !       RSC 23-APR-2013
 !       ADD DUFOUR EFFECT TERMS TO SPECIES ENTHALPY
   IF(flmduf(ispec))THEN
-    
-    DO kc = kstab,kstob
-      DO jc = jstab,jstob
-        DO ic = istab,istob
-          
-          utmp(ic,jc,kc) = utmp(ic,jc,kc)  &
-              + rgspec(ispec)*trun(ic,jc,kc)*tdrmix(ic,jc,kc)
-          
-        END DO
-      END DO
-    END DO
-    
+
+    rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+    call ops_par_loop(complexmath_kernel_eqfour, "A = A+var*B*C", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_tdrmix, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ))
+
   END IF
   
 !       =======================================================================
@@ -1343,21 +1332,19 @@ DO ispec = 1,nspec
 !       BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
   IF(fzladb)CALL zerozl(d_store6)
   IF(fzradb)CALL zerozr(d_store6)
-  
+
 !       E EQUATION
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        fornow = store4(ic,jc,kc)*store1(ic,jc,kc)  &
-            + store5(ic,jc,kc)*store2(ic,jc,kc)  &
-            + store6(ic,jc,kc)*store3(ic,jc,kc)
-        
-        erhs(ic,jc,kc) = erhs(ic,jc,kc) + fornow*utmp(ic,jc,kc)
-        
-      END DO
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(complexmath_kernel_eqfive, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
+
 !                                                         STORE1,2,3 = DYDX,Y,Z
 !                                                          STORE7 = DIFFUSIVITY
 !                                                         RATE = Y SOURCE TERMS
@@ -1396,20 +1383,18 @@ DO ispec = 1,nspec
 !       BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
   IF(fzladb)CALL zerozl(d_store6)
   IF(fzradb)CALL zerozr(d_store6)
-  
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        fornow = store4(ic,jc,kc)*store1(ic,jc,kc)  &
-            + store5(ic,jc,kc)*store2(ic,jc,kc)  &
-            + store6(ic,jc,kc)*store3(ic,jc,kc)
-        
-        erhs(ic,jc,kc) = erhs(ic,jc,kc) + fornow*store7(ic,jc,kc)
-        
-      END DO
-    END DO
-  END DO
+
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(complexmath_kernel_eqfive, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
+
 !                                                         STORE1,2,3 = DYDX,Y,Z
 !                                                          STORE7 = DIFFUSIVITY
 !                                                         RATE = Y SOURCE TERMS
@@ -1594,18 +1579,15 @@ DO ispec = 1,nspec
   IF(fzradb)CALL zerozr(d_store3)
   
 !       E EQUATION
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        fornow = (store1(ic,jc,kc) +  store2(ic,jc,kc)  &
-            +  store3(ic,jc,kc))*store4(ic,jc,kc)
-        
-        erhs(ic,jc,kc) = erhs(ic,jc,kc) + fornow*utmp(ic,jc,kc)
-        
-      END DO
-    END DO
-  END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(complexmath_kernel_eqsix, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
+
 !                                                         RATE = Y SOURCE TERMS
 !                                                           VTMP = DIV CORR VEL
 !                                                              WTMP = MIXTURE H
@@ -1696,22 +1678,19 @@ DO ispec = 1,nspec
 !         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
     IF(fzladb)CALL zerozl(d_store3)
     IF(fzradb)CALL zerozr(d_store3)
-    
+
 !         E EQUATION
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          fornow = store1(ic,jc,kc)*wd1x(ic,jc,kc)  &
-              + store2(ic,jc,kc)*wd1y(ic,jc,kc) + store3(ic,jc,kc)*wd1z(ic,jc,kc)
-          
-          erhs(ic,jc,kc) = erhs(ic,jc,kc) + fornow*utmp(ic,jc,kc)
-          
-        END DO
-      END DO
-    END DO
-    
-    
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(complexmath_kernel_eqfive, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_wd1x, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_wd1y, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_wd1z, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
+
 !         E-EQUATION: FURTHER HEAT FLUX TERMS
 !         SPECIES ENTHALPY GRADIENT TERMS
     
@@ -1738,20 +1717,18 @@ DO ispec = 1,nspec
 !         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
     IF(fzladb)CALL zerozl(d_store6)
     IF(fzradb)CALL zerozr(d_store6)
-    
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          fornow = store4(ic,jc,kc)*wd1x(ic,jc,kc)  &
-              + store5(ic,jc,kc)*wd1y(ic,jc,kc) + store6(ic,jc,kc)*wd1z(ic,jc,kc)
-          
-          erhs(ic,jc,kc) = erhs(ic,jc,kc) + fornow*store7(ic,jc,kc)
-          
-        END DO
-      END DO
-    END DO
-    
+
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(complexmath_kernel_eqfive, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_wd1x, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_wd1y, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_wd1z, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
+
 !         ====================================================================
     
 !         Y-EQUATION: DIFFUSIVE TERMS
@@ -1909,19 +1886,15 @@ DO ispec = 1,nspec
     IF(fzradb)CALL zerozr(d_wd2z)
     
 !         E EQUATION
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          fornow = (wd2x(ic,jc,kc) +  wd2y(ic,jc,kc)  &
-              +  wd2z(ic,jc,kc))*store7(ic,jc,kc)
-          
-          erhs(ic,jc,kc) = erhs(ic,jc,kc) + fornow*utmp(ic,jc,kc)
-          
-        END DO
-      END DO
-    END DO
-    
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(complexmath_kernel_eqsix, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_wd2x, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_wd2y, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_wd2z, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
+
   END IF
 !       MIXTURE MOLAR MASS TERMS
   
@@ -2009,22 +1982,18 @@ DO ispec = 1,nspec
 !         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
     IF(fzladb)CALL zerozl(d_store3)
     IF(fzradb)CALL zerozr(d_store3)
-    
-!         E EQUATION
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          fornow = store1(ic,jc,kc)*pd1x(ic,jc,kc)  &
-              + store2(ic,jc,kc)*pd1y(ic,jc,kc) + store3(ic,jc,kc)*pd1z(ic,jc,kc)
-          
-          erhs(ic,jc,kc) = erhs(ic,jc,kc) + fornow*utmp(ic,jc,kc)
-          
-        END DO
-      END DO
-    END DO
-    
-    
+
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(complexmath_kernel_eqfive, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_pd1x, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_pd1y, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_pd1z, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
+
 !         E-EQUATION: FURTHER HEAT FLUX TERMS
 !         SPECIES ENTHALPY GRADIENT TERMS
     
@@ -2051,20 +2020,18 @@ DO ispec = 1,nspec
 !         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
     IF(fzladb)CALL zerozl(d_store6)
     IF(fzradb)CALL zerozr(d_store6)
-    
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          fornow = store4(ic,jc,kc)*pd1x(ic,jc,kc)  &
-              + store5(ic,jc,kc)*pd1y(ic,jc,kc) + store6(ic,jc,kc)*pd1z(ic,jc,kc)
-          
-          erhs(ic,jc,kc) = erhs(ic,jc,kc) + fornow*store7(ic,jc,kc)
-          
-        END DO
-      END DO
-    END DO
-    
+
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(complexmath_kernel_eqfive, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_pd1x, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_pd1y, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_pd1z, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
+
 !         ====================================================================
     
 !         Y-EQUATION: DIFFUSIVE TERMS
@@ -2220,21 +2187,17 @@ DO ispec = 1,nspec
 !         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
     IF(fzladb)CALL zerozl(d_pd2z)
     IF(fzradb)CALL zerozr(d_pd2z)
-    
+
 !         E EQUATION
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          fornow = (pd2x(ic,jc,kc) +  pd2y(ic,jc,kc)  &
-              +  pd2z(ic,jc,kc))*store7(ic,jc,kc)
-          
-          erhs(ic,jc,kc) = erhs(ic,jc,kc) + fornow*utmp(ic,jc,kc)
-          
-        END DO
-      END DO
-    END DO
-    
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(complexmath_kernel_eqsix, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_pd2x, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_pd2y, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_pd2z, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
+
   END IF
   
 !       =======================================================================
@@ -2314,16 +2277,13 @@ DO ispec = 1,nspec
 !         SUBTRACT DUFOUR EFFECT TERMS TO RESTORE SPECIES ENTHALPY
 !         RSC 08-JUN-2015 BUG FIX
     IF(flmduf(ispec))THEN
-      DO kc = kstab,kstob
-        DO jc = jstab,jstob
-          DO ic = istab,istob
-            
-            utmp(ic,jc,kc) = utmp(ic,jc,kc)  &
-                - rgspec(ispec)*trun(ic,jc,kc)*tdrmix(ic,jc,kc)
-            
-          END DO
-        END DO
-      END DO
+        rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+        call ops_par_loop(complexmath_kernel_eqseven, "A = A-var*B*C", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_tdrmix, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ))
+
     END IF
     
 !         BOUNDARY CONDITIONS
@@ -2336,22 +2296,19 @@ DO ispec = 1,nspec
 !         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
     IF(fzladb)CALL zerozl(d_store3)
     IF(fzradb)CALL zerozr(d_store3)
-    
+
 !         E EQUATION
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          fornow = store1(ic,jc,kc)*td1x(ic,jc,kc)  &
-              + store2(ic,jc,kc)*td1y(ic,jc,kc) + store3(ic,jc,kc)*td1z(ic,jc,kc)
-          
-          erhs(ic,jc,kc) = erhs(ic,jc,kc) + fornow*utmp(ic,jc,kc)
-          
-        END DO
-      END DO
-    END DO
-    
-    
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(complexmath_kernel_eqfive, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_td1x, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_td1y, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_td1z, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
+
 !         E-EQUATION: FURTHER HEAT FLUX TERMS
 !         SPECIES ENTHALPY GRADIENT TERMS
     
@@ -2381,20 +2338,18 @@ DO ispec = 1,nspec
 !         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
     IF(fzladb)CALL zerozl(d_store6)
     IF(fzradb)CALL zerozr(d_store6)
-    
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          fornow = store4(ic,jc,kc)*td1x(ic,jc,kc)  &
-              + store5(ic,jc,kc)*td1y(ic,jc,kc) + store6(ic,jc,kc)*td1z(ic,jc,kc)
-          
-          erhs(ic,jc,kc) = erhs(ic,jc,kc) + fornow*store7(ic,jc,kc)
-          
-        END DO
-      END DO
-    END DO
-    
+
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(complexmath_kernel_eqfive, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_td1x, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_td1y, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_td1z, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
+
 !         ====================================================================
     
 !         Y-EQUATION: DIFFUSIVE TERMS
@@ -2778,21 +2733,17 @@ DO ispec = 1,nspec
 !         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
     IF(fzladb)CALL zerozl(d_td2z)
     IF(fzradb)CALL zerozr(d_td2z)
-    
+
 !         E EQUATION
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          fornow = (td2x(ic,jc,kc) +  td2y(ic,jc,kc)  &
-              +  td2z(ic,jc,kc))*store7(ic,jc,kc)
-          
-          erhs(ic,jc,kc) = erhs(ic,jc,kc) + fornow*utmp(ic,jc,kc)
-          
-        END DO
-      END DO
-    END DO
-    
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(complexmath_kernel_eqsix, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_td2x, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_td2y, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_td2z, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
+
   END IF
   
 !                                                         RATE = Y SOURCE TERMS
@@ -2861,17 +2812,18 @@ IF(fzladb)CALL zerozl(d_store4)
 IF(fzradb)CALL zerozr(d_store4)
 
 !     DIV RHO VCORR HMIX
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      erhs(ic,jc,kc) = erhs(ic,jc,kc) - wtmp(ic,jc,kc)*store4(ic,jc,kc)  &
-          - store1(ic,jc,kc)*ucor(ic,jc,kc) - store2(ic,jc,kc)*vcor(ic,jc,kc)  &
-          - store3(ic,jc,kc)*wcor(ic,jc,kc)
-      
-    END DO
-  END DO
-END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(complexmath_kernel_eqeight, "A = A-B*C-D*E-F*G-H*I", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_ucor, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_vcor, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_wcor, 1, s3d_000, "real(dp)", OPS_READ))
+
 !                                                         RATE = Y SOURCE TERMS
 !                                                           VTMP = DIV CORR VEL
 !     =========================================================================

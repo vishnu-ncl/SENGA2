@@ -130,6 +130,3 @@ SUBROUTINE heat_flux_kernel_soret_fxlcnw(erhs,trun,tdrmix,store7,td1x,acbcxl,rgs
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + fornow
 
 END SUBROUTINE heat_flux_kernel_soret_fxlcnw
-
-
-
