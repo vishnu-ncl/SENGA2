@@ -155,7 +155,7 @@ CALL dfbydz(d_wrhs,d_store3)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
     
-    call ops_par_loop(compute_kernel_AequalsBCDplus, "A=B+C+D", senga_grid, 3, rangexyz, &
+    call ops_par_loop(math_kernel_eqL, "A=B+C+D", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_divm, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -175,7 +175,7 @@ CALL dfbydz(d_wrhs,d_store3)
 !     ERHS CONTAINS RHO E: CONVERT TO E
 !     E IS PARALLEL
     rangexyz = (/istalt,istolt,jstalt,jstolt,kstalt,kstolt/)
-    call ops_par_loop(compute_kernel_AequalsAdivB, "A=A/B", senga_grid, 3, rangexyz, &
+    call ops_par_loop(math_kernel_eqS, "A=A/B", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ))
 
@@ -241,7 +241,7 @@ END IF
 
 !     COLLECT E DIV RHO U IN STORE4 FOR NOW
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsBmulC, "A=B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_divm, 1, s3d_000, "real(dp)", OPS_READ))
@@ -256,7 +256,7 @@ END IF
 !     D/DX RHO U E
 !     RHO U E IS PARALLEL
     rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-    call ops_par_loop(compute_kernel_AequalsBmulC, "A=B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
                         ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_READ))
@@ -266,7 +266,7 @@ CALL dfbydx(d_store7,d_store1)
 !     D/DY RHO V E
 !     RHO V E IS PARALLEL
     rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-    call ops_par_loop(compute_kernel_AequalsBmulC, "A=B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
                         ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_READ))
@@ -276,7 +276,7 @@ CALL dfbydy(d_store7,d_store2)
 !     D/DZ RHO W E
 !     RHO W E IS PARALLEL
     rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-    call ops_par_loop(compute_kernel_AequalsBmulC, "A=B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
                         ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_READ))
@@ -285,7 +285,7 @@ CALL dfbydz(d_store7,d_store3)
 
 !     COLLECT DIV RHO U E IN STORE4 FOR NOW
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsABCDplus, "A=A+B+C+D", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqM, "A=A+B+C+D", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -304,7 +304,7 @@ CALL dfbydz(d_erhs,d_store3)
 
 !     COLLECT ALL CONVECTIVE TERMS IN ERHS
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqone, "A = -half*(B+C*D+E*F+G*H)", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqAD, "A = -half*(B+C*D+E*F+G*H)", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -484,7 +484,7 @@ IF(fzlcon)CALL zerozl(d_store6)
 IF(fzrcon)CALL zerozr(d_store6)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqtwo, "A = A+(B*C+D*E+F*G)", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqAA, "A = A+(B*C+D*E+F*G)", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -585,7 +585,7 @@ IF(fzrcon)CALL zerozr(d_store3)
 
 !     COLLECT CONDUCTIVITY TERMS
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqthree, "A = A+(B+C+D)*E", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqY, "A = A+(B+C+D)*E", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1035,7 +1035,7 @@ DO ispec = 1,nspec
 !       STORE DIFFUSIVITY IN STORE7 FOR NOW
 !       Y DIFFUSIVITY IS PARALLEL
     rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-    call ops_par_loop(compute_kernel_AequalsBmulvar, "A=B*val", senga_grid, 3, rangexyz, &
+    call ops_par_loop(math_kernel_eqD, "A=B*val", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
                         ops_arg_gbl(olewis(ispec), 1, "real(dp)", OPS_READ))
@@ -1137,17 +1137,17 @@ DO ispec = 1,nspec
   
 !       DIFFUSION CORRECTION VELOCITY
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_ucor, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &    
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_vcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_wcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
@@ -1273,7 +1273,7 @@ DO ispec = 1,nspec
   IF(flmduf(ispec))THEN
 
     rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-    call ops_par_loop(complexmath_kernel_eqfour, "A = A+var*B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqF, "A = A+var*B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_tdrmix, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1335,7 +1335,7 @@ DO ispec = 1,nspec
 
 !       E EQUATION
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqfive, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1385,7 +1385,7 @@ DO ispec = 1,nspec
   IF(fzradb)CALL zerozr(d_store6)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqfive, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1580,7 +1580,7 @@ DO ispec = 1,nspec
   
 !       E EQUATION
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqsix, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqZ, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1615,17 +1615,17 @@ DO ispec = 1,nspec
 !         DIFFUSION CORRECTION VELOCITY
 !         FIRST DERIVATIVES OF LN(MIXTURE MOLAR MASS) ALREADY STORED
    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_ucor, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_wd1x, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_vcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_wd1y, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_wcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_wd1z, 1, s3d_000, "real(dp)", OPS_READ)) 
@@ -1681,7 +1681,7 @@ DO ispec = 1,nspec
 
 !         E EQUATION
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqfive, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_wd1x, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1719,7 +1719,7 @@ DO ispec = 1,nspec
     IF(fzradb)CALL zerozr(d_store6)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqfive, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_wd1x, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1887,7 +1887,7 @@ DO ispec = 1,nspec
     
 !         E EQUATION
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqsix, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqZ, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_wd2x, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_wd2y, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1919,17 +1919,17 @@ DO ispec = 1,nspec
 !         DIFFUSION CORRECTION VELOCITY
 !         FIRST DERIVATIVES OF LN(PRESSURE) ALREADY STORED
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_ucor, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_pd1x, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_vcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_pd1y, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_wcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_pd1z, 1, s3d_000, "real(dp)", OPS_READ))
@@ -1984,7 +1984,7 @@ DO ispec = 1,nspec
     IF(fzradb)CALL zerozr(d_store3)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqfive, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_pd1x, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -2022,7 +2022,7 @@ DO ispec = 1,nspec
     IF(fzradb)CALL zerozr(d_store6)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqfive, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_pd1x, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -2190,7 +2190,7 @@ DO ispec = 1,nspec
 
 !         E EQUATION
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqsix, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqZ, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_pd2x, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_pd2y, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -2221,17 +2221,17 @@ DO ispec = 1,nspec
 !         DIFFUSION CORRECTION VELOCITY
 !         FIRST DERIVATIVES OF LN(TEMPERATURE) ALREADY STORED
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_ucor, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_td1x, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_vcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_td1y, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_wcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_td1z, 1, s3d_000, "real(dp)", OPS_READ))
@@ -2278,7 +2278,7 @@ DO ispec = 1,nspec
 !         RSC 08-JUN-2015 BUG FIX
     IF(flmduf(ispec))THEN
         rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-        call ops_par_loop(complexmath_kernel_eqseven, "A = A-var*B*C", senga_grid, 3, rangexyz,  &
+        call ops_par_loop(math_kernel_eqH, "A = A-var*B*C", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
                         ops_arg_dat(d_tdrmix, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -2299,7 +2299,7 @@ DO ispec = 1,nspec
 
 !         E EQUATION
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqfive, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_td1x, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -2340,7 +2340,7 @@ DO ispec = 1,nspec
     IF(fzradb)CALL zerozr(d_store6)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqfive, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_td1x, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -2736,7 +2736,7 @@ DO ispec = 1,nspec
 
 !         E EQUATION
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqsix, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqZ, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_td2x, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_td2y, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -2813,7 +2813,7 @@ IF(fzradb)CALL zerozr(d_store4)
 
 !     DIV RHO VCORR HMIX
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqeight, "A = A-B*C-D*E-F*G-H*I", senga_grid, 3, rangexyz, &
+    call ops_par_loop(math_kernel_eqAH, "A = A-B*C-D*E-F*G-H*I", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &

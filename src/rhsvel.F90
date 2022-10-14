@@ -9,389 +9,382 @@ SUBROUTINE rhsvel
     use com_senga
     use com_ops_senga
 
- 
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-02  Time: 15:08:24
+!   *************************************************************************
 
-!     *************************************************************************
+!   RHSVEL
+!   ======
 
-!     RHSVEL
-!     ======
+!   AUTHOR
+!   ------
+!   R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
 
-!     AUTHOR
-!     ------
-!     R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
+!   CHANGE RECORD
+!   -------------
+!   08-DEC-2002:  CREATED
+!   17-APR-2013:  RSC MIXTURE AVERAGED TRANSPORT
 
-!     CHANGE RECORD
-!     -------------
-!     08-DEC-2002:  CREATED
-!     17-APR-2013:  RSC MIXTURE AVERAGED TRANSPORT
+!   DESCRIPTION
+!   -----------
+!   DNS CODE SENGA2
+!   COMPUTES RIGHT-HAND-SIDES FOR TIME INTEGRATION
+!   OF CONTINUITY AND MOMENTUM EQUATIONS
+!   EVALUATES PRESSURE WORK AND VISCOUS WORK TERMS IN ENERGY EQUATION
 
-!     DESCRIPTION
-!     -----------
-!     DNS CODE SENGA2
-!     COMPUTES RIGHT-HAND-SIDES FOR TIME INTEGRATION
-!     OF CONTINUITY AND MOMENTUM EQUATIONS
-!     EVALUATES PRESSURE WORK AND VISCOUS WORK TERMS IN ENERGY EQUATION
-
-!     *************************************************************************
+!   *************************************************************************
 
 
-!     GLOBAL DATA
-!     ===========
-!     -------------------------------------------------------------------------
+!   GLOBAL DATA
+!   ===========
+!   -------------------------------------------------------------------------
 
-!     -------------------------------------------------------------------------
+!   -------------------------------------------------------------------------
 
 
-!     LOCAL DATA
-!     ==========
-REAL(KIND=dp) :: fornow,prefer
-INTEGER :: ic,jc,kc
-INTEGER :: rangexyz(6)
+!   LOCAL DATA
+!   ==========
+    real(kind=dp) :: fornow,prefer
+    integer :: ic,jc,kc
+    integer :: rangexyz(6)
 
-!     BEGIN
-!     =====
+!   BEGIN
+!   =====
 
-!     =========================================================================
+!   =========================================================================
 
-!     CONVERT VELOCITIES
+!   CONVERT VELOCITIES
 !     ------------------
 
-!     U,V,WRHS CONTAIN RHO U,V,W: CONVERT TO U,V,W
-!     U,V,W HELD IN U,V,WTMP THROUGHOUT THIS ROUTINE
-!     U,V,W ARE PARALLEL
+!   U,V,WRHS CONTAIN RHO U,V,W: CONVERT TO U,V,W
+!   U,V,W HELD IN U,V,WTMP THROUGHOUT THIS ROUTINE
+!   U,V,W ARE PARALLEL
     rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-    call ops_par_loop(compute_kernel_AequalsBdivC, "A=B/C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqT, "A=B/C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsBdivC, "A=B/C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqT, "A=B/C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsBdivC, "A=B/C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqT, "A=B/C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ))
 
-!     =========================================================================
+!   =========================================================================
 
-!     COLLECT VELOCITY COMPONENTS FOR BCs
-!     -----------------------------------
+!   COLLECT VELOCITY COMPONENTS FOR BCs
+!   -----------------------------------
 
-!     X-DIRECTION
-IF(fxlcnv)THEN
-    rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_velcomp_xdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+!   X-DIRECTION
+    IF(fxlcnv)THEN
+        rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_velcomp_xdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
 
-END IF
-IF(fxrcnv)THEN
-    rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_velcomp_xdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+    END IF
+    IF(fxrcnv)THEN
+        rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_velcomp_xdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
 
-END IF
+    END IF
 
-!     Y-DIRECTION
-IF(fylcnv)THEN
-    rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_velcomp_ydir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_struyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_strwyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+!   Y-DIRECTION
+    IF(fylcnv)THEN
+        rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_velcomp_ydir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_struyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_strwyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
 
-END IF
-IF(fyrcnv)THEN
-    rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_velcomp_ydir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+    END IF
+    IF(fyrcnv)THEN
+        rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_velcomp_ydir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
 
-END IF
+    END IF
 
-!     Z-DIRECTION
-IF(fzlcnv)THEN
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
-    call ops_par_loop(boundary_kernel_velcomp_zdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+!   Z-DIRECTION
+    IF(fzlcnv)THEN
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+        call ops_par_loop(boundary_kernel_velcomp_zdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
 
-END IF
-IF(fzrcnv)THEN
-    rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
-    call ops_par_loop(boundary_kernel_velcomp_zdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_struzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_strvzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+    END IF
+    IF(fzrcnv)THEN
+        rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+        call ops_par_loop(boundary_kernel_velcomp_zdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_struzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_strvzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
 
-END IF
+    END IF
 
-!     =========================================================================
-!     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-!     =========================================================================
+!   =========================================================================
+!   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+!   =========================================================================
 
-!     MOMENTUM EQUATIONS: CONVECTIVE TERMS
-!     ------------------------------------
-!     RHO U U
-!     RHO U U IS PARALLEL
+!   MOMENTUM EQUATIONS: CONVECTIVE TERMS
+!   ------------------------------------
+!   RHO U U
+!   RHO U U IS PARALLEL
     rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-    call ops_par_loop(compute_kernel_AequalsBmulC, "A=B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
 
-!     D/DX RHO U U
-!     STRAIGHT INTO STORE4 FOR NOW
-CALL dfbydx(d_store7,d_store4)
+!   D/DX RHO U U
+!   STRAIGHT INTO STORE4 FOR NOW
+    call dfbydx(d_store7,d_store4)
 
 
-!     U-EQUATION: CONVECTIVE TERMS
-!     ----------------------------
-!     (HALF) D/DX RHO U U: ALREADY IN STORE4
-!                                                   STORE4 = U CONVECTIVE TERMS
-!                                                          U,V,WRHS = RHO U,V,W
-!     =========================================================================
+!   U-EQUATION: CONVECTIVE TERMS
+!   ----------------------------
+!   (HALF) D/DX RHO U U: ALREADY IN STORE4
+!                                                  STORE4 = U CONVECTIVE TERMS
+!                                                         U,V,WRHS = RHO U,V,W
+!    =========================================================================
 
-!     RHO U V
-!     RHO U V IS PARALLEL
+!   RHO U V
+!   RHO U V IS PARALLEL
     rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-    call ops_par_loop(compute_kernel_AequalsBmulC, "A=B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ))
 
-!     D/DY RHO V U
-!     D/DX RHO U V
-CALL dfbydy(d_store7,d_store1)
-CALL dfbydx(d_store7,d_store5)
+!   D/DY RHO V U
+!   D/DX RHO U V
+    call dfbydy(d_store7,d_store1)
+    call dfbydx(d_store7,d_store5)
 
 
-!     U-EQUATION: CONVECTIVE TERMS
-!     V-EQUATION: CONVECTIVE TERMS
-!     ----------------------------
-!     (HALF) D/DY RHO V U
-!     (HALF) D/DX RHO U V: ALREADY IN STORE5
+!   U-EQUATION: CONVECTIVE TERMS
+!   V-EQUATION: CONVECTIVE TERMS
+!   ----------------------------
+!   (HALF) D/DY RHO V U
+!   (HALF) D/DX RHO U V: ALREADY IN STORE5
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusB, "A=A+B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
 
-!                                               STORE4,5 = U,V CONVECTIVE TERMS
-!                                                          U,V,WRHS = RHO U,V,W
-!     =========================================================================
+!                                             STORE4,5 = U,V CONVECTIVE TERMS
+!                                                        U,V,WRHS = RHO U,V,W
+!   =========================================================================
 
-!     RHO U W
-!     RHO U W IS PARALLEL
+!   RHO U W
+!   RHO U W IS PARALLEL
     rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-    call ops_par_loop(compute_kernel_AequalsBmulC, "A=B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ))
 
-!     D/DZ RHO W U
-!     D/DX RHO U W
-CALL dfbydz(d_store7,d_store1)
-CALL dfbydx(d_store7,d_store6)
+!   D/DZ RHO W U
+!   D/DX RHO U W
+    call dfbydz(d_store7,d_store1)
+    call dfbydx(d_store7,d_store6)
 
-
-!     U-EQUATION: CONVECTIVE TERMS
-!     W-EQUATION: CONVECTIVE TERMS
-!     ----------------------------
-!     (HALF) D/DZ RHO W U
-!     (HALF) D/DX RHO U W: ALREADY IN STORE6
+!   U-EQUATION: CONVECTIVE TERMS
+!   W-EQUATION: CONVECTIVE TERMS
+!   ----------------------------
+!   (HALF) D/DZ RHO W U
+!   (HALF) D/DX RHO U W: ALREADY IN STORE6
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusB, "A=A+B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
 
-!                                           STORE4,5,6 = U,V,W CONVECTIVE TERMS
-!                                                          U,V,WRHS = RHO U,V,W
-!     =========================================================================
+!                                         STORE4,5,6 = U,V,W CONVECTIVE TERMS
+!                                                        U,V,WRHS = RHO U,V,W
+!   =========================================================================
 
-!     RHO V V
-!     RHO V V IS PARALLEL
+!   RHO V V
+!   RHO V V IS PARALLEL
     rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-    call ops_par_loop(compute_kernel_AequalsBmulC, "A=B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ))
       
-!     D/DY RHO V V
-CALL dfbydy(d_store7,d_store1)
+!   D/DY RHO V V
+    call dfbydy(d_store7,d_store1)
 
-
-!     V-EQUATION: CONVECTIVE TERMS
-!     ----------------------------
-!     (HALF) D/DY RHO V V
+!   V-EQUATION: CONVECTIVE TERMS
+!   ----------------------------
+!   (HALF) D/DY RHO V V
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusB, "A=A+B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
 
-!                                           STORE4,5,6 = U,V,W CONVECTIVE TERMS
-!                                                          U,V,WRHS = RHO U,V,W
-!     =========================================================================
+!                                         STORE4,5,6 = U,V,W CONVECTIVE TERMS
+!                                                        U,V,WRHS = RHO U,V,W
+!   =========================================================================
 
-!     RHO V W
-!     RHO V W IS PARALLEL
+!   RHO V W
+!   RHO V W IS PARALLEL
     rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-    call ops_par_loop(compute_kernel_AequalsBmulC, "A=B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ))
 
-!     D/DZ RHO W V
-!     D/DY RHO V W
-CALL dfbydz(d_store7,d_store1)
-CALL dfbydy(d_store7,d_store2)
+!   D/DZ RHO W V
+!   D/DY RHO V W
+    call dfbydz(d_store7,d_store1)
+    call dfbydy(d_store7,d_store2)
 
-
-!     V-EQUATION: CONVECTIVE TERMS
-!     W-EQUATION: CONVECTIVE TERMS
-!     ----------------------------
-!     (HALF) D/DZ RHO W V
-!     (HALF) D/DY RHO V W
+!   V-EQUATION: CONVECTIVE TERMS
+!   W-EQUATION: CONVECTIVE TERMS
+!   ----------------------------
+!   (HALF) D/DZ RHO W V
+!   (HALF) D/DY RHO V W
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusB, "A=A+B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAplusB, "A=A+B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
     
-!                                           STORE4,5,6 = U,V,W CONVECTIVE TERMS
-!                                                          U,V,WRHS = RHO U,V,W
-!     =========================================================================
+!                                         STORE4,5,6 = U,V,W CONVECTIVE TERMS
+!                                                        U,V,WRHS = RHO U,V,W
+!   =========================================================================
 
-!     RHO W W
-!     RHO W W IS PARALLEL
+!   RHO W W
+!   RHO W W IS PARALLEL
     rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-    call ops_par_loop(compute_kernel_AequalsBmulC, "A=B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ))
 
-!     D/DZ RHO W W
-CALL dfbydz(d_store7,d_store1)
+!   D/DZ RHO W W
+    call dfbydz(d_store7,d_store1)
 
-
-!     W-EQUATION: CONVECTIVE TERMS
-!     ----------------------------
-!     (HALF) D/DZ RHO W W
+!   W-EQUATION: CONVECTIVE TERMS
+!   ----------------------------
+!   (HALF) D/DZ RHO W W
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusB, "A=A+B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
 
-!                                           STORE4,5,6 = U,V,W CONVECTIVE TERMS
-!                                                          U,V,WRHS = RHO U,V,W
-!     =========================================================================
+!                                         STORE4,5,6 = U,V,W CONVECTIVE TERMS
+!                                                        U,V,WRHS = RHO U,V,W
+!   =========================================================================
 
-!     VELOCITY NORMAL DERIVATIVES
-!     ---------------------------
-!     DUDX,DVDY,DWDZ
-CALL dfbydx(d_utmp,d_store1)
-CALL dfbydy(d_vtmp,d_store2)
-CALL dfbydz(d_wtmp,d_store3)
-!                                                   STORE1,2,3 = DUDX,DVDY,DWDZ
-!                                           STORE4,5,6 = U,V,W CONVECTIVE TERMS
-!                                                          U,V,WRHS = RHO U,V,W
-!     =========================================================================
+!   VELOCITY NORMAL DERIVATIVES
+!   ---------------------------
+!   DUDX,DVDY,DWDZ
+    call dfbydx(d_utmp,d_store1)
+    call dfbydy(d_vtmp,d_store2)
+    call dfbydz(d_wtmp,d_store3)
 
-!     COLLECT VELOCITY DERIVATIVES FOR BCs
-!     ------------------------------------
+!                                                 STORE1,2,3 = DUDX,DVDY,DWDZ
+!                                         STORE4,5,6 = U,V,W CONVECTIVE TERMS
+!                                                        U,V,WRHS = RHO U,V,W
+!   =========================================================================
 
-!     X-DIRECTION: DUDX
-IF(fxlcnv)THEN
-    rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_velderiv_xdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_bcl1xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+!   COLLECT VELOCITY DERIVATIVES FOR BCs
+!   ------------------------------------
 
-END IF
-IF(fxrcnv)THEN
-    rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_velderiv_xdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+!   X-DIRECTION: DUDX
+    IF(fxlcnv)THEN
+        rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_velderiv_xdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_bcl1xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
 
-END IF
+    END IF
+    IF(fxrcnv)THEN
+        rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_velderiv_xdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
 
-!     Y-DIRECTION: DVDY
-IF(fylcnv)THEN
-    rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_velderiv_ydir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_bcl1yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+    END IF
 
-END IF
-IF(fyrcnv)THEN
-    rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_velderiv_ydir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+!   Y-DIRECTION: DVDY
+    IF(fylcnv)THEN
+        rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_velderiv_ydir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_bcl1yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
 
-END IF
+    END IF
+    IF(fyrcnv)THEN
+        rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_velderiv_ydir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
 
-!     Z-DIRECTION: DWDZ
-IF(fzlcnv)THEN
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
-    call ops_par_loop(boundary_kernel_velderiv_zdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_bcl1zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+    END IF
 
-END IF
-IF(fzrcnv)THEN
-    rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
-    call ops_par_loop(boundary_kernel_velderiv_zdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+!   Z-DIRECTION: DWDZ
+    IF(fzlcnv)THEN
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+        call ops_par_loop(boundary_kernel_velderiv_zdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_bcl1zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
 
-END IF
+    END IF
+    IF(fzrcnv)THEN
+        rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+        call ops_par_loop(boundary_kernel_velderiv_zdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
 
-!     =========================================================================
+    END IF
+
+!   =========================================================================
 
 !   U-EQUATION: CONVECTIVE TERMS
 !   ----------------------------
 !   DIV RHO U U  + U DIV RHO U
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsBplusCmulD, "A=B+C*D", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqQ, "A=B+C*D", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_divm, 1, s3d_000, "real(dp)", OPS_READ))
 
 !   RHO U DUDX
-    call ops_par_loop(compute_kernel_AequalsBmulC, "A=B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
@@ -399,7 +392,7 @@ END IF
 !   HALF DIV RHO U U + HALF RHO U DUDX + HALF U DIV RHO U
 !   STORE IN URHS
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqnine, "A = -half*(B+C)", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqAC, "A = -half*(B+C)", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
@@ -408,22 +401,22 @@ END IF
 !   ----------------------------
 !   DIV RHO U V + V DIV RHO U
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsBplusCmulD, "A=B+C*D", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqQ, "A=B+C*D", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_divm, 1, s3d_000, "real(dp)", OPS_READ))
 
 !   RHO V DVDY
-    call ops_par_loop(compute_kernel_AequalsBmulC, "A=B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
 
-!     HALF DIV RHO U V + HALF RHO V DVDY + HALF V DIV RHO U
-!     STORE IN VRHS
+!   HALF DIV RHO U V + HALF RHO V DVDY + HALF V DIV RHO U
+!   STORE IN VRHS
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqnine, "A = -half*(B+C)", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqAC, "A = -half*(B+C)", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
@@ -432,133 +425,134 @@ END IF
 !   ----------------------------
 !   DIV RHO U W + W DIV RHO U
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsBplusCmulD, "A=B+C*D", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqQ, "A=B+C*D", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_divm, 1, s3d_000, "real(dp)", OPS_READ))
 
 !   RHO W DWDZ
-    call ops_par_loop(compute_kernel_AequalsBmulC, "A=B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
 
-!     HALF DIV RHO U W + HALF RHO W DWDZ + HALF W DIV RHO U
-!     STORE IN WRHS
+!   HALF DIV RHO U W + HALF RHO W DWDZ + HALF W DIV RHO U
+!   STORE IN WRHS
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqnine, "A = -half*(B+C)", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqAC, "A = -half*(B+C)", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
 
-!     U,V,WRHS CONTAIN U,V,W SOURCE TERMS THROUGHOUT REMAINDER OF THIS ROUTINE
-!                                                   STORE1,2,3 = DUDX,DVDY,DWDZ
-!     =========================================================================
+!   U,V,WRHS CONTAIN U,V,W SOURCE TERMS THROUGHOUT REMAINDER OF THIS ROUTINE
+!                                                STORE1,2,3 = DUDX,DVDY,DWDZ
+!   ========================================================================
 
-!     PRESSURE GRADIENTS
-!     ------------------
+!   PRESSURE GRADIENTS
+!   ------------------
 
-prefer = prun(ipref,jpref,kpref)
+    prefer = prun(ipref,jpref,kpref)
 
     rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-    call ops_par_loop(compute_kernel_AequalsBminusvar, "A = B-var", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqG, "A = B-var", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_gbl(prefer, 1, "real(dp)", OPS_READ))
 
-!     8DX,8DY,8DZ
-CALL dfbydx(d_store7,d_store4)
-CALL dfbydy(d_store7,d_store5)
-CALL dfbydz(d_store7,d_store6)
-!                                                   STORE1,2,3 = DUDX,DVDY,DWDZ
-!                                                   STORE4,5,6 = 8DX,8DY,8DZ
-!     =========================================================================
+!   8DX,8DY,8DZ
+    call dfbydx(d_store7,d_store4)
+    call dfbydy(d_store7,d_store5)
+    call dfbydz(d_store7,d_store6)
 
-!     COLLECT PRESSURE AND ITS GRADIENTS FOR BCs
-!     ------------------------------------------
+!                                              STORE1,2,3 = DUDX,DVDY,DWDZ
+!                                                 STORE4,5,6 = 8DX,8DY,8DZ
+!   ======================================================================
 
-!     X-DIRECTION: P AND 8DX
-IF(fxlcnv)THEN
-    rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_pressure_xdir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strpxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+!   COLLECT PRESSURE AND ITS GRADIENTS FOR BCs
+!   ------------------------------------------
 
-END IF
-IF(fxrcnv)THEN
-    rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_pressure_xdir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strpxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bcl5xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+!   X-DIRECTION: P AND 8DX
+    IF(fxlcnv)THEN
+        rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_pressure_xdir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strpxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
 
-END IF
+    END IF
+    IF(fxrcnv)THEN
+        rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_pressure_xdir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strpxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_bcl5xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
 
-!     Y-DIRECTION: P AND 8DY
-IF(fylcnv)THEN
-    rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_pressure_ydir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strpyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+    END IF
 
-END IF
-IF(fyrcnv)THEN
-    rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_pressure_ydir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strpyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bcl5yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+!   Y-DIRECTION: P AND 8DY
+    IF(fylcnv)THEN
+        rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_pressure_ydir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strpyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
 
-END IF
+    END IF
+    IF(fyrcnv)THEN
+        rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_pressure_ydir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strpyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_bcl5yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
 
-!     Z-DIRECTION: P AND 8DZ
-IF(fzlcnv)THEN
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
-    call ops_par_loop(boundary_kernel_pressure_zdir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strpzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+    END IF
 
-END IF
-IF(fzrcnv)THEN
-    rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
-    call ops_par_loop(boundary_kernel_pressure_zdir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strpzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bcl5zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+!   Z-DIRECTION: P AND 8DZ
+    IF(fzlcnv)THEN
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+        call ops_par_loop(boundary_kernel_pressure_zdir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strpzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
 
-END IF
+    END IF
+    IF(fzrcnv)THEN
+        rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+        call ops_par_loop(boundary_kernel_pressure_zdir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strpzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_bcl5zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
 
-!     =========================================================================
+    END IF
 
-!     U,V,W-EQUATIONS: PRESSURE GRADIENT TERMS
-!     E-EQUATION: PRESSURE WORK TERMS
-!     -------------------------------
-!     8DX,8DY,8DZ
-!     U 8DX + V 8DY + W 8DZ
+!   =========================================================================
+
+!   U,V,W-EQUATIONS: PRESSURE GRADIENT TERMS
+!   E-EQUATION: PRESSURE WORK TERMS
+!   -------------------------------
+!   8DX,8DY,8DZ
+!   U 8DX + V 8DY + W 8DZ
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAminusB, "A = A-B", senga_grid, 3, rangexyz, &
+    call ops_par_loop(math_kernel_eqW, "A = A-B", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAminusB, "A = A-B", senga_grid, 3, rangexyz, &
+    call ops_par_loop(math_kernel_eqW, "A = A-B", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAminusB, "A = A-B", senga_grid, 3, rangexyz, &
+    call ops_par_loop(math_kernel_eqW, "A = A-B", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(complexmath_kernel_eqten,"A = A-B*C-D*E-F*G", senga_grid, 3, rangexyz, &
+    call ops_par_loop(math_kernel_eqAG,"A = A-B*C-D*E-F*G", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -567,411 +561,414 @@ END IF
                     ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ))
 
-!                                                   STORE1,2,3 = DUDX,DVDY,DWDZ
-!     =========================================================================
+!                                                 STORE1,2,3 = DUDX,DVDY,DWDZ
+!   =========================================================================
 
-!     E-EQUATION: PRESSURE WORK TERMS
-!     -------------------------------
-!     P DIV U
+!   E-EQUATION: PRESSURE WORK TERMS
+!   -------------------------------
+!   P DIV U
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqeleven, "A = A-B*(C+D+E)", senga_grid, 3, rangexyz, &
+    call ops_par_loop(math_kernel_eqAF, "A = A-B*(C+D+E)", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
 
-!                                                   STORE1,2,3 = DUDX,DVDY,DWDZ
-!     =========================================================================
+!                                                 STORE1,2,3 = DUDX,DVDY,DWDZ
+!   =========================================================================
 
-!     VISCOSITY
-!     ---------
+!   VISCOSITY
+!   ---------
 
-!     VISCOSITY IS PARALLEL
+!   VISCOSITY IS PARALLEL
     rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-    call ops_par_loop(compute_kernel_AequalsAmulvar, "A = A*var", senga_grid, 3, rangexyz, &
+    call ops_par_loop(math_kernel_eqC, "A = A*var", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_gbl(prantl,1,"real(dp)", OPS_READ))
 
-!                                                   STORE1,2,3 = DUDX,DVDY,DWDZ
-!     -------------------------------------------------------------------------
+!                                                 STORE1,2,3 = DUDX,DVDY,DWDZ
+!    -------------------------------------------------------------------------
 
-!     MIXTURE-AVERAGED TRANSPORT
-!     RSC 17-APR-2013
-!C     DIAGNOSTICS
-!      WRITE(6,*)'RHSVEL: visc: ',FLMAVT
-IF(flmavt)THEN
-  
-    rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-    call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_difmix, 1, s3d_000, "real(dp)", OPS_READ))
+!   MIXTURE-AVERAGED TRANSPORT
+!   RSC 17-APR-2013
+!   DIAGNOSTICS
+!   WRITE(6,*)'RHSVEL: visc: ',FLMAVT
+    IF(flmavt)THEN
+        rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+        call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_difmix, 1, s3d_000, "real(dp)", OPS_READ))
     
-!C       DIAGNOSTICS
-!        KC = 1
-!        JC = 1
-!        WRITE(6,'(4I5)')ITIME,IRKSTP,JC,KC
-!        DO IC = ISTAB,ISTOB
-!          WRITE(6,'(I5,2(1PE15.7))')IC,TRANSP(IC,JC,KC)
-!        ENDDO
+!   DIAGNOSTICS
+!   KC = 1
+!   JC = 1
+!   WRITE(6,'(4I5)')ITIME,IRKSTP,JC,KC
+!   DO IC = ISTAB,ISTOB
+!       WRITE(6,'(I5,2(1PE15.7))')IC,TRANSP(IC,JC,KC)
+!   ENDDO
   
-!C       DIAGNOSTICS
-!        KC = 1
-!        JC = 1
-!        IC = 1
-!        WRITE(6,'(3I5,1PE15.7)')IC,JC,KC,TRANSP(IC,JC,KC)
-!        IC = 2
-!        WRITE(6,'(3I5,1PE15.7)')IC,JC,KC,TRANSP(IC,JC,KC)
-!        IC = 500
-!        WRITE(6,'(3I5,1PE15.7)')IC,JC,KC,TRANSP(IC,JC,KC)
-!        IC = 1000
-!        WRITE(6,'(3I5,1PE15.7)')IC,JC,KC,TRANSP(IC,JC,KC)
-!        IC = 1001
-!        WRITE(6,'(3I5,1PE15.7)')IC,JC,KC,TRANSP(IC,JC,KC)
+!   DIAGNOSTICS
+!   KC = 1
+!   JC = 1
+!   IC = 1
+!       WRITE(6,'(3I5,1PE15.7)')IC,JC,KC,TRANSP(IC,JC,KC)
+!   IC = 2
+!       WRITE(6,'(3I5,1PE15.7)')IC,JC,KC,TRANSP(IC,JC,KC)
+!   IC = 500
+!       WRITE(6,'(3I5,1PE15.7)')IC,JC,KC,TRANSP(IC,JC,KC)
+!   IC = 1000
+!       WRITE(6,'(3I5,1PE15.7)')IC,JC,KC,TRANSP(IC,JC,KC)
+!   IC = 1001
+!       WRITE(6,'(3I5,1PE15.7)')IC,JC,KC,TRANSP(IC,JC,KC)
   
-END IF
+    END IF
 
-!     -------------------------------------------------------------------------
+!   -------------------------------------------------------------------------
 
-!     VISCOUS TERMS: TAUXXb,e,f
-!     -------------
+!   VISCOUS TERMS: TAUXXb,e,f
+!   -------------
 
-!     DVDY+DWDZ
+!   DVDY+DWDZ
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsBplusC, "A=B+C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqK, "A=B+C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
 
-!     TAUXXb,e,f
+!   TAUXXb,e,f
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqtwelve, "A = var1*B-var2*A", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqI, "A = var1*B-var2*A", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_gbl(fthd, 1, "real(dp)", OPS_READ), &
                     ops_arg_gbl(tthd, 1, "real(dp)", OPS_READ))
 
-!     E-EQUATION: VISCOUS WORK TERMS
-!     ------------------------------
-!     TAUXXb,e,f DUDX
+!   E-EQUATION: VISCOUS WORK TERMS
+!   ------------------------------
+!   TAUXXb,e,f DUDX
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusBmulCmulD, "A = A+B*C*D", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqP, "A = A+B*C*D", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
 
-!                                                   STORE1,2,3 = DUDX,DVDY,DWDZ
-!                                                           STORE6 = TAUXXb,e,f
-!     =========================================================================
+!                                                 STORE1,2,3 = DUDX,DVDY,DWDZ
+!                                                         STORE6 = TAUXXb,e,f
+!   =========================================================================
 
-!     VISCOSITY GRADIENT: X COMPONENT
-!     ------------------
-CALL dfbydx(d_transp,d_store4)
-!                                                   STORE1,2,3 = DUDX,DVDY,DWDZ
-!                                                                STORE4 = DMUDX
-!                                                           STORE6 = TAUXXb,e,f
-!     =========================================================================
+!   VISCOSITY GRADIENT: X COMPONENT
+!   ------------------
+    call dfbydx(d_transp,d_store4)
 
-!     U-EQUATION: VISCOUS STRESS TERMS
-!     E-EQUATION: VISCOUS WORK TERMS
-!     ------------------------------
-!     TAUXX,Xb,e,f
-!     U TAUXX,Xb,e,f
+!                                                 STORE1,2,3 = DUDX,DVDY,DWDZ
+!                                                              STORE4 = DMUDX
+!                                                         STORE6 = TAUXXb,e,f
+!   =========================================================================
+
+!   U-EQUATION: VISCOUS STRESS TERMS
+!   E-EQUATION: VISCOUS WORK TERMS
+!   ------------------------------
+!   TAUXX,Xb,e,f
+!   U TAUXX,Xb,e,f
     
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAmulB, "A=A*B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqU, "A=A*B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ))
 
-!     BOUNDARY CONDITIONS
-!     BC IN X: TAUXX,X TERM ZERO ON END POINTS
-IF(fxlvsn)CALL zeroxl(d_store6)
-IF(fxrvsn)CALL zeroxr(d_store6)
+!   BOUNDARY CONDITIONS
+!   BC IN X: TAUXX,X TERM ZERO ON END POINTS
+    IF(fxlvsn) call zeroxl(d_store6)
+    IF(fxrvsn) call zeroxr(d_store6)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusB, "A=A+B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ))
 
-!                                                   STORE1,2,3 = DUDX,DVDY,DWDZ
-!                                                                STORE4 = DMUDX
-!     =========================================================================
+!                                                 STORE1,2,3 = DUDX,DVDY,DWDZ
+!                                                              STORE4 = DMUDX
+!   =========================================================================
 
-!     VISCOUS TERMS: TAUYYb,e,f
-!     -------------
+!   VISCOUS TERMS: TAUYYb,e,f
+!   -------------
 
-!     DUDX+DWDZ
+!   DUDX+DWDZ
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsBplusC, "A=B+C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqK, "A=B+C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
 
-!     TAUYYb,e,f
+!   TAUYYb,e,f
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqtwelve, "A = var1*B-var2*A", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqI, "A = var1*B-var2*A", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_gbl(fthd, 1, "real(dp)", OPS_READ), &
                     ops_arg_gbl(tthd, 1, "real(dp)", OPS_READ))
 
-!     E-EQUATION: VISCOUS WORK TERMS
-!     ------------------------------
-!     TAUYYb,e,f DVDY
+!   E-EQUATION: VISCOUS WORK TERMS
+!   ------------------------------
+!   TAUYYb,e,f DVDY
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusBmulCmulD, "A = A+B*C*D", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqP, "A = A+B*C*D", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
 
-!                                                   STORE1,2,3 = DUDX,DVDY,DWDZ
-!                                                                STORE4 = DMUDX
-!                                                           STORE6 = TAUYYb,e,f
-!     =========================================================================
+!                                                 STORE1,2,3 = DUDX,DVDY,DWDZ
+!                                                              STORE4 = DMUDX
+!                                                         STORE6 = TAUYYb,e,f
+!   =========================================================================
 
-!     VISCOSITY GRADIENT: Y COMPONENT
-!     ------------------
-CALL dfbydy(d_transp,d_store5)
-!                                                   STORE1,2,3 = DUDX,DVDY,DWDZ
-!                                                            STORE4,5 = DMUDX,Y
-!                                                           STORE6 = TAUYYb,e,f
-!     =========================================================================
+!   VISCOSITY GRADIENT: Y COMPONENT
+!   ------------------
+    call dfbydy(d_transp,d_store5)
 
-!     V-EQUATION: VISCOUS STRESS TERMS
-!     E-EQUATION: VISCOUS WORK TERMS
-!     ------------------------------
-!     TAUYY,Yb,e,f
-!     V TAUYY,Yb,e,f
+!                                                 STORE1,2,3 = DUDX,DVDY,DWDZ
+!                                                          STORE4,5 = DMUDX,Y
+!                                                         STORE6 = TAUYYb,e,f
+!   =========================================================================
+
+!   V-EQUATION: VISCOUS STRESS TERMS
+!   E-EQUATION: VISCOUS WORK TERMS
+!   ------------------------------
+!   TAUYY,Yb,e,f
+!   V TAUYY,Yb,e,f
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAmulB, "A=A*B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqU, "A=A*B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ))
 
-!     BOUNDARY CONDITIONS
-!     BC IN Y: TAUYY,Y TERM ZERO ON END POINTS
-IF(fylvsn)CALL zeroyl(d_store6)
-IF(fyrvsn)CALL zeroyr(d_store6)
+!   BOUNDARY CONDITIONS
+!   BC IN Y: TAUYY,Y TERM ZERO ON END POINTS
+    IF(fylvsn) call zeroyl(d_store6)
+    IF(fyrvsn) call zeroyr(d_store6)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusB, "A=A+B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ))
 
-!                                                   STORE1,2,3 = DUDX,DVDY,DWDZ
-!                                                            STORE4,5 = DMUDX,Y
-!     =========================================================================
+!                                                 STORE1,2,3 = DUDX,DVDY,DWDZ
+!                                                          STORE4,5 = DMUDX,Y
+!   =========================================================================
 
-!     VISCOUS TERMS: TAUZZb,e,f
-!     -------------
+!   VISCOUS TERMS: TAUZZb,e,f
+!   -------------
 
-!     DUDX+DVDY
+!   DUDX+DVDY
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusB, "A=A+B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
     
-!     TAUZZb,e,f
+!   TAUZZb,e,f
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqtwelve, "A = var1*B-var2*A", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqI, "A = var1*B-var2*A", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_gbl(fthd, 1, "real(dp)", OPS_READ), &
                     ops_arg_gbl(tthd, 1, "real(dp)", OPS_READ))
 
-!     E-EQUATION: VISCOUS WORK TERMS
-!     ------------------------------
-!     TAUZZb,e,f DWDZ
+!   E-EQUATION: VISCOUS WORK TERMS
+!   ------------------------------
+!   TAUZZb,e,f DWDZ
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusBmulCmulD, "A = A+B*C*D", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqP, "A = A+B*C*D", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
 
-!                                                                 STORE3 = DWDZ
-!                                                            STORE4,5 = DMUDX,Y
-!                                                           STORE1 = TAUZZb,e,f
-!     =========================================================================
+!                                                               STORE3 = DWDZ
+!                                                          STORE4,5 = DMUDX,Y
+!                                                         STORE1 = TAUZZb,e,f
+!   =========================================================================
 
-!     VISCOSITY GRADIENT: Z COMPONENT
-!     ------------------
-CALL dfbydz(d_transp,d_store6)
+!   VISCOSITY GRADIENT: Z COMPONENT
+!   ------------------
+    call dfbydz(d_transp,d_store6)
 
-!                                                        STORE4,5,6 = DMUDX,Y,Z
-!                                                           STORE1 = TAUZZb,e,f
-!     =========================================================================
+!                                                      STORE4,5,6 = DMUDX,Y,Z
+!                                                         STORE1 = TAUZZb,e,f
+!   =========================================================================
 
-!     W-EQUATION: VISCOUS STRESS TERMS
-!     E-EQUATION: VISCOUS WORK TERMS
-!     ------------------------------
-!     TAUZZ,Zb,e,f
-!     W TAUZZ,Zb,e,f
+!   W-EQUATION: VISCOUS STRESS TERMS
+!   E-EQUATION: VISCOUS WORK TERMS
+!   ------------------------------
+!   TAUZZ,Zb,e,f
+!   W TAUZZ,Zb,e,f
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAmulB, "A=A*B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqU, "A=A*B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ))
         
-!     BOUNDARY CONDITIONS
-!     BC IN Z: TAUZZ,Z TERM ZERO ON END POINTS
-IF(fzlvsn)CALL zerozl(d_store1)
-IF(fzrvsn)CALL zerozr(d_store1)
+!   BOUNDARY CONDITIONS
+!   BC IN Z: TAUZZ,Z TERM ZERO ON END POINTS
+    IF(fzlvsn) call zerozl(d_store1)
+    IF(fzrvsn) call zerozr(d_store1)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusB, "A=A+B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
       
-!                                                        STORE4,5,6 = DMUDX,Y,Z
-!     =========================================================================
+!                                                      STORE4,5,6 = DMUDX,Y,Z
+!   =========================================================================
 
-!     VELOCITY CROSS-DERIVATIVES
-!     --------------------------
+!   VELOCITY CROSS-DERIVATIVES
+!   --------------------------
 
-!     DUDY
-!     ----
-CALL dfbydy(d_utmp,d_store1)
+!   DUDY
+!   ----
+    call dfbydy(d_utmp,d_store1)
 
+!   COLLECT VELOCITY DERIVATIVE FOR BCs
+!   -----------------------------------
+!   Y-DIRECTION: DUDY
+    IF(fylcnv)THEN
+        rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_velderiv_ydir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_bcl3yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
 
-!     COLLECT VELOCITY DERIVATIVE FOR BCs
-!     -----------------------------------
-!     Y-DIRECTION: DUDY
-IF(fylcnv)THEN
-    rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_velderiv_ydir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_bcl3yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+    END IF
+    IF(fyrcnv)THEN
+        rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_velderiv_ydir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_bcl3yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
 
-END IF
-IF(fyrcnv)THEN
-    rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_velderiv_ydir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_bcl3yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+    END IF
 
-END IF
-!                                                                 STORE1 = DUDY
-!                                                        STORE4,5,6 = DMUDX,Y,Z
-!     =========================================================================
+!                                                               STORE1 = DUDY
+!                                                      STORE4,5,6 = DMUDX,Y,Z
+!   =========================================================================
 
-!     U-EQUATION: CONVECTIVE TERMS
-!     ----------------------------
-!     HALF RHO V DUDY
+!   U-EQUATION: CONVECTIVE TERMS
+!   ----------------------------
+!   HALF RHO V DUDY
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqthriteen, "A = A-half*B*C*D", senga_grid, 3, rangexyz, &
+    call ops_par_loop(math_kernel_eqAE, "A = A-half*B*C*D", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
     
-!                                                                 STORE1 = DUDY
-!                                                        STORE4,5,6 = DMUDX,Y,Z
-!     =========================================================================
+!                                                               STORE1 = DUDY
+!                                                      STORE4,5,6 = DMUDX,Y,Z
+!   =========================================================================
 
-!     DVDX
-!     ----
-CALL dfbydx(d_vtmp,d_store2)
+!   DVDX
+!   ----
+    call dfbydx(d_vtmp,d_store2)
 
 
-!     COLLECT VELOCITY DERIVATIVES FOR BCs
-!     ------------------------------------
-!     X-DIRECTION: DVDX
-IF(fxlcnv)THEN
-    rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_velderiv_xdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_bcl3xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+!   COLLECT VELOCITY DERIVATIVES FOR BCs
+!   ------------------------------------
+!   X-DIRECTION: DVDX
+    IF(fxlcnv)THEN
+        rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_velderiv_xdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_bcl3xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
 
-END IF
-IF(fxrcnv)THEN
-    rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_velderiv_xdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_bcl3xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+    END IF
+    IF(fxrcnv)THEN
+        rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_velderiv_xdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_bcl3xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
 
-END IF
-!                                                                 STORE1 = DUDY
-!                                                                 STORE2 = DVDX
-!                                                        STORE4,5,6 = DMUDX,Y,Z
-!     =========================================================================
+    END IF
 
-!     V-EQUATION: CONVECTIVE TERMS
-!     ----------------------------
-!     HALF RHO U DVDX
+!                                                               STORE1 = DUDY
+!                                                               STORE2 = DVDX
+!                                                      STORE4,5,6 = DMUDX,Y,Z
+!   =========================================================================
+
+!   V-EQUATION: CONVECTIVE TERMS
+!   ----------------------------
+!   HALF RHO U DVDX
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqthriteen, "A = A-half*B*C*D", senga_grid, 3, rangexyz, &
+    call ops_par_loop(math_kernel_eqAE, "A = A-half*B*C*D", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
 
-!                                                                 STORE1 = DUDY
-!                                                                 STORE2 = DVDX
-!                                                        STORE4,5,6 = DMUDX,Y,Z
-!     =========================================================================
+!                                                               STORE1 = DUDY
+!                                                               STORE2 = DVDX
+!                                                      STORE4,5,6 = DMUDX,Y,Z
+!   =========================================================================
 
-!     VELOCITY SECOND CROSS DERIVATIVES
-!     ---------------------------------
+!   VELOCITY SECOND CROSS DERIVATIVES
+!   ---------------------------------
 
-!     DUDY+DVDX
+!   DUDY+DVDX
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsBplusC, "A=B+C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqK, "A=B+C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
 
-!     D2UDXY
-CALL d2fdxy(d_utmp,d_store1)
+!   D2UDXY
+    call d2fdxy(d_utmp,d_store1)
 
-!     D2VDXY
-CALL d2fdxy(d_vtmp,d_store2)
-!                                                               STORE1 = D2UDXY
-!                                                               STORE2 = D2VDXY
-!                                                          STORE7 = (DUDY+DVDX)
-!                                                        STORE4,5,6 = DMUDX,Y,Z
-!     =========================================================================
+!   D2VDXY
+    call d2fdxy(d_vtmp,d_store2)
 
-!     U-EQUATION: VISCOUS STRESS TERMS
-!     E-EQUATION: VISCOUS WORK TERMS
-!     ------------------------------
-!     TAUXX,Xc
-!     U TAUXX,Xc
+!                                                             STORE1 = D2UDXY
+!                                                             STORE2 = D2VDXY
+!                                                        STORE7 = (DUDY+DVDX)
+!                                                      STORE4,5,6 = DMUDX,Y,Z
+!   =========================================================================
+
+!   U-EQUATION: VISCOUS STRESS TERMS
+!   E-EQUATION: VISCOUS WORK TERMS
+!   ------------------------------
+!   TAUXX,Xc
+!   U TAUXX,Xc
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsBmulCmulvar, "A = B*C*var", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqE, "A = B*C*var", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_gbl(tthd, 1, "real(dp)", OPS_READ))
 
-!     BOUNDARY CONDITIONS
-!     BC IN X: TAUXX,X TERMS ZERO ON END POINTS
-IF(fxlvsn)CALL zeroxl(d_store3)
-IF(fxrvsn)CALL zeroxr(d_store3)
+!   BOUNDARY CONDITIONS
+!   BC IN X: TAUXX,X TERMS ZERO ON END POINTS
+    IF(fxlvsn) call zeroxl(d_store3)
+    IF(fxrvsn) call zeroxr(d_store3)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAminusB, "A = A-B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqW, "A = A-B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAminusBmulC, "A = A-B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqX, "A = A-B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
@@ -989,7 +986,7 @@ IF(fxrvsn)CALL zeroxr(d_store3)
 !     V TAUYY,Yc
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsBmulCmulvar, "A = B*C*var", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqE, "A = B*C*var", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1002,11 +999,11 @@ IF(fylvsn)CALL zeroyl(d_store3)
 IF(fyrvsn)CALL zeroyr(d_store3)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAminusB, "A = A-B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqW, "A = A-B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAminusBmulC, "A = A-B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqX, "A = A-B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
@@ -1022,7 +1019,7 @@ CALL d2fdy2(d_utmp,d_store3)
 
 !     D2UDY2+D2VDXY
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusB, "A=A+B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
 
@@ -1033,7 +1030,7 @@ CALL d2fdy2(d_utmp,d_store3)
 !     U TAUXY,Ya,b,c
 
    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-   call ops_par_loop(compute_kernel_AequalsAmulBplusCmulD, "A = A*B+C*D", senga_grid, 3, rangexyz,  &
+   call ops_par_loop(math_kernel_eqR, "A = A*B+C*D", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1045,11 +1042,11 @@ IF(fylvst)CALL zeroyl(d_store3)
 IF(fyrvst)CALL zeroyr(d_store3)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusB, "A=A+B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
@@ -1064,7 +1061,7 @@ CALL d2fdx2(d_vtmp,d_store3)
 
 !     D2UDXY+D2VDX2
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusB, "A=A+B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
 
@@ -1075,7 +1072,7 @@ CALL d2fdx2(d_vtmp,d_store3)
 !     V TAUYX,Xa,b,c
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-   call ops_par_loop(compute_kernel_AequalsAmulBplusCmulD, "A = A*B+C*D", senga_grid, 3, rangexyz,  &
+   call ops_par_loop(math_kernel_eqR, "A = A*B+C*D", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1087,11 +1084,11 @@ IF(fxlvst)CALL zeroxl(d_store3)
 IF(fxrvst)CALL zeroxr(d_store3)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusB, "A=A+B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
@@ -1104,7 +1101,7 @@ IF(fxrvst)CALL zeroxr(d_store3)
 !     ------------------------------
 !     TAUXY(DUDY+DVDX)
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusBmulCmulC, "A = A+B*C*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqO, "A = A+B*C*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
@@ -1143,7 +1140,7 @@ END IF
 !     HALF RHO W DUDZ
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqthriteen, "A = A-half*B*C*D", senga_grid, 3, rangexyz, &
+    call ops_par_loop(math_kernel_eqAE, "A = A-half*B*C*D", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1185,7 +1182,7 @@ END IF
 !     HALF RHO U DWDX
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqthriteen, "A = A-half*B*C*D", senga_grid, 3, rangexyz, &
+    call ops_par_loop(math_kernel_eqAE, "A = A-half*B*C*D", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1201,7 +1198,7 @@ END IF
 
 !     DUDZ+DWDX
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsBplusC, "A=B+C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqK, "A=B+C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
@@ -1223,7 +1220,7 @@ CALL d2fdxz(d_wtmp,d_store2)
 !     TAUXX,Xd
 !     U TAUXX,Xd
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsBmulCmulvar, "A = B*C*var", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqE, "A = B*C*var", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1235,11 +1232,11 @@ IF(fxlvsn)CALL zeroxl(d_store3)
 IF(fxrvsn)CALL zeroxr(d_store3)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAminusB, "A = A-B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqW, "A = A-B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAminusBmulC, "A = A-B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqX, "A = A-B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
@@ -1256,7 +1253,7 @@ IF(fxrvsn)CALL zeroxr(d_store3)
 !     TAUZZ,Zc
 !     W TAUZZ,Zc
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsBmulCmulvar, "A = B*C*var", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqE, "A = B*C*var", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1268,11 +1265,11 @@ IF(fzlvsn)CALL zerozl(d_store3)
 IF(fzrvsn)CALL zerozr(d_store3)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAminusB, "A = A-B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqW, "A = A-B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAminusBmulC, "A = A-B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqX, "A = A-B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
@@ -1288,7 +1285,7 @@ CALL d2fdz2(d_utmp,d_store3)
 
 !     D2UDZ2+D2WDXZ
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusB, "A=A+B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
 
@@ -1299,7 +1296,7 @@ CALL d2fdz2(d_utmp,d_store3)
 !     U TAUXZ,Za,b,c
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAmulBplusCmulD, "A = A*B+C*D", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqR, "A = A*B+C*D", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1311,11 +1308,11 @@ IF(fzlvst)CALL zerozl(d_store3)
 IF(fzrvst)CALL zerozr(d_store3)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusB, "A=A+B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
@@ -1331,7 +1328,7 @@ CALL d2fdx2(d_wtmp,d_store3)
 
 !     D2UDXZ+D2WDX2
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusB, "A=A+B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
 
@@ -1342,7 +1339,7 @@ CALL d2fdx2(d_wtmp,d_store3)
 !     W TAUZX,Xa,b,c
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAmulBplusCmulD, "A = A*B+C*D", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqR, "A = A*B+C*D", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1354,11 +1351,11 @@ IF(fxlvst)CALL zeroxl(d_store3)
 IF(fxrvst)CALL zeroxr(d_store3)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusB, "A=A+B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
@@ -1373,7 +1370,7 @@ IF(fxrvst)CALL zeroxr(d_store3)
 !     TAUXZ(DUDZ+DWDX)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusBmulCmulC, "A = A+B*C*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqO, "A = A+B*C*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
@@ -1413,7 +1410,7 @@ END IF
 !     ----------------------------
 !     HALF RHO W DVDZ
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqthriteen, "A = A-half*B*C*D", senga_grid, 3, rangexyz, &
+    call ops_par_loop(math_kernel_eqAE, "A = A-half*B*C*D", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1456,7 +1453,7 @@ END IF
 !     ----------------------------
 !     HALF RHO V DWDY
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqthriteen, "A = A-half*B*C*D", senga_grid, 3, rangexyz, &
+    call ops_par_loop(math_kernel_eqAE, "A = A-half*B*C*D", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1473,7 +1470,7 @@ END IF
 
 !     DVDZ+DWDY
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsBplusC, "A=B+C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqK, "A=B+C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
@@ -1498,7 +1495,7 @@ CALL d2fdyz(d_wtmp,d_store2)
 !     V TAUYY,Yd
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsBmulCmulvar, "A = B*C*var", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqE, "A = B*C*var", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1510,11 +1507,11 @@ IF(fylvsn)CALL zeroyl(d_store3)
 IF(fyrvsn)CALL zeroyr(d_store3)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAminusB, "A = A-B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqW, "A = A-B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAminusBmulC, "A = A-B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqX, "A = A-B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
@@ -1533,7 +1530,7 @@ IF(fyrvsn)CALL zeroyr(d_store3)
 !     W TAUZZ,Zd
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsBmulCmulvar, "A = B*C*var", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqE, "A = B*C*var", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1545,11 +1542,11 @@ IF(fzlvsn)CALL zerozl(d_store3)
 IF(fzrvsn)CALL zerozr(d_store3)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAminusB, "A = A-B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqW, "A = A-B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAminusBmulC, "A = A-B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqX, "A = A-B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
@@ -1566,7 +1563,7 @@ CALL d2fdz2(d_vtmp,d_store3)
 
 !     D2VDZ2+D2WDYZ
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusB, "A=A+B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
 
@@ -1577,7 +1574,7 @@ CALL d2fdz2(d_vtmp,d_store3)
 !     V TAUYZ,Za,b,c
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAmulBplusCmulD, "A = A*B+C*D", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqR, "A = A*B+C*D", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1589,11 +1586,11 @@ IF(fzlvst)CALL zerozl(d_store3)
 IF(fzrvst)CALL zerozr(d_store3)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusB, "A=A+B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
@@ -1609,7 +1606,7 @@ CALL d2fdy2(d_wtmp,d_store3)
 
 !     D2VDYZ+D2WDY2
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusB, "A=A+B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
 
@@ -1620,7 +1617,7 @@ CALL d2fdy2(d_wtmp,d_store3)
 !     W TAUZY,Ya,b,c
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAmulBplusCmulD, "A = A*B+C*D", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqR, "A = A*B+C*D", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1632,11 +1629,11 @@ IF(fylvst)CALL zeroyl(d_store3)
 IF(fyrvst)CALL zeroyr(d_store3)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusB, "A=A+B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(compute_kernel_AequalsAplusBmulC, "A=A+B*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
@@ -1651,7 +1648,7 @@ IF(fyrvst)CALL zeroyr(d_store3)
 !     TAUYZ(DVDZ+DWDY)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsAplusBmulCmulC, "A = A+B*C*C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqO, "A = A+B*C*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
@@ -1685,7 +1682,7 @@ IF(fzrvsn)CALL zerozr(d_store3)
 !     TAUXX,Xa
 !     U TAUXX,Xa
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqtau, "TAU", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqtau, "TAU", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1700,7 +1697,7 @@ IF(fzrvsn)CALL zerozr(d_store3)
 !     V TAUYY,Ya
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqtau, "TAU", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqtau, "TAU", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1715,7 +1712,7 @@ IF(fzrvsn)CALL zerozr(d_store3)
 !     W TAUZZ,Za
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(complexmath_kernel_eqtau, "TAU", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqtau, "TAU", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1732,7 +1729,7 @@ IF(fzrvsn)CALL zerozr(d_store3)
 !     DIV RHO U
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(compute_kernel_AequalsnegateB, "A = -B", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqB, "A = -B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_divm, 1, s3d_000, "real(dp)", OPS_READ))
 

@@ -137,6 +137,19 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, werr, d_werr, "real(dp)", "WERR")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, eerr, d_eerr, "real(dp)", "EERR")
 
+!---------------------------------------MULTI-DIM DAT---------------------------------
+    d_size = (/nxsize, nysize, nzsize/)
+    d_m = (/0,0,0/)
+    d_p = (/0,0,0/)
+    call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, yrun, d_yrun, "real(dp)", "YRUN")
+    call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, yerr, d_yerr, "real(dp)", "YERR")
+
+    d_size = (/nxsize, nysize, nzsize/)
+    d_m = (/-nhalox,-nhaloy,-nhaloz/)
+    d_p = (/nhalox,nhaloy,nhaloz/)
+    call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, yrhs, d_yrhs, "real(dp)", "YRHS")
+
+!---------------------------------------WITH HALOS------------------------------------
     d_size = (/nxsize, nysize, nzsize/)
     d_m = (/-nhalox,-nhaloy,-nhaloz/)
     d_p = (/nhalox,nhaloy,nhaloz/)
@@ -158,7 +171,7 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, difmix, d_difmix, "real(dp)", "DIFMIX")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, tdrmix, d_tdrmix, "real(dp)", "TDRMIX")
 
-!   Boundary
+!-----------------------------------------Boundary YZ---------------------------------
     d_size = (/1, nysize, nzsize/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
@@ -193,6 +206,7 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strrxl, d_strrxl, "real(dp)", "STRRXL")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strrxr, d_strrxr, "real(dp)", "STRRXR")
 
+!-----------------------------------------Boundary XZ---------------------------------
     d_size = (/nxsize, 1, nzsize/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
@@ -226,7 +240,8 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strgyr, d_strgyr, "real(dp)", "STRGYR")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strryl, d_strryl, "real(dp)", "STRRYL")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strryr, d_strryr, "real(dp)", "STRRYR")
-    
+
+!-----------------------------------------Boundary XY---------------------------------
     d_size = (/nxsize, nysize, 1/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
@@ -261,7 +276,7 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strrzl, d_strrzl, "real(dp)", "STRRZL")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strrzr, d_strrzr, "real(dp)", "STRRZR")
 
-!   Declare OPS Stencil
+!------------------------------------OPS Stencil----------------------------------------
     call ops_decl_stencil( 3, 1, a3d_000, s3d_000, "0,0,0")
 
     call ops_decl_strided_stencil( 3, 1, a3d_000, stride3d_x, s3d_000_strid3d_x, "stride 3D X dir")

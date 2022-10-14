@@ -28,6 +28,8 @@ MODULE com_ops_senga
     
     TYPE(ops_dat) :: d_utmp, d_vtmp, d_wtmp, d_prun, d_trun, d_transp, d_store7
 
+    TYPE(ops_dat) :: d_yrhs, d_yrun, d_yerr
+
     TYPE(ops_dat) :: d_bcl1xl, d_bcl2xl, d_bcl3xl, d_bcl4xl, d_bcl5xl, d_bcltxl
     TYPE(ops_dat) :: d_bcl1xr, d_bcl2xr, d_bcl3xr, d_bcl4xr, d_bcl5xr, d_bcltxr
 
