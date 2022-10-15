@@ -103,14 +103,14 @@ DO kc = kstalt,kstolt
 !             =================================================================
         
 !             CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
-        tcoeff(0) = tcoeff(0) + yrhs(ic,jc,kc,ispec)*  &
+        tcoeff(0) = tcoeff(0) + yrhs(ispec,ic,jc,kc)*  &
             amascp(ncenth(itint,ispec),itint,ispec)
-        tcoeff(1) = tcoeff(1) + yrhs(ic,jc,kc,ispec)*amasct(1,itint,ispec)
+        tcoeff(1) = tcoeff(1) + yrhs(ispec,ic,jc,kc)*amasct(1,itint,ispec)
         tderiv(1) = tcoeff(1)
         DO icp = 2, ncpoly(itint,ispec)
-          tcoeff(icp) = tcoeff(icp) + yrhs(ic,jc,kc,ispec)*  &
+          tcoeff(icp) = tcoeff(icp) + yrhs(ispec,ic,jc,kc)*  &
               amasct(icp,itint,ispec)
-          tderiv(icp) = tderiv(icp) + yrhs(ic,jc,kc,ispec)*  &
+          tderiv(icp) = tderiv(icp) + yrhs(ispec,ic,jc,kc)*  &
               amascp(icp,itint,ispec)
         END DO
         
@@ -119,7 +119,7 @@ DO kc = kstalt,kstolt
 !             USE STORE7
 !             TO ACCUMULATE (DENSITY TIMES) MIXTURE SPECIFIC GAS CONSTANT
         store7(ic,jc,kc) = store7(ic,jc,kc)  &
-            + yrhs(ic,jc,kc,ispec)*rgspec(ispec)
+            + yrhs(ispec,ic,jc,kc)*rgspec(ispec)
         
 !             =================================================================
         
@@ -206,7 +206,7 @@ DO kc = kstalt,kstolt
         DO icp = ncpom1(itint,ispec),1,-1
           cpfory = cpfory*trun(ic,jc,kc) + amascp(icp,itint,ispec)
         END DO
-        transp(ic,jc,kc) = transp(ic,jc,kc) + yrhs(ic,jc,kc,ispec)*cpfory
+        transp(ic,jc,kc) = transp(ic,jc,kc) + yrhs(ispec,ic,jc,kc)*cpfory
         
       END DO
       transp(ic,jc,kc) = transp(ic,jc,kc)/drhs(ic,jc,kc)

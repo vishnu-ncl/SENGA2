@@ -190,7 +190,7 @@ DO ispec = 1, nspm1
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        yrun(ic,jc,kc,ispec) = yrinr(ispec)  &
+        yrun(ispec,ic,jc,kc) = yrinr(ispec)  &
             + crin(ic)*(yrinp(ispec) - yrinr(ispec))
         
       END DO
@@ -221,7 +221,7 @@ DO kc = kstal,kstol
   DO jc = jstal,jstol
     DO ic = istal,istol
       
-      yrun(ic,jc,kc,nspec) = zero
+      yrun(nspec,ic,jc,kc) = zero
       
     END DO
   END DO
@@ -232,7 +232,7 @@ DO ispec = 1, nspm1
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        yrun(ic,jc,kc,nspec) = yrun(ic,jc,kc,nspec) + yrun(ic,jc,kc,ispec)
+        yrun(nspec,ic,jc,kc) = yrun(nspec,ic,jc,kc) + yrun(ispec,ic,jc,kc)
         
       END DO
     END DO
@@ -243,7 +243,7 @@ DO kc = kstal,kstol
   DO jc = jstal,jstol
     DO ic = istal,istol
       
-      yrun(ic,jc,kc,nspec) = one - yrun(ic,jc,kc,nspec)
+      yrun(nspec,ic,jc,kc) = one - yrun(nspec,ic,jc,kc)
       
     END DO
   END DO
@@ -283,7 +283,7 @@ DO ispec = 1,nspec
       DO ic = istal,istol
         
         store1(ic,jc,kc) = store1(ic,jc,kc)  &
-            + rgspec(ispec)*yrun(ic,jc,kc,ispec)
+            + rgspec(ispec)*yrun(ispec,ic,jc,kc)
         
       END DO
     END DO

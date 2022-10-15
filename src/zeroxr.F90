@@ -9,30 +9,23 @@ use OPS_Fortran_Reference
     use com_senga
     use com_ops_senga
 
-
-!     ARGUMENTS
-!     =========
-
+!   ARGUMENTS
+!   =========
     TYPE(ops_dat) :: farray
 
+!   LOCAL DATA
+!   ==========
+    integer :: rangexyz(6)
 
+!   BEGIN
+!   =====
 
-!     LOCAL DATA
-!     ==========
-INTEGER :: rangexyz(6)
-
-!     BEGIN
-!     =====
-
-!     =========================================================================
+!   =========================================================================
 
     rangexyz = (/istol,istol, jstal,jstol, kstal,kstol/)
     call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
                         ops_arg_dat(farray, 1, s3d_000, "real(dp)", OPS_WRITE))
 
-
-!     =========================================================================
-
-
+!   =========================================================================
  
 END SUBROUTINE zeroxr

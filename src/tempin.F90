@@ -116,13 +116,13 @@ DO kc = kstalt,kstolt
 !             END OF LOOP 1100
         
 !             CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
-        tcoeff(0) = tcoeff(0) + yrhs(ic,jc,kc,ispec)*  &
+        tcoeff(0) = tcoeff(0) + yrhs(ispec,ic,jc,kc)*  &
             amascp(ncenth(itint,ispec),itint,ispec)
         
-        tcoeff(1) = tcoeff(1) + yrhs(ic,jc,kc,ispec)*amasct(1,itint,ispec)
+        tcoeff(1) = tcoeff(1) + yrhs(ispec,ic,jc,kc)*amasct(1,itint,ispec)
         DO icp = 2, ncpoly(itint,ispec)
           tcoeff(icp) = tcoeff(icp)  &
-              + yrhs(ic,jc,kc,ispec)*amasct(icp,itint,ispec)
+              + yrhs(ispec,ic,jc,kc)*amasct(icp,itint,ispec)
         END DO
         
       END DO
@@ -182,12 +182,12 @@ DO kc = kstalt,kstolt
 !                 END OF LOOP 2100
           
 !                 CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
-          tcoeff(0) = tcoeff(0) + yrhs(ic,jc,kc,ispec)*  &
+          tcoeff(0) = tcoeff(0) + yrhs(ispec,ic,jc,kc)*  &
               amascp(ncenth(itint,ispec),itint,ispec)
-          tcoeff(1) = tcoeff(1) + yrhs(ic,jc,kc,ispec)*amasct(1,itint,ispec)
+          tcoeff(1) = tcoeff(1) + yrhs(ispec,ic,jc,kc)*amasct(1,itint,ispec)
           DO icp = 2, ncpoly(itint,ispec)
             tcoeff(icp) = tcoeff(icp)  &
-                + yrhs(ic,jc,kc,ispec)*amasct(icp,itint,ispec)
+                + yrhs(ispec,ic,jc,kc)*amasct(icp,itint,ispec)
           END DO
           
         END DO
@@ -232,7 +232,7 @@ DO kc = kstalt,kstolt
             WRITE(6,*)wrhs(ic,jc,kc)
             WRITE(6,*)erhs(ic,jc,kc)
             DO ispec = 1, nspec
-              WRITE(6,*)yrhs(ic,jc,kc,ispec)
+              WRITE(6,*)yrhs(ispec,ic,jc,kc)
             END DO
             STOP
           END IF
@@ -289,12 +289,12 @@ DO kc = kstalt,kstolt
 !                 END OF LOOP 3100
           
 !                 CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
-          tcoeff(0) = tcoeff(0) + yrhs(ic,jc,kc,ispec)*  &
+          tcoeff(0) = tcoeff(0) + yrhs(ispec,ic,jc,kc)*  &
               amascp(ncenth(itint,ispec),itint,ispec)
-          tcoeff(1) = tcoeff(1) + yrhs(ic,jc,kc,ispec)*amasct(1,itint,ispec)
+          tcoeff(1) = tcoeff(1) + yrhs(ispec,ic,jc,kc)*amasct(1,itint,ispec)
           DO icp = 2, ncpoly(itint,ispec)
             tcoeff(icp) = tcoeff(icp)  &
-                + yrhs(ic,jc,kc,ispec)*amasct(icp,itint,ispec)
+                + yrhs(ispec,ic,jc,kc)*amasct(icp,itint,ispec)
           END DO
           
         END DO
@@ -339,7 +339,7 @@ DO kc = kstalt,kstolt
             WRITE(6,*)wrhs(ic,jc,kc)
             WRITE(6,*)erhs(ic,jc,kc)
             DO ispec = 1, nspec
-              WRITE(6,*)yrhs(ic,jc,kc,ispec)
+              WRITE(6,*)yrhs(ispec,ic,jc,kc)
             END DO
             STOP
           END IF
@@ -401,12 +401,12 @@ DO kc = kstalt,kstolt
 !                 END OF LOOP 4100
           
 !                 CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
-          tcoeff(0) = tcoeff(0) + yrhs(ic,jc,kc,ispec)*  &
+          tcoeff(0) = tcoeff(0) + yrhs(ispec,ic,jc,kc)*  &
               amascp(ncenth(itint,ispec),itint,ispec)
-          tcoeff(1) = tcoeff(1) + yrhs(ic,jc,kc,ispec)*amasct(1,itint,ispec)
+          tcoeff(1) = tcoeff(1) + yrhs(ispec,ic,jc,kc)*amasct(1,itint,ispec)
           DO icp = 2, ncpoly(itint,ispec)
             tcoeff(icp) = tcoeff(icp)  &
-                + yrhs(ic,jc,kc,ispec)*amasct(icp,itint,ispec)
+                + yrhs(ispec,ic,jc,kc)*amasct(icp,itint,ispec)
           END DO
           
         END DO
@@ -486,13 +486,13 @@ DO kc = kstalt,kstolt
         DO icp = ncpom1(itint,ispec),1,-1
           cpfory = cpfory*trun(ic,jc,kc) + amascp(icp,itint,ispec)
         END DO
-        transp(ic,jc,kc) = transp(ic,jc,kc) + yrhs(ic,jc,kc,ispec)*cpfory
+        transp(ic,jc,kc) = transp(ic,jc,kc) + yrhs(ispec,ic,jc,kc)*cpfory
         
 !             =================================================================
         
 !             EVALUATE (DENSITY TIMES) MIXTURE GAS CONSTANT FOR PRESSURE
         store7(ic,jc,kc) = store7(ic,jc,kc)  &
-            + yrhs(ic,jc,kc,ispec)*rgspec(ispec)
+            + yrhs(ispec,ic,jc,kc)*rgspec(ispec)
         
 !             =================================================================
         

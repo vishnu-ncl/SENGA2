@@ -88,7 +88,7 @@ DO jspec = 1, nsprad
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        fornow = yrhs(ic,jc,kc,ispec)*rgspec(ispec)*trun(ic,jc,kc)
+        fornow = yrhs(ispec,ic,jc,kc)*rgspec(ispec)*trun(ic,jc,kc)
         store1(ic,jc,kc) = store1(ic,jc,kc) + store2(ic,jc,kc)*fornow
         
       END DO

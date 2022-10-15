@@ -249,7 +249,7 @@ DO ispec = 1,nspec
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        yerr(ic,jc,kc,ispec) = zero
+        yerr(ispec,ic,jc,kc) = zero
         
       END DO
     END DO

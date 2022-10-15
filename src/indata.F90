@@ -1072,7 +1072,7 @@ DO ispec = 1,nspec
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        yrun(ic,jc,kc,ispec) = yrin(ispec)
+        yrun(ispec,ic,jc,kc) = yrin(ispec)
         
       END DO
     END DO
@@ -1167,7 +1167,7 @@ DO ispec = 1,nspec
       DO ic = istal,istol
         
         store1(ic,jc,kc) = store1(ic,jc,kc)  &
-            + rgspec(ispec)*yrun(ic,jc,kc,ispec)
+            + rgspec(ispec)*yrun(ispec,ic,jc,kc)
         
       END DO
     END DO
@@ -1259,7 +1259,7 @@ DO ispec = 1,nspec
         fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
             + fornow*trun(ic,jc,kc)
         
-        erun(ic,jc,kc) = erun(ic,jc,kc) + fornow*yrun(ic,jc,kc,ispec)
+        erun(ic,jc,kc) = erun(ic,jc,kc) + fornow*yrun(ispec,ic,jc,kc)
         
       END DO
     END DO
@@ -1305,7 +1305,7 @@ DO ispec = 1,nspec
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        yrun(ic,jc,kc,ispec) = drun(ic,jc,kc)*yrun(ic,jc,kc,ispec)
+        yrun(ispec,ic,jc,kc) = drun(ic,jc,kc)*yrun(ispec,ic,jc,kc)
         
       END DO
     END DO
@@ -1368,7 +1368,7 @@ END DO
                     DO ic = 1, nxnode
                         READ(ncdmpi,*)drun(ic,jc,kc),  &
                             urun(ic,jc,kc),vrun(ic,jc,kc),wrun(ic,jc,kc), erun(ic,jc,kc),  &
-                            (yrun(ic,jc,kc,ispec),ispec=1,nspec)
+                            (yrun(ispec,ic,jc,kc),ispec=1,nspec)
                     END DO
                 END DO
             END DO
@@ -1421,7 +1421,7 @@ DO ispec = 1,nspec
     DO jc = jstab,jstob
       DO ic = istab,istob
         
-        yrhs(ic,jc,kc,ispec) = dyrin(ispec)
+        yrhs(ispec,ic,jc,kc) = dyrin(ispec)
         
       END DO
     END DO
@@ -1451,7 +1451,7 @@ DO ispec = 1,nspec
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        yrhs(ic,jc,kc,ispec) = yrun(ic,jc,kc,ispec)
+        yrhs(ispec,ic,jc,kc) = yrun(ispec,ic,jc,kc)
         
       END DO
     END DO

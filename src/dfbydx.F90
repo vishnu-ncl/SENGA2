@@ -9,33 +9,27 @@ use OPS_Fortran_Reference
     use com_senga
     use com_ops_senga
 
+!   ARGUMENTS
+!   =========
     TYPE(ops_dat) :: functn, fderiv
 
+!   LOCAL DATA
+!   ==========
+    integer :: istart,ifinis
+    integer :: rangexyz(6)
 
-!     ARGUMENTS
-!     =========
+!   BEGIN
+!   =====
 
+!   =========================================================================
 
+!   END CONDITIONS
+!   ==============
 
-
-!     LOCAL DATA
-!     ==========
-INTEGER :: istart,ifinis
-INTEGER :: rangexyz(6)
-
-
-!     BEGIN
-!     =====
-
-!     =========================================================================
-
-!     END CONDITIONS
-!     ==============
-
-istart = istal
-ifinis = istol
-IF(nendxl == nbound)    istart = istap5
-IF(nendxr == nbound)    ifinis = istom5
+    istart = istal
+    ifinis = istol
+    IF(nendxl == nbound)    istart = istap5
+    IF(nendxr == nbound)    ifinis = istom5
 
 !   =========================================================================
 
@@ -124,6 +118,5 @@ IF(nendxr == nbound)    ifinis = istom5
     call ops_par_loop(dfbydx_kernel_scaling, "dfbydx_scaling", senga_grid, 3, rangexyz,  &
                       ops_arg_dat(fderiv, 1, s3d_000, "real(dp)", OPS_WRITE))
 !   =========================================================================
-
 
 END SUBROUTINE dfbydx

@@ -9,34 +9,27 @@ use OPS_Fortran_Reference
     use com_senga
     use com_ops_senga
 
+!   ARGUMENTS
+!   =========
     TYPE(ops_dat) :: functn, fderiv
 
+!   LOCAL DATA
+!   ==========
+    integer :: kstart,kfinis
+    integer :: rangexyz(6)
 
-!     ARGUMENTS
-!     =========
+!   BEGIN
+!   =====
 
+!   =========================================================================
 
+!   END CONDITIONS
+!   ==============
 
-
-!     LOCAL DATA
-!     ==========
-INTEGER :: kstart,kfinis
-INTEGER :: rangexyz(6)
-
-
-!     BEGIN
-!     =====
-
-!     =========================================================================
-
-!     END CONDITIONS
-!     ==============
-
-kstart = kstal
-kfinis = kstol
-IF(nendzl == nbound)    kstart = kstap5
-IF(nendzr == nbound)    kfinis = kstom5
-
+    kstart = kstal
+    kfinis = kstol
+    IF(nendzl == nbound)    kstart = kstap5
+    IF(nendzr == nbound)    kfinis = kstom5
 
 !   =========================================================================
     if(nzglbl == 1) then
@@ -127,11 +120,8 @@ IF(nendzr == nbound)    kfinis = kstom5
                         ops_arg_dat(fderiv, 1, s3d_000, "real(dp)", OPS_WRITE))
 !       =========================================================================
 
-
     end if
 
-
 !   =========================================================================
-
 
 END SUBROUTINE dfbydz

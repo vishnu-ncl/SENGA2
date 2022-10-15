@@ -148,8 +148,8 @@ IF(fladpt)THEN
         DO ic = istaly,istoly
           
 !                FORNOW = ABS(YERR(IC,JC,KC,ISPEC))
-          fornow = ABS(yerr(ic,jc,kc,ispec))  &
-              /(ABS(yrun(ic,jc,kc,ispec))+erynrm(ispec))
+          fornow = ABS(yerr(ispec,ic,jc,kc))  &
+              /(ABS(yrun(ispec,ic,jc,kc))+erynrm(ispec))
           IF(fornow > erytot(ispec))erytot(ispec) = fornow
           
         END DO
@@ -304,7 +304,7 @@ IF(fladpt)THEN
       DO jc = jstal,jstol
         DO ic = istal,istol
           
-          yerr(ic,jc,kc,ispec) = zero
+          yerr(ispec,ic,jc,kc) = zero
           
         END DO
       END DO

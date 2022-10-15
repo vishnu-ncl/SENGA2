@@ -443,7 +443,7 @@ IF(flmavt)THEN
         combo2 = zero
         combo3 = zero
         DO ispec = 1, nspec
-          fornow = yrhs(ic,jc,kc,ispec)*ovwmol(ispec)
+          fornow = yrhs(ispec,ic,jc,kc)*ovwmol(ispec)
           combo1 = combo1 + fornow*ctrans(ispec)
           combo2 = combo2 + fornow/ctrans(ispec)
           combo3 = combo3 + fornow
@@ -621,7 +621,7 @@ DO ispec = 1,nspec
   DO kc = kstal,kstol
     DO jc = jstal,jstol
       DO ic = istal,istol
-        rrte(ic,jc,kc,ispec) = rate(ic,jc,kc,ispec)
+        rrte(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc)
       END DO
     END DO
   END DO
@@ -639,7 +639,7 @@ IF(fxlcnv)THEN
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
-        ratexl(jc,kc,ispec) = rate(istal,jc,kc,ispec)
+        ratexl(jc,kc,ispec) = rate(ispec,istal,jc,kc)
         
       END DO
     END DO
@@ -650,7 +650,7 @@ IF(fxrcnv)THEN
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
-        ratexr(jc,kc,ispec) = rate(istol,jc,kc,ispec)
+        ratexr(jc,kc,ispec) = rate(ispec,istol,jc,kc)
         
       END DO
     END DO
@@ -663,7 +663,7 @@ IF(fylcnv)THEN
     DO kc = kstal,kstol
       DO ic = istal,istol
         
-        rateyl(ic,kc,ispec) = rate(ic,jstal,kc,ispec)
+        rateyl(ic,kc,ispec) = rate(ispec,ic,jstal,kc)
         
       END DO
     END DO
@@ -674,7 +674,7 @@ IF(fyrcnv)THEN
     DO kc = kstal,kstol
       DO ic = istal,istol
         
-        rateyr(ic,kc,ispec) = rate(ic,jstol,kc,ispec)
+        rateyr(ic,kc,ispec) = rate(ispec,ic,jstol,kc)
         
       END DO
     END DO
@@ -687,7 +687,7 @@ IF(fzlcnv)THEN
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        ratezl(ic,jc,ispec) = rate(ic,jc,kstal,ispec)
+        ratezl(ic,jc,ispec) = rate(ispec,ic,jc,kstal)
         
       END DO
     END DO
@@ -698,7 +698,7 @@ IF(fzrcnv)THEN
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        ratezr(ic,jc,ispec) = rate(ic,jc,kstol,ispec)
+        ratezr(ic,jc,ispec) = rate(ispec,ic,jc,kstol)
         
       END DO
     END DO
@@ -813,7 +813,7 @@ DO ispec = 1,nspec
     DO jc = jstalt,jstolt
       DO ic = istalt,istolt
         
-        yrhs(ic,jc,kc,ispec) = yrhs(ic,jc,kc,ispec)/drhs(ic,jc,kc)
+        yrhs(ispec,ic,jc,kc) = yrhs(ispec,ic,jc,kc)/drhs(ic,jc,kc)
         
       END DO
     END DO
@@ -830,8 +830,8 @@ DO ispec = 1,nspec
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        rate(ic,jc,kc,ispec) = rate(ic,jc,kc,ispec)  &
-            - half*yrhs(ic,jc,kc,ispec)*divm(ic,jc,kc)
+        rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc)  &
+            - half*yrhs(ispec,ic,jc,kc)*divm(ic,jc,kc)
         
       END DO
     END DO
@@ -851,7 +851,7 @@ DO ispec = 1,nspec
     DO jc = jstab,jstob
       DO ic = istab,istob
         
-        store7(ic,jc,kc) = yrhs(ic,jc,kc,ispec)*urhs(ic,jc,kc)
+        store7(ic,jc,kc) = yrhs(ispec,ic,jc,kc)*urhs(ic,jc,kc)
         
       END DO
     END DO
@@ -864,7 +864,7 @@ DO ispec = 1,nspec
     DO jc = jstab,jstob
       DO ic = istab,istob
         
-        store7(ic,jc,kc) = yrhs(ic,jc,kc,ispec)*vrhs(ic,jc,kc)
+        store7(ic,jc,kc) = yrhs(ispec,ic,jc,kc)*vrhs(ic,jc,kc)
         
       END DO
     END DO
@@ -877,7 +877,7 @@ DO ispec = 1,nspec
     DO jc = jstab,jstob
       DO ic = istab,istob
         
-        store7(ic,jc,kc) = yrhs(ic,jc,kc,ispec)*wrhs(ic,jc,kc)
+        store7(ic,jc,kc) = yrhs(ispec,ic,jc,kc)*wrhs(ic,jc,kc)
         
       END DO
     END DO
@@ -889,7 +889,7 @@ DO ispec = 1,nspec
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        rate(ic,jc,kc,ispec) = rate(ic,jc,kc,ispec)  &
+        rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc)  &
             - half*(store1(ic,jc,kc) + store2(ic,jc,kc)  &
             + store3(ic,jc,kc))
         
@@ -909,7 +909,7 @@ DO ispec = 1,nspec
     DO jc = jstab,jstob
       DO ic = istab,istob
         
-        store7(ic,jc,kc) = yrhs(ic,jc,kc,ispec)
+        store7(ic,jc,kc) = yrhs(ispec,ic,jc,kc)
         
       END DO
     END DO
@@ -931,7 +931,7 @@ DO ispec = 1,nspec
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
-        stryxl(jc,kc,ispec) = yrhs(istal,jc,kc,ispec)
+        stryxl(jc,kc,ispec) = yrhs(ispec,istal,jc,kc)
         bclyxl(jc,kc,ispec) = store1(istal,jc,kc)
         
       END DO
@@ -941,7 +941,7 @@ DO ispec = 1,nspec
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
-        stryxr(jc,kc,ispec) = yrhs(istol,jc,kc,ispec)
+        stryxr(jc,kc,ispec) = yrhs(ispec,istol,jc,kc)
         bclyxr(jc,kc,ispec) = store1(istol,jc,kc)
         
       END DO
@@ -953,7 +953,7 @@ DO ispec = 1,nspec
     DO kc = kstal,kstol
       DO ic = istal,istol
         
-        stryyl(ic,kc,ispec) = yrhs(ic,jstal,kc,ispec)
+        stryyl(ic,kc,ispec) = yrhs(ispec,ic,jstal,kc)
         bclyyl(ic,kc,ispec) = store2(ic,jstal,kc)
         
       END DO
@@ -963,7 +963,7 @@ DO ispec = 1,nspec
     DO kc = kstal,kstol
       DO ic = istal,istol
         
-        stryyr(ic,kc,ispec) = yrhs(ic,jstol,kc,ispec)
+        stryyr(ic,kc,ispec) = yrhs(ispec,ic,jstol,kc)
         bclyyr(ic,kc,ispec) = store2(ic,jstol,kc)
         
       END DO
@@ -975,7 +975,7 @@ DO ispec = 1,nspec
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        stryzl(ic,jc,ispec) = yrhs(ic,jc,kstal,ispec)
+        stryzl(ic,jc,ispec) = yrhs(ispec,ic,jc,kstal)
         bclyzl(ic,jc,ispec) = store3(ic,jc,kstal)
         
       END DO
@@ -985,7 +985,7 @@ DO ispec = 1,nspec
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        stryzr(ic,jc,ispec) = yrhs(ic,jc,kstol,ispec)
+        stryzr(ic,jc,ispec) = yrhs(ispec,ic,jc,kstol)
         bclyzr(ic,jc,ispec) = store3(ic,jc,kstol)
         
       END DO
@@ -1006,7 +1006,7 @@ DO ispec = 1,nspec
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        rate(ic,jc,kc,ispec) = rate(ic,jc,kc,ispec)  &
+        rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc)  &
             - half*(store1(ic,jc,kc)*urhs(ic,jc,kc)  &
             + store2(ic,jc,kc)*vrhs(ic,jc,kc) + store3(ic,jc,kc)*wrhs(ic,jc,kc))
         
@@ -1070,11 +1070,11 @@ DO ispec = 1,nspec
           combo1 = zero
           combo2 = zero
           DO jspec = 1, nspec
-            fornow = yrhs(ic,jc,kc,jspec) + dfctol
+            fornow = yrhs(jspec,ic,jc,kc) + dfctol
             combo1 = combo1 + fornow
             combo2 = combo2 + fornow*ovwmol(jspec)/ctrans(jspec)
           END DO
-          fornow = yrhs(ic,jc,kc,ispec) + dfctol
+          fornow = yrhs(ispec,ic,jc,kc) + dfctol
           combo1 = combo1 - fornow
           combo2 = combo2 - fornow*ovwmol(ispec)/ctrans(ispec)
           combo2 = combo2*wmomix(ic,jc,kc)
@@ -1119,7 +1119,7 @@ DO ispec = 1,nspec
               ctrans(jspec) = fornow
               
 !                   COMBINATION RULE FOR THERMAL DIFFUSIION RATIO
-              fornow = yrhs(ic,jc,kc,jspec)*ovwmol(jspec)
+              fornow = yrhs(jspec,ic,jc,kc)*ovwmol(jspec)
               tdrmix(ic,jc,kc) = tdrmix(ic,jc,kc)  &
                   + fornow*wmomix(ic,jc,kc)*ctrans(jspec)
               
@@ -1184,7 +1184,7 @@ DO ispec = 1,nspec
             + fornow*trun(ic,jc,kc)
         
 !             MIXTURE H
-        wtmp(ic,jc,kc) = wtmp(ic,jc,kc) + utmp(ic,jc,kc)*yrhs(ic,jc,kc,ispec)
+        wtmp(ic,jc,kc) = wtmp(ic,jc,kc) + utmp(ic,jc,kc)*yrhs(ispec,ic,jc,kc)
         
       END DO
     END DO
@@ -1313,7 +1313,7 @@ DO ispec = 1,nspec
             + store6(ic,jc,kc)*store3(ic,jc,kc)
         
 !             Y EQUATION
-        rate(ic,jc,kc,ispec) = rate(ic,jc,kc,ispec) + fornow
+        rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
         
 !             DIFFUSION CORRECTION VELOCITY DIVERGENCE
         vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
@@ -1418,7 +1418,7 @@ DO ispec = 1,nspec
           fornow = fornow + acbcxl(ic-1)*store7(ic,jc,kc)*store1(ic,jc,kc)
           
         END DO
-        rate(istal,jc,kc,ispec) = rate(istal,jc,kc,ispec) + fornow
+        rate(ispec,istal,jc,kc) = rate(ispec,istal,jc,kc) + fornow
         vtmp(istal,jc,kc) = vtmp(istal,jc,kc) + fornow
         erhs(istal,jc,kc) = erhs(istal,jc,kc) + fornow*utmp(istal,jc,kc)
         
@@ -1435,7 +1435,7 @@ DO ispec = 1,nspec
           fornow = fornow + acbcxr(istol-ic)*store7(ic,jc,kc)*store1(ic,jc,kc)
           
         END DO
-        rate(istol,jc,kc,ispec) = rate(istol,jc,kc,ispec) + fornow
+        rate(ispec,istol,jc,kc) = rate(ispec,istol,jc,kc) + fornow
         vtmp(istol,jc,kc) = vtmp(istol,jc,kc) + fornow
         erhs(istol,jc,kc) = erhs(istol,jc,kc) + fornow*utmp(istol,jc,kc)
         
@@ -1452,7 +1452,7 @@ DO ispec = 1,nspec
           fornow = fornow + acbcyl(jc-1)*store7(ic,jc,kc)*store2(ic,jc,kc)
           
         END DO
-        rate(ic,jstal,kc,ispec) = rate(ic,jstal,kc,ispec) + fornow
+        rate(ispec,ic,jstal,kc) = rate(ispec,ic,jstal,kc) + fornow
         vtmp(ic,jstal,kc) = vtmp(ic,jstal,kc) + fornow
         erhs(ic,jstal,kc) = erhs(ic,jstal,kc) + fornow*utmp(ic,jstal,kc)
         
@@ -1469,7 +1469,7 @@ DO ispec = 1,nspec
           fornow = fornow + acbcyr(jstol-jc)*store7(ic,jc,kc)*store2(ic,jc,kc)
           
         END DO
-        rate(ic,jstol,kc,ispec) = rate(ic,jstol,kc,ispec) + fornow
+        rate(ispec,ic,jstol,kc) = rate(ispec,ic,jstol,kc) + fornow
         vtmp(ic,jstol,kc) = vtmp(ic,jstol,kc) + fornow
         erhs(ic,jstol,kc) = erhs(ic,jstol,kc) + fornow*utmp(ic,jstol,kc)
         
@@ -1486,7 +1486,7 @@ DO ispec = 1,nspec
           fornow = fornow + acbczl(kc-1)*store7(ic,jc,kc)*store3(ic,jc,kc)
           
         END DO
-        rate(ic,jc,kstal,ispec) = rate(ic,jc,kstal,ispec) + fornow
+        rate(ispec,ic,jc,kstal) = rate(ispec,ic,jc,kstal) + fornow
         vtmp(ic,jc,kstal) = vtmp(ic,jc,kstal) + fornow
         erhs(ic,jc,kstal) = erhs(ic,jc,kstal) + fornow*utmp(ic,jc,kstal)
         
@@ -1503,7 +1503,7 @@ DO ispec = 1,nspec
           fornow = fornow + acbczr(kstol-kc)*store7(ic,jc,kc)*store3(ic,jc,kc)
           
         END DO
-        rate(ic,jc,kstol,ispec) = rate(ic,jc,kstol,ispec) + fornow
+        rate(ispec,ic,jc,kstol) = rate(ispec,ic,jc,kstol) + fornow
         vtmp(ic,jc,kstol) = vtmp(ic,jc,kstol) + fornow
         erhs(ic,jc,kstol) = erhs(ic,jc,kstol) + fornow*utmp(ic,jc,kstol)
         
@@ -1530,7 +1530,7 @@ DO ispec = 1,nspec
     DO jc = jstab,jstob
       DO ic = istab,istob
         
-        store7(ic,jc,kc) = yrhs(ic,jc,kc,ispec)
+        store7(ic,jc,kc) = yrhs(ispec,ic,jc,kc)
         
       END DO
     END DO
@@ -1558,7 +1558,7 @@ DO ispec = 1,nspec
             +  store3(ic,jc,kc))*store4(ic,jc,kc)
         
 !             Y EQUATION
-        rate(ic,jc,kc,ispec) = rate(ic,jc,kc,ispec) + fornow
+        rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
         
 !             DIFFUSION CORRECTION VELOCITY DIVERGENCE
         vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
@@ -1606,7 +1606,7 @@ DO ispec = 1,nspec
       DO jc = jstab,jstob
         DO ic = istab,istob
           
-          store7(ic,jc,kc) = difmix(ic,jc,kc)*yrhs(ic,jc,kc,ispec)
+          store7(ic,jc,kc) = difmix(ic,jc,kc)*yrhs(ispec,ic,jc,kc)
           
         END DO
       END DO
@@ -1659,7 +1659,7 @@ DO ispec = 1,nspec
               + store2(ic,jc,kc)*wd1y(ic,jc,kc) + store3(ic,jc,kc)*wd1z(ic,jc,kc)
           
 !               Y EQUATION
-          rate(ic,jc,kc,ispec) = rate(ic,jc,kc,ispec) + fornow
+          rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
           
 !               DIFFUSION CORRECTION VELOCITY DIVERGENCE
           vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
@@ -1746,7 +1746,7 @@ DO ispec = 1,nspec
             fornow = fornow + acbcxl(ic-1)*store7(ic,jc,kc)*wd1x(ic,jc,kc)
             
           END DO
-          rate(istal,jc,kc,ispec) = rate(istal,jc,kc,ispec) + fornow
+          rate(ispec,istal,jc,kc) = rate(ispec,istal,jc,kc) + fornow
           vtmp(istal,jc,kc) = vtmp(istal,jc,kc) + fornow
           erhs(istal,jc,kc) = erhs(istal,jc,kc) + fornow*utmp(istal,jc,kc)
           
@@ -1763,7 +1763,7 @@ DO ispec = 1,nspec
             fornow = fornow + acbcxr(istol-ic)*store7(ic,jc,kc)*wd1x(ic,jc,kc)
             
           END DO
-          rate(istol,jc,kc,ispec) = rate(istol,jc,kc,ispec) + fornow
+          rate(ispec,istol,jc,kc) = rate(ispec,istol,jc,kc) + fornow
           vtmp(istol,jc,kc) = vtmp(istol,jc,kc) + fornow
           erhs(istol,jc,kc) = erhs(istol,jc,kc) + fornow*utmp(istol,jc,kc)
           
@@ -1780,7 +1780,7 @@ DO ispec = 1,nspec
             fornow = fornow + acbcyl(jc-1)*store7(ic,jc,kc)*wd1y(ic,jc,kc)
             
           END DO
-          rate(ic,jstal,kc,ispec) = rate(ic,jstal,kc,ispec) + fornow
+          rate(ispec,ic,jstal,kc) = rate(ispec,ic,jstal,kc) + fornow
           vtmp(ic,jstal,kc) = vtmp(ic,jstal,kc) + fornow
           erhs(ic,jstal,kc) = erhs(ic,jstal,kc) + fornow*utmp(ic,jstal,kc)
           
@@ -1797,7 +1797,7 @@ DO ispec = 1,nspec
             fornow = fornow + acbcyr(jstol-jc)*store7(ic,jc,kc)*wd1y(ic,jc,kc)
             
           END DO
-          rate(ic,jstol,kc,ispec) = rate(ic,jstol,kc,ispec) + fornow
+          rate(ispec,ic,jstol,kc) = rate(ispec,ic,jstol,kc) + fornow
           vtmp(ic,jstol,kc) = vtmp(ic,jstol,kc) + fornow
           erhs(ic,jstol,kc) = erhs(ic,jstol,kc) + fornow*utmp(ic,jstol,kc)
           
@@ -1814,7 +1814,7 @@ DO ispec = 1,nspec
             fornow = fornow + acbczl(kc-1)*store7(ic,jc,kc)*wd1z(ic,jc,kc)
             
           END DO
-          rate(ic,jc,kstal,ispec) = rate(ic,jc,kstal,ispec) + fornow
+          rate(ispec,ic,jc,kstal) = rate(ispec,ic,jc,kstal) + fornow
           vtmp(ic,jc,kstal) = vtmp(ic,jc,kstal) + fornow
           erhs(ic,jc,kstal) = erhs(ic,jc,kstal) + fornow*utmp(ic,jc,kstal)
           
@@ -1831,7 +1831,7 @@ DO ispec = 1,nspec
             fornow = fornow + acbczr(kstol-kc)*store7(ic,jc,kc)*wd1z(ic,jc,kc)
             
           END DO
-          rate(ic,jc,kstol,ispec) = rate(ic,jc,kstol,ispec) + fornow
+          rate(ispec,ic,jc,kstol) = rate(ispec,ic,jc,kstol) + fornow
           vtmp(ic,jc,kstol) = vtmp(ic,jc,kstol) + fornow
           erhs(ic,jc,kstol) = erhs(ic,jc,kstol) + fornow*utmp(ic,jc,kstol)
           
@@ -1865,7 +1865,7 @@ DO ispec = 1,nspec
               +  wd2z(ic,jc,kc))*store7(ic,jc,kc)
           
 !               Y EQUATION
-          rate(ic,jc,kc,ispec) = rate(ic,jc,kc,ispec) + fornow
+          rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
           
 !               DIFFUSION CORRECTION VELOCITY DIVERGENCE
           vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
@@ -1909,7 +1909,7 @@ DO ispec = 1,nspec
       DO jc = jstab,jstob
         DO ic = istab,istob
           
-          store7(ic,jc,kc) = difmix(ic,jc,kc)*yrhs(ic,jc,kc,ispec)  &
+          store7(ic,jc,kc) = difmix(ic,jc,kc)*yrhs(ispec,ic,jc,kc)  &
               *(one-wmolar(ispec)/wmomix(ic,jc,kc))
           
         END DO
@@ -1963,7 +1963,7 @@ DO ispec = 1,nspec
               + store2(ic,jc,kc)*pd1y(ic,jc,kc) + store3(ic,jc,kc)*pd1z(ic,jc,kc)
           
 !               Y EQUATION
-          rate(ic,jc,kc,ispec) = rate(ic,jc,kc,ispec) + fornow
+          rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
           
 !               DIFFUSION CORRECTION VELOCITY DIVERGENCE
           vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
@@ -2049,7 +2049,7 @@ DO ispec = 1,nspec
             fornow = fornow + acbcxl(ic-1)*store7(ic,jc,kc)*pd1x(ic,jc,kc)
             
           END DO
-          rate(istal,jc,kc,ispec) = rate(istal,jc,kc,ispec) + fornow
+          rate(ispec,istal,jc,kc) = rate(ispec,istal,jc,kc) + fornow
           vtmp(istal,jc,kc) = vtmp(istal,jc,kc) + fornow
           erhs(istal,jc,kc) = erhs(istal,jc,kc) + fornow*utmp(istal,jc,kc)
           
@@ -2066,7 +2066,7 @@ DO ispec = 1,nspec
             fornow = fornow + acbcxr(istol-ic)*store7(ic,jc,kc)*pd1x(ic,jc,kc)
             
           END DO
-          rate(istol,jc,kc,ispec) = rate(istol,jc,kc,ispec) + fornow
+          rate(ispec,istol,jc,kc) = rate(ispec,istol,jc,kc) + fornow
           vtmp(istol,jc,kc) = vtmp(istol,jc,kc) + fornow
           erhs(istol,jc,kc) = erhs(istol,jc,kc) + fornow*utmp(istol,jc,kc)
           
@@ -2083,7 +2083,7 @@ DO ispec = 1,nspec
             fornow = fornow + acbcyl(jc-1)*store7(ic,jc,kc)*pd1y(ic,jc,kc)
             
           END DO
-          rate(ic,jstal,kc,ispec) = rate(ic,jstal,kc,ispec) + fornow
+          rate(ispec,ic,jstal,kc) = rate(ispec,ic,jstal,kc) + fornow
           vtmp(ic,jstal,kc) = vtmp(ic,jstal,kc) + fornow
           erhs(ic,jstal,kc) = erhs(ic,jstal,kc) + fornow*utmp(ic,jstal,kc)
           
@@ -2100,7 +2100,7 @@ DO ispec = 1,nspec
             fornow = fornow + acbcyr(jstol-jc)*store7(ic,jc,kc)*pd1y(ic,jc,kc)
             
           END DO
-          rate(ic,jstol,kc,ispec) = rate(ic,jstol,kc,ispec) + fornow
+          rate(ispec,ic,jstol,kc) = rate(ispec,ic,jstol,kc) + fornow
           vtmp(ic,jstol,kc) = vtmp(ic,jstol,kc) + fornow
           erhs(ic,jstol,kc) = erhs(ic,jstol,kc) + fornow*utmp(ic,jstol,kc)
           
@@ -2117,7 +2117,7 @@ DO ispec = 1,nspec
             fornow = fornow + acbczl(kc-1)*store7(ic,jc,kc)*pd1z(ic,jc,kc)
             
           END DO
-          rate(ic,jc,kstal,ispec) = rate(ic,jc,kstal,ispec) + fornow
+          rate(ispec,ic,jc,kstal) = rate(ispec,ic,jc,kstal) + fornow
           vtmp(ic,jc,kstal) = vtmp(ic,jc,kstal) + fornow
           erhs(ic,jc,kstal) = erhs(ic,jc,kstal) + fornow*utmp(ic,jc,kstal)
           
@@ -2134,7 +2134,7 @@ DO ispec = 1,nspec
             fornow = fornow + acbczr(kstol-kc)*store7(ic,jc,kc)*pd1z(ic,jc,kc)
             
           END DO
-          rate(ic,jc,kstol,ispec) = rate(ic,jc,kstol,ispec) + fornow
+          rate(ispec,ic,jc,kstol) = rate(ispec,ic,jc,kstol) + fornow
           vtmp(ic,jc,kstol) = vtmp(ic,jc,kstol) + fornow
           erhs(ic,jc,kstol) = erhs(ic,jc,kstol) + fornow*utmp(ic,jc,kstol)
           
@@ -2168,7 +2168,7 @@ DO ispec = 1,nspec
               +  pd2z(ic,jc,kc))*store7(ic,jc,kc)
           
 !               Y EQUATION
-          rate(ic,jc,kc,ispec) = rate(ic,jc,kc,ispec) + fornow
+          rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
           
 !               DIFFUSION CORRECTION VELOCITY DIVERGENCE
           vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
@@ -2211,7 +2211,7 @@ DO ispec = 1,nspec
       DO jc = jstab,jstob
         DO ic = istab,istob
           
-          store7(ic,jc,kc) = difmix(ic,jc,kc)*yrhs(ic,jc,kc,ispec)  &
+          store7(ic,jc,kc) = difmix(ic,jc,kc)*yrhs(ispec,ic,jc,kc)  &
               *tdrmix(ic,jc,kc)
           
         END DO
@@ -2265,7 +2265,7 @@ DO ispec = 1,nspec
               + store2(ic,jc,kc)*td1y(ic,jc,kc) + store3(ic,jc,kc)*td1z(ic,jc,kc)
           
 !               Y EQUATION
-          rate(ic,jc,kc,ispec) = rate(ic,jc,kc,ispec) + fornow
+          rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
           
 !               DIFFUSION CORRECTION VELOCITY DIVERGENCE
           vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
@@ -2367,7 +2367,7 @@ DO ispec = 1,nspec
             fornow = fornow + acbcxl(ic-1)*store7(ic,jc,kc)*td1x(ic,jc,kc)
             
           END DO
-          rate(istal,jc,kc,ispec) = rate(istal,jc,kc,ispec) + fornow
+          rate(ispec,istal,jc,kc) = rate(ispec,istal,jc,kc) + fornow
           vtmp(istal,jc,kc) = vtmp(istal,jc,kc) + fornow
           erhs(istal,jc,kc) = erhs(istal,jc,kc) + fornow*(utmp(istal,jc,kc)  &
               + rgspec(ispec)*trun(istal,jc,kc)*tdrmix(istal,jc,kc))
@@ -2385,7 +2385,7 @@ DO ispec = 1,nspec
             fornow = fornow + acbcxr(istol-ic)*store7(ic,jc,kc)*td1x(ic,jc,kc)
             
           END DO
-          rate(istol,jc,kc,ispec) = rate(istol,jc,kc,ispec) + fornow
+          rate(ispec,istol,jc,kc) = rate(ispec,istol,jc,kc) + fornow
           vtmp(istol,jc,kc) = vtmp(istol,jc,kc) + fornow
           erhs(istol,jc,kc) = erhs(istol,jc,kc) + fornow*(utmp(istol,jc,kc)  &
               + rgspec(ispec)*trun(istol,jc,kc)*tdrmix(istol,jc,kc))
@@ -2403,7 +2403,7 @@ DO ispec = 1,nspec
             fornow = fornow + acbcyl(jc-1)*store7(ic,jc,kc)*td1y(ic,jc,kc)
             
           END DO
-          rate(ic,jstal,kc,ispec) = rate(ic,jstal,kc,ispec) + fornow
+          rate(ispec,ic,jstal,kc) = rate(ispec,ic,jstal,kc) + fornow
           vtmp(ic,jstal,kc) = vtmp(ic,jstal,kc) + fornow
           erhs(ic,jstal,kc) = erhs(ic,jstal,kc) + fornow*(utmp(ic,jstal,kc)  &
               + rgspec(ispec)*trun(ic,jstal,kc)*tdrmix(ic,jstal,kc))
@@ -2421,7 +2421,7 @@ DO ispec = 1,nspec
             fornow = fornow + acbcyr(jstol-jc)*store7(ic,jc,kc)*td1y(ic,jc,kc)
             
           END DO
-          rate(ic,jstol,kc,ispec) = rate(ic,jstol,kc,ispec) + fornow
+          rate(ispec,ic,jstol,kc) = rate(ispec,ic,jstol,kc) + fornow
           vtmp(ic,jstol,kc) = vtmp(ic,jstol,kc) + fornow
           erhs(ic,jstol,kc) = erhs(ic,jstol,kc) + fornow*(utmp(ic,jstol,kc)  &
               + rgspec(ispec)*trun(ic,jstol,kc)*tdrmix(ic,jstol,kc))
@@ -2439,7 +2439,7 @@ DO ispec = 1,nspec
             fornow = fornow + acbczl(kc-1)*store7(ic,jc,kc)*td1z(ic,jc,kc)
             
           END DO
-          rate(ic,jc,kstal,ispec) = rate(ic,jc,kstal,ispec) + fornow
+          rate(ispec,ic,jc,kstal) = rate(ispec,ic,jc,kstal) + fornow
           vtmp(ic,jc,kstal) = vtmp(ic,jc,kstal) + fornow
           erhs(ic,jc,kstal) = erhs(ic,jc,kstal) + fornow*(utmp(ic,jc,kstal)  &
               + rgspec(ispec)*trun(ic,jc,kstal)*tdrmix(ic,jc,kstal))
@@ -2457,7 +2457,7 @@ DO ispec = 1,nspec
             fornow = fornow + acbczr(kstol-kc)*store7(ic,jc,kc)*td1z(ic,jc,kc)
             
           END DO
-          rate(ic,jc,kstol,ispec) = rate(ic,jc,kstol,ispec) + fornow
+          rate(ispec,ic,jc,kstol) = rate(ispec,ic,jc,kstol) + fornow
           vtmp(ic,jc,kstol) = vtmp(ic,jc,kstol) + fornow
           erhs(ic,jc,kstol) = erhs(ic,jc,kstol) + fornow*(utmp(ic,jc,kstol)  &
               + rgspec(ispec)*trun(ic,jc,kstol)*tdrmix(ic,jc,kstol))
@@ -2714,7 +2714,7 @@ DO ispec = 1,nspec
               +  td2z(ic,jc,kc))*store7(ic,jc,kc)
           
 !               Y EQUATION
-          rate(ic,jc,kc,ispec) = rate(ic,jc,kc,ispec) + fornow
+          rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
           
 !               DIFFUSION CORRECTION VELOCITY DIVERGENCE
           vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
@@ -2857,10 +2857,10 @@ IF(flmavt)THEN
             fornow = SQRT(ctrans(ispec)/ctrans(jspec))
             fornow = one + fornow*wilko2(jspec,ispec)
             fornow = wilko1(jspec,ispec)*fornow*fornow
-            combo2 = combo2 + yrhs(ic,jc,kc,jspec)*ovwmol(jspec)*fornow
+            combo2 = combo2 + yrhs(jspec,ic,jc,kc)*ovwmol(jspec)*fornow
           END DO
           fornow = ctrans(ispec)/combo2
-          combo1 = combo1 + yrhs(ic,jc,kc,ispec)*ovwmol(ispec)*fornow
+          combo1 = combo1 + yrhs(ispec,ic,jc,kc)*ovwmol(ispec)*fornow
           
         END DO
         difmix(ic,jc,kc) = combo1
@@ -2886,7 +2886,7 @@ DO ispec = 1,nspec
     DO jc = jstab,jstob
       DO ic = istab,istob
         
-        store7(ic,jc,kc) = yrhs(ic,jc,kc,ispec)
+        store7(ic,jc,kc) = yrhs(ispec,ic,jc,kc)
         
       END DO
     END DO
@@ -2912,8 +2912,8 @@ DO ispec = 1,nspec
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        yrhs(ic,jc,kc,ispec) = rate(ic,jc,kc,ispec)  &
-            - yrhs(ic,jc,kc,ispec)*vtmp(ic,jc,kc)  &
+        yrhs(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc)  &
+            - yrhs(ispec,ic,jc,kc)*vtmp(ic,jc,kc)  &
             - store1(ic,jc,kc)*ucor(ic,jc,kc) - store2(ic,jc,kc)*vcor(ic,jc,kc)  &
             - store3(ic,jc,kc)*wcor(ic,jc,kc)
         

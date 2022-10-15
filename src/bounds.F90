@@ -207,7 +207,7 @@ IF(fxlcnv)THEN
       DO kc = kstal,kstol
         DO jc = jstal,jstol
           
-          yrhs(istal,jc,kc,ispec) = yrhs(istal,jc,kc,ispec)  &
+          yrhs(ispec,istal,jc,kc) = yrhs(ispec,istal,jc,kc)  &
               - bcl5xl(1,jc,kc)*ova2xl(jc,kc)*stryxl(jc,kc,ispec)
           
         END DO
@@ -336,7 +336,7 @@ IF(fxlcnv)THEN
           
           erhs(istal,jc,kc) = erhs(istal,jc,kc) - fornow*strhxl(jc,kc,ispec)
           
-          yrhs(istal,jc,kc,ispec) = yrhs(istal,jc,kc,ispec)  &
+          yrhs(ispec,istal,jc,kc) = yrhs(ispec,istal,jc,kc)  &
               - (bcl2xl(1,jc,kc)+bcl5xl(1,jc,kc)*ova2xl(jc,kc))*stryxl(jc,kc,ispec)  &
               - fornow
           
@@ -560,7 +560,7 @@ IF(fxlcnv)THEN
       DO kc = kstal,kstol
         DO jc = jstal,jstol
           
-          yrhs(istal,jc,kc,ispec) = yrhs(istal,jc,kc,ispec)  &
+          yrhs(ispec,istal,jc,kc) = yrhs(ispec,istal,jc,kc)  &
               - bcl5xl(1,jc,kc)*ova2xl(jc,kc)*stryxl(jc,kc,ispec)
           
         END DO
@@ -675,7 +675,7 @@ IF(fxlcnv)THEN
       DO kc = kstal,kstol
         DO jc = jstal,jstol
           
-          yrhs(istal,jc,kc,ispec) = yrhs(istal,jc,kc,ispec)  &
+          yrhs(ispec,istal,jc,kc) = yrhs(ispec,istal,jc,kc)  &
               - (bcl2xl(1,jc,kc)+bcl5xl(1,jc,kc)*ova2xl(jc,kc))*stryxl(jc,kc,ispec)
           
         END DO
@@ -852,7 +852,7 @@ IF(fxrcnv)THEN
       DO kc = kstal,kstol
         DO jc = jstal,jstol
           
-          yrhs(istol,jc,kc,ispec) = yrhs(istol,jc,kc,ispec)  &
+          yrhs(ispec,istol,jc,kc) = yrhs(ispec,istol,jc,kc)  &
               - bcl1xr(1,jc,kc)*ova2xr(jc,kc)*stryxr(jc,kc,ispec)
           
         END DO
@@ -983,7 +983,7 @@ IF(fxrcnv)THEN
           
           erhs(istol,jc,kc) = erhs(istol,jc,kc) - fornow*strhxr(jc,kc,ispec)
           
-          yrhs(istol,jc,kc,ispec) = yrhs(istol,jc,kc,ispec)  &
+          yrhs(ispec,istol,jc,kc) = yrhs(ispec,istol,jc,kc)  &
               - (bcl2xr(1,jc,kc)+bcl1xr(1,jc,kc)*ova2xr(jc,kc))*stryxr(jc,kc,ispec)  &
               - fornow
           
@@ -1208,7 +1208,7 @@ IF(fxrcnv)THEN
       DO kc = kstal,kstol
         DO jc = jstal,jstol
           
-          yrhs(istol,jc,kc,ispec) = yrhs(istol,jc,kc,ispec)  &
+          yrhs(ispec,istol,jc,kc) = yrhs(ispec,istol,jc,kc)  &
               - bcl1xr(1,jc,kc)*ova2xr(jc,kc)*stryxr(jc,kc,ispec)
           
         END DO
@@ -1323,7 +1323,7 @@ IF(fxrcnv)THEN
       DO kc = kstal,kstol
         DO jc = jstal,jstol
           
-          yrhs(istol,jc,kc,ispec) = yrhs(istol,jc,kc,ispec)  &
+          yrhs(ispec,istol,jc,kc) = yrhs(ispec,istol,jc,kc)  &
               - (bcl2xr(1,jc,kc)+bcl1xr(1,jc,kc)*ova2xr(jc,kc))*stryxr(jc,kc,ispec)
           
         END DO
@@ -1499,7 +1499,7 @@ IF(fylcnv)THEN
       DO kc = kstal,kstol
         DO ic = istal,istol
           
-          yrhs(ic,jstal,kc,ispec) = yrhs(ic,jstal,kc,ispec)  &
+          yrhs(ispec,ic,jstal,kc) = yrhs(ispec,ic,jstal,kc)  &
               - bcl5yl(ic,1,kc)*ova2yl(ic,kc)*stryyl(ic,kc,ispec)
           
         END DO
@@ -1628,7 +1628,7 @@ IF(fylcnv)THEN
           
           erhs(ic,jstal,kc) = erhs(ic,jstal,kc) - fornow*strhyl(ic,kc,ispec)
           
-          yrhs(ic,jstal,kc,ispec) = yrhs(ic,jstal,kc,ispec)  &
+          yrhs(ispec,ic,jstal,kc) = yrhs(ispec,ic,jstal,kc)  &
               - (bcl2yl(ic,1,kc)+bcl5yl(ic,1,kc)*ova2yl(ic,kc))*stryyl(ic,kc,ispec)  &
               - fornow
           
@@ -1852,7 +1852,7 @@ IF(fylcnv)THEN
       DO kc = kstal,kstol
         DO ic = istal,istol
           
-          yrhs(ic,jstal,kc,ispec) = yrhs(ic,jstal,kc,ispec)  &
+          yrhs(ispec,ic,jstal,kc) = yrhs(ispec,ic,jstal,kc)  &
               - bcl5yl(ic,1,kc)*ova2yl(ic,kc)*stryyl(ic,kc,ispec)
           
         END DO
@@ -1968,7 +1968,7 @@ IF(fylcnv)THEN
       DO kc = kstal,kstol
         DO ic = istal,istol
           
-          yrhs(ic,jstal,kc,ispec) = yrhs(ic,jstal,kc,ispec)  &
+          yrhs(ispec,ic,jstal,kc) = yrhs(ispec,ic,jstal,kc)  &
               - (bcl2yl(ic,1,kc)+bcl5yl(ic,1,kc)*ova2yl(ic,kc))*stryyl(ic,kc,ispec)
           
         END DO
@@ -2144,7 +2144,7 @@ IF(fyrcnv)THEN
       DO kc = kstal,kstol
         DO ic = istal,istol
           
-          yrhs(ic,jstol,kc,ispec) = yrhs(ic,jstol,kc,ispec)  &
+          yrhs(ispec,ic,jstol,kc) = yrhs(ispec,ic,jstol,kc)  &
               - bcl1yr(ic,1,kc)*ova2yr(ic,kc)*stryyr(ic,kc,ispec)
           
         END DO
@@ -2275,7 +2275,7 @@ IF(fyrcnv)THEN
           
           erhs(ic,jstol,kc) = erhs(ic,jstol,kc) - fornow*strhyr(ic,kc,ispec)
           
-          yrhs(ic,jstol,kc,ispec) = yrhs(ic,jstol,kc,ispec)  &
+          yrhs(ispec,ic,jstol,kc) = yrhs(ispec,ic,jstol,kc)  &
               - (bcl2yr(ic,1,kc)+bcl1yr(ic,1,kc)*ova2yr(ic,kc))*stryyr(ic,kc,ispec)  &
               - fornow
           
@@ -2500,7 +2500,7 @@ IF(fyrcnv)THEN
       DO kc = kstal,kstol
         DO ic = istal,istol
           
-          yrhs(ic,jstol,kc,ispec) = yrhs(ic,jstol,kc,ispec)  &
+          yrhs(ispec,ic,jstol,kc) = yrhs(ispec,ic,jstol,kc)  &
               - bcl1yr(ic,1,kc)*ova2yr(ic,kc)*stryyr(ic,kc,ispec)
           
         END DO
@@ -2615,7 +2615,7 @@ IF(fyrcnv)THEN
       DO kc = kstal,kstol
         DO ic = istal,istol
           
-          yrhs(ic,jstol,kc,ispec) = yrhs(ic,jstol,kc,ispec)  &
+          yrhs(ispec,ic,jstol,kc) = yrhs(ispec,ic,jstol,kc)  &
               - (bcl2yr(ic,1,kc)+bcl1yr(ic,1,kc)*ova2yr(ic,kc))*stryyr(ic,kc,ispec)
           
         END DO
@@ -2791,7 +2791,7 @@ IF(fzlcnv)THEN
       DO jc = jstal,jstol
         DO ic = istal,istol
           
-          yrhs(ic,jc,kstal,ispec) = yrhs(ic,jc,kstal,ispec)  &
+          yrhs(ispec,ic,jc,kstal) = yrhs(ispec,ic,jc,kstal)  &
               - bcl5zl(ic,jc,1)*ova2zl(ic,jc)*stryzl(ic,jc,ispec)
           
         END DO
@@ -2920,7 +2920,7 @@ IF(fzlcnv)THEN
           
           erhs(ic,jc,kstal) = erhs(ic,jc,kstal) - fornow*strhzl(ic,jc,ispec)
           
-          yrhs(ic,jc,kstal,ispec) = yrhs(ic,jc,kstal,ispec)  &
+          yrhs(ispec,ic,jc,kstal) = yrhs(ispec,ic,jc,kstal)  &
               - (bcl2zl(ic,jc,1)+bcl5zl(ic,jc,1)*ova2zl(ic,jc))*stryzl(ic,jc,ispec)  &
               - fornow
           
@@ -3144,7 +3144,7 @@ IF(fzlcnv)THEN
       DO jc = jstal,jstol
         DO ic = istal,istol
           
-          yrhs(ic,jc,kstal,ispec) = yrhs(ic,jc,kstal,ispec)  &
+          yrhs(ispec,ic,jc,kstal) = yrhs(ispec,ic,jc,kstal)  &
               - bcl5zl(ic,jc,1)*ova2zl(ic,jc)*stryzl(ic,jc,ispec)
           
         END DO
@@ -3259,7 +3259,7 @@ IF(fzlcnv)THEN
       DO jc = jstal,jstol
         DO ic = istal,istol
           
-          yrhs(ic,jc,kstal,ispec) = yrhs(ic,jc,kstal,ispec)  &
+          yrhs(ispec,ic,jc,kstal) = yrhs(ispec,ic,jc,kstal)  &
               - (bcl2zl(ic,jc,1)+bcl5zl(ic,jc,1)*ova2zl(ic,jc))*stryzl(ic,jc,ispec)
           
         END DO
@@ -3435,7 +3435,7 @@ IF(fzrcnv)THEN
       DO jc = jstal,jstol
         DO ic = istal,istol
           
-          yrhs(ic,jc,kstol,ispec) = yrhs(ic,jc,kstol,ispec)  &
+          yrhs(ispec,ic,jc,kstol) = yrhs(ispec,ic,jc,kstol)  &
               - bcl1zr(ic,jc,1)*ova2zr(ic,jc)*stryzr(ic,jc,ispec)
           
         END DO
@@ -3566,7 +3566,7 @@ IF(fzrcnv)THEN
           
           erhs(ic,jc,kstol) = erhs(ic,jc,kstol) - fornow*strhzr(ic,jc,ispec)
           
-          yrhs(ic,jc,kstol,ispec) = yrhs(ic,jc,kstol,ispec)  &
+          yrhs(ispec,ic,jc,kstol) = yrhs(ispec,ic,jc,kstol)  &
               - (bcl2zr(ic,jc,1)+bcl5zr(ic,jc,1)*ova2zr(ic,jc))*stryzr(ic,jc,ispec)  &
               - fornow
           
@@ -3789,7 +3789,7 @@ IF(fzrcnv)THEN
       DO jc = jstal,jstol
         DO ic = istal,istol
           
-          yrhs(ic,jc,kstol,ispec) = yrhs(ic,jc,kstol,ispec)  &
+          yrhs(ispec,ic,jc,kstol) = yrhs(ispec,ic,jc,kstol)  &
               - bcl1zr(ic,jc,1)*ova2zr(ic,jc)*stryzr(ic,jc,ispec)
           
         END DO
@@ -3904,7 +3904,7 @@ IF(fzrcnv)THEN
       DO jc = jstal,jstol
         DO ic = istal,istol
           
-          yrhs(ic,jc,kstol,ispec) = yrhs(ic,jc,kstol,ispec)  &
+          yrhs(ispec,ic,jc,kstol) = yrhs(ispec,ic,jc,kstol)  &
               - (bcl2zr(ic,jc,1)+bcl1zr(ic,jc,1)*ova2zr(ic,jc))*stryzr(ic,jc,ispec)
           
         END DO

@@ -149,7 +149,7 @@ DO ispec = 1,nspec
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        rate(ic,jc,kc,ispec) = zero
+        rate(ispec,ic,jc,kc) = zero
         
       END DO
     END DO
@@ -205,7 +205,7 @@ DO istep = 1, nstep
         DO jc = jstal,jstol
           DO ic = istal,istol
             
-            store3(ic,jc,kc) = store3(ic,jc,kc) + yrhs(ic,jc,kc,ispec)*ovwmas
+            store3(ic,jc,kc) = store3(ic,jc,kc) + yrhs(ispec,ic,jc,kc)*ovwmas
             
           END DO
         END DO
@@ -450,7 +450,7 @@ DO istep = 1, nstep
       DO jc = jstal,jstol
         DO ic = istal,istol
           
-          fornow = MAX(yrhs(ic,jc,kc,ispec)*ovwmol(ispec),zero)
+          fornow = MAX(yrhs(ispec,ic,jc,kc)*ovwmol(ispec),zero)
           store1(ic,jc,kc) = store1(ic,jc,kc)*fornow
           
         END DO
@@ -491,7 +491,7 @@ DO istep = 1, nstep
         DO jc = jstal,jstol
           DO ic = istal,istol
             
-            fornow = yrhs(ic,jc,kc,ispec)*ovwmol(ispec)
+            fornow = yrhs(ispec,ic,jc,kc)*ovwmol(ispec)
             fornow = MAX(fornow,ysmall)
             fornow = EXP(scoef*LOG(fornow))
             fornow = fornow/(one+ydenom*fornow)
@@ -599,7 +599,7 @@ DO istep = 1, nstep
         DO jc = jstal,jstol
           DO ic = istal,istol
             
-            fornow = MAX(yrhs(ic,jc,kc,ispec)*ovwmol(ispec),zero)
+            fornow = MAX(yrhs(ispec,ic,jc,kc)*ovwmol(ispec),zero)
             store2(ic,jc,kc) = store2(ic,jc,kc)*fornow
             
           END DO
@@ -640,7 +640,7 @@ DO istep = 1, nstep
           DO jc = jstal,jstol
             DO ic = istal,istol
               
-              fornow = yrhs(ic,jc,kc,ispec)*ovwmol(ispec)
+              fornow = yrhs(ispec,ic,jc,kc)*ovwmol(ispec)
               fornow = MAX(fornow,ysmall)
               fornow = EXP(scoef*LOG(fornow))
               fornow = fornow/(one+ydenom*fornow)
@@ -723,7 +723,7 @@ DO istep = 1, nstep
       DO jc = jstal,jstol
         DO ic = istal,istol
           
-          rate(ic,jc,kc,ispec) = rate(ic,jc,kc,ispec)  &
+          rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc)  &
               + store1(ic,jc,kc)*diffmw(isspec,istep)
           
         END DO

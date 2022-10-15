@@ -59,7 +59,7 @@ INTEGER :: iddump
 REAL(KIND=dp) :: deltag,fornow
 REAL(KIND=dp) :: ttemp(nxsize,nysize,nzsize)
 REAL(KIND=dp) :: ptemp(nxsize,nysize,nzsize)
-REAL(KIND=dp) :: ytemp(nxsize,nysize,nzsize,nspec)
+REAL(KIND=dp) :: ytemp(nspec,nxsize,nysize,nzsize)
 
 INTEGER :: ispec
 INTEGER :: ic,jc,kc
@@ -254,7 +254,7 @@ IF(MOD(itime,ntdump) == 0)THEN
     DO jc = 1,nysize
       DO ic = 1,nxsize
         DO ispec =1,nspec
-          ytemp(ic,jc,kc,ispec)=yrun(ic,jc,kc,ispec)/drun(ic,jc,kc)
+          ytemp(ispec,ic,jc,kc)=yrun(ispec,ic,jc,kc)/drun(ic,jc,kc)
         END DO
         ttemp(ic,jc,kc)=trun(ic,jc,kc)
         ptemp(ic,jc,kc)=prun(ic,jc,kc)
@@ -301,7 +301,7 @@ IF(MOD(itime,ntdump) == 0)THEN
         DO ic = 1,nxnode
           WRITE(ncdmpo,*)drun(ic,jc,kc),  &
               urun(ic,jc,kc),vrun(ic,jc,kc),wrun(ic,jc,kc), erun(ic,jc,kc),  &
-              (yrun(ic,jc,kc,ispec),ispec=1,nspec)
+              (yrun(ispec,ic,jc,kc),ispec=1,nspec)
         END DO
       END DO
     END DO

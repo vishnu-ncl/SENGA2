@@ -143,6 +143,8 @@ SUBROUTINE ops_data_init()
     d_p = (/0,0,0/)
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, yrun, d_yrun, "real(dp)", "YRUN")
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, yerr, d_yerr, "real(dp)", "YERR")
+    call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, rate, d_rate, "real(dp)", "RATE")
+    call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, rrte, d_rrte, "real(dp)", "RRTE")
 
     d_size = (/nxsize, nysize, nzsize/)
     d_m = (/-nhalox,-nhaloy,-nhaloz/)

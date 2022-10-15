@@ -36,7 +36,7 @@ use com_senga
 !     ARGUMENTS
 !     =========
 
-REAL(KIND=dp), INTENT(OUT)            :: bigarr(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr,nspcmx)
+REAL(KIND=dp), INTENT(OUT)            :: bigarr(nspcmx,nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
 INTEGER, INTENT(IN)                      :: indexl
 INTEGER, INTENT(IN)                      :: indexr
 INTEGER, INTENT(IN)                      :: jndexl
@@ -71,7 +71,7 @@ DO ispec = 1,nspec
     DO jc = jndexl,jndexr
       DO ic = indexl,indexr
         
-        bigarr(ic,jc,kc,ispec) = bigarr(ic,jc,ks,ispec)
+        bigarr(ispec,ic,jc,kc) = bigarr(ispec,ic,jc,ks)
         
       END DO
     END DO
@@ -89,7 +89,7 @@ DO ispec = 1,nspec
     DO jc = jndexl,jndexr
       DO ic = indexl,indexr
         
-        bigarr(ic,jc,kc,ispec) = bigarr(ic,jc,ks,ispec)
+        bigarr(ispec,ic,jc,kc) = bigarr(ispec,ic,jc,ks)
         
       END DO
     END DO

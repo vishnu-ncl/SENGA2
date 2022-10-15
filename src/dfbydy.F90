@@ -9,34 +9,27 @@ use OPS_Fortran_Reference
     use com_senga
     use com_ops_senga
 
+!   ARGUMENTS
+!   =========
     TYPE(ops_dat) :: functn, fderiv
- 
 
-!     ARGUMENTS
-!     =========
+!   LOCAL DATA
+!   ==========
+    integer:: jstart,jfinis
+    integer :: rangexyz(6)
 
+!   BEGIN
+!   =====
 
+!   =========================================================================
 
+!   END CONDITIONS
+!   ==============
 
-!     LOCAL DATA
-!     ==========
-INTEGER :: jstart,jfinis
-INTEGER :: rangexyz(6)
-
-
-!     BEGIN
-!     =====
-
-!     =========================================================================
-
-!     END CONDITIONS
-!     ==============
-
-jstart = jstal
-jfinis = jstol
-IF(nendyl == nbound)    jstart = jstap5
-IF(nendyr == nbound)    jfinis = jstom5
-
+    jstart = jstal
+    jfinis = jstol
+    IF(nendyl == nbound)    jstart = jstap5
+    IF(nendyr == nbound)    jfinis = jstom5
 
 !   =========================================================================
     if(nyglbl == 1) then
@@ -127,11 +120,8 @@ IF(nendyr == nbound)    jfinis = jstom5
                         ops_arg_dat(fderiv, 1, s3d_000, "real(dp)", OPS_WRITE))
 !       =========================================================================    
 
-
     end if
 
-
 !   =========================================================================
-
 
 END SUBROUTINE dfbydy

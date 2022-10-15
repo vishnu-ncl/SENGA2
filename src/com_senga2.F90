@@ -447,7 +447,7 @@ COMMON/rknorm/erdrhs,erurhs,ervrhs,erwrhs,ererhs,eryrhs
 !     PRINCIPAL VARIABLES (ALL STANDARD SIZE ARRAYS)
 REAL(KIND=dp) :: drun(nxsize,nysize,nzsize),urun(nxsize,nysize,nzsize),  &
     vrun(nxsize,nysize,nzsize),wrun(nxsize,nysize,nzsize),  &
-    erun(nxsize,nysize,nzsize), yrun(nxsize,nysize,nzsize,nspcmx)
+    erun(nxsize,nysize,nzsize), yrun(nspcmx,nxsize,nysize,nzsize)
 
 COMMON/prvars/drun,urun,vrun,wrun,erun,yrun
 
@@ -460,7 +460,7 @@ REAL(KIND=dp) :: drhs(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr),  &
     vrhs(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr),  &
     wrhs(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr),  &
     erhs(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr),  &
-    yrhs(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr,nspcmx)
+    yrhs(nspcmx,nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
 
 COMMON/timrhs/drhs,urhs,vrhs,wrhs,erhs,yrhs
 
@@ -470,7 +470,7 @@ COMMON/timrhs/drhs,urhs,vrhs,wrhs,erhs,yrhs
 !     TIME-STEPPING ERROR ARRAYS (ALL STANDARD SIZE ARRAYS)
 REAL(KIND=dp) :: derr(nxsize,nysize,nzsize),uerr(nxsize,nysize,nzsize),  &
     verr(nxsize,nysize,nzsize),werr(nxsize,nysize,nzsize),  &
-    eerr(nxsize,nysize,nzsize), yerr(nxsize,nysize,nzsize,nspcmx)
+    eerr(nxsize,nysize,nzsize), yerr(nspcmx,nxsize,nysize,nzsize)
 
 COMMON/timerr/derr,uerr,verr,werr,eerr,yerr
 
@@ -482,8 +482,8 @@ REAL(KIND=dp) ::  &
     store1(nxsize,nysize,nzsize),store2(nxsize,nysize,nzsize),  &
     store3(nxsize,nysize,nzsize),store4(nxsize,nysize,nzsize),  &
     store5(nxsize,nysize,nzsize),store6(nxsize,nysize,nzsize),  &
-    divm(nxsize,nysize,nzsize), rate(nxsize,nysize,nzsize,nspcmx),  &
-    rrte(nxsize,nysize,nzsize,nspcmx)
+    divm(nxsize,nysize,nzsize), rate(nspcmx,nxsize,nysize,nzsize),  &
+    rrte(nspcmx,nxsize,nysize,nzsize)
 
 COMMON/worksp/store1,store2,store3,store4,store5,store6,divm,rate, rrte
 
