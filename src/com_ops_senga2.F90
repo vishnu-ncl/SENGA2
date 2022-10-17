@@ -54,6 +54,8 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_struzr, d_strvzr, d_strwzr, d_strpzr, d_strdzr, d_strtzr
     TYPE(ops_dat) :: d_strezr, d_strgzr, d_strrzr
 
+    TYPE(ops_reduction) :: h_erdtot, h_erutot, h_ervtot, h_erwtot, h_eretot, h_erytot
+
     TYPE(ops_stencil) :: s3d_000
 
     TYPE(ops_stencil) :: s3d_000_strid3d_x, s3d_000_strid3d_y, s3d_000_strid3d_z

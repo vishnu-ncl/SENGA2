@@ -1,75 +1,78 @@
 SUBROUTINE adaptt
+
+    use OPS_Fortran_Reference
+    
+    use OPS_CONSTANTS
+    use, intrinsic :: ISO_C_BINDING
+
+    use data_types
+    use com_senga
+    use com_ops_senga
  
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-13  Time: 20:58:13
+!   *************************************************************************
 
-!     *************************************************************************
+!   ADAPTT
+!   ======
 
-!     ADAPTT
-!     ======
+!   AUTHOR
+!   ------
+!   R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
 
-!     AUTHOR
-!     ------
-!     R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
+!   CHANGE RECORD
+!   -------------
+!   19-JAN-2003:  CREATED
+!   23-AUG-2009:  RSC REVISE ERROR NORM EVALUATION
+!   08-AUG-2012:  RSC EVALUATE ALL SPECIES
+!   09-AUG-2012   RSC/RACG USE GLOBAL ERROR
 
-!     CHANGE RECORD
-!     -------------
-!     19-JAN-2003:  CREATED
-!     23-AUG-2009:  RSC REVISE ERROR NORM EVALUATION
-!     08-AUG-2012:  RSC EVALUATE ALL SPECIES
-!     09-AUG-2012   RSC/RACG USE GLOBAL ERROR
+!   DESCRIPTION
+!   -----------
+!   DNS CODE SENGA2
+!   COMPUTES NEW TIMESTEP FOR ERK SCHEME
 
-!     DESCRIPTION
-!     -----------
-!     DNS CODE SENGA2
-!     COMPUTES NEW TIMESTEP FOR ERK SCHEME
-
-!     *************************************************************************
+!   *************************************************************************
 
 
-!     GLOBAL DATA
-!     ===========
-!     -------------------------------------------------------------------------
-use data_types
-use com_senga
-!     -------------------------------------------------------------------------
+!   GLOBAL DATA
+!   ===========
+!   -------------------------------------------------------------------------
+!   -------------------------------------------------------------------------
 
+!   LOCAL DATA
+!   ==========
+    real(kind=dp) :: erytot(nspcmx)
+    real(kind=dp) :: erdtot,erutot,ervtot,erwtot,eretot
+    real(kind=dp) :: errmax,tratio,tstold
+!   RSC/RACG 09-AUG-2012 USE GLOBAL ERROR
+!   real(kind=dp) TSTLOC
+    real(kind=dp) :: errloc
+    real(kind=dp) :: fornow
+    integer :: ic,jc,kc,ispec
+    integer :: rangexyz(6)
 
-!     LOCAL DATA
-!     ==========
-REAL(KIND=dp) :: erytot(nspcmx)
-REAL(KIND=dp) :: erdtot,erutot,ervtot,erwtot,eretot
-REAL(KIND=dp) :: errmax,tratio,tstold
-!     RSC/RACG 09-AUG-2012 USE GLOBAL ERROR
-!      REAL(KIND=dp) TSTLOC
-REAL(KIND=dp) :: errloc
-REAL(KIND=dp) :: fornow
-INTEGER :: ic,jc,kc,ispec
+!   BEGIN
+!   =====
 
+!   =========================================================================
 
-!     BEGIN
-!     =====
-
-!     =========================================================================
-
-!     CHECK ADAPTION FLAG
-!     -------------------
-IF(fladpt)THEN
+!   CHECK ADAPTION FLAG
+!   -------------------
+    IF(fladpt) THEN
   
-!       =======================================================================
+!   =======================================================================
   
-!       INITIALISE THE ERROR NORM TOTALS
-!       --------------------------------
-  erdtot = zero
-  erutot = zero
-  ervtot = zero
-  erwtot = zero
-  eretot = zero
+!   INITIALISE THE ERROR NORM TOTALS
+!   --------------------------------
+        erdtot = zero
+        erutot = zero
+        ervtot = zero
+        erwtot = zero
+        eretot = zero
 !       RSC 08-AUG-2012 EVALUATE ALL SPECIES
-!        DO ISPEC = 1,NSPM1
-  DO ispec = 1,nspec
-    erytot(ispec) = zero
-  END DO
+!       DO ISPEC = 1,NSPM1
+        DO ispec = 1,nspec
+            erytot(ispec) = zero
+        END DO
   
 !       =======================================================================
   
@@ -79,184 +82,142 @@ IF(fladpt)THEN
 !       RSC 23 AUG-2009 REVISE ERROR NORM EVALUATION
   
 !       EVALUATE ERROR NORMS
-  DO kc = kstald,kstold
-    DO jc = jstald,jstold
-      DO ic = istald,istold
-        
-!              FORNOW = ABS(DERR(IC,JC,KC))
-        fornow = ABS(derr(ic,jc,kc))/(ABS(drun(ic,jc,kc))+erdnrm)
-        IF(fornow > erdtot)erdtot = fornow
-        
-      END DO
-    END DO
-  END DO
-  
-  DO kc = kstalu,kstolu
-    DO jc = jstalu,jstolu
-      DO ic = istalu,istolu
-        
-!              FORNOW = ABS(UERR(IC,JC,KC))
-        fornow = ABS(uerr(ic,jc,kc))/(ABS(urun(ic,jc,kc))+erunrm)
-        IF(fornow > erutot)erutot = fornow
-        
-      END DO
-    END DO
-  END DO
-  
-  DO kc = kstalv,kstolv
-    DO jc = jstalv,jstolv
-      DO ic = istalv,istolv
-        
-!              FORNOW = ABS(VERR(IC,JC,KC))
-        fornow = ABS(verr(ic,jc,kc))/(ABS(vrun(ic,jc,kc))+ervnrm)
-        IF(fornow > ervtot)ervtot = fornow
-        
-      END DO
-    END DO
-  END DO
-  
-  DO kc = kstalw,kstolw
-    DO jc = jstalw,jstolw
-      DO ic = istalw,istolw
-        
-!              FORNOW = ABS(WERR(IC,JC,KC))
-        fornow = ABS(werr(ic,jc,kc))/(ABS(wrun(ic,jc,kc))+erwnrm)
-        IF(fornow > erwtot)erwtot = fornow
-        
-      END DO
-    END DO
-  END DO
-  
-  DO kc = kstale,kstole
-    DO jc = jstale,jstole
-      DO ic = istale,istole
-        
-!              FORNOW = ABS(EERR(IC,JC,KC))
-        fornow = ABS(eerr(ic,jc,kc))/(ABS(erun(ic,jc,kc))+erenrm)
-        IF(fornow > eretot)eretot = fornow
-        
-      END DO
-    END DO
-  END DO
-  
+        rangexyz = (/istald,istold,jstald,jstold,kstald,kstold/)
+        call ops_par_loop(adaptt_kernel_err_eval, "EVALUATE ERROR NORMS", senga_grid, 3, rangexyz,  &
+                        &  ops_arg_dat(d_derr, 1, s3d_000, "real(dp)", OPS_READ), &
+                        &  ops_arg_dat(d_drun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        &  ops_arg_gbl(erdnrm, 1, "real(dp)", OPS_READ), &
+                        &  ops_arg_reduce(h_erdtot, 1, "real(8)", OPS_MAX))
+        call ops_reduction_result(h_erdtot, erdtot)
+
+        rangexyz = (/istalu,istolu,jstalu,jstolu,kstalu,kstolu/)
+        call ops_par_loop(adaptt_kernel_err_eval, "EVALUATE ERROR NORMS", senga_grid, 3, rangexyz,  &
+                        &  ops_arg_dat(d_uerr, 1, s3d_000, "real(dp)", OPS_READ), &
+                        &  ops_arg_dat(d_urun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        &  ops_arg_gbl(erunrm, 1, "real(dp)", OPS_READ), &
+                        &  ops_arg_reduce(h_erutot, 1, "real(8)", OPS_MAX))
+        call ops_reduction_result(h_erutot, erutot)    
+
+        rangexyz = (/istalv,istolv,jstalv,jstolv,kstalv,kstolv/)
+        call ops_par_loop(adaptt_kernel_err_eval, "EVALUATE ERROR NORMS", senga_grid, 3, rangexyz,  &
+                        &  ops_arg_dat(d_verr, 1, s3d_000, "real(dp)", OPS_READ), &
+                        &  ops_arg_dat(d_vrun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        &  ops_arg_gbl(ervnrm, 1, "real(dp)", OPS_READ), &
+                        &  ops_arg_reduce(h_ervtot, 1, "real(8)", OPS_MAX))
+        call ops_reduction_result(h_ervtot, ervtot)
+    
+        rangexyz = (/istalw,istolw,jstalw,jstolw,kstalw,kstolw/)
+        call ops_par_loop(adaptt_kernel_err_eval, "EVALUATE ERROR NORMS", senga_grid, 3, rangexyz,  &
+                        &  ops_arg_dat(d_werr, 1, s3d_000, "real(dp)", OPS_READ), &
+                        &  ops_arg_dat(d_wrun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        &  ops_arg_gbl(erwnrm, 1, "real(dp)", OPS_READ), &
+                        &  ops_arg_reduce(h_erwtot, 1, "real(8)", OPS_MAX))
+        call ops_reduction_result(h_erwtot, erwtot)
+
+        rangexyz = (/istale,istole,jstale,jstole,kstale,kstole/) 
+        call ops_par_loop(adaptt_kernel_err_eval, "EVALUATE ERROR NORMS", senga_grid, 3, rangexyz,  &
+                        &  ops_arg_dat(d_eerr, 1, s3d_000, "real(dp)", OPS_READ), &
+                        &  ops_arg_dat(d_erun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        &  ops_arg_gbl(erenrm, 1, "real(dp)", OPS_READ), &
+                        &  ops_arg_reduce(h_eretot, 1, "real(8)", OPS_MAX))
+        call ops_reduction_result(h_eretot, eretot)
+    
 !       RSC 08-AUG-2012 EVALUATE ALL SPECIES
-!        DO ISPEC = 1,NSPM1
-  DO ispec = 1,nspec
-    
-    DO kc = kstaly,kstoly
-      DO jc = jstaly,jstoly
-        DO ic = istaly,istoly
-          
-!                FORNOW = ABS(YERR(IC,JC,KC,ISPEC))
-          fornow = ABS(yerr(ispec,ic,jc,kc))  &
-              /(ABS(yrun(ispec,ic,jc,kc))+erynrm(ispec))
-          IF(fornow > erytot(ispec))erytot(ispec) = fornow
-          
+!       DO ISPEC = 1,NSPM1
+        DO ispec = 1,nspec
+
+            rangexyz = (/istaly,istoly,jstaly,jstoly,kstaly,kstoly/)
+            call ops_par_loop(adaptt_kernel_err_eval_multidim, "EVALUATE ERROR NORMS - MULTIDIM", senga_grid, 3, rangexyz,  &
+                        &  ops_arg_dat(d_yerr, 9, s3d_000, "real(dp)", OPS_READ), &
+                        &  ops_arg_dat(d_yrun, 9, s3d_000, "real(dp)", OPS_READ), &
+                        &  ops_arg_gbl(erynrm(ispec), 1, "real(dp)", OPS_READ), &
+                        &  ops_arg_gbl(ispec, 1, "integer", OPS_READ), &  
+                        &  ops_arg_reduce(h_erytot, 1, "real(8)", OPS_MAX))
+            call ops_reduction_result(h_erytot, erytot(ispec))
+
         END DO
-      END DO
-    END DO
-    
-  END DO
-  
-!       =======================================================================
-  
-!C       NORMALISE THE ERROR NORMS
-!C       -------------------------
-!        ERDTOT = ABS(ERDTOT)*ERDNRM
-!        ERUTOT = ABS(ERUTOT)*ERUNRM
-!        ERVTOT = ABS(ERVTOT)*ERVNRM
-!        ERWTOT = ABS(ERWTOT)*ERWNRM
-!        ERETOT = ABS(ERETOT)*ERENRM
-!        DO ISPEC = 1,NSPM1
-!          ERYTOT(ISPEC) = ABS(ERYTOT(ISPEC))*ERYNRM(ISPEC)
-!        ENDDO
   
 !       =======================================================================
   
 !       FIND THE MAXIMUM
 !       ----------------
-  errmax = zero
-  IF(erdtot > errmax)THEN
-    errmax = erdtot
-    inderr = -4
-  END IF
-  IF(erutot > errmax)THEN
-    errmax = erutot
-    inderr = -1
-  END IF
-  IF(ervtot > errmax)THEN
-    errmax = ervtot
-    inderr = -2
-  END IF
-  IF(erwtot > errmax)THEN
-    errmax = erwtot
-    inderr = -3
-  END IF
-  IF(eretot > errmax)THEN
-    errmax = eretot
-    inderr = 0
-  END IF
+        errmax = zero
+        IF(erdtot > errmax)THEN
+            errmax = erdtot
+            inderr = -4
+        END IF
+
+        IF(erutot > errmax)THEN
+            errmax = erutot
+            inderr = -1
+            END IF
+
+        IF(ervtot > errmax)THEN
+            errmax = ervtot
+            inderr = -2
+        END IF
+
+        IF(erwtot > errmax)THEN
+            errmax = erwtot
+            inderr = -3
+        END IF
+
+        IF(eretot > errmax)THEN
+            errmax = eretot
+            inderr = 0
+        END IF
+
 !       RSC 08-AUG-2012 EVALUATE ALL SPECIES
-!        DO ISPEC = 1,NSPM1
-  DO ispec = 1,nspec
-    IF(erytot(ispec) > errmax)THEN
-      errmax = erytot(ispec)
-      inderr = ispec
-    END IF
-  END DO
+!       DO ISPEC = 1,NSPM1
+        DO ispec = 1,nspec
+            IF(erytot(ispec) > errmax)THEN
+                errmax = erytot(ispec)
+                inderr = ispec
+            END IF
+        END DO
   
 !       =======================================================================
   
 !       FIND THE LARGEST GLOBAL ERROR
 !       -----------------------------
 !       RSC/RACG 09-AUG-2012 USE GLOBAL ERROR
-  errloc = errmax
-  CALL p_gmax(errloc,errmax)
+        errloc = errmax
+        call p_gmax(errloc,errmax)
   
 !       =======================================================================
   
 !       EVALUATE THE NEW TIME STEP
 !       --------------------------
 !       ZERO CHECK
-  IF(errmax < errlow)errmax = errlow
+        IF(errmax < errlow)errmax = errlow
   
 !       -----------------------------------------------------------------------
-  
-!C       I-CONTROLLER
-!        TRATIO = CTMULT*EXP(CTALPH*LOG(ERRTOL/ERRMAX))
-  
-!       -----------------------------------------------------------------------
-  
-!C       PI-CONTROLLER
-!        TRATIO = CTMULT*EXP(CTALPH*LOG(ERRTOL/ERRMAX)
-!     +                     +CTBETA*LOG(ERROLD/ERRTOL))
-!        ERROLD = ERRMAX
   
 !       -----------------------------------------------------------------------
   
 !       PID-CONTROLLER
-  tratio = ctmult*EXP(ctalph*LOG(errtol/errmax) +ctbeta*LOG(errold/errtol)  &
-      +ctgama*LOG(errtol/errldr))
-  errldr = errold
-  errold = errmax
+        tratio = ctmult*EXP(ctalph*LOG(errtol/errmax) +ctbeta*LOG(errold/errtol)  &
+                +ctgama*LOG(errtol/errldr))
+        errldr = errold
+        errold = errmax
   
 !       -----------------------------------------------------------------------
   
 !       LIMIT CHANGES TO TIME STEP
-  IF(tratio > trmax)tratio = trmax
-  IF(tratio < trmin)tratio = trmin
+        IF(tratio > trmax) tratio = trmax
+        IF(tratio < trmin) tratio = trmin
   
 !       -----------------------------------------------------------------------
   
 !       SAVE THE OLD TIME STEP
-  tstold = tstep
+        tstold = tstep
   
 !       SET THE NEW TIME STEP
-  tstep = tstep*tratio
+        tstep = tstep*tratio
   
 !       LIMIT THE TIME STEP
-  IF(tstep > tsmax)tstep = tsmax
-  IF(tstep < tsmin)tstep = tsmin
+        IF(tstep > tsmax) tstep = tsmax
+        IF(tstep < tsmin) tstep = tsmin
   
 !       =======================================================================
   
@@ -264,80 +225,75 @@ IF(fladpt)THEN
 !       ---------------------------------------------
 !       NEW TIME STEP IS THE GLOBAL MINIMUM OVER ALL PROCESSORS
 !       RSC/RACG 09-AUG-2012 USE GLOBAL ERROR
-!        TSTLOC = TSTEP
-!        CALL P_GMIN(TSTLOC,TSTEP)
+!       TSTLOC = TSTEP
+!       CALL P_GMIN(TSTLOC,TSTEP)
   
 !       =======================================================================
   
 !       UPDATE THE TIME ADVANCEMENT COEFFICIENTS
 !       AND THE RK SUBSTEP TIME LEVELS
-  tratio = tstep/tstold
-  DO irkstp = 1, nrkstp
-    rklhs(irkstp) = rklhs(irkstp)*tratio
-    rkrhs(irkstp) = rkrhs(irkstp)*tratio
-    rkerr(irkstp) = rkerr(irkstp)*tratio
-    rktim(irkstp) = rktim(irkstp)*tratio
-  END DO
+        tratio = tstep/tstold
+        DO irkstp = 1, nrkstp
+            rklhs(irkstp) = rklhs(irkstp)*tratio
+            rkrhs(irkstp) = rkrhs(irkstp)*tratio
+            rkerr(irkstp) = rkerr(irkstp)*tratio
+            rktim(irkstp) = rktim(irkstp)*tratio
+        END DO
   
 !       =======================================================================
   
 !       (RE)INITIALISE ERK ERROR ARRAYS
 !       -------------------------------
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        derr(ic,jc,kc) = zero
-        uerr(ic,jc,kc) = zero
-        verr(ic,jc,kc) = zero
-        werr(ic,jc,kc) = zero
-        eerr(ic,jc,kc) = zero
-        
-      END DO
-    END DO
-  END DO
+        rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+        call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_derr, 1, s3d_000, "real(dp)", OPS_WRITE))
+
+        call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_uerr, 1, s3d_000, "real(dp)", OPS_WRITE))
+
+        call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_verr, 1, s3d_000, "real(dp)", OPS_WRITE))
+
+        call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_werr, 1, s3d_000, "real(dp)", OPS_WRITE))
+
+        call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_eerr, 1, s3d_000, "real(dp)", OPS_WRITE))
+
 !       RSC 08-AUG-2012 EVALUATE ALL SPECIES
-!        DO ISPEC = 1,NSPM1
-  DO ispec = 1,nspec
-    
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          yerr(ispec,ic,jc,kc) = zero
-          
+!       DO ISPEC = 1,NSPM1
+        DO ispec = 1,nspec
+            rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+            call ops_par_loop(set_zero_kernel_multidim, "set_zero_multidim", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_yerr, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
         END DO
-      END DO
-    END DO
-    
-  END DO
   
 !       =======================================================================
   
 !       (RE)INITIALISE ERK SUBSTEP ERROR NORMS
 !       --------------------------------------
-  DO irkstp = 1,nrkstp
+        DO irkstp = 1,nrkstp
     
-    erdrhs(irkstp) = zero
-    erurhs(irkstp) = zero
-    ervrhs(irkstp) = zero
-    erwrhs(irkstp) = zero
-    ererhs(irkstp) = zero
-!         RSC 08-AUG-2012 EVALUATE ALL SPECIES
-!          DO ISPEC = 1,NSPM1
-    DO ispec = 1,nspec
-      eryrhs(ispec,irkstp) = zero
-    END DO
+            erdrhs(irkstp) = zero
+            erurhs(irkstp) = zero
+            ervrhs(irkstp) = zero
+            erwrhs(irkstp) = zero
+            ererhs(irkstp) = zero
+!           RSC 08-AUG-2012 EVALUATE ALL SPECIES
+!           DO ISPEC = 1,NSPM1
+            DO ispec = 1,nspec
+                eryrhs(ispec,irkstp) = zero
+            END DO
     
-  END DO
+        END DO
   
-!       =======================================================================
+!   =======================================================================
   
-END IF
-!     ADAPTION FLAG
+    END IF
+!   ADAPTION FLAG
 
-!     =========================================================================
+!   =========================================================================
 
-
-RETURN
 END SUBROUTINE adaptt

@@ -278,6 +278,14 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strrzl, d_strrzl, "real(dp)", "STRRZL")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strrzr, d_strrzr, "real(dp)", "STRRZR")
 
+!------------------------------------OPS Reduction Handles-----------------------------
+    call ops_decl_reduction_handle(8, h_erdtot, "real(dp)", "erdtot")
+    call ops_decl_reduction_handle(8, h_erutot, "real(dp)", "erutot")
+    call ops_decl_reduction_handle(8, h_ervtot, "real(dp)", "ervtot")
+    call ops_decl_reduction_handle(8, h_erwtot, "real(dp)", "erwtot")
+    call ops_decl_reduction_handle(8, h_eretot, "real(dp)", "eretot")
+    call ops_decl_reduction_handle(8, h_erytot, "real(dp)", "erytot")
+
 !------------------------------------OPS Stencil----------------------------------------
     call ops_decl_stencil( 3, 1, a3d_000, s3d_000, "0,0,0")
 
