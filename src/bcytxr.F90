@@ -57,10 +57,10 @@ DO ispec = 1,nspec
     DO jc = jstal,jstol
       
 !           SET MASS FRACTIONS TO CONSTANT (INITIAL) VALUES
-      stryxr(jc,kc,ispec) = yrin(ispec)
+      stryxr(ispec,1,jc,kc) = yrin(ispec)
       
 !           SET MASS FRACTION TIME DERIVATIVES TO ZERO
-      dydtxr(jc,kc,ispec) = zero
+      dydtxr(ispec,1,jc,kc) = zero
       
     END DO
   END DO

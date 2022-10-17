@@ -631,9 +631,9 @@ COMMON/bcdifw/acbcxl,acbcxr,acbcyl,acbcyr,acbczl,acbczr
 
 !     X-DIRECTION LEFT-HAND END
 REAL(KIND=dp) ::  &
-    bclyxl(nysize,nzsize,nspcmx),stryxl(nysize,nzsize,nspcmx),  &
-    dydtxl(nysize,nzsize,nspcmx),ratexl(nysize,nzsize,nspcmx),  &
-    strhxl(nysize,nzsize,nspcmx), bcl1xl(1,nysize,nzsize),bcl2xl(1,nysize,nzsize),  &
+    bclyxl(nspcmx,1,nysize,nzsize),stryxl(nspcmx,1,nysize,nzsize),  &
+    dydtxl(nspcmx,1,nysize,nzsize),ratexl(nspcmx,1,nysize,nzsize),  &
+    strhxl(nspcmx,1,nysize,nzsize), bcl1xl(1,nysize,nzsize),bcl2xl(1,nysize,nzsize),  &
     bcl3xl(1,nysize,nzsize),bcl4xl(1,nysize,nzsize),  &
     bcl5xl(1,nysize,nzsize),bcltxl(1,nysize,nzsize),  &
     struxl(1,nysize,nzsize),strvxl(1,nysize,nzsize),  &
@@ -652,9 +652,9 @@ COMMON/nbccxl/bclyxl,stryxl,dydtxl,ratexl,strhxl,  &
 
 !     X-DIRECTION RIGHT-HAND END
 REAL(KIND=dp) ::  &
-    bclyxr(nysize,nzsize,nspcmx),stryxr(nysize,nzsize,nspcmx),  &
-    dydtxr(nysize,nzsize,nspcmx),ratexr(nysize,nzsize,nspcmx),  &
-    strhxr(nysize,nzsize,nspcmx), bcl1xr(1,nysize,nzsize),bcl2xr(1,nysize,nzsize),  &
+    bclyxr(nspcmx,1,nysize,nzsize),stryxr(nspcmx,1,nysize,nzsize),  &
+    dydtxr(nspcmx,1,nysize,nzsize),ratexr(nspcmx,1,nysize,nzsize),  &
+    strhxr(nspcmx,1,nysize,nzsize), bcl1xr(1,nysize,nzsize),bcl2xr(1,nysize,nzsize),  &
     bcl3xr(1,nysize,nzsize),bcl4xr(1,nysize,nzsize),  &
     bcl5xr(1,nysize,nzsize),bcltxr(1,nysize,nzsize),  &
     struxr(1,nysize,nzsize),strvxr(1,nysize,nzsize),  &
@@ -674,9 +674,9 @@ COMMON/nbccxr/bclyxr,stryxr,dydtxr,ratexr,strhxr,  &
 
 !     Y-DIRECTION LEFT-HAND END
 REAL(KIND=dp) ::  &
-    bclyyl(nxsize,nzsize,nspcmx),stryyl(nxsize,nzsize,nspcmx),  &
-    dydtyl(nxsize,nzsize,nspcmx),rateyl(nxsize,nzsize,nspcmx),  &
-    strhyl(nxsize,nzsize,nspcmx), bcl1yl(nxsize,1,nzsize),bcl2yl(nxsize,1,nzsize),  &
+    bclyyl(nspcmx,nxsize,1,nzsize),stryyl(nspcmx,nxsize,1,nzsize),  &
+    dydtyl(nspcmx,nxsize,1,nzsize),rateyl(nspcmx,nxsize,1,nzsize),  &
+    strhyl(nspcmx,nxsize,1,nzsize), bcl1yl(nxsize,1,nzsize),bcl2yl(nxsize,1,nzsize),  &
     bcl3yl(nxsize,1,nzsize),bcl4yl(nxsize,1,nzsize),  &
     bcl5yl(nxsize,1,nzsize),bcltyl(nxsize,1,nzsize),  &
     struyl(nxsize,1,nzsize),strvyl(nxsize,1,nzsize),  &
@@ -695,9 +695,9 @@ COMMON/nbccyl/bclyyl,stryyl,dydtyl,rateyl,strhyl,  &
 
 !     Y-DIRECTION RIGHT-HAND END
 REAL(KIND=dp) ::  &
-    bclyyr(nxsize,nzsize,nspcmx),stryyr(nxsize,nzsize,nspcmx),  &
-    dydtyr(nxsize,nzsize,nspcmx),rateyr(nxsize,nzsize,nspcmx),  &
-    strhyr(nxsize,nzsize,nspcmx), bcl1yr(nxsize,1,nzsize),bcl2yr(nxsize,1,nzsize),  &
+    bclyyr(nspcmx,nxsize,1,nzsize),stryyr(nspcmx,nxsize,1,nzsize),  &
+    dydtyr(nspcmx,nxsize,1,nzsize),rateyr(nspcmx,nxsize,1,nzsize),  &
+    strhyr(nspcmx,nxsize,1,nzsize), bcl1yr(nxsize,1,nzsize),bcl2yr(nxsize,1,nzsize),  &
     bcl3yr(nxsize,1,nzsize),bcl4yr(nxsize,1,nzsize),  &
     bcl5yr(nxsize,1,nzsize),bcltyr(nxsize,1,nzsize),  &
     struyr(nxsize,1,nzsize),strvyr(nxsize,1,nzsize),  &
@@ -717,9 +717,9 @@ COMMON/nbccyr/bclyyr,stryyr,dydtyr,rateyr,strhyr,  &
 
 !     Z-DIRECTION LEFT-HAND END
 REAL(KIND=dp) ::  &
-    bclyzl(nxsize,nysize,nspcmx),stryzl(nxsize,nysize,nspcmx),  &
-    dydtzl(nxsize,nysize,nspcmx),ratezl(nxsize,nysize,nspcmx),  &
-    strhzl(nxsize,nysize,nspcmx), bcl1zl(nxsize,nysize,1),bcl2zl(nxsize,nysize,1),  &
+    bclyzl(nspcmx,nxsize,nysize,1),stryzl(nspcmx,nxsize,nysize,1),  &
+    dydtzl(nspcmx,nxsize,nysize,1),ratezl(nspcmx,nxsize,nysize,1),  &
+    strhzl(nspcmx,nxsize,nysize,1), bcl1zl(nxsize,nysize,1),bcl2zl(nxsize,nysize,1),  &
     bcl3zl(nxsize,nysize,1),bcl4zl(nxsize,nysize,1),  &
     bcl5zl(nxsize,nysize,1),bcltzl(nxsize,nysize,1),  &
     struzl(nxsize,nysize,1),strvzl(nxsize,nysize,1),  &
@@ -738,9 +738,9 @@ COMMON/nbcczl/bclyzl,stryzl,dydtzl,ratezl,strhzl,  &
 
 !     Z-DIRECTION RIGHT-HAND END
 REAL(KIND=dp) ::  &
-    bclyzr(nxsize,nysize,nspcmx),stryzr(nxsize,nysize,nspcmx),  &
-    dydtzr(nxsize,nysize,nspcmx),ratezr(nxsize,nysize,nspcmx),  &
-    strhzr(nxsize,nysize,nspcmx), bcl1zr(nxsize,nysize,1),bcl2zr(nxsize,nysize,1),  &
+    bclyzr(nspcmx,nxsize,nysize,1),stryzr(nspcmx,nxsize,nysize,1),  &
+    dydtzr(nspcmx,nxsize,nysize,1),ratezr(nspcmx,nxsize,nysize,1),  &
+    strhzr(nspcmx,nxsize,nysize,1), bcl1zr(nxsize,nysize,1),bcl2zr(nxsize,nysize,1),  &
     bcl3zr(nxsize,nysize,1),bcl4zr(nxsize,nysize,1),  &
     bcl5zr(nxsize,nysize,1),bcltzr(nxsize,nysize,1),  &
     struzr(nxsize,nysize,1),strvzr(nxsize,nysize,1),  &

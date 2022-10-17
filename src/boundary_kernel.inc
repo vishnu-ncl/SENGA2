@@ -247,3 +247,114 @@ SUBROUTINE boundary_kernel_velderiv_zdir(store,bclz)
 
 END SUBROUTINE boundary_kernel_velderiv_zdir
 
+SUBROUTINE boundary_kernel_reaction_xdir(rate, ratex, ispec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: ratex
+    real(kind=dp), dimension(1), intent(in) :: rate
+    integer, intent(in) :: ispec
+
+    ratex(OPS_ACC_MD2(ispec,0,0,0)) = rate(OPS_ACC_MD1(ispec,0,0,0))
+
+END SUBROUTINE boundary_kernel_reaction_xdir
+
+SUBROUTINE boundary_kernel_reaction_ydir(rate, ratey, ispec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: ratey
+    real(kind=dp), dimension(1), intent(in) :: rate
+    integer, intent(in) :: ispec
+
+    ratey(OPS_ACC_MD2(ispec,0,0,0)) = rate(OPS_ACC_MD1(ispec,0,0,0))
+
+END SUBROUTINE boundary_kernel_reaction_ydir
+
+SUBROUTINE boundary_kernel_reaction_zdir(rate, ratez, ispec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: ratez
+    real(kind=dp), dimension(1), intent(in) :: rate
+    integer, intent(in) :: ispec
+
+    ratez(OPS_ACC_MD2(ispec,0,0,0)) = rate(OPS_ACC_MD1(ispec,0,0,0))
+
+END SUBROUTINE boundary_kernel_reaction_zdir
+
+SUBROUTINE boundary_kernel_mass_xdir(yrhs, store1, stryx, bclyx, ispec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: stryx, bclyx
+    real(kind=dp), dimension(1), intent(in) :: yrhs, store1
+    integer, intent(in) :: ispec
+
+    stryx(OPS_ACC_MD3(ispec,0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))
+    bclyx(OPS_ACC_MD4(ispec,0,0,0)) = store1(OPS_ACC2(0,0,0))
+
+END SUBROUTINE boundary_kernel_mass_xdir
+
+SUBROUTINE boundary_kernel_mass_ydir(yrhs, store2, stryy, bclyy, ispec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: stryy, bclyy
+    real(kind=dp), dimension(1), intent(in) :: yrhs, store2
+    integer, intent(in) :: ispec
+
+    stryy(OPS_ACC_MD3(ispec,0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))
+    bclyy(OPS_ACC_MD4(ispec,0,0,0)) = store2(OPS_ACC2(0,0,0))
+
+END SUBROUTINE boundary_kernel_mass_ydir
+
+SUBROUTINE boundary_kernel_mass_zdir(yrhs, store3, stryz, bclyz, ispec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: stryz, bclyz
+    real(kind=dp), dimension(1), intent(in) :: yrhs, store3
+    integer, intent(in) :: ispec
+
+    stryz(OPS_ACC_MD3(ispec,0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))
+    bclyz(OPS_ACC_MD4(ispec,0,0,0)) = store3(OPS_ACC2(0,0,0))
+
+END SUBROUTINE boundary_kernel_mass_zdir
+
+SUBROUTINE boundary_kernel_speciesH_xdir(utmp, strhx, ispec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: strhx
+    real(kind=dp), dimension(1), intent(in) :: utmp
+    integer, intent(in) :: ispec
+
+    strhx(OPS_ACC_MD2(ispec,0,0,0)) = utmp(OPS_ACC1(0,0,0))
+
+END SUBROUTINE boundary_kernel_speciesH_xdir
+
+SUBROUTINE boundary_kernel_speciesH_ydir(utmp, strhy, ispec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: strhy
+    real(kind=dp), dimension(1), intent(in) :: utmp
+    integer, intent(in) :: ispec
+
+    strhy(OPS_ACC_MD2(ispec,0,0,0)) = utmp(OPS_ACC1(0,0,0))
+
+END SUBROUTINE boundary_kernel_speciesH_ydir
+
+SUBROUTINE boundary_kernel_speciesH_zdir(utmp, strhz, ispec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: strhz
+    real(kind=dp), dimension(1), intent(in) :: utmp
+    integer, intent(in) :: ispec
+
+    strhz(OPS_ACC_MD2(ispec,0,0,0)) = utmp(OPS_ACC1(0,0,0))
+
+END SUBROUTINE boundary_kernel_speciesH_zdir
+

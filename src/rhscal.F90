@@ -603,107 +603,101 @@ IF(fzrcon)CALL zerozr(d_store3)
 
 !     E-EQUATION: RADIATION HEAT LOSS
 !     -------------------------------
-IF(flradn)CALL radcal
+    IF(flradn)CALL radcal
 
-!     =========================================================================
+!   =========================================================================
 
-!     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-!     =========================================================================
+!   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+!   =========================================================================
 
-!     SPECIES MASS FRACTION EQUATIONS
-!     ===============================
+!   SPECIES MASS FRACTION EQUATIONS
+!   ===============================
 
-!     REACTION RATE FOR ALL SPECIES
-!     -----------------------------
-CALL chrate
+!   REACTION RATE FOR ALL SPECIES
+!   -----------------------------
+    CALL chrate
 !---UA
-DO ispec = 1,nspec
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        rrte(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc)
-      END DO
+    DO ispec = 1,nspec
+        DO kc = kstal,kstol
+            DO jc = jstal,jstol
+                DO ic = istal,istol
+                    rrte(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc)
+                END DO
+            END DO
+        END DO
     END DO
-  END DO
-END DO
 !---end-UA
 !                                                          RATE = REACTION RATE
-!     =========================================================================
+!   =========================================================================
 
-!     COLLECT REACTION RATE FOR BCs
-!     -----------------------------
+!   COLLECT REACTION RATE FOR BCs
+!   -----------------------------
 
-!     X-DIRECTION
-IF(fxlcnv)THEN
-  DO ispec = 1,nspec
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        ratexl(jc,kc,ispec) = rate(ispec,istal,jc,kc)
-        
-      END DO
-    END DO
-  END DO
-END IF
-IF(fxrcnv)THEN
-  DO ispec = 1,nspec
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        ratexr(jc,kc,ispec) = rate(ispec,istol,jc,kc)
-        
-      END DO
-    END DO
-  END DO
-END IF
+!   X-DIRECTION
+    IF(fxlcnv)THEN
+        DO ispec = 1,nspec
+            rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(boundary_kernel_reaction_xdir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_ratexl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
-!     Y-DIRECTION
-IF(fylcnv)THEN
-  DO ispec = 1,nspec
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        rateyl(ic,kc,ispec) = rate(ispec,ic,jstal,kc)
-        
-      END DO
-    END DO
-  END DO
-END IF
-IF(fyrcnv)THEN
-  DO ispec = 1,nspec
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        rateyr(ic,kc,ispec) = rate(ispec,ic,jstol,kc)
-        
-      END DO
-    END DO
-  END DO
-END IF
+        END DO
+    END IF
+    IF(fxrcnv)THEN
+        DO ispec = 1,nspec
+            rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(boundary_kernel_reaction_xdir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_ratexr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
-!     Z-DIRECTION
-IF(fzlcnv)THEN
-  DO ispec = 1,nspec
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        ratezl(ic,jc,ispec) = rate(ispec,ic,jc,kstal)
-        
-      END DO
-    END DO
-  END DO
-END IF
-IF(fzrcnv)THEN
-  DO ispec = 1,nspec
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        ratezr(ic,jc,ispec) = rate(ispec,ic,jc,kstol)
-        
-      END DO
-    END DO
-  END DO
-END IF
+        END DO
+    END IF
+
+!   Y-DIRECTION
+    IF(fylcnv)THEN
+        DO ispec = 1,nspec
+            rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+            call ops_par_loop(boundary_kernel_reaction_ydir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_rateyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+        END DO
+    END IF
+    IF(fyrcnv)THEN
+        DO ispec = 1,nspec
+            rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+            call ops_par_loop(boundary_kernel_reaction_ydir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_rateyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+        END DO
+    END IF
+
+!   Z-DIRECTION
+    IF(fzlcnv)THEN
+        DO ispec = 1,nspec
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+            call ops_par_loop(boundary_kernel_reaction_zdir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_ratezl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+        END DO
+    END IF
+    IF(fzrcnv)THEN
+        DO ispec = 1,nspec
+            rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+            call ops_par_loop(boundary_kernel_reaction_zdir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_ratezr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+        END DO
+    END IF
 !                                                          RATE = REACTION RATE
 !     =========================================================================
 
@@ -743,17 +737,17 @@ END IF
 
 !     MIXTURE MOLAR MASS
 IF(flmixw)THEN
-  
+
   DO kc = kstab,kstob
     DO jc = jstab,jstob
       DO ic = istab,istob
-        
+
         store7(ic,jc,kc) = LOG(wmomix(ic,jc,kc))
-        
+
       END DO
     END DO
-  END DO   
-   
+  END DO
+
   CALL dfbydx(d_store7,d_wd1x)
   CALL dfbydy(d_store7,d_wd1y)
   CALL dfbydz(d_store7,d_wd1z)
@@ -799,25 +793,25 @@ END IF
 
 !     =========================================================================
 
-!     RUN THROUGH ALL SPECIES
-!     -----------------------
-!     RSC 08-AUG-2012 EVALUATE ALL SPECIES
-!     RSC 08-JUN-2015 REMOVE Nth SPECIES TREATMENT
-DO ispec = 1,nspec
+!   RUN THROUGH ALL SPECIES
+!   -----------------------
+!   RSC 08-AUG-2012 EVALUATE ALL SPECIES
+!   RSC 08-JUN-2015 REMOVE Nth SPECIES TREATMENT
+    DO ispec = 1,nspec
   
-!       =======================================================================
+!   =======================================================================
   
-!       YRHS CONTAINS RHO Y: CONVERT TO Y
-!       Y IS PARALLEL
-  DO kc = kstalt,kstolt
-    DO jc = jstalt,jstolt
-      DO ic = istalt,istolt
-        
-        yrhs(ispec,ic,jc,kc) = yrhs(ispec,ic,jc,kc)/drhs(ic,jc,kc)
-        
-      END DO
-    END DO
-  END DO
+!   YRHS CONTAINS RHO Y: CONVERT TO Y
+!   Y IS PARALLEL
+        DO kc = kstalt,kstolt
+            DO jc = jstalt,jstolt
+                DO ic = istalt,istolt
+
+                    yrhs(ispec,ic,jc,kc) = yrhs(ispec,ic,jc,kc)/drhs(ic,jc,kc)
+
+                END DO
+            END DO
+        END DO
   
 !       =======================================================================
   
@@ -826,16 +820,16 @@ DO ispec = 1,nspec
 !       HALF Y DIV RHO U
   
 !       COLLECT Y SOURCE TERMS IN RATE FOR NOW
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      DO ic = istal,istol
+        DO kc = kstal,kstol
+            DO jc = jstal,jstol
+                DO ic = istal,istol
         
-        rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc)  &
-            - half*yrhs(ispec,ic,jc,kc)*divm(ic,jc,kc)
+                rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc)  &
+                            - half*yrhs(ispec,ic,jc,kc)*divm(ic,jc,kc)
         
-      END DO
-    END DO
-  END DO
+                END DO
+            END DO
+        END DO
 !                                                         RATE = Y SOURCE TERMS
 !                                                           VTMP = DIV CORR VEL
 !                                                       WTMP = MIXTURE H
@@ -847,29 +841,29 @@ DO ispec = 1,nspec
   
 !       D/DX RHO U Y
 !       RHO U Y IS PARALLEL
-  DO kc = kstab,kstob
-    DO jc = jstab,jstob
-      DO ic = istab,istob
+        DO kc = kstab,kstob
+            DO jc = jstab,jstob
+                DO ic = istab,istob
         
-        store7(ic,jc,kc) = yrhs(ispec,ic,jc,kc)*urhs(ic,jc,kc)
+                    store7(ic,jc,kc) = yrhs(ispec,ic,jc,kc)*urhs(ic,jc,kc)
         
-      END DO
-    END DO
-  END DO
-  CALL dfbydx(d_store7,d_store1)
+                END DO
+            END DO
+        END DO
+        call dfbydx(d_store7,d_store1)
   
 !       D/DY RHO V Y
 !       RHO V Y IS PARALLEL
-  DO kc = kstab,kstob
-    DO jc = jstab,jstob
-      DO ic = istab,istob
+        DO kc = kstab,kstob
+            DO jc = jstab,jstob
+                DO ic = istab,istob
         
-        store7(ic,jc,kc) = yrhs(ispec,ic,jc,kc)*vrhs(ic,jc,kc)
+                    store7(ic,jc,kc) = yrhs(ispec,ic,jc,kc)*vrhs(ic,jc,kc)
         
-      END DO
-    END DO
-  END DO
-  CALL dfbydy(d_store7,d_store2)
+                END DO
+            END DO
+        END DO
+        call dfbydy(d_store7,d_store2)
   
 !       D/DZ RHO W Y
 !       RHO W Y IS PARALLEL
@@ -882,7 +876,7 @@ DO ispec = 1,nspec
       END DO
     END DO
   END DO
-  CALL dfbydz(d_store7,d_store3)
+        call dfbydz(d_store7,d_store3)
   
 !       COLLECT DIV RHO U Y IN RATE FOR NOW
   DO kc = kstal,kstol
@@ -914,9 +908,9 @@ DO ispec = 1,nspec
       END DO
     END DO
   END DO
-  CALL dfbydx(d_store7,d_store1)
-  CALL dfbydy(d_store7,d_store2)
-  CALL dfbydz(d_store7,d_store3)
+        call dfbydx(d_store7,d_store1)
+        call dfbydy(d_store7,d_store2)
+        call dfbydz(d_store7,d_store3)
 !                                                         STORE1,2,3 = DYDX,Y,Z
 !                                                         RATE = Y SOURCE TERMS
 !                                                           VTMP = DIV CORR VEL
@@ -927,70 +921,67 @@ DO ispec = 1,nspec
 !       -------------------------------------------------------
   
 !       X-DIRECTION: DYDX
-  IF(fxlcnv)THEN
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        stryxl(jc,kc,ispec) = yrhs(ispec,istal,jc,kc)
-        bclyxl(jc,kc,ispec) = store1(istal,jc,kc)
-        
-      END DO
-    END DO
-  END IF
-  IF(fxrcnv)THEN
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        stryxr(jc,kc,ispec) = yrhs(ispec,istol,jc,kc)
-        bclyxr(jc,kc,ispec) = store1(istol,jc,kc)
-        
-      END DO
-    END DO
-  END IF
-  
+        IF(fxlcnv) THEN
+            rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(boundary_kernel_mass_xdir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_stryxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bclyxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+        END IF
+        IF(fxrcnv) THEN
+            rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(boundary_kernel_mass_xdir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_stryxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bclyxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+        END IF
+
 !       Y-DIRECTION: DYDY
-  IF(fylcnv)THEN
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        stryyl(ic,kc,ispec) = yrhs(ispec,ic,jstal,kc)
-        bclyyl(ic,kc,ispec) = store2(ic,jstal,kc)
-        
-      END DO
-    END DO
-  END IF
-  IF(fyrcnv)THEN
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        stryyr(ic,kc,ispec) = yrhs(ispec,ic,jstol,kc)
-        bclyyr(ic,kc,ispec) = store2(ic,jstol,kc)
-        
-      END DO
-    END DO
-  END IF
-  
+        IF(fylcnv) THEN
+            rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+            call ops_par_loop(boundary_kernel_mass_ydir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_stryyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bclyyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+        END IF
+        IF(fyrcnv) THEN
+            rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+            call ops_par_loop(boundary_kernel_mass_ydir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_stryyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bclyyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+        END IF
+
 !       Z-DIRECTION: DYDZ
-  IF(fzlcnv)THEN
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        stryzl(ic,jc,ispec) = yrhs(ispec,ic,jc,kstal)
-        bclyzl(ic,jc,ispec) = store3(ic,jc,kstal)
-        
-      END DO
-    END DO
-  END IF
-  IF(fzrcnv)THEN
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        stryzr(ic,jc,ispec) = yrhs(ispec,ic,jc,kstol)
-        bclyzr(ic,jc,ispec) = store3(ic,jc,kstol)
-        
-      END DO
-    END DO
-  END IF
+        IF(fzlcnv) THEN
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+            call ops_par_loop(boundary_kernel_mass_zdir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_stryzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bclyzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+        END IF
+        IF(fzrcnv) THEN
+            rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+            call ops_par_loop(boundary_kernel_mass_zdir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_stryzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_bclyzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+        END IF
 !                                                         STORE1,2,3 = DYDX,Y,Z
 !                                                         RATE = Y SOURCE TERMS
 !                                                           VTMP = DIV CORR VEL
@@ -1034,8 +1025,8 @@ DO ispec = 1,nspec
 !       TRANSP CONTAINS CONDUCTIVITY/CP
 !       STORE DIFFUSIVITY IN STORE7 FOR NOW
 !       Y DIFFUSIVITY IS PARALLEL
-    rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-    call ops_par_loop(math_kernel_eqD, "A=B*val", senga_grid, 3, rangexyz, &
+        rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+        call ops_par_loop(math_kernel_eqD, "A=B*val", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
                         ops_arg_gbl(olewis(ispec), 1, "real(dp)", OPS_READ))
@@ -1097,9 +1088,9 @@ DO ispec = 1,nspec
 !         THERMAL DIFFUSION RATIO FOR EACH SPECIES
 !         RELATIVE TO CURRENT SPECIES
   
-    rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-    call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_tdrmix, 1, s3d_000, "real(dp)", OPS_WRITE))
+            rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+            call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_tdrmix, 1, s3d_000, "real(dp)", OPS_WRITE))
     
     DO jspec = 1, nspec
       
@@ -1136,21 +1127,21 @@ DO ispec = 1,nspec
 !       =======================================================================
   
 !       DIFFUSION CORRECTION VELOCITY
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_ucor, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &    
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_ucor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &    
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_vcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
+        call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_vcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_wcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+        call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_wcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
 
 !                                                         STORE1,2,3 = DYDX,Y,Z
 !                                                          STORE7 = DIFFUSIVITY
@@ -1201,64 +1192,58 @@ DO ispec = 1,nspec
 !       -------------------------
   
 !       X-DIRECTION
-  IF(fxlcnv)THEN
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        strhxl(jc,kc,ispec) = utmp(istal,jc,kc)
-        
-      END DO
-    END DO
-  END IF
-  IF(fxrcnv)THEN
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        strhxr(jc,kc,ispec) = utmp(istol,jc,kc)
-        
-      END DO
-    END DO
-  END IF
+        IF(fxlcnv) THEN
+            rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(boundary_kernel_speciesH_xdir, "COLLECT SPECIES H FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strhxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+        END IF
+        IF(fxrcnv) THEN
+            rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(boundary_kernel_speciesH_xdir, "COLLECT SPECIES H FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strhxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+        END IF
   
 !       Y-DIRECTION
-  IF(fylcnv)THEN
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        strhyl(ic,kc,ispec) = utmp(ic,jstal,kc)
-        
-      END DO
-    END DO
-  END IF
-  IF(fyrcnv)THEN
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        strhyr(ic,kc,ispec) = utmp(ic,jstol,kc)
-        
-      END DO
-    END DO
-  END IF
+        IF(fylcnv) THEN
+            rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+            call ops_par_loop(boundary_kernel_speciesH_ydir, "COLLECT SPECIES H FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strhyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+        END IF
+        IF(fyrcnv) THEN
+            rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+            call ops_par_loop(boundary_kernel_speciesH_ydir, "COLLECT SPECIES H FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strhyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+        END IF
   
 !       Z-DIRECTION
-  IF(fzlcnv)THEN
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        strhzl(ic,jc,ispec) = utmp(ic,jc,kstal)
-        
-      END DO
-    END DO
-  END IF
-  IF(fzrcnv)THEN
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        strhzr(ic,jc,ispec) = utmp(ic,jc,kstol)
-        
-      END DO
-    END DO
-  END IF
+        IF(fzlcnv) THEN
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+            call ops_par_loop(boundary_kernel_speciesH_zdir, "COLLECT SPECIES H FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strhzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+        END IF
+        IF(fzrcnv) THEN
+            rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+            call ops_par_loop(boundary_kernel_speciesH_zdir, "COLLECT SPECIES H FOR BCs", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_strhzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+        END IF
 !                                                         STORE1,2,3 = DYDX,Y,Z
 !                                                          STORE7 = DIFFUSIVITY
 !                                                  RATE = Y SOURCE TERMS
@@ -1270,16 +1255,15 @@ DO ispec = 1,nspec
 !       MIXTURE AVERAGED TRANSPORT
 !       RSC 23-APR-2013
 !       ADD DUFOUR EFFECT TERMS TO SPECIES ENTHALPY
-  IF(flmduf(ispec))THEN
+        IF(flmduf(ispec)) THEN
+            rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+            call ops_par_loop(math_kernel_eqF, "A = A+var*B*C", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_tdrmix, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ))
 
-    rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-    call ops_par_loop(math_kernel_eqF, "A = A+var*B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_tdrmix, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ))
-
-  END IF
+        END IF
   
 !       =======================================================================
   
@@ -1289,20 +1273,20 @@ DO ispec = 1,nspec
 !       DIFFUSIVITY GRADIENT TERMS
   
 !       DIFFUSIVITY GRADIENTS
-  CALL dfbydx(d_store7,d_store4)
-  CALL dfbydy(d_store7,d_store5)
-  CALL dfbydz(d_store7,d_store6)
+        call dfbydx(d_store7,d_store4)
+        call dfbydy(d_store7,d_store5)
+        call dfbydz(d_store7,d_store6)
   
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fxldif)CALL zeroxl(d_store4)
-  IF(fxrdif)CALL zeroxr(d_store4)
+        IF(fxldif) call zeroxl(d_store4)
+        IF(fxrdif) call zeroxr(d_store4)
 !       BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fyldif)CALL zeroyl(d_store5)
-  IF(fyrdif)CALL zeroyr(d_store5)
+        IF(fyldif) call zeroyl(d_store5)
+        IF(fyrdif) call zeroyr(d_store5)
 !       BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fzldif)CALL zerozl(d_store6)
-  IF(fzrdif)CALL zerozr(d_store6)
+        IF(fzldif) call zerozl(d_store6)
+        IF(fzrdif) call zerozr(d_store6)
   
   DO kc = kstal,kstol
     DO jc = jstal,jstol

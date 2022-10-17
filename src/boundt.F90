@@ -161,7 +161,7 @@ IF(fxlcnv)THEN
           fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
               + fornow*strtxl(1,jc,kc)
           
-          yrhs(ispec,istal,jc,kc) = drhs(istal,jc,kc)*stryxl(jc,kc,ispec)
+          yrhs(ispec,istal,jc,kc) = drhs(istal,jc,kc)*stryxl(ispec,1,jc,kc)
           
           erhs(istal,jc,kc) = erhs(istal,jc,kc)  &
               + (fornow-rgspec(ispec)*strtxl(1,jc,kc))*yrhs(ispec,istal,jc,kc)
@@ -208,7 +208,7 @@ IF(fxlcnv)THEN
       DO kc = kstal,kstol
         DO jc = jstal,jstol
           
-          yrhs(ispec,istal,jc,kc) = strdxl(1,jc,kc)*stryxl(jc,kc,ispec)
+          yrhs(ispec,istal,jc,kc) = strdxl(1,jc,kc)*stryxl(ispec,1,jc,kc)
           
         END DO
       END DO
@@ -440,7 +440,7 @@ IF(fxrcnv)THEN
           fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
               + fornow*strtxr(1,jc,kc)
           
-          yrhs(ispec,istol,jc,kc) = drhs(istol,jc,kc)*stryxr(jc,kc,ispec)
+          yrhs(ispec,istol,jc,kc) = drhs(istol,jc,kc)*stryxr(ispec,1,jc,kc)
           
           erhs(istol,jc,kc) = erhs(istol,jc,kc)  &
               + (fornow-rgspec(ispec)*strtxr(1,jc,kc))*yrhs(ispec,istol,jc,kc)
@@ -487,7 +487,7 @@ IF(fxrcnv)THEN
       DO kc = kstal,kstol
         DO jc = jstal,jstol
           
-          yrhs(ispec,istol,jc,kc) = strdxr(1,jc,kc)*stryxr(jc,kc,ispec)
+          yrhs(ispec,istol,jc,kc) = strdxr(1,jc,kc)*stryxr(ispec,1,jc,kc)
           
         END DO
       END DO
@@ -725,7 +725,7 @@ IF(fylcnv)THEN
           fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
               + fornow*strtyl(ic,1,kc)
           
-          yrhs(ispec,ic,jstal,kc) = drhs(ic,jstal,kc)*stryyl(ic,kc,ispec)
+          yrhs(ispec,ic,jstal,kc) = drhs(ic,jstal,kc)*stryyl(ispec,ic,1,kc)
           
           erhs(ic,jstal,kc) = erhs(ic,jstal,kc)  &
               + (fornow-rgspec(ispec)*strtyl(ic,1,kc))*yrhs(ispec,ic,jstal,kc)
@@ -772,7 +772,7 @@ IF(fylcnv)THEN
       DO kc = kstal,kstol
         DO ic = istal,istol
           
-          yrhs(ispec,ic,jstal,kc) = strdyl(ic,1,kc)*stryyl(ic,kc,ispec)
+          yrhs(ispec,ic,jstal,kc) = strdyl(ic,1,kc)*stryyl(ispec,ic,1,kc)
           
         END DO
       END DO
@@ -1010,7 +1010,7 @@ IF(fyrcnv)THEN
           fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
               + fornow*strtyr(ic,1,kc)
           
-          yrhs(ispec,ic,jstol,kc) = drhs(ic,jstol,kc)*stryyr(ic,kc,ispec)
+          yrhs(ispec,ic,jstol,kc) = drhs(ic,jstol,kc)*stryyr(ispec,ic,1,kc)
           
           erhs(ic,jstol,kc) = erhs(ic,jstol,kc)  &
               + (fornow-rgspec(ispec)*strtyr(ic,1,kc))*yrhs(ispec,ic,jstol,kc)
@@ -1057,7 +1057,7 @@ IF(fyrcnv)THEN
       DO kc = kstal,kstol
         DO ic = istal,istol
           
-          yrhs(ispec,ic,jstol,kc) = strdyr(ic,1,kc)*stryyr(ic,kc,ispec)
+          yrhs(ispec,ic,jstol,kc) = strdyr(ic,1,kc)*stryyr(ispec,ic,1,kc)
           
         END DO
       END DO
@@ -1295,7 +1295,7 @@ IF(fzlcnv)THEN
           fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
               + fornow*strtzl(ic,jc,1)
           
-          yrhs(ispec,ic,jc,kstal) = drhs(ic,jc,kstal)*stryzl(ic,jc,ispec)
+          yrhs(ispec,ic,jc,kstal) = drhs(ic,jc,kstal)*stryzl(ispec,ic,jc,1)
           
           erhs(ic,jc,kstal) = erhs(ic,jc,kstal)  &
               + (fornow-rgspec(ispec)*strtzl(ic,jc,1))*yrhs(ispec,ic,jc,kstal)
@@ -1342,7 +1342,7 @@ IF(fzlcnv)THEN
       DO jc = jstal,jstol
         DO ic = istal,istol
           
-          yrhs(ispec,ic,jc,kstal) = strdzl(ic,jc,1)*stryzl(ic,jc,ispec)
+          yrhs(ispec,ic,jc,kstal) = strdzl(ic,jc,1)*stryzl(ispec,ic,jc,1)
           
         END DO
       END DO
@@ -1580,7 +1580,7 @@ IF(fzrcnv)THEN
           fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
               + fornow*strtzr(ic,jc,1)
           
-          yrhs(ispec,ic,jc,kstol) = drhs(ic,jc,kstol)*stryzr(ic,jc,ispec)
+          yrhs(ispec,ic,jc,kstol) = drhs(ic,jc,kstol)*stryzr(ispec,ic,jc,1)
           
           erhs(ic,jc,kstol) = erhs(ic,jc,kstol)  &
               + (fornow-rgspec(ispec)*strtzr(ic,jc,1))*yrhs(ispec,ic,jc,kstol)
@@ -1627,7 +1627,7 @@ IF(fzrcnv)THEN
       DO jc = jstal,jstol
         DO ic = istal,istol
           
-          yrhs(ispec,ic,jc,kstol) = strdzr(ic,jc,1)*stryzr(ic,jc,ispec)
+          yrhs(ispec,ic,jc,kstol) = strdzr(ic,jc,1)*stryzr(ispec,ic,jc,1)
           
         END DO
       END DO

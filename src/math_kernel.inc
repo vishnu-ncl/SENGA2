@@ -6,7 +6,7 @@ SUBROUTINE math_kernel_eqA(out_arr, in_arr1)
     real(kind=dp), dimension(1) :: out_arr
     real(kind=dp), dimension(1), intent(in) :: in_arr1
 
-    out_arr(OPS_ACC1(0,0,0)) = LOG(in_arr1(OPS_ACC2(0,0,0)))
+    out_arr(OPS_ACC1(0,0,0)) = log(in_arr1(OPS_ACC2(0,0,0)))
 
 END SUBROUTINE math_kernel_eqA
 
