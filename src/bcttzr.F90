@@ -1,85 +1,75 @@
 SUBROUTINE bcttzr
  
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-13  Time: 20:59:13
+    use OPS_Fortran_Reference
 
-!     *************************************************************************
+    use OPS_CONSTANTS
+    use, intrinsic :: ISO_C_BINDING
 
-!     BCTTZR
-!     ======
+    use data_types
+    use com_senga
+    use com_ops_senga
 
-!     AUTHOR
-!     ------
-!     R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
+!   *************************************************************************
 
-!     CHANGE RECORD
-!     -------------
-!     26-OCT-2013:  CREATED
-!     09-MAY-2015:  RSC MODIFIED FOR ISOTHERMAL WALL
+!   BCTTZR
+!   ======
 
-!     DESCRIPTION
-!     -----------
-!     DNS CODE SENGA2
-!     EVALUATES TIME-DEPENDENT BOUNDARY CONDITIONS FOR TEMPERATURE
-!     AND ITS TIME DERIVATIVE
+!   AUTHOR
+!   ------
+!   R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
 
-!     Z-DIRECTION RIGHT-HAND END
+!   CHANGE RECORD
+!   -------------
+!   26-OCT-2013:  CREATED
+!   09-MAY-2015:  RSC MODIFIED FOR ISOTHERMAL WALL
 
-!     *************************************************************************
+!   DESCRIPTION
+!   -----------
+!   DNS CODE SENGA2
+!   EVALUATES TIME-DEPENDENT BOUNDARY CONDITIONS FOR TEMPERATURE
+!   AND ITS TIME DERIVATIVE
 
+!   Z-DIRECTION RIGHT-HAND END
 
-!     GLOBAL DATA
-!     ===========
-!     -------------------------------------------------------------------------
-use data_types
-use com_senga
-!     -------------------------------------------------------------------------
+!   *************************************************************************
 
+!   GLOBAL DATA
+!   ===========
+!   -------------------------------------------------------------------------
+!   -------------------------------------------------------------------------
 
-!     LOCAL DATA
-!     ==========
-INTEGER :: ic,jc
+!   LOCAL DATA
+!   ==========
+    integer :: rangexyz(6)
 
+!   BEGIN
+!   =====
 
-!     BEGIN
-!     =====
+!   =========================================================================
 
-!     =========================================================================
+!   RK TIME INCREMENT IS HELD IN RKTIM(IRKSTP)
 
-!     RK TIME INCREMENT IS HELD IN RKTIM(IRKSTP)
+!   =========================================================================
 
-!     =========================================================================
+!   EVALUATE AND RETURN STRTZR,DTDTZR
+    rangexyz = (/istal,istol,jstal,jstol,1,1/)
+    call ops_par_loop(bcdt_kernel_zdir, "bcdt_kernel_zdir", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE),  &
+                    ops_arg_dat(d_dtdtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(trin, 1, "real(dp)", OPS_READ))
 
-!     EVALUATE AND RETURN STRTZR,DTDTZR
-DO jc = jstal,jstol
-  DO ic = istal,istol
-    
-    strtzr(ic,jc,1) = trin
-    
-    dtdtzr(ic,jc) = zero
-    
-  END DO
-END DO
+!   =========================================================================
 
-!     =========================================================================
+!   ISOTHERMAL WALL
+    IF(nsbczr == nsbcw2) THEN
+        rangexyz = (/istal,istol,jstal,jstol,1,1/)
+        call ops_par_loop(bcdt_kernel_zdir, "bcdt_kernel_zdir", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_dtdtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                        ops_arg_gbl(rzrprm(1), 1, "real(dp)", OPS_READ))
 
-!     ISOTHERMAL WALL
-IF(nsbczr == nsbcw2)THEN
-  
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      strtzr(ic,jc,1) = rzrprm(1)
-      
-      dtdtzr(ic,jc) = zero
-      
-    END DO
-  END DO
-  
-END IF
+    END IF
 
-!     =========================================================================
+!   =========================================================================
 
-
-RETURN
 END SUBROUTINE bcttzr

@@ -1,70 +1,62 @@
 SUBROUTINE bcdtxl
- 
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-13  Time: 20:58:19
 
-!     *************************************************************************
+    use OPS_Fortran_Reference
 
-!     BCDTXL
-!     ======
+    use OPS_CONSTANTS
+    use, intrinsic :: ISO_C_BINDING
 
-!     AUTHOR
-!     ------
-!     R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
+    use data_types
+    use com_senga
+    use com_ops_senga
+     
+!   *************************************************************************
 
-!     CHANGE RECORD
-!     -------------
-!     30-DEC-2003:  CREATED
+!   BCDTXL
+!   ======
 
-!     DESCRIPTION
-!     -----------
-!     DNS CODE SENGA2
-!     EVALUATES TIME-DEPENDENT BOUNDARY CONDITIONS FOR DENSITY
-!     AND ITS TIME DERIVATIVE
+!   AUTHOR
+!   ------
+!   R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
 
-!     X-DIRECTION LEFT-HAND END
+!   CHANGE RECORD
+!   -------------
+!   30-DEC-2003:  CREATED
 
-!     *************************************************************************
+!   DESCRIPTION
+!   -----------
+!   DNS CODE SENGA2
+!   EVALUATES TIME-DEPENDENT BOUNDARY CONDITIONS FOR DENSITY
+!   AND ITS TIME DERIVATIVE
 
+!   X-DIRECTION LEFT-HAND END
 
-!     GLOBAL DATA
-!     ===========
-!     -------------------------------------------------------------------------
-use data_types
-use com_senga
-!     -------------------------------------------------------------------------
+!   *************************************************************************
 
+!   GLOBAL DATA
+!   ===========
+!   -------------------------------------------------------------------------
+!   -------------------------------------------------------------------------
 
-!     LOCAL DATA
-!     ==========
-INTEGER :: jc,kc
+!   LOCAL DATA
+!   ==========
+    integer :: rangexyz(6)
 
+!   BEGIN
+!   =====
 
-!     BEGIN
-!     =====
+!   =========================================================================
 
-!     =========================================================================
+!   RK TIME INCREMENT IS HELD IN RKTIM(IRKSTP)
 
-!     RK TIME INCREMENT IS HELD IN RKTIM(IRKSTP)
+!   =========================================================================
 
-!     =========================================================================
+!   EVALUATE AND RETURN STRDXL,DDDTXL
+    rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(bcdt_kernel_xdir, "bcdt_kernel_xdir", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
+                    ops_arg_dat(d_dddtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(drin, 1, "real(dp)", OPS_READ))    
 
-!     EVALUATE AND RETURN STRDXL,DDDTXL
+!   =========================================================================
 
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    
-!         SET DENSITY TO CONSTANT (INITIAL) VALUE
-    strdxl(1,jc,kc) = drin
-    
-!         SET DENSITY TIME DERIVATIVE TO ZERO
-    dddtxl(jc,kc) = zero
-    
-  END DO
-END DO
-
-!     =========================================================================
-
-
-RETURN
 END SUBROUTINE bcdtxl

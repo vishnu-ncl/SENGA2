@@ -249,6 +249,10 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strgxr, d_strgxr, "real(dp)", "STRGXR")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strrxl, d_strrxl, "real(dp)", "STRRXL")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strrxr, d_strrxr, "real(dp)", "STRRXR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, dtdtxl, d_dtdtxl, "real(dp)", "DTDTXL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, dtdtxr, d_dtdtxr, "real(dp)", "DTDTXR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, dddtxl, d_dddtxl, "real(dp)", "DDDTXL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, dddtxr, d_dddtxr, "real(dp)", "DDDTXR")
 
 !-----------------------------------------Boundary XZ---------------------------------
     d_size = (/nxsize, 1, nzsize/)
@@ -284,6 +288,10 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strgyr, d_strgyr, "real(dp)", "STRGYR")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strryl, d_strryl, "real(dp)", "STRRYL")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strryr, d_strryr, "real(dp)", "STRRYR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, dtdtyl, d_dtdtyl, "real(dp)", "DTDTYL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, dtdtyr, d_dtdtyr, "real(dp)", "DTDTYR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, dddtyl, d_dddtyl, "real(dp)", "DDDTYL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, dddtyr, d_dddtyr, "real(dp)", "DDDTYR")
 
 !-----------------------------------------Boundary XY---------------------------------
     d_size = (/nxsize, nysize, 1/)
@@ -319,6 +327,10 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strgzr, d_strgzr, "real(dp)", "STRGZR")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strrzl, d_strrzl, "real(dp)", "STRRZL")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, strrzr, d_strrzr, "real(dp)", "STRRZR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, dtdtzl, d_dtdtzl, "real(dp)", "DTDTZL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, dtdtzr, d_dtdtzr, "real(dp)", "DTDTZR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, dddtzl, d_dddtzl, "real(dp)", "DDDTZL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, dddtzr, d_dddtzr, "real(dp)", "DDDTZR")
 
 !------------------------------------OPS Reduction Handles-----------------------------
     call ops_decl_reduction_handle(8, h_erdtot, "real(dp)", "erdtot")

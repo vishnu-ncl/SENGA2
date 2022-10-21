@@ -641,7 +641,7 @@ REAL(KIND=dp) ::  &
     strdxl(1,nysize,nzsize),strtxl(1,nysize,nzsize),  &
     strexl(1,nysize,nzsize),strgxl(1,nysize,nzsize), strrxl(1,nysize,nzsize),  &
     dudtxl(nysize,nzsize),dvdtxl(nysize,nzsize),  &
-    dwdtxl(nysize,nzsize),dtdtxl(nysize,nzsize), dddtxl(nysize,nzsize),  &
+    dwdtxl(nysize,nzsize),dtdtxl(1,nysize,nzsize), dddtxl(1,nysize,nzsize),  &
     acouxl(nysize,nzsize),ova2xl(nysize,nzsize),  &
     gam1xl(nysize,nzsize),ovgmxl(nysize,nzsize),  &
     sydtxl(nysize,nzsize),sorpxl(nysize,nzsize)
@@ -662,7 +662,7 @@ REAL(KIND=dp) ::  &
     strdxr(1,nysize,nzsize),strtxr(1,nysize,nzsize),  &
     strexr(1,nysize,nzsize),strgxr(1,nysize,nzsize), strrxr(1,nysize,nzsize),  &
     dudtxr(nysize,nzsize),dvdtxr(nysize,nzsize),  &
-    dwdtxr(nysize,nzsize),dtdtxr(nysize,nzsize), dddtxr(nysize,nzsize),  &
+    dwdtxr(nysize,nzsize),dtdtxr(1,nysize,nzsize), dddtxr(1,nysize,nzsize),  &
     acouxr(nysize,nzsize),ova2xr(nysize,nzsize),  &
     gam1xr(nysize,nzsize),ovgmxr(nysize,nzsize),  &
     sydtxr(nysize,nzsize),sorpxr(nysize,nzsize)
@@ -684,7 +684,7 @@ REAL(KIND=dp) ::  &
     strdyl(nxsize,1,nzsize),strtyl(nxsize,1,nzsize),  &
     streyl(nxsize,1,nzsize),strgyl(nxsize,1,nzsize), strryl(nxsize,1,nzsize),  &
     dudtyl(nxsize,nzsize),dvdtyl(nxsize,nzsize),  &
-    dwdtyl(nxsize,nzsize),dtdtyl(nxsize,nzsize), dddtyl(nxsize,nzsize),  &
+    dwdtyl(nxsize,nzsize),dtdtyl(nxsize,1,nzsize), dddtyl(nxsize,1,nzsize),  &
     acouyl(nxsize,nzsize),ova2yl(nxsize,nzsize),  &
     gam1yl(nxsize,nzsize),ovgmyl(nxsize,nzsize),  &
     sydtyl(nxsize,nzsize),sorpyl(nxsize,nzsize)
@@ -705,7 +705,7 @@ REAL(KIND=dp) ::  &
     strdyr(nxsize,1,nzsize),strtyr(nxsize,1,nzsize),  &
     streyr(nxsize,1,nzsize),strgyr(nxsize,1,nzsize), strryr(nxsize,1,nzsize),  &
     dudtyr(nxsize,nzsize),dvdtyr(nxsize,nzsize),  &
-    dwdtyr(nxsize,nzsize),dtdtyr(nxsize,nzsize), dddtyr(nxsize,nzsize),  &
+    dwdtyr(nxsize,nzsize),dtdtyr(nxsize,1,nzsize), dddtyr(nxsize,1,nzsize),  &
     acouyr(nxsize,nzsize),ova2yr(nxsize,nzsize),  &
     gam1yr(nxsize,nzsize),ovgmyr(nxsize,nzsize),  &
     sydtyr(nxsize,nzsize),sorpyr(nxsize,nzsize)
@@ -727,7 +727,7 @@ REAL(KIND=dp) ::  &
     strdzl(nxsize,nysize,1),strtzl(nxsize,nysize,1),  &
     strezl(nxsize,nysize,1),strgzl(nxsize,nysize,1), strrzl(nxsize,nysize,1),  &
     dudtzl(nxsize,nysize),dvdtzl(nxsize,nysize),  &
-    dwdtzl(nxsize,nysize),dtdtzl(nxsize,nysize), dddtzl(nxsize,nysize),  &
+    dwdtzl(nxsize,nysize),dtdtzl(nxsize,nysize,1), dddtzl(nxsize,nysize,1),  &
     acouzl(nxsize,nysize),ova2zl(nxsize,nysize),  &
     gam1zl(nxsize,nysize),ovgmzl(nxsize,nysize),  &
     sydtzl(nxsize,nysize),sorpzl(nxsize,nysize)
@@ -748,7 +748,7 @@ REAL(KIND=dp) ::  &
     strdzr(nxsize,nysize,1),strtzr(nxsize,nysize,1),  &
     strezr(nxsize,nysize,1),strgzr(nxsize,nysize,1), strrzr(nxsize,nysize,1),  &
     dudtzr(nxsize,nysize),dvdtzr(nxsize,nysize),  &
-    dwdtzr(nxsize,nysize),dtdtzr(nxsize,nysize), dddtzr(nxsize,nysize),  &
+    dwdtzr(nxsize,nysize),dtdtzr(nxsize,nysize,1), dddtzr(nxsize,nysize,1),  &
     acouzr(nxsize,nysize),ova2zr(nxsize,nysize),  &
     gam1zr(nxsize,nysize),ovgmzr(nxsize,nysize),  &
     sydtzr(nxsize,nysize),sorpzr(nxsize,nysize)

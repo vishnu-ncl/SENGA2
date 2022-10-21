@@ -1,85 +1,75 @@
 SUBROUTINE bcttyr
- 
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-13  Time: 20:59:05
 
-!     *************************************************************************
+    use OPS_Fortran_Reference
 
-!     BCTTYR
-!     ======
+    use OPS_CONSTANTS
+    use, intrinsic :: ISO_C_BINDING
 
-!     AUTHOR
-!     ------
-!     R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
+    use data_types
+    use com_senga
+    use com_ops_senga
 
-!     CHANGE RECORD
-!     -------------
-!     26-OCT-2013:  CREATED
-!     09-MAY-2015:  RSC MODIFIED FOR ISOTHERMAL WALL
+!   *************************************************************************
 
-!     DESCRIPTION
-!     -----------
-!     DNS CODE SENGA2
-!     EVALUATES TIME-DEPENDENT BOUNDARY CONDITIONS FOR TEMPERATURE
-!     AND ITS TIME DERIVATIVE
+!   BCTTYR
+!   ======
 
-!     Y-DIRECTION RIGHT-HAND END
+!   AUTHOR
+!   ------
+!   R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
 
-!     *************************************************************************
+!   CHANGE RECORD
+!   -------------
+!   26-OCT-2013:  CREATED
+!   09-MAY-2015:  RSC MODIFIED FOR ISOTHERMAL WALL
 
+!   DESCRIPTION
+!   -----------
+!   DNS CODE SENGA2
+!   EVALUATES TIME-DEPENDENT BOUNDARY CONDITIONS FOR TEMPERATURE
+!   AND ITS TIME DERIVATIVE
 
-!     GLOBAL DATA
-!     ===========
-!     -------------------------------------------------------------------------
-use data_types
-use com_senga
-!     -------------------------------------------------------------------------
+!   Y-DIRECTION RIGHT-HAND END
 
+!   *************************************************************************
 
-!     LOCAL DATA
-!     ==========
-INTEGER :: ic,kc
+!   GLOBAL DATA
+!   ===========
+!   -------------------------------------------------------------------------
+!   -------------------------------------------------------------------------
 
+!   LOCAL DATA
+!   ==========
+    integer :: rangexyz(6)
 
-!     BEGIN
-!     =====
+!   BEGIN
+!   =====
 
-!     =========================================================================
+!   =========================================================================
 
-!     RK TIME INCREMENT IS HELD IN RKTIM(IRKSTP)
+!   RK TIME INCREMENT IS HELD IN RKTIM(IRKSTP)
 
-!     =========================================================================
+!   =========================================================================
 
-!     EVALUATE AND RETURN STRTYR,DTDTYR
-DO kc = kstal,kstol
-  DO ic = istal,istol
-    
-    strtyr(ic,1,kc) = trin
-    
-    dtdtyr(ic,kc) = zero
-    
-  END DO
-END DO
+!   EVALUATE AND RETURN STRTYR,DTDTYR
+    rangexyz = (/istal,istol,1,1,kstal,kstol/)
+    call ops_par_loop(bcdt_kernel_ydir, "bcdt_kernel_ydir", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE),  &
+                    ops_arg_dat(d_dtdtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(trin, 1, "real(dp)", OPS_READ))
 
-!     =========================================================================
+!   =========================================================================
 
-!     ISOTHERMAL WALL
-IF(nsbcyr == nsbcw2)THEN
-  
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      strtyr(ic,1,kc) = ryrprm(1)
-      
-      dtdtyr(ic,kc) = zero
-      
-    END DO
-  END DO
-  
-END IF
+!   ISOTHERMAL WALL
+    IF(nsbcyr == nsbcw2) THEN
+        rangexyz = (/istal,istol,1,1,kstal,kstol/)
+        call ops_par_loop(bcdt_kernel_ydir, "bcdt_kernel_ydir", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE),  &
+                    ops_arg_dat(d_dtdtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(ryrprm(1), 1, "real(dp)", OPS_READ))
 
-!     =========================================================================
+    END IF
 
+!   =========================================================================
 
-RETURN
 END SUBROUTINE bcttyr

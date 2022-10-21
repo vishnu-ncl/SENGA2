@@ -412,7 +412,7 @@ IF(fxlcnv)THEN
             - strdxl(1,jc,kc)*acouxl(jc,kc)*dudtxl(jc,kc) - bcl5xl(1,jc,kc)
         bcl2xl(1,jc,kc) = gam1xl(jc,kc)*ova2xl(jc,kc)  &
             *(bcl1xl(1,jc,kc)+bcl5xl(1,jc,kc))  &
-            + strdxl(1,jc,kc)*(dtdtxl(jc,kc)/strtxl(1,jc,kc)  &
+            + strdxl(1,jc,kc)*(dtdtxl(1,jc,kc)/strtxl(1,jc,kc)  &
             - sorpxl(jc,kc)/strpxl(1,jc,kc) + sydtxl(jc,kc))  &
             - bcl2xl(1,jc,kc)
         
@@ -462,7 +462,7 @@ IF(fxlcnv)THEN
 !             SUBTRACT FROM NEW VALUE OF L's
 !             L1X UNCHANGED
         fornow = bcl1xl(1,jc,kc) - strdxl(1,jc,kc)*acouxl(jc,kc)*dudtxl(jc,kc)
-        bcl2xl(1,jc,kc) = -dddtxl(jc,kc)  &
+        bcl2xl(1,jc,kc) = -dddtxl(1,jc,kc)  &
             - ova2xl(jc,kc)*(bcl1xl(1,jc,kc)+fornow) - bcl2xl(1,jc,kc)
         bcl3xl(1,jc,kc) = -dvdtxl(jc,kc) - bcl3xl(1,jc,kc)
         bcl4xl(1,jc,kc) = -dwdtxl(jc,kc) - bcl4xl(1,jc,kc)
@@ -636,7 +636,7 @@ IF(fxlcnv)THEN
             - strdxl(1,jc,kc)*acouxl(jc,kc)*dudtxl(jc,kc) - bcl5xl(1,jc,kc)
         bcl2xl(1,jc,kc) = gam1xl(jc,kc)*ova2xl(jc,kc)  &
             *(bcl1xl(1,jc,kc)+bcl5xl(1,jc,kc))  &
-            + strdxl(1,jc,kc)*(dtdtxl(jc,kc)/strtxl(1,jc,kc)  &
+            + strdxl(1,jc,kc)*(dtdtxl(1,jc,kc)/strtxl(1,jc,kc)  &
             - sorpxl(jc,kc)/strpxl(1,jc,kc)) - bcl2xl(1,jc,kc)
         
       END DO
@@ -1059,7 +1059,7 @@ IF(fxrcnv)THEN
             + strdxr(1,jc,kc)*acouxr(jc,kc)*dudtxr(jc,kc) - bcl1xr(1,jc,kc)
         bcl2xr(1,jc,kc) = gam1xr(jc,kc)*ova2xr(jc,kc)  &
             *(bcl1xr(1,jc,kc)+bcl5xr(1,jc,kc))  &
-            + strdxr(1,jc,kc)*(dtdtxr(jc,kc)/strtxr(1,jc,kc)  &
+            + strdxr(1,jc,kc)*(dtdtxr(1,jc,kc)/strtxr(1,jc,kc)  &
             - sorpxr(jc,kc)/strpxr(1,jc,kc) + sydtxr(jc,kc))  &
             - bcl2xr(1,jc,kc)
         
@@ -1110,7 +1110,7 @@ IF(fxrcnv)THEN
 !             L5X UNCHANGED
         fornow = bcl5xr(1,jc,kc) + strdxr(1,jc,kc)*acouxr(jc,kc)*dudtxr(jc,kc)
         bcl1xr(1,jc,kc) = fornow - bcl1xr(1,jc,kc)
-        bcl2xr(1,jc,kc) = -dddtxr(jc,kc)  &
+        bcl2xr(1,jc,kc) = -dddtxr(1,jc,kc)  &
             - ova2xr(jc,kc)*(bcl5xr(1,jc,kc)+fornow) - bcl2xr(1,jc,kc)
         bcl3xr(1,jc,kc) = -dvdtxr(jc,kc) - bcl3xr(1,jc,kc)
         bcl4xr(1,jc,kc) = -dwdtxr(jc,kc) - bcl4xr(1,jc,kc)
@@ -1284,7 +1284,7 @@ IF(fxrcnv)THEN
         bcl4xr(1,jc,kc) = -dwdtxr(jc,kc) - bcl4xr(1,jc,kc)
         bcl2xr(1,jc,kc) = gam1xr(jc,kc)*ova2xr(jc,kc)  &
             *(bcl1xr(1,jc,kc)+bcl5xr(1,jc,kc))  &
-            + strdxr(1,jc,kc)*(dtdtxr(jc,kc)/strtxr(1,jc,kc)  &
+            + strdxr(1,jc,kc)*(dtdtxr(1,jc,kc)/strtxr(1,jc,kc)  &
             - sorpxr(jc,kc)/strpxr(1,jc,kc)) - bcl2xr(1,jc,kc)
         
       END DO
@@ -1704,7 +1704,7 @@ IF(fylcnv)THEN
             - strdyl(ic,1,kc)*acouyl(ic,kc)*dvdtyl(ic,kc) - bcl5yl(ic,1,kc)
         bcl2yl(ic,1,kc) = gam1yl(ic,kc)*ova2yl(ic,kc)  &
             *(bcl1yl(ic,1,kc)+bcl5yl(ic,1,kc))  &
-            + strdyl(ic,1,kc)*(dtdtyl(ic,kc)/strtyl(ic,1,kc)  &
+            + strdyl(ic,1,kc)*(dtdtyl(ic,1,kc)/strtyl(ic,1,kc)  &
             - sorpyl(ic,kc)/strpyl(ic,1,kc) + sydtyl(ic,kc))  &
             - bcl2yl(ic,1,kc)
         
@@ -1754,7 +1754,7 @@ IF(fylcnv)THEN
 !             SUBTRACT FROM NEW VALUE OF L's
 !             L1Y UNCHANGED
         fornow = bcl1yl(ic,1,kc) - strdyl(ic,1,kc)*acouyl(ic,kc)*dvdtyl(ic,kc)
-        bcl2yl(ic,1,kc) = -dddtyl(ic,kc)  &
+        bcl2yl(ic,1,kc) = -dddtyl(ic,1,kc)  &
             - ova2yl(ic,kc)*(bcl1yl(ic,1,kc)+fornow) - bcl2yl(ic,1,kc)
         bcl3yl(ic,1,kc) = -dudtyl(ic,kc) - bcl3yl(ic,1,kc)
         bcl4yl(ic,1,kc) = -dwdtyl(ic,kc) - bcl4yl(ic,1,kc)
@@ -1929,7 +1929,7 @@ IF(fylcnv)THEN
             - strdyl(ic,1,kc)*acouyl(ic,kc)*dvdtyl(ic,kc) - bcl5yl(ic,1,kc)
         bcl2yl(ic,1,kc) = gam1yl(ic,kc)*ova2yl(ic,kc)  &
             *(bcl1yl(ic,1,kc)+bcl5yl(ic,1,kc))  &
-            + strdyl(ic,1,kc)*(dtdtyl(ic,kc)/strtyl(ic,1,kc)  &
+            + strdyl(ic,1,kc)*(dtdtyl(ic,1,kc)/strtyl(ic,1,kc)  &
             - sorpyl(ic,kc)/strpyl(ic,1,kc)) - bcl2yl(ic,1,kc)
         
       END DO
@@ -2351,7 +2351,7 @@ IF(fyrcnv)THEN
             + strdyr(ic,1,kc)*acouyr(ic,kc)*dvdtyr(ic,kc) - bcl1yr(ic,1,kc)
         bcl2yr(ic,1,kc) = gam1yr(ic,kc)*ova2yr(ic,kc)  &
             *(bcl1yr(ic,1,kc)+bcl5yr(ic,1,kc))  &
-            + strdyr(ic,1,kc)*(dtdtyr(ic,kc)/strtyr(ic,1,kc)  &
+            + strdyr(ic,1,kc)*(dtdtyr(ic,1,kc)/strtyr(ic,1,kc)  &
             - sorpyr(ic,kc)/strpyr(ic,1,kc) + sydtyr(ic,kc))  &
             - bcl2yr(ic,1,kc)
         
@@ -2402,7 +2402,7 @@ IF(fyrcnv)THEN
 !             L5Y UNCHANGED
         fornow = bcl5yr(ic,1,kc) + strdyr(ic,1,kc)*acouyr(ic,kc)*dvdtyr(ic,kc)
         bcl1yr(ic,1,kc) = fornow - bcl1yr(ic,1,kc)
-        bcl2yr(ic,1,kc) = -dddtyr(ic,kc)  &
+        bcl2yr(ic,1,kc) = -dddtyr(ic,1,kc)  &
             - ova2yr(ic,kc)*(bcl1yr(ic,1,kc)+fornow) - bcl2yr(ic,1,kc)
         bcl3yr(ic,1,kc) = -dudtyr(ic,kc) - bcl3yr(ic,1,kc)
         bcl4yr(ic,1,kc) = -dwdtyr(ic,kc) - bcl4yr(ic,1,kc)
@@ -2576,7 +2576,7 @@ IF(fyrcnv)THEN
         bcl4yr(ic,1,kc) = -dwdtyr(ic,kc) - bcl4yr(ic,1,kc)
         bcl2yr(ic,1,kc) = gam1yr(ic,kc)*ova2yr(ic,kc)  &
             *(bcl1yr(ic,1,kc)+bcl5yr(ic,1,kc))  &
-            + strdyr(ic,1,kc)*(dtdtyr(ic,kc)/strtyr(ic,1,kc)  &
+            + strdyr(ic,1,kc)*(dtdtyr(ic,1,kc)/strtyr(ic,1,kc)  &
             - sorpyr(ic,kc)/strpyr(ic,1,kc)) - bcl2yr(ic,1,kc)
         
       END DO
@@ -2996,7 +2996,7 @@ IF(fzlcnv)THEN
             - strdzl(ic,jc,1)*acouzl(ic,jc)*dwdtzl(ic,jc) - bcl5zl(ic,jc,1)
         bcl2zl(ic,jc,1) = gam1zl(ic,jc)*ova2zl(ic,jc)  &
             *(bcl1zl(ic,jc,1)+bcl5zl(ic,jc,1))  &
-            + strdzl(ic,jc,1)*(dtdtzl(ic,jc)/strtzl(ic,jc,1)  &
+            + strdzl(ic,jc,1)*(dtdtzl(ic,jc,1)/strtzl(ic,jc,1)  &
             - sorpzl(ic,jc)/strpzl(ic,jc,1) + sydtzl(ic,jc))  &
             - bcl2zl(ic,jc,1)
         
@@ -3046,7 +3046,7 @@ IF(fzlcnv)THEN
 !             SUBTRACT FROM NEW VALUE OF L's
 !             L1Z UNCHANGED
         fornow = bcl1zl(ic,jc,1) - strdzl(ic,jc,1)*acouzl(ic,jc)*dwdtzl(ic,jc)
-        bcl2zl(ic,jc,1) = -dddtzl(ic,jc)  &
+        bcl2zl(ic,jc,1) = -dddtzl(ic,jc,1)  &
             - ova2zl(ic,jc)*(bcl1zl(ic,jc,1)+fornow) - bcl2zl(ic,jc,1)
         bcl3zl(ic,jc,1) = -dudtzl(ic,jc) - bcl3zl(ic,jc,1)
         bcl4zl(ic,jc,1) = -dvdtzl(ic,jc) - bcl4zl(ic,jc,1)
@@ -3220,7 +3220,7 @@ IF(fzlcnv)THEN
             - strdzl(ic,jc,1)*acouzl(ic,jc)*dwdtzl(ic,jc) - bcl5zl(ic,jc,1)
         bcl2zl(ic,jc,1) = gam1zl(ic,jc)*ova2zl(ic,jc)  &
             *(bcl1zl(ic,jc,1)+bcl5zl(ic,jc,1))  &
-            + strdzl(ic,jc,1)*(dtdtzl(ic,jc)/strtzl(ic,jc,1)  &
+            + strdzl(ic,jc,1)*(dtdtzl(ic,jc,1)/strtzl(ic,jc,1)  &
             - sorpzl(ic,jc)/strpzl(ic,jc,1)) - bcl2zl(ic,jc,1)
         
       END DO
@@ -3642,7 +3642,7 @@ IF(fzrcnv)THEN
             + strdzr(ic,jc,1)*acouzr(ic,jc)*dwdtzr(ic,jc) - bcl1zr(ic,jc,1)
         bcl2zr(ic,jc,1) = gam1zr(ic,jc)*ova2zr(ic,jc)  &
             *(bcl1zr(ic,jc,1)+bcl5zr(ic,jc,1))  &
-            + strdzr(ic,jc,1)*(dtdtzr(ic,jc)/strtzr(ic,jc,1)  &
+            + strdzr(ic,jc,1)*(dtdtzr(ic,jc,1)/strtzr(ic,jc,1)  &
             - sorpzr(ic,jc)/strpzr(ic,jc,1) + sydtzr(ic,jc))  &
             - bcl2zr(ic,jc,1)
         
@@ -3691,7 +3691,7 @@ IF(fzrcnv)THEN
 !             L5Z UNCHANGED
         fornow = bcl5zr(ic,jc,1) + strdzr(ic,jc,1)*acouzr(ic,jc)*dwdtzr(ic,jc)
         bcl1zr(ic,jc,1) = fornow - bcl1zr(ic,jc,1)
-        bcl2zr(ic,jc,1) = -dddtzr(ic,jc)  &
+        bcl2zr(ic,jc,1) = -dddtzr(ic,jc,1)  &
             - ova2zr(ic,jc)*(bcl1zr(ic,jc,1)+fornow) - bcl2zr(ic,jc,1)
         bcl3zr(ic,jc,1) = -dudtzr(ic,jc) - bcl3zr(ic,jc,1)
         bcl4zr(ic,jc,1) = -dvdtzr(ic,jc) - bcl4zr(ic,jc,1)
@@ -3865,7 +3865,7 @@ IF(fzrcnv)THEN
         bcl4zr(ic,jc,1) = -dvdtzr(ic,jc) - bcl4zr(ic,jc,1)
         bcl2zr(ic,jc,1) = gam1zr(ic,jc)*ova2zr(ic,jc)  &
             *(bcl1zr(ic,jc,1)+bcl5zr(ic,jc,1))  &
-            + strdzr(ic,jc,1)*(dtdtzr(ic,jc)/strtzr(ic,jc,1)  &
+            + strdzr(ic,jc,1)*(dtdtzr(ic,jc,1)/strtzr(ic,jc,1)  &
             - sorpzr(ic,jc)/strpzr(ic,jc,1)) - bcl2zr(ic,jc,1)
         
       END DO

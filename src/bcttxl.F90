@@ -1,85 +1,75 @@
 SUBROUTINE bcttxl
  
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-13  Time: 20:58:53
+    use OPS_Fortran_Reference
 
-!     *************************************************************************
+    use OPS_CONSTANTS
+    use, intrinsic :: ISO_C_BINDING
 
-!     BCTTXL
-!     ======
+    use data_types
+    use com_senga
+    use com_ops_senga
 
-!     AUTHOR
-!     ------
-!     R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
+!   *************************************************************************
 
-!     CHANGE RECORD
-!     -------------
-!     30-DEC-2003:  CREATED
-!     09-MAY-2015:  RSC MODIFIED FOR ISOTHERMAL WALL
+!   BCTTXL
+!   ======
 
-!     DESCRIPTION
-!     -----------
-!     DNS CODE SENGA2
-!     EVALUATES TIME-DEPENDENT BOUNDARY CONDITIONS FOR TEMPERATURE
-!     AND ITS TIME DERIVATIVE
+!   AUTHOR
+!   ------
+!   R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
 
-!     X-DIRECTION LEFT-HAND END
+!   CHANGE RECORD
+!   -------------
+!   30-DEC-2003:  CREATED
+!   09-MAY-2015:  RSC MODIFIED FOR ISOTHERMAL WALL
 
-!     *************************************************************************
+!   DESCRIPTION
+!   -----------
+!   DNS CODE SENGA2
+!   EVALUATES TIME-DEPENDENT BOUNDARY CONDITIONS FOR TEMPERATURE
+!   AND ITS TIME DERIVATIVE
 
+!   X-DIRECTION LEFT-HAND END
 
-!     GLOBAL DATA
-!     ===========
-!     -------------------------------------------------------------------------
-use data_types
-use com_senga
-!     -------------------------------------------------------------------------
+!   *************************************************************************
 
+!   GLOBAL DATA
+!   ===========
+!   -------------------------------------------------------------------------
+!   -------------------------------------------------------------------------
 
-!     LOCAL DATA
-!     ==========
-INTEGER :: jc,kc
+!   LOCAL DATA
+!   ==========
+    integer :: rangexyz(6)
 
+!   BEGIN
+!   =====
 
-!     BEGIN
-!     =====
+!   =========================================================================
 
-!     =========================================================================
+!   RK TIME INCREMENT IS HELD IN RKTIM(IRKSTP)
 
-!     RK TIME INCREMENT IS HELD IN RKTIM(IRKSTP)
+!   =========================================================================
 
-!     =========================================================================
+!   EVALUATE AND RETURN STRTXL,DTDTXL
+    rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(bcdt_kernel_xdir, "bcdt_kernel_xdir", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
+                    ops_arg_dat(d_dtdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(trin, 1, "real(dp)", OPS_READ))
 
-!     EVALUATE AND RETURN STRTXL,DTDTXL
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    
-    strtxl(1,jc,kc) = trin
-    
-    dtdtxl(jc,kc) = zero
-    
-  END DO
-END DO
+!   =========================================================================
 
-!     =========================================================================
+!   ISOTHERMAL WALL
+    IF(nsbcxl == nsbcw2) THEN
+        rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(bcdt_kernel_xdir, "bcdt_kernel_xdir", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_dtdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                        ops_arg_gbl(rxlprm(1), 1, "real(dp)", OPS_READ))        
 
-!     ISOTHERMAL WALL
-IF(nsbcxl == nsbcw2)THEN
-  
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      strtxl(1,jc,kc) = rxlprm(1)
-      
-      dtdtxl(jc,kc) = zero
-      
-    END DO
-  END DO
-  
-END IF
+    END IF
 
-!     =========================================================================
+!   =========================================================================
 
-
-RETURN
 END SUBROUTINE bcttxl
