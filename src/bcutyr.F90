@@ -1,76 +1,71 @@
 SUBROUTINE bcutyr
+
+    use OPS_Fortran_Reference
+
+    use OPS_CONSTANTS
+    use, intrinsic :: ISO_C_BINDING
+
+    use data_types
+    use com_senga
+    use com_ops_senga
  
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-14  Time: 11:14:57
+!   *************************************************************************
 
-!     *************************************************************************
+!   BCUTYR
+!   ======
 
-!     BCUTYR
-!     ======
+!   AUTHOR
+!   ------
+!   R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
 
-!     AUTHOR
-!     ------
-!     R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
+!   CHANGE RECORD
+!   -------------
+!   26-OCT-2013:  CREATED
 
-!     CHANGE RECORD
-!     -------------
-!     26-OCT-2013:  CREATED
+!   DESCRIPTION
+!   -----------
+!   DNS CODE SENGA2
+!   EVALUATES TIME-DEPENDENT BOUNDARY CONDITIONS FOR VELOCITY COMPONENTS
+!   AND THEIR TIME DERIVATIVES
 
-!     DESCRIPTION
-!     -----------
-!     DNS CODE SENGA2
-!     EVALUATES TIME-DEPENDENT BOUNDARY CONDITIONS FOR VELOCITY COMPONENTS
-!     AND THEIR TIME DERIVATIVES
+!   Y-DIRECTION RIGHT-HAND END
 
-!     Y-DIRECTION RIGHT-HAND END
+!   *************************************************************************
 
-!     *************************************************************************
-
-
-!     GLOBAL DATA
-!     ===========
-!     -------------------------------------------------------------------------
-use data_types
-use com_senga
-!     -------------------------------------------------------------------------
+!   GLOBAL DATA
+!   ===========
+!   -------------------------------------------------------------------------
+!   -------------------------------------------------------------------------
 
 
-!     LOCAL DATA
-!     ==========
-INTEGER :: ic,kc
+!   LOCAL DATA
+!   ==========
+    integer :: rangexyz(6)
 
+!   BEGIN
+!   =====
 
-!     BEGIN
-!     =====
+!   =========================================================================
 
-!     =========================================================================
+!   RK TIME INCREMENT IS HELD IN RKTIM(IRKSTP)
 
-!     RK TIME INCREMENT IS HELD IN RKTIM(IRKSTP)
+!   =========================================================================
 
-!     =========================================================================
+!   CONSTANT V-VELOCITY
+!   PARAMETER I1=1, R1=V-VELOCITY
+    IF(nyrprm(1) == 1) THEN
+        rangexyz = (/istal,istol,1,1,kstal,kstol/)
+        call ops_par_loop(bcut_kernel_ydir, "bcut_kernel_ydir", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_dudtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_dvdtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_dwdtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                        ops_arg_gbl(ryrprm(1), 1, "real(dp)", OPS_READ))  
 
-!     CONSTANT V-VELOCITY
-!     PARAMETER I1=1, R1=V-VELOCITY
-IF(nyrprm(1) == 1)THEN
-  
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      struyr(ic,1,kc) = zero
-      strvyr(ic,1,kc) = ryrprm(1)
-      strwyr(ic,1,kc) = zero
-      
-      dudtyr(ic,kc) = zero
-      dvdtyr(ic,kc) = zero
-      dwdtyr(ic,kc) = zero
-      
-    END DO
-  END DO
-  
-END IF
+    END IF
 
-!     =========================================================================
+!   =========================================================================
 
-
-RETURN
 END SUBROUTINE bcutyr
