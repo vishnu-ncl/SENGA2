@@ -1,74 +1,67 @@
 SUBROUTINE bcytyl
  
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-14  Time: 11:15:16
+    use OPS_Fortran_Reference
 
-!     *************************************************************************
+    use OPS_CONSTANTS
+    use, intrinsic :: ISO_C_BINDING
 
-!     BCYTYL
-!     ======
+    use data_types
+    use com_senga
+    use com_ops_senga
 
-!     AUTHOR
-!     ------
-!     R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
+!   *************************************************************************
 
-!     CHANGE RECORD
-!     -------------
-!     26-OCT-2013:  CREATED
+!   BCYTYL
+!   ======
 
-!     DESCRIPTION
-!     -----------
-!     DNS CODE SENGA2
-!     EVALUATES TIME-DEPENDENT BOUNDARY CONDITIONS FOR MASS FRACTIONS
-!     AND THEIR TIME DERIVATIVES
+!   AUTHOR
+!   ------
+!   R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
 
-!     Y-DIRECTION LEFT-HAND END
+!   CHANGE RECORD
+!   -------------
+!   26-OCT-2013:  CREATED
 
-!     *************************************************************************
+!   DESCRIPTION
+!   -----------
+!   DNS CODE SENGA2
+!   EVALUATES TIME-DEPENDENT BOUNDARY CONDITIONS FOR MASS FRACTIONS
+!   AND THEIR TIME DERIVATIVES
 
+!   Y-DIRECTION LEFT-HAND END
 
-!     GLOBAL DATA
-!     ===========
-!     -------------------------------------------------------------------------
-use data_types
-use com_senga
-!     -------------------------------------------------------------------------
+!   *************************************************************************
 
+!   GLOBAL DATA
+!   ===========
+!   -------------------------------------------------------------------------
+!   -------------------------------------------------------------------------
 
-!     LOCAL DATA
-!     ==========
-INTEGER :: ic,kc
-INTEGER :: ispec
+!   LOCAL DATA
+!   ==========
+    integer :: ispec
+    integer :: rangexyz(6)
 
+!   BEGIN
+!   =====
 
-!     BEGIN
-!     =====
+!   =========================================================================
 
-!     =========================================================================
+!   RK TIME INCREMENT IS HELD IN RKTIM(IRKSTP)
 
-!     RK TIME INCREMENT IS HELD IN RKTIM(IRKSTP)
+!   =========================================================================
 
-!     =========================================================================
+!   EVALUATE AND RETURN STRYYL,DYDTYL
+    DO ispec = 1,nspec
+        rangexyz = (/istal,istol,1,1,kstal,kstol/)
+        call ops_par_loop(bcyt_kernel_ydir, "bcyt_kernel_ydir", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_stryyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_dydtyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
+                            ops_arg_gbl(yrin(ispec), 1, "real(dp)", OPS_READ))      
 
-!     EVALUATE AND RETURN STRYYL,DYDTYL
-DO ispec = 1,nspec
-  
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-!           SET MASS FRACTIONS TO CONSTANT (INITIAL) VALUES
-      stryyl(ispec,ic,1,kc) = yrin(ispec)
-      
-!           SET MASS FRACTION TIME DERIVATIVES TO ZERO
-      dydtyl(ispec,ic,1,kc) = zero
-      
     END DO
-  END DO
-  
-END DO
 
-!     =========================================================================
+!   =========================================================================
 
-
-RETURN
 END SUBROUTINE bcytyl
