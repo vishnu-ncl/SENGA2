@@ -9,149 +9,145 @@ SUBROUTINE rhscal
     use com_senga
     use com_ops_senga
 
+!   *************************************************************************
 
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-26  Time: 15:26:16
+!   RHSCAL
+!   ======
 
-!     *************************************************************************
+!   AUTHOR
+!   ------
+!   R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
 
-!     RHSCAL
-!     ======
+!   CHANGE RECORD
+!   -------------
+!   12-NOV-2002:  CREATED
+!   26-OCT-2008:  RSC/TDD BUG FIX FZLCON
+!   08-AUG-2012:  RSC EVALUATE ALL SPECIES
+!   17-APR-2013:  RSC MIXTURE AVERAGED TRANSPORT
+!   14-JUL-2013:  RSC RADIATION HEAT LOSS
+!   08-JUN-2015:  RSC REMOVE Nth SPECIES TREATMENT
+!   08-JUN-2015:  RSC UPDATED WALL BCS
 
-!     AUTHOR
-!     ------
-!     R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
+!   DESCRIPTION
+!   -----------
+!   DNS CODE SENGA2
+!   COMPUTES RIGHT-HAND-SIDES FOR TIME INTEGRATION OF SCALAR PDEs
+!   INCLUDES MULTIPLE SCALARS AND MULTI-STEP CHEMISTRY
+!   ENERGY EQUATION REQUIRES PRESSURE-WORK AND VISCOUS WORK TERMS
+!   COMPUTED IN RHSVEL
 
-!     CHANGE RECORD
-!     -------------
-!     12-NOV-2002:  CREATED
-!     26-OCT-2008:  RSC/TDD BUG FIX FZLCON
-!     08-AUG-2012:  RSC EVALUATE ALL SPECIES
-!     17-APR-2013:  RSC MIXTURE AVERAGED TRANSPORT
-!     14-JUL-2013:  RSC RADIATION HEAT LOSS
-!     08-JUN-2015:  RSC REMOVE Nth SPECIES TREATMENT
-!     08-JUN-2015:  RSC UPDATED WALL BCS
+!   *************************************************************************
 
-!     DESCRIPTION
-!     -----------
-!     DNS CODE SENGA2
-!     COMPUTES RIGHT-HAND-SIDES FOR TIME INTEGRATION OF SCALAR PDEs
-!     INCLUDES MULTIPLE SCALARS AND MULTI-STEP CHEMISTRY
-!     ENERGY EQUATION REQUIRES PRESSURE-WORK AND VISCOUS WORK TERMS
-!     COMPUTED IN RHSVEL
+!   GLOBAL DATA
+!   ===========
+!   -------------------------------------------------------------------------
 
-!     *************************************************************************
+!   -------------------------------------------------------------------------
 
+!   LOCAL DATA
+!   ==========
+    real(kind=dp) :: ctrans(nspcmx)
+    real(kind=dp) :: fornow,combo1,combo2,combo3
+    integer :: ic,jc,kc,ispec
+    integer :: itint,icp,iindex,ipower,icoef1,icoef2
+    logical :: flmtds
+    integer :: rangexyz(6)
 
-!     GLOBAL DATA
-!     ===========
-!     -------------------------------------------------------------------------
+!    BEGIN
+!    =====
 
-!     -------------------------------------------------------------------------
+!   =========================================================================
+!   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+!   =========================================================================
 
+!   EVALUATE THE TEMPERATURE
+!   ------------------------
+!   ALSO PRESSURE, MIXTURE CP AND MIXTURE GAS CONSTANT
+    call temper
 
-!     LOCAL DATA
-!     ==========
-real(kind=dp) :: ctrans(nspcmx)
-real(kind=dp) :: fornow,combo1,combo2,combo3
-INTEGER :: ic,jc,kc,ispec
-INTEGER :: itint,icp,iindex,ipower,icoef1,icoef2
-LOGICAL :: flmtds
-INTEGER :: rangexyz(6)
+!                                                             PRUN,TRUN = P,T
+!                                                         STORE7 = RHO*MIX RG
+!   =========================================================================
 
-!     BEGIN
-!     =====
+!   COLLECT MIXTURE CP AND GAS CONSTANT FOR BCs
+!   -------------------------------------------
 
-!     =========================================================================
-!     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-!     =========================================================================
+!   X-DIRECTION
+    IF(fxlcnv)THEN
+        rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_CPandGAS_xdir, "COLLECT CP AND GAS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strgxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_strrxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
 
-!     EVALUATE THE TEMPERATURE
-!     ------------------------
-!     ALSO PRESSURE, MIXTURE CP AND MIXTURE GAS CONSTANT
-CALL temper
-!                                                               PRUN,TRUN = P,T
-!                                                           STORE7 = RHO*MIX RG
-!     =========================================================================
+    END IF
+    IF(fxrcnv)THEN
+        rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_CPandGAS_xdir, "COLLECT CP AND GAS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strgxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_strrxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
 
-!     COLLECT MIXTURE CP AND GAS CONSTANT FOR BCs
-!     -------------------------------------------
+    END IF
 
-!     X-DIRECTION
-IF(fxlcnv)THEN
-    rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_CPandGAS_xdir, "COLLECT CP AND GAS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strgxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_strrxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+!   Y-DIRECTION
+    IF(fylcnv)THEN
+        rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_CPandGAS_ydir, "COLLECT CP AND GAS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strgyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_strryl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
 
-END IF
-IF(fxrcnv)THEN
-    rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_CPandGAS_xdir, "COLLECT CP AND GAS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strgxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_strrxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+    END IF
+    IF(fyrcnv)THEN
+        rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_CPandGAS_ydir, "COLLECT CP AND GAS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strgyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_strryr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
 
-END IF
+    END IF
 
-!     Y-DIRECTION
-IF(fylcnv)THEN
-    rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_CPandGAS_ydir, "COLLECT CP AND GAS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strgyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_strryl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+!   Z-DIRECTION
+    IF(fzlcnv)THEN
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+        call ops_par_loop(boundary_kernel_CPandGAS_zdir, "COLLECT CP AND GAS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strgzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_strrzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
 
-END IF
-IF(fyrcnv)THEN
-    rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_CPandGAS_ydir, "COLLECT CP AND GAS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strgyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_strryr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+    END IF
+    IF(fzrcnv)THEN
+        rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+        call ops_par_loop(boundary_kernel_CPandGAS_zdir, "COLLECT CP AND GAS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strgzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_strrzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
 
-END IF
+    END IF
 
-!     Z-DIRECTION
-IF(fzlcnv)THEN
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
-    call ops_par_loop(boundary_kernel_CPandGAS_zdir, "COLLECT CP AND GAS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strgzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_strrzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+!                                                            ALL STORES CLEAR
+!   =========================================================================
 
-END IF
-IF(fzrcnv)THEN
-    rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
-    call ops_par_loop(boundary_kernel_CPandGAS_zdir, "COLLECT CP AND GAS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strgzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_strrzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+!   MASS FLUX DIVERGENCE
+!   --------------------
+!   URHS,VRHS,WRHS CONTAIN RHO U, RHO V, RHO W
 
-END IF
-!                                                              ALL STORES CLEAR
-!     =========================================================================
-
-!     MASS FLUX DIVERGENCE
-!     --------------------
-!     URHS,VRHS,WRHS CONTAIN RHO U, RHO V, RHO W
-
-CALL dfbydx(d_urhs,d_store1)
-CALL dfbydy(d_vrhs,d_store2)
-CALL dfbydz(d_wrhs,d_store3)
+    call dfbydx(d_urhs,d_store1)
+    call dfbydy(d_vrhs,d_store2)
+    call dfbydz(d_wrhs,d_store3)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
     
@@ -161,129 +157,130 @@ CALL dfbydz(d_wrhs,d_store3)
                     ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ)) 
 
-!                                                              ALL STORES CLEAR
-!     =========================================================================
-!     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-!     =========================================================================
+!                                                            ALL STORES CLEAR
+!   =========================================================================
+!   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+!   =========================================================================
 
-!     INTERNAL ENERGY EQUATION
-!     ========================
+!   INTERNAL ENERGY EQUATION
+!   ========================
 
-!     CONVERT INTERNAL ENERGY
-!     -----------------------
+!   CONVERT INTERNAL ENERGY
+!   -----------------------
 
-!     ERHS CONTAINS RHO E: CONVERT TO E
-!     E IS PARALLEL
+!   ERHS CONTAINS RHO E: CONVERT TO E
+!   E IS PARALLEL
     rangexyz = (/istalt,istolt,jstalt,jstolt,kstalt,kstolt/)
     call ops_par_loop(math_kernel_eqS, "A=A/B", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ))
 
-!                                                              ALL STORES CLEAR
-!     =========================================================================
+!                                                            ALL STORES CLEAR
+!   =========================================================================
 
-!     COLLECT INTERNAL ENERGY FOR BCs
-!     -------------------------------
+!   COLLECT INTERNAL ENERGY FOR BCs
+!   -------------------------------
 
-!     X-DIRECTION
-IF(fxlcnv)THEN
-    rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_internalenergy_xdir, "COLLECT INTERNAL ENERGY FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strexl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+!   X-DIRECTION
+    IF(fxlcnv)THEN
+        rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_internalenergy_xdir, "COLLECT INTERNAL ENERGY FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strexl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
 
-END IF
-IF(fxrcnv)THEN
-    rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_internalenergy_xdir, "COLLECT INTERNAL ENERGY FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strexr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+    END IF
+    IF(fxrcnv)THEN
+        rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_internalenergy_xdir, "COLLECT INTERNAL ENERGY FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strexr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
 
-END IF
+    END IF
 
-!     Y-DIRECTION
-IF(fylcnv)THEN
-    rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_internalenergy_ydir, "COLLECT INTERNAL ENERGY FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_streyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+!   Y-DIRECTION
+    IF(fylcnv)THEN
+        rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_internalenergy_ydir, "COLLECT INTERNAL ENERGY FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_streyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
 
-END IF
-IF(fyrcnv)THEN
-    rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_internalenergy_ydir, "COLLECT INTERNAL ENERGY FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_streyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+    END IF
+    IF(fyrcnv)THEN
+        rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_internalenergy_ydir, "COLLECT INTERNAL ENERGY FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_streyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
 
-END IF
+    END IF
 
-!     Z-DIRECTION
-IF(fzlcnv)THEN
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
-    call ops_par_loop(boundary_kernel_internalenergy_zdir, "COLLECT INTERNAL ENERGY FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strezl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+!   Z-DIRECTION
+    IF(fzlcnv)THEN
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+        call ops_par_loop(boundary_kernel_internalenergy_zdir, "COLLECT INTERNAL ENERGY FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strezl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
 
-END IF
-IF(fzrcnv)THEN
-    rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
-    call ops_par_loop(boundary_kernel_internalenergy_zdir, "COLLECT INTERNAL ENERGY FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strezr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+    END IF
+    IF(fzrcnv)THEN
+        rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+        call ops_par_loop(boundary_kernel_internalenergy_zdir, "COLLECT INTERNAL ENERGY FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strezr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
 
-END IF
-!                                                              ALL STORES CLEAR
-!     =========================================================================
+    END IF
 
-!     E EQUATION: CONVECTIVE TERMS
-!     ----------------------------
-!     HALF E DIV RHO U
+!                                                            ALL STORES CLEAR
+!   =========================================================================
 
-!     COLLECT E DIV RHO U IN STORE4 FOR NOW
+!   E EQUATION: CONVECTIVE TERMS
+!   ----------------------------
+!   HALF E DIV RHO U
+
+!   COLLECT E DIV RHO U IN STORE4 FOR NOW
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
     call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_divm, 1, s3d_000, "real(dp)", OPS_READ))
 
-!                                                          STORE4 = E DIV RHO U
-!     =========================================================================
+!                                                        STORE4 = E DIV RHO U
+!   =========================================================================
 
-!     E EQUATION: CONVECTIVE TERMS
-!     ----------------------------
-!     HALF DIV RHO U E
+!   E EQUATION: CONVECTIVE TERMS
+!   ----------------------------
+!   HALF DIV RHO U E
 
-!     D/DX RHO U E
-!     RHO U E IS PARALLEL
+!   D/DX RHO U E
+!   RHO U E IS PARALLEL
     rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
     call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_READ))
 
-CALL dfbydx(d_store7,d_store1)
+    call dfbydx(d_store7,d_store1)
 
-!     D/DY RHO V E
-!     RHO V E IS PARALLEL
+!   D/DY RHO V E
+!   RHO V E IS PARALLEL
     rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
     call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
                         ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_READ))
     
-CALL dfbydy(d_store7,d_store2)
+    call dfbydy(d_store7,d_store2)
 
-!     D/DZ RHO W E
-!     RHO W E IS PARALLEL
+!   D/DZ RHO W E
+!   RHO W E IS PARALLEL
     rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
     call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
                         ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_READ))
 
-CALL dfbydz(d_store7,d_store3)
+    call dfbydz(d_store7,d_store3)
 
-!     COLLECT DIV RHO U E IN STORE4 FOR NOW
+!   COLLECT DIV RHO U E IN STORE4 FOR NOW
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
     call ops_par_loop(math_kernel_eqM, "A=A+B+C+D", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_WRITE), &
@@ -291,18 +288,18 @@ CALL dfbydz(d_store7,d_store3)
                         ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
                         ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
 
-!                                            STORE4 = E DIV RHO U + DIV RHO U E
-!     =========================================================================
+!                                          STORE4 = E DIV RHO U + DIV RHO U E
+!   =========================================================================
 
-!     E EQUATION: CONVECTIVE TERMS
-!     ----------------------------
-!     HALF RHO U.DEL E
+!   E EQUATION: CONVECTIVE TERMS
+!   ----------------------------
+!   HALF RHO U.DEL E
 
-CALL dfbydx(d_erhs,d_store1)
-CALL dfbydy(d_erhs,d_store2)
-CALL dfbydz(d_erhs,d_store3)
+    call dfbydx(d_erhs,d_store1)
+    call dfbydy(d_erhs,d_store2)
+    call dfbydz(d_erhs,d_store3)
 
-!     COLLECT ALL CONVECTIVE TERMS IN ERHS
+!   COLLECT ALL CONVECTIVE TERMS IN ERHS
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
     call ops_par_loop(math_kernel_eqAD, "A = -half*(B+C*D+E*F+G*H)", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
@@ -314,117 +311,117 @@ CALL dfbydz(d_erhs,d_store3)
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_READ))
 
-!     -------------------------------------
-!     E EQUATION: CONVECTIVE TERMS COMPLETE
-!     -------------------------------------
-!                                                              ALL STORES CLEAR
-!     =========================================================================
+!   -------------------------------------
+!   E EQUATION: CONVECTIVE TERMS COMPLETE
+!   -------------------------------------
+!                                                            ALL STORES CLEAR
+!   =========================================================================
 
-!     E-EQUATION: HEAT FLUX TERMS
-!     ---------------------------
+!   E-EQUATION: HEAT FLUX TERMS
+!   ---------------------------
 
-!     TEMPERATURE GRADIENTS
-CALL dfbydx(d_trun,d_store1)
-CALL dfbydy(d_trun,d_store2)
-CALL dfbydz(d_trun,d_store3)
+!   TEMPERATURE GRADIENTS
+    call dfbydx(d_trun,d_store1)
+    call dfbydy(d_trun,d_store2)
+    call dfbydz(d_trun,d_store3)
 
-!                                                         STORE1,2,3 = DTDX,Y,Z
-!     =========================================================================
+!                                                       STORE1,2,3 = DTDX,Y,Z
+!   =========================================================================
 
-!     COLLECT TEMPERATURE AND ITS GRADIENTS FOR BCs
-!     ---------------------------------------------
+!   COLLECT TEMPERATURE AND ITS GRADIENTS FOR BCs
+!   ---------------------------------------------
 
-!     X-DIRECTION
-IF(fxlcnv)THEN
+!   X-DIRECTION
+    IF(fxlcnv) THEN
+        rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_temperature_xdir, "COLLECT TEMPERATURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_bcltxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
 
-    rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_temperature_xdir, "COLLECT TEMPERATURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bcltxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+    END IF
+    IF(fxrcnv) THEN
+        rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_temperature_xdir, "COLLECT TEMPERATURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_bcltxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
 
-END IF
-IF(fxrcnv)THEN
-    rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_temperature_xdir, "COLLECT TEMPERATURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bcltxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+    END IF
 
-END IF
+!   Y-DIRECTION
+    IF(fylcnv)THEN
+        rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_temperature_ydir, "COLLECT TEMPERATURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_bcltyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
 
-!     Y-DIRECTION
-IF(fylcnv)THEN
-    rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_temperature_ydir, "COLLECT TEMPERATURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bcltyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+    END IF
+    IF(fyrcnv)THEN
+        rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+        call ops_par_loop(boundary_kernel_temperature_ydir, "COLLECT TEMPERATURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_bcltyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
 
-END IF
-IF(fyrcnv)THEN
-    rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_temperature_ydir, "COLLECT TEMPERATURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bcltyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+    END IF
 
-END IF
+!   Z-DIRECTION
+    IF(fzlcnv)THEN
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+        call ops_par_loop(boundary_kernel_temperature_zdir, "COLLECT TEMPERATURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_bcltzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
 
-!     Z-DIRECTION
-IF(fzlcnv)THEN
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
-    call ops_par_loop(boundary_kernel_temperature_zdir, "COLLECT TEMPERATURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bcltzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+    END IF
+    IF(fzrcnv)THEN
+        rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+        call ops_par_loop(boundary_kernel_temperature_zdir, "COLLECT TEMPERATURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_bcltzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
 
-END IF
-IF(fzrcnv)THEN
-    rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
-    call ops_par_loop(boundary_kernel_temperature_zdir, "COLLECT TEMPERATURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bcltzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+    END IF
 
-END IF
-!                                                         STORE1,2,3 = DTDX,Y,Z
-!     =========================================================================
+!                                                       STORE1,2,3 = DTDX,Y,Z
+!   =========================================================================
 
-!     E-EQUATION: HEAT FLUX TERMS
-!     ---------------------------
+!   E-EQUATION: HEAT FLUX TERMS
+!   ---------------------------
 
-!     THERMAL CONDUCTIVITY
-!     ANALYTICAL FUNCTION OF TEMPERATURE
-!     TRANSP CONTAINS MIXTURE CP
-!     STORE CONDUCTIVITY/CP IN TRANSP FOR USE IN DIFFUSIVITY AND VISCOSITY
-!     STORE CONDUCTIVITY IN STORE7 FOR NOW
+!   THERMAL CONDUCTIVITY
+!   ANALYTICAL FUNCTION OF TEMPERATURE
+!   TRANSP CONTAINS MIXTURE CP
+!   STORE CONDUCTIVITY/CP IN TRANSP FOR USE IN DIFFUSIVITY AND VISCOSITY
+!   STORE CONDUCTIVITY IN STORE7 FOR NOW
 
-!     THERMAL CONDUCTIVITY IS PARALLEL
-DO kc = kstab,kstob
-  DO jc = jstab,jstob
-    DO ic = istab,istob
+!   THERMAL CONDUCTIVITY IS PARALLEL
+    DO kc = kstab,kstob
+        DO jc = jstab,jstob
+            DO ic = istab,istob
       
       fornow = alamda*EXP(rlamda*LOG(trun(ic,jc,kc)))
       store7(ic,jc,kc) = fornow*transp(ic,jc,kc)
       transp(ic,jc,kc) = fornow
       
     END DO
-  END DO
-END DO
+    END DO
+    END DO
 
-!     MIXTURE AVERAGED TRANSPORT
-!     RSC 17-APR-2013
-!     THERMAL CONDUCTIVITY
+!   MIXTURE AVERAGED TRANSPORT
+!   RSC 17-APR-2013
+!   THERMAL CONDUCTIVITY
 
-IF(flmavt)THEN
-  DO kc = kstab,kstob
+    IF(flmavt)THEN
+    DO kc = kstab,kstob
     DO jc = jstab,jstob
       DO ic = istab,istob
         
@@ -462,26 +459,28 @@ IF(flmavt)THEN
         
       END DO
     END DO
-  END DO
+    END DO
   
-END IF
+    END IF
 
-!     CONDUCTIVITY GRADIENTS
-CALL dfbydx(d_store7,d_store4)
-CALL dfbydy(d_store7,d_store5)
-CALL dfbydz(d_store7,d_store6)
+!   CONDUCTIVITY GRADIENTS
+    call dfbydx(d_store7,d_store4)
+    call dfbydy(d_store7,d_store5)
+    call dfbydz(d_store7,d_store6)
 
-!     BOUNDARY CONDITIONS
-!     BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-IF(fxlcon)CALL zeroxl(d_store4)
-IF(fxrcon)CALL zeroxr(d_store4)
-!     BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-IF(fylcon)CALL zeroyl(d_store5)
-IF(fyrcon)CALL zeroyr(d_store5)
-!     BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-!     RSC/TDD BUG FIX FZLCON
-IF(fzlcon)CALL zerozl(d_store6)
-IF(fzrcon)CALL zerozr(d_store6)
+!   BOUNDARY CONDITIONS
+!   BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+    IF(fxlcon) call zeroxl(d_store4)
+    IF(fxrcon) call zeroxr(d_store4)
+
+!   BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+    IF(fylcon) call zeroyl(d_store5)
+    IF(fyrcon) call zeroyr(d_store5)
+
+!   BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+!   RSC/TDD BUG FIX FZLCON
+    IF(fzlcon) call zerozl(d_store6)
+    IF(fzrcon) call zerozr(d_store6)
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
     call ops_par_loop(math_kernel_eqAA, "A = A+(B*C+D*E+F*G)", senga_grid, 3, rangexyz,  &
@@ -493,97 +492,93 @@ IF(fzrcon)CALL zerozr(d_store6)
                     ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
 
-!                                                         STORE1,2,3 = DTDX,Y,Z
-!                                                         STORE7 = CONDUCTIVITY
-!     =========================================================================
+!                                                       STORE1,2,3 = DTDX,Y,Z
+!                                                       STORE7 = CONDUCTIVITY
+!   =========================================================================
 
-!     E-EQUATION: HEAT FLUX TERMS
-!     ---------------------------
-!     WALL BC: THERMAL CONDUCTION TERMS
-IF(fxlcnw)THEN
+!   E-EQUATION: HEAT FLUX TERMS
+!   ---------------------------
+!   WALL BC: THERMAL CONDUCTION TERMS
+    IF(fxlcnw) THEN
+        rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(heat_flux_kernel_thermal_fxlcnw, "HEAT FLUX: Thermal fxlcnw", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_store1, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store7, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(acbcxl, 1, "real(dp)", OPS_READ))
 
-    rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(heat_flux_kernel_thermal_fxlcnw, "HEAT FLUX: Thermal fxlcnw", senga_grid, 3, rangexyz,  &
-                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                ops_arg_dat(d_store1, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
-                ops_arg_dat(d_store7, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
-                ops_arg_gbl(acbcxl, 1, "real(dp)", OPS_READ))
+    END IF
+    IF(fxrcnw) THEN
+        rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(heat_flux_kernel_thermal_fxrcnw, "HEAT FLUX: Thermal fxrcnw", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_m100_to_m400_x, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_m100_to_m400_x, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(acbcxr, 1, "real(dp)", OPS_READ))
 
-END IF
-IF(fxrcnw)THEN
+    END IF
+    IF(fylcnw) THEN
+        rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+        call ops_par_loop(heat_flux_kernel_thermal_fylcnw, "HEAT FLUX: Thermal fylcnw", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store2, 1, s3d_p010_to_p040_y, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_p010_to_p040_y, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(acbcyl, 1, "real(dp)", OPS_READ))
 
-    rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(heat_flux_kernel_thermal_fxrcnw, "HEAT FLUX: Thermal fxrcnw", senga_grid, 3, rangexyz,  &
-                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                ops_arg_dat(d_store1, 1, s3d_m100_to_m400_x, "real(dp)", OPS_READ), &
-                ops_arg_dat(d_store7, 1, s3d_m100_to_m400_x, "real(dp)", OPS_READ), &
-                ops_arg_gbl(acbcxr, 1, "real(dp)", OPS_READ))
+    END IF
+    IF(fyrcnw) THEN
+        rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+        call ops_par_loop(heat_flux_kernel_thermal_fyrcnw, "HEAT FLUX: Thermal fyrcnw", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store2, 1, s3d_m010_to_m040_y, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_m010_to_m040_y, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(acbcyr, 1, "real(dp)", OPS_READ))
 
-END IF
-IF(fylcnw)THEN
+    END IF
+    IF(fzlcnw) THEN
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+        call ops_par_loop(heat_flux_kernel_thermal_fzlcnw, "HEAT FLUX: Thermal fzlcnw", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store3, 1, s3d_p001_to_p004_z, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_p001_to_p004_z, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(acbczl, 1, "real(dp)", OPS_READ))    
 
-    rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
-    call ops_par_loop(heat_flux_kernel_thermal_fylcnw, "HEAT FLUX: Thermal fylcnw", senga_grid, 3, rangexyz,  &
-                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                ops_arg_dat(d_store2, 1, s3d_p010_to_p040_y, "real(dp)", OPS_READ), &
-                ops_arg_dat(d_store7, 1, s3d_p010_to_p040_y, "real(dp)", OPS_READ), &
-                ops_arg_gbl(acbcyl, 1, "real(dp)", OPS_READ))
+    END IF
+    IF(fzrcnw)THEN
+        rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+        call ops_par_loop(heat_flux_kernel_thermal_fzrcnw, "HEAT FLUX: Thermal fzrcnw", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_store3, 1, s3d_m001_to_m004_z, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store7, 1, s3d_m001_to_m004_z, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(acbczr, 1, "real(dp)", OPS_READ))
+    END IF
 
-END IF
-IF(fyrcnw)THEN
+!   =========================================================================
 
-    rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
-    call ops_par_loop(heat_flux_kernel_thermal_fyrcnw, "HEAT FLUX: Thermal fyrcnw", senga_grid, 3, rangexyz,  &
-                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                ops_arg_dat(d_store2, 1, s3d_m010_to_m040_y, "real(dp)", OPS_READ), &
-                ops_arg_dat(d_store7, 1, s3d_m010_to_m040_y, "real(dp)", OPS_READ), &
-                ops_arg_gbl(acbcyr, 1, "real(dp)", OPS_READ))
+!   E-EQUATION: HEAT FLUX TERMS
+!   ---------------------------
+!   SECOND DERIVATIVE TERMS
 
-END IF
-IF(fzlcnw)THEN
+!   TEMPERATURE SECOND DERIVATIVES
+    call d2fdx2(d_trun,d_store1)
+    call d2fdy2(d_trun,d_store2)
+    call d2fdz2(d_trun,d_store3)
 
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
-    call ops_par_loop(heat_flux_kernel_thermal_fzlcnw, "HEAT FLUX: Thermal fzlcnw", senga_grid, 3, rangexyz,  &
-                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                ops_arg_dat(d_store3, 1, s3d_p001_to_p004_z, "real(dp)", OPS_READ), &
-                ops_arg_dat(d_store7, 1, s3d_p001_to_p004_z, "real(dp)", OPS_READ), &
-                ops_arg_gbl(acbczl, 1, "real(dp)", OPS_READ))    
+!   BOUNDARY CONDITIONS
+!   BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+    IF(fxlcon) call zeroxl(d_store1)
+    IF(fxrcon) call zeroxr(d_store1)
 
-END IF
-IF(fzrcnw)THEN
+!   BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+    IF(fylcon) call zeroyl(d_store2)
+    IF(fyrcon) call zeroyr(d_store2)
 
-    rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
-    call ops_par_loop(heat_flux_kernel_thermal_fzrcnw, "HEAT FLUX: Thermal fzrcnw", senga_grid, 3, rangexyz,  &
-                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                ops_arg_dat(d_store3, 1, s3d_m001_to_m004_z, "real(dp)", OPS_READ), &
-                ops_arg_dat(d_store7, 1, s3d_m001_to_m004_z, "real(dp)", OPS_READ), &
-                ops_arg_gbl(acbczr, 1, "real(dp)", OPS_READ))
-END IF
+!   BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+!   RSC 28-JUN-2015 BUG FIX FZLCON
+    IF(fzlcon) call zerozl(d_store3)
+    IF(fzrcon) call zerozr(d_store3)
 
-!     =========================================================================
-
-!     E-EQUATION: HEAT FLUX TERMS
-!     ---------------------------
-!     SECOND DERIVATIVE TERMS
-
-!     TEMPERATURE SECOND DERIVATIVES
-CALL d2fdx2(d_trun,d_store1)
-CALL d2fdy2(d_trun,d_store2)
-CALL d2fdz2(d_trun,d_store3)
-
-!     BOUNDARY CONDITIONS
-!     BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-IF(fxlcon)CALL zeroxl(d_store1)
-IF(fxrcon)CALL zeroxr(d_store1)
-!     BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-IF(fylcon)CALL zeroyl(d_store2)
-IF(fyrcon)CALL zeroyr(d_store2)
-!     BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-!     RSC 28-JUN-2015 BUG FIX FZLCON
-IF(fzlcon)CALL zerozl(d_store3)
-IF(fzrcon)CALL zerozr(d_store3)
-
-!     COLLECT CONDUCTIVITY TERMS
+!   COLLECT CONDUCTIVITY TERMS
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
     call ops_par_loop(math_kernel_eqY, "A = A+(B+C+D)*E", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
@@ -592,18 +587,18 @@ IF(fzrcon)CALL zerozr(d_store3)
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
 
-!     ---------------------------------------------------
-!     E-EQUATION: FURTHER HEAT FLUX TERMS EVALUATED BELOW
-!     ---------------------------------------------------
-!     E-EQUATION: PRESSURE-WORK AND VISCOUS WORK TERMS
-!                 EVALUATED IN SUBROUTINE RHSVEL
-!     ---------------------------------------------------
-!                                                              ALL STORES CLEAR
-!     =========================================================================
+!   ---------------------------------------------------
+!   E-EQUATION: FURTHER HEAT FLUX TERMS EVALUATED BELOW
+!   ---------------------------------------------------
+!   E-EQUATION: PRESSURE-WORK AND VISCOUS WORK TERMS
+!               EVALUATED IN SUBROUTINE RHSVEL
+!   ---------------------------------------------------
+!                                                            ALL STORES CLEAR
+!   =========================================================================
 
-!     E-EQUATION: RADIATION HEAT LOSS
-!     -------------------------------
-    IF(flradn)CALL radcal
+!   E-EQUATION: RADIATION HEAT LOSS
+!   -------------------------------
+    IF(flradn) call radcal
 
 !   =========================================================================
 
@@ -615,7 +610,7 @@ IF(fzrcon)CALL zerozr(d_store3)
 
 !   REACTION RATE FOR ALL SPECIES
 !   -----------------------------
-    CALL chrate
+    call chrate
 !---UA
     DO ispec = 1,nspec
         DO kc = kstal,kstol
@@ -627,7 +622,7 @@ IF(fzrcon)CALL zerozr(d_store3)
         END DO
     END DO
 !---end-UA
-!                                                          RATE = REACTION RATE
+!                                                        RATE = REACTION RATE
 !   =========================================================================
 
 !   COLLECT REACTION RATE FOR BCs
@@ -638,9 +633,9 @@ IF(fzrcon)CALL zerozr(d_store3)
         DO ispec = 1,nspec
             rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
             call ops_par_loop(boundary_kernel_reaction_xdir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_ratexl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ratexl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END DO
     END IF
@@ -648,9 +643,9 @@ IF(fzrcon)CALL zerozr(d_store3)
         DO ispec = 1,nspec
             rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
             call ops_par_loop(boundary_kernel_reaction_xdir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_ratexr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ratexr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END DO
     END IF
@@ -660,9 +655,9 @@ IF(fzrcon)CALL zerozr(d_store3)
         DO ispec = 1,nspec
             rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
             call ops_par_loop(boundary_kernel_reaction_ydir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_rateyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_rateyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END DO
     END IF
@@ -670,9 +665,9 @@ IF(fzrcon)CALL zerozr(d_store3)
         DO ispec = 1,nspec
             rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
             call ops_par_loop(boundary_kernel_reaction_ydir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_rateyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_rateyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END DO
     END IF
@@ -682,9 +677,9 @@ IF(fzrcon)CALL zerozr(d_store3)
         DO ispec = 1,nspec
             rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
             call ops_par_loop(boundary_kernel_reaction_zdir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_ratezl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ratezl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END DO
     END IF
@@ -692,106 +687,106 @@ IF(fzrcon)CALL zerozr(d_store3)
         DO ispec = 1,nspec
             rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
             call ops_par_loop(boundary_kernel_reaction_zdir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_ratezr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ratezr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END DO
     END IF
-!                                                          RATE = REACTION RATE
-!     =========================================================================
 
-!     ZERO THE ACCUMULATORS FOR THE DIFFUSION CORRECTION VELOCITY
-!     AND ITS DIVERGENCE
+!                                                        RATE = REACTION RATE
+!   =========================================================================
+
+!   ZERO THE ACCUMULATORS FOR THE DIFFUSION CORRECTION VELOCITY
+!   AND ITS DIVERGENCE
 
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
     call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_ucor, 1, s3d_000, "real(dp)", OPS_WRITE))
+                    ops_arg_dat(d_ucor, 1, s3d_000, "real(dp)", OPS_WRITE))
 
     call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_vcor, 1, s3d_000, "real(dp)", OPS_WRITE))
+                    ops_arg_dat(d_vcor, 1, s3d_000, "real(dp)", OPS_WRITE))
 
     call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_wcor, 1, s3d_000, "real(dp)", OPS_WRITE))
+                    ops_arg_dat(d_wcor, 1, s3d_000, "real(dp)", OPS_WRITE))
 
     call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE))
+                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE))
     
 
-!     ZERO THE ACCUMULATOR FOR THE MIXTURE ENTHALPY
-!     MIXTURE H IS PARALLEL
+!   ZERO THE ACCUMULATOR FOR THE MIXTURE ENTHALPY
+!   MIXTURE H IS PARALLEL
 
     rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
     call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_WRITE))
+                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_WRITE))
 
-!                                                          RATE = REACTION RATE
-!                                                           VTMP = DIV CORR VEL
-!                                                       WTMP = MIXTURE H
-!     =========================================================================
+!                                                        RATE = REACTION RATE
+!                                                         VTMP = DIV CORR VEL
+!                                                     WTMP = MIXTURE H
+!   =========================================================================
 
-!     MIXTURE AVERAGED TRANSPORT
-!     RSC 17-APR-2013
-!     EVALUATE FIRST AND SECOND DERIVATIVES
-!     OF LN(MIXTURE MOLAR MASS), LN(PRESSURE) AND LN(TEMPERATURE)
+!   MIXTURE AVERAGED TRANSPORT
+!   RSC 17-APR-2013
+!   EVALUATE FIRST AND SECOND DERIVATIVES
+!   OF LN(MIXTURE MOLAR MASS), LN(PRESSURE) AND LN(TEMPERATURE)
 
-!     MIXTURE MOLAR MASS
-IF(flmixw)THEN
+!   MIXTURE MOLAR MASS
+    IF(flmixw) THEN
 
-  DO kc = kstab,kstob
-    DO jc = jstab,jstob
-      DO ic = istab,istob
+        DO kc = kstab,kstob
+        DO jc = jstab,jstob
+        DO ic = istab,istob
 
         store7(ic,jc,kc) = LOG(wmomix(ic,jc,kc))
 
-      END DO
-    END DO
-  END DO
+        END DO
+        END DO
+        END DO
 
-  CALL dfbydx(d_store7,d_wd1x)
-  CALL dfbydy(d_store7,d_wd1y)
-  CALL dfbydz(d_store7,d_wd1z)
-  CALL d2fdx2(d_store7,d_wd2x)
-  CALL d2fdy2(d_store7,d_wd2y)
-  CALL d2fdz2(d_store7,d_wd2z)
-  
-END IF
+        call dfbydx(d_store7,d_wd1x)
+        call dfbydy(d_store7,d_wd1y)
+        call dfbydz(d_store7,d_wd1z)
+        call d2fdx2(d_store7,d_wd2x)
+        call d2fdy2(d_store7,d_wd2y)
+        call d2fdz2(d_store7,d_wd2z)
 
-!     PRESSURE
-IF(flmixp)THEN
-  DO kc = kstab,kstob
-    DO jc = jstab,jstob
-      DO ic = istab,istob
+    END IF
+
+!   PRESSURE
+    IF(flmixp) THEN
+        DO kc = kstab,kstob
+        DO jc = jstab,jstob
+        DO ic = istab,istob
         
         store7(ic,jc,kc) = LOG(prun(ic,jc,kc))
         
-      END DO
-    END DO
-  END DO
+        END DO
+        END DO
+        END DO
   
-  CALL dfbydx(d_store7,d_pd1x)
-  CALL dfbydy(d_store7,d_pd1y)
-  CALL dfbydz(d_store7,d_pd1z)
-  CALL d2fdx2(d_store7,d_pd2x)
-  CALL d2fdy2(d_store7,d_pd2y)
-  CALL d2fdz2(d_store7,d_pd2z)
-  
-END IF
+        call dfbydx(d_store7,d_pd1x)
+        call dfbydy(d_store7,d_pd1y)
+        call dfbydz(d_store7,d_pd1z)
+        call d2fdx2(d_store7,d_pd2x)
+        call d2fdy2(d_store7,d_pd2y)
+        call d2fdz2(d_store7,d_pd2z)
 
-!     TEMPERATURE
-IF(flmixt)THEN
-  
+    END IF
+
+!   TEMPERATURE
+    IF(flmixt)THEN
 !       TRANSP CONTAINS LN(T/TDIFGB)
-  CALL dfbydx(d_transp,d_td1x)
-  CALL dfbydy(d_transp,d_td1y)
-  CALL dfbydz(d_transp,d_td1z)
-  CALL d2fdx2(d_transp,d_td2x)
-  CALL d2fdy2(d_transp,d_td2y)
-  CALL d2fdz2(d_transp,d_td2z)
-  
-END IF
+        call dfbydx(d_transp,d_td1x)
+        call dfbydy(d_transp,d_td1y)
+        call dfbydz(d_transp,d_td1z)
+        call d2fdx2(d_transp,d_td2x)
+        call d2fdy2(d_transp,d_td2y)
+        call d2fdz2(d_transp,d_td2z)
 
-!     =========================================================================
+    END IF
+
+!   =========================================================================
 
 !   RUN THROUGH ALL SPECIES
 !   -----------------------
@@ -801,8 +796,8 @@ END IF
   
 !   =======================================================================
   
-!   YRHS CONTAINS RHO Y: CONVERT TO Y
-!   Y IS PARALLEL
+!       YRHS CONTAINS RHO Y: CONVERT TO Y
+!       Y IS PARALLEL
         DO kc = kstalt,kstolt
             DO jc = jstalt,jstolt
                 DO ic = istalt,istolt
@@ -867,29 +862,30 @@ END IF
   
 !       D/DZ RHO W Y
 !       RHO W Y IS PARALLEL
-  DO kc = kstab,kstob
-    DO jc = jstab,jstob
-      DO ic = istab,istob
+        DO kc = kstab,kstob
+        DO jc = jstab,jstob
+        DO ic = istab,istob
         
         store7(ic,jc,kc) = yrhs(ispec,ic,jc,kc)*wrhs(ic,jc,kc)
         
-      END DO
-    END DO
-  END DO
+        END DO
+        END DO
+        END DO
+
         call dfbydz(d_store7,d_store3)
   
 !       COLLECT DIV RHO U Y IN RATE FOR NOW
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      DO ic = istal,istol
+        DO kc = kstal,kstol
+        DO jc = jstal,jstol
+        DO ic = istal,istol
         
         rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc)  &
             - half*(store1(ic,jc,kc) + store2(ic,jc,kc)  &
             + store3(ic,jc,kc))
         
-      END DO
-    END DO
-  END DO
+        END DO
+        END DO
+        END DO
 !                                                  RATE = Y SOURCE TERMS
 !                                                           VTMP = DIV CORR VEL
 !                                                       WTMP = MIXTURE H
@@ -899,18 +895,20 @@ END IF
 !       ------------------------------------
   
 !       SPECIES MASS FRACTION GRADIENTS
-  DO kc = kstab,kstob
-    DO jc = jstab,jstob
-      DO ic = istab,istob
+        DO kc = kstab,kstob
+        DO jc = jstab,jstob
+        DO ic = istab,istob
         
         store7(ic,jc,kc) = yrhs(ispec,ic,jc,kc)
         
-      END DO
-    END DO
-  END DO
+        END DO
+        END DO
+        END DO
+
         call dfbydx(d_store7,d_store1)
         call dfbydy(d_store7,d_store2)
         call dfbydz(d_store7,d_store3)
+
 !                                                         STORE1,2,3 = DYDX,Y,Z
 !                                                         RATE = Y SOURCE TERMS
 !                                                           VTMP = DIV CORR VEL
@@ -924,62 +922,65 @@ END IF
         IF(fxlcnv) THEN
             rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
             call ops_par_loop(boundary_kernel_mass_xdir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_stryxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bclyxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_stryxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bclyxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END IF
         IF(fxrcnv) THEN
             rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
             call ops_par_loop(boundary_kernel_mass_xdir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_stryxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bclyxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_stryxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bclyxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
         END IF
 
 !       Y-DIRECTION: DYDY
         IF(fylcnv) THEN
             rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
             call ops_par_loop(boundary_kernel_mass_ydir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_stryyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bclyyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_stryyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bclyyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END IF
         IF(fyrcnv) THEN
             rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
             call ops_par_loop(boundary_kernel_mass_ydir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_stryyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bclyyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_stryyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bclyyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
         END IF
 
 !       Z-DIRECTION: DYDZ
         IF(fzlcnv) THEN
             rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
             call ops_par_loop(boundary_kernel_mass_zdir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_stryzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bclyzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_stryzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bclyzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
         END IF
         IF(fzrcnv) THEN
             rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
             call ops_par_loop(boundary_kernel_mass_zdir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_stryzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bclyzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_stryzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bclyzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END IF
 !                                                         STORE1,2,3 = DYDX,Y,Z
@@ -993,17 +994,17 @@ END IF
 !       HALF RHO U.DEL Y
   
 !       COLLECT HALF RHO U.DEL Y IN RATE FOR NOW
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      DO ic = istal,istol
+        DO kc = kstal,kstol
+        DO jc = jstal,jstol
+        DO ic = istal,istol
         
         rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc)  &
             - half*(store1(ic,jc,kc)*urhs(ic,jc,kc)  &
             + store2(ic,jc,kc)*vrhs(ic,jc,kc) + store3(ic,jc,kc)*wrhs(ic,jc,kc))
         
-      END DO
-    END DO
-  END DO
+        END DO
+        END DO
+        END DO
   
 !       -------------------------------------
 !       Y-EQUATION: CONVECTIVE TERMS COMPLETE
@@ -1041,12 +1042,12 @@ END IF
 !       MIXTURE AVERAGED TRANSPORT
 !       RSC 17-APR-2013
 !       TRANSP CONTAINS LN(T/TDIFGB)
-  IF(flmavt)THEN
+        IF(flmavt) THEN
     
-!         MASS DIFFUSIVITY FOR EACH SPECIES
-!         RELATIVE TO CURRENT SPECIES
-    DO kc = kstab,kstob
-      DO jc = jstab,jstob
+!       MASS DIFFUSIVITY FOR EACH SPECIES
+!       RELATIVE TO CURRENT SPECIES
+        DO kc = kstab,kstob
+        DO jc = jstab,jstob
         DO ic = istab,istob
           
           DO jspec = 1, nspec
@@ -1073,56 +1074,56 @@ END IF
           store7(ic,jc,kc) = difmix(ic,jc,kc)
           
         END DO
-      END DO
-    END DO
+        END DO
+            END DO
     
-  END IF
+        END IF
   
 !       -----------------------------------------------------------------------
   
 !       MIXTURE AVERAGED TRANSPORT
 !       RSC 17-APR-2013
 !       TRANSP CONTAINS LN(T/TDIFGB)
-  IF(flmtdr(ispec))THEN
+        IF(flmtdr(ispec))THEN
     
-!         THERMAL DIFFUSION RATIO FOR EACH SPECIES
-!         RELATIVE TO CURRENT SPECIES
+!           THERMAL DIFFUSION RATIO FOR EACH SPECIES
+!           RELATIVE TO CURRENT SPECIES
   
             rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
             call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_tdrmix, 1, s3d_000, "real(dp)", OPS_WRITE))
     
-    DO jspec = 1, nspec
+            DO jspec = 1, nspec
       
-      flmtds = flmtdr(jspec).AND.(ispec /= jspec)
-      IF(flmtds)THEN
+                flmtds = flmtdr(jspec).AND.(ispec /= jspec)
+                IF(flmtds)THEN
         
-        DO kc = kstab,kstob
-          DO jc = jstab,jstob
-            DO ic = istab,istob
+                DO kc = kstab,kstob
+                DO jc = jstab,jstob
+                DO ic = istab,istob
               
-!                   THERMAL DIFFUSION RATIO FOR THIS SPECIES PAIR
-              combo2 = trun(ic,jc,kc)/tdifgb
-              fornow = tdrcco(ncotdr,jspec,ispec)
-              DO icp = ncotm1,1,-1
+!               THERMAL DIFFUSION RATIO FOR THIS SPECIES PAIR
+                combo2 = trun(ic,jc,kc)/tdifgb
+                fornow = tdrcco(ncotdr,jspec,ispec)
+                DO icp = ncotm1,1,-1
                 fornow = fornow*combo2 + tdrcco(icp,jspec,ispec)
-              END DO
-              ctrans(jspec) = fornow
+                END DO
+                ctrans(jspec) = fornow
               
-!                   COMBINATION RULE FOR THERMAL DIFFUSIION RATIO
-              fornow = yrhs(jspec,ic,jc,kc)*ovwmol(jspec)
-              tdrmix(ic,jc,kc) = tdrmix(ic,jc,kc)  &
+!               COMBINATION RULE FOR THERMAL DIFFUSIION RATIO
+                fornow = yrhs(jspec,ic,jc,kc)*ovwmol(jspec)
+                tdrmix(ic,jc,kc) = tdrmix(ic,jc,kc)  &
                   + fornow*wmomix(ic,jc,kc)*ctrans(jspec)
               
-            END DO
-          END DO
-        END DO
+                END DO
+                END DO
+                END DO
         
-      END IF
+                END IF
       
-    END DO
+            END DO
     
-  END IF
+        END IF
   
 !       =======================================================================
   
@@ -1154,17 +1155,17 @@ END IF
 !       ----------------
   
 !       TEMPERATURE INTERVAL INDEXING
-  iindex = 1 + (ispec-1)/nspimx
-  ipower = ispec - (iindex-1)*nspimx - 1
-  icoef2 = ntbase**ipower
-  icoef1 = icoef2*ntbase
+        iindex = 1 + (ispec-1)/nspimx
+        ipower = ispec - (iindex-1)*nspimx - 1
+        icoef2 = ntbase**ipower
+        icoef1 = icoef2*ntbase
   
 !       SPECIES H IS PARALLEL
 !       STORE SPECIES H IN UTMP FOR NOW
 !       STORE MIXTURE H IN WTMP FOR NOW
-  DO kc = kstab,kstob
-    DO jc = jstab,jstob
-      DO ic = istab,istob
+        DO kc = kstab,kstob
+        DO jc = jstab,jstob
+        DO ic = istab,istob
         
         itint = 1 + MOD(itndex(ic,jc,kc,iindex),icoef1)/icoef2
         fornow = amasch(ncpoly(itint,ispec),itint,ispec)
@@ -1177,9 +1178,9 @@ END IF
 !             MIXTURE H
         wtmp(ic,jc,kc) = wtmp(ic,jc,kc) + utmp(ic,jc,kc)*yrhs(ispec,ic,jc,kc)
         
-      END DO
-    END DO
-  END DO
+        END DO
+        END DO
+        END DO
 !                                                         STORE1,2,3 = DYDX,Y,Z
 !                                                          STORE7 = DIFFUSIVITY
 !                                                  RATE = Y SOURCE TERMS
@@ -1195,17 +1196,17 @@ END IF
         IF(fxlcnv) THEN
             rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
             call ops_par_loop(boundary_kernel_speciesH_xdir, "COLLECT SPECIES H FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strhxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strhxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END IF
         IF(fxrcnv) THEN
             rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
             call ops_par_loop(boundary_kernel_speciesH_xdir, "COLLECT SPECIES H FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strhxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strhxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END IF
   
@@ -1213,17 +1214,17 @@ END IF
         IF(fylcnv) THEN
             rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
             call ops_par_loop(boundary_kernel_speciesH_ydir, "COLLECT SPECIES H FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strhyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strhyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END IF
         IF(fyrcnv) THEN
             rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
             call ops_par_loop(boundary_kernel_speciesH_ydir, "COLLECT SPECIES H FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strhyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strhyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END IF
   
@@ -1231,19 +1232,20 @@ END IF
         IF(fzlcnv) THEN
             rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
             call ops_par_loop(boundary_kernel_speciesH_zdir, "COLLECT SPECIES H FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strhzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strhzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END IF
         IF(fzrcnv) THEN
             rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
             call ops_par_loop(boundary_kernel_speciesH_zdir, "COLLECT SPECIES H FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strhzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strhzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END IF
+
 !                                                         STORE1,2,3 = DYDX,Y,Z
 !                                                          STORE7 = DIFFUSIVITY
 !                                                  RATE = Y SOURCE TERMS
@@ -1288,9 +1290,9 @@ END IF
         IF(fzldif) call zerozl(d_store6)
         IF(fzrdif) call zerozr(d_store6)
   
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      DO ic = istal,istol
+        DO kc = kstal,kstol
+        DO jc = jstal,jstol
+        DO ic = istal,istol
         
         fornow = store4(ic,jc,kc)*store1(ic,jc,kc)  &
             + store5(ic,jc,kc)*store2(ic,jc,kc)  &
@@ -1302,32 +1304,34 @@ END IF
 !             DIFFUSION CORRECTION VELOCITY DIVERGENCE
         vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
         
-      END DO
-    END DO
-  END DO
+        END DO
+        END DO
+        END DO
   
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-  IF(fxladb)CALL zeroxl(d_store4)
-  IF(fxradb)CALL zeroxr(d_store4)
+        IF(fxladb) call zeroxl(d_store4)
+        IF(fxradb) call zeroxr(d_store4)
+
 !       BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-  IF(fyladb)CALL zeroyl(d_store5)
-  IF(fyradb)CALL zeroyr(d_store5)
+        IF(fyladb) call zeroyl(d_store5)
+        IF(fyradb) call zeroyr(d_store5)
+
 !       BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-  IF(fzladb)CALL zerozl(d_store6)
-  IF(fzradb)CALL zerozr(d_store6)
+        IF(fzladb) call zerozl(d_store6)
+        IF(fzradb) call zerozr(d_store6)
 
 !       E EQUATION
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
 
 !                                                         STORE1,2,3 = DYDX,Y,Z
 !                                                          STORE7 = DIFFUSIVITY
@@ -1342,42 +1346,46 @@ END IF
 !       SPECIES ENTHALPY GRADIENT TERMS
   
 !       SPECIES ENTHALPY GRADIENTS
-  CALL dfbydx(d_utmp,d_store4)
-  CALL dfbydy(d_utmp,d_store5)
-  CALL dfbydz(d_utmp,d_store6)
+        call dfbydx(d_utmp,d_store4)
+        call dfbydy(d_utmp,d_store5)
+        call dfbydz(d_utmp,d_store6)
   
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fxldif)CALL zeroxl(d_store4)
-  IF(fxrdif)CALL zeroxr(d_store4)
+        IF(fxldif) call zeroxl(d_store4)
+        IF(fxrdif) call zeroxr(d_store4)
+
 !       BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fyldif)CALL zeroyl(d_store5)
-  IF(fyrdif)CALL zeroyr(d_store5)
+        IF(fyldif) call zeroyl(d_store5)
+        IF(fyrdif) call zeroyr(d_store5)
+
 !       BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fzldif)CALL zerozl(d_store6)
-  IF(fzrdif)CALL zerozr(d_store6)
+        IF(fzldif) call zerozl(d_store6)
+        IF(fzrdif) call zerozr(d_store6)
   
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-  IF(fxladb)CALL zeroxl(d_store4)
-  IF(fxradb)CALL zeroxr(d_store4)
-!       BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-  IF(fyladb)CALL zeroyl(d_store5)
-  IF(fyradb)CALL zeroyr(d_store5)
-!       BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-  IF(fzladb)CALL zerozl(d_store6)
-  IF(fzradb)CALL zerozr(d_store6)
+        IF(fxladb) call zeroxl(d_store4)
+        IF(fxradb) call zeroxr(d_store4)
 
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
+!       BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+        IF(fyladb) call zeroyl(d_store5)
+        IF(fyradb) call zeroyr(d_store5)
+
+!       BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+        IF(fzladb) call zerozl(d_store6)
+        IF(fzradb) call zerozr(d_store6)
+
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
 
 !                                                         STORE1,2,3 = DYDX,Y,Z
 !                                                          STORE7 = DIFFUSIVITY
@@ -1392,108 +1400,84 @@ END IF
 !       WALL BC: MASS DIFFUSION TERMS
 !       E-EQUATION: HEAT FLUX TERMS
 !       WALL BC: ENTHALPY DIFFUSION TERMS
-  IF(fxldfw)THEN
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        fornow = zero
-        DO ic = istap1,istow
-          
-          fornow = fornow + acbcxl(ic-1)*store7(ic,jc,kc)*store1(ic,jc,kc)
-          
-        END DO
-        rate(ispec,istal,jc,kc) = rate(ispec,istal,jc,kc) + fornow
-        vtmp(istal,jc,kc) = vtmp(istal,jc,kc) + fornow
-        erhs(istal,jc,kc) = erhs(istal,jc,kc) + fornow*utmp(istal,jc,kc)
-        
-      END DO
-    END DO
-  END IF
-  IF(fxrdfw)THEN
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        fornow = zero
-        DO ic = istaw,istom1
-          
-          fornow = fornow + acbcxr(istol-ic)*store7(ic,jc,kc)*store1(ic,jc,kc)
-          
-        END DO
-        rate(ispec,istol,jc,kc) = rate(ispec,istol,jc,kc) + fornow
-        vtmp(istol,jc,kc) = vtmp(istol,jc,kc) + fornow
-        erhs(istol,jc,kc) = erhs(istol,jc,kc) + fornow*utmp(istol,jc,kc)
-        
-      END DO
-    END DO
-  END IF
-  IF(fyldfw)THEN
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        fornow = zero
-        DO jc = jstap1,jstow
-          
-          fornow = fornow + acbcyl(jc-1)*store7(ic,jc,kc)*store2(ic,jc,kc)
-          
-        END DO
-        rate(ispec,ic,jstal,kc) = rate(ispec,ic,jstal,kc) + fornow
-        vtmp(ic,jstal,kc) = vtmp(ic,jstal,kc) + fornow
-        erhs(ic,jstal,kc) = erhs(ic,jstal,kc) + fornow*utmp(ic,jstal,kc)
-        
-      END DO
-    END DO
-  END IF
-  IF(fyrdfw)THEN
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        fornow = zero
-        DO jc = jstaw,jstom1
-          
-          fornow = fornow + acbcyr(jstol-jc)*store7(ic,jc,kc)*store2(ic,jc,kc)
-          
-        END DO
-        rate(ispec,ic,jstol,kc) = rate(ispec,ic,jstol,kc) + fornow
-        vtmp(ic,jstol,kc) = vtmp(ic,jstol,kc) + fornow
-        erhs(ic,jstol,kc) = erhs(ic,jstol,kc) + fornow*utmp(ic,jstol,kc)
-        
-      END DO
-    END DO
-  END IF
-  IF(fzldfw)THEN
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        fornow = zero
-        DO kc = kstap1,kstow
-          
-          fornow = fornow + acbczl(kc-1)*store7(ic,jc,kc)*store3(ic,jc,kc)
-          
-        END DO
-        rate(ispec,ic,jc,kstal) = rate(ispec,ic,jc,kstal) + fornow
-        vtmp(ic,jc,kstal) = vtmp(ic,jc,kstal) + fornow
-        erhs(ic,jc,kstal) = erhs(ic,jc,kstal) + fornow*utmp(ic,jc,kstal)
-        
-      END DO
-    END DO
-  END IF
-  IF(fzrdfw)THEN
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        fornow = zero
-        DO kc = kstaw,kstom1
-          
-          fornow = fornow + acbczr(kstol-kc)*store7(ic,jc,kc)*store3(ic,jc,kc)
-          
-        END DO
-        rate(ispec,ic,jc,kstol) = rate(ispec,ic,jc,kstol) + fornow
-        vtmp(ic,jc,kstol) = vtmp(ic,jc,kstol) + fornow
-        erhs(ic,jc,kstol) = erhs(ic,jc,kstol) + fornow*utmp(ic,jc,kstol)
-        
-      END DO
-    END DO
-  END IF
+        IF(fxldfw) THEN
+            rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(heat_flux_kernel_enthalpy2_fxldfw, "HEAT FLUX: Enthalpy fxldfw", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store1, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(acbcxl, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+        END IF
+        IF(fxrdfw) THEN
+            rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(heat_flux_kernel_enthalpy2_fxrdfw, "HEAT FLUX: Enthalpy fxrdfw", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_m100_to_m400_x, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store1, 1, s3d_m100_to_m400_x, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(acbcxr, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+        END IF
+        IF(fyldfw) THEN
+            rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+            call ops_par_loop(heat_flux_kernel_enthalpy2_fyldfw, "HEAT FLUX: Enthalpy fyldfw", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_p010_to_p040_y, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store2, 1, s3d_p010_to_p040_y, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(acbcyl, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+        END IF
+        IF(fyrdfw) THEN
+            rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+            call ops_par_loop(heat_flux_kernel_enthalpy2_fyrdfw, "HEAT FLUX: Enthalpy fyrdfw", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_m010_to_m040_y, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store2, 1, s3d_m010_to_m040_y, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(acbcyr, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+        END IF
+        IF(fzldfw) THEN
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+            call ops_par_loop(heat_flux_kernel_enthalpy2_fzldfw, "HEAT FLUX: Enthalpy fzldfw", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_p001_to_p004_z, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store3, 1, s3d_p001_to_p004_z, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(acbczl, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+        END IF
+        IF(fzrdfw) THEN
+            rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+            call ops_par_loop(heat_flux_kernel_enthalpy2_fzrdfw, "HEAT FLUX: Enthalpy fzrdfw", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_m001_to_m004_z, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store3, 1, s3d_m001_to_m004_z, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(acbczr, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+        END IF
   
 !       =======================================================================
   
@@ -1504,39 +1488,42 @@ END IF
   
 !       SPECIES MASS FRACTION SECOND DERIVATIVES
 !       MOVE DIFFUSIVITY TO STORE4
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
 
 !       MOVE MASS FRACTION TO STORE7
-  DO kc = kstab,kstob
-    DO jc = jstab,jstob
-      DO ic = istab,istob
+        DO kc = kstab,kstob
+        DO jc = jstab,jstob
+        DO ic = istab,istob
         
         store7(ic,jc,kc) = yrhs(ispec,ic,jc,kc)
         
-      END DO
-    END DO
-  END DO
-  CALL d2fdx2(d_store7,d_store1)
-  CALL d2fdy2(d_store7,d_store2)
-  CALL d2fdz2(d_store7,d_store3)
+        END DO
+        END DO
+        END DO
+
+        call d2fdx2(d_store7,d_store1)
+        call d2fdy2(d_store7,d_store2)
+        call d2fdz2(d_store7,d_store3)
   
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fxldif)CALL zeroxl(d_store1)
-  IF(fxrdif)CALL zeroxr(d_store1)
+        IF(fxldif) call zeroxl(d_store1)
+        IF(fxrdif) call zeroxr(d_store1)
+
 !       BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fyldif)CALL zeroyl(d_store2)
-  IF(fyrdif)CALL zeroyr(d_store2)
+        IF(fyldif) call zeroyl(d_store2)
+        IF(fyrdif) call zeroyr(d_store2)
+
 !       BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fzldif)CALL zerozl(d_store3)
-  IF(fzrdif)CALL zerozr(d_store3)
+        IF(fzldif) call zerozl(d_store3)
+        IF(fzrdif) call zerozr(d_store3)
   
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      DO ic = istal,istol
+        DO kc = kstal,kstol
+        DO jc = jstal,jstol
+        DO ic = istal,istol
         
         fornow = (store1(ic,jc,kc) +  store2(ic,jc,kc)  &
             +  store3(ic,jc,kc))*store4(ic,jc,kc)
@@ -1547,30 +1534,32 @@ END IF
 !             DIFFUSION CORRECTION VELOCITY DIVERGENCE
         vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
         
-      END DO
-    END DO
-  END DO
+        END DO
+        END DO
+        END DO
   
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-  IF(fxladb)CALL zeroxl(d_store1)
-  IF(fxradb)CALL zeroxr(d_store1)
+        IF(fxladb) call zeroxl(d_store1)
+        IF(fxradb) call zeroxr(d_store1)
+
 !       BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-  IF(fyladb)CALL zeroyl(d_store2)
-  IF(fyradb)CALL zeroyr(d_store2)
+        IF(fyladb) call zeroyl(d_store2)
+        IF(fyradb) call zeroyr(d_store2)
+
 !       BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-  IF(fzladb)CALL zerozl(d_store3)
-  IF(fzradb)CALL zerozr(d_store3)
+        IF(fzladb) call zerozl(d_store3)
+        IF(fzradb) call zerozr(d_store3)
   
 !       E EQUATION
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(math_kernel_eqZ, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(math_kernel_eqZ, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
 
 !                                                         RATE = Y SOURCE TERMS
 !                                                           VTMP = DIV CORR VEL
@@ -1582,1220 +1571,1175 @@ END IF
 !       MOLAR MASS TERMS, PRESSURE TERMS, SORET EFFECT
   
 !       MIXTURE MOLAR MASS TERMS
-  IF(flmixw)THEN
+        IF(flmixw) THEN
+!           FIRST AND SECOND DERIVATIVES OF LN(MIXTURE MOLAR MASS) ALREADY STORED
     
-!         FIRST AND SECOND DERIVATIVES OF LN(MIXTURE MOLAR MASS) ALREADY STORED
-    
-    DO kc = kstab,kstob
-      DO jc = jstab,jstob
-        DO ic = istab,istob
+            DO kc = kstab,kstob
+            DO jc = jstab,jstob
+            DO ic = istab,istob
           
-          store7(ic,jc,kc) = difmix(ic,jc,kc)*yrhs(ispec,ic,jc,kc)
+            store7(ic,jc,kc) = difmix(ic,jc,kc)*yrhs(ispec,ic,jc,kc)
           
-        END DO
-      END DO
-    END DO
+            END DO
+            END DO
+            END DO
     
-!         DIFFUSION CORRECTION VELOCITY
-!         FIRST DERIVATIVES OF LN(MIXTURE MOLAR MASS) ALREADY STORED
-   rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_ucor, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wd1x, 1, s3d_000, "real(dp)", OPS_READ))
+!           DIFFUSION CORRECTION VELOCITY
+!           FIRST DERIVATIVES OF LN(MIXTURE MOLAR MASS) ALREADY STORED
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_ucor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_wd1x, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_vcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wd1y, 1, s3d_000, "real(dp)", OPS_READ))
+            call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_vcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_wd1y, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_wcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wd1z, 1, s3d_000, "real(dp)", OPS_READ)) 
+            call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_wcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_wd1z, 1, s3d_000, "real(dp)", OPS_READ)) 
     
-!         Y EQUATION: DIFFUSIVE TERMS
-!         E EQUATION: FURTHER HEAT FLUX TERMS
+!           Y EQUATION: DIFFUSIVE TERMS
+!           E EQUATION: FURTHER HEAT FLUX TERMS
     
-!         DIFFUSIVITY GRADIENT TERMS
+!           DIFFUSIVITY GRADIENT TERMS
     
-!         DIFFUSIVITY GRADIENTS
-    CALL dfbydx(d_store7,d_store1)
-    CALL dfbydy(d_store7,d_store2)
-    CALL dfbydz(d_store7,d_store3)
+!           DIFFUSIVITY GRADIENTS
+            call dfbydx(d_store7,d_store1)
+            call dfbydy(d_store7,d_store2)
+            call dfbydz(d_store7,d_store3)
     
-!         BOUNDARY CONDITIONS
-!         BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fxldif)CALL zeroxl(d_store1)
-    IF(fxrdif)CALL zeroxr(d_store1)
-!         BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fyldif)CALL zeroyl(d_store2)
-    IF(fyrdif)CALL zeroyr(d_store2)
-!         BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fzldif)CALL zerozl(d_store3)
-    IF(fzrdif)CALL zerozr(d_store3)
+!           BOUNDARY CONDITIONS
+!           BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fxldif) call zeroxl(d_store1)
+            IF(fxrdif) call zeroxr(d_store1)
+
+!           BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fyldif) call zeroyl(d_store2)
+            IF(fyrdif) call zeroyr(d_store2)
+
+!           BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fzldif) call zerozl(d_store3)
+            IF(fzrdif) call zerozr(d_store3)
     
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        DO ic = istal,istol
+            DO kc = kstal,kstol
+            DO jc = jstal,jstol
+            DO ic = istal,istol
           
-          fornow = store1(ic,jc,kc)*wd1x(ic,jc,kc)  &
+            fornow = store1(ic,jc,kc)*wd1x(ic,jc,kc)  &
               + store2(ic,jc,kc)*wd1y(ic,jc,kc) + store3(ic,jc,kc)*wd1z(ic,jc,kc)
           
 !               Y EQUATION
-          rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
+            rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
           
 !               DIFFUSION CORRECTION VELOCITY DIVERGENCE
-          vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
+            vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
           
-        END DO
-      END DO
-    END DO
+            END DO
+            END DO
+            END DO
     
-!         BOUNDARY CONDITIONS
-!         BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fxladb)CALL zeroxl(d_store1)
-    IF(fxradb)CALL zeroxr(d_store1)
-!         BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fyladb)CALL zeroyl(d_store2)
-    IF(fyradb)CALL zeroyr(d_store2)
-!         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fzladb)CALL zerozl(d_store3)
-    IF(fzradb)CALL zerozr(d_store3)
+!           BOUNDARY CONDITIONS
+!           BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fxladb) call zeroxl(d_store1)
+            IF(fxradb) call zeroxr(d_store1)
 
-!         E EQUATION
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wd1x, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wd1y, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wd1z, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
+!           BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fyladb) call zeroyl(d_store2)
+            IF(fyradb) call zeroyr(d_store2)
 
-!         E-EQUATION: FURTHER HEAT FLUX TERMS
-!         SPECIES ENTHALPY GRADIENT TERMS
-    
-!         SPECIES ENTHALPY GRADIENTS ALREADY IN STORE4,5,6
-    
-!         BOUNDARY CONDITIONS
-!         BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fxldif)CALL zeroxl(d_store4)
-    IF(fxrdif)CALL zeroxr(d_store4)
-!         BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fyldif)CALL zeroyl(d_store5)
-    IF(fyrdif)CALL zeroyr(d_store5)
-!         BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fzldif)CALL zerozl(d_store6)
-    IF(fzrdif)CALL zerozr(d_store6)
-    
-!         BOUNDARY CONDITIONS
-!         BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fxladb)CALL zeroxl(d_store4)
-    IF(fxradb)CALL zeroxr(d_store4)
-!         BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fyladb)CALL zeroyl(d_store5)
-    IF(fyradb)CALL zeroyr(d_store5)
-!         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fzladb)CALL zerozl(d_store6)
-    IF(fzradb)CALL zerozr(d_store6)
+!           BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fzladb) call zerozl(d_store3)
+            IF(fzradb) call zerozr(d_store3)
 
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wd1x, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wd1y, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wd1z, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
+!           E EQUATION
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_wd1x, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_wd1y, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_wd1z, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
 
-!         ====================================================================
+!           E-EQUATION: FURTHER HEAT FLUX TERMS
+!           SPECIES ENTHALPY GRADIENT TERMS
     
-!         Y-EQUATION: DIFFUSIVE TERMS
-!         ---------------------------
-!         WALL BC: MOLAR MASS TERMS
-!         E-EQUATION: HEAT FLUX TERMS
-!         WALL BC: ENTHALPY DIFFUSION TERMS
-    IF(fxldfw)THEN
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-          fornow = zero
-          DO ic = istap1,istow
-            
-            fornow = fornow + acbcxl(ic-1)*store7(ic,jc,kc)*wd1x(ic,jc,kc)
-            
-          END DO
-          rate(ispec,istal,jc,kc) = rate(ispec,istal,jc,kc) + fornow
-          vtmp(istal,jc,kc) = vtmp(istal,jc,kc) + fornow
-          erhs(istal,jc,kc) = erhs(istal,jc,kc) + fornow*utmp(istal,jc,kc)
-          
-        END DO
-      END DO
-    END IF
-    IF(fxrdfw)THEN
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-          fornow = zero
-          DO ic = istaw,istom1
-            
-            fornow = fornow + acbcxr(istol-ic)*store7(ic,jc,kc)*wd1x(ic,jc,kc)
-            
-          END DO
-          rate(ispec,istol,jc,kc) = rate(ispec,istol,jc,kc) + fornow
-          vtmp(istol,jc,kc) = vtmp(istol,jc,kc) + fornow
-          erhs(istol,jc,kc) = erhs(istol,jc,kc) + fornow*utmp(istol,jc,kc)
-          
-        END DO
-      END DO
-    END IF
-    IF(fyldfw)THEN
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-          fornow = zero
-          DO jc = jstap1,jstow
-            
-            fornow = fornow + acbcyl(jc-1)*store7(ic,jc,kc)*wd1y(ic,jc,kc)
-            
-          END DO
-          rate(ispec,ic,jstal,kc) = rate(ispec,ic,jstal,kc) + fornow
-          vtmp(ic,jstal,kc) = vtmp(ic,jstal,kc) + fornow
-          erhs(ic,jstal,kc) = erhs(ic,jstal,kc) + fornow*utmp(ic,jstal,kc)
-          
-        END DO
-      END DO
-    END IF
-    IF(fyrdfw)THEN
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-          fornow = zero
-          DO jc = jstaw,jstom1
-            
-            fornow = fornow + acbcyr(jstol-jc)*store7(ic,jc,kc)*wd1y(ic,jc,kc)
-            
-          END DO
-          rate(ispec,ic,jstol,kc) = rate(ispec,ic,jstol,kc) + fornow
-          vtmp(ic,jstol,kc) = vtmp(ic,jstol,kc) + fornow
-          erhs(ic,jstol,kc) = erhs(ic,jstol,kc) + fornow*utmp(ic,jstol,kc)
-          
-        END DO
-      END DO
-    END IF
-    IF(fzldfw)THEN
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          fornow = zero
-          DO kc = kstap1,kstow
-            
-            fornow = fornow + acbczl(kc-1)*store7(ic,jc,kc)*wd1z(ic,jc,kc)
-            
-          END DO
-          rate(ispec,ic,jc,kstal) = rate(ispec,ic,jc,kstal) + fornow
-          vtmp(ic,jc,kstal) = vtmp(ic,jc,kstal) + fornow
-          erhs(ic,jc,kstal) = erhs(ic,jc,kstal) + fornow*utmp(ic,jc,kstal)
-          
-        END DO
-      END DO
-    END IF
-    IF(fzrdfw)THEN
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          fornow = zero
-          DO kc = kstaw,kstom1
-            
-            fornow = fornow + acbczr(kstol-kc)*store7(ic,jc,kc)*wd1z(ic,jc,kc)
-            
-          END DO
-          rate(ispec,ic,jc,kstol) = rate(ispec,ic,jc,kstol) + fornow
-          vtmp(ic,jc,kstol) = vtmp(ic,jc,kstol) + fornow
-          erhs(ic,jc,kstol) = erhs(ic,jc,kstol) + fornow*utmp(ic,jc,kstol)
-          
-        END DO
-      END DO
-    END IF
+!           SPECIES ENTHALPY GRADIENTS ALREADY IN STORE4,5,6
     
-!         ====================================================================
+!           BOUNDARY CONDITIONS
+!           BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fxldif) call zeroxl(d_store4)
+            IF(fxrdif) call zeroxr(d_store4)
+
+!           BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fyldif) call zeroyl(d_store5)
+            IF(fyrdif) call zeroyr(d_store5)
+
+!           BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fzldif) call zerozl(d_store6)
+            IF(fzrdif) call zerozr(d_store6)
     
-!         Y-EQUATION: DIFFUSIVE TERMS
-!         E-EQUATION: FURTHER HEAT FLUX TERMS
-!         SECOND DERIVATIVE TERMS
-!         SECOND DERIVATIVES OF LN(MIXTURE MOLAR MASS) ALREADY STORED
+!           BOUNDARY CONDITIONS
+!           BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fxladb) call zeroxl(d_store4)
+            IF(fxradb) call zeroxr(d_store4)
+
+!           BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fyladb) call zeroyl(d_store5)
+            IF(fyradb) call zeroyr(d_store5)
+
+!           BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fzladb) call zerozl(d_store6)
+            IF(fzradb) call zerozr(d_store6)
+
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_wd1x, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_wd1y, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_wd1z, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
+
+!           ====================================================================
     
-!         BOUNDARY CONDITIONS
-!         BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fxldif)CALL zeroxl(d_wd2x)
-    IF(fxrdif)CALL zeroxr(d_wd2x)
-!         BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fyldif)CALL zeroyl(d_wd2y)
-    IF(fyrdif)CALL zeroyr(d_wd2y)
-!         BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fzldif)CALL zerozl(d_wd2z)
-    IF(fzrdif)CALL zerozr(d_wd2z)
+!           Y-EQUATION: DIFFUSIVE TERMS
+!           ---------------------------
+!           WALL BC: MOLAR MASS TERMS
+!           E-EQUATION: HEAT FLUX TERMS
+!           WALL BC: ENTHALPY DIFFUSION TERMS
+            IF(fxldfw) THEN
+                rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(heat_flux_kernel_enthalpy2_fxldfw, "HEAT FLUX: Enthalpy fxldfw", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_wd1x, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(acbcxl, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END IF
+            IF(fxrdfw) THEN
+                rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(heat_flux_kernel_enthalpy2_fxrdfw, "HEAT FLUX: Enthalpy fxrdfw", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_m100_to_m400_x, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_wd1x, 1, s3d_m100_to_m400_x, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(acbcxr, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END IF
+            IF(fyldfw) THEN
+                rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+            call ops_par_loop(heat_flux_kernel_enthalpy2_fyldfw, "HEAT FLUX: Enthalpy fyldfw", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_p010_to_p040_y, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_wd1y, 1, s3d_p010_to_p040_y, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(acbcyl, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END IF
+            IF(fyrdfw) THEN
+                rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+            call ops_par_loop(heat_flux_kernel_enthalpy2_fyrdfw, "HEAT FLUX: Enthalpy fyrdfw", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_m010_to_m040_y, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_wd1y, 1, s3d_m010_to_m040_y, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(acbcyr, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END IF
+            IF(fzldfw) THEN
+                rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+            call ops_par_loop(heat_flux_kernel_enthalpy2_fzldfw, "HEAT FLUX: Enthalpy fzldfw", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_p001_to_p004_z, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_wd1z, 1, s3d_p001_to_p004_z, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(acbczl, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END IF
+            IF(fzrdfw) THEN
+                rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+            call ops_par_loop(heat_flux_kernel_enthalpy2_fzrdfw, "HEAT FLUX: Enthalpy fzrdfw", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_m001_to_m004_z, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_wd1z, 1, s3d_m001_to_m004_z, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(acbczr, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END IF
     
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        DO ic = istal,istol
+!           ====================================================================
+    
+!           Y-EQUATION: DIFFUSIVE TERMS
+!           E-EQUATION: FURTHER HEAT FLUX TERMS
+!           SECOND DERIVATIVE TERMS
+!           SECOND DERIVATIVES OF LN(MIXTURE MOLAR MASS) ALREADY STORED
+    
+!           BOUNDARY CONDITIONS
+!           BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fxldif) call zeroxl(d_wd2x)
+            IF(fxrdif) call zeroxr(d_wd2x)
+
+!           BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fyldif) call zeroyl(d_wd2y)
+            IF(fyrdif) call zeroyr(d_wd2y)
+
+!           BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fzldif) call zerozl(d_wd2z)
+            IF(fzrdif) call zerozr(d_wd2z)
+    
+            DO kc = kstal,kstol
+            DO jc = jstal,jstol
+            DO ic = istal,istol
           
-          fornow = (wd2x(ic,jc,kc) +  wd2y(ic,jc,kc)  &
+            fornow = (wd2x(ic,jc,kc) +  wd2y(ic,jc,kc)  &
               +  wd2z(ic,jc,kc))*store7(ic,jc,kc)
           
 !               Y EQUATION
-          rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
+            rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
           
 !               DIFFUSION CORRECTION VELOCITY DIVERGENCE
-          vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
+            vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
           
-        END DO
-      END DO
-    END DO
+            END DO
+            END DO
+            END DO
     
-!         BOUNDARY CONDITIONS
-!         BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fxladb)CALL zeroxl(d_wd2x)
-    IF(fxradb)CALL zeroxr(d_wd2x)
-!         BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fyladb)CALL zeroyl(d_wd2y)
-    IF(fyradb)CALL zeroyr(d_wd2y)
-!         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fzladb)CALL zerozl(d_wd2z)
-    IF(fzradb)CALL zerozr(d_wd2z)
-    
-!         E EQUATION
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(math_kernel_eqZ, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_wd2x, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wd2y, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wd2z, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
+!           BOUNDARY CONDITIONS
+!           BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fxladb) call zeroxl(d_wd2x)
+            IF(fxradb) call zeroxr(d_wd2x)
 
-  END IF
+!           BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fyladb) call zeroyl(d_wd2y)
+            IF(fyradb) call zeroyr(d_wd2y)
+
+!           BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fzladb) call zerozl(d_wd2z)
+            IF(fzradb) call zerozr(d_wd2z)
+    
+!           E EQUATION
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(math_kernel_eqZ, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_wd2x, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_wd2y, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_wd2z, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
+
+        END IF  !flmixw
 !       MIXTURE MOLAR MASS TERMS
   
 !       =======================================================================
   
 !       PRESSURE DIFFUSION TERMS
-  IF(flmixp)THEN
+        IF(flmixp) THEN
+!           FIRST AND SECOND DERIVATIVES OF LN(PRESSURE) ALREADY STORED
     
-!         FIRST AND SECOND DERIVATIVES OF LN(PRESSURE) ALREADY STORED
-    
-    DO kc = kstab,kstob
-      DO jc = jstab,jstob
-        DO ic = istab,istob
+            DO kc = kstab,kstob
+            DO jc = jstab,jstob
+            DO ic = istab,istob
           
-          store7(ic,jc,kc) = difmix(ic,jc,kc)*yrhs(ispec,ic,jc,kc)  &
+            store7(ic,jc,kc) = difmix(ic,jc,kc)*yrhs(ispec,ic,jc,kc)  &
               *(one-wmolar(ispec)/wmomix(ic,jc,kc))
           
-        END DO
-      END DO
-    END DO
+            END DO
+            END DO
+            END DO
     
-!         DIFFUSION CORRECTION VELOCITY
-!         FIRST DERIVATIVES OF LN(PRESSURE) ALREADY STORED
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_ucor, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_pd1x, 1, s3d_000, "real(dp)", OPS_READ))
+!           DIFFUSION CORRECTION VELOCITY
+!           FIRST DERIVATIVES OF LN(PRESSURE) ALREADY STORED
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_ucor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_pd1x, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_vcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_pd1y, 1, s3d_000, "real(dp)", OPS_READ))
+            call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_vcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_pd1y, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_wcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_pd1z, 1, s3d_000, "real(dp)", OPS_READ))
+            call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_wcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_pd1z, 1, s3d_000, "real(dp)", OPS_READ))
 
-!         Y EQUATION: DIFFUSIVE TERMS
-!         E EQUATION: FURTHER HEAT FLUX TERMS
+!           Y EQUATION: DIFFUSIVE TERMS
+!           E EQUATION: FURTHER HEAT FLUX TERMS
     
-!         DIFFUSIVITY GRADIENT TERMS
+!           DIFFUSIVITY GRADIENT TERMS
     
-!         DIFFUSIVITY GRADIENTS
-    CALL dfbydx(d_store7,d_store1)
-    CALL dfbydy(d_store7,d_store2)
-    CALL dfbydz(d_store7,d_store3)
+!           DIFFUSIVITY GRADIENTS
+            call dfbydx(d_store7,d_store1)
+            call dfbydy(d_store7,d_store2)
+            call dfbydz(d_store7,d_store3)
     
-!         BOUNDARY CONDITIONS
-!         BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fxldif)CALL zeroxl(d_store1)
-    IF(fxrdif)CALL zeroxr(d_store1)
-!         BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fyldif)CALL zeroyl(d_store2)
-    IF(fyrdif)CALL zeroyr(d_store2)
-!         BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fzldif)CALL zerozl(d_store3)
-    IF(fzrdif)CALL zerozr(d_store3)
+!           BOUNDARY CONDITIONS
+!           BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fxldif) call zeroxl(d_store1)
+            IF(fxrdif) call zeroxr(d_store1)
+
+!           BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fyldif) call zeroyl(d_store2)
+            IF(fyrdif) call zeroyr(d_store2)
+
+!           BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fzldif) call zerozl(d_store3)
+            IF(fzrdif) call zerozr(d_store3)
     
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        DO ic = istal,istol
+            DO kc = kstal,kstol
+            DO jc = jstal,jstol
+            DO ic = istal,istol
           
-          fornow = store1(ic,jc,kc)*pd1x(ic,jc,kc)  &
+            fornow = store1(ic,jc,kc)*pd1x(ic,jc,kc)  &
               + store2(ic,jc,kc)*pd1y(ic,jc,kc) + store3(ic,jc,kc)*pd1z(ic,jc,kc)
           
 !               Y EQUATION
-          rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
+            rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
           
 !               DIFFUSION CORRECTION VELOCITY DIVERGENCE
-          vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
+            vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
           
-        END DO
-      END DO
-    END DO
+            END DO
+            END DO
+            END DO
     
-!         BOUNDARY CONDITIONS
-!         BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fxladb)CALL zeroxl(d_store1)
-    IF(fxradb)CALL zeroxr(d_store1)
-!         BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fyladb)CALL zeroyl(d_store2)
-    IF(fyradb)CALL zeroyr(d_store2)
-!         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fzladb)CALL zerozl(d_store3)
-    IF(fzradb)CALL zerozr(d_store3)
+!           BOUNDARY CONDITIONS
+!           BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fxladb) call zeroxl(d_store1)
+            IF(fxradb) call zeroxr(d_store1)
 
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_pd1x, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_pd1y, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_pd1z, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
+!           BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fyladb) call zeroyl(d_store2)
+            IF(fyradb) call zeroyr(d_store2)
 
-!         E-EQUATION: FURTHER HEAT FLUX TERMS
-!         SPECIES ENTHALPY GRADIENT TERMS
-    
-!         SPECIES ENTHALPY GRADIENTS ALREADY IN STORE4,5,6
-    
-!         BOUNDARY CONDITIONS
-!         BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fxldif)CALL zeroxl(d_store4)
-    IF(fxrdif)CALL zeroxr(d_store4)
-!         BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fyldif)CALL zeroyl(d_store5)
-    IF(fyrdif)CALL zeroyr(d_store5)
-!         BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fzldif)CALL zerozl(d_store6)
-    IF(fzrdif)CALL zerozr(d_store6)
-    
-!         BOUNDARY CONDITIONS
-!         BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fxladb)CALL zeroxl(d_store4)
-    IF(fxradb)CALL zeroxr(d_store4)
-!         BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fyladb)CALL zeroyl(d_store5)
-    IF(fyradb)CALL zeroyr(d_store5)
-!         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fzladb)CALL zerozl(d_store6)
-    IF(fzradb)CALL zerozr(d_store6)
+!           BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fzladb) call zerozl(d_store3)
+            IF(fzradb) call zerozr(d_store3)
 
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_pd1x, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_pd1y, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_pd1z, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_pd1x, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_pd1y, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_pd1z, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
 
-!         ====================================================================
+!           E-EQUATION: FURTHER HEAT FLUX TERMS
+!           SPECIES ENTHALPY GRADIENT TERMS
     
-!         Y-EQUATION: DIFFUSIVE TERMS
-!         ---------------------------
-!         WALL BC: PRESSURE TERMS
-!         E-EQUATION: HEAT FLUX TERMS
-!         WALL BC: ENTHALPY DIFFUSION TERMS
-    IF(fxldfw)THEN
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-          fornow = zero
-          DO ic = istap1,istow
-            
-            fornow = fornow + acbcxl(ic-1)*store7(ic,jc,kc)*pd1x(ic,jc,kc)
-            
-          END DO
-          rate(ispec,istal,jc,kc) = rate(ispec,istal,jc,kc) + fornow
-          vtmp(istal,jc,kc) = vtmp(istal,jc,kc) + fornow
-          erhs(istal,jc,kc) = erhs(istal,jc,kc) + fornow*utmp(istal,jc,kc)
-          
-        END DO
-      END DO
-    END IF
-    IF(fxrdfw)THEN
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-          fornow = zero
-          DO ic = istaw,istom1
-            
-            fornow = fornow + acbcxr(istol-ic)*store7(ic,jc,kc)*pd1x(ic,jc,kc)
-            
-          END DO
-          rate(ispec,istol,jc,kc) = rate(ispec,istol,jc,kc) + fornow
-          vtmp(istol,jc,kc) = vtmp(istol,jc,kc) + fornow
-          erhs(istol,jc,kc) = erhs(istol,jc,kc) + fornow*utmp(istol,jc,kc)
-          
-        END DO
-      END DO
-    END IF
-    IF(fyldfw)THEN
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-          fornow = zero
-          DO jc = jstap1,jstow
-            
-            fornow = fornow + acbcyl(jc-1)*store7(ic,jc,kc)*pd1y(ic,jc,kc)
-            
-          END DO
-          rate(ispec,ic,jstal,kc) = rate(ispec,ic,jstal,kc) + fornow
-          vtmp(ic,jstal,kc) = vtmp(ic,jstal,kc) + fornow
-          erhs(ic,jstal,kc) = erhs(ic,jstal,kc) + fornow*utmp(ic,jstal,kc)
-          
-        END DO
-      END DO
-    END IF
-    IF(fyrdfw)THEN
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-          fornow = zero
-          DO jc = jstaw,jstom1
-            
-            fornow = fornow + acbcyr(jstol-jc)*store7(ic,jc,kc)*pd1y(ic,jc,kc)
-            
-          END DO
-          rate(ispec,ic,jstol,kc) = rate(ispec,ic,jstol,kc) + fornow
-          vtmp(ic,jstol,kc) = vtmp(ic,jstol,kc) + fornow
-          erhs(ic,jstol,kc) = erhs(ic,jstol,kc) + fornow*utmp(ic,jstol,kc)
-          
-        END DO
-      END DO
-    END IF
-    IF(fzldfw)THEN
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          fornow = zero
-          DO kc = kstap1,kstow
-            
-            fornow = fornow + acbczl(kc-1)*store7(ic,jc,kc)*pd1z(ic,jc,kc)
-            
-          END DO
-          rate(ispec,ic,jc,kstal) = rate(ispec,ic,jc,kstal) + fornow
-          vtmp(ic,jc,kstal) = vtmp(ic,jc,kstal) + fornow
-          erhs(ic,jc,kstal) = erhs(ic,jc,kstal) + fornow*utmp(ic,jc,kstal)
-          
-        END DO
-      END DO
-    END IF
-    IF(fzrdfw)THEN
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          fornow = zero
-          DO kc = kstaw,kstom1
-            
-            fornow = fornow + acbczr(kstol-kc)*store7(ic,jc,kc)*pd1z(ic,jc,kc)
-            
-          END DO
-          rate(ispec,ic,jc,kstol) = rate(ispec,ic,jc,kstol) + fornow
-          vtmp(ic,jc,kstol) = vtmp(ic,jc,kstol) + fornow
-          erhs(ic,jc,kstol) = erhs(ic,jc,kstol) + fornow*utmp(ic,jc,kstol)
-          
-        END DO
-      END DO
-    END IF
+!           SPECIES ENTHALPY GRADIENTS ALREADY IN STORE4,5,6
     
-!         ====================================================================
+!           BOUNDARY CONDITIONS
+!           BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fxldif) call zeroxl(d_store4)
+            IF(fxrdif) call zeroxr(d_store4)
+
+!           BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fyldif) call zeroyl(d_store5)
+            IF(fyrdif) call zeroyr(d_store5)
+
+!           BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fzldif) call zerozl(d_store6)
+            IF(fzrdif) call zerozr(d_store6)
     
-!         Y-EQUATION: DIFFUSIVE TERMS
-!         E-EQUATION: FURTHER HEAT FLUX TERMS
-!         SECOND DERIVATIVE TERMS
-!         SECOND DERIVATIVES OF LN(PRESSURE) ALREADY STORED
+!           BOUNDARY CONDITIONS
+!           BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fxladb) call zeroxl(d_store4)
+            IF(fxradb) call zeroxr(d_store4)
+
+!           BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fyladb) call zeroyl(d_store5)
+            IF(fyradb) call zeroyr(d_store5)
+
+!           BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fzladb) call zerozl(d_store6)
+            IF(fzradb) call zerozr(d_store6)
+
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_pd1x, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_pd1y, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_pd1z, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
+
+!           ====================================================================
     
-!         BOUNDARY CONDITIONS
-!         BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fxldif)CALL zeroxl(d_pd2x)
-    IF(fxrdif)CALL zeroxr(d_pd2x)
-!         BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fyldif)CALL zeroyl(d_pd2y)
-    IF(fyrdif)CALL zeroyr(d_pd2y)
-!         BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fzldif)CALL zerozl(d_pd2z)
-    IF(fzrdif)CALL zerozr(d_pd2z)
+!           Y-EQUATION: DIFFUSIVE TERMS
+!           ---------------------------
+!           WALL BC: PRESSURE TERMS
+!           E-EQUATION: HEAT FLUX TERMS
+!           WALL BC: ENTHALPY DIFFUSION TERMS
+            IF(fxldfw) THEN
+                rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(heat_flux_kernel_enthalpy2_fxldfw, "HEAT FLUX: Enthalpy fxldfw", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_pd1x, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(acbcxl, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END IF
+            IF(fxrdfw) THEN
+                rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(heat_flux_kernel_enthalpy2_fxrdfw, "HEAT FLUX: Enthalpy fxrdfw", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_m100_to_m400_x, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_pd1x, 1, s3d_m100_to_m400_x, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(acbcxr, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END IF
+            IF(fyldfw) THEN
+                rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+            call ops_par_loop(heat_flux_kernel_enthalpy2_fyldfw, "HEAT FLUX: Enthalpy fyldfw", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_p010_to_p040_y, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_pd1y, 1, s3d_p010_to_p040_y, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(acbcyl, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END IF
+            IF(fyrdfw) THEN
+                rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+            call ops_par_loop(heat_flux_kernel_enthalpy2_fyrdfw, "HEAT FLUX: Enthalpy fyrdfw", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_m010_to_m040_y, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_pd1y, 1, s3d_m010_to_m040_y, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(acbcyr, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END IF
+            IF(fzldfw) THEN
+                rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+            call ops_par_loop(heat_flux_kernel_enthalpy2_fzldfw, "HEAT FLUX: Enthalpy fzldfw", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_p001_to_p004_z, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_pd1z, 1, s3d_p001_to_p004_z, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(acbczl, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END IF
+            IF(fzrdfw) THEN
+                rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+            call ops_par_loop(heat_flux_kernel_enthalpy2_fzrdfw, "HEAT FLUX: Enthalpy fzrdfw", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_m001_to_m004_z, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_pd1z, 1, s3d_m001_to_m004_z, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(acbczr, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END IF
     
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        DO ic = istal,istol
+!           ====================================================================
+    
+!           Y-EQUATION: DIFFUSIVE TERMS
+!           E-EQUATION: FURTHER HEAT FLUX TERMS
+!           SECOND DERIVATIVE TERMS
+!           SECOND DERIVATIVES OF LN(PRESSURE) ALREADY STORED
+    
+!           BOUNDARY CONDITIONS
+!           BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fxldif) call zeroxl(d_pd2x)
+            IF(fxrdif) call zeroxr(d_pd2x)
+
+!           BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fyldif) call zeroyl(d_pd2y)
+            IF(fyrdif) call zeroyr(d_pd2y)
+
+!           BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fzldif) call zerozl(d_pd2z)
+            IF(fzrdif) call zerozr(d_pd2z)
+    
+            DO kc = kstal,kstol
+            DO jc = jstal,jstol
+            DO ic = istal,istol
           
-          fornow = (pd2x(ic,jc,kc) +  pd2y(ic,jc,kc)  &
+            fornow = (pd2x(ic,jc,kc) +  pd2y(ic,jc,kc)  &
               +  pd2z(ic,jc,kc))*store7(ic,jc,kc)
           
 !               Y EQUATION
-          rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
+            rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
           
 !               DIFFUSION CORRECTION VELOCITY DIVERGENCE
-          vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
+            vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
           
-        END DO
-      END DO
-    END DO
+            END DO
+            END DO
+            END DO
     
-!         BOUNDARY CONDITIONS
-!         BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fxladb)CALL zeroxl(d_pd2x)
-    IF(fxradb)CALL zeroxr(d_pd2x)
-!         BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fyladb)CALL zeroyl(d_pd2y)
-    IF(fyradb)CALL zeroyr(d_pd2y)
-!         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fzladb)CALL zerozl(d_pd2z)
-    IF(fzradb)CALL zerozr(d_pd2z)
+!           BOUNDARY CONDITIONS
+!           BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fxladb) call zeroxl(d_pd2x)
+            IF(fxradb) call zeroxr(d_pd2x)
 
-!         E EQUATION
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(math_kernel_eqZ, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_pd2x, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_pd2y, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_pd2z, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
+!           BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fyladb) call zeroyl(d_pd2y)
+            IF(fyradb) call zeroyr(d_pd2y)
 
-  END IF
-  
+!           BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fzladb) call zerozl(d_pd2z)
+            IF(fzradb) call zerozr(d_pd2z)
+
+!           E EQUATION
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(math_kernel_eqZ, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_pd2x, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_pd2y, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_pd2z, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
+
+        END IF
+!       PRESSURE DIFFUSION TERMS
+
 !       =======================================================================
   
 !       SORET EFFECT (THERMAL DIFFUSION) TERMS
-  IF(flmsor(ispec))THEN
+        IF(flmsor(ispec))THEN
+!           FIRST AND SECOND DERIVATIVES OF LN(TEMPERATURE) ALREADY STORED
     
-!         FIRST AND SECOND DERIVATIVES OF LN(TEMPERATURE) ALREADY STORED
-    
-    DO kc = kstab,kstob
-      DO jc = jstab,jstob
-        DO ic = istab,istob
+            DO kc = kstab,kstob
+            DO jc = jstab,jstob
+            DO ic = istab,istob
           
-          store7(ic,jc,kc) = difmix(ic,jc,kc)*yrhs(ispec,ic,jc,kc)  &
+            store7(ic,jc,kc) = difmix(ic,jc,kc)*yrhs(ispec,ic,jc,kc)  &
               *tdrmix(ic,jc,kc)
           
-        END DO
-      END DO
-    END DO
+            END DO
+            END DO
+            END DO
     
-!         DIFFUSION CORRECTION VELOCITY
-!         FIRST DERIVATIVES OF LN(TEMPERATURE) ALREADY STORED
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_ucor, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_td1x, 1, s3d_000, "real(dp)", OPS_READ))
+!           DIFFUSION CORRECTION VELOCITY
+!           FIRST DERIVATIVES OF LN(TEMPERATURE) ALREADY STORED
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_ucor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_td1x, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_vcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_td1y, 1, s3d_000, "real(dp)", OPS_READ))
+            call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_vcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_td1y, 1, s3d_000, "real(dp)", OPS_READ))
 
-    call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_wcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_td1z, 1, s3d_000, "real(dp)", OPS_READ))
+            call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_wcor, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_td1z, 1, s3d_000, "real(dp)", OPS_READ))
 
-!         Y EQUATION: DIFFUSIVE TERMS
-!         E EQUATION: FURTHER HEAT FLUX TERMS
+!           Y EQUATION: DIFFUSIVE TERMS
+!           E EQUATION: FURTHER HEAT FLUX TERMS
     
-!         DIFFUSIVITY GRADIENT TERMS
+!           DIFFUSIVITY GRADIENT TERMS
     
-!         DIFFUSIVITY GRADIENTS
-    CALL dfbydx(d_store7,d_store1)
-    CALL dfbydy(d_store7,d_store2)
-    CALL dfbydz(d_store7,d_store3)
+!           DIFFUSIVITY GRADIENTS
+            call dfbydx(d_store7,d_store1)
+            call dfbydy(d_store7,d_store2)
+            call dfbydz(d_store7,d_store3)
     
-!         BOUNDARY CONDITIONS
-!         BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fxldif)CALL zeroxl(d_store1)
-    IF(fxrdif)CALL zeroxr(d_store1)
-!         BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fyldif)CALL zeroyl(d_store2)
-    IF(fyrdif)CALL zeroyr(d_store2)
-!         BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fzldif)CALL zerozl(d_store3)
-    IF(fzrdif)CALL zerozr(d_store3)
+!           BOUNDARY CONDITIONS
+!           BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fxldif) call zeroxl(d_store1)
+            IF(fxrdif) call zeroxr(d_store1)
+
+!           BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fyldif) call zeroyl(d_store2)
+            IF(fyrdif) call zeroyr(d_store2)
+
+!           BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fzldif) call zerozl(d_store3)
+            IF(fzrdif) call zerozr(d_store3)
     
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        DO ic = istal,istol
+            DO kc = kstal,kstol
+            DO jc = jstal,jstol
+            DO ic = istal,istol
           
-          fornow = store1(ic,jc,kc)*td1x(ic,jc,kc)  &
+            fornow = store1(ic,jc,kc)*td1x(ic,jc,kc)  &
               + store2(ic,jc,kc)*td1y(ic,jc,kc) + store3(ic,jc,kc)*td1z(ic,jc,kc)
           
 !               Y EQUATION
-          rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
+            rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
           
 !               DIFFUSION CORRECTION VELOCITY DIVERGENCE
-          vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
+            vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
           
-        END DO
-      END DO
-    END DO
+            END DO
+            END DO
+            END DO
     
-!         SUBTRACT DUFOUR EFFECT TERMS TO RESTORE SPECIES ENTHALPY
-!         RSC 08-JUN-2015 BUG FIX
-    IF(flmduf(ispec))THEN
-        rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-        call ops_par_loop(math_kernel_eqH, "A = A-var*B*C", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_tdrmix, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ))
+!           SUBTRACT DUFOUR EFFECT TERMS TO RESTORE SPECIES ENTHALPY
+!           RSC 08-JUN-2015 BUG FIX
+            IF(flmduf(ispec))THEN
+                rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+                call ops_par_loop(math_kernel_eqH, "A = A-var*B*C", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_tdrmix, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ))
 
-    END IF
+            END IF
     
-!         BOUNDARY CONDITIONS
-!         BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fxladb)CALL zeroxl(d_store1)
-    IF(fxradb)CALL zeroxr(d_store1)
-!         BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fyladb)CALL zeroyl(d_store2)
-    IF(fyradb)CALL zeroyr(d_store2)
-!         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fzladb)CALL zerozl(d_store3)
-    IF(fzradb)CALL zerozr(d_store3)
+!           BOUNDARY CONDITIONS
+!           BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fxladb) call zeroxl(d_store1)
+            IF(fxradb) call zeroxr(d_store1)
 
-!         E EQUATION
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_td1x, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_td1y, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_td1z, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
+!           BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fyladb) call zeroyl(d_store2)
+            IF(fyradb) call zeroyr(d_store2)
 
-!         E-EQUATION: FURTHER HEAT FLUX TERMS
-!         SPECIES ENTHALPY GRADIENT TERMS
-    
-!         EVALUATE SPECIES ENTHALPY GRADIENTS USING STORE4,5,6
-    CALL dfbydx(d_utmp,d_store4)
-    CALL dfbydy(d_utmp,d_store5)
-    CALL dfbydz(d_utmp,d_store6)
-    
-!         BOUNDARY CONDITIONS
-!         BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fxldif)CALL zeroxl(d_store4)
-    IF(fxrdif)CALL zeroxr(d_store4)
-!         BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fyldif)CALL zeroyl(d_store5)
-    IF(fyrdif)CALL zeroyr(d_store5)
-!         BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fzldif)CALL zerozl(d_store6)
-    IF(fzrdif)CALL zerozr(d_store6)
-    
-!         BOUNDARY CONDITIONS
-!         BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fxladb)CALL zeroxl(d_store4)
-    IF(fxradb)CALL zeroxr(d_store4)
-!         BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fyladb)CALL zeroyl(d_store5)
-    IF(fyradb)CALL zeroyr(d_store5)
-!         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fzladb)CALL zerozl(d_store6)
-    IF(fzradb)CALL zerozr(d_store6)
+!           BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fzladb) call zerozl(d_store3)
+            IF(fzradb) call zerozr(d_store3)
 
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_td1x, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_td1y, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_td1z, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
+!           E EQUATION
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_td1x, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_td1y, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_td1z, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
 
-!         ====================================================================
+!           E-EQUATION: FURTHER HEAT FLUX TERMS
+!           SPECIES ENTHALPY GRADIENT TERMS
     
-!         Y-EQUATION: DIFFUSIVE TERMS
-!         ---------------------------
-!         WALL BC: SORET EFFECT TERMS
-!         E-EQUATION: HEAT FLUX TERMS
-!         WALL BC: ENTHALPY DIFFUSION TERMS
-    IF(fxldfw)THEN
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-          fornow = zero
-          DO ic = istap1,istow
-            
-            fornow = fornow + acbcxl(ic-1)*store7(ic,jc,kc)*td1x(ic,jc,kc)
-            
-          END DO
-          rate(ispec,istal,jc,kc) = rate(ispec,istal,jc,kc) + fornow
-          vtmp(istal,jc,kc) = vtmp(istal,jc,kc) + fornow
-          erhs(istal,jc,kc) = erhs(istal,jc,kc) + fornow*(utmp(istal,jc,kc)  &
-              + rgspec(ispec)*trun(istal,jc,kc)*tdrmix(istal,jc,kc))
-          
-        END DO
-      END DO
-    END IF
-    IF(fxrdfw)THEN
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-          fornow = zero
-          DO ic = istaw,istom1
-            
-            fornow = fornow + acbcxr(istol-ic)*store7(ic,jc,kc)*td1x(ic,jc,kc)
-            
-          END DO
-          rate(ispec,istol,jc,kc) = rate(ispec,istol,jc,kc) + fornow
-          vtmp(istol,jc,kc) = vtmp(istol,jc,kc) + fornow
-          erhs(istol,jc,kc) = erhs(istol,jc,kc) + fornow*(utmp(istol,jc,kc)  &
-              + rgspec(ispec)*trun(istol,jc,kc)*tdrmix(istol,jc,kc))
-          
-        END DO
-      END DO
-    END IF
-    IF(fyldfw)THEN
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-          fornow = zero
-          DO jc = jstap1,jstow
-            
-            fornow = fornow + acbcyl(jc-1)*store7(ic,jc,kc)*td1y(ic,jc,kc)
-            
-          END DO
-          rate(ispec,ic,jstal,kc) = rate(ispec,ic,jstal,kc) + fornow
-          vtmp(ic,jstal,kc) = vtmp(ic,jstal,kc) + fornow
-          erhs(ic,jstal,kc) = erhs(ic,jstal,kc) + fornow*(utmp(ic,jstal,kc)  &
-              + rgspec(ispec)*trun(ic,jstal,kc)*tdrmix(ic,jstal,kc))
-          
-        END DO
-      END DO
-    END IF
-    IF(fyrdfw)THEN
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-          fornow = zero
-          DO jc = jstaw,jstom1
-            
-            fornow = fornow + acbcyr(jstol-jc)*store7(ic,jc,kc)*td1y(ic,jc,kc)
-            
-          END DO
-          rate(ispec,ic,jstol,kc) = rate(ispec,ic,jstol,kc) + fornow
-          vtmp(ic,jstol,kc) = vtmp(ic,jstol,kc) + fornow
-          erhs(ic,jstol,kc) = erhs(ic,jstol,kc) + fornow*(utmp(ic,jstol,kc)  &
-              + rgspec(ispec)*trun(ic,jstol,kc)*tdrmix(ic,jstol,kc))
-          
-        END DO
-      END DO
-    END IF
-    IF(fzldfw)THEN
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          fornow = zero
-          DO kc = kstap1,kstow
-            
-            fornow = fornow + acbczl(kc-1)*store7(ic,jc,kc)*td1z(ic,jc,kc)
-            
-          END DO
-          rate(ispec,ic,jc,kstal) = rate(ispec,ic,jc,kstal) + fornow
-          vtmp(ic,jc,kstal) = vtmp(ic,jc,kstal) + fornow
-          erhs(ic,jc,kstal) = erhs(ic,jc,kstal) + fornow*(utmp(ic,jc,kstal)  &
-              + rgspec(ispec)*trun(ic,jc,kstal)*tdrmix(ic,jc,kstal))
-          
-        END DO
-      END DO
-    END IF
-    IF(fzrdfw)THEN
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          fornow = zero
-          DO kc = kstaw,kstom1
-            
-            fornow = fornow + acbczr(kstol-kc)*store7(ic,jc,kc)*td1z(ic,jc,kc)
-            
-          END DO
-          rate(ispec,ic,jc,kstol) = rate(ispec,ic,jc,kstol) + fornow
-          vtmp(ic,jc,kstol) = vtmp(ic,jc,kstol) + fornow
-          erhs(ic,jc,kstol) = erhs(ic,jc,kstol) + fornow*(utmp(ic,jc,kstol)  &
-              + rgspec(ispec)*trun(ic,jc,kstol)*tdrmix(ic,jc,kstol))
-          
-        END DO
-      END DO
-    END IF
+!           EVALUATE SPECIES ENTHALPY GRADIENTS USING STORE4,5,6
+            call dfbydx(d_utmp,d_store4)
+            call dfbydy(d_utmp,d_store5)
+            call dfbydz(d_utmp,d_store6)
     
-!         E-EQUATION: HEAT FLUX TERMS
-!         WALL BC: SORET AND DUFOUR TERMS
-    IF(flmduf(ispec))THEN
+!           BOUNDARY CONDITIONS
+!           BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fxldif) call zeroxl(d_store4)
+            IF(fxrdif) call zeroxr(d_store4)
+
+!           BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fyldif) call zeroyl(d_store5)
+            IF(fyrdif) call zeroyr(d_store5)
+
+!           BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fzldif) call zerozl(d_store6)
+            IF(fzrdif) call zerozr(d_store6)
+    
+!           BOUNDARY CONDITIONS
+!           BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fxladb) call zeroxl(d_store4)
+            IF(fxradb) call zeroxr(d_store4)
+
+!           BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fyladb) call zeroyl(d_store5)
+            IF(fyradb) call zeroyr(d_store5)
+
+!           BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fzladb) call zerozl(d_store6)
+            IF(fzradb) call zerozr(d_store6)
+
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_td1x, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_td1y, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_td1z, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
+
+!           ====================================================================
+    
+!           Y-EQUATION: DIFFUSIVE TERMS
+!           ---------------------------
+!           WALL BC: SORET EFFECT TERMS
 !           E-EQUATION: HEAT FLUX TERMS
-!           WALL BC: ADIABATIC WALL
-      IF(fxlcnw)THEN
+!           WALL BC: ENTHALPY DIFFUSION TERMS
+            IF(fxldfw) THEN
+                rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(heat_flux_kernel_enthalpy_fxldfw, "HEAT FLUX: Enthalpy fxldfw", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_tdrmix, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_td1x, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(acbcxl, 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
-        rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(heat_flux_kernel_soret_fxlcnw, "HEAT FLUX: Soret and DUFOUR fxlcnw", senga_grid, 3, rangexyz,  &
-                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                ops_arg_dat(d_trun, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
-                ops_arg_dat(d_tdrmix, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
-                ops_arg_dat(d_store7, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
-                ops_arg_dat(d_td1x, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
-                ops_arg_gbl(acbcxl, 1, "real(dp)", OPS_READ), &
-                ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ))
+            END IF
+            IF(fxrdfw) THEN
+                rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(heat_flux_kernel_enthalpy_fxrdfw, "HEAT FLUX: Enthalpy fxrdfw", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_tdrmix, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_m100_to_m400_x, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_td1x, 1, s3d_m100_to_m400_x, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(acbcxr, 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
-      END IF
-      IF(fxrcnw)THEN
-        DO kc = kstal,kstol
-          DO jc = jstal,jstol
-            
-            fornow = zero
-            DO ic = istaw,istom1
-              
-              combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
-              fornow = fornow  &
-                  + acbcxr(istol-ic)*combo1*store7(ic,jc,kc)*td1x(ic,jc,kc)
-              
-            END DO
-            erhs(istol,jc,kc) = erhs(istol,jc,kc) + rgspec(ispec)*fornow
-            
-          END DO
-        END DO
-      END IF
-      IF(fylcnw)THEN
-        DO kc = kstal,kstol
-          DO ic = istal,istol
-            
-            fornow = zero
-            DO jc = jstap1,jstow
-              
-              combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
-              fornow = fornow  &
-                  + acbcyl(jc-1)*combo1*store7(ic,jc,kc)*td1y(ic,jc,kc)
-              
-            END DO
-            erhs(ic,jstal,kc) = erhs(ic,jstal,kc) + rgspec(ispec)*fornow
-            
-          END DO
-        END DO
-      END IF
-      IF(fyrcnw)THEN
-        DO kc = kstal,kstol
-          DO ic = istal,istol
-            
-            fornow = zero
-            DO jc = jstaw,jstom1
-              
-              combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
-              fornow = fornow  &
-                  + acbcyr(jstol-jc)*combo1*store7(ic,jc,kc)*td1y(ic,jc,kc)
-              
-            END DO
-            erhs(ic,jstol,kc) = erhs(ic,jstol,kc) + rgspec(ispec)*fornow
-            
-          END DO
-        END DO
-      END IF
-      IF(fzlcnw)THEN
-        DO jc = jstal,jstol
-          DO ic = istal,istol
-            
-            fornow = zero
-            DO kc = kstap1,kstow
-              
-              combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
-              fornow = fornow  &
-                  + acbczl(kc-1)*combo1*store7(ic,jc,kc)*td1z(ic,jc,kc)
-              
-            END DO
-            erhs(ic,jc,kstal) = erhs(ic,jc,kstal) + rgspec(ispec)*fornow
-            
-          END DO
-        END DO
-      END IF
-      IF(fzrcnw)THEN
-        DO jc = jstal,jstol
-          DO ic = istal,istol
-            
-            fornow = zero
-            DO kc = kstaw,kstom1
-              
-              combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
-              fornow = fornow  &
-                  + acbczr(kstol-kc)*combo1*store7(ic,jc,kc)*td1z(ic,jc,kc)
-              
-            END DO
-            erhs(ic,jc,kstol) = erhs(ic,jc,kstol) + rgspec(ispec)*fornow
-            
-          END DO
-        END DO
-      END IF
+            END IF
+            IF(fyldfw) THEN
+                rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+                call ops_par_loop(heat_flux_kernel_enthalpy_fyldfw, "HEAT FLUX: Enthalpy fyldfw", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_tdrmix, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_p010_to_p040_y, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_td1y, 1, s3d_p010_to_p040_y, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(acbcyl, 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END IF
+            IF(fyrdfw) THEN
+                rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+                call ops_par_loop(heat_flux_kernel_enthalpy_fyrdfw, "HEAT FLUX: Enthalpy fyrdfw", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_tdrmix, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_m010_to_m040_y, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_td1y, 1, s3d_m010_to_m040_y, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(acbcyr, 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END IF
+            IF(fzldfw) THEN
+                rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+                call ops_par_loop(heat_flux_kernel_enthalpy_fzldfw, "HEAT FLUX: Enthalpy fzldfw", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_tdrmix, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_p001_to_p004_z, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_td1z, 1, s3d_p001_to_p004_z, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(acbczl, 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END IF
+            IF(fzrdfw) THEN
+                rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+                call ops_par_loop(heat_flux_kernel_enthalpy_fzrdfw, "HEAT FLUX: Enthalpy fzrdfw", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_tdrmix, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_m001_to_m004_z, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_td1z, 1, s3d_m001_to_m004_z, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(acbczr, 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END IF
+    
+!           E-EQUATION: HEAT FLUX TERMS
+!           WALL BC: SORET AND DUFOUR TERMS
+            IF(flmduf(ispec)) THEN
+!               E-EQUATION: HEAT FLUX TERMS
+!               WALL BC: ADIABATIC WALL
+                IF(fxlcnw) THEN
+                    rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+                    call ops_par_loop(heat_flux_kernel_soret_fxlcnw, "HEAT FLUX: Soret and DUFOUR fxlcnw", senga_grid, 3, rangexyz,  &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(dp)", OPS_WRITE), &
+                                    ops_arg_dat(d_trun,   1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_td1x,   1, s3d_p100_to_p400_x, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(acbcxl,   1, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ))
+
+                END IF
+                IF(fxrcnw) THEN
+                    rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+                    call ops_par_loop(heat_flux_kernel_soret_fxrcnw, "HEAT FLUX: Soret and DUFOUR fxrcnw", senga_grid, 3, rangexyz,  &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(dp)", OPS_WRITE), &
+                                    ops_arg_dat(d_trun,   1, s3d_m100_to_m400_x, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_m100_to_m400_x, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_m100_to_m400_x, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_td1x,   1, s3d_m100_to_m400_x, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(acbcxr,   1, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ))
+
+                END IF
+                IF(fylcnw) THEN
+                    rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+                    call ops_par_loop(heat_flux_kernel_soret_fylcnw, "HEAT FLUX: Soret and DUFOUR fylcnw", senga_grid, 3, rangexyz,  &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(dp)", OPS_WRITE), &
+                                    ops_arg_dat(d_trun,   1, s3d_p010_to_p040_y, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_p010_to_p040_y, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_p010_to_p040_y, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_td1y,   1, s3d_p010_to_p040_y, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(acbcyl,   1, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ))
+
+                END IF
+                IF(fyrcnw) THEN
+                    rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+                    call ops_par_loop(heat_flux_kernel_soret_fyrcnw, "HEAT FLUX: Soret and DUFOUR fyrcnw", senga_grid, 3, rangexyz,  &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(dp)", OPS_WRITE), &
+                                    ops_arg_dat(d_trun,   1, s3d_m010_to_m040_y, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_m010_to_m040_y, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_m010_to_m040_y, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_td1y,   1, s3d_m010_to_m040_y, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(acbcyr,   1, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ))
+
+                END IF
+                IF(fzlcnw) THEN
+                    rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+                    call ops_par_loop(heat_flux_kernel_soret_fzlcnw, "HEAT FLUX: Soret and DUFOUR fzlcnw", senga_grid, 3, rangexyz,  &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(dp)", OPS_WRITE), &
+                                    ops_arg_dat(d_trun,   1, s3d_p001_to_p004_z, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_p001_to_p004_z, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_p001_to_p004_z, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_td1z,   1, s3d_p001_to_p004_z, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(acbczl,   1, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ))
+
+                END IF
+                IF(fzrcnw) THEN
+                    rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+                    call ops_par_loop(heat_flux_kernel_soret_fzrcnw, "HEAT FLUX: Soret and DUFOUR fzrcnw", senga_grid, 3, rangexyz,  &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(dp)", OPS_WRITE), &
+                                    ops_arg_dat(d_trun,   1, s3d_m001_to_m004_z, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_m001_to_m004_z, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_m001_to_m004_z, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_td1z,   1, s3d_m001_to_m004_z, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(acbczr,   1, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ))
+
+                END IF
       
-!           E-EQUATION: HEAT FLUX TERMS
-!           WALL BC: ISOTHERMAL WALL
-      IF(fxladw)THEN
-        DO kc = kstal,kstol
-          DO jc = jstal,jstol
+!               E-EQUATION: HEAT FLUX TERMS
+!               WALL BC: ISOTHERMAL WALL
+                IF(fxladw) THEN
+                    DO kc = kstal,kstol
+                    DO jc = jstal,jstol
             
-            combo2 = trun(istal,jc,kc)*tdrmix(istal,jc,kc)
-            combo2 = combo2*store7(istal,jc,kc)*td1x(istal,jc,kc)
-            fornow = zero
-            DO ic = istap1,istow
+                    combo2 = trun(istal,jc,kc)*tdrmix(istal,jc,kc)
+                    combo2 = combo2*store7(istal,jc,kc)*td1x(istal,jc,kc)
+                    fornow = zero
+                    DO ic = istap1,istow
               
-              combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
-              combo1 = combo1*store7(ic,jc,kc)*td1x(ic,jc,kc)
-              fornow = fornow + acbcxl(ic-1)*rgspec(ispec)*(combo1-combo2)
+                    combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
+                    combo1 = combo1*store7(ic,jc,kc)*td1x(ic,jc,kc)
+                    fornow = fornow + acbcxl(ic-1)*rgspec(ispec)*(combo1-combo2)
               
-            END DO
-            erhs(istal,jc,kc) = erhs(istal,jc,kc) + rgspec(ispec)*fornow
+                    END DO
+                    erhs(istal,jc,kc) = erhs(istal,jc,kc) + rgspec(ispec)*fornow
             
-          END DO
-        END DO
-      END IF
-      IF(fxradw)THEN
-        DO kc = kstal,kstol
-          DO jc = jstal,jstol
+                    END DO
+                    END DO
+                END IF
+                IF(fxradw) THEN
+                    DO kc = kstal,kstol
+                    DO jc = jstal,jstol
             
-            combo2 = trun(istol,jc,kc)*tdrmix(istol,jc,kc)
-            combo2 = combo2*store7(istol,jc,kc)*td1x(istol,jc,kc)
-            fornow = zero
-            DO ic = istaw,istom1
+                    combo2 = trun(istol,jc,kc)*tdrmix(istol,jc,kc)
+                    combo2 = combo2*store7(istol,jc,kc)*td1x(istol,jc,kc)
+                    fornow = zero
+                    DO ic = istaw,istom1
               
-              combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
-              combo1 = combo1*store7(ic,jc,kc)*td1x(ic,jc,kc)
-              fornow = fornow + acbcxr(istol-ic)*rgspec(ispec)*(combo2-combo1)
+                    combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
+                    combo1 = combo1*store7(ic,jc,kc)*td1x(ic,jc,kc)
+                    fornow = fornow + acbcxr(istol-ic)*rgspec(ispec)*(combo2-combo1)
               
-            END DO
-            erhs(istol,jc,kc) = erhs(istol,jc,kc) + rgspec(ispec)*fornow
+                    END DO
+                    erhs(istol,jc,kc) = erhs(istol,jc,kc) + rgspec(ispec)*fornow
             
-          END DO
-        END DO
-      END IF
-      IF(fyladw)THEN
-        DO kc = kstal,kstol
-          DO ic = istal,istol
+                    END DO
+                    END DO
+                END IF
+                IF(fyladw) THEN
+                    DO kc = kstal,kstol
+                    DO ic = istal,istol
             
-            combo2 = trun(ic,jstal,kc)*tdrmix(ic,jstal,kc)
-            combo2 = combo2*store7(ic,jstal,kc)*td1y(ic,jstal,kc)
-            fornow = zero
-            DO jc = jstap1,jstow
+                    combo2 = trun(ic,jstal,kc)*tdrmix(ic,jstal,kc)
+                    combo2 = combo2*store7(ic,jstal,kc)*td1y(ic,jstal,kc)
+                    fornow = zero
+                    DO jc = jstap1,jstow
               
-              combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
-              combo1 = combo1*store7(ic,jc,kc)*td1y(ic,jc,kc)
-              fornow = fornow + acbcyl(jc-1)*rgspec(ispec)*(combo1-combo2)
+                    combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
+                    combo1 = combo1*store7(ic,jc,kc)*td1y(ic,jc,kc)
+                    fornow = fornow + acbcyl(jc-1)*rgspec(ispec)*(combo1-combo2)
               
-            END DO
-            erhs(ic,jstal,kc) = erhs(ic,jstal,kc) + rgspec(ispec)*fornow
+                    END DO
+                    erhs(ic,jstal,kc) = erhs(ic,jstal,kc) + rgspec(ispec)*fornow
             
-          END DO
-        END DO
-      END IF
-      IF(fyradw)THEN
-        DO kc = kstal,kstol
-          DO ic = istal,istol
+                    END DO
+                    END DO
+                END IF
+                IF(fyradw) THEN
+                    DO kc = kstal,kstol
+                    DO ic = istal,istol
             
-            combo2 = trun(ic,jstol,kc)*tdrmix(ic,jstol,kc)
-            combo2 = combo2*store7(ic,jstol,kc)*td1y(ic,jstol,kc)
-            fornow = zero
-            DO jc = jstaw,jstom1
+                        combo2 = trun(ic,jstol,kc)*tdrmix(ic,jstol,kc)
+                    combo2 = combo2*store7(ic,jstol,kc)*td1y(ic,jstol,kc)
+                        fornow = zero
+                    DO jc = jstaw,jstom1
               
-              combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
-              combo1 = combo1*store7(ic,jc,kc)*td1y(ic,jc,kc)
-              fornow = fornow + acbcyr(jstol-jc)*rgspec(ispec)*(combo2-combo1)
+                    combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
+                    combo1 = combo1*store7(ic,jc,kc)*td1y(ic,jc,kc)
+                    fornow = fornow + acbcyr(jstol-jc)*rgspec(ispec)*(combo2-combo1)
               
-            END DO
-            erhs(ic,jstol,kc) = erhs(ic,jstol,kc) + rgspec(ispec)*fornow
+                    END DO
+                    erhs(ic,jstol,kc) = erhs(ic,jstol,kc) + rgspec(ispec)*fornow
             
-          END DO
-        END DO
-      END IF
-      IF(fzladw)THEN
-        DO jc = jstal,jstol
-          DO ic = istal,istol
+                    END DO
+                    END DO
+                END IF
+                IF(fzladw) THEN
+                    DO jc = jstal,jstol
+                    DO ic = istal,istol
             
-            combo2 = trun(ic,jc,kstal)*tdrmix(ic,jc,kstal)
-            combo2 = combo2*store7(ic,jc,kstal)*td1z(ic,jc,kstal)
-            fornow = zero
-            DO kc = kstap1,kstow
+                        combo2 = trun(ic,jc,kstal)*tdrmix(ic,jc,kstal)
+                        combo2 = combo2*store7(ic,jc,kstal)*td1z(ic,jc,kstal)
+                        fornow = zero
+                        DO kc = kstap1,kstow
               
-              combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
-              combo1 = combo1*store7(ic,jc,kc)*td1z(ic,jc,kc)
-              fornow = fornow + acbczl(kc-1)*rgspec(ispec)*(combo1-combo2)
+                    combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
+                    combo1 = combo1*store7(ic,jc,kc)*td1z(ic,jc,kc)
+                    fornow = fornow + acbczl(kc-1)*rgspec(ispec)*(combo1-combo2)
               
-            END DO
-            erhs(ic,jc,kstal) = erhs(ic,jc,kstal) + rgspec(ispec)*fornow
+                    END DO
+                    erhs(ic,jc,kstal) = erhs(ic,jc,kstal) + rgspec(ispec)*fornow
             
-          END DO
-        END DO
-      END IF
-      IF(fzradw)THEN
-        DO jc = jstal,jstol
-          DO ic = istal,istol
+                    END DO
+                    END DO
+                END IF
+                IF(fzradw)THEN
+                    DO jc = jstal,jstol
+                    DO ic = istal,istol
             
-            combo2 = trun(ic,jc,kstol)*tdrmix(ic,jc,kstol)
-            combo2 = combo2*store7(ic,jc,kstol)*td1z(ic,jc,kstol)
-            fornow = zero
-            DO kc = kstaw,kstom1
+                    combo2 = trun(ic,jc,kstol)*tdrmix(ic,jc,kstol)
+                    combo2 = combo2*store7(ic,jc,kstol)*td1z(ic,jc,kstol)
+                    fornow = zero
+                    DO kc = kstaw,kstom1
               
-              combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
-              combo1 = combo1*store7(ic,jc,kc)*td1z(ic,jc,kc)
-              fornow = fornow + acbczr(kstol-kc)*rgspec(ispec)*(combo2-combo1)
+                    combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
+                    combo1 = combo1*store7(ic,jc,kc)*td1z(ic,jc,kc)
+                    fornow = fornow + acbczr(kstol-kc)*rgspec(ispec)*(combo2-combo1)
               
-            END DO
-            erhs(ic,jc,kstol) = erhs(ic,jc,kstol) + rgspec(ispec)*fornow
+                    END DO
+                    erhs(ic,jc,kstol) = erhs(ic,jc,kstol) + rgspec(ispec)*fornow
             
-          END DO
-        END DO
-      END IF
-    END IF
+                    END DO
+                    END DO
+                END IF
+
+            END IF
     
-!         ====================================================================
+!           ====================================================================
     
-!         Y-EQUATION: DIFFUSIVE TERMS
-!         E-EQUATION: FURTHER HEAT FLUX TERMS
-!         SECOND DERIVATIVE TERMS
-!         SECOND DERIVATIVES OF LN(TEMPERATURE) ALREADY STORED
+!           Y-EQUATION: DIFFUSIVE TERMS
+!           E-EQUATION: FURTHER HEAT FLUX TERMS
+!           SECOND DERIVATIVE TERMS
+!           SECOND DERIVATIVES OF LN(TEMPERATURE) ALREADY STORED
     
-!         BOUNDARY CONDITIONS
-!         BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fxldif)CALL zeroxl(d_td2x)
-    IF(fxrdif)CALL zeroxr(d_td2x)
-!         BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fyldif)CALL zeroyl(d_td2y)
-    IF(fyrdif)CALL zeroyr(d_td2y)
-!         BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-    IF(fzldif)CALL zerozl(d_td2z)
-    IF(fzrdif)CALL zerozr(d_td2z)
+!           BOUNDARY CONDITIONS
+!           BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fxldif) call zeroxl(d_td2x)
+            IF(fxrdif) call zeroxr(d_td2x)
+
+!           BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fyldif) call zeroyl(d_td2y)
+            IF(fyrdif) call zeroyr(d_td2y)
+
+!           BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+            IF(fzldif) call zerozl(d_td2z)
+            IF(fzrdif) call zerozr(d_td2z)
     
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        DO ic = istal,istol
+            DO kc = kstal,kstol
+            DO jc = jstal,jstol
+            DO ic = istal,istol
           
-          fornow = (td2x(ic,jc,kc) +  td2y(ic,jc,kc)  &
+            fornow = (td2x(ic,jc,kc) +  td2y(ic,jc,kc)  &
               +  td2z(ic,jc,kc))*store7(ic,jc,kc)
           
 !               Y EQUATION
-          rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
+            rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
           
 !               DIFFUSION CORRECTION VELOCITY DIVERGENCE
-          vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
+            vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
           
-        END DO
-      END DO
-    END DO
+            END DO
+            END DO
+            END DO
     
-!         BOUNDARY CONDITIONS
-!         BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fxladb)CALL zeroxl(d_td2x)
-    IF(fxradb)CALL zeroxr(d_td2x)
-!         BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fyladb)CALL zeroyl(d_td2y)
-    IF(fyradb)CALL zeroyr(d_td2y)
-!         BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-    IF(fzladb)CALL zerozl(d_td2z)
-    IF(fzradb)CALL zerozr(d_td2z)
+!           BOUNDARY CONDITIONS
+!           BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fxladb) call zeroxl(d_td2x)
+            IF(fxradb) call zeroxr(d_td2x)
 
-!         E EQUATION
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(math_kernel_eqZ, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_td2x, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_td2y, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_td2z, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
+!           BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fyladb) call zeroyl(d_td2y)
+            IF(fyradb) call zeroyr(d_td2y)
 
-  END IF
+!           BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+            IF(fzladb) call zerozl(d_td2z)
+            IF(fzradb) call zerozr(d_td2z)
+
+!           E EQUATION
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(math_kernel_eqZ, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_td2x, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_td2y, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_td2z, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
+
+        END IF
   
-!                                                         RATE = Y SOURCE TERMS
-!                                                           VTMP = DIV CORR VEL
-!                                                              WTMP = MIXTURE H
-!       =======================================================================
+!                                                      RATE = Y SOURCE TERMS
+!                                                       VTMP = DIV CORR VEL
+!                                                          WTMP = MIXTURE H
+!   =======================================================================
   
-!       ----------------------------------------------------------------
-!       E-EQUATION: DIFFUSION CORRECTION VELOCITY TERMS EVALUATED BELOW
-!       Y-EQUATION: DIFFUSION CORRECTION VELOCITY TERMS EVALUATED BELOW
-!       ----------------------------------------------------------------
+!   ----------------------------------------------------------------
+!   E-EQUATION: DIFFUSION CORRECTION VELOCITY TERMS EVALUATED BELOW
+!   Y-EQUATION: DIFFUSION CORRECTION VELOCITY TERMS EVALUATED BELOW
+!   ----------------------------------------------------------------
   
-END DO
-!     RSC 08-AUG-2012 EVALUATE ALL SPECIES
-!     END OF RUN THROUGH ALL SPECIES
+    END DO ! END of ispec loop
+!   RSC 08-AUG-2012 EVALUATE ALL SPECIES
+!   END OF RUN THROUGH ALL SPECIES
 
-!     =========================================================================
+!   =========================================================================
 
-!     EVALUATE DIFFUSION CORRECTION VELOCITY TERMS
-!     --------------------------------------------
+!   EVALUATE DIFFUSION CORRECTION VELOCITY TERMS
+!   --------------------------------------------
 
-!     E-EQUATION: FURTHER HEAT FLUX TERMS
-!     -----------------------------------
-!     MIXTURE ENTHALPY GRADIENTS
-CALL dfbydx(d_wtmp,d_store1)
-CALL dfbydy(d_wtmp,d_store2)
-CALL dfbydz(d_wtmp,d_store3)
+!   E-EQUATION: FURTHER HEAT FLUX TERMS
+!   -----------------------------------
+!   MIXTURE ENTHALPY GRADIENTS
+    call dfbydx(d_wtmp,d_store1)
+    call dfbydy(d_wtmp,d_store2)
+    call dfbydz(d_wtmp,d_store3)
 
-!     BOUNDARY CONDITIONS
-!     BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-IF(fxldif)CALL zeroxl(d_store1)
-IF(fxrdif)CALL zeroxr(d_store1)
-!     BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-IF(fyldif)CALL zeroyl(d_store2)
-IF(fyrdif)CALL zeroyr(d_store2)
-!     BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-IF(fzldif)CALL zerozl(d_store3)
-IF(fzrdif)CALL zerozr(d_store3)
+!   BOUNDARY CONDITIONS
+!   BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+    IF(fxldif) call zeroxl(d_store1)
+    IF(fxrdif) call zeroxr(d_store1)
 
-!     BOUNDARY CONDITIONS
-!     BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-IF(fxladb)CALL zeroxl(d_store1)
-IF(fxradb)CALL zeroxr(d_store1)
-!     BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-IF(fyladb)CALL zeroyl(d_store2)
-IF(fyradb)CALL zeroyr(d_store2)
-!     BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-IF(fzladb)CALL zerozl(d_store3)
-IF(fzradb)CALL zerozr(d_store3)
+!   BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+    IF(fyldif) call zeroyl(d_store2)
+    IF(fyrdif) call zeroyr(d_store2)
 
-!     TRANSFER DIV CORR VEL TO TEMPORARY STORE
+!   BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
+    IF(fzldif) call zerozl(d_store3)
+    IF(fzrdif) call zerozr(d_store3)
+
+!   BOUNDARY CONDITIONS
+!   BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+    IF(fxladb) call zeroxl(d_store1)
+    IF(fxradb) call zeroxr(d_store1)
+
+!   BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+    IF(fyladb) call zeroyl(d_store2)
+    IF(fyradb) call zeroyr(d_store2)
+
+!   BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+    IF(fzladb) call zerozl(d_store3)
+    IF(fzradb) call zerozr(d_store3)
+
+!   TRANSFER DIV CORR VEL TO TEMPORARY STORE
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
     call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ))
 
-!     BOUNDARY CONDITIONS
-!     BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-IF(fxladb)CALL zeroxl(d_store4)
-IF(fxradb)CALL zeroxr(d_store4)
-!     BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-IF(fyladb)CALL zeroyl(d_store4)
-IF(fyradb)CALL zeroyr(d_store4)
-!     BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
-IF(fzladb)CALL zerozl(d_store4)
-IF(fzradb)CALL zerozr(d_store4)
+!   BOUNDARY CONDITIONS
+!   BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+    IF(fxladb) call zeroxl(d_store4)
+    IF(fxradb) call zeroxr(d_store4)
 
-!     DIV RHO VCORR HMIX
+!   BC IN Y: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+    IF(fyladb) call zeroyl(d_store4)
+    IF(fyradb) call zeroyr(d_store4)
+
+!   BC IN Z: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
+    IF(fzladb) call zerozl(d_store4)
+    IF(fzradb) call zerozr(d_store4)
+
+!   DIV RHO VCORR HMIX
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
     call ops_par_loop(math_kernel_eqAH, "A = A-B*C-D*E-F*G-H*I", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
@@ -2808,21 +2752,21 @@ IF(fzradb)CALL zerozr(d_store4)
                     ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
                     ops_arg_dat(d_wcor, 1, s3d_000, "real(dp)", OPS_READ))
 
-!                                                         RATE = Y SOURCE TERMS
-!                                                           VTMP = DIV CORR VEL
-!     =========================================================================
+!                                                       RATE = Y SOURCE TERMS
+!                                                         VTMP = DIV CORR VEL
+!   =========================================================================
 
-!     MIXTURE AVERAGED TRANSPORT
-!     EVALUATE THE VISCOSITY
+!   MIXTURE AVERAGED TRANSPORT
+!   EVALUATE THE VISCOSITY
 
-!     RSC 17-APR-2013
-!     TRANSP CONTAINS LN(T)
-!     STORE VISCOSITY IN DIFMIX FOR NOW
-IF(flmavt)THEN
+!   RSC 17-APR-2013
+!   TRANSP CONTAINS LN(T)
+!   STORE VISCOSITY IN DIFMIX FOR NOW
+    IF(flmavt)THEN
   
-  DO kc = kstab,kstob
-    DO jc = jstab,jstob
-      DO ic = istab,istob
+        DO kc = kstab,kstob
+        DO jc = jstab,jstob
+        DO ic = istab,istob
         
 !             VISCOSITY FOR EACH SPECIES
         DO ispec = 1, nspec
@@ -2849,163 +2793,163 @@ IF(flmavt)THEN
         END DO
         difmix(ic,jc,kc) = combo1
         
-      END DO
-    END DO
-  END DO
+        END DO
+        END DO
+        END DO
   
-END IF
+    END IF
 
-!     =========================================================================
+!   =========================================================================
 
-!     RUN THROUGH ALL SPECIES
-!     -----------------------
-!     RSC 08-AUG-2012 EVALUATE ALL SPECIES
-!     RSC 08-JUN-2015 REMOVE Nth SPECIES TREATMENT
-DO ispec = 1,nspec
-  
+!   RUN THROUGH ALL SPECIES
+!   -----------------------
+!   RSC 08-AUG-2012 EVALUATE ALL SPECIES
+!   RSC 08-JUN-2015 REMOVE Nth SPECIES TREATMENT
+    DO ispec = 1,nspec
 !       Y-EQUATION: DIFFUSIVE TERMS
 !       ---------------------------
 !       RECOMPUTE SPECIES MASS FRACTION GRADIENTS
-  DO kc = kstab,kstob
-    DO jc = jstab,jstob
-      DO ic = istab,istob
+        DO kc = kstab,kstob
+        DO jc = jstab,jstob
+        DO ic = istab,istob
         
         store7(ic,jc,kc) = yrhs(ispec,ic,jc,kc)
         
-      END DO
-    END DO
-  END DO
-  CALL dfbydx(d_store7,d_store1)
-  CALL dfbydy(d_store7,d_store2)
-  CALL dfbydz(d_store7,d_store3)
+        END DO
+        END DO
+        END DO
+
+        call dfbydx(d_store7,d_store1)
+        call dfbydy(d_store7,d_store2)
+        call dfbydz(d_store7,d_store3)
   
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fxldif)CALL zeroxl(d_store1)
-  IF(fxrdif)CALL zeroxr(d_store1)
+        IF(fxldif) call zeroxl(d_store1)
+        IF(fxrdif) call zeroxr(d_store1)
+
 !       BC IN Y: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fyldif)CALL zeroyl(d_store2)
-  IF(fyrdif)CALL zeroyr(d_store2)
+        IF(fyldif) call zeroyl(d_store2)
+        IF(fyrdif) call zeroyr(d_store2)
+
 !       BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
-  IF(fzldif)CALL zerozl(d_store3)
-  IF(fzrdif)CALL zerozr(d_store3)
+        IF(fzldif) call zerozl(d_store3)
+        IF(fzrdif) call zerozr(d_store3)
   
 !       DIV RHO VCORR Y
 !       STORE Y SOURCE TERMS IN YRHS
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      DO ic = istal,istol
+        DO kc = kstal,kstol
+        DO jc = jstal,jstol
+        DO ic = istal,istol
         
         yrhs(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc)  &
             - yrhs(ispec,ic,jc,kc)*vtmp(ic,jc,kc)  &
             - store1(ic,jc,kc)*ucor(ic,jc,kc) - store2(ic,jc,kc)*vcor(ic,jc,kc)  &
             - store3(ic,jc,kc)*wcor(ic,jc,kc)
         
-      END DO
+        END DO
+        END DO
+        END DO
+  
     END DO
-  END DO
+
+!   RSC 08-AUG-2012 EVALUATE ALL SPECIES
+!   END OF RUN THROUGH ALL SPECIES
+!                                                            ALL STORES CLEAR
+!   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+!   ------------------------------------------------
+!   Y-EQUATION: SOURCE TERMS COMPLETE
+!   ------------------------------------------------
+!   E-EQUATION: PRESSURE-WORK AND VISCOUS WORK TERMS
+!               EVALUATED IN SUBROUTINE RHSVEL
+!   ------------------------------------------------
+
+!   =========================================================================
+!   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+!   =========================================================================
+
+!   COLLECT DENSITY AND ITS GRADIENTS FOR BCs
+!   -----------------------------------------
+
+!   X-DIRECTION: DRHODX
+    IF(fxlcnv.OR.fxrcnv) THEN
   
-END DO
-
-!     RSC 08-AUG-2012 EVALUATE ALL SPECIES
-!     END OF RUN THROUGH ALL SPECIES
-!                                                              ALL STORES CLEAR
-!     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-!     ------------------------------------------------
-!     Y-EQUATION: SOURCE TERMS COMPLETE
-!     ------------------------------------------------
-!     E-EQUATION: PRESSURE-WORK AND VISCOUS WORK TERMS
-!                 EVALUATED IN SUBROUTINE RHSVEL
-!     ------------------------------------------------
-
-!     =========================================================================
-!     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-!     =========================================================================
-
-!     COLLECT DENSITY AND ITS GRADIENTS FOR BCs
-!     -----------------------------------------
-
-!     X-DIRECTION: DRHODX
-IF(fxlcnv.OR.fxrcnv)THEN
+        call dfbydx(d_drhs,d_store1)
   
-  CALL dfbydx(d_drhs,d_store1)
+        IF(fxlcnv) THEN
+            rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(boundary_kernel_density_xdir, "COLLECT DENSITY AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
+        END IF
+        IF(fxrcnv) THEN
+            rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(boundary_kernel_density_xdir, "COLLECT DENSITY AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
+        END IF
+
+    END IF
+
+!   Y-DIRECTION: DRHODY
+    IF(fylcnv.OR.fyrcnv) THEN
   
-  IF(fxlcnv)THEN
-    rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_density_xdir, "COLLECT DENSITY AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
-
-  END IF
-  IF(fxrcnv)THEN
-    rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_density_xdir, "COLLECT DENSITY AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bcl2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
-
-  END IF
+        call dfbydy(d_drhs,d_store2)
   
-END IF
+        IF(fylcnv) THEN
+            rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+            call ops_par_loop(boundary_kernel_density_ydir, "COLLECT DENSITY AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
 
-!     Y-DIRECTION: DRHODY
-IF(fylcnv.OR.fyrcnv)THEN
+        END IF
+        IF(fyrcnv) THEN
+            rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+            call ops_par_loop(boundary_kernel_density_ydir, "COLLECT DENSITY AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
+        END IF
   
-  CALL dfbydy(d_drhs,d_store2)
+    END IF
+
+!   Z-DIRECTION: DRHODZ
+    IF(fzlcnv.OR.fzrcnv) THEN
+
+        call dfbydz(d_drhs,d_store3)
   
-  IF(fylcnv)THEN
-    rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_density_ydir, "COLLECT DENSITY AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bcl2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+        IF(fzlcnv) THEN
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+            call ops_par_loop(boundary_kernel_density_zdir, "COLLECT DENSITY AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
 
-  END IF
-  IF(fyrcnv)THEN
-    rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
-    call ops_par_loop(boundary_kernel_density_ydir, "COLLECT DENSITY AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bcl2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+        END IF
+        IF(fzrcnv) THEN
+            rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+            call ops_par_loop(boundary_kernel_density_zdir, "COLLECT DENSITY AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
 
-  END IF
+        END IF
   
-END IF
+    END IF
 
-!     Z-DIRECTION: DRHODZ
-IF(fzlcnv.OR.fzrcnv)THEN
-  
-  CALL dfbydz(d_drhs,d_store3)
-  
-  IF(fzlcnv)THEN
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
-    call ops_par_loop(boundary_kernel_density_zdir, "COLLECT DENSITY AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bcl2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+!   =========================================================================
 
-  END IF
-  IF(fzrcnv)THEN
-    rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
-    call ops_par_loop(boundary_kernel_density_zdir, "COLLECT DENSITY AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_bcl2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
-
-  END IF
-  
-END IF
-
-!     =========================================================================
-
-
-RETURN
 END SUBROUTINE rhscal
