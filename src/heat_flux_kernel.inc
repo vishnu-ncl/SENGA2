@@ -520,3 +520,158 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fzrdfw(rate,erhs,vtmp,utmp,store7,arr1,acb
 
 END SUBROUTINE heat_flux_kernel_enthalpy2_fzrdfw
 
+SUBROUTINE heat_flux_kernel_isothermal_fxladw(erhs,trun,tdrmix,store7,td1x,acbcxl,rgspec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: erhs
+    real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,store7,td1x
+    real(kind=dp), dimension(1), intent(in) :: acbcxl
+    real(kind=dp), intent(in) :: rgspec
+    real(kind=dp) :: fornow, combo0, combo1, combo2, combo3, combo4
+
+    combo0 = trun(OPS_ACC2(0,0,0))*tdrmix(OPS_ACC3(0,0,0))*store7(OPS_ACC4(0,0,0))*td1x(OPS_ACC5(0,0,0))
+
+    combo1 = trun(OPS_ACC2(1,0,0))*tdrmix(OPS_ACC3(1,0,0))*store7(OPS_ACC4(1,0,0))*td1x(OPS_ACC5(1,0,0))
+    combo2 = trun(OPS_ACC2(2,0,0))*tdrmix(OPS_ACC3(2,0,0))*store7(OPS_ACC4(2,0,0))*td1x(OPS_ACC5(2,0,0))
+    combo3 = trun(OPS_ACC2(3,0,0))*tdrmix(OPS_ACC3(3,0,0))*store7(OPS_ACC4(3,0,0))*td1x(OPS_ACC5(3,0,0))
+    combo4 = trun(OPS_ACC2(4,0,0))*tdrmix(OPS_ACC3(4,0,0))*store7(OPS_ACC4(4,0,0))*td1x(OPS_ACC5(4,0,0))
+
+    fornow = acbcxl(1)*rgspec*(combo1-combo0) &
+           + acbcxl(2)*rgspec*(combo2-combo0) &
+           + acbcxl(3)*rgspec*(combo3-combo0) &
+           + acbcxl(4)*rgspec*(combo4-combo0)
+
+    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + rgspec*fornow    
+
+END SUBROUTINE heat_flux_kernel_isothermal_fxladw
+
+SUBROUTINE heat_flux_kernel_isothermal_fxradw(erhs,trun,tdrmix,store7,td1x,acbcxr,rgspec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: erhs
+    real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,store7,td1x
+    real(kind=dp), dimension(1), intent(in) :: acbcxr
+    real(kind=dp), intent(in) :: rgspec
+    real(kind=dp) :: fornow, combo0, combo1, combo2, combo3, combo4
+
+    combo0 = trun(OPS_ACC2(0,0,0))*tdrmix(OPS_ACC3(0,0,0))*store7(OPS_ACC4(0,0,0))*td1x(OPS_ACC5(0,0,0))
+
+    combo4 = trun(OPS_ACC2(-4,0,0))*tdrmix(OPS_ACC3(-4,0,0))*store7(OPS_ACC4(-4,0,0))*td1x(OPS_ACC5(-4,0,0))
+    combo3 = trun(OPS_ACC2(-3,0,0))*tdrmix(OPS_ACC3(-3,0,0))*store7(OPS_ACC4(-3,0,0))*td1x(OPS_ACC5(-3,0,0))
+    combo2 = trun(OPS_ACC2(-2,0,0))*tdrmix(OPS_ACC3(-2,0,0))*store7(OPS_ACC4(-2,0,0))*td1x(OPS_ACC5(-2,0,0))
+    combo1 = trun(OPS_ACC2(-1,0,0))*tdrmix(OPS_ACC3(-1,0,0))*store7(OPS_ACC4(-1,0,0))*td1x(OPS_ACC5(-1,0,0))
+
+    fornow = acbcxr(4)*rgspec*(combo0-combo4) &
+           + acbcxr(3)*rgspec*(combo0-combo3) &
+           + acbcxr(2)*rgspec*(combo0-combo2) &
+           + acbcxr(1)*rgspec*(combo0-combo1)
+
+    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + rgspec*fornow
+
+END SUBROUTINE heat_flux_kernel_isothermal_fxradw
+
+SUBROUTINE heat_flux_kernel_isothermal_fyladw(erhs,trun,tdrmix,store7,td1y,acbcyl,rgspec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: erhs
+    real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,store7,td1y
+    real(kind=dp), dimension(1), intent(in) :: acbcyl
+    real(kind=dp), intent(in) :: rgspec
+    real(kind=dp) :: fornow, combo0, combo1, combo2, combo3, combo4
+
+    combo0 = trun(OPS_ACC2(0,0,0))*tdrmix(OPS_ACC3(0,0,0))*store7(OPS_ACC4(0,0,0))*td1y(OPS_ACC5(0,0,0))
+
+    combo1 = trun(OPS_ACC2(0,1,0))*tdrmix(OPS_ACC3(0,1,0))*store7(OPS_ACC4(0,1,0))*td1y(OPS_ACC5(0,1,0))
+    combo2 = trun(OPS_ACC2(0,2,0))*tdrmix(OPS_ACC3(0,2,0))*store7(OPS_ACC4(0,2,0))*td1y(OPS_ACC5(0,2,0))
+    combo3 = trun(OPS_ACC2(0,3,0))*tdrmix(OPS_ACC3(0,3,0))*store7(OPS_ACC4(0,3,0))*td1y(OPS_ACC5(0,3,0))
+    combo4 = trun(OPS_ACC2(0,4,0))*tdrmix(OPS_ACC3(0,4,0))*store7(OPS_ACC4(0,4,0))*td1y(OPS_ACC5(0,4,0))
+
+    fornow = acbcyl(1)*rgspec*(combo1-combo0) &
+           + acbcyl(2)*rgspec*(combo2-combo0) &
+           + acbcyl(3)*rgspec*(combo3-combo0) &
+           + acbcyl(4)*rgspec*(combo4-combo0)
+
+    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + rgspec*fornow
+
+END SUBROUTINE heat_flux_kernel_isothermal_fyladw
+
+SUBROUTINE heat_flux_kernel_isothermal_fyradw(erhs,trun,tdrmix,store7,td1y,acbcyr,rgspec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: erhs
+    real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,store7,td1y
+    real(kind=dp), dimension(1), intent(in) :: acbcyr
+    real(kind=dp), intent(in) :: rgspec
+    real(kind=dp) :: fornow, combo0, combo1, combo2, combo3, combo4
+
+    combo0 = trun(OPS_ACC2(0,0,0))*tdrmix(OPS_ACC3(0,0,0))*store7(OPS_ACC4(0,0,0))*td1y(OPS_ACC5(0,0,0))
+
+    combo4 = trun(OPS_ACC2(0,-4,0))*tdrmix(OPS_ACC3(0,-4,0))*store7(OPS_ACC4(0,-4,0))*td1y(OPS_ACC5(0,-4,0))
+    combo3 = trun(OPS_ACC2(0,-3,0))*tdrmix(OPS_ACC3(0,-3,0))*store7(OPS_ACC4(0,-3,0))*td1y(OPS_ACC5(0,-3,0))
+    combo2 = trun(OPS_ACC2(0,-2,0))*tdrmix(OPS_ACC3(0,-2,0))*store7(OPS_ACC4(0,-2,0))*td1y(OPS_ACC5(0,-2,0))
+    combo1 = trun(OPS_ACC2(0,-1,0))*tdrmix(OPS_ACC3(0,-1,0))*store7(OPS_ACC4(0,-1,0))*td1y(OPS_ACC5(0,-1,0))
+
+    fornow = acbcyr(4)*rgspec*(combo0-combo4) &
+           + acbcyr(3)*rgspec*(combo0-combo3) &
+           + acbcyr(2)*rgspec*(combo0-combo2) &
+           + acbcyr(1)*rgspec*(combo0-combo1)
+
+    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + rgspec*fornow
+
+END SUBROUTINE heat_flux_kernel_isothermal_fyradw
+
+SUBROUTINE heat_flux_kernel_isothermal_fzladw(erhs,trun,tdrmix,store7,td1z,acbczl,rgspec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: erhs
+    real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,store7,td1z
+    real(kind=dp), dimension(1), intent(in) :: acbczl
+    real(kind=dp), intent(in) :: rgspec
+    real(kind=dp) :: fornow, combo0, combo1, combo2, combo3, combo4
+
+    combo0 = trun(OPS_ACC2(0,0,0))*tdrmix(OPS_ACC3(0,0,0))*store7(OPS_ACC4(0,0,0))*td1z(OPS_ACC5(0,0,0))
+
+    combo1 = trun(OPS_ACC2(0,0,1))*tdrmix(OPS_ACC3(0,0,1))*store7(OPS_ACC4(0,0,1))*td1z(OPS_ACC5(0,0,1))
+    combo2 = trun(OPS_ACC2(0,0,2))*tdrmix(OPS_ACC3(0,0,2))*store7(OPS_ACC4(0,0,2))*td1z(OPS_ACC5(0,0,2))
+    combo3 = trun(OPS_ACC2(0,0,3))*tdrmix(OPS_ACC3(0,0,3))*store7(OPS_ACC4(0,0,3))*td1z(OPS_ACC5(0,0,3))
+    combo4 = trun(OPS_ACC2(0,0,4))*tdrmix(OPS_ACC3(0,0,4))*store7(OPS_ACC4(0,0,4))*td1z(OPS_ACC5(0,0,4))
+
+    fornow = acbczl(1)*rgspec*(combo1-combo0) &
+           + acbczl(2)*rgspec*(combo2-combo0) &
+           + acbczl(3)*rgspec*(combo3-combo0) &
+           + acbczl(4)*rgspec*(combo4-combo0)
+
+    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + rgspec*fornow
+
+END SUBROUTINE heat_flux_kernel_isothermal_fzladw
+
+SUBROUTINE heat_flux_kernel_isothermal_fzradw(erhs,trun,tdrmix,store7,td1z,acbczr,rgspec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: erhs
+    real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,store7,td1z
+    real(kind=dp), dimension(1), intent(in) :: acbczr
+    real(kind=dp), intent(in) :: rgspec
+    real(kind=dp) :: fornow, combo0, combo1, combo2, combo3, combo4
+
+    combo0 = trun(OPS_ACC2(0,0,0))*tdrmix(OPS_ACC3(0,0,0))*store7(OPS_ACC4(0,0,0))*td1z(OPS_ACC5(0,0,0))
+
+    combo4 = trun(OPS_ACC2(0,0,-4))*tdrmix(OPS_ACC3(0,0,-4))*store7(OPS_ACC4(0,0,-4))*td1z(OPS_ACC5(0,0,-4))
+    combo3 = trun(OPS_ACC2(0,0,-3))*tdrmix(OPS_ACC3(0,0,-3))*store7(OPS_ACC4(0,0,-3))*td1z(OPS_ACC5(0,0,-3))
+    combo2 = trun(OPS_ACC2(0,0,-2))*tdrmix(OPS_ACC3(0,0,-2))*store7(OPS_ACC4(0,0,-2))*td1z(OPS_ACC5(0,0,-2))
+    combo1 = trun(OPS_ACC2(0,0,-1))*tdrmix(OPS_ACC3(0,0,-1))*store7(OPS_ACC4(0,0,-1))*td1z(OPS_ACC5(0,0,-1))
+
+    fornow = acbczr(4)*rgspec*(combo0-combo4) &
+           + acbczr(3)*rgspec*(combo0-combo3) &
+           + acbczr(2)*rgspec*(combo0-combo2) &
+           + acbczr(1)*rgspec*(combo0-combo1)
+
+    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + rgspec*fornow
+
+END SUBROUTINE heat_flux_kernel_isothermal_fzradw

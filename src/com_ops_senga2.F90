@@ -48,6 +48,9 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_dudtxl, d_dvdtxl, d_dwdtxl, d_dtdtxl, d_dddtxl
     TYPE(ops_dat) :: d_dudtxr, d_dvdtxr, d_dwdtxr, d_dtdtxr, d_dddtxr    
 
+    TYPE(ops_dat) :: d_acouxl, d_ova2xl, d_gam1xl, d_ovgmxl, d_sydtxl, d_sorpxl
+    TYPE(ops_dat) :: d_acouxr, d_ova2xr, d_gam1xr, d_ovgmxr, d_sydtxr, d_sorpxr
+
     TYPE(ops_dat) :: d_bcl1yl, d_bcl2yl, d_bcl3yl, d_bcl4yl, d_bcl5yl, d_bcltyl
     TYPE(ops_dat) :: d_bcl1yr, d_bcl2yr, d_bcl3yr, d_bcl4yr, d_bcl5yr, d_bcltyr
 
@@ -59,6 +62,9 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_dudtyl, d_dvdtyl, d_dwdtyl, d_dtdtyl, d_dddtyl
     TYPE(ops_dat) :: d_dudtyr, d_dvdtyr, d_dwdtyr, d_dtdtyr, d_dddtyr
 
+    TYPE(ops_dat) :: d_acouyl, d_ova2yl, d_gam1yl, d_ovgmyl, d_sydtyl, d_sorpyl
+    TYPE(ops_dat) :: d_acouyr, d_ova2yr, d_gam1yr, d_ovgmyr, d_sydtyr, d_sorpyr
+
     TYPE(ops_dat) :: d_bcl1zl, d_bcl2zl, d_bcl3zl, d_bcl4zl, d_bcl5zl, d_bcltzl
     TYPE(ops_dat) :: d_bcl1zr, d_bcl2zr, d_bcl3zr, d_bcl4zr, d_bcl5zr, d_bcltzr
 
@@ -69,6 +75,9 @@ MODULE com_ops_senga
 
     TYPE(ops_dat) :: d_dudtzl, d_dvdtzl, d_dwdtzl, d_dtdtzl, d_dddtzl
     TYPE(ops_dat) :: d_dudtzr, d_dvdtzr, d_dwdtzr, d_dtdtzr, d_dddtzr
+
+    TYPE(ops_dat) :: d_acouzl, d_ova2zl, d_gam1zl, d_ovgmzl, d_sydtzl, d_sorpzl
+    TYPE(ops_dat) :: d_acouzr, d_ova2zr, d_gam1zr, d_ovgmzr, d_sydtzr, d_sorpzr
 
     TYPE(ops_reduction) :: h_erdtot, h_erutot, h_ervtot, h_erwtot, h_eretot, h_erytot
 

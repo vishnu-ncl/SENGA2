@@ -613,13 +613,12 @@ SUBROUTINE rhscal
     call chrate
 !---UA
     DO ispec = 1,nspec
-        DO kc = kstal,kstol
-            DO jc = jstal,jstol
-                DO ic = istal,istol
-                    rrte(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc)
-                END DO
-            END DO
-        END DO
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(math_multidim_kernel_eqB, "A_multidim = B_multidim", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_rrte, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
     END DO
 !---end-UA
 !                                                        RATE = REACTION RATE
@@ -755,16 +754,17 @@ SUBROUTINE rhscal
 
 !   PRESSURE
     IF(flmixp) THEN
+    
         DO kc = kstab,kstob
         DO jc = jstab,jstob
         DO ic = istab,istob
-        
+
         store7(ic,jc,kc) = LOG(prun(ic,jc,kc))
-        
+
         END DO
         END DO
         END DO
-  
+
         call dfbydx(d_store7,d_pd1x)
         call dfbydy(d_store7,d_pd1y)
         call dfbydz(d_store7,d_pd1z)
@@ -798,16 +798,12 @@ SUBROUTINE rhscal
   
 !       YRHS CONTAINS RHO Y: CONVERT TO Y
 !       Y IS PARALLEL
-        DO kc = kstalt,kstolt
-            DO jc = jstalt,jstolt
-                DO ic = istalt,istolt
+        rangexyz = (/istalt,istolt,jstalt,jstolt,kstalt,kstolt/)
+        call ops_par_loop(math_multidim_kernel_eqE, "A_multidim = A_multidim/B", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
-                    yrhs(ispec,ic,jc,kc) = yrhs(ispec,ic,jc,kc)/drhs(ic,jc,kc)
-
-                END DO
-            END DO
-        END DO
-  
 !       =======================================================================
   
 !       Y EQUATION: CONVECTIVE TERMS
@@ -815,16 +811,13 @@ SUBROUTINE rhscal
 !       HALF Y DIV RHO U
   
 !       COLLECT Y SOURCE TERMS IN RATE FOR NOW
-        DO kc = kstal,kstol
-            DO jc = jstal,jstol
-                DO ic = istal,istol
-        
-                rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc)  &
-                            - half*yrhs(ispec,ic,jc,kc)*divm(ic,jc,kc)
-        
-                END DO
-            END DO
-        END DO
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(math_multidim_kernel_eqI, "A_multidim = A_multidim - half*B_multidim*C", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_divm, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
 !                                                         RATE = Y SOURCE TERMS
 !                                                           VTMP = DIV CORR VEL
 !                                                       WTMP = MIXTURE H
@@ -836,56 +829,46 @@ SUBROUTINE rhscal
   
 !       D/DX RHO U Y
 !       RHO U Y IS PARALLEL
-        DO kc = kstab,kstob
-            DO jc = jstab,jstob
-                DO ic = istab,istob
-        
-                    store7(ic,jc,kc) = yrhs(ispec,ic,jc,kc)*urhs(ic,jc,kc)
-        
-                END DO
-            END DO
-        END DO
+        rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+        call ops_par_loop(math_multidim_kernel_eqD, "A = B_multidim*C", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
         call dfbydx(d_store7,d_store1)
   
 !       D/DY RHO V Y
 !       RHO V Y IS PARALLEL
-        DO kc = kstab,kstob
-            DO jc = jstab,jstob
-                DO ic = istab,istob
-        
-                    store7(ic,jc,kc) = yrhs(ispec,ic,jc,kc)*vrhs(ic,jc,kc)
-        
-                END DO
-            END DO
-        END DO
+        rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+        call ops_par_loop(math_multidim_kernel_eqD, "A = B_multidim*C", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
         call dfbydy(d_store7,d_store2)
   
 !       D/DZ RHO W Y
 !       RHO W Y IS PARALLEL
-        DO kc = kstab,kstob
-        DO jc = jstab,jstob
-        DO ic = istab,istob
-        
-        store7(ic,jc,kc) = yrhs(ispec,ic,jc,kc)*wrhs(ic,jc,kc)
-        
-        END DO
-        END DO
-        END DO
+        rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+        call ops_par_loop(math_multidim_kernel_eqD, "A = B_multidim*C", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         call dfbydz(d_store7,d_store3)
   
 !       COLLECT DIV RHO U Y IN RATE FOR NOW
-        DO kc = kstal,kstol
-        DO jc = jstal,jstol
-        DO ic = istal,istol
-        
-        rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc)  &
-            - half*(store1(ic,jc,kc) + store2(ic,jc,kc)  &
-            + store3(ic,jc,kc))
-        
-        END DO
-        END DO
-        END DO
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(math_multidim_kernel_eqH, "A_multidim = A_multidim - half*(B+C+D)", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
 !                                                  RATE = Y SOURCE TERMS
 !                                                           VTMP = DIV CORR VEL
 !                                                       WTMP = MIXTURE H
@@ -895,15 +878,11 @@ SUBROUTINE rhscal
 !       ------------------------------------
   
 !       SPECIES MASS FRACTION GRADIENTS
-        DO kc = kstab,kstob
-        DO jc = jstab,jstob
-        DO ic = istab,istob
-        
-        store7(ic,jc,kc) = yrhs(ispec,ic,jc,kc)
-        
-        END DO
-        END DO
-        END DO
+        rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+        call ops_par_loop(math_multidim_kernel_eqA, "A = B_multidim", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         call dfbydx(d_store7,d_store1)
         call dfbydy(d_store7,d_store2)
@@ -994,18 +973,17 @@ SUBROUTINE rhscal
 !       HALF RHO U.DEL Y
   
 !       COLLECT HALF RHO U.DEL Y IN RATE FOR NOW
-        DO kc = kstal,kstol
-        DO jc = jstal,jstol
-        DO ic = istal,istol
-        
-        rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc)  &
-            - half*(store1(ic,jc,kc)*urhs(ic,jc,kc)  &
-            + store2(ic,jc,kc)*vrhs(ic,jc,kc) + store3(ic,jc,kc)*wrhs(ic,jc,kc))
-        
-        END DO
-        END DO
-        END DO
-  
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(math_multidim_kernel_eqJ, "A_multidim = A_multidim - half*(B*C+D*E+F*G)", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
 !       -------------------------------------
 !       Y-EQUATION: CONVECTIVE TERMS COMPLETE
 !       -------------------------------------
@@ -1494,15 +1472,11 @@ SUBROUTINE rhscal
                         ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
 
 !       MOVE MASS FRACTION TO STORE7
-        DO kc = kstab,kstob
-        DO jc = jstab,jstob
-        DO ic = istab,istob
-        
-        store7(ic,jc,kc) = yrhs(ispec,ic,jc,kc)
-        
-        END DO
-        END DO
-        END DO
+        rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+        call ops_par_loop(math_multidim_kernel_eqA, "A = B_multidim", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         call d2fdx2(d_store7,d_store1)
         call d2fdy2(d_store7,d_store2)
@@ -1573,17 +1547,13 @@ SUBROUTINE rhscal
 !       MIXTURE MOLAR MASS TERMS
         IF(flmixw) THEN
 !           FIRST AND SECOND DERIVATIVES OF LN(MIXTURE MOLAR MASS) ALREADY STORED
-    
-            DO kc = kstab,kstob
-            DO jc = jstab,jstob
-            DO ic = istab,istob
-          
-            store7(ic,jc,kc) = difmix(ic,jc,kc)*yrhs(ispec,ic,jc,kc)
-          
-            END DO
-            END DO
-            END DO
-    
+            rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+            call ops_par_loop(math_multidim_kernel_eqC, "A = B*C_multidim", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_difmix, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
 !           DIFFUSION CORRECTION VELOCITY
 !           FIRST DERIVATIVES OF LN(MIXTURE MOLAR MASS) ALREADY STORED
             rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
@@ -1863,18 +1833,16 @@ SUBROUTINE rhscal
 !       PRESSURE DIFFUSION TERMS
         IF(flmixp) THEN
 !           FIRST AND SECOND DERIVATIVES OF LN(PRESSURE) ALREADY STORED
-    
-            DO kc = kstab,kstob
-            DO jc = jstab,jstob
-            DO ic = istab,istob
-          
-            store7(ic,jc,kc) = difmix(ic,jc,kc)*yrhs(ispec,ic,jc,kc)  &
-              *(one-wmolar(ispec)/wmomix(ic,jc,kc))
-          
-            END DO
-            END DO
-            END DO
-    
+
+            rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+            call ops_par_loop(math_multidim_kernel_eqG, "A = B*C_multidim*(one-const_val/D)", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_difmix, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_wmomix, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(wmolar(ispec), 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
 !           DIFFUSION CORRECTION VELOCITY
 !           FIRST DERIVATIVES OF LN(PRESSURE) ALREADY STORED
             rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
@@ -2153,18 +2121,15 @@ SUBROUTINE rhscal
 !       SORET EFFECT (THERMAL DIFFUSION) TERMS
         IF(flmsor(ispec))THEN
 !           FIRST AND SECOND DERIVATIVES OF LN(TEMPERATURE) ALREADY STORED
-    
-            DO kc = kstab,kstob
-            DO jc = jstab,jstob
-            DO ic = istab,istob
-          
-            store7(ic,jc,kc) = difmix(ic,jc,kc)*yrhs(ispec,ic,jc,kc)  &
-              *tdrmix(ic,jc,kc)
-          
-            END DO
-            END DO
-            END DO
-    
+
+            rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+            call ops_par_loop(math_multidim_kernel_eqF, "A = B*C_multidim*D", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_difmix, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_tdrmix, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
 !           DIFFUSION CORRECTION VELOCITY
 !           FIRST DERIVATIVES OF LN(TEMPERATURE) ALREADY STORED
             rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
@@ -2490,118 +2455,76 @@ SUBROUTINE rhscal
 !               E-EQUATION: HEAT FLUX TERMS
 !               WALL BC: ISOTHERMAL WALL
                 IF(fxladw) THEN
-                    DO kc = kstal,kstol
-                    DO jc = jstal,jstol
-            
-                    combo2 = trun(istal,jc,kc)*tdrmix(istal,jc,kc)
-                    combo2 = combo2*store7(istal,jc,kc)*td1x(istal,jc,kc)
-                    fornow = zero
-                    DO ic = istap1,istow
-              
-                    combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
-                    combo1 = combo1*store7(ic,jc,kc)*td1x(ic,jc,kc)
-                    fornow = fornow + acbcxl(ic-1)*rgspec(ispec)*(combo1-combo2)
-              
-                    END DO
-                    erhs(istal,jc,kc) = erhs(istal,jc,kc) + rgspec(ispec)*fornow
-            
-                    END DO
-                    END DO
+                    rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+                    call ops_par_loop(heat_flux_kernel_isothermal_fxladw, "HEAT FLUX: Isothermal fxladw", senga_grid, 3, rangexyz,  &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(dp)", OPS_WRITE), &
+                                    ops_arg_dat(d_trun,   1, s3d_000_to_p400_x, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_000_to_p400_x, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_000_to_p400_x, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_td1x,   1, s3d_000_to_p400_x, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(acbcxl,   1, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ))
+
                 END IF
                 IF(fxradw) THEN
-                    DO kc = kstal,kstol
-                    DO jc = jstal,jstol
-            
-                    combo2 = trun(istol,jc,kc)*tdrmix(istol,jc,kc)
-                    combo2 = combo2*store7(istol,jc,kc)*td1x(istol,jc,kc)
-                    fornow = zero
-                    DO ic = istaw,istom1
-              
-                    combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
-                    combo1 = combo1*store7(ic,jc,kc)*td1x(ic,jc,kc)
-                    fornow = fornow + acbcxr(istol-ic)*rgspec(ispec)*(combo2-combo1)
-              
-                    END DO
-                    erhs(istol,jc,kc) = erhs(istol,jc,kc) + rgspec(ispec)*fornow
-            
-                    END DO
-                    END DO
+                    rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+                    call ops_par_loop(heat_flux_kernel_isothermal_fxradw, "HEAT FLUX: Isothermal fxradw", senga_grid, 3, rangexyz,  &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(dp)", OPS_WRITE), &
+                                    ops_arg_dat(d_trun,   1, s3d_000_to_m400_x, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_000_to_m400_x, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_000_to_m400_x, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_td1x,   1, s3d_000_to_m400_x, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(acbcxr,   1, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ))
+
                 END IF
                 IF(fyladw) THEN
-                    DO kc = kstal,kstol
-                    DO ic = istal,istol
-            
-                    combo2 = trun(ic,jstal,kc)*tdrmix(ic,jstal,kc)
-                    combo2 = combo2*store7(ic,jstal,kc)*td1y(ic,jstal,kc)
-                    fornow = zero
-                    DO jc = jstap1,jstow
-              
-                    combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
-                    combo1 = combo1*store7(ic,jc,kc)*td1y(ic,jc,kc)
-                    fornow = fornow + acbcyl(jc-1)*rgspec(ispec)*(combo1-combo2)
-              
-                    END DO
-                    erhs(ic,jstal,kc) = erhs(ic,jstal,kc) + rgspec(ispec)*fornow
-            
-                    END DO
-                    END DO
+                    rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+                    call ops_par_loop(heat_flux_kernel_isothermal_fyladw, "HEAT FLUX: Isothermal fyladw", senga_grid, 3, rangexyz,  &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(dp)", OPS_WRITE), &
+                                    ops_arg_dat(d_trun,   1, s3d_000_to_p040_y, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_000_to_p040_y, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_000_to_p040_y, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_td1y,   1, s3d_000_to_p040_y, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(acbcyl,   1, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ))
+
                 END IF
                 IF(fyradw) THEN
-                    DO kc = kstal,kstol
-                    DO ic = istal,istol
-            
-                        combo2 = trun(ic,jstol,kc)*tdrmix(ic,jstol,kc)
-                    combo2 = combo2*store7(ic,jstol,kc)*td1y(ic,jstol,kc)
-                        fornow = zero
-                    DO jc = jstaw,jstom1
-              
-                    combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
-                    combo1 = combo1*store7(ic,jc,kc)*td1y(ic,jc,kc)
-                    fornow = fornow + acbcyr(jstol-jc)*rgspec(ispec)*(combo2-combo1)
-              
-                    END DO
-                    erhs(ic,jstol,kc) = erhs(ic,jstol,kc) + rgspec(ispec)*fornow
-            
-                    END DO
-                    END DO
+                    rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+                    call ops_par_loop(heat_flux_kernel_isothermal_fyradw, "HEAT FLUX: Isothermal fyradw", senga_grid, 3, rangexyz,  &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(dp)", OPS_WRITE), &
+                                    ops_arg_dat(d_trun,   1, s3d_000_to_m040_y, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_000_to_m040_y, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_000_to_m040_y, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_td1y,   1, s3d_000_to_m040_y, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(acbcyr,   1, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ))
+
                 END IF
                 IF(fzladw) THEN
-                    DO jc = jstal,jstol
-                    DO ic = istal,istol
-            
-                        combo2 = trun(ic,jc,kstal)*tdrmix(ic,jc,kstal)
-                        combo2 = combo2*store7(ic,jc,kstal)*td1z(ic,jc,kstal)
-                        fornow = zero
-                        DO kc = kstap1,kstow
-              
-                    combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
-                    combo1 = combo1*store7(ic,jc,kc)*td1z(ic,jc,kc)
-                    fornow = fornow + acbczl(kc-1)*rgspec(ispec)*(combo1-combo2)
-              
-                    END DO
-                    erhs(ic,jc,kstal) = erhs(ic,jc,kstal) + rgspec(ispec)*fornow
-            
-                    END DO
-                    END DO
+                    rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+                    call ops_par_loop(heat_flux_kernel_isothermal_fzladw, "HEAT FLUX: Isothermal fzladw", senga_grid, 3, rangexyz,  &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(dp)", OPS_WRITE), &
+                                    ops_arg_dat(d_trun,   1, s3d_000_to_p004_z, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_000_to_p004_z, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_000_to_p004_z, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_td1z,   1, s3d_000_to_p004_z, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(acbczl,   1, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ))
+
                 END IF
                 IF(fzradw)THEN
-                    DO jc = jstal,jstol
-                    DO ic = istal,istol
-            
-                    combo2 = trun(ic,jc,kstol)*tdrmix(ic,jc,kstol)
-                    combo2 = combo2*store7(ic,jc,kstol)*td1z(ic,jc,kstol)
-                    fornow = zero
-                    DO kc = kstaw,kstom1
-              
-                    combo1 = trun(ic,jc,kc)*tdrmix(ic,jc,kc)
-                    combo1 = combo1*store7(ic,jc,kc)*td1z(ic,jc,kc)
-                    fornow = fornow + acbczr(kstol-kc)*rgspec(ispec)*(combo2-combo1)
-              
-                    END DO
-                    erhs(ic,jc,kstol) = erhs(ic,jc,kstol) + rgspec(ispec)*fornow
-            
-                    END DO
-                    END DO
+                    rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+                    call ops_par_loop(heat_flux_kernel_isothermal_fzradw, "HEAT FLUX: Isothermal fzradw", senga_grid, 3, rangexyz,  &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(dp)", OPS_WRITE), &
+                                    ops_arg_dat(d_trun,   1, s3d_000_to_m004_z, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_000_to_m004_z, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_000_to_m004_z, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_td1z,   1, s3d_000_to_m004_z, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(acbczr,   1, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ))
+
                 END IF
 
             END IF
@@ -2809,15 +2732,11 @@ SUBROUTINE rhscal
 !       Y-EQUATION: DIFFUSIVE TERMS
 !       ---------------------------
 !       RECOMPUTE SPECIES MASS FRACTION GRADIENTS
-        DO kc = kstab,kstob
-        DO jc = jstab,jstob
-        DO ic = istab,istob
-        
-        store7(ic,jc,kc) = yrhs(ispec,ic,jc,kc)
-        
-        END DO
-        END DO
-        END DO
+        rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+        call ops_par_loop(math_multidim_kernel_eqA, "A = B_multidim", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         call dfbydx(d_store7,d_store1)
         call dfbydy(d_store7,d_store2)
@@ -2838,19 +2757,19 @@ SUBROUTINE rhscal
   
 !       DIV RHO VCORR Y
 !       STORE Y SOURCE TERMS IN YRHS
-        DO kc = kstal,kstol
-        DO jc = jstal,jstol
-        DO ic = istal,istol
-        
-        yrhs(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc)  &
-            - yrhs(ispec,ic,jc,kc)*vtmp(ic,jc,kc)  &
-            - store1(ic,jc,kc)*ucor(ic,jc,kc) - store2(ic,jc,kc)*vcor(ic,jc,kc)  &
-            - store3(ic,jc,kc)*wcor(ic,jc,kc)
-        
-        END DO
-        END DO
-        END DO
-  
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(math_multidim_kernel_eqK, "A_multidim = B_multidim - A_multidim*C - D*E - F*G - H*I", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_ucor, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_vcor, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_wcor, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
     END DO
 
 !   RSC 08-AUG-2012 EVALUATE ALL SPECIES
