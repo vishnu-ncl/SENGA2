@@ -98,18 +98,15 @@ INTEGER :: ic,jc,kc
 !       REDUCED INTERNAL ENERGY
 !       -----------------------
 !       GAMMA-1, 1/(GAMMA-1)
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      gam1xl(1,jc,kc) = strgxl(1,jc,kc) - strrxl(1,jc,kc)
-      strexl(1,jc,kc) = strexl(1,jc,kc) - gam1xl(1,jc,kc)*strtxl(1,jc,kc)
-      
-      gam1xl(1,jc,kc) = strrxl(1,jc,kc)/gam1xl(1,jc,kc)
-      ovgmxl(1,jc,kc) = one/gam1xl(1,jc,kc)
-      
-    END DO
-  END DO
-  
+        rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(bounds_kernel_reduced_energy_xdir, "REDUCED INTERNAL ENERGY", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_gam1xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_strexl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_ovgmxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_strgxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strrxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+                        
 !       SPEED OF SOUND
 !       --------------
   DO kc = kstal,kstol
@@ -127,20 +124,16 @@ INTEGER :: ic,jc,kc
 !       OUTFLOW BOUNDARY CONDITIONS
 !       ---------------------------
   
-  IF(nsbcxl == nsbco1)THEN
+        IF(nsbcxl == nsbco1)THEN
     
-!         OUTFLOW BC No 1
-!         SUBSONIC NON-REFLECTING OUTFLOW
-!         WITH OPTION TO SET PRESSURE AT INFINITY
+!           OUTFLOW BC No 1
+!           SUBSONIC NON-REFLECTING OUTFLOW
+!           WITH OPTION TO SET PRESSURE AT INFINITY
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        sorpxl(1,jc,kc) = zero
-        
-      END DO
-    END DO
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
     
     DO ispec = 1,nspec
       
@@ -222,21 +215,17 @@ INTEGER :: ic,jc,kc
 !       INFLOW BOUNDARY CONDITIONS
 !       --------------------------
   
-  IF(nsbcxl == nsbci1)THEN
+        IF(nsbcxl == nsbci1)THEN
     
-!         INFLOW BC No 1
-!         SUBSONIC NON-REFLECTING LAMINAR INFLOW
+!           INFLOW BC No 1
+!           SUBSONIC NON-REFLECTING LAMINAR INFLOW
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        sorpxl(1,jc,kc) = zero
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
+            DO ispec = 1,nspec
       
       DO kc = kstal,kstol
         DO jc = jstal,jstol
@@ -247,7 +236,7 @@ INTEGER :: ic,jc,kc
         END DO
       END DO
       
-    END DO
+            END DO
     
     DO kc = kstal,kstol
       DO jc = jstal,jstol
@@ -349,27 +338,24 @@ INTEGER :: ic,jc,kc
   
 !       =======================================================================
   
-  IF(nsbcxl == nsbci2)THEN
+        IF(nsbcxl == nsbci2) THEN
     
-!         INFLOW BOUNDARY CONDITION No 2
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
+!           INFLOW BOUNDARY CONDITION No 2
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
     
-!         VELOCITY, TEMPERATURE AND MASS FRACTIONS IMPOSED
-!         AS FUNCTIONS OF TIME
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
+!           VELOCITY, TEMPERATURE AND MASS FRACTIONS IMPOSED
+!           AS FUNCTIONS OF TIME
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        sydtxl(1,jc,kc) = zero
-        sorpxl(1,jc,kc) = zero
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sydtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+            call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
+            DO ispec = 1,nspec
       
       DO kc = kstal,kstol
         DO jc = jstal,jstol
@@ -381,7 +367,7 @@ INTEGER :: ic,jc,kc
         END DO
       END DO
       
-    END DO
+            END DO
     
     DO kc = kstal,kstol
       DO jc = jstal,jstol
@@ -568,30 +554,26 @@ INTEGER :: ic,jc,kc
       
     END DO
     
-  END IF
+        END IF
   
 !       =======================================================================
   
-  IF(nsbcxl == nsbcw2)THEN
+        IF(nsbcxl == nsbcw2)THEN
     
-!         WALL BOUNDARY CONDITION No 2
-!         NO-SLIP WALL - ISOTHERMAL
+!           WALL BOUNDARY CONDITION No 2
+!           NO-SLIP WALL - ISOTHERMAL
     
-!         VELOCITY AND TEMPERATURE IMPOSED
-!         AS FUNCTIONS OF TIME
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
+!           VELOCITY AND TEMPERATURE IMPOSED
+!           AS FUNCTIONS OF TIME
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        sorpxl(1,jc,kc) = zero
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
+            DO ispec = 1,nspec
       
       DO kc = kstal,kstol
         DO jc = jstal,jstol
@@ -602,7 +584,7 @@ INTEGER :: ic,jc,kc
         END DO
       END DO
       
-    END DO
+            END DO
     
     DO kc = kstal,kstol
       DO jc = jstal,jstol
@@ -687,16 +669,16 @@ INTEGER :: ic,jc,kc
   
 !       =======================================================================
   
-END IF
-!     X-DIRECTION LEFT-HAND END
+    END IF
+!   X-DIRECTION LEFT-HAND END
 
-!     =========================================================================
-!     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-!     =========================================================================
+!   =========================================================================
+!   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+!   =========================================================================
 
-!     X-DIRECTION RIGHT-HAND END
-!     --------------------------
-IF(fxrcnv)THEN
+!   X-DIRECTION RIGHT-HAND END
+!   --------------------------
+    IF(fxrcnv)THEN
   
 !       =======================================================================
   
@@ -726,34 +708,29 @@ IF(fxrcnv)THEN
   
 !       REDUCED SPECIES ENTHALPY
 !       ------------------------
-  DO ispec = 1,nspec
-    
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        strhxr(ispec,1,jc,kc) = strhxr(ispec,1,jc,kc)  &
-            - strgxr(1,jc,kc)*strtxr(1,jc,kc)*rgspec(ispec)/strrxr(1,jc,kc)
-        
-      END DO
-      
-    END DO
-    
-  END DO
+        DO ispec = 1,nspec
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_reduced_enthalpy_xdir, "REDUCED SPECIES ENTHALPY", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_strhxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_strgxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strrxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))    
+
+        END DO
   
 !       REDUCED INTERNAL ENERGY
 !       -----------------------
 !       GAMMA-1, 1/(GAMMA-1)
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      gam1xr(1,jc,kc) = strgxr(1,jc,kc) - strrxr(1,jc,kc)
-      strexr(1,jc,kc) = strexr(1,jc,kc) - gam1xr(1,jc,kc)*strtxr(1,jc,kc)
-      
-      gam1xr(1,jc,kc) = strrxr(1,jc,kc)/gam1xr(1,jc,kc)
-      ovgmxr(1,jc,kc) = one/gam1xr(1,jc,kc)
-      
-    END DO
-  END DO
+        rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(bounds_kernel_reduced_energy_xdir, "REDUCED INTERNAL ENERGY", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_gam1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_strexr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_ovgmxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_strgxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strrxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
   
 !       SPEED OF SOUND
 !       --------------
@@ -772,21 +749,17 @@ IF(fxrcnv)THEN
 !       OUTFLOW BOUNDARY CONDITIONS
 !       ---------------------------
   
-  IF(nsbcxr == nsbco1)THEN
+        IF(nsbcxr == nsbco1)THEN
     
-!         OUTFLOW BC No 1
-!         SUBSONIC NON-REFLECTING OUTFLOW
-!         WITH OPTION TO SET PRESSURE AT INFINITY
+!           OUTFLOW BC No 1
+!           SUBSONIC NON-REFLECTING OUTFLOW
+!           WITH OPTION TO SET PRESSURE AT INFINITY
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        sorpxr(1,jc,kc) = zero
-        
-      END DO
-    END DO
-    
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
     DO ispec = 1,nspec
       
       DO kc = kstal,kstol
@@ -867,21 +840,17 @@ IF(fxrcnv)THEN
 !       INFLOW BOUNDARY CONDITIONS
 !       --------------------------
   
-  IF(nsbcxr == nsbci1)THEN
+        IF(nsbcxr == nsbci1)THEN
     
-!         INFLOW BC No 1
-!         SUBSONIC NON-REFLECTING LAMINAR INFLOW
+!           INFLOW BC No 1
+!           SUBSONIC NON-REFLECTING LAMINAR INFLOW
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        sorpxr(1,jc,kc) = zero
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
+            DO ispec = 1,nspec
       
       DO kc = kstal,kstol
         DO jc = jstal,jstol
@@ -892,7 +861,7 @@ IF(fxrcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
     DO kc = kstal,kstol
       DO jc = jstal,jstol
@@ -996,25 +965,22 @@ IF(fxrcnv)THEN
   
 !       =======================================================================
   
-  IF(nsbcxr == nsbci2)THEN
+        IF(nsbcxr == nsbci2)THEN
     
-!         INFLOW BOUNDARY CONDITION No 2
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
+!           INFLOW BOUNDARY CONDITION No 2
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
     
-!         VELOCITY, TEMPERATURE AND MASS FRACTIONS IMPOSED
-!         AS FUNCTIONS OF TIME
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
+!           VELOCITY, TEMPERATURE AND MASS FRACTIONS IMPOSED
+!           AS FUNCTIONS OF TIME
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        sydtxr(1,jc,kc) = zero
-        sorpxr(1,jc,kc) = zero
-        
-      END DO
-    END DO
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sydtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+            call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
     
     DO ispec = 1,nspec
       
@@ -1220,26 +1186,22 @@ IF(fxrcnv)THEN
   
 !       =======================================================================
   
-  IF(nsbcxr == nsbcw2)THEN
+        IF(nsbcxr == nsbcw2)THEN
     
-!         WALL BOUNDARY CONDITION No 2
-!         NO-SLIP WALL - ISOTHERMAL
+!           WALL BOUNDARY CONDITION No 2
+!           NO-SLIP WALL - ISOTHERMAL
     
-!         VELOCITY AND TEMPERATURE IMPOSED
-!         AS FUNCTIONS OF TIME
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
+!           VELOCITY AND TEMPERATURE IMPOSED
+!           AS FUNCTIONS OF TIME
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        sorpxr(1,jc,kc) = zero
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+
+            DO ispec = 1,nspec
       
       DO kc = kstal,kstol
         DO jc = jstal,jstol
@@ -1250,7 +1212,7 @@ IF(fxrcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
     DO kc = kstal,kstol
       DO jc = jstal,jstol
@@ -1335,16 +1297,16 @@ IF(fxrcnv)THEN
   
 !       =======================================================================
   
-END IF
-!     X-DIRECTION RIGHT-HAND END
+    END IF
+!   X-DIRECTION RIGHT-HAND END
 
-!     =========================================================================
-!     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-!     =========================================================================
+!   =========================================================================
+!   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+!   =========================================================================
 
-!     Y-DIRECTION LEFT-HAND END
-!     -------------------------
-IF(fylcnv)THEN
+!   Y-DIRECTION LEFT-HAND END
+!   -------------------------
+    IF(fylcnv)THEN
   
 !       =======================================================================
   
@@ -1374,33 +1336,29 @@ IF(fylcnv)THEN
   
 !       REDUCED SPECIES ENTHALPY
 !       ------------------------
-  DO ispec = 1,nspec
-    
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        strhyl(ispec,ic,1,kc) = strhyl(ispec,ic,1,kc)  &
-            - strgyl(ic,1,kc)*strtyl(ic,1,kc)*rgspec(ispec)/strryl(ic,1,kc)
-        
-      END DO
-    END DO
-    
-  END DO
+        DO ispec = 1,nspec
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_reduced_enthalpy_ydir, "REDUCED SPECIES ENTHALPY", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_strhyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_strgyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strryl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))    
+
+        END DO
   
 !       REDUCED INTERNAL ENERGY
 !       -----------------------
 !       GAMMA-1, 1/(GAMMA-1)
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      gam1yl(ic,1,kc) = strgyl(ic,1,kc) - strryl(ic,1,kc)
-      streyl(ic,1,kc) = streyl(ic,1,kc) - gam1yl(ic,1,kc)*strtyl(ic,1,kc)
-      
-      gam1yl(ic,1,kc) = strryl(ic,1,kc)/gam1yl(ic,1,kc)
-      ovgmyl(ic,1,kc) = one/gam1yl(ic,1,kc)
-      
-    END DO
-  END DO
+        rangexyz = (/istal,istol,1,1,kstal,kstol/)
+        call ops_par_loop(bounds_kernel_reduced_energy_ydir, "REDUCED INTERNAL ENERGY", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_gam1yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_streyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_ovgmyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_strgyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strryl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
   
 !       SPEED OF SOUND
 !       --------------
@@ -1419,22 +1377,18 @@ IF(fylcnv)THEN
 !       OUTFLOW BOUNDARY CONDITIONS
 !       ---------------------------
   
-  IF(nsbcyl == nsbco1)THEN
+        IF(nsbcyl == nsbco1)THEN
     
-!         OUTFLOW BC No 1
-!         SUBSONIC NON-REFLECTING OUTFLOW
-!         WITH OPTION TO SET PRESSURE AT INFINITY
+!           OUTFLOW BC No 1
+!           SUBSONIC NON-REFLECTING OUTFLOW
+!           WITH OPTION TO SET PRESSURE AT INFINITY
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        sorpyl(ic,1,kc) = zero
-        
-      END DO
-    END DO
-    
-    DO ispec = 1, nspec
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)
+            call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
+            DO ispec = 1, nspec
       
       DO kc = kstal,kstol
         DO ic = istal,istol
@@ -1445,7 +1399,7 @@ IF(fylcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
     DO kc = kstal,kstol
       DO ic = istal,istol
@@ -1514,21 +1468,17 @@ IF(fylcnv)THEN
 !       INFLOW BOUNDARY CONDITIONS
 !       --------------------------
   
-  IF(nsbcyl == nsbci1)THEN
+        IF(nsbcyl == nsbci1)THEN
     
-!         INFLOW BC No 1
-!         SUBSONIC NON-REFLECTING LAMINAR INFLOW
+!           INFLOW BC No 1
+!           SUBSONIC NON-REFLECTING LAMINAR INFLOW
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        sorpyl(ic,1,kc) = zero
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)
+            call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
+            DO ispec = 1,nspec
       
       DO kc = kstal,kstol
         DO ic = istal,istol
@@ -1539,7 +1489,7 @@ IF(fylcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
     DO kc = kstal,kstol
       DO ic = istal,istol
@@ -1641,27 +1591,24 @@ IF(fylcnv)THEN
   
 !       =======================================================================
   
-  IF(nsbcyl == nsbci2)THEN
+        IF(nsbcyl == nsbci2)THEN
     
-!         INFLOW BOUNDARY CONDITION No 2
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
+!           INFLOW BOUNDARY CONDITION No 2
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
     
-!         VELOCITY, TEMPERATURE AND MASS FRACTIONS IMPOSED
-!         AS FUNCTIONS OF TIME
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
+!           VELOCITY, TEMPERATURE AND MASS FRACTIONS IMPOSED
+!           AS FUNCTIONS OF TIME
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        sydtyl(ic,1,kc) = zero
-        sorpyl(ic,1,kc) = zero
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)
+            call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sydtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+            call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
+            DO ispec = 1,nspec
       
       DO kc = kstal,kstol
         DO ic = istal,istol
@@ -1673,7 +1620,7 @@ IF(fylcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
     DO kc = kstal,kstol
       DO ic = istal,istol
@@ -1865,26 +1812,22 @@ IF(fylcnv)THEN
   
 !       =======================================================================
   
-  IF(nsbcyl == nsbcw2)THEN
+        IF(nsbcyl == nsbcw2) THEN
     
-!         WALL BOUNDARY CONDITION No 2
-!         NO-SLIP WALL - ISOTHERMAL
+!           WALL BOUNDARY CONDITION No 2
+!           NO-SLIP WALL - ISOTHERMAL
     
-!         VELOCITY AND TEMPERATURE IMPOSED
-!         AS FUNCTIONS OF TIME
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
+!           VELOCITY AND TEMPERATURE IMPOSED
+!           AS FUNCTIONS OF TIME
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        sorpyl(ic,1,kc) = zero
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)
+            call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
+            DO ispec = 1,nspec
       
       DO kc = kstal,kstol
         DO ic = istal,istol
@@ -1895,7 +1838,7 @@ IF(fylcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
     DO kc = kstal,kstol
       DO ic = istal,istol
@@ -1980,16 +1923,16 @@ IF(fylcnv)THEN
   
 !       =======================================================================
   
-END IF
-!     Y-DIRECTION LEFT-HAND END
+    END IF
+!   Y-DIRECTION LEFT-HAND END
 
-!     =========================================================================
-!     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-!     =========================================================================
+!   =========================================================================
+!   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+!   =========================================================================
 
-!     Y-DIRECTION RIGHT-HAND END
-!     --------------------------
-IF(fyrcnv)THEN
+!   Y-DIRECTION RIGHT-HAND END
+!   --------------------------
+    IF(fyrcnv)THEN
   
 !       =======================================================================
   
@@ -2019,34 +1962,30 @@ IF(fyrcnv)THEN
   
 !       REDUCED SPECIES ENTHALPY
 !       ------------------------
-  DO ispec = 1,nspec
-    
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        strhyr(ispec,ic,1,kc) = strhyr(ispec,ic,1,kc)  &
-            - strgyr(ic,1,kc)*strtyr(ic,1,kc)*rgspec(ispec)/strryr(ic,1,kc)
-        
-      END DO
-    END DO
-    
-  END DO
+        DO ispec = 1,nspec
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_reduced_enthalpy_ydir, "REDUCED SPECIES ENTHALPY", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_strhyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_strgyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strryr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+        END DO
   
 !       REDUCED INTERNAL ENERGY
 !       -----------------------
 !       GAMMA-1, 1/(GAMMA-1)
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      gam1yr(ic,1,kc) = strgyr(ic,1,kc) - strryr(ic,1,kc)
-      streyr(ic,1,kc) = streyr(ic,1,kc) - gam1yr(ic,1,kc)*strtyr(ic,1,kc)
-      
-      gam1yr(ic,1,kc) = strryr(ic,1,kc)/gam1yr(ic,1,kc)
-      ovgmyr(ic,1,kc) = one/gam1yr(ic,1,kc)
-      
-    END DO
-  END DO
-  
+        rangexyz = (/istal,istol,1,1,kstal,kstol/)
+        call ops_par_loop(bounds_kernel_reduced_energy_ydir, "REDUCED INTERNAL ENERGY", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_gam1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_streyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_ovgmyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_strgyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strryr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
 !       SPEED OF SOUND
 !       --------------
   DO kc = kstal,kstol
@@ -2064,22 +2003,18 @@ IF(fyrcnv)THEN
 !       OUTFLOW BOUNDARY CONDITIONS
 !       ---------------------------
   
-  IF(nsbcyr == nsbco1)THEN
+        IF(nsbcyr == nsbco1)THEN
     
-!         OUTFLOW BC No 1
-!         SUBSONIC NON-REFLECTING OUTFLOW
-!         WITH OPTION TO SET PRESSURE AT INFINITY
+!           OUTFLOW BC No 1
+!           SUBSONIC NON-REFLECTING OUTFLOW
+!           WITH OPTION TO SET PRESSURE AT INFINITY
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        sorpyr(ic,1,kc) = zero
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)
+            call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
+            DO ispec = 1,nspec
       
       DO kc = kstal,kstol
         DO ic = istal,istol
@@ -2090,7 +2025,7 @@ IF(fyrcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
     DO kc = kstal,kstol
       DO ic = istal,istol
@@ -2159,21 +2094,17 @@ IF(fyrcnv)THEN
 !       INFLOW BOUNDARY CONDITIONS
 !       --------------------------
   
-  IF(nsbcyr == nsbci1)THEN
+        IF(nsbcyr == nsbci1)THEN
     
-!         INFLOW BC No 1
-!         SUBSONIC NON-REFLECTING LAMINAR INFLOW
+!           INFLOW BC No 1
+!           SUBSONIC NON-REFLECTING LAMINAR INFLOW
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        sorpyr(ic,1,kc) = zero
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)
+            call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
+            DO ispec = 1,nspec
       
       DO kc = kstal,kstol
         DO ic = istal,istol
@@ -2184,7 +2115,7 @@ IF(fyrcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
     DO kc = kstal,kstol
       DO ic = istal,istol
@@ -2288,27 +2219,24 @@ IF(fyrcnv)THEN
   
 !       =======================================================================
   
-  IF(nsbcyr == nsbci2)THEN
+        IF(nsbcyr == nsbci2)THEN
     
-!         INFLOW BOUNDARY CONDITION No 2
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
+!           INFLOW BOUNDARY CONDITION No 2
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
     
-!         VELOCITY, TEMPERATURE AND MASS FRACTIONS IMPOSED
-!         AS FUNCTIONS OF TIME
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
+!           VELOCITY, TEMPERATURE AND MASS FRACTIONS IMPOSED
+!           AS FUNCTIONS OF TIME
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        sydtyr(ic,1,kc) = zero
-        sorpyr(ic,1,kc) = zero
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)
+            call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sydtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+            call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
+            DO ispec = 1,nspec
       
       DO kc = kstal,kstol
         DO ic = istal,istol
@@ -2320,7 +2248,7 @@ IF(fyrcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
     DO kc = kstal,kstol
       DO ic = istal,istol
@@ -2512,26 +2440,22 @@ IF(fyrcnv)THEN
   
 !       =======================================================================
   
-  IF(nsbcyr == nsbcw2)THEN
+        IF(nsbcyr == nsbcw2) THEN
     
-!         WALL BOUNDARY CONDITION No 2
-!         NO-SLIP WALL - ISOTHERMAL
+!           WALL BOUNDARY CONDITION No 2
+!           NO-SLIP WALL - ISOTHERMAL
     
-!         VELOCITY AND TEMPERATURE IMPOSED
-!         AS FUNCTIONS OF TIME
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
+!           VELOCITY AND TEMPERATURE IMPOSED
+!           AS FUNCTIONS OF TIME
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        sorpyr(ic,1,kc) = zero
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)
+            call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+
+            DO ispec = 1,nspec
       
       DO kc = kstal,kstol
         DO ic = istal,istol
@@ -2542,7 +2466,7 @@ IF(fyrcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
     DO kc = kstal,kstol
       DO ic = istal,istol
@@ -2627,16 +2551,16 @@ IF(fyrcnv)THEN
   
 !       =======================================================================
   
-END IF
-!     Y-DIRECTION RIGHT-HAND END
+    END IF
+!   Y-DIRECTION RIGHT-HAND END
 
-!     =========================================================================
-!     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-!     =========================================================================
+!   =========================================================================
+!   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+!   =========================================================================
 
-!     Z-DIRECTION LEFT-HAND END
-!     -------------------------
-IF(fzlcnv)THEN
+!   Z-DIRECTION LEFT-HAND END
+!   -------------------------
+    IF(fzlcnv)THEN
   
 !       =======================================================================
   
@@ -2666,34 +2590,30 @@ IF(fzlcnv)THEN
   
 !       REDUCED SPECIES ENTHALPY
 !       ------------------------
-  DO ispec = 1,nspec
-    
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        strhzl(ispec,ic,jc,1) = strhzl(ispec,ic,jc,1)  &
-            - strgzl(ic,jc,1)*strtzl(ic,jc,1)*rgspec(ispec)/strrzl(ic,jc,1)
-        
-      END DO
-    END DO
-    
-  END DO
+        DO ispec = 1,nspec
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
+            call ops_par_loop(bounds_kernel_reduced_enthalpy_zdir, "REDUCED SPECIES ENTHALPY", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_strhzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_strgzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strrzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+        END DO
   
 !       REDUCED INTERNAL ENERGY
 !       -----------------------
 !       GAMMA-1, 1/(GAMMA-1)
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      gam1zl(ic,jc,1) = strgzl(ic,jc,1) - strrzl(ic,jc,1)
-      strezl(ic,jc,1) = strezl(ic,jc,1) - gam1zl(ic,jc,1)*strtzl(ic,jc,1)
-      
-      gam1zl(ic,jc,1) = strrzl(ic,jc,1)/gam1zl(ic,jc,1)
-      ovgmzl(ic,jc,1) = one/gam1zl(ic,jc,1)
-      
-    END DO
-  END DO
-  
+        rangexyz = (/istal,istol,jstal,jstol,1,1/)
+        call ops_par_loop(bounds_kernel_reduced_energy_zdir, "REDUCED INTERNAL ENERGY", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_gam1zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_strezl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_ovgmzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_strgzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strrzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
 !       SPEED OF SOUND
 !       --------------
   DO jc = jstal,jstol
@@ -2711,22 +2631,18 @@ IF(fzlcnv)THEN
 !       OUTFLOW BOUNDARY CONDITIONS
 !       ---------------------------
   
-  IF(nsbczl == nsbco1)THEN
+        IF(nsbczl == nsbco1)THEN
+
+!           OUTFLOW BC No 1
+!           SUBSONIC NON-REFLECTING OUTFLOW
+!           WITH OPTION TO SET PRESSURE AT INFINITY
     
-!         OUTFLOW BC No 1
-!         SUBSONIC NON-REFLECTING OUTFLOW
-!         WITH OPTION TO SET PRESSURE AT INFINITY
-    
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        sorpzl(ic,jc,1) = zero
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
+            call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
+            DO ispec = 1,nspec
       
       DO jc = jstal,jstol
         DO ic = istal,istol
@@ -2737,7 +2653,7 @@ IF(fzlcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
     DO jc = jstal,jstol
       DO ic = istal,istol
@@ -2806,21 +2722,17 @@ IF(fzlcnv)THEN
 !       INFLOW BOUNDARY CONDITIONS
 !       --------------------------
   
-  IF(nsbczl == nsbci1)THEN
+        IF(nsbczl == nsbci1)THEN
     
-!         INFLOW BC No 1
-!         SUBSONIC NON-REFLECTING LAMINAR INFLOW
+!           INFLOW BC No 1
+!           SUBSONIC NON-REFLECTING LAMINAR INFLOW
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        sorpzl(ic,jc,1) = zero
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
+            call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
+            DO ispec = 1,nspec
       
       DO jc = jstal,jstol
         DO ic = istal,istol
@@ -2831,7 +2743,7 @@ IF(fzlcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
     DO jc = jstal,jstol
       DO ic = istal,istol
@@ -2933,27 +2845,24 @@ IF(fzlcnv)THEN
   
 !       =======================================================================
   
-  IF(nsbczl == nsbci2)THEN
+        IF(nsbczl == nsbci2) THEN
     
-!         INFLOW BOUNDARY CONDITION No 2
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
+!           INFLOW BOUNDARY CONDITION No 2
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
     
-!         VELOCITY, TEMPERATURE AND MASS FRACTIONS IMPOSED
-!         AS FUNCTIONS OF TIME
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
+!           VELOCITY, TEMPERATURE AND MASS FRACTIONS IMPOSED
+!           AS FUNCTIONS OF TIME
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        sydtzl(ic,jc,1) = zero
-        sorpzl(ic,jc,1) = zero
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
+            call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sydtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+            call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
+            DO ispec = 1,nspec
       
       DO jc = jstal,jstol
         DO ic = istal,istol
@@ -2965,7 +2874,7 @@ IF(fzlcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
     DO jc = jstal,jstol
       DO ic = istal,istol
@@ -3156,26 +3065,22 @@ IF(fzlcnv)THEN
   
 !       =======================================================================
   
-  IF(nsbczl == nsbcw2)THEN
+        IF(nsbczl == nsbcw2)THEN
     
-!         WALL BOUNDARY CONDITION No 2
-!         NO-SLIP WALL - ISOTHERMAL
+!           WALL BOUNDARY CONDITION No 2
+!           NO-SLIP WALL - ISOTHERMAL
     
-!         VELOCITY AND TEMPERATURE IMPOSED
-!         AS FUNCTIONS OF TIME
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
+!           VELOCITY AND TEMPERATURE IMPOSED
+!           AS FUNCTIONS OF TIME
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        sorpzl(ic,jc,1) = zero
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
+            call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
+            DO ispec = 1,nspec
       
       DO jc = jstal,jstol
         DO ic = istal,istol
@@ -3186,7 +3091,7 @@ IF(fzlcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
     DO jc = jstal,jstol
       DO ic = istal,istol
@@ -3271,16 +3176,16 @@ IF(fzlcnv)THEN
   
 !       =======================================================================
   
-END IF
-!     Z-DIRECTION LEFT-HAND END
+    END IF
+!   Z-DIRECTION LEFT-HAND END
 
-!     =========================================================================
-!     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-!     =========================================================================
+!   =========================================================================
+!   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+!   =========================================================================
 
-!     Z-DIRECTION RIGHT-HAND END
-!     --------------------------
-IF(fzrcnv)THEN
+!   Z-DIRECTION RIGHT-HAND END
+!   --------------------------
+    IF(fzrcnv)THEN
   
 !       =======================================================================
   
@@ -3310,34 +3215,30 @@ IF(fzrcnv)THEN
   
 !       REDUCED SPECIES ENTHALPY
 !       ------------------------
-  DO ispec = 1,nspec
+        DO ispec = 1,nspec
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
+            call ops_par_loop(bounds_kernel_reduced_enthalpy_zdir, "REDUCED SPECIES ENTHALPY", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_strhzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_strgzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strrzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
     
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        strhzr(ispec,ic,jc,1) = strhzr(ispec,ic,jc,1)  &
-            - strgzr(ic,jc,1)*strtzr(ic,jc,1)*rgspec(ispec)/strrzr(ic,jc,1)
-        
-      END DO
-    END DO
-    
-  END DO
+        END DO
   
 !       REDUCED INTERNAL ENERGY
 !       -----------------------
 !       GAMMA-1, 1/(GAMMA-1)
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      gam1zr(ic,jc,1) = strgzr(ic,jc,1) - strrzr(ic,jc,1)
-      strezr(ic,jc,1) = strezr(ic,jc,1) - gam1zr(ic,jc,1)*strtzr(ic,jc,1)
-      
-      gam1zr(ic,jc,1) = strrzr(ic,jc,1)/gam1zr(ic,jc,1)
-      ovgmzr(ic,jc,1) = one/gam1zr(ic,jc,1)
-      
-    END DO
-  END DO
-  
+        rangexyz = (/istal,istol,jstal,jstol,1,1/)
+        call ops_par_loop(bounds_kernel_reduced_energy_zdir, "REDUCED INTERNAL ENERGY", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_gam1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_strezr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_ovgmzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_strgzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strrzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
 !       SPEED OF SOUND
 !       --------------
   DO jc = jstal,jstol
@@ -3355,22 +3256,18 @@ IF(fzrcnv)THEN
 !       OUTFLOW BOUNDARY CONDITIONS
 !       ---------------------------
   
-  IF(nsbczr == nsbco1)THEN
+        IF(nsbczr == nsbco1) THEN
     
-!         OUTFLOW BC No 1
-!         SUBSONIC NON-REFLECTING OUTFLOW
-!         WITH OPTION TO SET PRESSURE AT INFINITY
+!           OUTFLOW BC No 1
+!           SUBSONIC NON-REFLECTING OUTFLOW
+!           WITH OPTION TO SET PRESSURE AT INFINITY
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        sorpzr(ic,jc,1) = zero
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
+            call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
+            DO ispec = 1,nspec
       
       DO jc = jstal,jstol
         DO ic = istal,istol
@@ -3381,7 +3278,7 @@ IF(fzrcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
     DO jc = jstal,jstol
       DO ic = istal,istol
@@ -3450,21 +3347,17 @@ IF(fzrcnv)THEN
 !       INFLOW BOUNDARY CONDITIONS
 !       --------------------------
   
-  IF(nsbczr == nsbci1)THEN
+        IF(nsbczr == nsbci1)THEN
     
-!         INFLOW BC No 1
-!         SUBSONIC NON-REFLECTING LAMINAR INFLOW
+!           INFLOW BC No 1
+!           SUBSONIC NON-REFLECTING LAMINAR INFLOW
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        sorpzr(ic,jc,1) = zero
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
+            call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
+            DO ispec = 1,nspec
       
       DO jc = jstal,jstol
         DO ic = istal,istol
@@ -3475,7 +3368,7 @@ IF(fzrcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
     DO jc = jstal,jstol
       DO ic = istal,istol
@@ -3579,27 +3472,24 @@ IF(fzrcnv)THEN
   
 !       =======================================================================
   
-  IF(nsbczr == nsbci2)THEN
+        IF(nsbczr == nsbci2) THEN
     
-!         INFLOW BOUNDARY CONDITION No 2
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
+!           INFLOW BOUNDARY CONDITION No 2
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
     
-!         VELOCITY, TEMPERATURE AND MASS FRACTIONS IMPOSED
-!         AS FUNCTIONS OF TIME
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
+!           VELOCITY, TEMPERATURE AND MASS FRACTIONS IMPOSED
+!           AS FUNCTIONS OF TIME
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        sydtzr(ic,jc,1) = zero
-        sorpzr(ic,jc,1) = zero
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
+            call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sydtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+            call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
+            DO ispec = 1,nspec
       
       DO jc = jstal,jstol
         DO ic = istal,istol
@@ -3611,7 +3501,7 @@ IF(fzrcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
     DO jc = jstal,jstol
       DO ic = istal,istol
@@ -3797,30 +3687,26 @@ IF(fzrcnv)THEN
       
     END DO
     
-  END IF
+        END IF
   
 !       =======================================================================
   
-  IF(nsbczr == nsbcw2)THEN
+        IF(nsbczr == nsbcw2) THEN
     
-!         WALL BOUNDARY CONDITION No 2
-!         NO-SLIP WALL - ISOTHERMAL
+!           WALL BOUNDARY CONDITION No 2
+!           NO-SLIP WALL - ISOTHERMAL
     
-!         VELOCITY AND TEMPERATURE IMPOSED
-!         AS FUNCTIONS OF TIME
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
+!           VELOCITY AND TEMPERATURE IMPOSED
+!           AS FUNCTIONS OF TIME
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         PRECOMPUTE CHEMISTRY TERMS
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        sorpzr(ic,jc,1) = zero
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
+            call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+
+            DO ispec = 1,nspec
       
       DO jc = jstal,jstol
         DO ic = istal,istol
@@ -3831,7 +3717,7 @@ IF(fzrcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
     DO jc = jstal,jstol
       DO ic = istal,istol
