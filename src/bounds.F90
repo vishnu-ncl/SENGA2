@@ -150,22 +150,22 @@ INTEGER :: ic,jc,kc
                             ops_arg_dat(d_sorpxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
                             ops_arg_dat(d_gam1xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
 
-!         SPECIFY L5X AS REQUIRED
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-!             OLD VALUE OF L5X
-        bcl5xl(1,jc,kc) = half*(struxl(1,jc,kc)+acouxl(1,jc,kc))  &
-            *(bcl5xl(1,jc,kc)+strdxl(1,jc,kc)*acouxl(1,jc,kc)*bcl1xl(1,jc,kc))
-        
-!             SUBTRACT FROM NEW VALUE OF L5X
-        bcl5xl(1,jc,kc)= half*sorpxl(1,jc,kc)  &
-            + cobcxl*acouxl(1,jc,kc)*(strpxl(1,jc,kc)-pinfxl) - bcl5xl(1,jc,kc)
-        
-      END DO
-    END DO
+!           SPECIFY L5X AS REQUIRED
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_outflowBC1_computeL_xl, "SPECIFY L5X AS REQUIRED", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl1xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(cobcxl, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(pinfxl, 1, "real(dp)", OPS_READ))
     
-!         ADD TO CONSERVATIVE SOURCE TERMS
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
@@ -234,50 +234,37 @@ INTEGER :: ic,jc,kc
                             ops_arg_dat(d_sorpxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
                             ops_arg_dat(d_gam1xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
 
-!         SPECIFY L's AS REQUIRED
-!         L2X-L5X
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-!             OLD VALUE OF L's
-        fornow = strdxl(1,jc,kc)*acouxl(1,jc,kc)*bcl1xl(1,jc,kc)
-        bcl2xl(1,jc,kc) = struxl(1,jc,kc)  &
-            *(bcl2xl(1,jc,kc)-bcl5xl(1,jc,kc)*ova2xl(1,jc,kc))
-        bcl3xl(1,jc,kc) = struxl(1,jc,kc)*bcl3xl(1,jc,kc)
-        bcl4xl(1,jc,kc) = struxl(1,jc,kc)*bcl4xl(1,jc,kc)
-        bcl5xl(1,jc,kc) = half*(struxl(1,jc,kc)+acouxl(1,jc,kc))  &
-            *(bcl5xl(1,jc,kc)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's (=0 FOR L2X-L4X)
-!             L1X UNCHANGED
-        bcl2xl(1,jc,kc) = -bcl2xl(1,jc,kc)
-        bcl3xl(1,jc,kc) = -bcl3xl(1,jc,kc)
-        bcl4xl(1,jc,kc) = -bcl4xl(1,jc,kc)
-        bcl5xl(1,jc,kc) = half*sorpxl(1,jc,kc)  &
-            + cobcxl*acouxl(1,jc,kc)*(strpxl(1,jc,kc)-pinfxl) - bcl5xl(1,jc,kc)
-        
-      END DO
-    END DO
+!           SPECIFY L's AS REQUIRED
+!           L2X-L5X
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC1_computeL_xl, "L2X to L5X", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl1xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(cobcxl, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(pinfxl, 1, "real(dp)", OPS_READ))
+            
+!           LYX
+            DO ispec = 1,nspec
+                rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_inflowBC1_LYX_xl, "LYX", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_ratexl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
     
-!         LYX
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-!               OLD VALUE OF L's
-          bclyxl(ispec,1,jc,kc) = struxl(1,jc,kc)*bclyxl(ispec,1,jc,kc)
-          
-!               SUBTRACT FROM NEW VALUE OF L's (=0 FOR LYX)
-          bclyxl(ispec,1,jc,kc) = ratexl(ispec,1,jc,kc)/strdxl(1,jc,kc)  &
-              - bclyxl(ispec,1,jc,kc)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
+!           ADD TO CONSERVATIVE SOURCE TERMS
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
@@ -368,32 +355,24 @@ INTEGER :: ic,jc,kc
 
 !           SPECIFY L's AS REQUIRED
 !           L1X,L2X,L5X
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-!             OLD VALUE OF L's
-        fornow = strdxl(1,jc,kc)*acouxl(1,jc,kc)*bcl1xl(1,jc,kc)
-        bcl1xl(1,jc,kc) = half*(struxl(1,jc,kc)-acouxl(1,jc,kc))  &
-            *(bcl5xl(1,jc,kc)-fornow)
-        bcl2xl(1,jc,kc) = struxl(1,jc,kc)  &
-            *(bcl2xl(1,jc,kc)-bcl5xl(1,jc,kc)*ova2xl(1,jc,kc))
-        bcl5xl(1,jc,kc) = half*(struxl(1,jc,kc)+acouxl(1,jc,kc))  &
-            *(bcl5xl(1,jc,kc)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L1X UNCHANGED
-        bcl5xl(1,jc,kc) = bcl1xl(1,jc,kc)  &
-            - strdxl(1,jc,kc)*acouxl(1,jc,kc)*dudtxl(1,jc,kc) - bcl5xl(1,jc,kc)
-        bcl2xl(1,jc,kc) = gam1xl(1,jc,kc)*ova2xl(1,jc,kc)  &
-            *(bcl1xl(1,jc,kc)+bcl5xl(1,jc,kc))  &
-            + strdxl(1,jc,kc)*(dtdtxl(1,jc,kc)/strtxl(1,jc,kc)  &
-            - sorpxl(1,jc,kc)/strpxl(1,jc,kc) + sydtxl(1,jc,kc))  &
-            - bcl2xl(1,jc,kc)
-        
-      END DO
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC2_computeL_xl, "L1X L2X L5X", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dudtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_gam1xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dtdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sydtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+!           ADD TO CONSERVATIVE SOURCE TERMS
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
@@ -407,45 +386,36 @@ INTEGER :: ic,jc,kc
   
 !       =======================================================================
   
-  IF(nsbcxl == nsbci3)THEN
+        IF(nsbcxl == nsbci3)THEN
     
-!         INFLOW BOUNDARY CONDITION No 3
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
+!           INFLOW BOUNDARY CONDITION No 3
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
     
-!         VELOCITY, DENSITY AND MASS FRACTIONS IMPOSED
-!         AS FUNCTIONS OF TIME
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
+!           VELOCITY, DENSITY AND MASS FRACTIONS IMPOSED
+!           AS FUNCTIONS OF TIME
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         SPECIFY L's AS REQUIRED
-!         L1X-L5X
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-!             OLD VALUE OF L's
-        fornow = strdxl(1,jc,kc)*acouxl(1,jc,kc)*bcl1xl(1,jc,kc)
-        bcl1xl(1,jc,kc) = half*(struxl(1,jc,kc)-acouxl(1,jc,kc))  &
-            *(bcl5xl(1,jc,kc)-fornow)
-        bcl2xl(1,jc,kc) = struxl(1,jc,kc)  &
-            *(bcl2xl(1,jc,kc)-bcl5xl(1,jc,kc)*ova2xl(1,jc,kc))
-        bcl3xl(1,jc,kc) = struxl(1,jc,kc)*bcl3xl(1,jc,kc)
-        bcl4xl(1,jc,kc) = struxl(1,jc,kc)*bcl4xl(1,jc,kc)
-        bcl5xl(1,jc,kc) = half*(struxl(1,jc,kc)+acouxl(1,jc,kc))  &
-            *(bcl5xl(1,jc,kc)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L1X UNCHANGED
-        fornow = bcl1xl(1,jc,kc) - strdxl(1,jc,kc)*acouxl(1,jc,kc)*dudtxl(1,jc,kc)
-        bcl2xl(1,jc,kc) = -dddtxl(1,jc,kc)  &
-            - ova2xl(1,jc,kc)*(bcl1xl(1,jc,kc)+fornow) - bcl2xl(1,jc,kc)
-        bcl3xl(1,jc,kc) = -dvdtxl(1,jc,kc) - bcl3xl(1,jc,kc)
-        bcl4xl(1,jc,kc) = -dwdtxl(1,jc,kc) - bcl4xl(1,jc,kc)
-        bcl5xl(1,jc,kc) = fornow - bcl5xl(1,jc,kc)
-        
-      END DO
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
+!           SPECIFY L's AS REQUIRED
+!           L1X-L5X
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC3_computeL_xl, "L1X to L5X", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dudtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dddtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dvdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
@@ -481,39 +451,30 @@ INTEGER :: ic,jc,kc
 !       WALL BOUNDARY CONDITIONS
 !       ------------------------
   
-  IF(nsbcxl == nsbcw1)THEN
+        IF(nsbcxl == nsbcw1)THEN
     
-!         WALL BOUNDARY CONDITION No 1
-!         NO-SLIP WALL - ADIABATIC
+!           WALL BOUNDARY CONDITION No 1
+!           NO-SLIP WALL - ADIABATIC
     
-!         ALL VELOCITY COMPONENTS IMPOSED
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
+!           ALL VELOCITY COMPONENTS IMPOSED
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         SPECIFY L's AS REQUIRED
-!         L1X,L3X-L5X
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-!             OLD VALUE OF L's
-        fornow = strdxl(1,jc,kc)*acouxl(1,jc,kc)*bcl1xl(1,jc,kc)
-        bcl1xl(1,jc,kc) = half*(struxl(1,jc,kc)-acouxl(1,jc,kc))  &
-            *(bcl5xl(1,jc,kc)-fornow)
-        bcl3xl(1,jc,kc) = struxl(1,jc,kc)*bcl3xl(1,jc,kc)
-        bcl4xl(1,jc,kc) = struxl(1,jc,kc)*bcl4xl(1,jc,kc)
-        bcl5xl(1,jc,kc) = half*(struxl(1,jc,kc)+acouxl(1,jc,kc))  &
-            *(bcl5xl(1,jc,kc)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L1X,L2X UNCHANGED
-        bcl3xl(1,jc,kc) = -dvdtxl(1,jc,kc) - bcl3xl(1,jc,kc)
-        bcl4xl(1,jc,kc) = -dwdtxl(1,jc,kc) - bcl4xl(1,jc,kc)
-        bcl5xl(1,jc,kc) = bcl1xl(1,jc,kc)  &
-            - strdxl(1,jc,kc)*acouxl(1,jc,kc)*dudtxl(1,jc,kc) - bcl5xl(1,jc,kc)
-        
-      END DO
-    END DO
-    
+!           SPECIFY L's AS REQUIRED
+!           L1X,L3X-L5X
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_wallBC1_computeL_xl, "L1X and L3X to L5X", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), & 
+                            ops_arg_dat(d_acouxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dudtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dvdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO kc = kstal,kstol
       DO jc = jstal,jstol
@@ -578,51 +539,40 @@ INTEGER :: ic,jc,kc
 
 !           SPECIFY L's AS REQUIRED
 !           L1X-L5X
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-!             OLD VALUE OF L's
-        fornow = strdxl(1,jc,kc)*acouxl(1,jc,kc)*bcl1xl(1,jc,kc)
-        bcl1xl(1,jc,kc) = half*(struxl(1,jc,kc)-acouxl(1,jc,kc))  &
-            *(bcl5xl(1,jc,kc)-fornow)
-        bcl2xl(1,jc,kc) = struxl(1,jc,kc)  &
-            *(bcl2xl(1,jc,kc)-bcl5xl(1,jc,kc)*ova2xl(1,jc,kc))
-        bcl3xl(1,jc,kc) = struxl(1,jc,kc)*bcl3xl(1,jc,kc)
-        bcl4xl(1,jc,kc) = struxl(1,jc,kc)*bcl4xl(1,jc,kc)
-        bcl5xl(1,jc,kc) = half*(struxl(1,jc,kc)+acouxl(1,jc,kc))  &
-            *(bcl5xl(1,jc,kc)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L1X UNCHANGED
-        bcl3xl(1,jc,kc) = -dvdtxl(1,jc,kc) - bcl3xl(1,jc,kc)
-        bcl4xl(1,jc,kc) = -dwdtxl(1,jc,kc) - bcl4xl(1,jc,kc)
-        bcl5xl(1,jc,kc) = bcl1xl(1,jc,kc)  &
-            - strdxl(1,jc,kc)*acouxl(1,jc,kc)*dudtxl(1,jc,kc) - bcl5xl(1,jc,kc)
-        bcl2xl(1,jc,kc) = gam1xl(1,jc,kc)*ova2xl(1,jc,kc)  &
-            *(bcl1xl(1,jc,kc)+bcl5xl(1,jc,kc))  &
-            + strdxl(1,jc,kc)*(dtdtxl(1,jc,kc)/strtxl(1,jc,kc)  &
-            - sorpxl(1,jc,kc)/strpxl(1,jc,kc)) - bcl2xl(1,jc,kc)
-        
-      END DO
-    END DO
-    
-!         LYX
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-!               OLD VALUE OF LYX
-          bclyxl(ispec,1,jc,kc) = struxl(1,jc,kc)*bclyxl(ispec,1,jc,kc)
-          
-!               UPDATE L2X
-          bcl2xl(1,jc,kc) = bcl2xl(1,jc,kc) + (ratexl(ispec,1,jc,kc)  &
-              - strdxl(1,jc,kc)*bclyxl(ispec,1,jc,kc)) *rgspec(ispec)/strrxl(1,jc,kc)
-          
-        END DO
-      END DO
-      
-    END DO
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_wallBC2_computeL_xl, "L1X to L5X", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_gam1xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dtdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dudtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dvdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))           
+
+!           LYX
+            DO ispec = 1,nspec
+                rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_wallBC2_LYX_xl, "LYX", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_ratexl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strrxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ),
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
     
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO kc = kstal,kstol
@@ -1368,19 +1318,17 @@ INTEGER :: ic,jc,kc
                             ops_arg_dat(d_gam1yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
 
 !           SPECIFY L5Y AS REQUIRED
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L5Y
-        bcl5yl(ic,1,kc) = half*(strvyl(ic,1,kc)+acouyl(ic,1,kc))  &
-            *(bcl5yl(ic,1,kc)+strdyl(ic,1,kc)*acouyl(ic,1,kc)*bcl1yl(ic,1,kc))
-        
-!             SUBTRACT FROM NEW VALUE OF L5Y
-        bcl5yl(ic,1,kc)= half*sorpyl(ic,1,kc)  &
-            + cobcyl*acouyl(ic,1,kc)*(strpyl(ic,1,kc)-pinfyl) - bcl5yl(ic,1,kc)
-        
-      END DO
-    END DO
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_outflowBC1_computeL_yl, "SPECIFY L5Y AS REQUIRED", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl1yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(cobcyl, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(pinfyl, 1, "real(dp)", OPS_READ))
     
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO kc = kstal,kstol
@@ -1453,46 +1401,33 @@ INTEGER :: ic,jc,kc
 
 !           SPECIFY L's AS REQUIRED
 !           L2Y-L5Y
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L's
-        fornow = strdyl(ic,1,kc)*acouyl(ic,1,kc)*bcl1yl(ic,1,kc)
-        bcl2yl(ic,1,kc) = strvyl(ic,1,kc)  &
-            *(bcl2yl(ic,1,kc)-bcl5yl(ic,1,kc)*ova2yl(ic,1,kc))
-        bcl3yl(ic,1,kc) = strvyl(ic,1,kc)*bcl3yl(ic,1,kc)
-        bcl4yl(ic,1,kc) = strvyl(ic,1,kc)*bcl4yl(ic,1,kc)
-        bcl5yl(ic,1,kc) = half*(strvyl(ic,1,kc)+acouyl(ic,1,kc))  &
-            *(bcl5yl(ic,1,kc)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's (=0 FOR L2Y-L4Y)
-!             L1Y UNCHANGED
-        bcl2yl(ic,1,kc) = -bcl2yl(ic,1,kc)
-        bcl3yl(ic,1,kc) = -bcl3yl(ic,1,kc)
-        bcl4yl(ic,1,kc) = -bcl4yl(ic,1,kc)
-        bcl5yl(ic,1,kc) = half*sorpyl(ic,1,kc)  &
-            + cobcyl*acouyl(ic,1,kc)*(strpyl(ic,1,kc)-pinfyl) - bcl5yl(ic,1,kc)
-        
-      END DO
-    END DO
-    
-!         LYY
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-!               OLD VALUE OF L's
-          bclyyl(ispec,ic,1,kc) = strvyl(ic,1,kc)*bclyyl(ispec,ic,1,kc)
-          
-!               SUBTRACT FROM NEW VALUE OF L's (=0 FOR LYY)
-          bclyyl(ispec,ic,1,kc) = rateyl(ispec,ic,1,kc)/strdyl(ic,1,kc)  &
-              - bclyyl(ispec,ic,1,kc)
-          
-        END DO
-      END DO
-      
-    END DO
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC1_computeL_yl, "L2Y to L5Y", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl1yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(cobcyl, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(pinfyl, 1, "real(dp)", OPS_READ))
+
+!           LYY
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,1,1,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_inflowBC1_LYY_yl, "LYY", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_rateyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
     
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO kc = kstal,kstol
@@ -1585,32 +1520,24 @@ INTEGER :: ic,jc,kc
 
 !           SPECIFY L's AS REQUIRED
 !           L1Y,L2Y,L5Y
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L's
-        fornow = strdyl(ic,1,kc)*acouyl(ic,1,kc)*bcl1yl(ic,1,kc)
-        bcl1yl(ic,1,kc) = half*(strvyl(ic,1,kc)-acouyl(ic,1,kc))  &
-            *(bcl5yl(ic,1,kc)-fornow)
-        bcl2yl(ic,1,kc) = strvyl(ic,1,kc)  &
-            *(bcl2yl(ic,1,kc)-bcl5yl(ic,1,kc)*ova2yl(ic,1,kc))
-        bcl5yl(ic,1,kc) = half*(strvyl(ic,1,kc)+acouyl(ic,1,kc))  &
-            *(bcl5yl(ic,1,kc)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L1Y UNCHANGED
-        bcl5yl(ic,1,kc) = bcl1yl(ic,1,kc)  &
-            - strdyl(ic,1,kc)*acouyl(ic,1,kc)*dvdtyl(ic,1,kc) - bcl5yl(ic,1,kc)
-        bcl2yl(ic,1,kc) = gam1yl(ic,1,kc)*ova2yl(ic,1,kc)  &
-            *(bcl1yl(ic,1,kc)+bcl5yl(ic,1,kc))  &
-            + strdyl(ic,1,kc)*(dtdtyl(ic,1,kc)/strtyl(ic,1,kc)  &
-            - sorpyl(ic,1,kc)/strpyl(ic,1,kc) + sydtyl(ic,1,kc))  &
-            - bcl2yl(ic,1,kc)
-        
-      END DO
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC2_computeL_yl, "L1Y L2Y L5Y", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dvdtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_gam1yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dtdtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sydtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+!           ADD TO CONSERVATIVE SOURCE TERMS
     DO kc = kstal,kstol
       DO ic = istal,istol
         
@@ -1624,45 +1551,36 @@ INTEGER :: ic,jc,kc
   
 !       =======================================================================
   
-  IF(nsbcyl == nsbci3)THEN
+        IF(nsbcyl == nsbci3)THEN
     
-!         INFLOW BOUNDARY CONDITION No 3
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
+!           INFLOW BOUNDARY CONDITION No 3
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
     
-!         VELOCITY, DENSITY AND MASS FRACTIONS IMPOSED
-!         AS FUNCTIONS OF TIME
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
+!           VELOCITY, DENSITY AND MASS FRACTIONS IMPOSED
+!           AS FUNCTIONS OF TIME
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         SPECIFY L's AS REQUIRED
-!         L1Y-L5Y
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L's
-        fornow = strdyl(ic,1,kc)*acouyl(ic,1,kc)*bcl1yl(ic,1,kc)
-        bcl1yl(ic,1,kc) = half*(strvyl(ic,1,kc)-acouyl(ic,1,kc))  &
-            *(bcl5yl(ic,1,kc)-fornow)
-        bcl2yl(ic,1,kc) = strvyl(ic,1,kc)  &
-            *(bcl2yl(ic,1,kc)-bcl5yl(ic,1,kc)*ova2yl(ic,1,kc))
-        bcl3yl(ic,1,kc) = strvyl(ic,1,kc)*bcl3yl(ic,1,kc)
-        bcl4yl(ic,1,kc) = strvyl(ic,1,kc)*bcl4yl(ic,1,kc)
-        bcl5yl(ic,1,kc) = half*(strvyl(ic,1,kc)+acouyl(ic,1,kc))  &
-            *(bcl5yl(ic,1,kc)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L1Y UNCHANGED
-        fornow = bcl1yl(ic,1,kc) - strdyl(ic,1,kc)*acouyl(ic,1,kc)*dvdtyl(ic,1,kc)
-        bcl2yl(ic,1,kc) = -dddtyl(ic,1,kc)  &
-            - ova2yl(ic,1,kc)*(bcl1yl(ic,1,kc)+fornow) - bcl2yl(ic,1,kc)
-        bcl3yl(ic,1,kc) = -dudtyl(ic,1,kc) - bcl3yl(ic,1,kc)
-        bcl4yl(ic,1,kc) = -dwdtyl(ic,1,kc) - bcl4yl(ic,1,kc)
-        bcl5yl(ic,1,kc) = fornow - bcl5yl(ic,1,kc)
-        
-      END DO
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
+!           SPECIFY L's AS REQUIRED
+!           L1Y-L5Y
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC3_computeL_yl, "L1Y to L5Y", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dudtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dddtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dvdtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dwdtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)
     DO kc = kstal,kstol
       DO ic = istal,istol
         
@@ -1698,40 +1616,31 @@ INTEGER :: ic,jc,kc
 !       WALL BOUNDARY CONDITIONS
 !       ------------------------
   
-  IF(nsbcyl == nsbcw1)THEN
+        IF(nsbcyl == nsbcw1)THEN
     
-!         WALL BOUNDARY CONDITION No 1
-!         NO-SLIP WALL - ADIABATIC
+!           WALL BOUNDARY CONDITION No 1
+!           NO-SLIP WALL - ADIABATIC
     
-!         ALL VELOCITY COMPONENTS IMPOSED
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
+!           ALL VELOCITY COMPONENTS IMPOSED
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         SPECIFY L's AS REQUIRED
-!         L1Y,L3Y-L5Y
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L's
-        fornow = strdyl(ic,1,kc)*acouyl(ic,1,kc)*bcl1yl(ic,1,kc)
-        bcl1yl(ic,1,kc) = half*(strvyl(ic,1,kc)-acouyl(ic,1,kc))  &
-            *(bcl5yl(ic,1,kc)-fornow)
-        bcl3yl(ic,1,kc) = strvyl(ic,1,kc)*bcl3yl(ic,1,kc)
-        bcl4yl(ic,1,kc) = strvyl(ic,1,kc)*bcl4yl(ic,1,kc)
-        bcl5yl(ic,1,kc) = half*(strvyl(ic,1,kc)+acouyl(ic,1,kc))  &
-            *(bcl5yl(ic,1,kc)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L1Y,L2Y UNCHANGED
-        bcl3yl(ic,1,kc) = -dudtyl(ic,1,kc) - bcl3yl(ic,1,kc)
-        bcl4yl(ic,1,kc) = -dwdtyl(ic,1,kc) - bcl4yl(ic,1,kc)
-        bcl5yl(ic,1,kc) = bcl1yl(ic,1,kc)  &
-            - strdyl(ic,1,kc)*acouyl(ic,1,kc)*dvdtyl(ic,1,kc) - bcl5yl(ic,1,kc)
-        
-      END DO
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
+!           SPECIFY L's AS REQUIRED
+!           L1Y,L3Y-L5Y
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)    
+            call ops_par_loop(bounds_kernel_wallBC1_computeL_yl, "L1Y and L3Y to L5Y", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dudtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dvdtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dwdtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+!           ADD TO CONSERVATIVE SOURCE TERMS
     DO kc = kstal,kstol
       DO ic = istal,istol
         
@@ -1796,51 +1705,40 @@ INTEGER :: ic,jc,kc
 
 !           SPECIFY L's AS REQUIRED
 !           L1Y-L5Y
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L's
-        fornow = strdyl(ic,1,kc)*acouyl(ic,1,kc)*bcl1yl(ic,1,kc)
-        bcl1yl(ic,1,kc) = half*(strvyl(ic,1,kc)-acouyl(ic,1,kc))  &
-            *(bcl5yl(ic,1,kc)-fornow)
-        bcl2yl(ic,1,kc) = strvyl(ic,1,kc)  &
-            *(bcl2yl(ic,1,kc)-bcl5yl(ic,1,kc)*ova2yl(ic,1,kc))
-        bcl3yl(ic,1,kc) = strvyl(ic,1,kc)*bcl3yl(ic,1,kc)
-        bcl4yl(ic,1,kc) = strvyl(ic,1,kc)*bcl4yl(ic,1,kc)
-        bcl5yl(ic,1,kc) = half*(strvyl(ic,1,kc)+acouyl(ic,1,kc))  &
-            *(bcl5yl(ic,1,kc)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L1Y UNCHANGED
-        bcl3yl(ic,1,kc) = -dudtyl(ic,1,kc) - bcl3yl(ic,1,kc)
-        bcl4yl(ic,1,kc) = -dwdtyl(ic,1,kc) - bcl4yl(ic,1,kc)
-        bcl5yl(ic,1,kc) = bcl1yl(ic,1,kc)  &
-            - strdyl(ic,1,kc)*acouyl(ic,1,kc)*dvdtyl(ic,1,kc) - bcl5yl(ic,1,kc)
-        bcl2yl(ic,1,kc) = gam1yl(ic,1,kc)*ova2yl(ic,1,kc)  &
-            *(bcl1yl(ic,1,kc)+bcl5yl(ic,1,kc))  &
-            + strdyl(ic,1,kc)*(dtdtyl(ic,1,kc)/strtyl(ic,1,kc)  &
-            - sorpyl(ic,1,kc)/strpyl(ic,1,kc)) - bcl2yl(ic,1,kc)
-        
-      END DO
-    END DO
-    
-!         LYY
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-!               OLD VALUE OF LYY
-          bclyyl(ispec,ic,1,kc) = strvyl(ic,1,kc)*bclyyl(ispec,ic,1,kc)
-          
-!               UPDATE L2Y
-          bcl2yl(ic,1,kc) = bcl2yl(ic,1,kc) + (rateyl(ispec,ic,1,kc)  &
-              - strdyl(ic,1,kc)*bclyyl(ispec,ic,1,kc)) *rgspec(ispec)/strryl(ic,1,kc)
-          
-        END DO
-      END DO
-      
-    END DO
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_wallBC2_computeL_yl, "L1Y to L5Y", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_gam1yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dtdtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dudtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dvdtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dwdtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+!           LYY
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,1,1,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_wallBC2_LYY_yl, "LYY", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_bcl2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_rateyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strryl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
     
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO kc = kstal,kstol
@@ -2586,21 +2484,20 @@ INTEGER :: ic,jc,kc
                             ops_arg_dat(d_gam1zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
 
 !           SPECIFY L5Z AS REQUIRED
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L5Z
-        bcl5zl(ic,jc,1) = half*(strwzl(ic,jc,1)+acouzl(ic,jc,1))  &
-            *(bcl5zl(ic,jc,1)+strdzl(ic,jc,1)*acouzl(ic,jc,1)*bcl1zl(ic,jc,1))
-        
-!             SUBTRACT FROM NEW VALUE OF L5Z
-        bcl5zl(ic,jc,1)= half*sorpzl(ic,jc,1)  &
-            + cobczl*acouzl(ic,jc,1)*(strpzl(ic,jc,1)-pinfzl) - bcl5zl(ic,jc,1)
-        
-      END DO
-    END DO
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
+            call ops_par_loop(bounds_kernel_outflowBC1_computeL_zl, "SPECIFY L5Z AS REQUIRED", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl1zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(cobczl, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(pinfzl, 1, "real(dp)", OPS_READ))
     
-!         ADD TO CONSERVATIVE SOURCE TERMS
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
     DO jc = jstal,jstol
       DO ic = istal,istol
         
@@ -2671,48 +2568,35 @@ INTEGER :: ic,jc,kc
 
 !           SPECIFY L's AS REQUIRED
 !           L2Z-L5Z
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L's
-        fornow = strdzl(ic,jc,1)*acouzl(ic,jc,1)*bcl1zl(ic,jc,1)
-        bcl2zl(ic,jc,1) = strwzl(ic,jc,1)  &
-            *(bcl2zl(ic,jc,1)-bcl5zl(ic,jc,1)*ova2zl(ic,jc,1))
-        bcl3zl(ic,jc,1) = strwzl(ic,jc,1)*bcl3zl(ic,jc,1)
-        bcl4zl(ic,jc,1) = strwzl(ic,jc,1)*bcl4zl(ic,jc,1)
-        bcl5zl(ic,jc,1) = half*(strwzl(ic,jc,1)+acouzl(ic,jc,1))  &
-            *(bcl5zl(ic,jc,1)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's (=0 FOR L2Z-L4Z)
-!             L1Z UNCHANGED
-        bcl2zl(ic,jc,1) = -bcl2zl(ic,jc,1)
-        bcl3zl(ic,jc,1) = -bcl3zl(ic,jc,1)
-        bcl4zl(ic,jc,1) = -bcl4zl(ic,jc,1)
-        bcl5zl(ic,jc,1) = half*sorpzl(ic,jc,1)  &
-            + cobczl*acouzl(ic,jc,1)*(strpzl(ic,jc,1)-pinfzl) - bcl5zl(ic,jc,1)
-        
-      END DO
-    END DO
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
+            call ops_par_loop(bounds_kernel_inflowBC1_computeL_yl, "L2Z to L5Z", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl1zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(cobczl, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(pinfzl, 1, "real(dp)", OPS_READ))
+
+!           LYZ
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstol,1,1/)
+                call ops_par_loop(bounds_kernel_inflowBC1_LYZ_zl, "LYZ", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_ratezl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
     
-!         LYZ
-    DO ispec = 1,nspec
-      
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-!               OLD VALUE OF L's
-          bclyzl(ispec,ic,jc,1) = strwzl(ic,jc,1)*bclyzl(ispec,ic,jc,1)
-          
-!               SUBTRACT FROM NEW VALUE OF L's (=0 FOR LYZ)
-          bclyzl(ispec,ic,jc,1) = ratezl(ispec,ic,jc,1)/strdzl(ic,jc,1)  &
-              - bclyzl(ispec,ic,jc,1)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
+!           ADD TO CONSERVATIVE SOURCE TERMS
     DO jc = jstal,jstol
       DO ic = istal,istol
         
@@ -2803,32 +2687,24 @@ INTEGER :: ic,jc,kc
 
 !           SPECIFY L's AS REQUIRED
 !           L1Z,L2Z,L5Z
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L's
-        fornow = strdzl(ic,jc,1)*acouzl(ic,jc,1)*bcl1zl(ic,jc,1)
-        bcl1zl(ic,jc,1) = half*(strwzl(ic,jc,1)-acouzl(ic,jc,1))  &
-            *(bcl5zl(ic,jc,1)-fornow)
-        bcl2zl(ic,jc,1) = strwzl(ic,jc,1)  &
-            *(bcl2zl(ic,jc,1)-bcl5zl(ic,jc,1)*ova2zl(ic,jc,1))
-        bcl5zl(ic,jc,1) = half*(strwzl(ic,jc,1)+acouzl(ic,jc,1))  &
-            *(bcl5zl(ic,jc,1)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L1Z UNCHANGED
-        bcl5zl(ic,jc,1) = bcl1zl(ic,jc,1)  &
-            - strdzl(ic,jc,1)*acouzl(ic,jc,1)*dwdtzl(ic,jc,1) - bcl5zl(ic,jc,1)
-        bcl2zl(ic,jc,1) = gam1zl(ic,jc,1)*ova2zl(ic,jc,1)  &
-            *(bcl1zl(ic,jc,1)+bcl5zl(ic,jc,1))  &
-            + strdzl(ic,jc,1)*(dtdtzl(ic,jc,1)/strtzl(ic,jc,1)  &
-            - sorpzl(ic,jc,1)/strpzl(ic,jc,1) + sydtzl(ic,jc,1))  &
-            - bcl2zl(ic,jc,1)
-        
-      END DO
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
+            call ops_par_loop(bounds_kernel_inflowBC2_computeL_zl, "L1Z L2Z L5Z", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dwdtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_gam1zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dtdtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sydtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+!           ADD TO CONSERVATIVE SOURCE TERMS
     DO jc = jstal,jstol
       DO ic = istal,istol
         
@@ -2842,45 +2718,36 @@ INTEGER :: ic,jc,kc
   
 !       =======================================================================
   
-  IF(nsbczl == nsbci3)THEN
+        IF(nsbczl == nsbci3)THEN
     
-!         INFLOW BOUNDARY CONDITION No 3
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
+!           INFLOW BOUNDARY CONDITION No 3
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
     
-!         VELOCITY, DENSITY AND MASS FRACTIONS IMPOSED
-!         AS FUNCTIONS OF TIME
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
+!           VELOCITY, DENSITY AND MASS FRACTIONS IMPOSED
+!           AS FUNCTIONS OF TIME
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         SPECIFY L's AS REQUIRED
-!         L1Z-L5Z
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L's
-        fornow = strdzl(ic,jc,1)*acouzl(ic,jc,1)*bcl1zl(ic,jc,1)
-        bcl1zl(ic,jc,1) = half*(strwzl(ic,jc,1)-acouzl(ic,jc,1))  &
-            *(bcl5zl(ic,jc,1)-fornow)
-        bcl2zl(ic,jc,1) = strwzl(ic,jc,1)  &
-            *(bcl2zl(ic,jc,1)-bcl5zl(ic,jc,1)*ova2zl(ic,jc,1))
-        bcl3zl(ic,jc,1) = strwzl(ic,jc,1)*bcl3zl(ic,jc,1)
-        bcl4zl(ic,jc,1) = strwzl(ic,jc,1)*bcl4zl(ic,jc,1)
-        bcl5zl(ic,jc,1) = half*(strwzl(ic,jc,1)+acouzl(ic,jc,1))  &
-            *(bcl5zl(ic,jc,1)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L1Z UNCHANGED
-        fornow = bcl1zl(ic,jc,1) - strdzl(ic,jc,1)*acouzl(ic,jc,1)*dwdtzl(ic,jc,1)
-        bcl2zl(ic,jc,1) = -dddtzl(ic,jc,1)  &
-            - ova2zl(ic,jc,1)*(bcl1zl(ic,jc,1)+fornow) - bcl2zl(ic,jc,1)
-        bcl3zl(ic,jc,1) = -dudtzl(ic,jc,1) - bcl3zl(ic,jc,1)
-        bcl4zl(ic,jc,1) = -dvdtzl(ic,jc,1) - bcl4zl(ic,jc,1)
-        bcl5zl(ic,jc,1) = fornow - bcl5zl(ic,jc,1)
-        
-      END DO
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
+!           SPECIFY L's AS REQUIRED
+!           L1Z-L5Z
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
+            call ops_par_loop(bounds_kernel_inflowBC3_computeL_zl, "L1Z to L5Z", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dudtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dddtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dvdtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dwdtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
     DO jc = jstal,jstol
       DO ic = istal,istol
         
@@ -2916,39 +2783,30 @@ INTEGER :: ic,jc,kc
 !       WALL BOUNDARY CONDITIONS
 !       ------------------------
   
-  IF(nsbczl == nsbcw1)THEN
+        IF(nsbczl == nsbcw1) THEN
     
-!         WALL BOUNDARY CONDITION No 1
-!         NO-SLIP WALL - ADIABATIC
+!           WALL BOUNDARY CONDITION No 1
+!           NO-SLIP WALL - ADIABATIC
     
-!         ALL VELOCITY COMPONENTS IMPOSED
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
+!           ALL VELOCITY COMPONENTS IMPOSED
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         SPECIFY L's AS REQUIRED
-!         L1Z,L3Z-L5Z
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L's
-        fornow = strdzl(ic,jc,1)*acouzl(ic,jc,1)*bcl1zl(ic,jc,1)
-        bcl1zl(ic,jc,1) = half*(strwzl(ic,jc,1)-acouzl(ic,jc,1))  &
-            *(bcl5zl(ic,jc,1)-fornow)
-        bcl3zl(ic,jc,1) = strwzl(ic,jc,1)*bcl3zl(ic,jc,1)
-        bcl4zl(ic,jc,1) = strwzl(ic,jc,1)*bcl4zl(ic,jc,1)
-        bcl5zl(ic,jc,1) = half*(strwzl(ic,jc,1)+acouzl(ic,jc,1))  &
-            *(bcl5zl(ic,jc,1)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L1Z,L2Z UNCHANGED
-        bcl3zl(ic,jc,1) = -dudtzl(ic,jc,1) - bcl3zl(ic,jc,1)
-        bcl4zl(ic,jc,1) = -dvdtzl(ic,jc,1) - bcl4zl(ic,jc,1)
-        bcl5zl(ic,jc,1) = bcl1zl(ic,jc,1)  &
-            - strdzl(ic,jc,1)*acouzl(ic,jc,1)*dwdtzl(ic,jc,1) - bcl5zl(ic,jc,1)
-        
-      END DO
-    END DO
-    
+!           SPECIFY L's AS REQUIRED
+!           L1Z,L3Z-L5Z
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
+            call ops_par_loop(bounds_kernel_wallBC1_computeL_zl, "L1Z and L3Z to L5Z", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dudtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dvdtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dwdtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO jc = jstal,jstol
       DO ic = istal,istol
@@ -3013,51 +2871,40 @@ INTEGER :: ic,jc,kc
  
 !           SPECIFY L's AS REQUIRED
 !           L1Z-L5Z
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L's
-        fornow = strdzl(ic,jc,1)*acouzl(ic,jc,1)*bcl1zl(ic,jc,1)
-        bcl1zl(ic,jc,1) = half*(strwzl(ic,jc,1)-acouzl(ic,jc,1))  &
-            *(bcl5zl(ic,jc,1)-fornow)
-        bcl2zl(ic,jc,1) = strwzl(ic,jc,1)  &
-            *(bcl2zl(ic,jc,1)-bcl5zl(ic,jc,1)*ova2zl(ic,jc,1))
-        bcl3zl(ic,jc,1) = strwzl(ic,jc,1)*bcl3zl(ic,jc,1)
-        bcl4zl(ic,jc,1) = strwzl(ic,jc,1)*bcl4zl(ic,jc,1)
-        bcl5zl(ic,jc,1) = half*(strwzl(ic,jc,1)+acouzl(ic,jc,1))  &
-            *(bcl5zl(ic,jc,1)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L1Y UNCHANGED
-        bcl3zl(ic,jc,1) = -dudtzl(ic,jc,1) - bcl3zl(ic,jc,1)
-        bcl4zl(ic,jc,1) = -dvdtzl(ic,jc,1) - bcl4zl(ic,jc,1)
-        bcl5zl(ic,jc,1) = bcl1zl(ic,jc,1)  &
-            - strdzl(ic,jc,1)*acouzl(ic,jc,1)*dwdtzl(ic,jc,1) - bcl5zl(ic,jc,1)
-        bcl2zl(ic,jc,1) = gam1zl(ic,jc,1)*ova2zl(ic,jc,1)  &
-            *(bcl1zl(ic,jc,1)+bcl5zl(ic,jc,1))  &
-            + strdzl(ic,jc,1)*(dtdtzl(ic,jc,1)/strtzl(ic,jc,1)  &
-            - sorpzl(ic,jc,1)/strpzl(ic,jc,1)) - bcl2zl(ic,jc,1)
-        
-      END DO
-    END DO
-    
-!         LYZ
-    DO ispec = 1,nspec
-      
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-!               OLD VALUE OF LYZ
-          bclyzl(ispec,ic,jc,1) = strwzl(ic,jc,1)*bclyzl(ispec,ic,jc,1)
-          
-!               UPDATE L2Z
-          bcl2zl(ic,jc,1) = bcl2zl(ic,jc,1) + (ratezl(ispec,ic,jc,1)  &
-              - strdzl(ic,jc,1)*bclyzl(ispec,ic,jc,1)) *rgspec(ispec)/strrzl(ic,jc,1)
-          
-        END DO
-      END DO
-      
-    END DO
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
+            call ops_par_loop(bounds_kernel_wallBC2_computeL_zl, "L1Z to L5Z", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_gam1zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dtdtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dudtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dvdtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dwdtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))            
+
+!           LYZ
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstol,1,1/)
+                call ops_par_loop(bounds_kernel_wallBC2_LYZ_zl, "LYZ", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_bcl2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_ratezl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strrzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
     
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO jc = jstal,jstol
@@ -3277,7 +3124,7 @@ INTEGER :: ic,jc,kc
                             ops_arg_dat(d_gam1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
 
 !           SPECIFY L's AS REQUIRED
-!           L1Y-L4Y
+!           L1Z-L4Z
     DO jc = jstal,jstol
       DO ic = istal,istol
         
