@@ -452,7 +452,12 @@ SUBROUTINE rhsvel
 !   PRESSURE GRADIENTS
 !   ------------------
 
-    prefer = prun(ipref,jpref,kpref)
+    rangexyz = (/ipref,ipref,jpref,jpref,kpref,kpref/)
+    call ops_par_loop(math_kernel_getval, "Get value", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_reduce(h_prefer, 1, "real(8)", OPS_INC))
+
+    call ops_reduction_result(h_prefer, prefer)
 
     rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
     call ops_par_loop(math_kernel_eqG, "A = B-var", senga_grid, 3, rangexyz,  &

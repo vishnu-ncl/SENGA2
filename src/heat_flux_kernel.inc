@@ -4,7 +4,7 @@ SUBROUTINE heat_flux_kernel_thermal_fxlcnw(erhs,store1,store7,acbcxl)
 
     real(kind=dp), dimension(1) :: erhs
     real(kind=dp), dimension(1), intent(in) :: store1, store7
-    real(kind=dp), dimension(1), intent(in) :: acbcxl
+    real(kind=dp), dimension(4), intent(in) :: acbcxl
     real(kind=dp) :: fornow
 
     fornow = acbcxl(1)*store7(OPS_ACC3(1,0,0))*store1(OPS_ACC2(1,0,0)) &
@@ -22,7 +22,7 @@ SUBROUTINE heat_flux_kernel_thermal_fxrcnw(erhs,store1,store7,acbcxr)
 
     real(kind=dp), dimension(1) :: erhs
     real(kind=dp), dimension(1), intent(in) :: store1, store7
-    real(kind=dp), dimension(1), intent(in) :: acbcxr
+    real(kind=dp), dimension(4), intent(in) :: acbcxr
     real(kind=dp) :: fornow
 
     fornow = acbcxr(4)*store7(OPS_ACC3(-4,0,0))*store1(OPS_ACC2(-4,0,0)) &
@@ -40,7 +40,7 @@ SUBROUTINE heat_flux_kernel_thermal_fylcnw(erhs,store2,store7,acbcyl)
 
     real(kind=dp), dimension(1) :: erhs
     real(kind=dp), dimension(1), intent(in) :: store2, store7
-    real(kind=dp), dimension(1), intent(in) :: acbcyl
+    real(kind=dp), dimension(4), intent(in) :: acbcyl
     real(kind=dp) :: fornow
 
     fornow = acbcyl(1)*store7(OPS_ACC3(0,1,0))*store2(OPS_ACC2(0,1,0)) &
@@ -58,7 +58,7 @@ SUBROUTINE heat_flux_kernel_thermal_fyrcnw(erhs,store2,store7,acbcyr)
 
     real(kind=dp), dimension(1) :: erhs
     real(kind=dp), dimension(1), intent(in) :: store2, store7
-    real(kind=dp), dimension(1), intent(in) :: acbcyr
+    real(kind=dp), dimension(4), intent(in) :: acbcyr
     real(kind=dp) :: fornow
 
     fornow = acbcyr(4)*store7(OPS_ACC3(0,-4,0))*store2(OPS_ACC2(0,-4,0)) &
@@ -76,7 +76,7 @@ SUBROUTINE heat_flux_kernel_thermal_fzlcnw(erhs,store3,store7,acbczl)
 
     real(kind=dp), dimension(1) :: erhs
     real(kind=dp), dimension(1), intent(in) :: store3, store7
-    real(kind=dp), dimension(1), intent(in) :: acbczl
+    real(kind=dp), dimension(4), intent(in) :: acbczl
     real(kind=dp) :: fornow
 
     fornow = acbczl(1)*store7(OPS_ACC3(0,0,1))*store3(OPS_ACC2(0,0,1)) &
@@ -94,7 +94,7 @@ SUBROUTINE heat_flux_kernel_thermal_fzrcnw(erhs,store3,store7,acbczr)
 
     real(kind=dp), dimension(1) :: erhs
     real(kind=dp), dimension(1), intent(in) :: store3, store7
-    real(kind=dp), dimension(1), intent(in) :: acbczr
+    real(kind=dp), dimension(4), intent(in) :: acbczr
     real(kind=dp) :: fornow
 
     fornow = acbczr(4)*store7(OPS_ACC3(0,0,-4))*store3(OPS_ACC2(0,0,-4)) &
@@ -112,7 +112,7 @@ SUBROUTINE heat_flux_kernel_soret_fxlcnw(erhs,trun,tdrmix,store7,td1x,acbcxl,rgs
 
     real(kind=dp), dimension(1) :: erhs
     real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,store7,td1x
-    real(kind=dp), dimension(1), intent(in) :: acbcxl
+    real(kind=dp), dimension(4), intent(in) :: acbcxl
     real(kind=dp), intent(in) :: rgspec
     real(kind=dp) :: fornow
     real(kind=dp) :: combo1, combo2, combo3, combo4
@@ -137,7 +137,7 @@ SUBROUTINE heat_flux_kernel_soret_fxrcnw(erhs,trun,tdrmix,store7,td1x,acbcxr,rgs
 
     real(kind=dp), dimension(1) :: erhs
     real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,store7,td1x
-    real(kind=dp), dimension(1), intent(in) :: acbcxr
+    real(kind=dp), dimension(4), intent(in) :: acbcxr
     real(kind=dp), intent(in) :: rgspec
     real(kind=dp) :: fornow
     real(kind=dp) :: combo1, combo2, combo3, combo4
@@ -162,7 +162,7 @@ SUBROUTINE heat_flux_kernel_soret_fylcnw(erhs,trun,tdrmix,store7,td1y,acbcyl,rgs
 
     real(kind=dp), dimension(1) :: erhs
     real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,store7,td1y
-    real(kind=dp), dimension(1), intent(in) :: acbcyl
+    real(kind=dp), dimension(4), intent(in) :: acbcyl
     real(kind=dp), intent(in) :: rgspec
     real(kind=dp) :: fornow
     real(kind=dp) :: combo1, combo2, combo3, combo4
@@ -187,7 +187,7 @@ SUBROUTINE heat_flux_kernel_soret_fyrcnw(erhs,trun,tdrmix,store7,td1y,acbcyr,rgs
 
     real(kind=dp), dimension(1) :: erhs
     real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,store7,td1y
-    real(kind=dp), dimension(1), intent(in) :: acbcyr
+    real(kind=dp), dimension(4), intent(in) :: acbcyr
     real(kind=dp), intent(in) :: rgspec
     real(kind=dp) :: fornow
     real(kind=dp) :: combo1, combo2, combo3, combo4
@@ -212,7 +212,7 @@ SUBROUTINE heat_flux_kernel_soret_fzlcnw(erhs,trun,tdrmix,store7,td1z,acbczl,rgs
 
     real(kind=dp), dimension(1) :: erhs
     real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,store7,td1z
-    real(kind=dp), dimension(1), intent(in) :: acbczl
+    real(kind=dp), dimension(4), intent(in) :: acbczl
     real(kind=dp), intent(in) :: rgspec
     real(kind=dp) :: fornow
     real(kind=dp) :: combo1, combo2, combo3, combo4
@@ -237,7 +237,7 @@ SUBROUTINE heat_flux_kernel_soret_fzrcnw(erhs,trun,tdrmix,store7,td1z,acbczr,rgs
 
     real(kind=dp), dimension(1) :: erhs
     real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,store7,td1z
-    real(kind=dp), dimension(1), intent(in) :: acbczr
+    real(kind=dp), dimension(4), intent(in) :: acbczr
     real(kind=dp), intent(in) :: rgspec
     real(kind=dp) :: fornow
     real(kind=dp) :: combo1, combo2, combo3, combo4
@@ -262,7 +262,7 @@ SUBROUTINE heat_flux_kernel_enthalpy_fxldfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
 
     real(kind=dp), dimension(1) :: rate,erhs,vtmp
     real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,utmp,store7,td1x
-    real(kind=dp), dimension(1), intent(in) :: acbcxl
+    real(kind=dp), dimension(4), intent(in) :: acbcxl
     real(kind=dp), intent(in) :: rgspec
     integer, intent(in) :: ispec
     real(kind=dp) :: fornow
@@ -285,7 +285,7 @@ SUBROUTINE heat_flux_kernel_enthalpy_fxrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
 
     real(kind=dp), dimension(1) :: rate,erhs,vtmp
     real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,utmp,store7,td1x
-    real(kind=dp), dimension(1), intent(in) :: acbcxr
+    real(kind=dp), dimension(4), intent(in) :: acbcxr
     real(kind=dp), intent(in) :: rgspec
     integer, intent(in) :: ispec
     real(kind=dp) :: fornow
@@ -308,7 +308,7 @@ SUBROUTINE heat_flux_kernel_enthalpy_fyldfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
 
     real(kind=dp), dimension(1) :: rate,erhs,vtmp
     real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,utmp,store7,td1y
-    real(kind=dp), dimension(1), intent(in) :: acbcyl
+    real(kind=dp), dimension(4), intent(in) :: acbcyl
     real(kind=dp), intent(in) :: rgspec
     integer, intent(in) :: ispec
     real(kind=dp) :: fornow
@@ -331,7 +331,7 @@ SUBROUTINE heat_flux_kernel_enthalpy_fyrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
 
     real(kind=dp), dimension(1) :: rate,erhs,vtmp
     real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,utmp,store7,td1y
-    real(kind=dp), dimension(1), intent(in) :: acbcyr
+    real(kind=dp), dimension(4), intent(in) :: acbcyr
     real(kind=dp), intent(in) :: rgspec
     integer, intent(in) :: ispec
     real(kind=dp) :: fornow
@@ -354,7 +354,7 @@ SUBROUTINE heat_flux_kernel_enthalpy_fzldfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
 
     real(kind=dp), dimension(1) :: rate,erhs,vtmp
     real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,utmp,store7,td1z
-    real(kind=dp), dimension(1), intent(in) :: acbczl
+    real(kind=dp), dimension(4), intent(in) :: acbczl
     real(kind=dp), intent(in) :: rgspec
     integer, intent(in) :: ispec
     real(kind=dp) :: fornow
@@ -377,7 +377,7 @@ SUBROUTINE heat_flux_kernel_enthalpy_fzrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
 
     real(kind=dp), dimension(1) :: rate,erhs,vtmp
     real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,utmp,store7,td1z
-    real(kind=dp), dimension(1), intent(in) :: acbczr
+    real(kind=dp), dimension(4), intent(in) :: acbczr
     real(kind=dp), intent(in) :: rgspec
     integer, intent(in) :: ispec
     real(kind=dp) :: fornow
@@ -400,7 +400,7 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fxldfw(rate,erhs,vtmp,utmp,store7,arr1,acb
 
     real(kind=dp), dimension(1) :: rate,erhs,vtmp
     real(kind=dp), dimension(1), intent(in) :: utmp,store7,arr1
-    real(kind=dp), dimension(1), intent(in) :: acbcxl
+    real(kind=dp), dimension(4), intent(in) :: acbcxl
     integer, intent(in) :: ispec
     real(kind=dp) :: fornow
 
@@ -421,7 +421,7 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fxrdfw(rate,erhs,vtmp,utmp,store7,arr1,acb
 
     real(kind=dp), dimension(1) :: rate,erhs,vtmp
     real(kind=dp), dimension(1), intent(in) :: utmp,store7,arr1
-    real(kind=dp), dimension(1), intent(in) :: acbcxr
+    real(kind=dp), dimension(4), intent(in) :: acbcxr
     integer, intent(in) :: ispec
     real(kind=dp) :: fornow
 
@@ -442,7 +442,7 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fyldfw(rate,erhs,vtmp,utmp,store7,arr1,acb
 
     real(kind=dp), dimension(1) :: rate,erhs,vtmp
     real(kind=dp), dimension(1), intent(in) :: utmp,store7,arr1
-    real(kind=dp), dimension(1), intent(in) :: acbcyl
+    real(kind=dp), dimension(4), intent(in) :: acbcyl
     integer, intent(in) :: ispec
     real(kind=dp) :: fornow
 
@@ -463,7 +463,7 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fyrdfw(rate,erhs,vtmp,utmp,store7,arr1,acb
 
     real(kind=dp), dimension(1) :: rate,erhs,vtmp
     real(kind=dp), dimension(1), intent(in) :: utmp,store7,arr1
-    real(kind=dp), dimension(1), intent(in) :: acbcyr
+    real(kind=dp), dimension(4), intent(in) :: acbcyr
     integer, intent(in) :: ispec
     real(kind=dp) :: fornow
 
@@ -484,7 +484,7 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fzldfw(rate,erhs,vtmp,utmp,store7,arr1,acb
 
     real(kind=dp), dimension(1) :: rate,erhs,vtmp
     real(kind=dp), dimension(1), intent(in) :: utmp,store7,arr1
-    real(kind=dp), dimension(1), intent(in) :: acbczl
+    real(kind=dp), dimension(4), intent(in) :: acbczl
     integer, intent(in) :: ispec
     real(kind=dp) :: fornow
 
@@ -505,7 +505,7 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fzrdfw(rate,erhs,vtmp,utmp,store7,arr1,acb
 
     real(kind=dp), dimension(1) :: rate,erhs,vtmp
     real(kind=dp), dimension(1), intent(in) :: utmp,store7,arr1
-    real(kind=dp), dimension(1), intent(in) :: acbczr
+    real(kind=dp), dimension(4), intent(in) :: acbczr
     integer, intent(in) :: ispec
     real(kind=dp) :: fornow
 
@@ -526,7 +526,7 @@ SUBROUTINE heat_flux_kernel_isothermal_fxladw(erhs,trun,tdrmix,store7,td1x,acbcx
 
     real(kind=dp), dimension(1) :: erhs
     real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,store7,td1x
-    real(kind=dp), dimension(1), intent(in) :: acbcxl
+    real(kind=dp), dimension(4), intent(in) :: acbcxl
     real(kind=dp), intent(in) :: rgspec
     real(kind=dp) :: fornow, combo0, combo1, combo2, combo3, combo4
 
@@ -552,7 +552,7 @@ SUBROUTINE heat_flux_kernel_isothermal_fxradw(erhs,trun,tdrmix,store7,td1x,acbcx
 
     real(kind=dp), dimension(1) :: erhs
     real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,store7,td1x
-    real(kind=dp), dimension(1), intent(in) :: acbcxr
+    real(kind=dp), dimension(4), intent(in) :: acbcxr
     real(kind=dp), intent(in) :: rgspec
     real(kind=dp) :: fornow, combo0, combo1, combo2, combo3, combo4
 
@@ -578,7 +578,7 @@ SUBROUTINE heat_flux_kernel_isothermal_fyladw(erhs,trun,tdrmix,store7,td1y,acbcy
 
     real(kind=dp), dimension(1) :: erhs
     real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,store7,td1y
-    real(kind=dp), dimension(1), intent(in) :: acbcyl
+    real(kind=dp), dimension(4), intent(in) :: acbcyl
     real(kind=dp), intent(in) :: rgspec
     real(kind=dp) :: fornow, combo0, combo1, combo2, combo3, combo4
 
@@ -604,7 +604,7 @@ SUBROUTINE heat_flux_kernel_isothermal_fyradw(erhs,trun,tdrmix,store7,td1y,acbcy
 
     real(kind=dp), dimension(1) :: erhs
     real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,store7,td1y
-    real(kind=dp), dimension(1), intent(in) :: acbcyr
+    real(kind=dp), dimension(4), intent(in) :: acbcyr
     real(kind=dp), intent(in) :: rgspec
     real(kind=dp) :: fornow, combo0, combo1, combo2, combo3, combo4
 
@@ -630,7 +630,7 @@ SUBROUTINE heat_flux_kernel_isothermal_fzladw(erhs,trun,tdrmix,store7,td1z,acbcz
 
     real(kind=dp), dimension(1) :: erhs
     real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,store7,td1z
-    real(kind=dp), dimension(1), intent(in) :: acbczl
+    real(kind=dp), dimension(4), intent(in) :: acbczl
     real(kind=dp), intent(in) :: rgspec
     real(kind=dp) :: fornow, combo0, combo1, combo2, combo3, combo4
 
@@ -656,7 +656,7 @@ SUBROUTINE heat_flux_kernel_isothermal_fzradw(erhs,trun,tdrmix,store7,td1z,acbcz
 
     real(kind=dp), dimension(1) :: erhs
     real(kind=dp), dimension(1), intent(in) :: trun,tdrmix,store7,td1z
-    real(kind=dp), dimension(1), intent(in) :: acbczr
+    real(kind=dp), dimension(4), intent(in) :: acbczr
     real(kind=dp), intent(in) :: rgspec
     real(kind=dp) :: fornow, combo0, combo1, combo2, combo3, combo4
 

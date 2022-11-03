@@ -394,6 +394,7 @@ SUBROUTINE ops_data_init()
     call ops_decl_reduction_handle(8, h_erwtot, "real(dp)", "erwtot")
     call ops_decl_reduction_handle(8, h_eretot, "real(dp)", "eretot")
     call ops_decl_reduction_handle(8, h_erytot, "real(dp)", "erytot")
+    call ops_decl_reduction_handle(8, h_prefer, "real(dp)", "prefer")
 
 !------------------------------------OPS Stencil----------------------------------------
     call ops_decl_stencil( 3, 1, a3d_000, s3d_000, "0,0,0")

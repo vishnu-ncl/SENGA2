@@ -39,8 +39,6 @@ SUBROUTINE bounds
 
 !   LOCAL DATA
 !   ==========
-real(kind=dp) :: fornow
-INTEGER :: ic,jc,kc
     integer :: ispec
     integer :: rangexyz(6)
 
@@ -109,16 +107,14 @@ INTEGER :: ic,jc,kc
                         
 !       SPEED OF SOUND
 !       --------------
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      fornow = strgxl(1,jc,kc)*gam1xl(1,jc,kc)*strtxl(1,jc,kc)
-      acouxl(1,jc,kc) = SQRT(fornow)
-      ova2xl(1,jc,kc) = one/fornow
-      
-    END DO
-  END DO
-  
+        rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(bounds_kernel_sound_speed_xdir, "SPEED OF SOUND", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_acouxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_strgxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_gam1xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
 !       =======================================================================
   
 !       OUTFLOW BOUNDARY CONDITIONS
@@ -164,45 +160,36 @@ INTEGER :: ic,jc,kc
                             ops_arg_gbl(pinfxl, 1, "real(dp)", OPS_READ))
     
 !           ADD TO CONSERVATIVE SOURCE TERMS
-            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
-            
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        drhs(istal,jc,kc) = drhs(istal,jc,kc) - bcl5xl(1,jc,kc)*ova2xl(1,jc,kc)
-        
-        urhs(istal,jc,kc) = urhs(istal,jc,kc)  &
-            - bcl5xl(1,jc,kc)*ova2xl(1,jc,kc)*(struxl(1,jc,kc)+acouxl(1,jc,kc))
-        
-        vrhs(istal,jc,kc) = vrhs(istal,jc,kc)  &
-            - bcl5xl(1,jc,kc)*ova2xl(1,jc,kc)*strvxl(1,jc,kc)
-        
-        wrhs(istal,jc,kc) = wrhs(istal,jc,kc)  &
-            - bcl5xl(1,jc,kc)*ova2xl(1,jc,kc)*strwxl(1,jc,kc)
-        
-        erhs(istal,jc,kc) = erhs(istal,jc,kc)  &
-            - bcl5xl(1,jc,kc)*(ova2xl(1,jc,kc)*strexl(1,jc,kc)  &
-            + struxl(1,jc,kc)/acouxl(1,jc,kc) + ovgmxl(1,jc,kc))
-        
-      END DO
-    END DO
+            rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_outflowBC1_addsource_xl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &                            
+                            ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strexl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+!           RSC 08-AUG-2012 EVALUATE ALL SPECIES
+!           DO ISPEC = 1,NSPM1
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_outflowBC1_eval_xl, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
     
-!         RSC 08-AUG-2012 EVALUATE ALL SPECIES
-!          DO ISPEC = 1,NSPM1
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-          yrhs(ispec,istal,jc,kc) = yrhs(ispec,istal,jc,kc)  &
-              - bcl5xl(1,jc,kc)*ova2xl(1,jc,kc)*stryxl(ispec,1,jc,kc)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
+        END IF
   
 !       =======================================================================
   
@@ -265,51 +252,43 @@ INTEGER :: ic,jc,kc
             END DO
     
 !           ADD TO CONSERVATIVE SOURCE TERMS
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        drhs(istal,jc,kc) = drhs(istal,jc,kc) - bcl2xl(1,jc,kc)  &
-            - bcl5xl(1,jc,kc)*ova2xl(1,jc,kc)
-        
-        urhs(istal,jc,kc) = urhs(istal,jc,kc) - bcl2xl(1,jc,kc)*struxl(1,jc,kc)  &
-            - bcl5xl(1,jc,kc)*ova2xl(1,jc,kc)*(struxl(1,jc,kc)+acouxl(1,jc,kc))
-        
-        vrhs(istal,jc,kc) = vrhs(istal,jc,kc) - bcl2xl(1,jc,kc)*strvxl(1,jc,kc)  &
-            - bcl3xl(1,jc,kc)*strdxl(1,jc,kc)  &
-            - bcl5xl(1,jc,kc)*ova2xl(1,jc,kc)*strvxl(1,jc,kc)
-        
-        wrhs(istal,jc,kc) = wrhs(istal,jc,kc) - bcl2xl(1,jc,kc)*strwxl(1,jc,kc)  &
-            - bcl4xl(1,jc,kc)*strdxl(1,jc,kc)  &
-            - bcl5xl(1,jc,kc)*ova2xl(1,jc,kc)*strwxl(1,jc,kc)
-        
-        erhs(istal,jc,kc) = erhs(istal,jc,kc) - bcl2xl(1,jc,kc)*strexl(1,jc,kc)  &
-            - bcl3xl(1,jc,kc)*strdxl(1,jc,kc)*strvxl(1,jc,kc)  &
-            - bcl4xl(1,jc,kc)*strdxl(1,jc,kc)*strwxl(1,jc,kc)  &
-            - bcl5xl(1,jc,kc)*(ova2xl(1,jc,kc)*strexl(1,jc,kc)  &
-            + struxl(1,jc,kc)/acouxl(1,jc,kc) + ovgmxl(1,jc,kc))
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-          fornow = bclyxl(ispec,1,jc,kc)*strdxl(1,jc,kc)
-          
-          erhs(istal,jc,kc) = erhs(istal,jc,kc) - fornow*strhxl(ispec,1,jc,kc)
-          
-          yrhs(ispec,istal,jc,kc) = yrhs(ispec,istal,jc,kc)  &
-              - (bcl2xl(1,jc,kc)+bcl5xl(1,jc,kc)*ova2xl(1,jc,kc))*stryxl(ispec,1,jc,kc)  &
-              - fornow
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
+            rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC1_addsource_xl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl3xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl4xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strexl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))            
+
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_inflowBC1_eval_xl, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_bclyxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strhxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_stryxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer",  OPS_READ))
+
+            END DO
+
+        END IF
   
 !       =======================================================================
   
@@ -373,16 +352,14 @@ INTEGER :: ic,jc,kc
                             ops_arg_dat(d_sydtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
 
 !           ADD TO CONSERVATIVE SOURCE TERMS
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        drhs(istal,jc,kc) = drhs(istal,jc,kc) - bcl2xl(1,jc,kc)  &
-            - bcl5xl(1,jc,kc)*ova2xl(1,jc,kc)
-        
-      END DO
-    END DO
-    
-  END IF
+            rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC2_addsource_xl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+        END IF
   
 !       =======================================================================
   
@@ -415,43 +392,44 @@ INTEGER :: ic,jc,kc
                             ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
 
 !           ADD TO CONSERVATIVE SOURCE TERMS
-            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        erhs(istal,jc,kc) = erhs(istal,jc,kc) - bcl2xl(1,jc,kc)*strexl(1,jc,kc)  &
-            - bcl3xl(1,jc,kc)*strdxl(1,jc,kc)*strvxl(1,jc,kc)  &
-            - bcl4xl(1,jc,kc)*strdxl(1,jc,kc)*strwxl(1,jc,kc)  &
-            - bcl5xl(1,jc,kc)*(ova2xl(1,jc,kc)*strexl(1,jc,kc)  &
-            + struxl(1,jc,kc)/acouxl(1,jc,kc) + ovgmxl(1,jc,kc))
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-          bclyxl(ispec,1,jc,kc) = ratexl(ispec,1,jc,kc)/strdxl(1,jc,kc)  &
-              - dydtxl(ispec,1,jc,kc) - struxl(1,jc,kc)*bclyxl(ispec,1,jc,kc)
-          
-          erhs(istal,jc,kc) = erhs(istal,jc,kc)  &
-              - bclyxl(ispec,1,jc,kc)*strdxl(1,jc,kc)*strhxl(ispec,1,jc,kc)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+            rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC3_addsource_xl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl3xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl4xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strexl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_inflowBC3_eval_xl, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_bclyxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ratexl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_dydtxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strhxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
-  
+
 !       WALL BOUNDARY CONDITIONS
 !       ------------------------
-  
-        IF(nsbcxl == nsbcw1)THEN
+
+        IF(nsbcxl == nsbcw1) THEN
     
 !           WALL BOUNDARY CONDITION No 1
 !           NO-SLIP WALL - ADIABATIC
@@ -475,38 +453,38 @@ INTEGER :: ic,jc,kc
                             ops_arg_dat(d_dvdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
                             ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
 
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        drhs(istal,jc,kc) = drhs(istal,jc,kc) - bcl5xl(1,jc,kc)*ova2xl(1,jc,kc)
-        
-        erhs(istal,jc,kc) = erhs(istal,jc,kc)  &
-            - bcl3xl(1,jc,kc)*strdxl(1,jc,kc)*strvxl(1,jc,kc)  &
-            - bcl4xl(1,jc,kc)*strdxl(1,jc,kc)*strwxl(1,jc,kc)  &
-            - bcl5xl(1,jc,kc)*(ova2xl(1,jc,kc)*strexl(1,jc,kc)  &
-            + struxl(1,jc,kc)/acouxl(1,jc,kc) + ovgmxl(1,jc,kc))
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-          yrhs(ispec,istal,jc,kc) = yrhs(ispec,istal,jc,kc)  &
-              - bcl5xl(1,jc,kc)*ova2xl(1,jc,kc)*stryxl(ispec,1,jc,kc)
-          
-        END DO
-      END DO
-      
-    END DO
-    
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_wallBC1_addsource_xl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl4xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strexl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_wallBC1_eval_xl, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
         END IF
-  
+
 !       =======================================================================
-  
+
         IF(nsbcxl == nsbcw2) THEN
 
 !           WALL BOUNDARY CONDITION No 2
@@ -574,33 +552,30 @@ INTEGER :: ic,jc,kc
 
             END DO
     
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        drhs(istal,jc,kc) = drhs(istal,jc,kc) - bcl2xl(1,jc,kc)  &
-            - bcl5xl(1,jc,kc)*ova2xl(1,jc,kc)
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-          yrhs(ispec,istal,jc,kc) = yrhs(ispec,istal,jc,kc)  &
-              - (bcl2xl(1,jc,kc)+bcl5xl(1,jc,kc)*ova2xl(1,jc,kc))*stryxl(ispec,1,jc,kc)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_wallBC2_addsource_xl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_wallBC2_eval_xl, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
-  
+
     END IF
 !   X-DIRECTION LEFT-HAND END
 
@@ -610,10 +585,10 @@ INTEGER :: ic,jc,kc
 
 !   X-DIRECTION RIGHT-HAND END
 !   --------------------------
-    IF(fxrcnv)THEN
-  
+    IF(fxrcnv) THEN
+
 !       =======================================================================
-  
+
 !       STR ARRAYS CONTAIN STORED VALUES
 !       STRUXR = PRIMITIVE U-VELOCITY COMPONENT
 !       STRVXR = PRIMITIVE V-VELOCITY COMPONENT
@@ -666,16 +641,14 @@ INTEGER :: ic,jc,kc
   
 !       SPEED OF SOUND
 !       --------------
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      
-      fornow = strgxr(1,jc,kc)*gam1xr(1,jc,kc)*strtxr(1,jc,kc)
-      acouxr(1,jc,kc) = SQRT(fornow)
-      ova2xr(1,jc,kc) = one/fornow
-      
-    END DO
-  END DO
-  
+        rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(bounds_kernel_sound_speed_xdir, "SPEED OF SOUND", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_acouxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_strgxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_gam1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
 !       =======================================================================
   
 !       OUTFLOW BOUNDARY CONDITIONS
@@ -708,64 +681,55 @@ INTEGER :: ic,jc,kc
                             ops_arg_dat(d_gam1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
 
 !           SPECIFY L1X AS REQUIRED
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-!             OLD VALUE OF L1X
-        bcl1xr(1,jc,kc) = half*(struxr(1,jc,kc)-acouxr(1,jc,kc))  &
-            *(bcl5xr(1,jc,kc)-strdxr(1,jc,kc)*acouxr(1,jc,kc)*bcl1xr(1,jc,kc))
-        
-!             SUBTRACT FROM NEW VALUE OF L1X
-        bcl1xr(1,jc,kc)= half*sorpxr(1,jc,kc)  &
-            + cobcxr*acouxr(1,jc,kc)*(strpxr(1,jc,kc)-pinfxr) - bcl1xr(1,jc,kc)
-        
-      END DO
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        drhs(istol,jc,kc) = drhs(istol,jc,kc) - bcl1xr(1,jc,kc)*ova2xr(1,jc,kc)
-        
-        urhs(istol,jc,kc) = urhs(istol,jc,kc)  &
-            - bcl1xr(1,jc,kc)*ova2xr(1,jc,kc)*(struxr(1,jc,kc)-acouxr(1,jc,kc))
-        
-        vrhs(istol,jc,kc) = vrhs(istol,jc,kc)  &
-            - bcl1xr(1,jc,kc)*ova2xr(1,jc,kc)*strvxr(1,jc,kc)
-        
-        wrhs(istol,jc,kc) = wrhs(istol,jc,kc)  &
-            - bcl1xr(1,jc,kc)*ova2xr(1,jc,kc)*strwxr(1,jc,kc)
-        
-        erhs(istol,jc,kc) = erhs(istol,jc,kc)  &
-            - bcl1xr(1,jc,kc)*(ova2xr(1,jc,kc)*strexr(1,jc,kc)  &
-            - struxr(1,jc,kc)/acouxr(1,jc,kc) + ovgmxr(1,jc,kc))
-        
-      END DO
-    END DO
-    
-!         RSC 08-AUG-2012 EVALUATE ALL SPECIES
-!          DO ISPEC = 1,NSPM1
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-          yrhs(ispec,istol,jc,kc) = yrhs(ispec,istol,jc,kc)  &
-              - bcl1xr(1,jc,kc)*ova2xr(1,jc,kc)*stryxr(ispec,1,jc,kc)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_outflowBC1_computeL_xr, "SPECIFY L1X AS REQUIRED", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl5xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(cobcxr, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(pinfxr, 1, "real(dp)", OPS_READ))
+
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_outflowBC1_addsource_xr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strexr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+!           RSC 08-AUG-2012 EVALUATE ALL SPECIES
+!           DO ISPEC = 1,NSPM1
+            DO ispec = 1,nspec
+                rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_outflowBC1_eval_xr, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))                
+
+            END DO
+
+        END IF
+
 !       =======================================================================
-  
+
 !       INFLOW BOUNDARY CONDITIONS
 !       --------------------------
-  
+
         IF(nsbcxr == nsbci1) THEN
 
 !           INFLOW BC No 1
@@ -792,96 +756,73 @@ INTEGER :: ic,jc,kc
                             ops_arg_dat(d_gam1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
 
 !           SPECIFY L's AS REQUIRED
-!         L1X-L4X
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-!             OLD VALUE OF L's
-        fornow = strdxr(1,jc,kc)*acouxr(1,jc,kc)*bcl1xr(1,jc,kc)
-        bcl1xr(1,jc,kc) = half*(struxr(1,jc,kc)-acouxr(1,jc,kc))  &
-            *(bcl5xr(1,jc,kc)-fornow)
-        bcl2xr(1,jc,kc) = struxr(1,jc,kc)  &
-            *(bcl2xr(1,jc,kc)-bcl5xr(1,jc,kc)*ova2xr(1,jc,kc))
-        bcl3xr(1,jc,kc) = struxr(1,jc,kc)*bcl3xr(1,jc,kc)
-        bcl4xr(1,jc,kc) = struxr(1,jc,kc)*bcl4xr(1,jc,kc)
-        
-!             SUBTRACT FROM NEW VALUE OF L's (=0 FOR L2X-L4X)
-!             L5X UNCHANGED
-        bcl1xr(1,jc,kc) = half*sorpxr(1,jc,kc)  &
-            + cobcxr*acouxr(1,jc,kc)*(strpxr(1,jc,kc)-pinfxr) - bcl1xr(1,jc,kc)
-        bcl2xr(1,jc,kc) = -bcl2xr(1,jc,kc)
-        bcl3xr(1,jc,kc) = -bcl3xr(1,jc,kc)
-        bcl4xr(1,jc,kc) = -bcl4xr(1,jc,kc)
-        
-      END DO
-    END DO
+!           L1X-L4X
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC1_computeL_xr, "L1X-L4X", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl5xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(cobcxr, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(pinfxr, 1, "real(dp)", OPS_READ))
+
+!           LYX
+            DO ispec = 1,nspec
+                rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_inflowBC1_LYX_xr, "LYX", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_ratexr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))            
+
+            END DO
     
-!         LYX
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-!               OLD VALUE OF L's
-          bclyxr(ispec,1,jc,kc) = struxr(1,jc,kc)*bclyxr(ispec,1,jc,kc)
-          
-!               SUBTRACT FROM NEW VALUE OF L's (=0 FOR LYX)
-          bclyxr(ispec,1,jc,kc) = ratexr(ispec,1,jc,kc)/strdxr(1,jc,kc)  &
-              - bclyxr(ispec,1,jc,kc)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        drhs(istol,jc,kc) = drhs(istol,jc,kc) - bcl1xr(1,jc,kc)*ova2xr(1,jc,kc)  &
-            - bcl2xr(1,jc,kc)
-        
-        urhs(istol,jc,kc) = urhs(istol,jc,kc)  &
-            - bcl1xr(1,jc,kc)*ova2xr(1,jc,kc)*(struxr(1,jc,kc)-acouxr(1,jc,kc))  &
-            - bcl2xr(1,jc,kc)*struxr(1,jc,kc)
-        
-        vrhs(istol,jc,kc) = vrhs(istol,jc,kc)  &
-            - bcl1xr(1,jc,kc)*ova2xr(1,jc,kc)*strvxr(1,jc,kc)  &
-            - bcl2xr(1,jc,kc)*strvxr(1,jc,kc) - bcl3xr(1,jc,kc)*strdxr(1,jc,kc)
-        
-        wrhs(istol,jc,kc) = wrhs(istol,jc,kc)  &
-            - bcl1xr(1,jc,kc)*ova2xr(1,jc,kc)*strwxr(1,jc,kc)  &
-            - bcl2xr(1,jc,kc)*strwxr(1,jc,kc) - bcl4xr(1,jc,kc)*strdxr(1,jc,kc)
-        
-        erhs(istol,jc,kc) = erhs(istol,jc,kc)  &
-            - bcl1xr(1,jc,kc)*(ova2xr(1,jc,kc)*strexr(1,jc,kc)  &
-            - struxr(1,jc,kc)/acouxr(1,jc,kc) + ovgmxr(1,jc,kc))  &
-            - bcl2xr(1,jc,kc)*strexr(1,jc,kc)  &
-            - bcl3xr(1,jc,kc)*strdxr(1,jc,kc)*strvxr(1,jc,kc)  &
-            - bcl4xr(1,jc,kc)*strdxr(1,jc,kc)*strwxr(1,jc,kc)
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-          fornow = bclyxr(ispec,1,jc,kc)*strdxr(1,jc,kc)
-          
-          erhs(istol,jc,kc) = erhs(istol,jc,kc) - fornow*strhxr(ispec,1,jc,kc)
-          
-          yrhs(ispec,istol,jc,kc) = yrhs(ispec,istol,jc,kc)  &
-              - (bcl2xr(1,jc,kc)+bcl1xr(1,jc,kc)*ova2xr(1,jc,kc))*stryxr(ispec,1,jc,kc)  &
-              - fornow
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC1_addsource_xr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl3xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl4xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strexr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+                rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_inflowBC1_eval_xr, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_bclyxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strhxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_stryxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer",  OPS_READ))
+
+            END DO
+
+        END IF
   
 !       =======================================================================
   
@@ -927,185 +868,157 @@ INTEGER :: ic,jc,kc
 
 !           SPECIFY L's AS REQUIRED
 !           L1X,L2X,L5X
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-!             OLD VALUE OF L's
-        fornow = strdxr(1,jc,kc)*acouxr(1,jc,kc)*bcl1xr(1,jc,kc)
-        bcl1xr(1,jc,kc) = half*(struxr(1,jc,kc)-acouxr(1,jc,kc))  &
-            *(bcl5xr(1,jc,kc)-fornow)
-        bcl2xr(1,jc,kc) = struxr(1,jc,kc)  &
-            *(bcl2xr(1,jc,kc)-bcl5xr(1,jc,kc)*ova2xr(1,jc,kc))
-        bcl5xr(1,jc,kc) = half*(struxr(1,jc,kc)+acouxr(1,jc,kc))  &
-            *(bcl5xr(1,jc,kc)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L5X UNCHANGED
-        bcl1xr(1,jc,kc) = bcl5xr(1,jc,kc)  &
-            + strdxr(1,jc,kc)*acouxr(1,jc,kc)*dudtxr(1,jc,kc) - bcl1xr(1,jc,kc)
-        bcl2xr(1,jc,kc) = gam1xr(1,jc,kc)*ova2xr(1,jc,kc)  &
-            *(bcl1xr(1,jc,kc)+bcl5xr(1,jc,kc))  &
-            + strdxr(1,jc,kc)*(dtdtxr(1,jc,kc)/strtxr(1,jc,kc)  &
-            - sorpxr(1,jc,kc)/strpxr(1,jc,kc) + sydtxr(1,jc,kc))  &
-            - bcl2xr(1,jc,kc)
-        
-      END DO
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        drhs(istol,jc,kc) = drhs(istol,jc,kc) - bcl2xr(1,jc,kc)  &
-            - bcl1xr(1,jc,kc)*ova2xr(1,jc,kc)
-        
-      END DO
-    END DO
-    
-  END IF
-  
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC2_computeL_xr, "L1X L2X L5X", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dudtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_gam1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dtdtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sydtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC2_addsource_xr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ)) 
+
+        END IF
+
 !       =======================================================================
-  
-  IF(nsbcxr == nsbci3)THEN
+
+        IF(nsbcxr == nsbci3) THEN
+
+!           INFLOW BOUNDARY CONDITION No 3
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
     
-!         INFLOW BOUNDARY CONDITION No 3
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
+!           VELOCITY, DENSITY AND MASS FRACTIONS IMPOSED
+!           AS FUNCTIONS OF TIME
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         VELOCITY, DENSITY AND MASS FRACTIONS IMPOSED
-!         AS FUNCTIONS OF TIME
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
-    
-!         SPECIFY L's AS REQUIRED
-!         L1X-L5X
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-!             OLD VALUE OF L's
-        fornow = strdxr(1,jc,kc)*acouxr(1,jc,kc)*bcl1xr(1,jc,kc)
-        bcl1xr(1,jc,kc) = half*(struxr(1,jc,kc)-acouxr(1,jc,kc))  &
-            *(bcl5xr(1,jc,kc)-fornow)
-        bcl2xr(1,jc,kc) = struxr(1,jc,kc)  &
-            *(bcl2xr(1,jc,kc)-bcl5xr(1,jc,kc)*ova2xr(1,jc,kc))
-        bcl3xr(1,jc,kc) = struxr(1,jc,kc)*bcl3xr(1,jc,kc)
-        bcl4xr(1,jc,kc) = struxr(1,jc,kc)*bcl4xr(1,jc,kc)
-        bcl5xr(1,jc,kc) = half*(struxr(1,jc,kc)+acouxr(1,jc,kc))  &
-            *(bcl5xr(1,jc,kc)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L5X UNCHANGED
-        fornow = bcl5xr(1,jc,kc) + strdxr(1,jc,kc)*acouxr(1,jc,kc)*dudtxr(1,jc,kc)
-        bcl1xr(1,jc,kc) = fornow - bcl1xr(1,jc,kc)
-        bcl2xr(1,jc,kc) = -dddtxr(1,jc,kc)  &
-            - ova2xr(1,jc,kc)*(bcl5xr(1,jc,kc)+fornow) - bcl2xr(1,jc,kc)
-        bcl3xr(1,jc,kc) = -dvdtxr(1,jc,kc) - bcl3xr(1,jc,kc)
-        bcl4xr(1,jc,kc) = -dwdtxr(1,jc,kc) - bcl4xr(1,jc,kc)
-        
-      END DO
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        erhs(istol,jc,kc) = erhs(istol,jc,kc)  &
-            - bcl1xr(1,jc,kc)*(ova2xr(1,jc,kc)*strexr(1,jc,kc)  &
-            - struxr(1,jc,kc)/acouxr(1,jc,kc) + ovgmxr(1,jc,kc))  &
-            - bcl2xr(1,jc,kc)*strexr(1,jc,kc)  &
-            - bcl3xr(1,jc,kc)*strdxr(1,jc,kc)*strvxr(1,jc,kc)  &
-            - bcl4xr(1,jc,kc)*strdxr(1,jc,kc)*strwxr(1,jc,kc)
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-          bclyxr(ispec,1,jc,kc) = ratexr(ispec,1,jc,kc)/strdxr(1,jc,kc)  &
-              - dydtxr(ispec,1,jc,kc) - struxr(1,jc,kc)*bclyxr(ispec,1,jc,kc)
-          
-          erhs(istol,jc,kc) = erhs(istol,jc,kc)  &
-              - bclyxr(ispec,1,jc,kc)*strdxr(1,jc,kc)*strhxr(ispec,1,jc,kc)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+!           SPECIFY L's AS REQUIRED
+!           L1X-L5X
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC3_computeL_xr, "L1X to L5X", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dudtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dddtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dvdtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dwdtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC3_addsource_xr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl3xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl4xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strexr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouxr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ)) 
+
+            DO ispec = 1,nspec
+                rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_inflowBC3_eval_xr, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_bclyxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ratexr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_dydtxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strhxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
-  
+
 !       WALL BOUNDARY CONDITIONS
 !       ------------------------
-  
-  IF(nsbcxr == nsbcw1)THEN
+
+        IF(nsbcxr == nsbcw1) THEN
+
+!           WALL BOUNDARY CONDITION No 1
+!           NO-SLIP WALL - ADIABATIC
     
-!         WALL BOUNDARY CONDITION No 1
-!         NO-SLIP WALL - ADIABATIC
+!           ALL VELOCITY COMPONENTS IMPOSED
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         ALL VELOCITY COMPONENTS IMPOSED
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
-    
-!         SPECIFY L's AS REQUIRED
-!         L1X,L3X-L5X
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-!             OLD VALUE OF L's
-        fornow = strdxr(1,jc,kc)*acouxr(1,jc,kc)*bcl1xr(1,jc,kc)
-        bcl1xr(1,jc,kc) = half*(struxr(1,jc,kc)-acouxr(1,jc,kc))  &
-            *(bcl5xr(1,jc,kc)-fornow)
-        bcl3xr(1,jc,kc) = struxr(1,jc,kc)*bcl3xr(1,jc,kc)
-        bcl4xr(1,jc,kc) = struxr(1,jc,kc)*bcl4xr(1,jc,kc)
-        bcl5xr(1,jc,kc) = half*(struxr(1,jc,kc)+acouxr(1,jc,kc))  &
-            *(bcl5xr(1,jc,kc)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L2X,L5X UNCHANGED
-        bcl1xr(1,jc,kc) = bcl5xr(1,jc,kc)  &
-            + strdxr(1,jc,kc)*acouxr(1,jc,kc)*dudtxr(1,jc,kc) - bcl1xr(1,jc,kc)
-        bcl3xr(1,jc,kc) = -dvdtxr(1,jc,kc) - bcl3xr(1,jc,kc)
-        bcl4xr(1,jc,kc) = -dwdtxr(1,jc,kc) - bcl4xr(1,jc,kc)
-        
-      END DO
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        drhs(istol,jc,kc) = drhs(istol,jc,kc) - bcl1xr(1,jc,kc)*ova2xr(1,jc,kc)
-        
-        erhs(istol,jc,kc) = erhs(istol,jc,kc)  &
-            - bcl1xr(1,jc,kc)*(ova2xr(1,jc,kc)*strexr(1,jc,kc)  &
-            + struxr(1,jc,kc)/acouxr(1,jc,kc) + ovgmxr(1,jc,kc))  &
-            - bcl3xr(1,jc,kc)*strdxr(1,jc,kc)*strvxr(1,jc,kc)  &
-            - bcl4xr(1,jc,kc)*strdxr(1,jc,kc)*strwxr(1,jc,kc)
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-          yrhs(ispec,istol,jc,kc) = yrhs(ispec,istol,jc,kc)  &
-              - bcl1xr(1,jc,kc)*ova2xr(1,jc,kc)*stryxr(ispec,1,jc,kc)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+!           SPECIFY L's AS REQUIRED
+!           L1X,L3X-L5X
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_wallBC1_computeL_xr, "L1X and L3X to L5X", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dudtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dvdtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dwdtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_wallBC1_addsource_xr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl3xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl4xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strexr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+                rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_wallBC1_eval_xr, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
-  
+
         IF(nsbcxr == nsbcw2) THEN
 
 !           WALL BOUNDARY CONDITION No 2
@@ -1138,79 +1051,65 @@ INTEGER :: ic,jc,kc
 
 !           SPECIFY L's AS REQUIRED
 !           L1X-L5X
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-!             OLD VALUE OF L's
-        fornow = strdxr(1,jc,kc)*acouxr(1,jc,kc)*bcl1xr(1,jc,kc)
-        bcl1xr(1,jc,kc) = half*(struxr(1,jc,kc)-acouxr(1,jc,kc))  &
-            *(bcl5xr(1,jc,kc)-fornow)
-        bcl2xr(1,jc,kc) = struxr(1,jc,kc)  &
-            *(bcl2xr(1,jc,kc)-bcl5xr(1,jc,kc)*ova2xr(1,jc,kc))
-        bcl3xr(1,jc,kc) = struxr(1,jc,kc)*bcl3xr(1,jc,kc)
-        bcl4xr(1,jc,kc) = struxr(1,jc,kc)*bcl4xr(1,jc,kc)
-        bcl5xr(1,jc,kc) = half*(struxr(1,jc,kc)+acouxr(1,jc,kc))  &
-            *(bcl5xr(1,jc,kc)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L5X UNCHANGED
-        bcl1xr(1,jc,kc) = bcl5xr(1,jc,kc)  &
-            + strdxr(1,jc,kc)*acouxr(1,jc,kc)*dudtxr(1,jc,kc) - bcl1xr(1,jc,kc)
-        bcl3xr(1,jc,kc) = -dvdtxr(1,jc,kc) - bcl3xr(1,jc,kc)
-        bcl4xr(1,jc,kc) = -dwdtxr(1,jc,kc) - bcl4xr(1,jc,kc)
-        bcl2xr(1,jc,kc) = gam1xr(1,jc,kc)*ova2xr(1,jc,kc)  &
-            *(bcl1xr(1,jc,kc)+bcl5xr(1,jc,kc))  &
-            + strdxr(1,jc,kc)*(dtdtxr(1,jc,kc)/strtxr(1,jc,kc)  &
-            - sorpxr(1,jc,kc)/strpxr(1,jc,kc)) - bcl2xr(1,jc,kc)
-        
-      END DO
-    END DO
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_wallBC2_computeL_xr, "L1X to L5X", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dudtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dvdtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dwdtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_gam1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dtdtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+!           LYX
+            DO ispec = 1,nspec
+                rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_wallBC2_LYX_xr, "LYX", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_bcl2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_ratexr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strrxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
     
-!         LYX
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-!               OLD VALUE OF LYX
-          bclyxr(ispec,1,jc,kc) = struxr(1,jc,kc)*bclyxr(ispec,1,jc,kc)
-          
-!               UPDATE L2X
-          bcl2xr(1,jc,kc) = bcl2xr(1,jc,kc) + (ratexr(ispec,1,jc,kc)  &
-              - strdxr(1,jc,kc)*bclyxr(ispec,1,jc,kc)) *rgspec(ispec)/strrxr(1,jc,kc)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        drhs(istol,jc,kc) = drhs(istol,jc,kc) - bcl1xr(1,jc,kc)*ova2xr(1,jc,kc)  &
-            - bcl2xr(1,jc,kc)
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-          yrhs(ispec,istol,jc,kc) = yrhs(ispec,istol,jc,kc)  &
-              - (bcl2xr(1,jc,kc)+bcl1xr(1,jc,kc)*ova2xr(1,jc,kc))*stryxr(ispec,1,jc,kc)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_wallBC2_addsource_xr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+                rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_wallBC2_eval_xr, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
-  
+
     END IF
 !   X-DIRECTION RIGHT-HAND END
 
@@ -1220,10 +1119,10 @@ INTEGER :: ic,jc,kc
 
 !   Y-DIRECTION LEFT-HAND END
 !   -------------------------
-    IF(fylcnv)THEN
-  
+    IF(fylcnv) THEN
+
 !       =======================================================================
-  
+
 !       STR ARRAYS CONTAIN STORED VALUES
 !       STRUYL = PRIMITIVE U-VELOCITY COMPONENT
 !       STRVYL = PRIMITIVE V-VELOCITY COMPONENT
@@ -1276,15 +1175,13 @@ INTEGER :: ic,jc,kc
   
 !       SPEED OF SOUND
 !       --------------
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      fornow = strgyl(ic,1,kc)*gam1yl(ic,1,kc)*strtyl(ic,1,kc)
-      acouyl(ic,1,kc) = SQRT(fornow)
-      ova2yl(ic,1,kc) = one/fornow
-      
-    END DO
-  END DO
+        rangexyz = (/istal,istol,1,1,kstal,kstol/)        
+        call ops_par_loop(bounds_kernel_sound_speed_ydir, "SPEED OF SOUND", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_acouyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_strgyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_gam1yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
   
 !       =======================================================================
   
@@ -1330,44 +1227,37 @@ INTEGER :: ic,jc,kc
                             ops_arg_gbl(cobcyl, 1, "real(dp)", OPS_READ), &
                             ops_arg_gbl(pinfyl, 1, "real(dp)", OPS_READ))
     
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        drhs(ic,jstal,kc) = drhs(ic,jstal,kc) - bcl5yl(ic,1,kc)*ova2yl(ic,1,kc)
-        
-        urhs(ic,jstal,kc) = urhs(ic,jstal,kc)  &
-            - bcl5yl(ic,1,kc)*ova2yl(ic,1,kc)*struyl(ic,1,kc)
-        
-        vrhs(ic,jstal,kc) = vrhs(ic,jstal,kc)  &
-            - bcl5yl(ic,1,kc)*ova2yl(ic,1,kc)*(strvyl(ic,1,kc)+acouyl(ic,1,kc))
-        
-        wrhs(ic,jstal,kc) = wrhs(ic,jstal,kc)  &
-            - bcl5yl(ic,1,kc)*ova2yl(ic,1,kc)*strwyl(ic,1,kc)
-        
-        erhs(ic,jstal,kc) = erhs(ic,jstal,kc)  &
-            - bcl5yl(ic,1,kc)*(ova2yl(ic,1,kc)*streyl(ic,1,kc)  &
-            + strvyl(ic,1,kc)/acouyl(ic,1,kc) + ovgmyl(ic,1,kc))
-        
-      END DO
-    END DO
-    
-!         RSC 08-AUG-2012 EVALUATE ALL SPECIES
-!          DO ISPEC = 1,NSPM1
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-          yrhs(ispec,ic,jstal,kc) = yrhs(ispec,ic,jstal,kc)  &
-              - bcl5yl(ic,1,kc)*ova2yl(ic,1,kc)*stryyl(ispec,ic,1,kc)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_outflowBC1_addsource_yl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_streyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+!           RSC 08-AUG-2012 EVALUATE ALL SPECIES
+!           DO ISPEC = 1,NSPM1
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_outflowBC1_eval_yl, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
   
 !       =======================================================================
   
@@ -1429,53 +1319,45 @@ INTEGER :: ic,jc,kc
 
             END DO
     
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        drhs(ic,jstal,kc) = drhs(ic,jstal,kc) - bcl2yl(ic,1,kc)  &
-            - bcl5yl(ic,1,kc)*ova2yl(ic,1,kc)
-        
-        urhs(ic,jstal,kc) = urhs(ic,jstal,kc) - bcl2yl(ic,1,kc)*struyl(ic,1,kc)  &
-            - bcl3yl(ic,1,kc)*strdyl(ic,1,kc)  &
-            - bcl5yl(ic,1,kc)*ova2yl(ic,1,kc)*struyl(ic,1,kc)
-        
-        vrhs(ic,jstal,kc) = vrhs(ic,jstal,kc) - bcl2yl(ic,1,kc)*strvyl(ic,1,kc)  &
-            - bcl5yl(ic,1,kc)*ova2yl(ic,1,kc)*(strvyl(ic,1,kc)+acouyl(ic,1,kc))
-        
-        wrhs(ic,jstal,kc) = wrhs(ic,jstal,kc) - bcl2yl(ic,1,kc)*strwyl(ic,1,kc)  &
-            - bcl4yl(ic,1,kc)*strdyl(ic,1,kc)  &
-            - bcl5yl(ic,1,kc)*ova2yl(ic,1,kc)*strwyl(ic,1,kc)
-        
-        erhs(ic,jstal,kc) = erhs(ic,jstal,kc) - bcl2yl(ic,1,kc)*streyl(ic,1,kc)  &
-            - bcl3yl(ic,1,kc)*strdyl(ic,1,kc)*struyl(ic,1,kc)  &
-            - bcl4yl(ic,1,kc)*strdyl(ic,1,kc)*strwyl(ic,1,kc)  &
-            - bcl5yl(ic,1,kc)*(ova2yl(ic,1,kc)*streyl(ic,1,kc)  &
-            + strvyl(ic,1,kc)/acouyl(ic,1,kc) + ovgmyl(ic,1,kc))
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-          fornow = bclyyl(ispec,ic,1,kc)*strdyl(ic,1,kc)
-          
-          erhs(ic,jstal,kc) = erhs(ic,jstal,kc) - fornow*strhyl(ispec,ic,1,kc)
-          
-          yrhs(ispec,ic,jstal,kc) = yrhs(ispec,ic,jstal,kc)  &
-              - (bcl2yl(ic,1,kc)+bcl5yl(ic,1,kc)*ova2yl(ic,1,kc))*stryyl(ispec,ic,1,kc)  &
-              - fornow
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/) 
+            call ops_par_loop(bounds_kernel_inflowBC1_addsource_yl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl3yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl4yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_streyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_inflowBC1_eval_yl, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_bclyyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strhyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_stryyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer",  OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
 
         IF(nsbcyl == nsbci2) THEN
@@ -1538,21 +1420,19 @@ INTEGER :: ic,jc,kc
                             ops_arg_dat(d_sydtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
 
 !           ADD TO CONSERVATIVE SOURCE TERMS
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        drhs(ic,jstal,kc) = drhs(ic,jstal,kc) - bcl2yl(ic,1,kc)  &
-            - bcl5yl(ic,1,kc)*ova2yl(ic,1,kc)
-        
-      END DO
-    END DO
-    
-  END IF
-  
+            rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC2_addsource_yl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+        END IF
+
 !       =======================================================================
-  
+
         IF(nsbcyl == nsbci3)THEN
-    
+
 !           INFLOW BOUNDARY CONDITION No 3
 !           SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
     
@@ -1580,44 +1460,45 @@ INTEGER :: ic,jc,kc
                             ops_arg_dat(d_dwdtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
 
 !           ADD TO CONSERVATIVE SOURCE TERMS
-            rangexyz = (/istal,istol,1,1,kstal,kstol/)
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        erhs(ic,jstal,kc) = erhs(ic,jstal,kc) - bcl2yl(ic,1,kc)*streyl(ic,1,kc)  &
-            - bcl3yl(ic,1,kc)*strdyl(ic,1,kc)*struyl(ic,1,kc)  &
-            - bcl4yl(ic,1,kc)*strdyl(ic,1,kc)*strwyl(ic,1,kc)  &
-            - bcl5yl(ic,1,kc)*(ova2yl(ic,1,kc)*streyl(ic,1,kc)  &
-            + strvyl(ic,1,kc)/acouyl(ic,1,kc) + ovgmyl(ic,1,kc))
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-          bclyyl(ispec,ic,1,kc) = rateyl(ispec,ic,1,kc)/strdyl(ic,1,kc)  &
-              - dydtyl(ispec,ic,1,kc) - strvyl(ic,1,kc)*bclyyl(ispec,ic,1,kc)
-          
-          erhs(ic,jstal,kc) = erhs(ic,jstal,kc)  &
-              - bclyyl(ispec,ic,1,kc)*strdyl(ic,1,kc)*strhyl(ispec,ic,1,kc)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+            rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC3_addsource_yl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl3yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl4yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_streyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_inflowBC3_eval_yl, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_bclyyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_rateyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_dydtyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strhyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
-  
+
 !       WALL BOUNDARY CONDITIONS
 !       ------------------------
-  
-        IF(nsbcyl == nsbcw1)THEN
-    
+
+        IF(nsbcyl == nsbcw1) THEN
+
 !           WALL BOUNDARY CONDITION No 1
 !           NO-SLIP WALL - ADIABATIC
     
@@ -1641,38 +1522,37 @@ INTEGER :: ic,jc,kc
                             ops_arg_dat(d_dwdtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
 
 !           ADD TO CONSERVATIVE SOURCE TERMS
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        drhs(ic,jstal,kc) = drhs(ic,jstal,kc) - bcl5yl(ic,1,kc)*ova2yl(ic,1,kc)
-        
-        erhs(ic,jstal,kc) = erhs(ic,jstal,kc)  &
-            - bcl3yl(ic,1,kc)*strdyl(ic,1,kc)*struyl(ic,1,kc)  &
-            - bcl4yl(ic,1,kc)*strdyl(ic,1,kc)*strwyl(ic,1,kc)  &
-            - bcl5yl(ic,1,kc)*(ova2yl(ic,1,kc)*streyl(ic,1,kc)  &
-            + strvyl(ic,1,kc)/acouyl(ic,1,kc) + ovgmyl(ic,1,kc))
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-          yrhs(ispec,ic,jstal,kc) = yrhs(ispec,ic,jstal,kc)  &
-              - bcl5yl(ic,1,kc)*ova2yl(ic,1,kc)*stryyl(ispec,ic,1,kc)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
-  
+            rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_wallBC1_addsource_yl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl4yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_streyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_wallBC1_eval_yl, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
-  
+
         IF(nsbcyl == nsbcw2) THEN
 
 !           WALL BOUNDARY CONDITION No 2
@@ -1740,33 +1620,30 @@ INTEGER :: ic,jc,kc
 
             END DO
     
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        drhs(ic,jstal,kc) = drhs(ic,jstal,kc) - bcl2yl(ic,1,kc)  &
-            - bcl5yl(ic,1,kc)*ova2yl(ic,1,kc)
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-          yrhs(ispec,ic,jstal,kc) = yrhs(ispec,ic,jstal,kc)  &
-              - (bcl2yl(ic,1,kc)+bcl5yl(ic,1,kc)*ova2yl(ic,1,kc))*stryyl(ispec,ic,1,kc)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_wallBC2_addsource_yl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_wallBC2_eval_yl, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
-  
+
     END IF
 !   Y-DIRECTION LEFT-HAND END
 
@@ -1776,8 +1653,8 @@ INTEGER :: ic,jc,kc
 
 !   Y-DIRECTION RIGHT-HAND END
 !   --------------------------
-    IF(fyrcnv)THEN
-  
+    IF(fyrcnv) THEN
+
 !       =======================================================================
   
 !       STR ARRAYS CONTAIN STORED VALUES
@@ -1832,16 +1709,14 @@ INTEGER :: ic,jc,kc
 
 !       SPEED OF SOUND
 !       --------------
-  DO kc = kstal,kstol
-    DO ic = istal,istol
-      
-      fornow = strgyr(ic,1,kc)*gam1yr(ic,1,kc)*strtyr(ic,1,kc)
-      acouyr(ic,1,kc) = SQRT(fornow)
-      ova2yr(ic,1,kc) = one/fornow
-      
-    END DO
-  END DO
-  
+        rangexyz = (/istal,istol,1,1,kstal,kstol/)
+        call ops_par_loop(bounds_kernel_sound_speed_ydir, "SPEED OF SOUND", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_acouyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_strgyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_gam1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
 !       =======================================================================
   
 !       OUTFLOW BOUNDARY CONDITIONS
@@ -1874,59 +1749,50 @@ INTEGER :: ic,jc,kc
                             ops_arg_dat(d_gam1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
 
 !           SPECIFY L1Y AS REQUIRED
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L1Y
-        bcl1yr(ic,1,kc) = half*(strvyr(ic,1,kc)-acouyr(ic,1,kc))  &
-            *(bcl5yr(ic,1,kc)-strdyr(ic,1,kc)*acouyr(ic,1,kc)*bcl1yr(ic,1,kc))
-        
-!             SUBTRACT FROM NEW VALUE OF L1Y
-        bcl1yr(ic,1,kc)= half*sorpyr(ic,1,kc)  &
-            + cobcyr*acouyr(ic,1,kc)*(strpyr(ic,1,kc)-pinfyr) - bcl1yr(ic,1,kc)
-        
-      END DO
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        drhs(ic,jstol,kc) = drhs(ic,jstol,kc) - bcl1yr(ic,1,kc)*ova2yr(ic,1,kc)
-        
-        urhs(ic,jstol,kc) = urhs(ic,jstol,kc)  &
-            - bcl1yr(ic,1,kc)*ova2yr(ic,1,kc)*struyr(ic,1,kc)
-        
-        vrhs(ic,jstol,kc) = vrhs(ic,jstol,kc)  &
-            - bcl1yr(ic,1,kc)*ova2yr(ic,1,kc)*(strvyr(ic,1,kc)-acouyr(ic,1,kc))
-        
-        wrhs(ic,jstol,kc) = wrhs(ic,jstol,kc)  &
-            - bcl1yr(ic,1,kc)*ova2yr(ic,1,kc)*strwyr(ic,1,kc)
-        
-        erhs(ic,jstol,kc) = erhs(ic,jstol,kc)  &
-            - bcl1yr(ic,1,kc)*(ova2yr(ic,1,kc)*streyr(ic,1,kc)  &
-            - strvyr(ic,1,kc)/acouyr(ic,1,kc) + ovgmyr(ic,1,kc))
-        
-      END DO
-    END DO
-    
-!         RSC 08-AUG-2012 EVALUATE ALL SPECIES
-!          DO ISPEC = 1,NSPM1
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-          yrhs(ispec,ic,jstol,kc) = yrhs(ispec,ic,jstol,kc)  &
-              - bcl1yr(ic,1,kc)*ova2yr(ic,1,kc)*stryyr(ispec,ic,1,kc)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_outflowBC1_computeL_yr, "SPECIFY L1Y AS REQUIRED", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl5yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(cobcyr, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(pinfyr, 1, "real(dp)", OPS_READ))
+
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_outflowBC1_addsource_yr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_streyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+!           RSC 08-AUG-2012 EVALUATE ALL SPECIES
+!           DO ISPEC = 1,NSPM1
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_outflowBC1_eval_yr, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
 
 !       INFLOW BOUNDARY CONDITIONS
@@ -1959,96 +1825,73 @@ INTEGER :: ic,jc,kc
 
 !           SPECIFY L's AS REQUIRED
 !           L1Y-L4Y
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L's
-        fornow = strdyr(ic,1,kc)*acouyr(ic,1,kc)*bcl1yr(ic,1,kc)
-        bcl1yr(ic,1,kc) = half*(strvyr(ic,1,kc)-acouyr(ic,1,kc))  &
-            *(bcl5yr(ic,1,kc)-fornow)
-        bcl2yr(ic,1,kc) = strvyr(ic,1,kc)  &
-            *(bcl2yr(ic,1,kc)-bcl5yr(ic,1,kc)*ova2yr(ic,1,kc))
-        bcl3yr(ic,1,kc) = strvyr(ic,1,kc)*bcl3yr(ic,1,kc)
-        bcl4yr(ic,1,kc) = strvyr(ic,1,kc)*bcl4yr(ic,1,kc)
-        
-!             SUBTRACT FROM NEW VALUE OF L's (=0 FOR L2Y-L4Y)
-!             L5Y UNCHANGED
-        bcl1yr(ic,1,kc) = half*sorpyr(ic,1,kc)  &
-            + cobcyr*acouyr(ic,1,kc)*(strpyr(ic,1,kc)-pinfyr) - bcl1yr(ic,1,kc)
-        bcl2yr(ic,1,kc) = -bcl2yr(ic,1,kc)
-        bcl3yr(ic,1,kc) = -bcl3yr(ic,1,kc)
-        bcl4yr(ic,1,kc) = -bcl4yr(ic,1,kc)
-        
-      END DO
-    END DO
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)            
+            call ops_par_loop(bounds_kernel_inflowBC1_computeL_yr, "L1Y-L4Y", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl5yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(cobcyr, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(pinfyr, 1, "real(dp)", OPS_READ))
+
+!           LYY
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,1,1,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_inflowBC1_LYY_yr, "LYY", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_rateyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
     
-!         LYY
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-!               OLD VALUE OF L's
-          bclyyr(ispec,ic,1,kc) = strvyr(ic,1,kc)*bclyyr(ispec,ic,1,kc)
-          
-!               SUBTRACT FROM NEW VALUE OF L's (=0 FOR LYY)
-          bclyyr(ispec,ic,1,kc) = rateyr(ispec,ic,1,kc)/strdyr(ic,1,kc)  &
-              - bclyyr(ispec,ic,1,kc)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        drhs(ic,jstol,kc) = drhs(ic,jstol,kc) - bcl1yr(ic,1,kc)*ova2yr(ic,1,kc)  &
-            - bcl2yr(ic,1,kc)
-        
-        urhs(ic,jstol,kc) = urhs(ic,jstol,kc)  &
-            - bcl1yr(ic,1,kc)*ova2yr(ic,1,kc)*struyr(ic,1,kc)  &
-            - bcl2yr(ic,1,kc)*struyr(ic,1,kc) - bcl3yr(ic,1,kc)*strdyr(ic,1,kc)
-        
-        vrhs(ic,jstol,kc) = vrhs(ic,jstol,kc)  &
-            - bcl1yr(ic,1,kc)*ova2yr(ic,1,kc)*(strvyr(ic,1,kc)-acouyr(ic,1,kc))  &
-            - bcl2yr(ic,1,kc)*strvyr(ic,1,kc)
-        
-        wrhs(ic,jstol,kc) = wrhs(ic,jstol,kc)  &
-            - bcl1yr(ic,1,kc)*ova2yr(ic,1,kc)*strwyr(ic,1,kc)  &
-            - bcl2yr(ic,1,kc)*strwyr(ic,1,kc) - bcl4yr(ic,1,kc)*strdyr(ic,1,kc)
-        
-        erhs(ic,jstol,kc) = erhs(ic,jstol,kc)  &
-            - bcl1yr(ic,1,kc)*(ova2yr(ic,1,kc)*streyr(ic,1,kc)  &
-            + strvyr(ic,1,kc)/acouyr(ic,1,kc) + ovgmyr(ic,1,kc))  &
-            - bcl2yr(ic,1,kc)*streyr(ic,1,kc)  &
-            - bcl3yr(ic,1,kc)*strdyr(ic,1,kc)*struyr(ic,1,kc)  &
-            - bcl4yr(ic,1,kc)*strdyr(ic,1,kc)*strwyr(ic,1,kc)
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-          fornow = bclyyr(ispec,ic,1,kc)*strdyr(ic,1,kc)
-          
-          erhs(ic,jstol,kc) = erhs(ic,jstol,kc) - fornow*strhyr(ispec,ic,1,kc)
-          
-          yrhs(ispec,ic,jstol,kc) = yrhs(ispec,ic,jstol,kc)  &
-              - (bcl2yr(ic,1,kc)+bcl1yr(ic,1,kc)*ova2yr(ic,1,kc))*stryyr(ispec,ic,1,kc)  &
-              - fornow
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC1_addsource_yr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl3yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl4yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_streyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))            
+
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_inflowBC1_eval_yr, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_bclyyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strhyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_stryyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer",  OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
 
         IF(nsbcyr == nsbci2) THEN
@@ -2093,183 +1936,155 @@ INTEGER :: ic,jc,kc
 
 !           SPECIFY L's AS REQUIRED
 !           L1Y,L2Y,L5Y
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L's
-        fornow = strdyr(ic,1,kc)*acouyr(ic,1,kc)*bcl1yr(ic,1,kc)
-        bcl1yr(ic,1,kc) = half*(strvyr(ic,1,kc)-acouyr(ic,1,kc))  &
-            *(bcl5yr(ic,1,kc)-fornow)
-        bcl2yr(ic,1,kc) = strvyr(ic,1,kc)  &
-            *(bcl2yr(ic,1,kc)-bcl5yr(ic,1,kc)*ova2yr(ic,1,kc))
-        bcl5yr(ic,1,kc) = half*(strvyr(ic,1,kc)+acouyr(ic,1,kc))  &
-            *(bcl5yr(ic,1,kc)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L5Y UNCHANGED
-        bcl1yr(ic,1,kc) = bcl5yr(ic,1,kc)  &
-            + strdyr(ic,1,kc)*acouyr(ic,1,kc)*dvdtyr(ic,1,kc) - bcl1yr(ic,1,kc)
-        bcl2yr(ic,1,kc) = gam1yr(ic,1,kc)*ova2yr(ic,1,kc)  &
-            *(bcl1yr(ic,1,kc)+bcl5yr(ic,1,kc))  &
-            + strdyr(ic,1,kc)*(dtdtyr(ic,1,kc)/strtyr(ic,1,kc)  &
-            - sorpyr(ic,1,kc)/strpyr(ic,1,kc) + sydtyr(ic,1,kc))  &
-            - bcl2yr(ic,1,kc)
-        
-      END DO
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        drhs(ic,jstol,kc) = drhs(ic,jstol,kc) - bcl1yr(ic,1,kc)*ova2yr(ic,1,kc)  &
-            - bcl2yr(ic,1,kc)
-        
-      END DO
-    END DO
-    
-  END IF
-  
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC2_computeL_yr, "L1Y L2Y L5Y", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dvdtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_gam1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dtdtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sydtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC2_addsource_yr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+        END IF
+
 !       =======================================================================
-  
-  IF(nsbcyr == nsbci3)THEN
+
+        IF(nsbcyr == nsbci3) THEN
+
+!           INFLOW BOUNDARY CONDITION No 3
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
     
-!         INFLOW BOUNDARY CONDITION No 3
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
+!           VELOCITY, DENSITY AND MASS FRACTIONS IMPOSED
+!           AS FUNCTIONS OF TIME
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         VELOCITY, DENSITY AND MASS FRACTIONS IMPOSED
-!         AS FUNCTIONS OF TIME
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
-    
-!         SPECIFY L's AS REQUIRED
-!         L1Y-L5Y
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L's
-        fornow = strdyr(ic,1,kc)*acouyr(ic,1,kc)*bcl1yr(ic,1,kc)
-        bcl1yr(ic,1,kc) = half*(strvyr(ic,1,kc)-acouyr(ic,1,kc))  &
-            *(bcl5yr(ic,1,kc)-fornow)
-        bcl2yr(ic,1,kc) = strvyr(ic,1,kc)  &
-            *(bcl2yr(ic,1,kc)-bcl5yr(ic,1,kc)*ova2yr(ic,1,kc))
-        bcl3yr(ic,1,kc) = strvyr(ic,1,kc)*bcl3yr(ic,1,kc)
-        bcl4yr(ic,1,kc) = strvyr(ic,1,kc)*bcl4yr(ic,1,kc)
-        bcl5yr(ic,1,kc) = half*(strvyr(ic,1,kc)+acouyr(ic,1,kc))  &
-            *(bcl5yr(ic,1,kc)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L5Y UNCHANGED
-        fornow = bcl5yr(ic,1,kc) + strdyr(ic,1,kc)*acouyr(ic,1,kc)*dvdtyr(ic,1,kc)
-        bcl1yr(ic,1,kc) = fornow - bcl1yr(ic,1,kc)
-        bcl2yr(ic,1,kc) = -dddtyr(ic,1,kc)  &
-            - ova2yr(ic,1,kc)*(bcl1yr(ic,1,kc)+fornow) - bcl2yr(ic,1,kc)
-        bcl3yr(ic,1,kc) = -dudtyr(ic,1,kc) - bcl3yr(ic,1,kc)
-        bcl4yr(ic,1,kc) = -dwdtyr(ic,1,kc) - bcl4yr(ic,1,kc)
-        
-      END DO
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        erhs(ic,jstol,kc) = erhs(ic,jstol,kc)  &
-            - bcl1yr(ic,1,kc)*(ova2yr(ic,1,kc)*streyr(ic,1,kc)  &
-            + strvyr(ic,1,kc)/acouyr(ic,1,kc) + ovgmyr(ic,1,kc))  &
-            - bcl2yr(ic,1,kc)*streyr(ic,1,kc)  &
-            - bcl3yr(ic,1,kc)*strdyr(ic,1,kc)*struyr(ic,1,kc)  &
-            - bcl4yr(ic,1,kc)*strdyr(ic,1,kc)*strwyr(ic,1,kc)
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-          bclyyr(ispec,ic,1,kc) = rateyr(ispec,ic,1,kc)/strdyr(ic,1,kc)  &
-              - dydtyr(ispec,ic,1,kc) - strvyr(ic,1,kc)*bclyyr(ispec,ic,1,kc)
-          
-          erhs(ic,jstol,kc) = erhs(ic,jstol,kc)  &
-              - bclyyr(ispec,ic,1,kc)*strdyr(ic,1,kc)*strhyr(ispec,ic,1,kc)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+!           SPECIFY L's AS REQUIRED
+!           L1Y-L5Y
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC3_computeL_yr, "L1Y to L5Y", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dudtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dddtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dvdtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dwdtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC3_addsource_yr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl3yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl4yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_streyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_inflowBC3_eval_yr, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_bclyyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_rateyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_dydtyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strhyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
-  
+
 !       WALL BOUNDARY CONDITIONS
 !       ------------------------
-  
-  IF(nsbcyr == nsbcw1)THEN
+
+        IF(nsbcyr == nsbcw1)THEN
+
+!           WALL BOUNDARY CONDITION No 1
+!           NO-SLIP WALL - ADIABATIC
+
+!           ALL VELOCITY COMPONENTS IMPOSED
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         WALL BOUNDARY CONDITION No 1
-!         NO-SLIP WALL - ADIABATIC
-    
-!         ALL VELOCITY COMPONENTS IMPOSED
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
-    
-!         SPECIFY L's AS REQUIRED
-!         L1Y,L3Y-L5Y
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L's
-        fornow = strdyr(ic,1,kc)*acouyr(ic,1,kc)*bcl1yr(ic,1,kc)
-        bcl1yr(ic,1,kc) = half*(strvyr(ic,1,kc)-acouyr(ic,1,kc))  &
-            *(bcl5yr(ic,1,kc)-fornow)
-        bcl3yr(ic,1,kc) = strvyr(ic,1,kc)*bcl3yr(ic,1,kc)
-        bcl4yr(ic,1,kc) = strvyr(ic,1,kc)*bcl4yr(ic,1,kc)
-        bcl5yr(ic,1,kc) = half*(strvyr(ic,1,kc)+acouyr(ic,1,kc))  &
-            *(bcl5yr(ic,1,kc)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L2Y,L5Y UNCHANGED
-        bcl1yr(ic,1,kc) = bcl5yr(ic,1,kc)  &
-            + strdyr(ic,1,kc)*acouyr(ic,1,kc)*dvdtyr(ic,1,kc) - bcl1yr(ic,1,kc)
-        bcl3yr(ic,1,kc) = -dudtyr(ic,1,kc) - bcl3yr(ic,1,kc)
-        bcl4yr(ic,1,kc) = -dwdtyr(ic,1,kc) - bcl4yr(ic,1,kc)
-        
-      END DO
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        drhs(ic,jstol,kc) = drhs(ic,jstol,kc) - bcl1yr(ic,1,kc)*ova2yr(ic,1,kc)
-        
-        erhs(ic,jstol,kc) = erhs(ic,jstol,kc)  &
-            - bcl1yr(ic,1,kc)*(ova2yr(ic,1,kc)*streyr(ic,1,kc)  &
-            + strvyr(ic,1,kc)/acouyr(ic,1,kc) + ovgmyr(ic,1,kc))  &
-            - bcl3yr(ic,1,kc)*strdyr(ic,1,kc)*struyr(ic,1,kc)  &
-            - bcl4yr(ic,1,kc)*strdyr(ic,1,kc)*strwyr(ic,1,kc)
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-          yrhs(ispec,ic,jstol,kc) = yrhs(ispec,ic,jstol,kc)  &
-              - bcl1yr(ic,1,kc)*ova2yr(ic,1,kc)*stryyr(ispec,ic,1,kc)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+!           SPECIFY L's AS REQUIRED
+!           L1Y,L3Y-L5Y
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_wallBC1_computeL_yr, "L1Y and L3Y to L5Y", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dudtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dvdtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dwdtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_wallBC1_addsource_yr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl3yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl4yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_streyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_wallBC1_eval_yr, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
 
         IF(nsbcyr == nsbcw2) THEN
@@ -2304,79 +2119,65 @@ INTEGER :: ic,jc,kc
 
 !           SPECIFY L's AS REQUIRED
 !           L1Y-L5Y
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L's
-        fornow = strdyr(ic,1,kc)*acouyr(ic,1,kc)*bcl1yr(ic,1,kc)
-        bcl1yr(ic,1,kc) = half*(strvyr(ic,1,kc)-acouyr(ic,1,kc))  &
-            *(bcl5yr(ic,1,kc)-fornow)
-        bcl2yr(ic,1,kc) = strvyr(ic,1,kc)  &
-            *(bcl2yr(ic,1,kc)-bcl5yr(ic,1,kc)*ova2yr(ic,1,kc))
-        bcl3yr(ic,1,kc) = strvyr(ic,1,kc)*bcl3yr(ic,1,kc)
-        bcl4yr(ic,1,kc) = strvyr(ic,1,kc)*bcl4yr(ic,1,kc)
-        bcl5yr(ic,1,kc) = half*(strvyr(ic,1,kc)+acouyr(ic,1,kc))  &
-            *(bcl5yr(ic,1,kc)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L5Y UNCHANGED
-        bcl1yr(ic,1,kc) = bcl5yr(ic,1,kc)  &
-            + strdyr(ic,1,kc)*acouyr(ic,1,kc)*dvdtyr(ic,1,kc) - bcl1yr(ic,1,kc)
-        bcl3yr(ic,1,kc) = -dudtyr(ic,1,kc) - bcl3yr(ic,1,kc)
-        bcl4yr(ic,1,kc) = -dwdtyr(ic,1,kc) - bcl4yr(ic,1,kc)
-        bcl2yr(ic,1,kc) = gam1yr(ic,1,kc)*ova2yr(ic,1,kc)  &
-            *(bcl1yr(ic,1,kc)+bcl5yr(ic,1,kc))  &
-            + strdyr(ic,1,kc)*(dtdtyr(ic,1,kc)/strtyr(ic,1,kc)  &
-            - sorpyr(ic,1,kc)/strpyr(ic,1,kc)) - bcl2yr(ic,1,kc)
-        
-      END DO
-    END DO
+            rangexyz = (/istal,istol,1,1,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_wallBC2_computeL_yr, "L1Y to L5Y", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dudtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dvdtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dwdtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_gam1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dtdtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))            
+
+!           LYY
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,1,1,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_wallBC2_LYY_yr, "LYY", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_bcl2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_rateyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strryr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))                
+
+            END DO
     
-!         LYY
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-!               OLD VALUE OF LYY
-          bclyyr(ispec,ic,1,kc) = strvyr(ic,1,kc)*bclyyr(ispec,ic,1,kc)
-          
-!               UPDATE L2Y
-          bcl2yr(ic,1,kc) = bcl2yr(ic,1,kc) + (rateyr(ispec,ic,1,kc)  &
-              - strdyr(ic,1,kc)*bclyyr(ispec,ic,1,kc)) *rgspec(ispec)/strryr(ic,1,kc)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        drhs(ic,jstol,kc) = drhs(ic,jstol,kc) - bcl1yr(ic,1,kc)*ova2yr(ic,1,kc)  &
-            - bcl2yr(ic,1,kc)
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-          yrhs(ispec,ic,jstol,kc) = yrhs(ispec,ic,jstol,kc)  &
-              - (bcl2yr(ic,1,kc)+bcl1yr(ic,1,kc)*ova2yr(ic,1,kc))*stryyr(ispec,ic,1,kc)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+            call ops_par_loop(bounds_kernel_wallBC2_addsource_yr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+                call ops_par_loop(bounds_kernel_wallBC2_eval_yr, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
-  
+
     END IF
 !   Y-DIRECTION RIGHT-HAND END
 
@@ -2386,8 +2187,8 @@ INTEGER :: ic,jc,kc
 
 !   Z-DIRECTION LEFT-HAND END
 !   -------------------------
-    IF(fzlcnv)THEN
-  
+    IF(fzlcnv) THEN
+
 !       =======================================================================
   
 !       STR ARRAYS CONTAIN STORED VALUES
@@ -2442,16 +2243,14 @@ INTEGER :: ic,jc,kc
 
 !       SPEED OF SOUND
 !       --------------
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      fornow = strgzl(ic,jc,1)*gam1zl(ic,jc,1)*strtzl(ic,jc,1)
-      acouzl(ic,jc,1) = SQRT(fornow)
-      ova2zl(ic,jc,1) = one/fornow
-      
-    END DO
-  END DO
-  
+        rangexyz = (/istal,istol,jstal,jstol,1,1/)
+        call ops_par_loop(bounds_kernel_sound_speed_zdir, "SPEED OF SOUND", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_acouzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_strgzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_gam1zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
 !       =======================================================================
 
 !       OUTFLOW BOUNDARY CONDITIONS
@@ -2497,44 +2296,36 @@ INTEGER :: ic,jc,kc
                             ops_arg_gbl(pinfzl, 1, "real(dp)", OPS_READ))
     
 !           ADD TO CONSERVATIVE SOURCE TERMS
-            rangexyz = (/istal,istol,jstal,jstol,1,1/)
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        drhs(ic,jc,kstal) = drhs(ic,jc,kstal) - bcl5zl(ic,jc,1)*ova2zl(ic,jc,1)
-        
-        urhs(ic,jc,kstal) = urhs(ic,jc,kstal)  &
-            - bcl5zl(ic,jc,1)*ova2zl(ic,jc,1)*struzl(ic,jc,1)
-        
-        vrhs(ic,jc,kstal) = vrhs(ic,jc,kstal)  &
-            - bcl5zl(ic,jc,1)*ova2zl(ic,jc,1)*strvzl(ic,jc,1)
-        
-        wrhs(ic,jc,kstal) = wrhs(ic,jc,kstal)  &
-            - bcl5zl(ic,jc,1)*ova2zl(ic,jc,1)*(strwzl(ic,jc,1)+acouzl(ic,jc,1))
-        
-        erhs(ic,jc,kstal) = erhs(ic,jc,kstal)  &
-            - bcl5zl(ic,jc,1)*(ova2zl(ic,jc,1)*strezl(ic,jc,1)  &
-            + strwzl(ic,jc,1)/acouzl(ic,jc,1) + ovgmzl(ic,jc,1))
-        
-      END DO
-    END DO
-    
-!         RSC 08-AUG-2012 EVALUATE ALL SPECIES
-!          DO ISPEC = 1,NSPM1
-    DO ispec = 1,nspec
-      
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          yrhs(ispec,ic,jc,kstal) = yrhs(ispec,ic,jc,kstal)  &
-              - bcl5zl(ic,jc,1)*ova2zl(ic,jc,1)*stryzl(ispec,ic,jc,1)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+            call ops_par_loop(bounds_kernel_outflowBC1_addsource_zl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strezl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+!           RSC 08-AUG-2012 EVALUATE ALL SPECIES
+!           DO ISPEC = 1,NSPM1
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+                call ops_par_loop(bounds_kernel_outflowBC1_eval_zl, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
   
 !       =======================================================================
 
@@ -2597,52 +2388,44 @@ INTEGER :: ic,jc,kc
             END DO
     
 !           ADD TO CONSERVATIVE SOURCE TERMS
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        drhs(ic,jc,kstal) = drhs(ic,jc,kstal) - bcl2zl(ic,jc,1)  &
-            - bcl5zl(ic,jc,1)*ova2zl(ic,jc,1)
-        
-        urhs(ic,jc,kstal) = urhs(ic,jc,kstal) - bcl2zl(ic,jc,1)*struzl(ic,jc,1)  &
-            - bcl3zl(ic,jc,1)*strdzl(ic,jc,1)  &
-            - bcl5zl(ic,jc,1)*ova2zl(ic,jc,1)*struzl(ic,jc,1)
-        
-        vrhs(ic,jc,kstal) = vrhs(ic,jc,kstal) - bcl2zl(ic,jc,1)*strvzl(ic,jc,1)  &
-            - bcl4zl(ic,jc,1)*strdzl(ic,jc,1)  &
-            - bcl5zl(ic,jc,1)*ova2zl(ic,jc,1)*strvzl(ic,jc,1)
-        
-        wrhs(ic,jc,kstal) = wrhs(ic,jc,kstal) - bcl2zl(ic,jc,1)*strwzl(ic,jc,1)  &
-            - bcl5zl(ic,jc,1)*ova2zl(ic,jc,1)*(strwzl(ic,jc,1)+acouzl(ic,jc,1))
-        
-        erhs(ic,jc,kstal) = erhs(ic,jc,kstal) - bcl2zl(ic,jc,1)*strezl(ic,jc,1)  &
-            - bcl3zl(ic,jc,1)*strdzl(ic,jc,1)*struzl(ic,jc,1)  &
-            - bcl4zl(ic,jc,1)*strdzl(ic,jc,1)*strvzl(ic,jc,1)  &
-            - bcl5zl(ic,jc,1)*(ova2zl(ic,jc,1)*strezl(ic,jc,1)  &
-            + strwzl(ic,jc,1)/acouzl(ic,jc,1) + ovgmzl(ic,jc,1))
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          fornow = bclyzl(ispec,ic,jc,1)*strdzl(ic,jc,1)
-          
-          erhs(ic,jc,kstal) = erhs(ic,jc,kstal) - fornow*strhzl(ispec,ic,jc,1)
-          
-          yrhs(ispec,ic,jc,kstal) = yrhs(ispec,ic,jc,kstal)  &
-              - (bcl2zl(ic,jc,1)+bcl5zl(ic,jc,1)*ova2zl(ic,jc,1))*stryzl(ispec,ic,jc,1)  &
-              - fornow
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+            call ops_par_loop(bounds_kernel_inflowBC1_addsource_zl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl3zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl4zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strezl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+                call ops_par_loop(bounds_kernel_inflowBC1_eval_zl, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_bclyzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strhzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_stryzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer",  OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
 
         IF(nsbczl == nsbci2) THEN
@@ -2705,21 +2488,19 @@ INTEGER :: ic,jc,kc
                             ops_arg_dat(d_sydtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
 
 !           ADD TO CONSERVATIVE SOURCE TERMS
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        drhs(ic,jc,kstal) = drhs(ic,jc,kstal) - bcl2zl(ic,jc,1)  &
-            - bcl5zl(ic,jc,1)*ova2zl(ic,jc,1)
-        
-      END DO
-    END DO
-    
-  END IF
-  
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+            call ops_par_loop(bounds_kernel_inflowBC2_addsource_zl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+        END IF
+
 !       =======================================================================
-  
-        IF(nsbczl == nsbci3)THEN
-    
+
+        IF(nsbczl == nsbci3) THEN
+
 !           INFLOW BOUNDARY CONDITION No 3
 !           SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
     
@@ -2747,44 +2528,45 @@ INTEGER :: ic,jc,kc
                             ops_arg_dat(d_dwdtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
 
 !           ADD TO CONSERVATIVE SOURCE TERMS
-            rangexyz = (/istal,istol,jstal,jstol,1,1/)
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        erhs(ic,jc,kstal) = erhs(ic,jc,kstal) - bcl2zl(ic,jc,1)*strezl(ic,jc,1)  &
-            - bcl3zl(ic,jc,1)*strdzl(ic,jc,1)*struzl(ic,jc,1)  &
-            - bcl4zl(ic,jc,1)*strdzl(ic,jc,1)*strvzl(ic,jc,1)  &
-            - bcl5zl(ic,jc,1)*(ova2zl(ic,jc,1)*strezl(ic,jc,1)  &
-            + strwzl(ic,jc,1)/acouzl(ic,jc,1) + ovgmzl(ic,jc,1))
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          bclyzl(ispec,ic,jc,1) = ratezl(ispec,ic,jc,1)/strdzl(ic,jc,1)  &
-              - dydtzl(ispec,ic,jc,1) - strwzl(ic,jc,1)*bclyzl(ispec,ic,jc,1)
-          
-          erhs(ic,jc,kstal) = erhs(ic,jc,kstal)  &
-              - bclyzl(ispec,ic,jc,1)*strdzl(ic,jc,1)*strhzl(ispec,ic,jc,1)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+            call ops_par_loop(bounds_kernel_inflowBC3_addsource_zl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl3zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl4zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strezl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+                call ops_par_loop(bounds_kernel_inflowBC3_eval_zl, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_bclyzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ratezl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_dydtzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strhzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
-  
+
 !       WALL BOUNDARY CONDITIONS
 !       ------------------------
-  
+
         IF(nsbczl == nsbcw1) THEN
-    
+
 !           WALL BOUNDARY CONDITION No 1
 !           NO-SLIP WALL - ADIABATIC
     
@@ -2807,39 +2589,39 @@ INTEGER :: ic,jc,kc
                             ops_arg_dat(d_dvdtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
                             ops_arg_dat(d_dwdtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
 
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        drhs(ic,jc,kstal) = drhs(ic,jc,kstal) - bcl5zl(ic,jc,1)*ova2zl(ic,jc,1)
-        
-        erhs(ic,jc,kstal) = erhs(ic,jc,kstal)  &
-            - bcl3zl(ic,jc,1)*strdzl(ic,jc,1)*struzl(ic,jc,1)  &
-            - bcl4zl(ic,jc,1)*strdzl(ic,jc,1)*strvzl(ic,jc,1)  &
-            - bcl5zl(ic,jc,1)*(ova2zl(ic,jc,1)*strezl(ic,jc,1)  &
-            + strwzl(ic,jc,1)/acouzl(ic,jc,1) + ovgmzl(ic,jc,1))
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          yrhs(ispec,ic,jc,kstal) = yrhs(ispec,ic,jc,kstal)  &
-              - bcl5zl(ic,jc,1)*ova2zl(ic,jc,1)*stryzl(ispec,ic,jc,1)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+            call ops_par_loop(bounds_kernel_wallBC1_addsource_zl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl4zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strezl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+                call ops_par_loop(bounds_kernel_wallBC1_eval_zl, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
 
-        IF(nsbczl == nsbcw2)THEN
+        IF(nsbczl == nsbcw2) THEN
 
 !           WALL BOUNDARY CONDITION No 2
 !           NO-SLIP WALL - ISOTHERMAL
@@ -2906,33 +2688,30 @@ INTEGER :: ic,jc,kc
 
             END DO
     
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        drhs(ic,jc,kstal) = drhs(ic,jc,kstal) - bcl2zl(ic,jc,1)  &
-            - bcl5zl(ic,jc,1)*ova2zl(ic,jc,1)
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          yrhs(ispec,ic,jc,kstal) = yrhs(ispec,ic,jc,kstal)  &
-              - (bcl2zl(ic,jc,1)+bcl5zl(ic,jc,1)*ova2zl(ic,jc,1))*stryzl(ispec,ic,jc,1)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+            call ops_par_loop(bounds_kernel_wallBC2_addsource_zl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+                call ops_par_loop(bounds_kernel_wallBC2_eval_zl, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
-  
+
     END IF
 !   Z-DIRECTION LEFT-HAND END
 
@@ -2942,7 +2721,7 @@ INTEGER :: ic,jc,kc
 
 !   Z-DIRECTION RIGHT-HAND END
 !   --------------------------
-    IF(fzrcnv)THEN
+    IF(fzrcnv) THEN
   
 !       =======================================================================
   
@@ -2998,16 +2777,14 @@ INTEGER :: ic,jc,kc
 
 !       SPEED OF SOUND
 !       --------------
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      fornow = strgzr(ic,jc,1)*gam1zr(ic,jc,1)*strtzr(ic,jc,1)
-      acouzr(ic,jc,1) = SQRT(fornow)
-      ova2zr(ic,jc,1) = one/fornow
-      
-    END DO
-  END DO
-  
+        rangexyz = (/istal,istol,jstal,jstol,1,1/)
+        call ops_par_loop(bounds_kernel_sound_speed_zdir, "SPEED OF SOUND", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_acouzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE),  &
+                        ops_arg_dat(d_strgzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_gam1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
 !       =======================================================================
 
 !       OUTFLOW BOUNDARY CONDITIONS
@@ -3040,65 +2817,56 @@ INTEGER :: ic,jc,kc
                             ops_arg_dat(d_gam1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
 
 !           SPECIFY L1Z AS REQUIRED
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L1Z
-        bcl1zr(ic,jc,1) = half*(strwzr(ic,jc,1)-acouzr(ic,jc,1))  &
-            *(bcl5zr(ic,jc,1)-strdzr(ic,jc,1)*acouzr(ic,jc,1)*bcl1zr(ic,jc,1))
-        
-!             SUBTRACT FROM NEW VALUE OF L1Z
-        bcl1zr(ic,jc,1)= half*sorpzr(ic,jc,1)  &
-            + cobczr*acouzr(ic,jc,1)*(strpzr(ic,jc,1)-pinfzr) - bcl1zr(ic,jc,1)
-        
-      END DO
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        drhs(ic,jc,kstol) = drhs(ic,jc,kstol) - bcl1zr(ic,jc,1)*ova2zr(ic,jc,1)
-        
-        urhs(ic,jc,kstol) = urhs(ic,jc,kstol)  &
-            - bcl1zr(ic,jc,1)*ova2zr(ic,jc,1)*struzr(ic,jc,1)
-        
-        vrhs(ic,jc,kstol) = vrhs(ic,jc,kstol)  &
-            - bcl1zr(ic,jc,1)*ova2zr(ic,jc,1)*strvzr(ic,jc,1)
-        
-        wrhs(ic,jc,kstol) = wrhs(ic,jc,kstol)  &
-            - bcl1zr(ic,jc,1)*ova2zr(ic,jc,1)*(strwzr(ic,jc,1)-acouzr(ic,jc,1))
-        
-        erhs(ic,jc,kstol) = erhs(ic,jc,kstol)  &
-            - bcl1zr(ic,jc,1)*(ova2zr(ic,jc,1)*strezr(ic,jc,1)  &
-            - strwzr(ic,jc,1)/acouzr(ic,jc,1) + ovgmzr(ic,jc,1))
-        
-      END DO
-    END DO
-    
-!         RSC 08-AUG-2012 EVALUATE ALL SPECIES
-!          DO ISPEC = 1,NSPM1
-    DO ispec = 1,nspec
-      
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          yrhs(ispec,ic,jc,kstol) = yrhs(ispec,ic,jc,kstol)  &
-              - bcl1zr(ic,jc,1)*ova2zr(ic,jc,1)*stryzr(ispec,ic,jc,1)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
+            call ops_par_loop(bounds_kernel_outflowBC1_computeL_zr, "SPECIFY L1Z AS REQUIRED", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl5zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(cobczr, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(pinfzr, 1, "real(dp)", OPS_READ))
+
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+            call ops_par_loop(bounds_kernel_outflowBC1_addsource_zr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strezr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+!           RSC 08-AUG-2012 EVALUATE ALL SPECIES
+!           DO ISPEC = 1,NSPM1
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+                call ops_par_loop(bounds_kernel_outflowBC1_eval_zr, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
 
 !       INFLOW BOUNDARY CONDITIONS
 !       --------------------------
 
-        IF(nsbczr == nsbci1)THEN
+        IF(nsbczr == nsbci1) THEN
 
 !           INFLOW BC No 1
 !           SUBSONIC NON-REFLECTING LAMINAR INFLOW
@@ -3125,96 +2893,73 @@ INTEGER :: ic,jc,kc
 
 !           SPECIFY L's AS REQUIRED
 !           L1Z-L4Z
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L's
-        fornow = strdzr(ic,jc,1)*acouzr(ic,jc,1)*bcl1zr(ic,jc,1)
-        bcl1zr(ic,jc,1) = half*(strwzr(ic,jc,1)-acouzr(ic,jc,1))  &
-            *(bcl5zr(ic,jc,1)-fornow)
-        bcl2zr(ic,jc,1) = strwzr(ic,jc,1)  &
-            *(bcl2zr(ic,jc,1)-bcl5zr(ic,jc,1)*ova2zr(ic,jc,1))
-        bcl3zr(ic,jc,1) = strwzr(ic,jc,1)*bcl3zr(ic,jc,1)
-        bcl4zr(ic,jc,1) = strwzr(ic,jc,1)*bcl4zr(ic,jc,1)
-        
-!             SUBTRACT FROM NEW VALUE OF L's (=0 FOR L2Z-L4Z)
-!             L5Z UNCHANGED
-        bcl1zr(ic,jc,1) = half*sorpzr(ic,jc,1)  &
-            + cobczr*acouzr(ic,jc,1)*(strpzr(ic,jc,1)-pinfzr) - bcl1zr(ic,jc,1)
-        bcl2zr(ic,jc,1) = -bcl2zr(ic,jc,1)
-        bcl3zr(ic,jc,1) = -bcl3zr(ic,jc,1)
-        bcl4zr(ic,jc,1) = -bcl4zr(ic,jc,1)
-        
-      END DO
-    END DO
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
+            call ops_par_loop(bounds_kernel_inflowBC1_computeL_zr, "L1Z-L4Z", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl5zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(cobczr, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(pinfzr, 1, "real(dp)", OPS_READ)) 
+
+!           LYZ
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstol,1,1/)
+                call ops_par_loop(bounds_kernel_inflowBC1_LYZ_zr, "LYZ", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_ratezr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
     
-!         LYZ
-    DO ispec = 1,nspec
-      
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-!               OLD VALUE OF L's
-          bclyzr(ispec,ic,jc,1) = strwzr(ic,jc,1)*bclyzr(ispec,ic,jc,1)
-          
-!               SUBTRACT FROM NEW VALUE OF L's (=0 FOR LYZ)
-          bclyzr(ispec,ic,jc,1) = ratezr(ispec,ic,jc,1)/strdzr(ic,jc,1)  &
-              - bclyzr(ispec,ic,jc,1)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        drhs(ic,jc,kstol) = drhs(ic,jc,kstol) - bcl1zr(ic,jc,1)*ova2zr(ic,jc,1)  &
-            - bcl2zr(ic,jc,1)
-        
-        urhs(ic,jc,kstol) = urhs(ic,jc,kstol)  &
-            - bcl1zr(ic,jc,1)*ova2zr(ic,jc,1)*struzr(ic,jc,1)  &
-            - bcl2zr(ic,jc,1)*struzr(ic,jc,1) - bcl3zr(ic,jc,1)*strdzr(ic,jc,1)
-        
-        vrhs(ic,jc,kstol) = vrhs(ic,jc,kstol)  &
-            - bcl1zr(ic,jc,1)*ova2zr(ic,jc,1)*strvzr(ic,jc,1)  &
-            - bcl2zr(ic,jc,1)*strvzr(ic,jc,1) - bcl4zr(ic,jc,1)*strdzr(ic,jc,1)
-        
-        wrhs(ic,jc,kstol) = wrhs(ic,jc,kstol)  &
-            - bcl1zr(ic,jc,1)*ova2zr(ic,jc,1)*(strwzr(ic,jc,1)-acouzr(ic,jc,1))  &
-            - bcl2zr(ic,jc,1)*strwzr(ic,jc,1)
-        
-        erhs(ic,jc,kstol) = erhs(ic,jc,kstol)  &
-            - bcl1zr(ic,jc,1)*(ova2zr(ic,jc,1)*strezr(ic,jc,1)  &
-            + strwzr(ic,jc,1)/acouzr(ic,jc,1) + ovgmzr(ic,jc,1))  &
-            - bcl2zr(ic,jc,1)*strezr(ic,jc,1)  &
-            - bcl3zr(ic,jc,1)*strdzr(ic,jc,1)*struzr(ic,jc,1)  &
-            - bcl4zr(ic,jc,1)*strdzr(ic,jc,1)*strvzr(ic,jc,1)
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          fornow = bclyzr(ispec,ic,jc,1)*strdzr(ic,jc,1)
-          
-          erhs(ic,jc,kstol) = erhs(ic,jc,kstol) - fornow*strhzr(ispec,ic,jc,1)
-          
-          yrhs(ispec,ic,jc,kstol) = yrhs(ispec,ic,jc,kstol)  &
-              - (bcl2zr(ic,jc,1)+bcl5zr(ic,jc,1)*ova2zr(ic,jc,1))*stryzr(ispec,ic,jc,1)  &
-              - fornow
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC1_addsource_zr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl3zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl4zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strezr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+                call ops_par_loop(bounds_kernel_inflowBC1_eval_zr, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_bclyzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strhzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_stryzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl5zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer",  OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
 
         IF(nsbczr == nsbci2) THEN
@@ -3259,181 +3004,155 @@ INTEGER :: ic,jc,kc
 
 !           SPECIFY L's AS REQUIRED
 !           L1Z,L2Z,L5Z
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L's
-        fornow = strdzr(ic,jc,1)*acouzr(ic,jc,1)*bcl1zr(ic,jc,1)
-        bcl1zr(ic,jc,1) = half*(strwzr(ic,jc,1)-acouzr(ic,jc,1))  &
-            *(bcl5zr(ic,jc,1)-fornow)
-        bcl2zr(ic,jc,1) = strwzr(ic,jc,1)  &
-            *(bcl2zr(ic,jc,1)-bcl5zr(ic,jc,1)*ova2zr(ic,jc,1))
-        bcl5zr(ic,jc,1) = half*(strwzr(ic,jc,1)+acouzr(ic,jc,1))  &
-            *(bcl5zr(ic,jc,1)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L5Z UNCHANGED
-        bcl1zr(ic,jc,1) = bcl5zr(ic,jc,1)  &
-            + strdzr(ic,jc,1)*acouzr(ic,jc,1)*dwdtzr(ic,jc,1) - bcl1zr(ic,jc,1)
-        bcl2zr(ic,jc,1) = gam1zr(ic,jc,1)*ova2zr(ic,jc,1)  &
-            *(bcl1zr(ic,jc,1)+bcl5zr(ic,jc,1))  &
-            + strdzr(ic,jc,1)*(dtdtzr(ic,jc,1)/strtzr(ic,jc,1)  &
-            - sorpzr(ic,jc,1)/strpzr(ic,jc,1) + sydtzr(ic,jc,1))  &
-            - bcl2zr(ic,jc,1)
-        
-      END DO
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        drhs(ic,jc,kstol) = drhs(ic,jc,kstol) - bcl1zr(ic,jc,1)*ova2zr(ic,jc,1)  &
-            - bcl2zr(ic,jc,1)
-        
-      END DO
-    END DO
-    
-  END IF
-  
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)    
+            call ops_par_loop(bounds_kernel_inflowBC2_computeL_zr, "L1Z L2Z L5Z", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dwdtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_gam1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dtdtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sydtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC2_addsource_zr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+        END IF
+
 !       =======================================================================
-  
-  IF(nsbczr == nsbci3)THEN
+
+        IF(nsbczr == nsbci3) THEN
+
+!           INFLOW BOUNDARY CONDITION No 3
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
     
-!         INFLOW BOUNDARY CONDITION No 3
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
+!           VELOCITY, DENSITY AND MASS FRACTIONS IMPOSED
+!           AS FUNCTIONS OF TIME
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
     
-!         VELOCITY, DENSITY AND MASS FRACTIONS IMPOSED
-!         AS FUNCTIONS OF TIME
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
-    
-!         SPECIFY L's AS REQUIRED
-!         L1Z-L5Z
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L's
-        fornow = strdzr(ic,jc,1)*acouzr(ic,jc,1)*bcl1zr(ic,jc,1)
-        bcl1zr(ic,jc,1) = half*(strwzr(ic,jc,1)-acouzr(ic,jc,1))  &
-            *(bcl5zr(ic,jc,1)-fornow)
-        bcl2zr(ic,jc,1) = strwzr(ic,jc,1)  &
-            *(bcl2zr(ic,jc,1)-bcl5zr(ic,jc,1)*ova2zr(ic,jc,1))
-        bcl3zr(ic,jc,1) = strwzr(ic,jc,1)*bcl3zr(ic,jc,1)
-        bcl4zr(ic,jc,1) = strwzr(ic,jc,1)*bcl4zr(ic,jc,1)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L5Z UNCHANGED
-        fornow = bcl5zr(ic,jc,1) + strdzr(ic,jc,1)*acouzr(ic,jc,1)*dwdtzr(ic,jc,1)
-        bcl1zr(ic,jc,1) = fornow - bcl1zr(ic,jc,1)
-        bcl2zr(ic,jc,1) = -dddtzr(ic,jc,1)  &
-            - ova2zr(ic,jc,1)*(bcl1zr(ic,jc,1)+fornow) - bcl2zr(ic,jc,1)
-        bcl3zr(ic,jc,1) = -dudtzr(ic,jc,1) - bcl3zr(ic,jc,1)
-        bcl4zr(ic,jc,1) = -dvdtzr(ic,jc,1) - bcl4zr(ic,jc,1)
-        
-      END DO
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        erhs(ic,jc,kstol) = erhs(ic,jc,kstol)  &
-            - bcl1zr(ic,jc,1)*(ova2zr(ic,jc,1)*strezr(ic,jc,1)  &
-            + strwzr(ic,jc,1)/acouzr(ic,jc,1) + ovgmzr(ic,jc,1))  &
-            - bcl2zr(ic,jc,1)*strezr(ic,jc,1)  &
-            - bcl3zr(ic,jc,1)*strdzr(ic,jc,1)*struzr(ic,jc,1)  &
-            - bcl4zr(ic,jc,1)*strdzr(ic,jc,1)*strvzr(ic,jc,1)
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          bclyzr(ispec,ic,jc,1) = ratezr(ispec,ic,jc,1)/strdzr(ic,jc,1)  &
-              - dydtzr(ispec,ic,jc,1) - strwzr(ic,jc,1)*bclyzr(ispec,ic,jc,1)
-          
-          erhs(ic,jc,kstol) = erhs(ic,jc,kstol)  &
-              - bclyzr(ispec,ic,jc,1)*strdzr(ic,jc,1)*strhzr(ispec,ic,jc,1)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+!           SPECIFY L's AS REQUIRED
+!           L1Z-L5Z
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
+            call ops_par_loop(bounds_kernel_inflowBC3_computeL_zr, "L1Z to L5Z", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dudtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dddtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dvdtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dwdtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))            
+
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+            call ops_par_loop(bounds_kernel_inflowBC3_addsource_zr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl3zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl4zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strezr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+                call ops_par_loop(bounds_kernel_inflowBC3_eval_zr, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_bclyzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ratezr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_dydtzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strhzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
-  
+
 !       WALL BOUNDARY CONDITIONS
 !       ------------------------
-  
-  IF(nsbczr == nsbcw1)THEN
-    
-!         WALL BOUNDARY CONDITION No 1
-!         NO-SLIP WALL - ADIABATIC
-    
-!         ALL VELOCITY COMPONENTS IMPOSED
-!         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
-!         SET IN SUBROUTINE BOUNDT
-    
-!         SPECIFY L's AS REQUIRED
-!         L1Z,L3Z-L5Z
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L's
-        fornow = strdzr(ic,jc,1)*acouzr(ic,jc,1)*bcl1zr(ic,jc,1)
-        bcl1zr(ic,jc,1) = half*(strwzr(ic,jc,1)-acouzr(ic,jc,1))  &
-            *(bcl5zr(ic,jc,1)-fornow)
-        bcl3zr(ic,jc,1) = strwzr(ic,jc,1)*bcl3zr(ic,jc,1)
-        bcl4zr(ic,jc,1) = strwzr(ic,jc,1)*bcl4zr(ic,jc,1)
-        bcl5zr(ic,jc,1) = half*(strwzr(ic,jc,1)+acouzr(ic,jc,1))  &
-            *(bcl5zr(ic,jc,1)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L2Z,L5Z UNCHANGED
-        bcl1zr(ic,jc,1) = bcl5zr(ic,jc,1)  &
-            + strdzr(ic,jc,1)*acouzr(ic,jc,1)*dwdtzr(ic,jc,1) - bcl1zr(ic,jc,1)
-        bcl3zr(ic,jc,1) = -dudtzr(ic,jc,1) - bcl3zr(ic,jc,1)
-        bcl4zr(ic,jc,1) = -dvdtzr(ic,jc,1) - bcl4zr(ic,jc,1)
-        
-      END DO
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        drhs(ic,jc,kstol) = drhs(ic,jc,kstol) - bcl1zr(ic,jc,1)*ova2zr(ic,jc,1)
-        
-        erhs(ic,jc,kstol) = erhs(ic,jc,kstol)  &
-            - bcl1zr(ic,jc,1)*(ova2zr(ic,jc,1)*strezr(ic,jc,1)  &
-            + strwzr(ic,jc,1)/acouzr(ic,jc,1) + ovgmzr(ic,jc,1))  &
-            - bcl3zr(ic,jc,1)*strdzr(ic,jc,1)*struzr(ic,jc,1)  &
-            - bcl4zr(ic,jc,1)*strdzr(ic,jc,1)*strvzr(ic,jc,1)
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          yrhs(ispec,ic,jc,kstol) = yrhs(ispec,ic,jc,kstol)  &
-              - bcl1zr(ic,jc,1)*ova2zr(ic,jc,1)*stryzr(ispec,ic,jc,1)
-          
-        END DO
-      END DO
-      
-    END DO
-    
+
+        IF(nsbczr == nsbcw1) THEN
+
+!           WALL BOUNDARY CONDITION No 1
+!           NO-SLIP WALL - ADIABATIC
+
+!           ALL VELOCITY COMPONENTS IMPOSED
+!           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
+!           SET IN SUBROUTINE BOUNDT
+
+!           SPECIFY L's AS REQUIRED
+!           L1Z,L3Z-L5Z
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
+            call ops_par_loop(bounds_kernel_wallBC1_computeL_zr, "L1Z and L3Z to L5Z", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dudtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dvdtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dwdtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+            call ops_par_loop(bounds_kernel_wallBC1_addsource_zr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl3zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl4zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strezr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ovgmzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+                call ops_par_loop(bounds_kernel_wallBC1_eval_zr, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
         END IF
-  
+
 !       =======================================================================
 
         IF(nsbczr == nsbcw2) THEN
@@ -3468,79 +3187,65 @@ INTEGER :: ic,jc,kc
 
 !           SPECIFY L's AS REQUIRED
 !           L1Z-L5Z
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-!             OLD VALUE OF L's
-        fornow = strdzr(ic,jc,1)*acouzr(ic,jc,1)*bcl1zr(ic,jc,1)
-        bcl1zr(ic,jc,1) = half*(strwzr(ic,jc,1)-acouzr(ic,jc,1))  &
-            *(bcl5zr(ic,jc,1)-fornow)
-        bcl2zr(ic,jc,1) = strwzr(ic,jc,1)  &
-            *(bcl2zr(ic,jc,1)-bcl5zr(ic,jc,1)*ova2zr(ic,jc,1))
-        bcl3zr(ic,jc,1) = strwzr(ic,jc,1)*bcl3zr(ic,jc,1)
-        bcl4zr(ic,jc,1) = strwzr(ic,jc,1)*bcl4zr(ic,jc,1)
-        bcl5zr(ic,jc,1) = half*(strwzr(ic,jc,1)+acouzr(ic,jc,1))  &
-            *(bcl5zr(ic,jc,1)+fornow)
-        
-!             SUBTRACT FROM NEW VALUE OF L's
-!             L5Z UNCHANGED
-        bcl1zr(ic,jc,1) = bcl5zr(ic,jc,1)  &
-            + strdzr(ic,jc,1)*acouzr(ic,jc,1)*dwdtzr(ic,jc,1) - bcl1zr(ic,jc,1)
-        bcl3zr(ic,jc,1) = -dudtzr(ic,jc,1) - bcl3zr(ic,jc,1)
-        bcl4zr(ic,jc,1) = -dvdtzr(ic,jc,1) - bcl4zr(ic,jc,1)
-        bcl2zr(ic,jc,1) = gam1zr(ic,jc,1)*ova2zr(ic,jc,1)  &
-            *(bcl1zr(ic,jc,1)+bcl5zr(ic,jc,1))  &
-            + strdzr(ic,jc,1)*(dtdtzr(ic,jc,1)/strtzr(ic,jc,1)  &
-            - sorpzr(ic,jc,1)/strpzr(ic,jc,1)) - bcl2zr(ic,jc,1)
-        
-      END DO
-    END DO
+            rangexyz = (/istal,istol,jstal,jstol,1,1/)
+            call ops_par_loop(bounds_kernel_wallBC2_computeL_zr, "L1Z to L5Z", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl3zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl4zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl5zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_acouzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dudtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dvdtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dwdtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_gam1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_dtdtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_sorpzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strpzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+!           LYZ
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstol,1,1/)
+                call ops_par_loop(bounds_kernel_wallBC2_LYZ_zr, "LYZ", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_bcl2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_ratezr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strrzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
     
-!         LYZ
-    DO ispec = 1,nspec
-      
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-!               OLD VALUE OF LYZ
-          bclyzr(ispec,ic,jc,1) = strwzr(ic,jc,1)*bclyzr(ispec,ic,jc,1)
-          
-!               UPDATE L2Z
-          bcl2zr(ic,jc,1) = bcl2zr(ic,jc,1) + (ratezr(ispec,ic,jc,1)  &
-              - strdzr(ic,jc,1)*bclyzr(ispec,ic,jc,1)) *rgspec(ispec)/strrzr(ic,jc,1)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-!         ADD TO CONSERVATIVE SOURCE TERMS
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        drhs(ic,jc,kstol) = drhs(ic,jc,kstol) - bcl1zr(ic,jc,1)*ova2zr(ic,jc,1)  &
-            - bcl2zr(ic,jc,1)
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          yrhs(ispec,ic,jc,kstol) = yrhs(ispec,ic,jc,kstol)  &
-              - (bcl2zr(ic,jc,1)+bcl1zr(ic,jc,1)*ova2zr(ic,jc,1))*stryzr(ispec,ic,jc,1)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+!           ADD TO CONSERVATIVE SOURCE TERMS
+            rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+            call ops_par_loop(bounds_kernel_wallBC2_addsource_zr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_bcl2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+                call ops_par_loop(bounds_kernel_wallBC2_eval_zr, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_bcl2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+            
+            END DO
+
+        END IF
+
 !       =======================================================================
-  
+
     END IF
 !   Z-DIRECTION RIGHT-HAND END
 

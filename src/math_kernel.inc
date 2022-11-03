@@ -446,3 +446,14 @@ SUBROUTINE math_kernel_eqtau(out_arr1, out_arr2, in_arr1, in_arr2, in_arr3, var)
     out_arr2(OPS_ACC2(0,0,0)) = out_arr2(OPS_ACC2(0,0,0)) + fornow*in_arr3(OPS_ACC5(0,0,0))
 
 END SUBROUTINE math_kernel_eqtau
+
+SUBROUTINE math_kernel_getval(prun,prefer)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1), intent(in) :: prun
+    real(kind=8) :: prefer
+
+    prefer = prun(OPS_ACC1(0,0,0))
+
+END SUBROUTINE math_kernel_getval

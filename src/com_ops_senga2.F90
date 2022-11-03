@@ -79,7 +79,7 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_acouzl, d_ova2zl, d_gam1zl, d_ovgmzl, d_sydtzl, d_sorpzl
     TYPE(ops_dat) :: d_acouzr, d_ova2zr, d_gam1zr, d_ovgmzr, d_sydtzr, d_sorpzr
 
-    TYPE(ops_reduction) :: h_erdtot, h_erutot, h_ervtot, h_erwtot, h_eretot, h_erytot
+    TYPE(ops_reduction) :: h_erdtot, h_erutot, h_ervtot, h_erwtot, h_eretot, h_erytot, h_prefer
 
     TYPE(ops_stencil) :: s3d_000
 
