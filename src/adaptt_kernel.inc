@@ -12,7 +12,7 @@ SUBROUTINE adaptt_kernel_err_eval(err_arr, run_arr, ernrm, ertot)
 
 END SUBROUTINE adaptt_kernel_err_eval
 
-SUBROUTINE adaptt_kernel_err_eval_multidim(err_arr, run_arr, ernrm, ispec, ertot)
+SUBROUTINE adaptt_kernel_err_eval_MD(err_arr, run_arr, ernrm, ispec, ertot)
     use data_types
     implicit none
 
@@ -25,4 +25,4 @@ SUBROUTINE adaptt_kernel_err_eval_multidim(err_arr, run_arr, ernrm, ispec, ertot
     fornow = abs(err_arr(OPS_ACC_MD1(ispec,0,0,0)))/(abs(run_arr(OPS_ACC_MD2(ispec,0,0,0)))+ernrm)
     ertot = max( ertot, fornow )
 
-END SUBROUTINE adaptt_kernel_err_eval_multidim
+END SUBROUTINE adaptt_kernel_err_eval_MD

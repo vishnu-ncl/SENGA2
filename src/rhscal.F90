@@ -614,7 +614,7 @@ SUBROUTINE rhscal
 !---UA
     DO ispec = 1,nspec
         rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-        call ops_par_loop(math_multidim_kernel_eqB, "A_multidim = B_multidim", senga_grid, 3, rangexyz, &
+        call ops_par_loop(math_MD_kernel_eqB, "A_multidim = B_multidim", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_rrte, 9, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
@@ -799,7 +799,7 @@ SUBROUTINE rhscal
 !       YRHS CONTAINS RHO Y: CONVERT TO Y
 !       Y IS PARALLEL
         rangexyz = (/istalt,istolt,jstalt,jstolt,kstalt,kstolt/)
-        call ops_par_loop(math_multidim_kernel_eqE, "A_multidim = A_multidim/B", senga_grid, 3, rangexyz, &
+        call ops_par_loop(math_MD_kernel_eqE, "A_multidim = A_multidim/B", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
@@ -812,7 +812,7 @@ SUBROUTINE rhscal
   
 !       COLLECT Y SOURCE TERMS IN RATE FOR NOW
         rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-        call ops_par_loop(math_multidim_kernel_eqI, "A_multidim = A_multidim - half*B_multidim*C", senga_grid, 3, rangexyz, &
+        call ops_par_loop(math_MD_kernel_eqI, "A_multidim = A_multidim - half*B_multidim*C", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
                         ops_arg_dat(d_divm, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -830,7 +830,7 @@ SUBROUTINE rhscal
 !       D/DX RHO U Y
 !       RHO U Y IS PARALLEL
         rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-        call ops_par_loop(math_multidim_kernel_eqD, "A = B_multidim*C", senga_grid, 3, rangexyz, &
+        call ops_par_loop(math_MD_kernel_eqD, "A = B_multidim*C", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
                         ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -841,7 +841,7 @@ SUBROUTINE rhscal
 !       D/DY RHO V Y
 !       RHO V Y IS PARALLEL
         rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-        call ops_par_loop(math_multidim_kernel_eqD, "A = B_multidim*C", senga_grid, 3, rangexyz, &
+        call ops_par_loop(math_MD_kernel_eqD, "A = B_multidim*C", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
                         ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -852,7 +852,7 @@ SUBROUTINE rhscal
 !       D/DZ RHO W Y
 !       RHO W Y IS PARALLEL
         rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-        call ops_par_loop(math_multidim_kernel_eqD, "A = B_multidim*C", senga_grid, 3, rangexyz, &
+        call ops_par_loop(math_MD_kernel_eqD, "A = B_multidim*C", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
                         ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -862,7 +862,7 @@ SUBROUTINE rhscal
   
 !       COLLECT DIV RHO U Y IN RATE FOR NOW
         rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-        call ops_par_loop(math_multidim_kernel_eqH, "A_multidim = A_multidim - half*(B+C+D)", senga_grid, 3, rangexyz, &
+        call ops_par_loop(math_MD_kernel_eqH, "A_multidim = A_multidim - half*(B+C+D)", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -879,7 +879,7 @@ SUBROUTINE rhscal
   
 !       SPECIES MASS FRACTION GRADIENTS
         rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-        call ops_par_loop(math_multidim_kernel_eqA, "A = B_multidim", senga_grid, 3, rangexyz, &
+        call ops_par_loop(math_MD_kernel_eqA, "A = B_multidim", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
@@ -974,7 +974,7 @@ SUBROUTINE rhscal
   
 !       COLLECT HALF RHO U.DEL Y IN RATE FOR NOW
         rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-        call ops_par_loop(math_multidim_kernel_eqJ, "A_multidim = A_multidim - half*(B*C+D*E+F*G)", senga_grid, 3, rangexyz, &
+        call ops_par_loop(math_MD_kernel_eqJ, "A_multidim = A_multidim - half*(B*C+D*E+F*G)", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
                         ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -1267,25 +1267,19 @@ SUBROUTINE rhscal
 !       BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
         IF(fzldif) call zerozl(d_store6)
         IF(fzrdif) call zerozr(d_store6)
-  
-        DO kc = kstal,kstol
-        DO jc = jstal,jstol
-        DO ic = istal,istol
-        
-        fornow = store4(ic,jc,kc)*store1(ic,jc,kc)  &
-            + store5(ic,jc,kc)*store2(ic,jc,kc)  &
-            + store6(ic,jc,kc)*store3(ic,jc,kc)
-        
-!             Y EQUATION
-        rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
-        
-!             DIFFUSION CORRECTION VELOCITY DIVERGENCE
-        vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
-        
-        END DO
-        END DO
-        END DO
-  
+ 
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(math_MD_kernel_eqL, "multiple math equations", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
         IF(fxladb) call zeroxl(d_store4)
@@ -1473,7 +1467,7 @@ SUBROUTINE rhscal
 
 !       MOVE MASS FRACTION TO STORE7
         rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-        call ops_par_loop(math_multidim_kernel_eqA, "A = B_multidim", senga_grid, 3, rangexyz,  &
+        call ops_par_loop(math_MD_kernel_eqA, "A = B_multidim", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
@@ -1494,24 +1488,17 @@ SUBROUTINE rhscal
 !       BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
         IF(fzldif) call zerozl(d_store3)
         IF(fzrdif) call zerozr(d_store3)
-  
-        DO kc = kstal,kstol
-        DO jc = jstal,jstol
-        DO ic = istal,istol
-        
-        fornow = (store1(ic,jc,kc) +  store2(ic,jc,kc)  &
-            +  store3(ic,jc,kc))*store4(ic,jc,kc)
-        
-!             Y EQUATION
-        rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
-        
-!             DIFFUSION CORRECTION VELOCITY DIVERGENCE
-        vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
-        
-        END DO
-        END DO
-        END DO
-  
+ 
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(math_MD_kernel_eqM, "multiple math equations", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
         IF(fxladb) call zeroxl(d_store1)
@@ -1548,7 +1535,7 @@ SUBROUTINE rhscal
         IF(flmixw) THEN
 !           FIRST AND SECOND DERIVATIVES OF LN(MIXTURE MOLAR MASS) ALREADY STORED
             rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-            call ops_par_loop(math_multidim_kernel_eqC, "A = B*C_multidim", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_MD_kernel_eqC, "A = B*C_multidim", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                             ops_arg_dat(d_difmix, 1, s3d_000, "real(dp)", OPS_READ), &
                             ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
@@ -1594,24 +1581,19 @@ SUBROUTINE rhscal
 !           BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
             IF(fzldif) call zerozl(d_store3)
             IF(fzrdif) call zerozr(d_store3)
-    
-            DO kc = kstal,kstol
-            DO jc = jstal,jstol
-            DO ic = istal,istol
-          
-            fornow = store1(ic,jc,kc)*wd1x(ic,jc,kc)  &
-              + store2(ic,jc,kc)*wd1y(ic,jc,kc) + store3(ic,jc,kc)*wd1z(ic,jc,kc)
-          
-!               Y EQUATION
-            rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
-          
-!               DIFFUSION CORRECTION VELOCITY DIVERGENCE
-            vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
-          
-            END DO
-            END DO
-            END DO
-    
+
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(math_MD_kernel_eqL, "multiple math equations", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_wd1x, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_wd1y, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_wd1z, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))            
+ 
 !           BOUNDARY CONDITIONS
 !           BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
             IF(fxladb) call zeroxl(d_store1)
@@ -1784,24 +1766,17 @@ SUBROUTINE rhscal
 !           BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
             IF(fzldif) call zerozl(d_wd2z)
             IF(fzrdif) call zerozr(d_wd2z)
-    
-            DO kc = kstal,kstol
-            DO jc = jstal,jstol
-            DO ic = istal,istol
-          
-            fornow = (wd2x(ic,jc,kc) +  wd2y(ic,jc,kc)  &
-              +  wd2z(ic,jc,kc))*store7(ic,jc,kc)
-          
-!               Y EQUATION
-            rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
-          
-!               DIFFUSION CORRECTION VELOCITY DIVERGENCE
-            vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
-          
-            END DO
-            END DO
-            END DO
-    
+
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(math_MD_kernel_eqM, "multiple math equations", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_wd2x, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_wd2y, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_wd2z, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))            
+
 !           BOUNDARY CONDITIONS
 !           BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
             IF(fxladb) call zeroxl(d_wd2x)
@@ -1835,7 +1810,7 @@ SUBROUTINE rhscal
 !           FIRST AND SECOND DERIVATIVES OF LN(PRESSURE) ALREADY STORED
 
             rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-            call ops_par_loop(math_multidim_kernel_eqG, "A = B*C_multidim*(one-const_val/D)", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_MD_kernel_eqG, "A = B*C_multidim*(one-const_val/D)", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                             ops_arg_dat(d_difmix, 1, s3d_000, "real(dp)", OPS_READ), &
                             ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
@@ -1883,24 +1858,19 @@ SUBROUTINE rhscal
 !           BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
             IF(fzldif) call zerozl(d_store3)
             IF(fzrdif) call zerozr(d_store3)
-    
-            DO kc = kstal,kstol
-            DO jc = jstal,jstol
-            DO ic = istal,istol
-          
-            fornow = store1(ic,jc,kc)*pd1x(ic,jc,kc)  &
-              + store2(ic,jc,kc)*pd1y(ic,jc,kc) + store3(ic,jc,kc)*pd1z(ic,jc,kc)
-          
-!               Y EQUATION
-            rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
-          
-!               DIFFUSION CORRECTION VELOCITY DIVERGENCE
-            vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
-          
-            END DO
-            END DO
-            END DO
-    
+
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(math_MD_kernel_eqL, "multiple math equations", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_pd1x, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_pd1y, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_pd1z, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
 !           BOUNDARY CONDITIONS
 !           BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
             IF(fxladb) call zeroxl(d_store1)
@@ -2072,24 +2042,17 @@ SUBROUTINE rhscal
 !           BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
             IF(fzldif) call zerozl(d_pd2z)
             IF(fzrdif) call zerozr(d_pd2z)
-    
-            DO kc = kstal,kstol
-            DO jc = jstal,jstol
-            DO ic = istal,istol
-          
-            fornow = (pd2x(ic,jc,kc) +  pd2y(ic,jc,kc)  &
-              +  pd2z(ic,jc,kc))*store7(ic,jc,kc)
-          
-!               Y EQUATION
-            rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
-          
-!               DIFFUSION CORRECTION VELOCITY DIVERGENCE
-            vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
-          
-            END DO
-            END DO
-            END DO
-    
+
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(math_MD_kernel_eqM, "multiple math equations", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_pd2x, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_pd2y, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_pd2z, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+ 
 !           BOUNDARY CONDITIONS
 !           BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
             IF(fxladb) call zeroxl(d_pd2x)
@@ -2123,7 +2086,7 @@ SUBROUTINE rhscal
 !           FIRST AND SECOND DERIVATIVES OF LN(TEMPERATURE) ALREADY STORED
 
             rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-            call ops_par_loop(math_multidim_kernel_eqF, "A = B*C_multidim*D", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_MD_kernel_eqF, "A = B*C_multidim*D", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                             ops_arg_dat(d_difmix, 1, s3d_000, "real(dp)", OPS_READ), &
                             ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
@@ -2170,24 +2133,19 @@ SUBROUTINE rhscal
 !           BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
             IF(fzldif) call zerozl(d_store3)
             IF(fzrdif) call zerozr(d_store3)
-    
-            DO kc = kstal,kstol
-            DO jc = jstal,jstol
-            DO ic = istal,istol
-          
-            fornow = store1(ic,jc,kc)*td1x(ic,jc,kc)  &
-              + store2(ic,jc,kc)*td1y(ic,jc,kc) + store3(ic,jc,kc)*td1z(ic,jc,kc)
-          
-!               Y EQUATION
-            rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
-          
-!               DIFFUSION CORRECTION VELOCITY DIVERGENCE
-            vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
-          
-            END DO
-            END DO
-            END DO
-    
+
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(math_MD_kernel_eqL, "multiple math equations", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_td1x, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_td1y, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_td1z, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
 !           SUBTRACT DUFOUR EFFECT TERMS TO RESTORE SPECIES ENTHALPY
 !           RSC 08-JUN-2015 BUG FIX
             IF(flmduf(ispec))THEN
@@ -2548,24 +2506,17 @@ SUBROUTINE rhscal
 !           BC IN Z: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
             IF(fzldif) call zerozl(d_td2z)
             IF(fzrdif) call zerozr(d_td2z)
-    
-            DO kc = kstal,kstol
-            DO jc = jstal,jstol
-            DO ic = istal,istol
-          
-            fornow = (td2x(ic,jc,kc) +  td2y(ic,jc,kc)  &
-              +  td2z(ic,jc,kc))*store7(ic,jc,kc)
-          
-!               Y EQUATION
-            rate(ispec,ic,jc,kc) = rate(ispec,ic,jc,kc) + fornow
-          
-!               DIFFUSION CORRECTION VELOCITY DIVERGENCE
-            vtmp(ic,jc,kc) = vtmp(ic,jc,kc) + fornow
-          
-            END DO
-            END DO
-            END DO
-    
+
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(math_MD_kernel_eqM, "multiple math equations", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_td2x, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_td2y, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_td2z, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+ 
 !           BOUNDARY CONDITIONS
 !           BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
             IF(fxladb) call zeroxl(d_td2x)
@@ -2733,7 +2684,7 @@ SUBROUTINE rhscal
 !       ---------------------------
 !       RECOMPUTE SPECIES MASS FRACTION GRADIENTS
         rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-        call ops_par_loop(math_multidim_kernel_eqA, "A = B_multidim", senga_grid, 3, rangexyz, &
+        call ops_par_loop(math_MD_kernel_eqA, "A = B_multidim", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
@@ -2758,7 +2709,7 @@ SUBROUTINE rhscal
 !       DIV RHO VCORR Y
 !       STORE Y SOURCE TERMS IN YRHS
         rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-        call ops_par_loop(math_multidim_kernel_eqK, "A_multidim = B_multidim - A_multidim*C - D*E - F*G - H*I", senga_grid, 3, rangexyz, &
+        call ops_par_loop(math_MD_kernel_eqK, "A_multidim = B_multidim - A_multidim*C - D*E - F*G - H*I", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_rate, 9, s3d_000, "real(dp)", OPS_READ), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &

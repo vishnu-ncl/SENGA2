@@ -9,7 +9,7 @@ SUBROUTINE set_zero_kernel(farray)
 
 END SUBROUTINE set_zero_kernel
 
-SUBROUTINE set_zero_kernel_multidim(farray, ispec)
+SUBROUTINE set_zero_kernel_MD(farray, ispec)
     use data_types
     implicit none
 
@@ -18,7 +18,7 @@ SUBROUTINE set_zero_kernel_multidim(farray, ispec)
 
     farray(OPS_ACC_MD1(ispec,0,0,0)) = 0.0_dp
 
-END SUBROUTINE set_zero_kernel_multidim
+END SUBROUTINE set_zero_kernel_MD
 
 !set zero for y,z dimension
 SUBROUTINE set_zero_kernel_xdir(farray)

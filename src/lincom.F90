@@ -123,7 +123,7 @@ SUBROUTINE lincom
     DO ispec = 1,nspec
 
         rangexyz = (/istaly,istoly,jstaly,jstoly,kstaly,kstoly/)
-        call ops_par_loop(lincom_kernel_multidim, "lincom mulit-dim", senga_grid, 3, rangexyz, &
+        call ops_par_loop(lincom_kernel_MD, "lincom mulit-dim", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_yerr, 9, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_yrun, 9, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
