@@ -235,23 +235,19 @@ SUBROUTINE bountt
             call bcytxl
     
 !           CONSERVATIVE VARIABLES
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-          yrhs(ispec,istal,jc,kc) = strdxl(1,jc,kc)*stryxl(ispec,1,jc,kc)
-          
-          yrun(ispec,istal,jc,kc) = yrhs(ispec,istal,jc,kc)
-          
-          yerr(ispec,istal,jc,kc) = zero
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(bountt_kernel_eqE_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yrun, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yerr, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_stryxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
   
 !       =======================================================================
   
@@ -566,25 +562,21 @@ SUBROUTINE bountt
 !           SET MASS FRACTIONS AND TIME DERIVATIVES
             call bcytxr
     
-!         CONSERVATIVE VARIABLES
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-          yrhs(ispec,istol,jc,kc) = strdxr(1,jc,kc)*stryxr(ispec,1,jc,kc)
-          
-          yrun(ispec,istol,jc,kc) = yrhs(ispec,istol,jc,kc)
-          
-          yerr(ispec,istol,jc,kc) = zero
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+!           CONSERVATIVE VARIABLES
+            DO ispec = 1,nspec
+                rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(bountt_kernel_eqE_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yrun, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yerr, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_stryxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
   
         IF(nsbcxr == nsbcw1) THEN
@@ -907,24 +899,20 @@ SUBROUTINE bountt
             call bcytyl
     
 !           CONSERVATIVE VARIABLES
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-          yrhs(ispec,ic,jstal,kc) = strdyl(ic,1,kc)*stryyl(ispec,ic,1,kc)
-          
-          yrun(ispec,ic,jstal,kc) = yrhs(ispec,ic,jstal,kc)
-          
-          yerr(ispec,ic,jstal,kc) = zero
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+                call ops_par_loop(bountt_kernel_eqE_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yrun, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yerr, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_stryyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
   
         IF(nsbcyl == nsbcw1) THEN
@@ -1246,24 +1234,20 @@ SUBROUTINE bountt
             call bcytyr
     
 !           CONSERVATIVE VARIABLES
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-          yrhs(ispec,ic,jstol,kc) = strdyr(ic,1,kc)*stryyr(ispec,ic,1,kc)
-          
-          yrun(ispec,ic,jstol,kc) = yrhs(ispec,ic,jstol,kc)
-          
-          yerr(ispec,ic,jstol,kc) = zero
-          
-        END DO
-      END DO
-      
-    END DO
-    
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+                call ops_par_loop(bountt_kernel_eqE_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yrun, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yerr, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_stryyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
         END IF
-  
+
 !       =======================================================================
   
         IF(nsbcyr == nsbcw1) THEN
@@ -1586,27 +1570,23 @@ SUBROUTINE bountt
             call bcytzl
     
 !           CONSERVATIVE VARIABLES
-    DO ispec = 1,nspec
-      
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          yrhs(ispec,ic,jc,kstal) = strdzl(ic,jc,1)*stryzl(ispec,ic,jc,1)
-          
-          yrun(ispec,ic,jc,kstal) = yrhs(ispec,ic,jc,kstal)
-          
-          yerr(ispec,ic,jc,kstal) = zero
-          
-        END DO
-      END DO
-      
-    END DO
-    
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+                call ops_par_loop(bountt_kernel_eqE_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yrun, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yerr, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_stryzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
         END IF
-  
+
 !       =======================================================================
   
-        IF(nsbczl == nsbcw1)THEN
+        IF(nsbczl == nsbcw1) THEN
     
 !           WALL BC No 1
 !           NO-SLIP WALL - ADIABATIC
@@ -1926,23 +1906,19 @@ SUBROUTINE bountt
             call bcytzr
     
 !           CONSERVATIVE VARIABLES
-    DO ispec = 1,nspec
-      
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          yrhs(ispec,ic,jc,kstol) = strdzr(ic,jc,1)*stryzr(ispec,ic,jc,1)
-          
-          yrun(ispec,ic,jc,kstol) = yrhs(ispec,ic,jc,kstol)
-          
-          yerr(ispec,ic,jc,kstol) = zero
-          
-        END DO
-      END DO
-      
-    END DO
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+                call ops_par_loop(bountt_kernel_eqE_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yrun, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yerr, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_stryzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
     
-  END IF
+        END IF
   
 !       =======================================================================
   

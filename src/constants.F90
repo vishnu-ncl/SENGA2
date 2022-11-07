@@ -109,7 +109,11 @@ use data_types
     real(kind=dp) :: acfs5z,bcfs5z,ccfs5z,dcfs5z
 
     real(kind=dp) :: ovdlz2
+
+    real(kind=dp), constant :: foursb_opsconstant,trfrth_opsconstant
     
+    real(kind=dp) :: foursb,trfrth
+
 #else
     real(kind=dp) :: acoffx, bcoffx, ccoffx, dcoffx, ecoffx
     real(kind=dp) :: acof1x, bcof1x, ccof1x, dcof1x
@@ -164,6 +168,8 @@ use data_types
     real(kind=dp) :: acfs5z,bcfs5z,ccfs5z,dcfs5z
 
     real(kind=dp) :: ovdlz2
+
+    real(kind=dp) :: foursb,trfrth
 
 #endif
 

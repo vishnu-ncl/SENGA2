@@ -1,122 +1,105 @@
 SUBROUTINE radcal
- 
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-26  Time: 15:26:10
 
-!     *************************************************************************
+    use OPS_Fortran_Reference
 
-!     RADCAL
-!     ======
+    use OPS_CONSTANTS
+    use, intrinsic :: ISO_C_BINDING
 
-!     AUTHOR
-!     ------
-!     R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
+    use data_types
+    use com_senga
+    use com_ops_senga
 
-!     CHANGE RECORD
-!     -------------
-!     14-JUL-2013:  CREATED
+!   *************************************************************************
 
-!     DESCRIPTION
-!     -----------
-!     DNS CODE SENGA2
-!     RADIATION TREATMENT
-!     USING OPTICALLY THIN ASSUMPTION: Ju et al: JFM 342, 315-334, 1997.
-!     AFTER TOM DUNSTAN 2012
+!   RADCAL
+!   ======
 
-!     *************************************************************************
+!   AUTHOR
+!   ------
+!   R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
 
+!   CHANGE RECORD
+!   -------------
+!   14-JUL-2013:  CREATED
 
-!     GLOBAL DATA
-!     ===========
-!     -------------------------------------------------------------------------
-use data_types
-use com_senga
-!     -------------------------------------------------------------------------
+!   DESCRIPTION
+!   -----------
+!   DNS CODE SENGA2
+!   RADIATION TREATMENT
+!   USING OPTICALLY THIN ASSUMPTION: Ju et al: JFM 342, 315-334, 1997.
+!   AFTER TOM DUNSTAN 2012
 
+!   *************************************************************************
 
-!     LOCAL DATA
-!     ==========
-real(kind=dp) :: plspec,fornow
-INTEGER :: ic,jc,kc,ispec,jspec,icp
+!   GLOBAL DATA
+!   ===========
+!   -------------------------------------------------------------------------
+!   -------------------------------------------------------------------------
 
+!   LOCAL DATA
+!   ==========
+    real(kind=dp) :: plspec,fornow
+    integer :: ic,jc,kc,ispec,jspec,icp
+    integer :: rangexyz(6)
 
-!     BEGIN
-!     =====
+!   BEGIN
+!   =====
 
-!     =========================================================================
+!   =========================================================================
 
-!     BUILD THE PLANCK MEAN ABSORPTION COEFFICIENT OF THE MIXTURE
-!     -----------------------------------------------------------
+!   BUILD THE PLANCK MEAN ABSORPTION COEFFICIENT OF THE MIXTURE
+!   -----------------------------------------------------------
 
-!     INITIALISE THE ACCUMULATOR
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      store1(ic,jc,kc) = zero
-      
-    END DO
-  END DO
-END DO
+!   INITIALISE THE ACCUMULATOR
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_WRITE))
 
-!     -------------------------------------------------------------------------
+!   -------------------------------------------------------------------------
 
-!     RUN THROUGH ALL RADIATING SPECIES
-DO jspec = 1, nsprad
+!   RUN THROUGH ALL RADIATING SPECIES
+    DO jspec = 1, nsprad
   
 !       PLANCK MEAN ABSORPTION COEFFICIENT OF EACH SPECIES
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      DO ic = istal,istol
+        DO kc = kstal,kstol
+        DO jc = jstal,jstol
+            DO ic = istal,istol
         
-        fornow = trun(ic,jc,kc)
-        plspec = akprad(nkprad(jspec),jspec)
-        DO icp = nkprm1(jspec),1,-1
-          plspec = plspec*fornow + akprad(icp,jspec)
+                fornow = trun(ic,jc,kc)
+                plspec = akprad(nkprad(jspec),jspec)
+                DO icp = nkprm1(jspec),1,-1
+                    plspec = plspec*fornow + akprad(icp,jspec)
+                END DO
+                store2(ic,jc,kc) = plspec
+        
+            END DO
         END DO
-        store2(ic,jc,kc) = plspec
-        
-      END DO
-    END DO
-  END DO
+        END DO
   
 !       SPECIES ID
-  ispec = nsprid(jspec)
+        ispec = nsprid(jspec)
   
 !       ADD THE SPECIES CONTRIBUTION
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        fornow = yrhs(ispec,ic,jc,kc)*rgspec(ispec)*trun(ic,jc,kc)
-        store1(ic,jc,kc) = store1(ic,jc,kc) + store2(ic,jc,kc)*fornow
-        
-      END DO
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(radcal_kernel_addspecies, "ADD THE SPECIES CONTRIBUTION", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
     END DO
-  END DO
-  
-END DO
 
-!     =========================================================================
+!   =========================================================================
 
-!     INCLUDE THE RADIATION TERM IN THE ENERGY EQUATION
+!   INCLUDE THE RADIATION TERM IN THE ENERGY EQUATION
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(radcal_kernel_addradiation, "INCLUDE THE RADIATION TERM IN THE ENERGY EQUATION", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
 
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      fornow = trun(ic,jc,kc)
-      fornow = fornow*fornow*fornow*fornow
-      
-      erhs(ic,jc,kc) = erhs(ic,jc,kc)  &
-          - foursb*store1(ic,jc,kc)*(fornow - trfrth)
-      
-    END DO
-  END DO
-END DO
+!   =========================================================================
 
-!     =========================================================================
-
-
-RETURN
 END SUBROUTINE radcal

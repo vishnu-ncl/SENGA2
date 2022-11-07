@@ -1,65 +1,67 @@
 SUBROUTINE boundt
- 
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-26  Time: 15:24:40
 
-!     *************************************************************************
+    use OPS_Fortran_Reference
 
-!     BOUNDT
-!     ======
+    use OPS_CONSTANTS
+    use, intrinsic :: ISO_C_BINDING
 
-!     AUTHOR
-!     ------
-!     R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
+    use data_types
+    use com_senga
+    use com_ops_senga
 
-!     CHANGE RECORD
-!     -------------
-!     29-SEP-2003:  CREATED
-!     10-MAY-2015:  RSC WALL BCS UPDATED
+!   *************************************************************************
 
-!     DESCRIPTION
-!     -----------
-!     DNS CODE SENGA2
-!     APPLIES BOUNDARY CONDITIONS TO PRIMITIVE VARIABLES
+!   BOUNDT
+!   ======
 
-!     *************************************************************************
+!   AUTHOR
+!   ------
+!   R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
 
+!   CHANGE RECORD
+!   -------------
+!   29-SEP-2003:  CREATED
+!   10-MAY-2015:  RSC WALL BCS UPDATED
 
-!     GLOBAL DATA
-!     ===========
-!     -------------------------------------------------------------------------
-use data_types
-use com_senga
-!     -------------------------------------------------------------------------
+!   DESCRIPTION
+!   -----------
+!   DNS CODE SENGA2
+!   APPLIES BOUNDARY CONDITIONS TO PRIMITIVE VARIABLES
 
+!   *************************************************************************
 
-!     LOCAL DATA
-!     ==========
-real(kind=dp) :: fornow
-INTEGER :: jc,kc
-INTEGER :: ispec
-INTEGER :: iindex,ipower,icoef1,icoef2
-INTEGER :: itint,icp
+!   GLOBAL DATA
+!   ===========
+!   -------------------------------------------------------------------------
+!   -------------------------------------------------------------------------
 
+!   LOCAL DATA
+!   ==========
+    real(kind=dp) :: fornow
+    integer :: jc,kc
+    integer :: ispec
+    integer :: iindex,ipower,icoef1,icoef2
+    integer :: itint,icp
+    integer :: rangexyz(6)
 
-!     BEGIN
-!     =====
+!   BEGIN
+!   =====
 
-!     =========================================================================
+!   =========================================================================
 !KA   FIX INFLOW BC
 !KA   RK TIME INCREMENT IS HELD IN RKTIM(IRKSTP)
-btime  = rktim(irkstp)
-fupelc = .false.
+    btime  = rktim(irkstp)
+    fupelc = .false.
 
-!     X-DIRECTION LEFT-HAND END
-!     -------------------------
+!   X-DIRECTION LEFT-HAND END
+!   -------------------------
 
-!     GLOBAL BC SUPPORT
-!     TURBULENT INFLOW VELOCITY FIELD
-IF(fxltrb)CALL bcutxl
+!   GLOBAL BC SUPPORT
+!   TURBULENT INFLOW VELOCITY FIELD
+    IF(fxltrb) call bcutxl
 
-!     LOCAL BC SUPPORT
-IF(fxlcnv)THEN
+!   LOCAL BC SUPPORT
+    IF(fxlcnv)THEN
   
 !       =======================================================================
   
@@ -82,16 +84,16 @@ IF(fxlcnv)THEN
   
 !       =======================================================================
   
-  IF(nsbcxl == nsbci2)THEN
+        IF(nsbcxl == nsbci2) THEN
     
-!         INFLOW BC No 2
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
+!           INFLOW BC No 2
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutxl
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutxl
     
-!         SET TEMPERATURE AND TIME DERIVATIVE
-    CALL bcttxl
+!           SET TEMPERATURE AND TIME DERIVATIVE
+            call bcttxl
     
 !         SET TEMPERATURE INTERVAL INDEX
     DO kc = kstal,kstol
@@ -124,22 +126,26 @@ IF(fxlcnv)THEN
       END DO
     END DO
     
-!         CONSERVATIVE VARIABLES
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        urhs(istal,jc,kc) = drhs(istal,jc,kc)*struxl(1,jc,kc)
-        vrhs(istal,jc,kc) = drhs(istal,jc,kc)*strvxl(1,jc,kc)
-        wrhs(istal,jc,kc) = drhs(istal,jc,kc)*strwxl(1,jc,kc)
-        erhs(istal,jc,kc) = half*(struxl(1,jc,kc)*struxl(1,jc,kc)  &
-            + strvxl(1,jc,kc)*strvxl(1,jc,kc) + strwxl(1,jc,kc)*strwxl(1,jc,kc))
-        erhs(istal,jc,kc) = drhs(istal,jc,kc)*erhs(istal,jc,kc)
-        
-      END DO
-    END DO
-    
-!         SET MASS FRACTIONS AND TIME DERIVATIVES
-    CALL bcytxl
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(boundt_kernel_eqA_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+            call ops_par_loop(boundt_kernel_eqB_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ),  &
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+!           SET MASS FRACTIONS AND TIME DERIVATIVES
+            call bcytxl
     
 !         CONSERVATIVE VARIABLES
     DO ispec = 1,nspec
@@ -171,89 +177,86 @@ IF(fxlcnv)THEN
       
     END DO
     
-  END IF
+        END IF
   
 !       =======================================================================
   
-  IF(nsbcxl == nsbci3)THEN
+        IF(nsbcxl == nsbci3) THEN
     
-!         INFLOW BC No 3
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
+!           INFLOW BC No 3
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
+
+!           SET DENSITY AND TIME DERIVATIVE
+            call bcdtxl
+
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutxl
     
-!         SET DENSITY AND TIME DERIVATIVE
-    CALL bcdtxl
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(boundt_kernel_eqC_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+!           SET MASS FRACTIONS AND TIME DERIVATIVES
+            call bcytxl
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutxl
-    
-!         CONSERVATIVE VARIABLES
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        drhs(istal,jc,kc) = strdxl(1,jc,kc)
-        
-        urhs(istal,jc,kc) = strdxl(1,jc,kc)*struxl(1,jc,kc)
-        vrhs(istal,jc,kc) = strdxl(1,jc,kc)*strvxl(1,jc,kc)
-        wrhs(istal,jc,kc) = strdxl(1,jc,kc)*strwxl(1,jc,kc)
-        
-      END DO
-    END DO
-    
-!         SET MASS FRACTIONS AND TIME DERIVATIVES
-    CALL bcytxl
-    
-!         CONSERVATIVE VARIABLES
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-          yrhs(ispec,istal,jc,kc) = strdxl(1,jc,kc)*stryxl(ispec,1,jc,kc)
-          
-        END DO
-      END DO
-      
-    END DO
-    
-  END IF
-  
+!           CONSERVATIVE VARIABLES
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(boundt_kernel_eqD_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
 !       =======================================================================
   
-  IF(nsbcxl == nsbcw1)THEN
+        IF(nsbcxl == nsbcw1) THEN
     
-!         WALL BC No 1
-!         NO-SLIP WALL - ADIABATIC
+!           WALL BC No 1
+!           NO-SLIP WALL - ADIABATIC
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutxl
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutxl
     
-!         CONSERVATIVE VARIABLES
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        urhs(istal,jc,kc) = drhs(istal,jc,kc)*struxl(1,jc,kc)
-        vrhs(istal,jc,kc) = drhs(istal,jc,kc)*strvxl(1,jc,kc)
-        wrhs(istal,jc,kc) = drhs(istal,jc,kc)*strwxl(1,jc,kc)
-        
-      END DO
-    END DO
-    
-  END IF
-  
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(boundt_kernel_eqA_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+        END IF
+
 !       =======================================================================
-  
-  IF(nsbcxl == nsbcw2)THEN
+
+        IF(nsbcxl == nsbcw2) THEN
+
+!           WALL BC No 1
+!           NO-SLIP WALL - ISOTHERMAL
     
-!         WALL BC No 1
-!         NO-SLIP WALL - ISOTHERMAL
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutxl
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutxl
+!           SET TEMPERATURE AND TIME DERIVATIVE
+            call bcttxl
     
-!         SET TEMPERATURE AND TIME DERIVATIVE
-    CALL bcttxl
-    
-!         SET TEMPERATURE INTERVAL INDEX
+!           SET TEMPERATURE INTERVAL INDEX
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
@@ -284,21 +287,25 @@ IF(fxlcnv)THEN
       END DO
     END DO
     
-!         CONSERVATIVE VARIABLES
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        urhs(istal,jc,kc) = drhs(istal,jc,kc)*struxl(1,jc,kc)
-        vrhs(istal,jc,kc) = drhs(istal,jc,kc)*strvxl(1,jc,kc)
-        wrhs(istal,jc,kc) = drhs(istal,jc,kc)*strwxl(1,jc,kc)
-        erhs(istal,jc,kc) = half*(struxl(1,jc,kc)*struxl(1,jc,kc)  &
-            + strvxl(1,jc,kc)*strvxl(1,jc,kc) + strwxl(1,jc,kc)*strwxl(1,jc,kc))
-        erhs(istal,jc,kc) = drhs(istal,jc,kc)*erhs(istal,jc,kc)
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(boundt_kernel_eqA_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+            call ops_par_loop(boundt_kernel_eqB_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ),  &
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
       
 !           TEMPERATURE INTERVAL INDEXING
       iindex = 1 + (ispec-1)/nspimx
@@ -325,20 +332,20 @@ IF(fxlcnv)THEN
       
     END DO
     
-  END IF
+        END IF
   
 !       =======================================================================
-  
-END IF
-!     X-DIRECTION LEFT-HAND END
+ 
+    END IF
+!   X-DIRECTION LEFT-HAND END
 
-!     =========================================================================
-!     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-!     =========================================================================
+!   =========================================================================
+!   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+!   =========================================================================
 
-!     X-DIRECTION RIGHT-HAND END
-!     --------------------------
-IF(fxrcnv)THEN
+!   X-DIRECTION RIGHT-HAND END
+!   --------------------------
+    IF(fxrcnv) THEN
   
 !       =======================================================================
   
@@ -361,18 +368,18 @@ IF(fxrcnv)THEN
   
 !       =======================================================================
   
-  IF(nsbcxr == nsbci2)THEN
+        IF(nsbcxr == nsbci2)THEN
     
-!         INFLOW BC No 2
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
+!           INFLOW BC No 2
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutxr
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutxr
     
-!         SET TEMPERATURE AND TIME DERIVATIVE
-    CALL bcttxr
+!           SET TEMPERATURE AND TIME DERIVATIVE
+            call bcttxr
     
-!         SET TEMPERATURE INTERVAL INDEX
+!           SET TEMPERATURE INTERVAL INDEX
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
@@ -403,25 +410,29 @@ IF(fxrcnv)THEN
       END DO
     END DO
     
-!         CONSERVATIVE VARIABLES
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        urhs(istol,jc,kc) = drhs(istol,jc,kc)*struxr(1,jc,kc)
-        vrhs(istol,jc,kc) = drhs(istol,jc,kc)*strvxr(1,jc,kc)
-        wrhs(istol,jc,kc) = drhs(istol,jc,kc)*strwxr(1,jc,kc)
-        erhs(istol,jc,kc) = half*(struxr(1,jc,kc)*struxr(1,jc,kc)  &
-            + strvxr(1,jc,kc)*strvxr(1,jc,kc) + strwxr(1,jc,kc)*strwxr(1,jc,kc))
-        erhs(istol,jc,kc) = drhs(istol,jc,kc)*erhs(istol,jc,kc)
-        
-      END DO
-    END DO
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(boundt_kernel_eqA_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+            call ops_par_loop(boundt_kernel_eqB_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ),  &
+                            ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+!           SET MASS FRACTIONS AND TIME DERIVATIVES
+            call bcytxr
     
-!         SET MASS FRACTIONS AND TIME DERIVATIVES
-    CALL bcytxr
-    
-!         CONSERVATIVE VARIABLES
-    DO ispec = 1,nspec
+!           CONSERVATIVE VARIABLES
+            DO ispec = 1,nspec
       
 !           TEMPERATURE INTERVAL INDEXING
       iindex = 1 + (ispec-1)/nspimx
@@ -450,89 +461,86 @@ IF(fxrcnv)THEN
       
     END DO
     
-  END IF
+        END IF
   
 !       =======================================================================
   
-  IF(nsbcxr == nsbci3)THEN
+        IF(nsbcxr == nsbci3) THEN
     
-!         INFLOW BC No 3
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
+!           INFLOW BC No 3
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
     
-!         SET DENSITY AND TIME DERIVATIVE
-    CALL bcdtxr
+!           SET DENSITY AND TIME DERIVATIVE
+            call bcdtxr
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutxr
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutxr
     
-!         CONSERVATIVE VARIABLES
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        drhs(istol,jc,kc) = strdxr(1,jc,kc)
-        
-        urhs(istol,jc,kc) = strdxr(1,jc,kc)*struxr(1,jc,kc)
-        vrhs(istol,jc,kc) = strdxr(1,jc,kc)*strvxr(1,jc,kc)
-        wrhs(istol,jc,kc) = strdxr(1,jc,kc)*strwxr(1,jc,kc)
-        
-      END DO
-    END DO
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(boundt_kernel_eqC_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+!           SET MASS FRACTIONS AND TIME DERIVATIVES
+            call bcytxr
     
-!         SET MASS FRACTIONS AND TIME DERIVATIVES
-    CALL bcytxr
+!           CONSERVATIVE VARIABLES
+            DO ispec = 1,nspec
+                rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(boundt_kernel_eqD_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
+!       =======================================================================
+  
+        IF(nsbcxr == nsbcw1) THEN
     
-!         CONSERVATIVE VARIABLES
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-          yrhs(ispec,istol,jc,kc) = strdxr(1,jc,kc)*stryxr(ispec,1,jc,kc)
-          
-        END DO
-      END DO
-      
-    END DO
+!           WALL BC No 1
+!           NO-SLIP WALL - ADIABATIC
     
-  END IF
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutxr
+    
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(boundt_kernel_eqA_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+        END IF
   
 !       =======================================================================
   
-  IF(nsbcxr == nsbcw1)THEN
+        IF(nsbcxr == nsbcw2) THEN
     
-!         WALL BC No 1
-!         NO-SLIP WALL - ADIABATIC
+!           WALL BC No 1
+!           NO-SLIP WALL - ISOTHERMAL
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutxr
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutxr
     
-!         CONSERVATIVE VARIABLES
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
-        
-        urhs(istol,jc,kc) = drhs(istol,jc,kc)*struxr(1,jc,kc)
-        vrhs(istol,jc,kc) = drhs(istol,jc,kc)*strvxr(1,jc,kc)
-        wrhs(istol,jc,kc) = drhs(istol,jc,kc)*strwxr(1,jc,kc)
-        
-      END DO
-    END DO
+!           SET TEMPERATURE AND TIME DERIVATIVE
+            call bcttxr
     
-  END IF
-  
-!       =======================================================================
-  
-  IF(nsbcxr == nsbcw2)THEN
-    
-!         WALL BC No 1
-!         NO-SLIP WALL - ISOTHERMAL
-    
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutxr
-    
-!         SET TEMPERATURE AND TIME DERIVATIVE
-    CALL bcttxr
-    
-!         SET TEMPERATURE INTERVAL INDEX
+!           SET TEMPERATURE INTERVAL INDEX
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
@@ -563,23 +571,26 @@ IF(fxrcnv)THEN
       END DO
     END DO
     
-!         CONSERVATIVE VARIABLES
-    DO kc = kstal,kstol
-      DO jc = jstal,jstol
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(boundt_kernel_eqA_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
+
+            call ops_par_loop(boundt_kernel_eqB_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ),  &
+                            ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ))
         
-        urhs(istol,jc,kc) = drhs(istol,jc,kc)*struxr(1,jc,kc)
-        vrhs(istol,jc,kc) = drhs(istol,jc,kc)*strvxr(1,jc,kc)
-        wrhs(istol,jc,kc) = drhs(istol,jc,kc)*strwxr(1,jc,kc)
-        erhs(istol,jc,kc) = half*(struxr(1,jc,kc)*struxr(1,jc,kc)  &
-            + strvxr(1,jc,kc)*strvxr(1,jc,kc) + strwxr(1,jc,kc)*strwxr(1,jc,kc))
-        erhs(istol,jc,kc) = drhs(istol,jc,kc)*erhs(istol,jc,kc)
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-!           TEMPERATURE INTERVAL INDEXING
+            DO ispec = 1,nspec
+!               TEMPERATURE INTERVAL INDEXING
       iindex = 1 + (ispec-1)/nspimx
       ipower = ispec - (iindex-1)*nspimx - 1
       icoef2 = ntbase**ipower
@@ -602,28 +613,28 @@ IF(fxrcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
-  END IF
+        END IF
   
 !       =======================================================================
   
-END IF
-!     X-DIRECTION RIGHT-HAND END
+    END IF
+!   X-DIRECTION RIGHT-HAND END
 
-!     =========================================================================
-!     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-!     =========================================================================
+!   =========================================================================
+!   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+!   =========================================================================
 
-!     Y-DIRECTION LEFT-HAND END
-!     -------------------------
+!   Y-DIRECTION LEFT-HAND END
+!   -------------------------
 
-!     GLOBAL BC SUPPORT
-!     TURBULENT INFLOW VELOCITY FIELD
-IF(fyltrb)CALL bcutyl
+!   GLOBAL BC SUPPORT
+!   TURBULENT INFLOW VELOCITY FIELD
+    IF(fyltrb) call bcutyl
 
-!     LOCAL BC SUPPORT
-IF(fylcnv)THEN
+!   LOCAL BC SUPPORT
+    IF(fylcnv) THEN
   
 !       =======================================================================
   
@@ -646,18 +657,19 @@ IF(fylcnv)THEN
   
 !       =======================================================================
   
-  IF(nsbcyl == nsbci2)THEN
+        IF(nsbcyl == nsbci2) THEN
     
-!         INFLOW BC No 2
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
+!           INFLOW BC No 2
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutyl
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutyl
     
-!         SET TEMPERATURE AND TIME DERIVATIVE
-    CALL bcttyl
+!           SET TEMPERATURE AND TIME DERIVATIVE
+            call bcttyl
     
-!         SET TEMPERATURE INTERVAL INDEX
+!           SET TEMPERATURE INTERVAL INDEX
+
     DO kc = kstal,kstol
       DO ic = istal,istol
         
@@ -688,25 +700,29 @@ IF(fylcnv)THEN
       END DO
     END DO
     
-!         CONSERVATIVE VARIABLES
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        urhs(ic,jstal,kc) = drhs(ic,jstal,kc)*struyl(ic,1,kc)
-        vrhs(ic,jstal,kc) = drhs(ic,jstal,kc)*strvyl(ic,1,kc)
-        wrhs(ic,jstal,kc) = drhs(ic,jstal,kc)*strwyl(ic,1,kc)
-        erhs(ic,jstal,kc) = half*(struyl(ic,1,kc)*struyl(ic,1,kc)  &
-            + strvyl(ic,1,kc)*strvyl(ic,1,kc) + strwyl(ic,1,kc)*strwyl(ic,1,kc))
-        erhs(ic,jstal,kc) = drhs(ic,jstal,kc)*erhs(ic,jstal,kc)
-        
-      END DO
-    END DO
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+            call ops_par_loop(boundt_kernel_eqA_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+            call ops_par_loop(boundt_kernel_eqB_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ),  &
+                            ops_arg_dat(d_struyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+!           SET MASS FRACTIONS AND TIME DERIVATIVES
+            call bcytyl
     
-!         SET MASS FRACTIONS AND TIME DERIVATIVES
-    CALL bcytyl
-    
-!         CONSERVATIVE VARIABLES
-    DO ispec = 1,nspec
+!           CONSERVATIVE VARIABLES
+            DO ispec = 1,nspec
       
 !           TEMPERATURE INTERVAL INDEXING
       iindex = 1 + (ispec-1)/nspimx
@@ -733,91 +749,88 @@ IF(fylcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
-  END IF
+        END IF
   
 !       =======================================================================
   
-  IF(nsbcyl == nsbci3)THEN
+        IF(nsbcyl == nsbci3) THEN
     
-!         INFLOW BC No 3
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
+!           INFLOW BC No 3
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
     
-!         SET DENSITY AND TIME DERIVATIVE
-    CALL bcdtyl
+!           SET DENSITY AND TIME DERIVATIVE
+            call bcdtyl
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutyl
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutyl
     
-!         CONSERVATIVE VARIABLES
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        drhs(ic,jstal,kc) = strdyl(ic,1,kc)
-        
-        urhs(ic,jstal,kc) = strdyl(ic,1,kc)*struyl(ic,1,kc)
-        vrhs(ic,jstal,kc) = strdyl(ic,1,kc)*strvyl(ic,1,kc)
-        wrhs(ic,jstal,kc) = strdyl(ic,1,kc)*strwyl(ic,1,kc)
-        
-      END DO
-    END DO
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+            call ops_par_loop(boundt_kernel_eqC_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+!           SET MASS FRACTIONS AND TIME DERIVATIVES
+            call bcytyl
     
-!         SET MASS FRACTIONS AND TIME DERIVATIVES
-    CALL bcytyl
+!           CONSERVATIVE VARIABLES
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+                call ops_par_loop(boundt_kernel_eqD_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
+!       =======================================================================
+  
+        IF(nsbcyl == nsbcw1) THEN
     
-!         CONSERVATIVE VARIABLES
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-          yrhs(ispec,ic,jstal,kc) = strdyl(ic,1,kc)*stryyl(ispec,ic,1,kc)
-          
-        END DO
-      END DO
-      
-    END DO
+!           WALL BC No 1
+!           NO-SLIP WALL - ADIABATIC
     
-  END IF
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutyl
+    
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+            call ops_par_loop(boundt_kernel_eqA_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+        END IF
   
 !       =======================================================================
   
-  IF(nsbcyl == nsbcw1)THEN
+        IF(nsbcyl == nsbcw2)THEN
     
-!         WALL BC No 1
-!         NO-SLIP WALL - ADIABATIC
+!           WALL BC No 2
+!           NO-SLIP WALL - ISOTHERMAL
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutyl
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutyl
     
-!         CONSERVATIVE VARIABLES
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        urhs(ic,jstal,kc) = drhs(ic,jstal,kc)*struyl(ic,1,kc)
-        vrhs(ic,jstal,kc) = drhs(ic,jstal,kc)*strvyl(ic,1,kc)
-        wrhs(ic,jstal,kc) = drhs(ic,jstal,kc)*strwyl(ic,1,kc)
-        
-      END DO
-    END DO
+!           SET TEMPERATURE AND TIME DERIVATIVE
+            call bcttyl
     
-  END IF
-  
-!       =======================================================================
-  
-  IF(nsbcyl == nsbcw2)THEN
-    
-!         WALL BC No 2
-!         NO-SLIP WALL - ISOTHERMAL
-    
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutyl
-    
-!         SET TEMPERATURE AND TIME DERIVATIVE
-    CALL bcttyl
-    
-!         SET TEMPERATURE INTERVAL INDEX
+!           SET TEMPERATURE INTERVAL INDEX
     DO kc = kstal,kstol
       DO ic = istal,istol
         
@@ -848,23 +861,26 @@ IF(fylcnv)THEN
       END DO
     END DO
     
-!         CONSERVATIVE VARIABLES
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        urhs(ic,jstal,kc) = drhs(ic,jstal,kc)*struyl(ic,1,kc)
-        vrhs(ic,jstal,kc) = drhs(ic,jstal,kc)*strvyl(ic,1,kc)
-        wrhs(ic,jstal,kc) = drhs(ic,jstal,kc)*strwyl(ic,1,kc)
-        erhs(ic,jstal,kc) = half*(struyl(ic,1,kc)*struyl(ic,1,kc)  &
-            + strvyl(ic,1,kc)*strvyl(ic,1,kc) + strwyl(ic,1,kc)*strwyl(ic,1,kc))
-        erhs(ic,jstal,kc) = drhs(ic,jstal,kc)*erhs(ic,jstal,kc)
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-!           TEMPERATURE INTERVAL INDEXING
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+            call ops_par_loop(boundt_kernel_eqA_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+            call ops_par_loop(boundt_kernel_eqB_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ),  &
+                            ops_arg_dat(d_struyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+!               TEMPERATURE INTERVAL INDEXING
       iindex = 1 + (ispec-1)/nspimx
       ipower = ispec - (iindex-1)*nspimx - 1
       icoef2 = ntbase**ipower
@@ -887,28 +903,28 @@ IF(fylcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
-  END IF
+        END IF
   
 !       =======================================================================
   
-END IF
-!     Y-DIRECTION LEFT-HAND END
+    END IF
+!   Y-DIRECTION LEFT-HAND END
 
-!     =========================================================================
-!     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-!     =========================================================================
+!   =========================================================================
+!   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+!   =========================================================================
 
-!     Y-DIRECTION RIGHT-HAND END
-!     --------------------------
+!   Y-DIRECTION RIGHT-HAND END
+!   --------------------------
 
-!     GLOBAL BC SUPPORT
-!     TURBULENT INFLOW VELOCITY FIELD
-IF(fyrtrb)CALL bcutyr
+!   GLOBAL BC SUPPORT
+!   TURBULENT INFLOW VELOCITY FIELD
+    IF(fyrtrb) call bcutyr
 
-!     LOCAL BC SUPPORT
-IF(fyrcnv)THEN
+!   LOCAL BC SUPPORT
+    IF(fyrcnv) THEN
   
 !       =======================================================================
   
@@ -931,18 +947,18 @@ IF(fyrcnv)THEN
   
 !       =======================================================================
   
-  IF(nsbcyr == nsbci2)THEN
+        IF(nsbcyr == nsbci2) THEN
     
-!         INFLOW BC No 2
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
+!           INFLOW BC No 2
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutyr
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutyr
     
-!         SET TEMPERATURE AND TIME DERIVATIVE
-    CALL bcttyr
+!           SET TEMPERATURE AND TIME DERIVATIVE
+            call bcttyr
     
-!         SET TEMPERATURE INTERVAL INDEX
+!           SET TEMPERATURE INTERVAL INDEX
     DO kc = kstal,kstol
       DO ic = istal,istol
         
@@ -973,27 +989,30 @@ IF(fyrcnv)THEN
       END DO
     END DO
     
-!         CONSERVATIVE VARIABLES
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        urhs(ic,jstol,kc) = drhs(ic,jstol,kc)*struyr(ic,1,kc)
-        vrhs(ic,jstol,kc) = drhs(ic,jstol,kc)*strvyr(ic,1,kc)
-        wrhs(ic,jstol,kc) = drhs(ic,jstol,kc)*strwyr(ic,1,kc)
-        erhs(ic,jstol,kc) = half*(struyr(ic,1,kc)*struyr(ic,1,kc)  &
-            + strvyr(ic,1,kc)*strvyr(ic,1,kc) + strwyr(ic,1,kc)*strwyr(ic,1,kc))
-        erhs(ic,jstol,kc) = drhs(ic,jstol,kc)*erhs(ic,jstol,kc)
-        
-      END DO
-    END DO
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+            call ops_par_loop(boundt_kernel_eqA_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+            call ops_par_loop(boundt_kernel_eqB_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ),  &
+                            ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
     
-!         SET MASS FRACTIONS AND TIME DERIVATIVES
-    CALL bcytyr
+!           SET MASS FRACTIONS AND TIME DERIVATIVES
+            call bcytyr
     
-!         CONSERVATIVE VARIABLES
-    DO ispec = 1,nspec
-      
-!           TEMPERATURE INTERVAL INDEXING
+!           CONSERVATIVE VARIABLES
+            DO ispec = 1,nspec
+!               TEMPERATURE INTERVAL INDEXING
       iindex = 1 + (ispec-1)/nspimx
       ipower = ispec - (iindex-1)*nspimx - 1
       icoef2 = ntbase**ipower
@@ -1018,91 +1037,88 @@ IF(fyrcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
-  END IF
+        END IF
   
 !       =======================================================================
   
-  IF(nsbcyr == nsbci3)THEN
+        IF(nsbcyr == nsbci3) THEN
     
-!         INFLOW BC No 3
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
+!           INFLOW BC No 3
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
     
-!         SET DENSITY AND TIME DERIVATIVE
-    CALL bcdtyr
+!           SET DENSITY AND TIME DERIVATIVE
+            call bcdtyr
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutyr
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutyr
     
-!         CONSERVATIVE VARIABLES
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        drhs(ic,jstol,kc) = strdyr(ic,1,kc)
-        
-        urhs(ic,jstol,kc) = strdyr(ic,1,kc)*struyr(ic,1,kc)
-        vrhs(ic,jstol,kc) = strdyr(ic,1,kc)*strvyr(ic,1,kc)
-        wrhs(ic,jstol,kc) = strdyr(ic,1,kc)*strwyr(ic,1,kc)
-        
-      END DO
-    END DO
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+            call ops_par_loop(boundt_kernel_eqC_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+!           SET MASS FRACTIONS AND TIME DERIVATIVES
+            call bcytyr
     
-!         SET MASS FRACTIONS AND TIME DERIVATIVES
-    CALL bcytyr
+!           CONSERVATIVE VARIABLES
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+                 call ops_par_loop(boundt_kernel_eqD_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
+!       =======================================================================
+  
+        IF(nsbcyr == nsbcw1) THEN
     
-!         CONSERVATIVE VARIABLES
-    DO ispec = 1,nspec
-      
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-          yrhs(ispec,ic,jstol,kc) = strdyr(ic,1,kc)*stryyr(ispec,ic,1,kc)
-          
-        END DO
-      END DO
-      
-    END DO
+!           WALL BC No 1
+!           NO-SLIP WALL - ADIABATIC
     
-  END IF
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutyr
+    
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+            call ops_par_loop(boundt_kernel_eqA_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+        END IF
   
 !       =======================================================================
   
-  IF(nsbcyr == nsbcw1)THEN
+        IF(nsbcyr == nsbcw2) THEN
     
-!         WALL BC No 1
-!         NO-SLIP WALL - ADIABATIC
+!           WALL BC No 1
+!           NO-SLIP WALL - ISOTHERMAL
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutyr
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutyr
     
-!         CONSERVATIVE VARIABLES
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        urhs(ic,jstol,kc) = drhs(ic,jstol,kc)*struyr(ic,1,kc)
-        vrhs(ic,jstol,kc) = drhs(ic,jstol,kc)*strvyr(ic,1,kc)
-        wrhs(ic,jstol,kc) = drhs(ic,jstol,kc)*strwyr(ic,1,kc)
-        
-      END DO
-    END DO
+!           SET TEMPERATURE AND TIME DERIVATIVE
+            call bcttyr
     
-  END IF
-  
-!       =======================================================================
-  
-  IF(nsbcyr == nsbcw2)THEN
-    
-!         WALL BC No 1
-!         NO-SLIP WALL - ISOTHERMAL
-    
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutyr
-    
-!         SET TEMPERATURE AND TIME DERIVATIVE
-    CALL bcttyr
-    
-!         SET TEMPERATURE INTERVAL INDEX
+!           SET TEMPERATURE INTERVAL INDEX
     DO kc = kstal,kstol
       DO ic = istal,istol
         
@@ -1133,23 +1149,26 @@ IF(fyrcnv)THEN
       END DO
     END DO
     
-!         CONSERVATIVE VARIABLES
-    DO kc = kstal,kstol
-      DO ic = istal,istol
-        
-        urhs(ic,jstol,kc) = drhs(ic,jstol,kc)*struyr(ic,1,kc)
-        vrhs(ic,jstol,kc) = drhs(ic,jstol,kc)*strvyr(ic,1,kc)
-        wrhs(ic,jstol,kc) = drhs(ic,jstol,kc)*strwyr(ic,1,kc)
-        erhs(ic,jstol,kc) = half*(struyr(ic,1,kc)*struyr(ic,1,kc)  &
-            + strvyr(ic,1,kc)*strvyr(ic,1,kc) + strwyr(ic,1,kc)*strwyr(ic,1,kc))
-        erhs(ic,jstol,kc) = drhs(ic,jstol,kc)*erhs(ic,jstol,kc)
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-!           TEMPERATURE INTERVAL INDEXING
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+            call ops_par_loop(boundt_kernel_eqA_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+            call ops_par_loop(boundt_kernel_eqB_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ),  &
+                            ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+!               TEMPERATURE INTERVAL INDEXING
       iindex = 1 + (ispec-1)/nspimx
       ipower = ispec - (iindex-1)*nspimx - 1
       icoef2 = ntbase**ipower
@@ -1172,28 +1191,28 @@ IF(fyrcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
-  END IF
+        END IF
   
 !       =======================================================================
   
-END IF
-!     Y-DIRECTION RIGHT-HAND END
+    END IF
+!   Y-DIRECTION RIGHT-HAND END
 
-!     =========================================================================
-!     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-!     =========================================================================
+!   =========================================================================
+!   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+!   =========================================================================
 
-!     Z-DIRECTION LEFT-HAND END
-!     -------------------------
+!   Z-DIRECTION LEFT-HAND END
+!   -------------------------
 
-!     GLOBAL BC SUPPORT
-!     TURBULENT INFLOW VELOCITY FIELD
-IF(fzltrb)CALL bcutzl
+!   GLOBAL BC SUPPORT
+!   TURBULENT INFLOW VELOCITY FIELD
+    IF(fzltrb) call bcutzl
 
-!     LOCAL BC SUPPORT
-IF(fzlcnv)THEN
+!   LOCAL BC SUPPORT
+    IF(fzlcnv) THEN
   
 !       =======================================================================
   
@@ -1216,18 +1235,18 @@ IF(fzlcnv)THEN
   
 !       =======================================================================
   
-  IF(nsbczl == nsbci2)THEN
+        IF(nsbczl == nsbci2) THEN
     
-!         INFLOW BC No 2
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
+!           INFLOW BC No 2
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutzl
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutzl
     
-!         SET TEMPERATURE AND TIME DERIVATIVE
-    CALL bcttzl
+!           SET TEMPERATURE AND TIME DERIVATIVE
+            call bcttzl
     
-!         SET TEMPERATURE INTERVAL INDEX
+!           SET TEMPERATURE INTERVAL INDEX
     DO jc = jstal,jstol
       DO ic = istal,istol
         
@@ -1258,27 +1277,30 @@ IF(fzlcnv)THEN
       END DO
     END DO
     
-!         CONSERVATIVE VARIABLES
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        urhs(ic,jc,kstal) = drhs(ic,jc,kstal)*struzl(ic,jc,1)
-        vrhs(ic,jc,kstal) = drhs(ic,jc,kstal)*strvzl(ic,jc,1)
-        wrhs(ic,jc,kstal) = drhs(ic,jc,kstal)*strwzl(ic,jc,1)
-        erhs(ic,jc,kstal) = half*(struzl(ic,jc,1)*struzl(ic,jc,1)  &
-            + strvzl(ic,jc,1)*strvzl(ic,jc,1) + strwzl(ic,jc,1)*strwzl(ic,jc,1))
-        erhs(ic,jc,kstal) = drhs(ic,jc,kstal)*erhs(ic,jc,kstal)
-        
-      END DO
-    END DO
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+            call ops_par_loop(boundt_kernel_eqA_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+            call ops_par_loop(boundt_kernel_eqB_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ),  &
+                            ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+            
+!           SET MASS FRACTIONS AND TIME DERIVATIVES
+            call bcytzl
     
-!         SET MASS FRACTIONS AND TIME DERIVATIVES
-    CALL bcytzl
-    
-!         CONSERVATIVE VARIABLES
-    DO ispec = 1,nspec
-      
-!           TEMPERATURE INTERVAL INDEXING
+!           CONSERVATIVE VARIABLES
+            DO ispec = 1,nspec
+!               TEMPERATURE INTERVAL INDEXING
       iindex = 1 + (ispec-1)/nspimx
       ipower = ispec - (iindex-1)*nspimx - 1
       icoef2 = ntbase**ipower
@@ -1303,91 +1325,88 @@ IF(fzlcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
-  END IF
+        END IF
   
 !       =======================================================================
   
-  IF(nsbczl == nsbci3)THEN
+        IF(nsbczl == nsbci3) THEN
     
-!         INFLOW BC No 3
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
+!           INFLOW BC No 3
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
     
-!         SET DENSITY AND TIME DERIVATIVE
-    CALL bcdtzl
+!           SET DENSITY AND TIME DERIVATIVE
+            call bcdtzl
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutzl
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutzl
     
-!         CONSERVATIVE VARIABLES
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        drhs(ic,jc,kstal) = strdzl(ic,jc,1)
-        
-        urhs(ic,jc,kstal) = strdzl(ic,jc,1)*struzl(ic,jc,1)
-        vrhs(ic,jc,kstal) = strdzl(ic,jc,1)*strvzl(ic,jc,1)
-        wrhs(ic,jc,kstal) = strdzl(ic,jc,1)*strwzl(ic,jc,1)
-        
-      END DO
-    END DO
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+            call ops_par_loop(boundt_kernel_eqC_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+!           SET MASS FRACTIONS AND TIME DERIVATIVES
+            call bcytzl
     
-!         SET MASS FRACTIONS AND TIME DERIVATIVES
-    CALL bcytzl
+!           CONSERVATIVE VARIABLES
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+                call ops_par_loop(boundt_kernel_eqD_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
+!       =======================================================================
+  
+        IF(nsbczl == nsbcw1) THEN
     
-!         CONSERVATIVE VARIABLES
-    DO ispec = 1,nspec
-      
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          yrhs(ispec,ic,jc,kstal) = strdzl(ic,jc,1)*stryzl(ispec,ic,jc,1)
-          
-        END DO
-      END DO
-      
-    END DO
+!           WALL BC No 1
+!           NO-SLIP WALL - ADIABATIC
     
-  END IF
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutzl
+    
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+            call ops_par_loop(boundt_kernel_eqA_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+    
+        END IF
   
 !       =======================================================================
   
-  IF(nsbczl == nsbcw1)THEN
+        IF(nsbczl == nsbcw2) THEN
     
-!         WALL BC No 1
-!         NO-SLIP WALL - ADIABATIC
+!           WALL BC No 1
+!           NO-SLIP WALL - ISOTHERMAL
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutzl
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutzl
     
-!         CONSERVATIVE VARIABLES
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        urhs(ic,jc,kstal) = drhs(ic,jc,kstal)*struzl(ic,jc,1)
-        vrhs(ic,jc,kstal) = drhs(ic,jc,kstal)*strvzl(ic,jc,1)
-        wrhs(ic,jc,kstal) = drhs(ic,jc,kstal)*strwzl(ic,jc,1)
-        
-      END DO
-    END DO
+!           SET TEMPERATURE AND TIME DERIVATIVE
+            call bcttzl
     
-  END IF
-  
-!       =======================================================================
-  
-  IF(nsbczl == nsbcw2)THEN
-    
-!         WALL BC No 1
-!         NO-SLIP WALL - ISOTHERMAL
-    
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutzl
-    
-!         SET TEMPERATURE AND TIME DERIVATIVE
-    CALL bcttzl
-    
-!         SET TEMPERATURE INTERVAL INDEX
+!           SET TEMPERATURE INTERVAL INDEX
     DO jc = jstal,jstol
       DO ic = istal,istol
         
@@ -1418,23 +1437,26 @@ IF(fzlcnv)THEN
       END DO
     END DO
     
-!         CONSERVATIVE VARIABLES
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        urhs(ic,jc,kstal) = drhs(ic,jc,kstal)*struzl(ic,jc,1)
-        vrhs(ic,jc,kstal) = drhs(ic,jc,kstal)*strvzl(ic,jc,1)
-        wrhs(ic,jc,kstal) = drhs(ic,jc,kstal)*strwzl(ic,jc,1)
-        erhs(ic,jc,kstal) = half*(struzl(ic,jc,1)*struzl(ic,jc,1)  &
-            + strvzl(ic,jc,1)*strvzl(ic,jc,1) + strwzl(ic,jc,1)*strwzl(ic,jc,1))
-        erhs(ic,jc,kstal) = drhs(ic,jc,kstal)*erhs(ic,jc,kstal)
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-!           TEMPERATURE INTERVAL INDEXING
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+            call ops_par_loop(boundt_kernel_eqA_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+            call ops_par_loop(boundt_kernel_eqB_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ),  &
+                            ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+!               TEMPERATURE INTERVAL INDEXING
       iindex = 1 + (ispec-1)/nspimx
       ipower = ispec - (iindex-1)*nspimx - 1
       icoef2 = ntbase**ipower
@@ -1457,28 +1479,28 @@ IF(fzlcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
-  END IF
+        END IF
   
 !       =======================================================================
   
-END IF
-!     Z-DIRECTION LEFT-HAND END
+    END IF
+!   Z-DIRECTION LEFT-HAND END
 
-!     =========================================================================
-!     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-!     =========================================================================
+!   =========================================================================
+!   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+!   =========================================================================
 
-!     Z-DIRECTION RIGHT-HAND END
-!     --------------------------
+!   Z-DIRECTION RIGHT-HAND END
+!   --------------------------
 
-!     GLOBAL BC SUPPORT
-!     TURBULENT INFLOW VELOCITY FIELD
-IF(fzrtrb)CALL bcutzr
+!   GLOBAL BC SUPPORT
+!   TURBULENT INFLOW VELOCITY FIELD
+    IF(fzrtrb) call bcutzr
 
-!     LOCAL BC SUPPORT
-IF(fzrcnv)THEN
+!   LOCAL BC SUPPORT
+    IF(fzrcnv) THEN
   
 !       =======================================================================
   
@@ -1501,18 +1523,18 @@ IF(fzrcnv)THEN
   
 !       =======================================================================
   
-  IF(nsbczr == nsbci2)THEN
+        IF(nsbczr == nsbci2)THEN
     
-!         INFLOW BC No 2
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
+!           INFLOW BC No 2
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED TEMPERATURE
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutzr
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutzr
     
-!         SET TEMPERATURE AND TIME DERIVATIVE
-    CALL bcttzr
+!           SET TEMPERATURE AND TIME DERIVATIVE
+            call bcttzr
     
-!         SET TEMPERATURE INTERVAL INDEX
+!           SET TEMPERATURE INTERVAL INDEX
     DO jc = jstal,jstol
       DO ic = istal,istol
         
@@ -1543,27 +1565,30 @@ IF(fzrcnv)THEN
       END DO
     END DO
     
-!         CONSERVATIVE VARIABLES
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        urhs(ic,jc,kstol) = drhs(ic,jc,kstol)*struzr(ic,jc,1)
-        vrhs(ic,jc,kstol) = drhs(ic,jc,kstol)*strvzr(ic,jc,1)
-        wrhs(ic,jc,kstol) = drhs(ic,jc,kstol)*strwzr(ic,jc,1)
-        erhs(ic,jc,kstol) = half*(struzr(ic,jc,1)*struzr(ic,jc,1)  &
-            + strvzr(ic,jc,1)*strvzr(ic,jc,1) + strwzr(ic,jc,1)*strwzr(ic,jc,1))
-        erhs(ic,jc,kstol) = drhs(ic,jc,kstol)*erhs(ic,jc,kstol)
-        
-      END DO
-    END DO
+!               CONSERVATIVE VARIABLES
+                rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+                call ops_par_loop(boundt_kernel_eqA_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+                call ops_par_loop(boundt_kernel_eqB_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ),  &
+                            ops_arg_dat(d_struzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+!           SET MASS FRACTIONS AND TIME DERIVATIVES
+            call bcytzr
     
-!         SET MASS FRACTIONS AND TIME DERIVATIVES
-    CALL bcytzr
-    
-!         CONSERVATIVE VARIABLES
-    DO ispec = 1,nspec
-      
-!           TEMPERATURE INTERVAL INDEXING
+!           CONSERVATIVE VARIABLES
+            DO ispec = 1,nspec
+!               TEMPERATURE INTERVAL INDEXING
       iindex = 1 + (ispec-1)/nspimx
       ipower = ispec - (iindex-1)*nspimx - 1
       icoef2 = ntbase**ipower
@@ -1588,91 +1613,88 @@ IF(fzrcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
-  END IF
+        END IF
   
 !       =======================================================================
   
-  IF(nsbczr == nsbci3)THEN
+        IF(nsbczr == nsbci3) THEN
     
-!         INFLOW BC No 3
-!         SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
+!           INFLOW BC No 3
+!           SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
     
-!         SET DENSITY AND TIME DERIVATIVE
-    CALL bcdtzr
+!           SET DENSITY AND TIME DERIVATIVE
+            call bcdtzr
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutzr
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutzr
     
-!         CONSERVATIVE VARIABLES
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        drhs(ic,jc,kstol) = strdzr(ic,jc,1)
-        
-        urhs(ic,jc,kstol) = strdzr(ic,jc,1)*struzr(ic,jc,1)
-        vrhs(ic,jc,kstol) = strdzr(ic,jc,1)*strvzr(ic,jc,1)
-        wrhs(ic,jc,kstol) = strdzr(ic,jc,1)*strwzr(ic,jc,1)
-        
-      END DO
-    END DO
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+            call ops_par_loop(boundt_kernel_eqC_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+!           SET MASS FRACTIONS AND TIME DERIVATIVES
+            call bcytzr
     
-!         SET MASS FRACTIONS AND TIME DERIVATIVES
-    CALL bcytzr
+!           CONSERVATIVE VARIABLES
+            DO ispec = 1,nspec
+                rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+                call ops_par_loop(boundt_kernel_eqD_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_stryzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+            END DO
+
+        END IF
+
+!       =======================================================================
+  
+        IF(nsbczr == nsbcw1) THEN
     
-!         CONSERVATIVE VARIABLES
-    DO ispec = 1,nspec
-      
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          yrhs(ispec,ic,jc,kstol) = strdzr(ic,jc,1)*stryzr(ispec,ic,jc,1)
-          
-        END DO
-      END DO
-      
-    END DO
+!           WALL BC No 1
+!           NO-SLIP WALL - ADIABATIC
     
-  END IF
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutzr
+    
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+            call ops_par_loop(boundt_kernel_eqA_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+    
+        END IF
   
 !       =======================================================================
   
-  IF(nsbczr == nsbcw1)THEN
+        IF(nsbczr == nsbcw2) THEN
     
-!         WALL BC No 1
-!         NO-SLIP WALL - ADIABATIC
+!           WALL BC No 1
+!           NO-SLIP WALL - ISOTHERMAL
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutzr
+!           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
+            call bcutzr
     
-!         CONSERVATIVE VARIABLES
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        urhs(ic,jc,kstol) = drhs(ic,jc,kstol)*struzr(ic,jc,1)
-        vrhs(ic,jc,kstol) = drhs(ic,jc,kstol)*strvzr(ic,jc,1)
-        wrhs(ic,jc,kstol) = drhs(ic,jc,kstol)*strwzr(ic,jc,1)
-        
-      END DO
-    END DO
+!           SET TEMPERATURE AND TIME DERIVATIVE
+            call bcttzr
     
-  END IF
-  
-!       =======================================================================
-  
-  IF(nsbczr == nsbcw2)THEN
-    
-!         WALL BC No 1
-!         NO-SLIP WALL - ISOTHERMAL
-    
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutzr
-    
-!         SET TEMPERATURE AND TIME DERIVATIVE
-    CALL bcttzr
-    
-!         SET TEMPERATURE INTERVAL INDEX
+!           SET TEMPERATURE INTERVAL INDEX
     DO jc = jstal,jstol
       DO ic = istal,istol
         
@@ -1703,23 +1725,26 @@ IF(fzrcnv)THEN
       END DO
     END DO
     
-!         CONSERVATIVE VARIABLES
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        urhs(ic,jc,kstol) = drhs(ic,jc,kstol)*struzr(ic,jc,1)
-        vrhs(ic,jc,kstol) = drhs(ic,jc,kstol)*strvzr(ic,jc,1)
-        wrhs(ic,jc,kstol) = drhs(ic,jc,kstol)*strwzr(ic,jc,1)
-        erhs(ic,jc,kstol) = half*(struzr(ic,jc,1)*struzr(ic,jc,1)  &
-            + strvzr(ic,jc,1)*strvzr(ic,jc,1) + strwzr(ic,jc,1)*strwzr(ic,jc,1))
-        erhs(ic,jc,kstol) = drhs(ic,jc,kstol)*erhs(ic,jc,kstol)
-        
-      END DO
-    END DO
-    
-    DO ispec = 1,nspec
-      
-!           TEMPERATURE INTERVAL INDEXING
+!           CONSERVATIVE VARIABLES
+            rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+            call ops_par_loop(boundt_kernel_eqA_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_struzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+            call ops_par_loop(boundt_kernel_eqB_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ),  &
+                            ops_arg_dat(d_struzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strvzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ))
+
+            DO ispec = 1,nspec
+!               TEMPERATURE INTERVAL INDEXING
       iindex = 1 + (ispec-1)/nspimx
       ipower = ispec - (iindex-1)*nspimx - 1
       icoef2 = ntbase**ipower
@@ -1742,15 +1767,13 @@ IF(fzrcnv)THEN
         END DO
       END DO
       
-    END DO
+            END DO
     
-  END IF
+        END IF
   
-END IF
-!     Z-DIRECTION RIGHT-HAND END
+    END IF
+!   Z-DIRECTION RIGHT-HAND END
 
-!     =========================================================================
+!   =========================================================================
 
-
-RETURN
 END SUBROUTINE boundt

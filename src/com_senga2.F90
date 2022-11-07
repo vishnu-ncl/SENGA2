@@ -217,14 +217,14 @@ INTEGER :: ncfrmx
 PARAMETER(ncfrmx = 6)
 
 REAL(KIND=dp) :: akprad(ncfrmx,nspcmx)
-REAL(KIND=dp) :: foursb,trefrn,trfrth
+REAL(KIND=dp) :: trefrn
 
 INTEGER :: nsprid(nspcmx),nkprad(nspcmx),nkprm1(nspcmx)
 INTEGER :: nsprad,nfradn
 
 LOGICAL :: flradn
 
-COMMON/radiat/akprad,foursb,trefrn,trfrth, nsprid,nkprad,nkprm1,nsprad,  &
+COMMON/radiat/akprad,trefrn,nsprid,nkprad,nkprm1,nsprad,  &
     nfradn, flradn
 
 !     RADIAT-------------------------------------------------------------------
