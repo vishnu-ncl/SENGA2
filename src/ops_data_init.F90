@@ -387,6 +387,12 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, sorpzl, d_sorpzl, "real(dp)", "SORPZL")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, sorpzr, d_sorpzr, "real(dp)", "SORPZR")
 
+!------------------------------------Only X-direction---------------------------------
+    d_size = (/nxsize, 1, 1/)
+    d_m = (/0,0,0/)
+    d_p = (/0,0,0/)
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, crin, d_crin, "real(dp)", "CRIN")
+
 !------------------------------------OPS Reduction Handles-----------------------------
     call ops_decl_reduction_handle(8, h_erdtot, "real(dp)", "erdtot")
     call ops_decl_reduction_handle(8, h_erutot, "real(dp)", "erutot")

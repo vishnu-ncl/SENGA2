@@ -9,7 +9,7 @@ OTHER_FILES = data_type.F90 constants.F90 com_espect.F90 com_senga2.F90 \
     dtinit.F90 parfer.F90 tempin.F90 flinit.F90 output.F90 \
     dfmstr.F90 \
     exhalo.F90 inhalo.F90 exhals.F90 inhals.F90 \
-    ardums.F90 bctixl.F90 ardump.F90 \
+    ardums.F90 ardump.F90 \
     buftxl.F90 chkarr.F90 chkary.F90 cxhalo.F90 cxhals.F90 \
     cyhalo.F90 cyhals.F90 czhalo.F90 czhals.F90 erfunc.F90 espect.F90 \
     espksq.F90 espovk.F90 finish.F90 \
@@ -17,9 +17,7 @@ OTHER_FILES = data_type.F90 constants.F90 com_espect.F90 com_senga2.F90 \
     hdf5io.F90 contin.F90 \
     bcinit.F90 \
     turbin.F90 turbft.F90 fftsym.F90 fftf3d.F90 \
-    espini.F90 integf.F90 \
-    flamin.F90 \
-    fftixl.F90
+    espini.F90 integf.F90 fftixl.F90
 
 OPS_FILES = senga2.F90 com_ops_senga2.F90 ops_data_init.F90 dfinit.F90 dfbydx.F90 d2fdx2.F90 \
     dfbydy.F90 dfbydz.F90 d2fdy2.F90 d2fdz2.F90 zeroxl.F90 zeroxr.F90 zeroyl.F90 zeroyr.F90 \
@@ -28,7 +26,7 @@ OPS_FILES = senga2.F90 com_ops_senga2.F90 ops_data_init.F90 dfinit.F90 dfbydx.F9
     bcdtzl.F90 bcdtzr.F90 bcttxl.F90 bcttxr.F90 bcttyl.F90 bcttyr.F90 bcttzl.F90 \
     bcttzr.F90 bcutxl.F90 bcutxr.F90 bcutyl.F90 bcutyr.F90 bcutzl.F90 bcutzr.F90 \
     bcytxl.F90 bcytxr.F90 bcytyl.F90 bcytyr.F90 bcytzl.F90 bcytzr.F90 bounds.F90 \
-    bountt.F90 boundt.F90 radcal.F90 radcin.F90
+    bountt.F90 boundt.F90 radcal.F90 radcin.F90 bctixl.F90 flamin.F90
 
 OPS_GENERATED = senga2_ops.F90 com_ops_senga2_ops.F90 ops_data_init_ops.F90 dfinit_ops.F90 dfbydx_ops.F90 d2fdx2_ops.F90 \
     dfbydy_ops.F90 dfbydz_ops.F90 d2fdy2_ops.F90 d2fdz2_ops.F90 zeroxl_ops.F90 zeroxr_ops.F90 zeroyl_ops.F90 zeroyr_ops.F90 \
@@ -37,7 +35,7 @@ OPS_GENERATED = senga2_ops.F90 com_ops_senga2_ops.F90 ops_data_init_ops.F90 dfin
     bcdtzl_ops.F90 bcdtzr_ops.F90 bcttxl_ops.F90 bcttxr_ops.F90 bcttyl_ops.F90 bcttyr_ops.F90 bcttzl_ops.F90 \
     bcttzr_ops.F90 bcutxl_ops.F90 bcutxr_ops.F90 bcutyl_ops.F90 bcutyr_ops.F90 bcutzl_ops.F90 bcutzr_ops.F90 \
     bcytxl_ops.F90 bcytxr_ops.F90 bcytyl_ops.F90 bcytyr_ops.F90 bcytzl_ops.F90 bcytzr_ops.F90 bounds_ops.F90 \
-    bountt_ops.F90 boundt_ops.F90 radcal_ops.F90 radcin_ops.F90
+    bountt_ops.F90 boundt_ops.F90 radcal_ops.F90 radcin_ops.F90 bctixl_ops.F90 flamin_ops.F90
 
 APP_FLAGS = -g -fcheck=all -cpp -O3 -Wall -mcmodel=medium -fp-model strict -fp-model source -prec-div -prec-sqrt
 #APP_FLAGS = -Kieee

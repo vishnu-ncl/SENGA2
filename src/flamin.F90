@@ -1,45 +1,47 @@
 SUBROUTINE flamin
  
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-26  Time: 15:25:46
+    use OPS_Fortran_Reference
 
-!     *************************************************************************
+    use OPS_CONSTANTS
+    use, intrinsic :: ISO_C_BINDING
 
-!     FLAMIN
-!     ======
+    use data_types
+    use com_senga
+    use com_ops_senga
 
-!     AUTHOR
-!     ------
-!     R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
+!   *************************************************************************
 
-!     CHANGE RECORD
-!     -------------
-!     28-DEC-2003:  CREATED
-!     08-JAN-2005:  RSC INITIAL 1D LAMINAR FLAME PROFILE
+!   FLAMIN
+!   ======
 
-!     DESCRIPTION
-!     -----------
-!     DNS CODE SENGA2
-!     SETS INITIAL THERMOCHEMICAL FIELD
-!     1D LAMINAR FLAME PROFILE (LEFT OR RIGHT FACING)
-!     SPECIAL FOR 21 STEP HYDROGEN MECHAMISM
+!   AUTHOR
+!   ------
+!   R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
 
-!     *************************************************************************
+!   CHANGE RECORD
+!   -------------
+!   28-DEC-2003:  CREATED
+!   08-JAN-2005:  RSC INITIAL 1D LAMINAR FLAME PROFILE
 
+!   DESCRIPTION
+!   -----------
+!   DNS CODE SENGA2
+!   SETS INITIAL THERMOCHEMICAL FIELD
+!   1D LAMINAR FLAME PROFILE (LEFT OR RIGHT FACING)
+!   SPECIAL FOR 21 STEP HYDROGEN MECHAMISM
 
-!     GLOBAL DATA
-!     ===========
-!     -------------------------------------------------------------------------
-use data_types
-use com_senga
-!     -------------------------------------------------------------------------
+!   *************************************************************************
 
+!   GLOBAL DATA
+!   ===========
+!   -------------------------------------------------------------------------
+!   -------------------------------------------------------------------------
 
-!     PARAMETERS
-!     ==========
-!     ESTIMATED FLAME LOCATION AND THICKNESS
-real(kind=dp) :: clocat,cthick
-PARAMETER(clocat = 0.0025_dp, cthick = 0.0005_dp)
+!   PARAMETERS
+!   ==========
+!   ESTIMATED FLAME LOCATION AND THICKNESS
+    real(kind=dp) :: clocat,cthick
+    PARAMETER(clocat = 0.0025_dp, cthick = 0.0005_dp)
 
 !C     PINCH OF HYDROGEN ATOM
 !      real(kind=dp) HPINCH,HLOCAT,HTHICK
@@ -48,76 +50,72 @@ PARAMETER(clocat = 0.0025_dp, cthick = 0.0005_dp)
 !      real(kind=dp) H2PNCH,H2LOCT,H2THCK
 !      PARAMETER(H2PNCH = 1.0D-6, H2LOCT = 2.5D-3, H2THCK = 2.5D-4)
 
-
-!     FUNCTION
-!     ========
-real(kind=dp) :: erfunc
-EXTERNAL erfunc
-
-
-!     LOCAL DATA
-!     ==========
-real(kind=dp) :: crin(1:nxsize)
-real(kind=dp) :: yrinr(nspcmx),yrinp(nspcmx)
-real(kind=dp) :: trinr,trinp
-real(kind=dp) :: deltag,xcoord,argmnt
-real(kind=dp) :: flxmas
-INTEGER :: icproc
-INTEGER :: igofst
-INTEGER :: ix
-INTEGER :: ic,jc,kc
-INTEGER :: ispec
+!   FUNCTION
+!   ========
+    real(kind=dp) :: erfunc
+    EXTERNAL erfunc
 
 
-!     BEGIN
-!     =====
+!   LOCAL DATA
+!   ==========
+    real(kind=dp) :: yrinr(nspcmx),yrinp(nspcmx)
+    real(kind=dp) :: trinr,trinp
+    real(kind=dp) :: deltag,xcoord,argmnt
+    real(kind=dp) :: flxmas
+    integer :: icproc
+    integer :: igofst
+    integer :: ix
+    integer :: ic,jc,kc
+    integer :: ispec
+    integer :: rangexyz(6)
 
-!     =========================================================================
+!   BEGIN
+!   =====
 
-!     SPECIFY INITIAL THERMOCHEMICAL FIELD HERE
-!     =========================================
+!   =========================================================================
 
+!   SPECIFY INITIAL THERMOCHEMICAL FIELD HERE
+!   =========================================
 
-!     SET PRODUCT TEMPERATURE
-!     -----------------------
-!     REACTANT TEMPERATURE SET IN CONTROL FILE
-trinr = trin
-!      TRINP = 2330.96554
-trinp = 2200.0_dp
+!   SET PRODUCT TEMPERATURE
+!   -----------------------
+!   REACTANT TEMPERATURE SET IN CONTROL FILE
+    trinr = trin
+!   TRINP = 2330.96554
+    trinp = 2200.0_dp
 
+!   SET SPECIES MASS FRACTIONS
+!   --------------------------
+!   OVERRIDE MASS FRACTION VALUES SET IN CONTROL FILE
 
-!     SET SPECIES MASS FRACTIONS
-!     --------------------------
-!     OVERRIDE MASS FRACTION VALUES SET IN CONTROL FILE
+!   REACTANTS
+    yrinr(1) = 0.0199886_dp     !2.8312571D-2
+    yrinr(2) = 0.2286239_dp     !2.26500566D-1
+    DO ispec = 3,nspm1
+        yrinr(ispec) = zero
+    END DO
 
-!     REACTANTS
-yrinr(1) = 0.0199886_dp     !2.8312571D-2
-yrinr(2) = 0.2286239_dp     !2.26500566D-1
-DO ispec = 3,nspm1
-  yrinr(ispec) = zero
-END DO
+    yrinr(nspec) = zero
+    DO ispec = 1,nspm1
+        yrinr(nspec) = yrinr(nspec) + yrinr(ispec)
+    END DO
+    yrinr(nspec) = one - yrinr(nspec)
 
-yrinr(nspec) = zero
-DO ispec = 1,nspm1
-  yrinr(nspec) = yrinr(nspec) + yrinr(ispec)
-END DO
-yrinr(nspec) = one - yrinr(nspec)
+!   PRODUCTS
+    yrinp(1) = zero
+    yrinp(2) = 0.0685323_dp     !ZERO
+    yrinp(3) = 0.1798974_dp     !2.54716981D-1
+    DO ispec = 4,nspm1
+        yrinp(ispec) = zero
+    END DO
+    yrinp(nspec) = zero
+    DO ispec = 1,nspm1
+        yrinp(nspec) = yrinp(nspec) + yrinp(ispec)
+    END DO
+    yrinp(nspec) = one - yrinp(nspec)
 
-!     PRODUCTS
-yrinp(1) = zero
-yrinp(2) = 0.0685323_dp     !ZERO
-yrinp(3) = 0.1798974_dp     !2.54716981D-1
-DO ispec = 4,nspm1
-  yrinp(ispec) = zero
-END DO
-yrinp(nspec) = zero
-DO ispec = 1,nspm1
-  yrinp(nspec) = yrinp(nspec) + yrinp(ispec)
-END DO
-yrinp(nspec) = one - yrinp(nspec)
-
-!     WRITE TO REPORT FILE
-IF(iproc == 0)THEN
+!   WRITE TO REPORT FILE
+    IF(iproc == 0) THEN
   
 !        OPEN(UNIT=NCREPT,FILE=FNREPT,STATUS='OLD',FORM='FORMATTED')
   
@@ -127,49 +125,48 @@ IF(iproc == 0)THEN
 !          GOTO 1000
 !1010    BACKSPACE(NCREPT)
   
-  WRITE(ncrept,*)
-  WRITE(ncrept,*)'FLAMIN: reactant mass fractions:'
-  DO ispec = 1,nspec
-    WRITE(ncrept,'(I5,1PE15.7)')ispec,yrinr(ispec)
-  END DO
-  WRITE(ncrept,*)
+        WRITE(ncrept,*)
+        WRITE(ncrept,*)'FLAMIN: reactant mass fractions:'
+        DO ispec = 1,nspec
+            WRITE(ncrept,'(I5,1PE15.7)')ispec,yrinr(ispec)
+        END DO
+        WRITE(ncrept,*)
   
-  WRITE(ncrept,*)'FLAMIN: product mass fractions:'
-  DO ispec = 1,nspec
-    WRITE(ncrept,'(I5,1PE15.7)')ispec,yrinp(ispec)
-  END DO
-  WRITE(ncrept,*)
+        WRITE(ncrept,*)'FLAMIN: product mass fractions:'
+        DO ispec = 1,nspec
+            WRITE(ncrept,'(I5,1PE15.7)')ispec,yrinp(ispec)
+        END DO
+        WRITE(ncrept,*)
   
-  WRITE(ncrept,*)'FLAMIN: reactant and product temperatures:'
-  WRITE(ncrept,'(2(1PE15.7))')trinr,trinp
-  WRITE(ncrept,*)
+        WRITE(ncrept,*)'FLAMIN: reactant and product temperatures:'
+        WRITE(ncrept,'(2(1PE15.7))')trinr,trinp
+        WRITE(ncrept,*)
   
-!        CLOSE(NCREPT)
-  
-END IF
+!       CLOSE(NCREPT)
+
+    END IF
+
+!   GLOBAL INDEXING
+!   ---------------
+    deltag = xgdlen/(REAL(nxglbl-1,kind=dp))
+
+    igofst = 0
+    DO icproc = 0, ixproc-1
+        igofst = igofst + npmapx(icproc)
+    END DO
 
 
-!     GLOBAL INDEXING
-!     ---------------
-deltag = xgdlen/(REAL(nxglbl-1,kind=dp))
-
-igofst = 0
-DO icproc = 0, ixproc-1
-  igofst = igofst + npmapx(icproc)
-END DO
-
-
-!     SET REACTION PROGRESS VARIABLE PROFILE
-!     --------------------------------------
-!     SIMPLE 1D LEFT-FACING ERROR FUNCTION PROFILE
-DO ic = istal,istol
-  
-  ix = igofst + ic
-  xcoord = REAL(ix-1,kind=dp)*deltag
-  argmnt = (xcoord-clocat)/cthick
-  crin(ic) = half*(one+erfunc(argmnt))
-  
-END DO
+!   SET REACTION PROGRESS VARIABLE PROFILE
+!   --------------------------------------
+!   SIMPLE 1D LEFT-FACING ERROR FUNCTION PROFILE
+    rangexyz = (/istal,istol,1,1,1,1/)
+    call ops_par_loop(math_kernel_set_reaction_var, "SIMPLE 1D LEFT-FACING ERROR FUNCTION PROFILE", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_crin, 1, s3d_000_strid3d_x, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(deltag, 1, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(clocat, 1, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(cthick, 1, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(igofst, 1, "integer", OPS_READ), &
+                    ops_arg_idx())
 
 !C     SIMPLE 1D RIGHT-FACING ERROR FUNCTION PROFILE
 !      DO IC = ISTAL,ISTOL
@@ -182,22 +179,18 @@ END DO
 !      ENDDO
 
 
-!     SET SPECIES MASS FRACTION PROFILES
-!     ----------------------------------
-DO ispec = 1, nspm1
-  
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        yrun(ispec,ic,jc,kc) = yrinr(ispec)  &
-            + crin(ic)*(yrinp(ispec) - yrinr(ispec))
-        
-      END DO
+!   SET SPECIES MASS FRACTION PROFILES
+!   ----------------------------------
+    DO ispec = 1, nspm1
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(math_MD_kernel_eqQ, "SET SPECIES MASS FRACTION PROFILES", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_yrun, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_crin, 1, s3d_000_strid3d_x, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(yrinr(ispec), 1, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(yrinp(ispec), 1, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
     END DO
-  END DO
-  
-END DO
 
 !C     SG 25-STEP MECHANISM
 !C     ADD A PINCH OF HYDROGEN ATOM
@@ -217,108 +210,71 @@ END DO
 !        ENDDO
 !      ENDDO
 
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      yrun(nspec,ic,jc,kc) = zero
-      
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(set_zero_kernel_MD, "set zero multi-dim", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_yrun, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(nspec, 1, "integer", OPS_READ))
+
+    DO ispec = 1, nspm1
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(math_MD_kernel_eqN, "A_multidim = A_multidim + A_multidim", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_yrun, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(nspec, 1, "integer", OPS_READ))
+
     END DO
-  END DO
-END DO
 
-DO ispec = 1, nspm1
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        yrun(nspec,ic,jc,kc) = yrun(nspec,ic,jc,kc) + yrun(ispec,ic,jc,kc)
-        
-      END DO
+
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(math_MD_kernel_eqO, "A_multidim = 1.0 - A_multidim", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_yrun, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_gbl(nspec, 1, "integer", OPS_READ))
+
+!   SET TEMPERATURE PROFILE
+!   -----------------------
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(math_kernel_eqAK, "A = var1 + B_xdimonly*(var2-var1)", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_crin, 1, s3d_000_strid3d_x, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(trinr, 1, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(trinp, 1, "real(dp)", OPS_READ))
+
+!   SET DENSITY PROFILE ASSUMING CONSTANT PRESSURE
+!   -------------------
+!   PRESSURE SET IN CONTROL FILE
+
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_WRITE))
+
+    DO ispec = 1,nspec
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(math_MD_kernel_eqP, "A = A + var*B_multidim", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_yrun, 9, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
     END DO
-  END DO
-END DO
 
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      yrun(nspec,ic,jc,kc) = one - yrun(nspec,ic,jc,kc)
-      
-    END DO
-  END DO
-END DO
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(math_kernel_eqAJ, "A = var/(B*C)", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_drun, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(prin, 1, "real(dp)", OPS_READ))
 
+!   SET VELOCITY PROFILE ASSUMING CONSTANT MASS FLUX
+!   --------------------
+!   INITIAL (INLET) VEOCITY SET IN CONTROL FILE
+    flxmas = drin*urin
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(math_kernel_eqAI, "A = var/B", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_urun, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_drun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(flxmas, 1, "real(dp)", OPS_READ))
 
-!     SET TEMPERATURE PROFILE
-!     -----------------------
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      trun(ic,jc,kc) = trinr +  crin(ic)*(trinp - trinr)
-      
-    END DO
-  END DO
-END DO
-
-
-!     SET DENSITY PROFILE ASSUMING CONSTANT PRESSURE
-!     -------------------
-!     PRESSURE SET IN CONTROL FILE
-
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      store1(ic,jc,kc) = zero
-      
-    END DO
-  END DO
-END DO
-
-DO ispec = 1,nspec
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        store1(ic,jc,kc) = store1(ic,jc,kc)  &
-            + rgspec(ispec)*yrun(ispec,ic,jc,kc)
-        
-      END DO
-    END DO
-  END DO
-END DO
-
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      drun(ic,jc,kc) = prin/(store1(ic,jc,kc)*trun(ic,jc,kc))
-      
-    END DO
-  END DO
-END DO
-
-
-!     SET VELOCITY PROFILE ASSUMING CONSTANT MASS FLUX
-!     --------------------
-!     INITIAL (INLET) VEOCITY SET IN CONTROL FILE
-flxmas = drin*urin
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      urun(ic,jc,kc) = flxmas/drun(ic,jc,kc)
-      
-    END DO
-  END DO
-END DO
-
-!     =========================================================================
-
-
-RETURN
+!   =========================================================================
 
 9000  FORMAT(a)
 

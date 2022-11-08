@@ -5,7 +5,7 @@ SUBROUTINE math_MD_kernel_eqA(out_arr,in_arr1,ispec)
 
     real(kind=dp), dimension(1) :: out_arr
     real(kind=dp), dimension(1), intent(in) :: in_arr1
-    integer :: ispec
+    integer, intent(in) :: ispec
 
     out_arr(OPS_ACC1(0,0,0)) = in_arr1(OPS_ACC_MD2(ispec,0,0,0))
 
@@ -18,7 +18,7 @@ SUBROUTINE math_MD_kernel_eqB(out_arr,in_arr1,ispec)
 
     real(kind=dp), dimension(1) :: out_arr
     real(kind=dp), dimension(1), intent(in) :: in_arr1
-    integer :: ispec
+    integer, intent(in) :: ispec
 
     out_arr(OPS_ACC_MD1(ispec,0,0,0)) = in_arr1(OPS_ACC_MD2(ispec,0,0,0))
 
@@ -31,7 +31,7 @@ SUBROUTINE math_MD_kernel_eqC(out_arr,in_arr1,in_arr2,ispec)
 
     real(kind=dp), dimension(1) :: out_arr
     real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2
-    integer :: ispec
+    integer, intent(in) :: ispec
 
     out_arr(OPS_ACC1(0,0,0)) = in_arr1(OPS_ACC2(0,0,0))*in_arr2(OPS_ACC_MD3(ispec,0,0,0))
 
@@ -44,7 +44,7 @@ SUBROUTINE math_MD_kernel_eqD(out_arr,in_arr1,in_arr2,ispec)
 
     real(kind=dp), dimension(1) :: out_arr
     real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2
-    integer :: ispec
+    integer, intent(in) :: ispec
 
     out_arr(OPS_ACC1(0,0,0)) = in_arr1(OPS_ACC_MD2(ispec,0,0,0))*in_arr2(OPS_ACC3(0,0,0))
 
@@ -57,7 +57,7 @@ SUBROUTINE math_MD_kernel_eqE(out_arr,in_arr1,ispec)
 
     real(kind=dp), dimension(1) :: out_arr
     real(kind=dp), dimension(1), intent(in) :: in_arr1
-    integer :: ispec
+    integer, intent(in) :: ispec
 
     out_arr(OPS_ACC_MD1(ispec,0,0,0)) = out_arr(OPS_ACC_MD1(ispec,0,0,0)) / in_arr1(OPS_ACC2(0,0,0))
 
@@ -70,7 +70,7 @@ SUBROUTINE math_MD_kernel_eqF(out_arr,in_arr1,in_arr2,in_arr3,ispec)
 
     real(kind=dp), dimension(1) :: out_arr
     real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
-    integer :: ispec
+    integer, intent(in) :: ispec
 
     out_arr(OPS_ACC1(0,0,0)) = in_arr1(OPS_ACC2(0,0,0))*in_arr2(OPS_ACC_MD3(ispec,0,0,0))*in_arr3(OPS_ACC4(0,0,0))
 
@@ -84,7 +84,7 @@ SUBROUTINE math_MD_kernel_eqG(out_arr,in_arr1,in_arr2,in_arr3,val1,ispec)
     real(kind=dp), dimension(1) :: out_arr
     real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
     real(kind=dp), intent(in) :: val1
-    integer :: ispec
+    integer, intent(in) :: ispec
 
     out_arr(OPS_ACC1(0,0,0)) = in_arr1(OPS_ACC2(0,0,0))*in_arr2(OPS_ACC_MD3(ispec,0,0,0))*(1.0_dp - val1/in_arr3(OPS_ACC4(0,0,0)))
 
@@ -97,7 +97,7 @@ SUBROUTINE math_MD_kernel_eqH(out_arr,in_arr1,in_arr2,in_arr3,ispec)
 
     real(kind=dp), dimension(1) :: out_arr
     real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
-    integer :: ispec
+    integer, intent(in) :: ispec
 
     out_arr(OPS_ACC_MD1(ispec,0,0,0)) = out_arr(OPS_ACC_MD1(ispec,0,0,0)) - 0.5_dp*(in_arr1(OPS_ACC2(0,0,0))+in_arr2(OPS_ACC3(0,0,0))+in_arr3(OPS_ACC4(0,0,0)))
 
@@ -110,7 +110,7 @@ SUBROUTINE math_MD_kernel_eqI(out_arr,in_arr1,in_arr2,ispec)
 
     real(kind=dp), dimension(1) :: out_arr
     real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2
-    integer :: ispec
+    integer, intent(in) :: ispec
 
     out_arr(OPS_ACC_MD1(ispec,0,0,0)) = out_arr(OPS_ACC_MD1(ispec,0,0,0)) - 0.5_dp*in_arr1(OPS_ACC_MD2(ispec,0,0,0))*in_arr2(OPS_ACC3(0,0,0))
 
@@ -123,7 +123,7 @@ SUBROUTINE math_MD_kernel_eqJ(out_arr,in_arr1,in_arr2,in_arr3,in_arr4,in_arr5,in
 
     real(kind=dp), dimension(1) :: out_arr
     real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6
-    integer :: ispec
+    integer, intent(in) :: ispec
 
     out_arr(OPS_ACC_MD1(ispec,0,0,0)) = out_arr(OPS_ACC_MD1(ispec,0,0,0)) - 0.5_dp*( in_arr1(OPS_ACC2(0,0,0))*in_arr2(OPS_ACC3(0,0,0)) &
                                                                                    + in_arr3(OPS_ACC4(0,0,0))*in_arr4(OPS_ACC5(0,0,0)) &
@@ -138,7 +138,7 @@ SUBROUTINE math_MD_kernel_eqK(out_arr,in_arr1,in_arr2,in_arr3,in_arr4,in_arr5,in
 
     real(kind=dp), dimension(1) :: out_arr
     real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6, in_arr7, in_arr8
-    integer :: ispec
+    integer, intent(in) :: ispec
 
     out_arr(OPS_ACC_MD1(ispec,0,0,0)) = in_arr1(OPS_ACC_MD2(ispec,0,0,0)) - out_arr(OPS_ACC_MD1(ispec,0,0,0))*in_arr2(OPS_ACC3(0,0,0)) &
                                                                        - in_arr3(OPS_ACC4(0,0,0))*in_arr4(OPS_ACC5(0,0,0)) &
@@ -153,7 +153,7 @@ SUBROUTINE math_MD_kernel_eqL(out_arr1,out_arr2,in_arr1,in_arr2,in_arr3,in_arr4,
 
     real(kind=dp), dimension(1) :: out_arr1,out_arr2
     real(kind=dp), dimension(1), intent(in) :: in_arr1,in_arr2,in_arr3,in_arr4,in_arr5,in_arr6
-    integer :: ispec
+    integer, intent(in) :: ispec
     real(kind=dp) :: fornow
 
     fornow = in_arr1(OPS_ACC3(0,0,0))*in_arr2(OPS_ACC4(0,0,0))  &
@@ -174,7 +174,7 @@ SUBROUTINE math_MD_kernel_eqM(out_arr1,out_arr2,in_arr1,in_arr2,in_arr3,in_arr4,
 
     real(kind=dp), dimension(1) :: out_arr1,out_arr2
     real(kind=dp), dimension(1), intent(in) :: in_arr1,in_arr2,in_arr3,in_arr4
-    integer :: ispec
+    integer, intent(in) :: ispec
     real(kind=dp) :: fornow
 
     fornow = ( in_arr1(OPS_ACC3(0,0,0)) + in_arr2(OPS_ACC4(0,0,0)) + in_arr3(OPS_ACC5(0,0,0)) ) &
@@ -188,12 +188,56 @@ SUBROUTINE math_MD_kernel_eqM(out_arr1,out_arr2,in_arr1,in_arr2,in_arr3,in_arr4,
 
 END SUBROUTINE math_MD_kernel_eqM
 
+!A_multidim_lastIdx = A_multidim_lastIdx + A_multidim_loopIdx
+SUBROUTINE math_MD_kernel_eqN(out_arr1,ispec,nspec)
+    use data_types
+    implicit none
 
+    real(kind=dp), dimension(1) :: out_arr1
+    integer, intent(in) :: ispec,nspec
 
+    out_arr1(OPS_ACC_MD1(nspec,0,0,0)) = out_arr1(OPS_ACC_MD1(nspec,0,0,0)) + out_arr1(OPS_ACC_MD1(ispec,0,0,0))
 
+END SUBROUTINE math_MD_kernel_eqN
 
+!A_multidim = 1.0 - A_multidim
+SUBROUTINE math_MD_kernel_eqO(out_arr1,nspec)
+    use data_types
+    implicit none
 
+    real(kind=dp), dimension(1) :: out_arr1
+    integer, intent(in) :: nspec
 
+    out_arr1(OPS_ACC_MD1(nspec,0,0,0)) = 1.0_dp - out_arr1(OPS_ACC_MD1(nspec,0,0,0))
+
+END SUBROUTINE math_MD_kernel_eqO
+
+!A = A + var*B_multidim
+SUBROUTINE math_MD_kernel_eqP(out_arr1,in_arr1,val1,ispec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: out_arr1
+    real(kind=dp), dimension(1), intent(in) :: in_arr1
+    real(kind=dp), intent(in) :: val1
+    integer, intent(in) :: ispec
+    
+    out_arr1(OPS_ACC1(0,0,0)) = out_arr1(OPS_ACC1(0,0,0)) + val1*in_arr1(OPS_ACC_MD2(ispec,0,0,0))
+
+END SUBROUTINE math_MD_kernel_eqP
+
+SUBROUTINE math_MD_kernel_eqQ(out_arr1,in_arr1,val1,val2,ispec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: out_arr1
+    real(kind=dp), dimension(1), intent(in) :: in_arr1
+    real(kind=dp), intent(in) :: val1,val2
+    integer, intent(in) :: ispec
+
+    out_arr1(OPS_ACC_MD1(ispec,0,0,0)) = val1 + in_arr1(OPS_ACC2(0,0,0))*(val2-val1)
+    
+END SUBROUTINE math_MD_kernel_eqQ
 
 
 

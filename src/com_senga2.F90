@@ -2,9 +2,6 @@ MODULE com_senga
 
 !     PHYDIM-------------------------------------------------------------------
  
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-02  Time: 14:22:03
-
 !     PHYSICAL DIMENSIONS OF ARRAYS
 !     -----------------------------
 !     NOTE: ALL ARRAY SIZES MUST BE CONSISTENT
@@ -116,7 +113,6 @@ PARAMETER(prantl=0.70_dp)
 !     UNIVERSAL GAS CONSTANT
 REAL(KIND=dp) :: rguniv
 PARAMETER(rguniv=8314.20_dp)
-
 
 !     CHEMICAL DATA
 !     =============
@@ -447,9 +443,10 @@ COMMON/rknorm/erdrhs,erurhs,ervrhs,erwrhs,ererhs,eryrhs
 !     PRINCIPAL VARIABLES (ALL STANDARD SIZE ARRAYS)
 REAL(KIND=dp) :: drun(nxsize,nysize,nzsize),urun(nxsize,nysize,nzsize),  &
     vrun(nxsize,nysize,nzsize),wrun(nxsize,nysize,nzsize),  &
-    erun(nxsize,nysize,nzsize), yrun(nspcmx,nxsize,nysize,nzsize)
+    erun(nxsize,nysize,nzsize), yrun(nspcmx,nxsize,nysize,nzsize),  &
+    crin(nxsize,1,1)
 
-COMMON/prvars/drun,urun,vrun,wrun,erun,yrun
+COMMON/prvars/drun,urun,vrun,wrun,erun,yrun,crin
 
 !     PRVARS-------------------------------------------------------------------
 !     TIMRHS-------------------------------------------------------------------
