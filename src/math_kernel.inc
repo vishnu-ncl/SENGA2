@@ -60,7 +60,7 @@ SUBROUTINE math_kernel_eqE(out_arr, in_arr1, in_arr2, var)
 
 END SUBROUTINE math_kernel_eqE
 
-!A = A+var*BC*C
+!A = A+var*B*C
 SUBROUTINE math_kernel_eqF(out_arr, in_arr1, in_arr2, var)
     use data_types
     implicit none
@@ -471,7 +471,61 @@ SUBROUTINE math_kernel_eqAK(out_arr,in_arr1,var1,var2)
 
 END SUBROUTINE math_kernel_eqAK
 
-SUBROUTINE math_kernel_eqtau(out_arr1, out_arr2, in_arr1, in_arr2, in_arr3, var)
+!A = exp(A)
+SUBROUTINE math_kernel_eqAL(out_arr)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: out_arr
+    real(kind=dp) :: fornow
+
+    fornow = out_arr(OPS_ACC1(0,0,0))
+    out_arr(OPS_ACC1(0,0,0)) = exp(fornow)
+
+END SUBROUTINE math_kernel_eqAL
+
+!A = A + var
+SUBROUTINE math_kernel_eqAM(out_arr,var)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: out_arr
+    real(kind=dp), intent(in) :: var
+    
+    out_arr(OPS_ACC1(0,0,0)) = var + out_arr(OPS_ACC1(0,0,0))
+
+END SUBROUTINE math_kernel_eqAM
+
+!A = var
+SUBROUTINE math_kernel_eqAN(out_arr,var)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: out_arr
+    real(kind=dp), intent(in) :: var
+
+    out_arr(OPS_ACC1(0,0,0)) = var
+
+END SUBROUTINE math_kernel_eqAN
+
+!A = A - B + half*(C*C+D*D+E*E)
+SUBROUTINE math_kernel_eqAO(out_arr,in_arr1,in_arr2,in_arr3,in_arr4)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: out_arr
+    real(kind=dp), dimension(1), intent(in) :: in_arr1,in_arr2,in_arr3,in_arr4
+    real(kind=dp) :: fornow
+
+    fornow = in_arr2(OPS_ACC3(0,0,0))*in_arr2(OPS_ACC3(0,0,0))  & 
+           + in_arr3(OPS_ACC4(0,0,0))*in_arr3(OPS_ACC4(0,0,0))  &
+           + in_arr4(OPS_ACC5(0,0,0))*in_arr4(OPS_ACC5(0,0,0))
+    
+    out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) - in_arr1(OPS_ACC2(0,0,0)) + 0.5_dp*fornow
+
+END SUBROUTINE math_kernel_eqAO
+
+SUBROUTINE math_kernel_eqtau(out_arr1,out_arr2,in_arr1,in_arr2,in_arr3,var)
     use data_types
     implicit none
 

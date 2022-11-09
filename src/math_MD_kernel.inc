@@ -226,6 +226,7 @@ SUBROUTINE math_MD_kernel_eqP(out_arr1,in_arr1,val1,ispec)
 
 END SUBROUTINE math_MD_kernel_eqP
 
+!A_multidim = var1 + B*(var2-var1)
 SUBROUTINE math_MD_kernel_eqQ(out_arr1,in_arr1,val1,val2,ispec)
     use data_types
     implicit none
@@ -239,6 +240,59 @@ SUBROUTINE math_MD_kernel_eqQ(out_arr1,in_arr1,val1,val2,ispec)
     
 END SUBROUTINE math_MD_kernel_eqQ
 
+!A = A*max(B_multidim*var    zero)
+SUBROUTINE math_MD_kernel_eqR(out_arr1,in_arr1,val1,ispec)
+    use data_types
+    implicit none
 
+    real(kind=dp), dimension(1) :: out_arr1
+    real(kind=dp), dimension(1), intent(in) :: in_arr1
+    real(kind=dp), intent(in) :: val1
+    integer, intent(in) :: ispec
+    real(kind=dp) :: fornow
 
+    fornow = max(in_arr1(OPS_ACC_MD2(ispec,0,0,0))*val1, 0.0_dp)
+    out_arr1(OPS_ACC1(0,0,0)) = out_arr1(OPS_ACC1(0,0,0)) * fornow
+
+END SUBROUTINE math_MD_kernel_eqR
+    
+!A_multidim = A_multidim + B*var
+SUBROUTINE math_MD_kernel_eqS(out_arr1,in_arr1,val1,ispec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: out_arr1
+    real(kind=dp), dimension(1), intent(in) :: in_arr1
+    real(kind=dp), intent(in) :: val1
+    integer, intent(in) :: ispec
+
+    out_arr1(OPS_ACC_MD1(ispec,0,0,0)) = out_arr1(OPS_ACC_MD1(ispec,0,0,0)) + in_arr1(OPS_ACC2(0,0,0))*val1
+
+END SUBROUTINE math_MD_kernel_eqS
+
+!A_multidim = var
+SUBROUTINE math_MD_kernel_eqT(out_arr1,val1,ispec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: out_arr1
+    real(kind=dp), intent(in) :: val1
+    integer, intent(in) :: ispec
+
+    out_arr1(OPS_ACC_MD1(ispec,0,0,0)) = val1
+
+END SUBROUTINE math_MD_kernel_eqT
+
+!A_multidim = B*A_multidim
+SUBROUTINE math_MD_kernel_eqU(out_arr1,in_arr1,ispec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: out_arr1
+    real(kind=dp), dimension(1), intent(in) :: in_arr1
+    integer, intent(in) :: ispec
+
+    out_arr1(OPS_ACC_MD1(ispec,0,0,0)) = in_arr1(OPS_ACC2(0,0,0))*out_arr1(OPS_ACC_MD1(ispec,0,0,0))
+
+END SUBROUTINE math_MD_kernel_eqU
 
