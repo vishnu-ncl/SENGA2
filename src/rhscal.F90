@@ -733,6 +733,10 @@ SUBROUTINE rhscal
 !   MIXTURE MOLAR MASS
     IF(flmixw) THEN
 
+        !rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+        !call ops_par_loop(math_kernel_eqA, "A=log(B)", senga_grid, 3, rangexyz, &
+        !                ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
+        !                ops_arg_dat(d_wmomix, 1, s3d_000, "real(dp)", OPS_READ))
         DO kc = kstab,kstob
         DO jc = jstab,jstob
         DO ic = istab,istob
@@ -755,6 +759,11 @@ SUBROUTINE rhscal
 !   PRESSURE
     IF(flmixp) THEN
     
+        !rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+        !call ops_par_loop(math_kernel_eqA, "A=log(B)", senga_grid, 3, rangexyz, &
+        !                ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
+        !                ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ))
+
         DO kc = kstab,kstob
         DO jc = jstab,jstob
         DO ic = istab,istob
