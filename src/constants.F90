@@ -158,6 +158,11 @@ use data_types
     
     real(kind=dp) :: foursb,trfrth
 !---------------------------------------------------------------------------------------------------------------------------------
+
+    real(kind=dp), constant :: alamdc_opsconstant,rlamda_opsconstant,tlamda_opsconstant,prantl_opsconstant,alamda_opsconstant
+
+    real(kind=dp) :: alamdc,rlamda,tlamda,prantl,alamda
+!---------------------------------------------------------------------------------------------------------------------------------
 #else
 !---------------------------------------------------------------------------------------------------------------------------------
     real(kind=dp) :: acoffx, bcoffx, ccoffx, dcoffx, ecoffx
@@ -242,6 +247,9 @@ use data_types
 !-------------------------------------------------------------------
 
     real(kind=dp) :: foursb,trfrth
+!-------------------------------------------------------------------
+
+    real(kind=dp) :: alamdc,rlamda,tlamda,prantl,alamda
 
 #endif
 

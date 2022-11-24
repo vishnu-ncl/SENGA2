@@ -404,17 +404,11 @@ SUBROUTINE rhscal
 !   STORE CONDUCTIVITY IN STORE7 FOR NOW
 
 !   THERMAL CONDUCTIVITY IS PARALLEL
-    DO kc = kstab,kstob
-        DO jc = jstab,jstob
-            DO ic = istab,istob
-      
-      fornow = alamda*EXP(rlamda*LOG(trun(ic,jc,kc)))
-      store7(ic,jc,kc) = fornow*transp(ic,jc,kc)
-      transp(ic,jc,kc) = fornow
-      
-    END DO
-    END DO
-    END DO
+    rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+    call ops_par_loop(math_kernel_eqAP, "THERMAL CONDUCTIVITY", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ))
 
 !   MIXTURE AVERAGED TRANSPORT
 !   RSC 17-APR-2013
@@ -733,19 +727,10 @@ SUBROUTINE rhscal
 !   MIXTURE MOLAR MASS
     IF(flmixw) THEN
 
-        !rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-        !call ops_par_loop(math_kernel_eqA, "A=log(B)", senga_grid, 3, rangexyz, &
-        !                ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
-        !                ops_arg_dat(d_wmomix, 1, s3d_000, "real(dp)", OPS_READ))
-        DO kc = kstab,kstob
-        DO jc = jstab,jstob
-        DO ic = istab,istob
-
-        store7(ic,jc,kc) = LOG(wmomix(ic,jc,kc))
-
-        END DO
-        END DO
-        END DO
+        rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+        call ops_par_loop(math_kernel_eqA, "A=log(B)", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_wmomix, 1, s3d_000, "real(dp)", OPS_READ))
 
         call dfbydx(d_store7,d_wd1x)
         call dfbydy(d_store7,d_wd1y)
@@ -759,20 +744,10 @@ SUBROUTINE rhscal
 !   PRESSURE
     IF(flmixp) THEN
     
-        !rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
-        !call ops_par_loop(math_kernel_eqA, "A=log(B)", senga_grid, 3, rangexyz, &
-        !                ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
-        !                ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ))
-
-        DO kc = kstab,kstob
-        DO jc = jstab,jstob
-        DO ic = istab,istob
-
-        store7(ic,jc,kc) = LOG(prun(ic,jc,kc))
-
-        END DO
-        END DO
-        END DO
+        rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+        call ops_par_loop(math_kernel_eqA, "A=log(B)", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ))
 
         call dfbydx(d_store7,d_pd1x)
         call dfbydy(d_store7,d_pd1y)

@@ -480,7 +480,7 @@ SUBROUTINE math_kernel_eqAL(out_arr)
     real(kind=dp) :: fornow
 
     fornow = out_arr(OPS_ACC1(0,0,0))
-    out_arr(OPS_ACC1(0,0,0)) = exp(fornow)
+    out_arr(OPS_ACC1(0,0,0)) = EXP(fornow)
 
 END SUBROUTINE math_kernel_eqAL
 
@@ -524,6 +524,21 @@ SUBROUTINE math_kernel_eqAO(out_arr,in_arr1,in_arr2,in_arr3,in_arr4)
     out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) - in_arr1(OPS_ACC2(0,0,0)) + 0.5_dp*fornow
 
 END SUBROUTINE math_kernel_eqAO
+
+SUBROUTINE math_kernel_eqAP(out_arr1,out_arr2,in_arr1)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: out_arr1, out_arr2
+    real(kind=dp), dimension(1), intent(in) :: in_arr1
+    real(kind=dp) :: fornow
+    
+    fornow = alamda*EXP(rlamda*LOG(in_arr1(OPS_ACC3(0,0,0))))
+
+    out_arr1(OPS_ACC1(0,0,0)) = fornow*out_arr2(OPS_ACC2(0,0,0))
+    out_arr2(OPS_ACC2(0,0,0)) = fornow
+
+END SUBROUTINE math_kernel_eqAP
 
 SUBROUTINE math_kernel_eqtau(out_arr1,out_arr2,in_arr1,in_arr2,in_arr3,var)
     use data_types

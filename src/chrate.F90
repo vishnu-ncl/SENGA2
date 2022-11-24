@@ -546,16 +546,9 @@ SUBROUTINE chrate
     
 !           FINALISE BACKWARD RATE COEFFICIENT
 !           ----------------------------------
-            DO kc = kstal,kstol
-            DO jc = jstal,jstol
-            DO ic = istal,istol
-                store2(ic,jc,kc) = exp(store2(ic,jc,kc))
-            END DO
-            END DO
-            END DO
-            !rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
-            !call ops_par_loop(math_kernel_eqAL, "A = exp(A)", senga_grid, 3, rangexyz,  &
-            !                ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_RW))
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(math_kernel_eqAL, "A = exp(A)", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_RW))
 
 !                                               STORE1 = FORWARD REACTION RATE
 !                                               STORE2 = BACKWARD RATE CONSTANT

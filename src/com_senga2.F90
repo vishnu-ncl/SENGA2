@@ -104,12 +104,6 @@ PARAMETER(nssmax=10, nrsmax=10)
 INTEGER :: nllmax
 PARAMETER(nllmax=10)
 
-!     TRANSPORT COEFFICIENTS
-REAL(KIND=dp) :: alamdc,rlamda,tlamda
-PARAMETER(alamdc=0.0000258_dp, rlamda=0.70_dp, tlamda=298.0_dp)
-REAL(KIND=dp) :: prantl
-PARAMETER(prantl=0.70_dp)
-
 !     UNIVERSAL GAS CONSTANT
 REAL(KIND=dp) :: rguniv
 PARAMETER(rguniv=8314.20_dp)
@@ -132,7 +126,7 @@ REAL(KIND=dp) :: rctroe(12,nllmax)
 REAL(KIND=dp) :: rcsrif(8,nllmax)
 REAL(KIND=dp) :: wmolar(nspcmx),ovwmol(nspcmx),rgspec(nspcmx)
 REAL(KIND=dp) :: clewis(nspcmx),olewis(nspcmx)
-REAL(KIND=dp) :: prefgb,alamda
+REAL(KIND=dp) :: prefgb
 
 INTEGER :: nsspec(nssmax,nstpmx)
 INTEGER :: nrspec(nssmax,nstpmx),npspec(nssmax,nstpmx)
@@ -160,7 +154,7 @@ CHARACTER (LEN=10) :: bdysym(nspcmx)
 
 COMMON/chemic/amolcp,amolgb,amascp,amasct,amasch,amascs, tintlo,tinthi,  &
     diffmu,diffmw,crspec,cpspec,effy3b, rparam,rclind,rctroe,rcsrif,  &
-    wmolar,ovwmol,rgspec,clewis,olewis, prefgb,alamda,  &
+    wmolar,ovwmol,rgspec,clewis,olewis, prefgb,  &
     nsspec,nrspec,npspec,nrcpec,npcpec, ncofcp,ncpoly,ncpom1,ncenth,ncenpy,  &
     nsslen,nrslen,npslen,nrclen,npclen, mblist,mglist,mllist,mtlist,mslist,  &
     ntint, nspec,nspm1,nstep,nbody,ngibb,nlind,ntroe,nsrif,  &
