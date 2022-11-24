@@ -34,7 +34,7 @@ SUBROUTINE d2fdxy_kernel_interior(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_interior
 
-SUBROUTINE d2fdxy_kernel_lhpoint_xdir_4th_onesided(functn, fderiv)
+SUBROUTINE d2fdxy_kernel_lh_xdir_4th_onesided(functn, fderiv)
     use data_types
     implicit none
 
@@ -63,9 +63,9 @@ SUBROUTINE d2fdxy_kernel_lhpoint_xdir_4th_onesided(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf1xy*fdiffa + bcf1xy*fdiffb  &
           + ccf1xy*fdiffc + dcf1xy*fdiffd
 
-END SUBROUTINE d2fdxy_kernel_lhpoint_xdir_4th_onesided
+END SUBROUTINE d2fdxy_kernel_lh_xdir_4th_onesided
 
-SUBROUTINE d2fdxy_kernel_lhpoint_xdir_4th_mixed(functn, fderiv)
+SUBROUTINE d2fdxy_kernel_lh_xdir_4th_mixed(functn, fderiv)
     use data_types
     implicit none
 
@@ -94,9 +94,9 @@ SUBROUTINE d2fdxy_kernel_lhpoint_xdir_4th_mixed(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf2xy*fdiffa + bcf2xy*fdiffb  &
           + ccf2xy*fdiffc + dcf2xy*fdiffd
 
-END SUBROUTINE d2fdxy_kernel_lhpoint_xdir_4th_mixed
+END SUBROUTINE d2fdxy_kernel_lh_xdir_4th_mixed
 
-SUBROUTINE d2fdxy_kernel_lhpoint_xdir_4th_centered(functn, fderiv)
+SUBROUTINE d2fdxy_kernel_lh_xdir_4th_centered(functn, fderiv)
     use data_types
     implicit none
 
@@ -111,9 +111,9 @@ SUBROUTINE d2fdxy_kernel_lhpoint_xdir_4th_centered(functn, fderiv)
           - functn(OPS_ACC1(-2,2,0))  + functn(OPS_ACC1(-2,-2,0))
     fderiv(OPS_ACC2(0,0,0))  = acf3xy*fdiffa + bcf3xy*fdiffb
 
-END SUBROUTINE d2fdxy_kernel_lhpoint_xdir_4th_centered
+END SUBROUTINE d2fdxy_kernel_lh_xdir_4th_centered
 
-SUBROUTINE d2fdxy_kernel_lhpoint_xdir_6th_centered(functn, fderiv)
+SUBROUTINE d2fdxy_kernel_lh_xdir_6th_centered(functn, fderiv)
     use data_types
     implicit none
 
@@ -131,9 +131,9 @@ SUBROUTINE d2fdxy_kernel_lhpoint_xdir_6th_centered(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf4xy*fdiffa + bcf4xy*fdiffb  &
           + ccf4xy*fdiffc
 
-END SUBROUTINE d2fdxy_kernel_lhpoint_xdir_6th_centered
+END SUBROUTINE d2fdxy_kernel_lh_xdir_6th_centered
 
-SUBROUTINE d2fdxy_kernel_lhpoint_xdir_8th_centered(functn, fderiv)
+SUBROUTINE d2fdxy_kernel_lh_xdir_8th_centered(functn, fderiv)
     use data_types
     implicit none
 
@@ -153,9 +153,9 @@ SUBROUTINE d2fdxy_kernel_lhpoint_xdir_8th_centered(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf5xy*fdiffa + bcf5xy*fdiffb  &
           + ccf5xy*fdiffc + dcf5xy*fdiffd
     
-END SUBROUTINE d2fdxy_kernel_lhpoint_xdir_8th_centered
+END SUBROUTINE d2fdxy_kernel_lh_xdir_8th_centered
 
-SUBROUTINE d2fdxy_kernel_rhpoint_xdir_8th_centered(functn, fderiv)
+SUBROUTINE d2fdxy_kernel_rh_xdir_8th_centered(functn, fderiv)
     use data_types
     implicit none
 
@@ -175,9 +175,9 @@ SUBROUTINE d2fdxy_kernel_rhpoint_xdir_8th_centered(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf5xy*fdiffa + bcf5xy*fdiffb  &
           + ccf5xy*fdiffc + dcf5xy*fdiffd
 
-END SUBROUTINE d2fdxy_kernel_rhpoint_xdir_8th_centered
+END SUBROUTINE d2fdxy_kernel_rh_xdir_8th_centered
 
-SUBROUTINE d2fdxy_kernel_rhpoint_xdir_6th_centered(functn, fderiv)
+SUBROUTINE d2fdxy_kernel_rh_xdir_6th_centered(functn, fderiv)
     use data_types
     implicit none
 
@@ -195,9 +195,9 @@ SUBROUTINE d2fdxy_kernel_rhpoint_xdir_6th_centered(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf4xy*fdiffa + bcf4xy*fdiffb  &
           + ccf4xy*fdiffc
 
-END SUBROUTINE d2fdxy_kernel_rhpoint_xdir_6th_centered
+END SUBROUTINE d2fdxy_kernel_rh_xdir_6th_centered
 
-SUBROUTINE d2fdxy_kernel_rhpoint_xdir_4th_centered(functn, fderiv)
+SUBROUTINE d2fdxy_kernel_rh_xdir_4th_centered(functn, fderiv)
     use data_types
     implicit none
 
@@ -212,9 +212,9 @@ SUBROUTINE d2fdxy_kernel_rhpoint_xdir_4th_centered(functn, fderiv)
           - functn(OPS_ACC1(-2,2,0))  + functn(OPS_ACC1(-2,-2,0))
     fderiv(OPS_ACC2(0,0,0))  = acf3xy*fdiffa + bcf3xy*fdiffb
 
-END SUBROUTINE d2fdxy_kernel_rhpoint_xdir_4th_centered
+END SUBROUTINE d2fdxy_kernel_rh_xdir_4th_centered
 
-SUBROUTINE d2fdxy_kernel_rhpoint_xdir_4th_mixed(functn, fderiv)
+SUBROUTINE d2fdxy_kernel_rh_xdir_4th_mixed(functn, fderiv)
     use data_types
     implicit none
 
@@ -243,9 +243,9 @@ SUBROUTINE d2fdxy_kernel_rhpoint_xdir_4th_mixed(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf2xy*fdiffa + bcf2xy*fdiffb  &
           + ccf2xy*fdiffc + dcf2xy*fdiffd
 
-END SUBROUTINE d2fdxy_kernel_rhpoint_xdir_4th_mixed
+END SUBROUTINE d2fdxy_kernel_rh_xdir_4th_mixed
 
-SUBROUTINE d2fdxy_kernel_rhpoint_xdir_4th_onesided(functn, fderiv)
+SUBROUTINE d2fdxy_kernel_rh_xdir_4th_onesided(functn, fderiv)
     use data_types
     implicit none
 
@@ -274,7 +274,7 @@ SUBROUTINE d2fdxy_kernel_rhpoint_xdir_4th_onesided(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf1xy*fdiffa + bcf1xy*fdiffb  &
           + ccf1xy*fdiffc + dcf1xy*fdiffd
 
-END SUBROUTINE d2fdxy_kernel_rhpoint_xdir_4th_onesided
+END SUBROUTINE d2fdxy_kernel_rh_xdir_4th_onesided
 
 
 

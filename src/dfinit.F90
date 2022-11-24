@@ -712,6 +712,51 @@ SUBROUTINE dfinit
 
     ovdlz2_opsconstant = ovdlz2
 
+    acofx1_opsconstant = acofx1
+    bcofx1_opsconstant = bcofx1
+    acofy1_opsconstant = acofy1
+    bcofy1_opsconstant = bcofy1
+    acofz1_opsconstant = acofz1
+    bcofz1_opsconstant = bcofz1
+
+    acofxy_opsconstant = acofxy
+    bcofxy_opsconstant = bcofxy
+    ccofxy_opsconstant = ccofxy
+    dcofxy_opsconstant = dcofxy
+    ecofxy_opsconstant = ecofxy
+
+    acf1xy_opsconstant = acf1xy
+    bcf1xy_opsconstant = bcf1xy
+    ccf1xy_opsconstant = ccf1xy
+    dcf1xy_opsconstant = dcf1xy
+
+    acf2xy_opsconstant = acf2xy
+    bcf2xy_opsconstant = bcf2xy
+    ccf2xy_opsconstant = ccf2xy
+    dcf2xy_opsconstant = dcf2xy
+
+    acf3xy_opsconstant = acf3xy
+    bcf3xy_opsconstant = bcf3xy
+
+    acf4xy_opsconstant = acf4xy
+    bcf4xy_opsconstant = bcf4xy
+    ccf4xy_opsconstant = ccf4xy
+
+    acf5xy_opsconstant = acf5xy
+    bcf5xy_opsconstant = bcf5xy
+    ccf5xy_opsconstant = ccf5xy
+    dcf5xy_opsconstant = dcf5xy
+
+    acc1xy_opsconstant = acc1xy
+    bcc1xy_opsconstant = bcc1xy
+    ccc1xy_opsconstant = ccc1xy
+    dcc1xy_opsconstant = dcc1xy
+
+    acc2xy_opsconstant = acc2xy
+    bcc2xy_opsconstant = bcc2xy
+    ccc2xy_opsconstant = ccc2xy
+    dcc2xy_opsconstant = dcc2xy
+
 #endif
 
     call ops_decl_const("acoffx", 1, "double", acoffx)
@@ -899,5 +944,50 @@ SUBROUTINE dfinit
     call ops_decl_const("dcfs5z", 1, "double", dcfs5z)
 
     call ops_decl_const("ovdlz2", 1, "double", ovdlz2)
+
+    call ops_decl_const("acofx1", 1, "double", acofx1)
+    call ops_decl_const("bcofx1", 1, "double", bcofx1)
+    call ops_decl_const("acofy1", 1, "double", acofy1)
+    call ops_decl_const("bcofy1", 1, "double", bcofy1)
+    call ops_decl_const("acofz1", 1, "double", acofz1)
+    call ops_decl_const("bcofz1", 1, "double", bcofz1)
+
+    call ops_decl_const("acofxy", 1, "double", acofxy)
+    call ops_decl_const("bcofxy", 1, "double", bcofxy)
+    call ops_decl_const("ccofxy", 1, "double", ccofxy)
+    call ops_decl_const("dcofxy", 1, "double", dcofxy)
+    call ops_decl_const("ecofxy", 1, "double", ecofxy)
+
+    call ops_decl_const("acf1xy", 1, "double", acf1xy)
+    call ops_decl_const("bcf1xy", 1, "double", bcf1xy)
+    call ops_decl_const("ccf1xy", 1, "double", ccf1xy)
+    call ops_decl_const("dcf1xy", 1, "double", dcf1xy)
+
+    call ops_decl_const("acf2xy", 1, "double", acf2xy)
+    call ops_decl_const("bcf2xy", 1, "double", bcf2xy)
+    call ops_decl_const("ccf2xy", 1, "double", ccf2xy)
+    call ops_decl_const("dcf2xy", 1, "double", dcf2xy)
+
+    call ops_decl_const("acf3xy", 1, "double", acf3xy)
+    call ops_decl_const("bcf3xy", 1, "double", bcf3xy)
+
+    call ops_decl_const("acf4xy", 1, "double", acf4xy)
+    call ops_decl_const("bcf4xy", 1, "double", bcf4xy)
+    call ops_decl_const("ccf4xy", 1, "double", ccf4xy)
+
+    call ops_decl_const("acf5xy", 1, "double", acf5xy)
+    call ops_decl_const("bcf5xy", 1, "double", bcf5xy)
+    call ops_decl_const("ccf5xy", 1, "double", ccf5xy)
+    call ops_decl_const("dcf5xy", 1, "double", dcf5xy)
+
+    call ops_decl_const("acc1xy", 1, "double", acc1xy)
+    call ops_decl_const("bcc1xy", 1, "double", bcc1xy)
+    call ops_decl_const("ccc1xy", 1, "double", ccc1xy)
+    call ops_decl_const("dcc1xy", 1, "double", dcc1xy)
+
+    call ops_decl_const("acc2xy", 1, "double", acc2xy)
+    call ops_decl_const("bcc2xy", 1, "double", bcc2xy)
+    call ops_decl_const("ccc2xy", 1, "double", ccc2xy)
+    call ops_decl_const("dcc2xy", 1, "double", dcc2xy)
 
 END SUBROUTINE dfinit

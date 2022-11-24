@@ -81,6 +81,20 @@ SUBROUTINE ops_data_init()
     INTEGER a3d_p004_to_m001_z(18) /0,0,4, 0,0,3, 0,0,2, 0,0,1, 0,0,0, 0,0,-1/
     INTEGER a3d_p001_to_m004_z(18) /0,0,1, 0,0,0, 0,0,-1, 0,0,-2, 0,0,-3, 0,0,-4/
 
+!-------------------------------------------------------------------------------------
+    INTEGER a3d_p320_m120_mixed_xy(60) /3,2,0, 3,1,0, 3,-1,0, 3,-2,0, 2,2,0, 2,1,0, 2,-1,0, 2,-2,0, 1,2,0, 1,1,0, 1,-1,0, 1,-2,0, 0,2,0, 0,1,0, 0,-1,0, 0,-2,0, -1,2,0, -1,1,0, -1,-1,0, -1,-2,0/
+    INTEGER a3d_p120_m320_mixed_xy(60) /1,2,0, 1,1,0, 1,-1,0, 1,-2,0, 0,2,0, 0,1,0, 0,-1,0, 0,-2,0, -1,2,0, -1,1,0, -1,-1,0, -1,-2,0, -2,2,0, -2,1,0, -2,-1,0, -2,-2,0, -3,2,0, -3,1,0, -3,-1,0, -3,-2,0/
+
+    INTEGER a3d_p420_m020_mixed_xy(60) /4,2,0, 4,1,0, 4,-1,0, 4,-2,0, 3,2,0, 3,1,0, 3,-1,0, 3,-2,0, 2,2,0, 2,1,0, 2,-1,0, 2,-2,0, 1,2,0, 1,1,0, 1,-1,0, 1,-2,0, 0,2,0, 0,1,0, 0,-1,0, 0,-2,0/
+    INTEGER a3d_p020_m420_mixed_xy(60) /0,2,0, 0,1,0, 0,-1,0, 0,-2,0, -1,2,0, -1,1,0, -1,-1,0, -1,-2,0, -2,2,0, -2,1,0, -2,-1,0, -2,-2,0, -3,2,0, -3,1,0, -3,-1,0, -3,-2,0, -4,2,0, -4,1,0, -4,-1,0, -4,-2,0/
+
+    INTEGER a3d_p220_m220_mixed_xy(24) /2,2,0, 2,-2,0, 1,1,0, 1,-1,0, -1,1,0, -1,-1,0, -2,2,0, -2,-2,0/
+    INTEGER a3d_p330_m330_mixed_xy(36) /3,3,0, 3,-3,0, 2,2,0, 2,-2,0, 1,1,0, 1,-1,0, -1,1,0, -1,-1,0, -2,2,0, -2,-2,0, -3,3,0, -3,-3,0/
+    INTEGER a3d_p440_m440_mixed_xy(48) /4,4,0, 4,-4,0, 3,3,0, 3,-3,0, 2,2,0, 2,-2,0, 1,1,0, 1,-1,0, -1,1,0, -1,-1,0, -2,2,0, -2,-2,0, -3,3,0, -3,-3,0, -4,4,0, -4,-4,0/
+
+    INTEGER a3d_p550_to_m550_xy(33) /5,5,0, 4,4,0, 3,3,0, 2,2,0, 1,1,0, 0,0,0, -1,-1,0, -2,-2,0, -3,-3,0, -4,-4,0, -5,-5,0/
+
+
 !   *----------------------------OPS Declarations----------------------------*
 !   Declare OPS Block
     call ops_decl_block(3, senga_grid, "senga grid")
@@ -137,7 +151,7 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, werr, d_werr, "real(dp)", "WERR")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, eerr, d_eerr, "real(dp)", "EERR")
 
-!---------------------------------------MULTI-DIM DAT---------------------------------
+!---------------------------------------MULTI-DIM DAT-------------------------------------------------------
     d_size = (/nxsize, nysize, nzsize/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
@@ -193,7 +207,7 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, strhzl, d_strhzl, "real(dp)", "STRHZL")
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, strhzr, d_strhzr, "real(dp)", "STRHZR")
 
-!---------------------------------------WITH HALOS------------------------------------
+!---------------------------------------WITH HALOS---------------------------------------------------------
     d_size = (/nxsize, nysize, nzsize/)
     d_m = (/-nhalox,-nhaloy,-nhaloz/)
     d_p = (/nhalox,nhaloy,nhaloz/)
@@ -215,7 +229,7 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, difmix, d_difmix, "real(dp)", "DIFMIX")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, tdrmix, d_tdrmix, "real(dp)", "TDRMIX")
 
-!-----------------------------------------Boundary YZ---------------------------------
+!-----------------------------------------Boundary YZ--------------------------------------------------
     d_size = (/1, nysize, nzsize/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
@@ -273,7 +287,7 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, sorpxr, d_sorpxr, "real(dp)", "SORPXR")
 
 
-!-----------------------------------------Boundary XZ---------------------------------
+!-----------------------------------------Boundary XZ--------------------------------------------------
     d_size = (/nxsize, 1, nzsize/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
@@ -330,7 +344,7 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, sorpyl, d_sorpyl, "real(dp)", "SORPYL")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, sorpyr, d_sorpyr, "real(dp)", "SORPYR")
 
-!-----------------------------------------Boundary XY---------------------------------
+!-----------------------------------------Boundary XY--------------------------------------------------
     d_size = (/nxsize, nysize, 1/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
@@ -387,13 +401,13 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, sorpzl, d_sorpzl, "real(dp)", "SORPZL")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, sorpzr, d_sorpzr, "real(dp)", "SORPZR")
 
-!------------------------------------Only X-direction---------------------------------
+!------------------------------------Only X-direction-------------------------------------------------
     d_size = (/nxsize, 1, 1/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, crin, d_crin, "real(dp)", "CRIN")
 
-!------------------------------------OPS Reduction Handles-----------------------------
+!------------------------------------OPS Reduction Handles--------------------------------------------
     call ops_decl_reduction_handle(8, h_erdtot, "real(dp)", "erdtot")
     call ops_decl_reduction_handle(8, h_erutot, "real(dp)", "erutot")
     call ops_decl_reduction_handle(8, h_ervtot, "real(dp)", "ervtot")
@@ -402,7 +416,7 @@ SUBROUTINE ops_data_init()
     call ops_decl_reduction_handle(8, h_erytot, "real(dp)", "erytot")
     call ops_decl_reduction_handle(8, h_prefer, "real(dp)", "prefer")
 
-!------------------------------------OPS Stencil----------------------------------------
+!------------------------------------OPS Stencil---------------------------------------------------
     call ops_decl_stencil( 3, 1, a3d_000, s3d_000, "0,0,0")
 
     call ops_decl_strided_stencil( 3, 1, a3d_000, stride3d_x, s3d_000_strid3d_x, "stride 3D X dir")
@@ -432,7 +446,7 @@ SUBROUTINE ops_data_init()
 
     call ops_decl_stencil( 3,  6, a3d_p400_to_m100_x, s3d_p400_to_m100_x, "4,0,0 to -1,0,0")
     call ops_decl_stencil( 3,  6, a3d_p100_to_m400_x, s3d_p100_to_m400_x, "1,0,0 to -4,0,0")
-!-----------------------------------------------------------------------------------------------------
+!-------------------------------------------------------------------------------------------------
     call ops_decl_stencil( 3, 5, a3d_000_to_p040_y, s3d_000_to_p040_y, "0,0,0 to 0,4,0")
     call ops_decl_stencil( 3, 5, a3d_000_to_m040_y, s3d_000_to_m040_y, "0,0,0 to  0,-4,0")
 
@@ -452,7 +466,7 @@ SUBROUTINE ops_data_init()
 
     call ops_decl_stencil( 3,  6, a3d_p040_to_m010_y, s3d_p040_to_m010_y, "0,4,0 to  0,-1,0")
     call ops_decl_stencil( 3,  6, a3d_p010_to_m040_y, s3d_p010_to_m040_y, "0,1,0 to  0,-4,0")
-!-------------------------------------------------------------------------------------
+!-------------------------------------------------------------------------------------------------
     call ops_decl_stencil( 3, 5, a3d_000_to_p004_z, s3d_000_to_p004_z, "0,0,0 to 0,0,4")
     call ops_decl_stencil( 3, 5, a3d_000_to_m004_z, s3d_000_to_m004_z, "0,0,0 to  0,0,-4")
 
@@ -472,7 +486,19 @@ SUBROUTINE ops_data_init()
 
     call ops_decl_stencil( 3,  6, a3d_p004_to_m001_z, s3d_p004_to_m001_z, "0,0,4 to  0,0,-1")
     call ops_decl_stencil( 3,  6, a3d_p001_to_m004_z, s3d_p001_to_m004_z, "0,0,1 to  0,0,-4")
+!--------------------------------------------------------------------------------------------------
+    call ops_decl_stencil( 3, 20, a3d_p320_m120_mixed_xy, s3d_p320_m120_mixed_xy, "3,2,0 to -1,-2,0")
+    call ops_decl_stencil( 3, 20, a3d_p120_m320_mixed_xy, s3d_p120_m320_mixed_xy, "1,2,0 to -3,-2,0")
 
+    call ops_decl_stencil( 3, 20, a3d_p420_m020_mixed_xy, s3d_p420_m020_mixed_xy, "4,2,0 to 0,-2,0")
+    call ops_decl_stencil( 3, 20, a3d_p020_m420_mixed_xy, s3d_p020_m420_mixed_xy, "0,2,0 to -4,-2,0")
+
+    call ops_decl_stencil( 3, 8, a3d_p220_m220_mixed_xy, s3d_p220_m220_mixed_xy, "2,2,0 to -2,-2,0")
+    call ops_decl_stencil( 3, 12, a3d_p330_m330_mixed_xy, s3d_p330_m330_mixed_xy, "3,3,0 to -3,-3,0")
+    call ops_decl_stencil( 3, 16, a3d_p440_m440_mixed_xy, s3d_p440_m440_mixed_xy, "4,4,0 to -4,-4,0")
+
+    call ops_decl_stencil( 3, 11, a3d_p550_to_m550_xy, s3d_p550_to_m550_xy, "5,5,0 to -5,-5,0")
+!-------------------------------------------------------------------------------------------------
     call ops_partition(" ")
 
 END SUBROUTINE ops_data_init

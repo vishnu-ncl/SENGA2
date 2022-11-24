@@ -289,19 +289,18 @@ REAL(KIND=dp) :: acoeff,bcoeff,ccoeff,dcoeff,ecoeff,  &
     acofs4,bcofs4,ccofs4,  &
     acofs5,bcofs5,ccofs5,dcofs5,  &
     acoefx,bcoefx,ccoefx,dcoefx,ecoefx,  &
-    acofxy,bcofxy,ccofxy,dcofxy,ecofxy, acofxz,bcofxz,ccofxz,dcofxz,ecofxz,  &
+    acofxz,bcofxz,ccofxz,dcofxz,ecofxz,  &
     acofyz,bcofyz,ccofyz,dcofyz,ecofyz,  &
-    acofx1,bcofx1,acofy1,bcofy1,acofz1,bcofz1, acf1xy,bcf1xy,ccf1xy,dcf1xy,  &
     acf1xz,bcf1xz,ccf1xz,dcf1xz, acf1yz,bcf1yz,ccf1yz,dcf1yz,  &
-    acf2xy,bcf2xy,ccf2xy,dcf2xy, acf2xz,bcf2xz,ccf2xz,dcf2xz,  &
-    acf2yz,bcf2yz,ccf2yz,dcf2yz, acf3xy,bcf3xy,  &
+    acf2xz,bcf2xz,ccf2xz,dcf2xz, &
+    acf2yz,bcf2yz,ccf2yz,dcf2yz, &
     acf3xz,bcf3xz, acf3yz,bcf3yz,  &
-    acf4xy,bcf4xy,ccf4xy, acf4xz,bcf4xz,ccf4xz,  &
-    acf4yz,bcf4yz,ccf4yz, acf5xy,bcf5xy,ccf5xy,dcf5xy,  &
+    acf4xz,bcf4xz,ccf4xz, &
+    acf4yz,bcf4yz,ccf4yz, &
     acf5xz,bcf5xz,ccf5xz,dcf5xz, acf5yz,bcf5yz,ccf5yz,dcf5yz,  &
     acofc1,bcofc1,ccofc1,dcofc1, acofc2,bcofc2,ccofc2,dcofc2,  &
-    acc1xy,bcc1xy,ccc1xy,dcc1xy, acc1xz,bcc1xz,ccc1xz,dcc1xz,  &
-    acc1yz,bcc1yz,ccc1yz,dcc1yz, acc2xy,bcc2xy,ccc2xy,dcc2xy,  &
+    acc1xz,bcc1xz,ccc1xz,dcc1xz, &
+    acc1yz,bcc1yz,ccc1yz,dcc1yz, &
     acc2xz,bcc2xz,ccc2xz,dcc2xz, acc2yz,bcc2yz,ccc2yz,dcc2yz
 
 !     SPATIAL DERIVATIVE END CONDITIONS
@@ -320,19 +319,18 @@ COMMON/dfdiff/acoeff,bcoeff,ccoeff,dcoeff,ecoeff,  &
     acofs4,bcofs4,ccofs4,  &
     acofs5,bcofs5,ccofs5,dcofs5,  &
     acoefx,bcoefx,ccoefx,dcoefx,ecoefx,  &
-    acofxy,bcofxy,ccofxy,dcofxy,ecofxy, acofxz,bcofxz,ccofxz,dcofxz,ecofxz,  &
+    acofxz,bcofxz,ccofxz,dcofxz,ecofxz,  &
     acofyz,bcofyz,ccofyz,dcofyz,ecofyz,  &
-    acofx1,bcofx1,acofy1,bcofy1,acofz1,bcofz1, acf1xy,bcf1xy,ccf1xy,dcf1xy,  &
     acf1xz,bcf1xz,ccf1xz,dcf1xz, acf1yz,bcf1yz,ccf1yz,dcf1yz,  &
-    acf2xy,bcf2xy,ccf2xy,dcf2xy, acf2xz,bcf2xz,ccf2xz,dcf2xz,  &
-    acf2yz,bcf2yz,ccf2yz,dcf2yz, acf3xy,bcf3xy,  &
+    acf2xz,bcf2xz,ccf2xz,dcf2xz, &
+    acf2yz,bcf2yz,ccf2yz,dcf2yz, &
     acf3xz,bcf3xz, acf3yz,bcf3yz,  &
-    acf4xy,bcf4xy,ccf4xy, acf4xz,bcf4xz,ccf4xz,  &
-    acf4yz,bcf4yz,ccf4yz, acf5xy,bcf5xy,ccf5xy,dcf5xy,  &
+    acf4xz,bcf4xz,ccf4xz, &
+    acf4yz,bcf4yz,ccf4yz, &
     acf5xz,bcf5xz,ccf5xz,dcf5xz, acf5yz,bcf5yz,ccf5yz,dcf5yz,  &
     acofc1,bcofc1,ccofc1,dcofc1, acofc2,bcofc2,ccofc2,dcofc2,  &
-    acc1xy,bcc1xy,ccc1xy,dcc1xy, acc1xz,bcc1xz,ccc1xz,dcc1xz,  &
-    acc1yz,bcc1yz,ccc1yz,dcc1yz, acc2xy,bcc2xy,ccc2xy,dcc2xy,  &
+    acc1xz,bcc1xz,ccc1xz,dcc1xz, &
+    acc1yz,bcc1yz,ccc1yz,dcc1yz, &
     acc2xz,bcc2xz,ccc2xz,dcc2xz, acc2yz,bcc2yz,ccc2yz,dcc2yz,  &
     nendxl,nendxr,nendyl,nendyr,nendzl,nendzr
 
