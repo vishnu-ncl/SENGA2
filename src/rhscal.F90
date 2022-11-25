@@ -414,47 +414,23 @@ SUBROUTINE rhscal
 !   RSC 17-APR-2013
 !   THERMAL CONDUCTIVITY
 
-    IF(flmavt)THEN
-    DO kc = kstab,kstob
-    DO jc = jstab,jstob
-      DO ic = istab,istob
-        
-!             CONDUCTIVITY FOR EACH SPECIES
-        transp(ic,jc,kc) = LOG(trun(ic,jc,kc)/tdifgb)
-        DO ispec = 1, nspec
-          fornow = condco(ncocon,ispec)
-          DO icp = ncocm1,1,-1
-            fornow = fornow*transp(ic,jc,kc) + condco(icp,ispec)
-          END DO
-          ctrans(ispec) = EXP(fornow)
-        END DO
-        
-!             COMBINATION RULE FOR CONDUCTIVITY
-        combo1 = zero
-        combo2 = zero
-        combo3 = zero
-        DO ispec = 1, nspec
-          fornow = yrhs(ispec,ic,jc,kc)*ovwmol(ispec)
-          combo1 = combo1 + fornow*ctrans(ispec)
-          combo2 = combo2 + fornow/ctrans(ispec)
-          combo3 = combo3 + fornow
-        END DO
-!             RSC/GVN 08-MAR-2014 BUG FIX
-!              COMBO3 = DRHS(IC,JC,KC)/COMBO3
-!              COMBO1 = COMBO1*COMBO3
-!              COMBO2 = COMBO2*COMBO3
-!              STORE7(IC,JC,KC) = HALF*(COMBO1 + ONE/COMBO2)
-!              WMOMIX(IC,JC,KC) = COMBO3
-        combo3 = one/combo3
-        combo1 = combo1*combo3
-        combo2 = combo2*combo3
-        store7(ic,jc,kc) = half*(combo1 + one/combo2)
-        wmomix(ic,jc,kc) = drhs(ic,jc,kc)*combo3
-        
-      END DO
-    END DO
-    END DO
-  
+    IF(flmavt) THEN
+        rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+        call ops_par_loop(math_MD_kernel_eqV, "THERMAL CONDUCTIVITY", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_wmomix, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(condco, 1,  "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ovwmol, 1,  "real(dp)", OPS_READ), &
+                        ops_arg_gbl(tdifgb, 1,  "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ncocon, 1,  "integer", OPS_READ), &
+                        ops_arg_gbl(ncocm1, 1,  "integer", OPS_READ), &
+                        ops_arg_gbl(nspec, 1,  "integer", OPS_READ), &
+                        ops_arg_gbl(nccfmx, 1,  "integer", OPS_READ))
+
     END IF
 
 !   CONDUCTIVITY GRADIENTS
@@ -1006,39 +982,27 @@ SUBROUTINE rhscal
 !       TRANSP CONTAINS LN(T/TDIFGB)
         IF(flmavt) THEN
     
-!       MASS DIFFUSIVITY FOR EACH SPECIES
-!       RELATIVE TO CURRENT SPECIES
-        DO kc = kstab,kstob
-        DO jc = jstab,jstob
-        DO ic = istab,istob
-          
-          DO jspec = 1, nspec
-            fornow = diffco(ncodif,jspec,ispec)
-            DO icp = ncodm1,1,-1
-              fornow = fornow*transp(ic,jc,kc) + diffco(icp,jspec,ispec)
-            END DO
-            ctrans(jspec) = EXP(fornow)*pdifgb/prun(ic,jc,kc)
-          END DO
-          
-!               COMBINATION RULE FOR MASS DIFFUSIVITY
-          combo1 = zero
-          combo2 = zero
-          DO jspec = 1, nspec
-            fornow = yrhs(jspec,ic,jc,kc) + dfctol
-            combo1 = combo1 + fornow
-            combo2 = combo2 + fornow*ovwmol(jspec)/ctrans(jspec)
-          END DO
-          fornow = yrhs(ispec,ic,jc,kc) + dfctol
-          combo1 = combo1 - fornow
-          combo2 = combo2 - fornow*ovwmol(ispec)/ctrans(ispec)
-          combo2 = combo2*wmomix(ic,jc,kc)
-          difmix(ic,jc,kc) = drhs(ic,jc,kc)*combo1/combo2
-          store7(ic,jc,kc) = difmix(ic,jc,kc)
-          
-        END DO
-        END DO
-            END DO
-    
+!           MASS DIFFUSIVITY FOR EACH SPECIES
+!           RELATIVE TO CURRENT SPECIES
+            rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+            call ops_par_loop(math_MD_kernel_eqW, "MASS DIFFUSIVITY FOR EACH SPECIES", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_difmix, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_wmomix, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(diffco, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ovwmol, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(pdifgb, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(dfctol, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
+                            ops_arg_gbl(ncodif, 1, "integer", OPS_READ), &
+                            ops_arg_gbl(ncodm1, 1, "integer", OPS_READ), &
+                            ops_arg_gbl(nspec, 1, "integer", OPS_READ), &
+                            ops_arg_gbl(ndcfmx, 1, "integer", OPS_READ))
+
         END IF
   
 !       -----------------------------------------------------------------------

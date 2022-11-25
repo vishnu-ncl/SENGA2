@@ -1,64 +1,52 @@
 FUNCTION espovk(waveno)
  
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-14  Time: 11:16:44
+!   *************************************************************************
 
-!     *************************************************************************
+!   ESPOVK
+!   ======
 
-!     ESPOVK
-!     ======
+!   AUTHOR
+!   ------
+!   R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
 
-!     AUTHOR
-!     ------
-!     R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
+!   CHANGE RECORD
+!   -------------
+!   20-APR-1997:  CREATED
+!   24-MAY-2003:  RSC UPDATED FOR SENGA2
 
-!     CHANGE RECORD
-!     -------------
-!     20-APR-1997:  CREATED
-!     24-MAY-2003:  RSC UPDATED FOR SENGA2
+!   DESCRIPTION
+!   -----------
+!   EVALUATES THE TURBULENT ENERGY SPECTRUM DIVIDED BY WAVENUMBER
+!   AT THE GIVEN WAVENUMBER MAGNITUDE
 
-!     DESCRIPTION
-!     -----------
-!     EVALUATES THE TURBULENT ENERGY SPECTRUM DIVIDED BY WAVENUMBER
-!     AT THE GIVEN WAVENUMBER MAGNITUDE
+!   *************************************************************************
+    use data_types
 
-!     *************************************************************************
-use data_types
+!   EXTERNAL FUNCTION
+!   =================
+    real(kind=dp), intent(IN)             :: waveno
+    real(kind=dp) :: espect
+    EXTERNAL espect
 
-!     EXTERNAL FUNCTION
-!     =================
+!   PARAMETER
+!   =========
+    real(kind=dp), parameter :: zero = 0.0_dp
 
-REAL(KIND=dp), INTENT(IN)             :: waveno
-REAL(KIND=dp) :: espect
-EXTERNAL espect
+!   FUNCTION
+!   ========
+    real(kind=dp) :: espovk
 
+!   ARGUMENT
+!   ========
 
-!     PARAMETER
-!     =========
+!   BEGIN
+!   =====
 
-REAL(KIND=dp), PARAMETER :: zero = 0.0_dp
+!   =========================================================================
 
+    espovk = zero
+    IF(waveno > zero) espovk = espect(waveno)/waveno
 
-!     FUNCTION
-!     ========
-REAL(KIND=dp) :: espovk
+!   =========================================================================
 
-
-!     ARGUMENT
-!     ========
-
-
-
-!     BEGIN
-!     =====
-
-!     =========================================================================
-
-espovk = zero
-IF(waveno > zero)espovk = espect(waveno)/waveno
-
-!     =========================================================================
-
-
-RETURN
 END FUNCTION espovk

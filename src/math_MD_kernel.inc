@@ -296,3 +296,93 @@ SUBROUTINE math_MD_kernel_eqU(out_arr1,in_arr1,ispec)
 
 END SUBROUTINE math_MD_kernel_eqU
 
+SUBROUTINE math_MD_kernel_eqV(transp,store7,wmomix,trun,yrhs,drhs,condco,ovwmol,tdifgb,ncocon,ncocm1,nspec,nccfmx)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: transp,store7,wmomix
+    real(kind=dp), dimension(1), intent(in) :: trun,yrhs,drhs
+    
+    integer, intent(in) :: ncocon,ncocm1,nspec,nccfmx
+    
+    real(kind=dp), dimension(nspec), intent(in) :: ovwmol
+    real(kind=dp), dimension(nccfmx,nspec), intent(in) :: condco
+    
+    real(kind=dp), intent(in) :: tdifgb
+
+    real(kind=dp) :: fornow, combo1, combo2, combo3
+    real(kind=dp), dimension(nspec) :: ctrans
+    integer :: ispec,icp
+
+!   CONDUCTIVITY FOR EACH SPECIES
+    transp(OPS_ACC1(0,0,0)) = LOG(trun(OPS_ACC4(0,0,0))/tdifgb)
+    DO ispec = 1, nspec
+        fornow = condco(ncocon,ispec)
+        DO icp = ncocm1,1,-1
+            fornow = fornow*transp(OPS_ACC1(0,0,0)) + condco(icp,ispec)
+        END DO
+        ctrans(ispec) = EXP(fornow)
+    END DO
+
+!   COMBINATION RULE FOR CONDUCTIVITY
+    combo1 = 0.0_dp
+    combo2 = 0.0_dp
+    combo3 = 0.0_dp
+    DO ispec = 1, nspec
+        fornow = yrhs(OPS_ACC_MD5(ispec,0,0,0))*ovwmol(ispec)
+        combo1 = combo1 + fornow*ctrans(ispec)
+        combo2 = combo2 + fornow/ctrans(ispec)
+        combo3 = combo3 + fornow
+    END DO
+
+    combo3 = 1.0_dp/combo3
+    combo1 = combo1*combo3
+    combo2 = combo2*combo3
+    store7(OPS_ACC2(0,0,0)) = 0.5_dp*(combo1 + 1.0_dp/combo2)
+    wmomix(OPS_ACC3(0,0,0)) = drhs(OPS_ACC6(0,0,0))*combo3
+
+END SUBROUTINE math_MD_kernel_eqV
+    
+SUBROUTINE math_MD_kernel_eqW(difmix,store7,transp,prun,yrhs,wmomix,drhs,diffco,ovwmol,pdifgb,dfctol,ispec,ncodif,ncodm1,nspec,ndcfmx)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: difmix,store7
+    real(kind=dp), dimension(1), intent(in) :: transp,prun,yrhs,wmomix,drhs
+
+    integer, intent(in) :: ispec,ncodif,ncodm1,nspec,ndcfmx
+
+    real(kind=dp), dimension(nspec), intent(in) :: ovwmol
+    real(kind=dp), dimension(ndcfmx,nspec,nspec), intent(in) :: diffco
+    real(kind=dp), intent(in) :: pdifgb,dfctol
+
+    real(kind=dp) :: fornow, combo1, combo2
+    real(kind=dp), dimension(nspec) :: ctrans
+    integer :: jspec,icp
+
+    DO jspec = 1, nspec
+        fornow = diffco(ncodif,jspec,ispec)
+        DO icp = ncodm1,1,-1
+            fornow = fornow*transp(OPS_ACC3(0,0,0)) + diffco(icp,jspec,ispec)
+        END DO
+        ctrans(jspec) = EXP(fornow)*pdifgb/prun(OPS_ACC4(0,0,0))
+    END DO
+
+!   COMBINATION RULE FOR MASS DIFFUSIVITY
+    combo1 = 0.0_dp
+    combo2 = 0.0_dp
+    DO jspec = 1, nspec
+        fornow = yrhs(OPS_ACC_MD5(jspec,0,0,0)) + dfctol
+        combo1 = combo1 + fornow
+        combo2 = combo2 + fornow*ovwmol(jspec)/ctrans(jspec)
+    END DO
+
+    fornow = yrhs(OPS_ACC_MD5(ispec,0,0,0)) + dfctol
+    combo1 = combo1 - fornow
+    combo2 = combo2 - fornow*ovwmol(ispec)/ctrans(ispec)
+    combo2 = combo2*wmomix(OPS_ACC6(0,0,0))
+
+    difmix(OPS_ACC1(0,0,0)) = drhs(OPS_ACC7(0,0,0))*combo1/combo2
+    store7(OPS_ACC2(0,0,0)) = difmix(OPS_ACC1(0,0,0))
+
+END SUBROUTINE math_MD_kernel_eqW
