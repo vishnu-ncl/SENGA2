@@ -98,7 +98,7 @@ DO kc = kstalt,kstolt
         ipower = ispec - (iindex-1)*nspimx - 1
         icoef2 = ntbase**ipower
         icoef1 = icoef2*ntbase
-        itint = 1 + MOD(itndex(ic,jc,kc,iindex),icoef1)/icoef2
+        itint = 1 + MOD(itndex(iindex,ic,jc,kc),icoef1)/icoef2
         
 !             =================================================================
         
@@ -178,7 +178,7 @@ DO kc = kstalt,kstolt
 !           FOR ALL SPECIES RELOCATE TEMPERATURE IN AN INTERVAL
 !           EVALUATE MIXTURE SPECIFIC HEAT CP
       DO iindex = 1,nintmx
-        itndex(ic,jc,kc,iindex) = 0
+        itndex(iindex,ic,jc,kc) = 0
       END DO
       transp(ic,jc,kc) = zero
       DO ispec = 1,nspec
@@ -196,7 +196,7 @@ DO kc = kstalt,kstolt
 !             SET THE TEMPERATURE INTERVAL INDEX
         iindex = 1 + (ispec-1)/nspimx
         ipower = ispec - (iindex-1)*nspimx - 1
-        itndex(ic,jc,kc,iindex) = itndex(ic,jc,kc,iindex)  &
+        itndex(iindex,ic,jc,kc) = itndex(iindex,ic,jc,kc)  &
             +(itint-1)*ntbase**ipower
         
 !             =================================================================

@@ -522,7 +522,7 @@ REAL(KIND=dp) :: utmp(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr),  &
 COMMON/worksb/utmp,vtmp,wtmp,prun,trun,transp,store7
 
 !     WORKSPACE (TEMPERATURE INDEXING)
-INTEGER :: itndex(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr,nintmx)
+INTEGER :: itndex(nintmx,nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
 
 COMMON/worksi/itndex
 

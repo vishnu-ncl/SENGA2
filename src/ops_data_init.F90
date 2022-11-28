@@ -163,6 +163,7 @@ SUBROUTINE ops_data_init()
     d_size = (/nxsize, nysize, nzsize/)
     d_m = (/-nhalox,-nhaloy,-nhaloz/)
     d_p = (/nhalox,nhaloy,nhaloz/)
+    call ops_decl_dat(senga_grid, nintmx, d_size, d_base, d_m, d_p, itndex, d_itndex, "integer", "ITNDEX")
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, yrhs, d_yrhs, "real(dp)", "YRHS")
 
     d_size = (/1, nysize, nzsize/)

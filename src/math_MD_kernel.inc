@@ -386,3 +386,108 @@ SUBROUTINE math_MD_kernel_eqW(difmix,store7,transp,prun,yrhs,wmomix,drhs,diffco,
     store7(OPS_ACC2(0,0,0)) = difmix(OPS_ACC1(0,0,0))
 
 END SUBROUTINE math_MD_kernel_eqW
+
+SUBROUTINE math_MD_kernel_eqX(tdrmix,trun,yrhs,wmomix,tdrcco,ovwmol,tdifgb,ncotdr,jspec,ispec,ncotm1,nspec,ndcfmx)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: tdrmix
+    real(kind=dp), dimension(1), intent(in) :: trun,yrhs,wmomix
+
+    integer, intent(in) :: ncotdr,jspec,ispec,ncotm1,nspec,ndcfmx
+
+    real(kind=dp), dimension(nspec), intent(in) :: ovwmol
+    real(kind=dp), dimension(ndcfmx,nspec,nspec), intent(in) :: tdrcco
+    real(kind=dp), intent(in) :: tdifgb
+
+    real(kind=dp) :: fornow, combo2
+    real(kind=dp), dimension(nspec) :: ctrans
+    integer :: icp
+
+!   THERMAL DIFFUSION RATIO FOR THIS SPECIES PAIR
+    combo2 = trun(OPS_ACC2(0,0,0))/tdifgb
+    fornow = tdrcco(ncotdr,jspec,ispec)
+    DO icp = ncotm1,1,-1
+        fornow = fornow*combo2 + tdrcco(icp,jspec,ispec)
+    END DO
+    ctrans(jspec) = fornow
+
+!   COMBINATION RULE FOR THERMAL DIFFUSIION RATIO
+    fornow = yrhs(OPS_ACC_MD3(jspec,0,0,0))*ovwmol(jspec)
+    tdrmix(OPS_ACC1(0,0,0)) = tdrmix(OPS_ACC1(0,0,0))  &
+                     + fornow*wmomix(OPS_ACC4(0,0,0))*ctrans(jspec)
+
+END SUBROUTINE math_MD_kernel_eqX
+
+SUBROUTINE math_MD_kernel_eqY(difmix,transp,yrhs,viscco,wilko1,wilko2,ovwmol,ncovis,ncovm1,nspec,nvcfmx)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: difmix
+    real(kind=dp), dimension(1), intent(in) :: transp,yrhs
+
+    integer, intent(in) :: ncovis,ncovm1,nspec,nvcfmx
+
+    real(kind=dp), dimension(nspec), intent(in) :: ovwmol
+    real(kind=dp), dimension(nvcfmx,nspec), intent(in) :: viscco
+    real(kind=dp), dimension(nspec,nspec), intent(in) :: wilko1,wilko2
+
+    real(kind=dp) :: fornow, combo1, combo2
+    real(kind=dp), dimension(nspec) :: ctrans
+    integer :: ispec, jspec, icp
+
+!   VISCOSITY FOR EACH SPECIES
+    DO ispec = 1, nspec
+        fornow = viscco(ncovis,ispec)
+        DO icp = ncovm1,1,-1
+            fornow = fornow*transp(OPS_ACC2(0,0,0)) + viscco(icp,ispec)
+        END DO
+        ctrans(ispec) = EXP(fornow)
+    END DO
+
+!   COMBINATION RULE FOR VISCOSITY
+    combo1 = 0.0_dp
+    DO ispec = 1, nspec
+        combo2 = 0.0_dp
+        DO jspec = 1, nspec
+            fornow = SQRT(ctrans(ispec)/ctrans(jspec))
+            fornow = 1.0_dp + fornow*wilko2(jspec,ispec)
+            fornow = wilko1(jspec,ispec)*fornow*fornow
+            combo2 = combo2 + yrhs(OPS_ACC_MD3(jspec,0,0,0))*ovwmol(jspec)*fornow
+        END DO
+        fornow = ctrans(ispec)/combo2
+        combo1 = combo1 + yrhs(OPS_ACC_MD3(ispec,0,0,0))*ovwmol(ispec)*fornow
+    END DO
+
+    difmix(OPS_ACC1(0,0,0)) = combo1
+
+END SUBROUTINE math_MD_kernel_eqY
+
+SUBROUTINE math_MD_kernel_eqZ(utmp,wtmp,trun,itndex,yrhs,amasch,ncpoly,ncpom1,ncenth,icoef1,icoef2,iindex,ispec,ncofmx,ntinmx,nspec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: utmp, wtmp
+    real(kind=dp), dimension(1), intent(in) :: trun, yrhs
+    integer, dimension(1), intent(in) :: itndex
+
+    integer, intent(in) ::  iindex, icoef1, icoef2, ispec, ncofmx, ntinmx, nspec
+
+    real(kind=dp), dimension(ncofmx,ntinmx,nspec), intent(in) :: amasch
+    integer, dimension(ntinmx,nspec), intent(in) :: ncpoly, ncpom1, ncenth
+
+    real(kind=dp) :: fornow
+    integer :: itint,icp
+
+    itint = 1 + MOD(itndex(OPS_ACC_MD4(iindex,0,0,0)),icoef1)/icoef2
+    fornow = amasch(ncpoly(itint,ispec),itint,ispec)
+    DO icp = ncpom1(itint,ispec),1,-1
+        fornow = fornow*trun(OPS_ACC3(0,0,0)) + amasch(icp,itint,ispec)
+    END DO
+    utmp(OPS_ACC1(0,0,0)) = amasch(ncenth(itint,ispec),itint,ispec)  &
+                    + fornow*trun(OPS_ACC3(0,0,0))
+
+!   MIXTURE H
+    wtmp(OPS_ACC2(0,0,0)) = wtmp(OPS_ACC2(0,0,0)) + utmp(OPS_ACC1(0,0,0))*yrhs(OPS_ACC_MD5(ispec,0,0,0))
+
+END SUBROUTINE math_MD_kernel_eqZ

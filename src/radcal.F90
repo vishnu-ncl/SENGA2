@@ -59,26 +59,22 @@ SUBROUTINE radcal
 
 !   RUN THROUGH ALL RADIATING SPECIES
     DO jspec = 1, nsprad
-  
+
 !       PLANCK MEAN ABSORPTION COEFFICIENT OF EACH SPECIES
-        DO kc = kstal,kstol
-        DO jc = jstal,jstol
-            DO ic = istal,istol
-        
-                fornow = trun(ic,jc,kc)
-                plspec = akprad(nkprad(jspec),jspec)
-                DO icp = nkprm1(jspec),1,-1
-                    plspec = plspec*fornow + akprad(icp,jspec)
-                END DO
-                store2(ic,jc,kc) = plspec
-        
-            END DO
-        END DO
-        END DO
-  
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(radcal_kernel_meancoef, "PLANCK MEAN ABSORPTION COEF", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(akprad, 1, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(nkprad, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(nkprm1, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(jspec, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(ncfrmx, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(nspec, 1, "integer", OPS_READ))
+
 !       SPECIES ID
         ispec = nsprid(jspec)
-  
+
 !       ADD THE SPECIES CONTRIBUTION
         rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
         call ops_par_loop(radcal_kernel_addspecies, "ADD THE SPECIES CONTRIBUTION", senga_grid, 3, rangexyz,  &

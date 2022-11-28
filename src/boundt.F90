@@ -100,7 +100,7 @@ SUBROUTINE boundt
       DO jc = jstal,jstol
         
         DO iindex = 1,nintmx
-          itndex(istal,jc,kc,iindex) = 0
+          itndex(iindex,istal,jc,kc) = 0
         END DO
         
         DO ispec = 1,nspec
@@ -118,7 +118,7 @@ SUBROUTINE boundt
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1
-          itndex(istal,jc,kc,iindex) = itndex(istal,jc,kc,iindex)  &
+          itndex(iindex,istal,jc,kc) = itndex(iindex,istal,jc,kc)  &
               + (itint-1)*ntbase**ipower
           
         END DO
@@ -159,7 +159,7 @@ SUBROUTINE boundt
       DO kc = kstal,kstol
         DO jc = jstal,jstol
           
-          itint = 1 +MOD(itndex(istal,jc,kc,iindex),icoef1)/icoef2
+          itint = 1 +MOD(itndex(iindex,istal,jc,kc),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
             fornow = fornow*strtxl(1,jc,kc) + amasch(icp,itint,ispec)
@@ -261,7 +261,7 @@ SUBROUTINE boundt
       DO jc = jstal,jstol
         
         DO iindex = 1,nintmx
-          itndex(istal,jc,kc,iindex) = 0
+          itndex(iindex,istal,jc,kc) = 0
         END DO
         
         DO ispec = 1,nspec
@@ -279,7 +279,7 @@ SUBROUTINE boundt
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1
-          itndex(istal,jc,kc,iindex) = itndex(istal,jc,kc,iindex)  &
+          itndex(iindex,istal,jc,kc) = itndex(iindex,istal,jc,kc)  &
               + (itint-1)*ntbase**ipower
           
         END DO
@@ -316,7 +316,7 @@ SUBROUTINE boundt
       DO kc = kstal,kstol
         DO jc = jstal,jstol
           
-          itint = 1 +MOD(itndex(istal,jc,kc,iindex),icoef1)/icoef2
+          itint = 1 +MOD(itndex(iindex,istal,jc,kc),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
             fornow = fornow*strtxl(1,jc,kc) + amasch(icp,itint,ispec)
@@ -384,7 +384,7 @@ SUBROUTINE boundt
       DO jc = jstal,jstol
         
         DO iindex = 1,nintmx
-          itndex(istol,jc,kc,iindex) = 0
+          itndex(iindex,istol,jc,kc) = 0
         END DO
         
         DO ispec = 1,nspec
@@ -402,7 +402,7 @@ SUBROUTINE boundt
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1
-          itndex(istol,jc,kc,iindex) = itndex(istol,jc,kc,iindex)  &
+          itndex(iindex,istol,jc,kc) = itndex(iindex,istol,jc,kc)  &
               + (itint-1)*ntbase**ipower
           
         END DO
@@ -443,7 +443,7 @@ SUBROUTINE boundt
       DO kc = kstal,kstol
         DO jc = jstal,jstol
           
-          itint = 1 +MOD(itndex(istol,jc,kc,iindex),icoef1)/icoef2
+          itint = 1 +MOD(itndex(iindex,istol,jc,kc),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
             fornow = fornow*strtxr(1,jc,kc) + amasch(icp,itint,ispec)
@@ -545,7 +545,7 @@ SUBROUTINE boundt
       DO jc = jstal,jstol
         
         DO iindex = 1,nintmx
-          itndex(istol,jc,kc,iindex) = 0
+          itndex(iindex,istol,jc,kc) = 0
         END DO
         
         DO ispec = 1,nspec
@@ -563,7 +563,7 @@ SUBROUTINE boundt
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1
-          itndex(istol,jc,kc,iindex) = itndex(istol,jc,kc,iindex)  &
+          itndex(iindex,istol,jc,kc) = itndex(iindex,istol,jc,kc)  &
               + (itint-1)*ntbase**ipower
           
         END DO
@@ -599,7 +599,7 @@ SUBROUTINE boundt
       DO kc = kstal,kstol
         DO jc = jstal,jstol
           
-          itint = 1 +MOD(itndex(istol,jc,kc,iindex),icoef1)/icoef2
+          itint = 1 +MOD(itndex(iindex,istol,jc,kc),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
             fornow = fornow*strtxr(1,jc,kc) + amasch(icp,itint,ispec)
@@ -674,7 +674,7 @@ SUBROUTINE boundt
       DO ic = istal,istol
         
         DO iindex = 1,nintmx
-          itndex(ic,jstal,kc,iindex) = 0
+          itndex(iindex,ic,jstal,kc) = 0
         END DO
         
         DO ispec = 1,nspec
@@ -692,7 +692,7 @@ SUBROUTINE boundt
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1
-          itndex(ic,jstal,kc,iindex) = itndex(ic,jstal,kc,iindex)  &
+          itndex(iindex,ic,jstal,kc) = itndex(iindex,ic,jstal,kc)  &
               + (itint-1)*ntbase**ipower
           
         END DO
@@ -733,7 +733,7 @@ SUBROUTINE boundt
       DO kc = kstal,kstol
         DO ic = istal,istol
           
-          itint = 1 +MOD(itndex(ic,jstal,kc,iindex),icoef1)/icoef2
+          itint = 1 +MOD(itndex(iindex,ic,jstal,kc),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
             fornow = fornow*strtyl(ic,1,kc) + amasch(icp,itint,ispec)
@@ -835,7 +835,7 @@ SUBROUTINE boundt
       DO ic = istal,istol
         
         DO iindex = 1,nintmx
-          itndex(ic,jstal,kc,iindex) = 0
+          itndex(iindex,ic,jstal,kc) = 0
         END DO
         
         DO ispec = 1,nspec
@@ -853,7 +853,7 @@ SUBROUTINE boundt
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1
-          itndex(ic,jstal,kc,iindex) = itndex(ic,jstal,kc,iindex)  &
+          itndex(iindex,ic,jstal,kc) = itndex(iindex,ic,jstal,kc)  &
               + (itint-1)*ntbase**ipower
           
         END DO
@@ -889,7 +889,7 @@ SUBROUTINE boundt
       DO kc = kstal,kstol
         DO ic = istal,istol
           
-          itint = 1 +MOD(itndex(ic,jstal,kc,iindex),icoef1)/icoef2
+          itint = 1 +MOD(itndex(iindex,ic,jstal,kc),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
             fornow = fornow*strtyl(ic,1,kc) + amasch(icp,itint,ispec)
@@ -963,7 +963,7 @@ SUBROUTINE boundt
       DO ic = istal,istol
         
         DO iindex = 1,nintmx
-          itndex(ic,jstol,kc,iindex) = 0
+          itndex(iindex,ic,jstol,kc) = 0
         END DO
         
         DO ispec = 1,nspec
@@ -981,7 +981,7 @@ SUBROUTINE boundt
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1
-          itndex(ic,jstol,kc,iindex) = itndex(ic,jstol,kc,iindex)  &
+          itndex(iindex,ic,jstol,kc) = itndex(iindex,ic,jstol,kc)  &
               + (itint-1)*ntbase**ipower
           
         END DO
@@ -1021,7 +1021,7 @@ SUBROUTINE boundt
       DO kc = kstal,kstol
         DO ic = istal,istol
           
-          itint = 1 +MOD(itndex(ic,jstol,kc,iindex),icoef1)/icoef2
+          itint = 1 +MOD(itndex(iindex,ic,jstol,kc),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
             fornow = fornow*strtyr(ic,1,kc) + amasch(icp,itint,ispec)
@@ -1123,7 +1123,7 @@ SUBROUTINE boundt
       DO ic = istal,istol
         
         DO iindex = 1,nintmx
-          itndex(ic,jstol,kc,iindex) = 0
+          itndex(iindex,ic,jstol,kc) = 0
         END DO
         
         DO ispec = 1,nspec
@@ -1141,7 +1141,7 @@ SUBROUTINE boundt
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1
-          itndex(ic,jstol,kc,iindex) = itndex(ic,jstol,kc,iindex)  &
+          itndex(iindex,ic,jstol,kc) = itndex(iindex,ic,jstol,kc)  &
               + (itint-1)*ntbase**ipower
           
         END DO
@@ -1177,7 +1177,7 @@ SUBROUTINE boundt
       DO kc = kstal,kstol
         DO ic = istal,istol
           
-          itint = 1 +MOD(itndex(ic,jstol,kc,iindex),icoef1)/icoef2
+          itint = 1 +MOD(itndex(iindex,ic,jstol,kc),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
             fornow = fornow*strtyr(ic,1,kc) + amasch(icp,itint,ispec)
@@ -1251,7 +1251,7 @@ SUBROUTINE boundt
       DO ic = istal,istol
         
         DO iindex = 1,nintmx
-          itndex(ic,jc,kstal,iindex) = 0
+          itndex(iindex,ic,jc,kstal) = 0
         END DO
         
         DO ispec = 1,nspec
@@ -1269,7 +1269,7 @@ SUBROUTINE boundt
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1
-          itndex(ic,jc,kstal,iindex) = itndex(ic,jc,kstal,iindex)  &
+          itndex(iindex,ic,jc,kstal) = itndex(iindex,ic,jc,kstal)  &
               + (itint-1)*ntbase**ipower
           
         END DO
@@ -1309,7 +1309,7 @@ SUBROUTINE boundt
       DO jc = jstal,jstol
         DO ic = istal,istol
           
-          itint = 1 +MOD(itndex(ic,jc,kstal,iindex),icoef1)/icoef2
+          itint = 1 +MOD(itndex(iindex,ic,jc,kstal),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
             fornow = fornow*strtzl(ic,jc,1) + amasch(icp,itint,ispec)
@@ -1411,7 +1411,7 @@ SUBROUTINE boundt
       DO ic = istal,istol
         
         DO iindex = 1,nintmx
-          itndex(ic,jc,kstal,iindex) = 0
+          itndex(iindex,ic,jc,kstal) = 0
         END DO
         
         DO ispec = 1,nspec
@@ -1429,7 +1429,7 @@ SUBROUTINE boundt
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1
-          itndex(ic,jc,kstal,iindex) = itndex(ic,jc,kstal,iindex)  &
+          itndex(iindex,ic,jc,kstal) = itndex(iindex,ic,jc,kstal)  &
               + (itint-1)*ntbase**ipower
           
         END DO
@@ -1465,7 +1465,7 @@ SUBROUTINE boundt
       DO jc = jstal,jstol
         DO ic = istal,istol
           
-          itint = 1 +MOD(itndex(ic,jc,kstal,iindex),icoef1)/icoef2
+          itint = 1 +MOD(itndex(iindex,ic,jc,kstal),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
             fornow = fornow*strtzl(ic,jc,1) + amasch(icp,itint,ispec)
@@ -1539,7 +1539,7 @@ SUBROUTINE boundt
       DO ic = istal,istol
         
         DO iindex = 1,nintmx
-          itndex(ic,jc,kstol,iindex) = 0
+          itndex(iindex,ic,jc,kstol) = 0
         END DO
         
         DO ispec = 1,nspec
@@ -1557,7 +1557,7 @@ SUBROUTINE boundt
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1
-          itndex(ic,jc,kstol,iindex) = itndex(ic,jc,kstol,iindex)  &
+          itndex(iindex,ic,jc,kstol) = itndex(iindex,ic,jc,kstol)  &
               + (itint-1)*ntbase**ipower
           
         END DO
@@ -1597,7 +1597,7 @@ SUBROUTINE boundt
       DO jc = jstal,jstol
         DO ic = istal,istol
           
-          itint = 1 +MOD(itndex(ic,jc,kstol,iindex),icoef1)/icoef2
+          itint = 1 +MOD(itndex(iindex,ic,jc,kstol),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
             fornow = fornow*strtzr(ic,jc,1) + amasch(icp,itint,ispec)
@@ -1699,7 +1699,7 @@ SUBROUTINE boundt
       DO ic = istal,istol
         
         DO iindex = 1,nintmx
-          itndex(ic,jc,kstol,iindex) = 0
+          itndex(iindex,ic,jc,kstol) = 0
         END DO
         
         DO ispec = 1,nspec
@@ -1717,7 +1717,7 @@ SUBROUTINE boundt
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1
-          itndex(ic,jc,kstol,iindex) = itndex(ic,jc,kstol,iindex)  &
+          itndex(iindex,ic,jc,kstol) = itndex(iindex,ic,jc,kstol)  &
               + (itint-1)*ntbase**ipower
           
         END DO
@@ -1753,7 +1753,7 @@ SUBROUTINE boundt
       DO jc = jstal,jstol
         DO ic = istal,istol
           
-          itint = 1 +MOD(itndex(ic,jc,kstol,iindex),icoef1)/icoef2
+          itint = 1 +MOD(itndex(iindex,ic,jc,kstol),icoef1)/icoef2
           fornow = amasch(ncpoly(itint,ispec),itint,ispec)
           DO icp = ncpom1(itint,ispec),1,-1
             fornow = fornow*strtzr(ic,jc,1) + amasch(icp,itint,ispec)

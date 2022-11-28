@@ -1191,7 +1191,7 @@ DO kc = kstab,kstob
     DO ic = istab,istob
       
       DO iindex = 1,nintmx
-        itndex(ic,jc,kc,iindex) = 0
+        itndex(iindex,ic,jc,kc) = 0
       END DO
       
       DO ispec = 1,nspec
@@ -1209,7 +1209,7 @@ DO kc = kstab,kstob
 !             SET THE TEMPERATURE INDEX
         iindex = 1 + (ispec-1)/nspimx
         ipower = ispec - (iindex-1)*nspimx - 1
-        itndex(ic,jc,kc,iindex) = itndex(ic,jc,kc,iindex)  &
+        itndex(iindex,ic,jc,kc) = itndex(iindex,ic,jc,kc)  &
             +(itint-1)*ntbase**ipower
         
       END DO
@@ -1237,7 +1237,7 @@ DO ispec = 1,nspec
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        itint = 1 + MOD(itndex(ic,jc,kc,iindex),icoef1)/icoef2
+        itint = 1 + MOD(itndex(iindex,ic,jc,kc),icoef1)/icoef2
         fornow = amasch(ncpoly(itint,ispec),itint,ispec)
         DO icp = ncpom1(itint,ispec),1,-1
           fornow = fornow*trun(ic,jc,kc) + amasch(icp,itint,ispec)

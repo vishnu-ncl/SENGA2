@@ -517,7 +517,7 @@ SUBROUTINE chrate
                     ipower = ispec - (iindex-1)*nspimx - 1
                     icoef2 = ntbase**ipower
                     icoef1 = icoef2*ntbase
-                    itint = 1 + MOD(itndex(ic,jc,kc,iindex),icoef1)/icoef2
+                    itint = 1 + MOD(itndex(iindex,ic,jc,kc),icoef1)/icoef2
             
 !                   CONSTRUCT GIBBS FUNCTION FROM ITS POLYNOMIAL COEFFICIENTS
                 gibbsp = amolgb(ncpoly(itint,ispec),itint,ispec)

@@ -29,3 +29,28 @@ SUBROUTINE radcal_kernel_addspecies(store1,yrhs,trun,store2,rgspec,ispec)
     store1(OPS_ACC1(0,0,0)) = store1(OPS_ACC1(0,0,0)) + store2(OPS_ACC4(0,0,0))*fornow
 
 END SUBROUTINE radcal_kernel_addspecies
+
+SUBROUTINE radcal_kernel_meancoef(store2,trun,akprad,nkprad,nkprm1,jspec,ncfrmx,nspec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: store2
+    real(kind=dp), dimension(1), intent(in) :: trun
+
+    integer, intent(in) :: jspec, ncfrmx, nspec
+
+    real(kind=dp), dimension(ncfrmx,nspec), intent(in) :: akprad
+    integer, dimension(nspec), intent(in) :: nkprad, nkprm1
+
+    real(kind=dp) :: plspec,fornow
+    integer :: icp
+
+    fornow = trun(OPS_ACC2(0,0,0))
+    plspec = akprad(nkprad(jspec),jspec)
+    DO icp = nkprm1(jspec),1,-1
+        plspec = plspec*fornow + akprad(icp,jspec)
+    END DO
+    store2(OPS_ACC1(0,0,0)) = plspec
+
+END SUBROUTINE radcal_kernel_meancoef
+

@@ -457,7 +457,7 @@ DO kc = kstalt,kstolt
 !           EVALUATE PRESSURE
 !           EVALUATE MIXTURE SPECIFIC HEAT CP
       DO iindex = 1,nintmx
-        itndex(ic,jc,kc,iindex) = 0
+        itndex(iindex,ic,jc,kc) = 0
       END DO
       store7(ic,jc,kc) = zero
       transp(ic,jc,kc) = zero
@@ -476,7 +476,7 @@ DO kc = kstalt,kstolt
 !             SET THE TEMPERATURE INDEX
         iindex = 1 + (ispec-1)/nspimx
         ipower = ispec - (iindex-1)*nspimx - 1
-        itndex(ic,jc,kc,iindex) = itndex(ic,jc,kc,iindex)  &
+        itndex(iindex,ic,jc,kc) = itndex(iindex,ic,jc,kc)  &
             + (itint-1)*ntbase**ipower
         
 !             =================================================================

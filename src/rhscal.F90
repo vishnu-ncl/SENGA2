@@ -1023,34 +1023,29 @@ SUBROUTINE rhscal
       
                 flmtds = flmtdr(jspec).AND.(ispec /= jspec)
                 IF(flmtds)THEN
-        
-                DO kc = kstab,kstob
-                DO jc = jstab,jstob
-                DO ic = istab,istob
-              
-!               THERMAL DIFFUSION RATIO FOR THIS SPECIES PAIR
-                combo2 = trun(ic,jc,kc)/tdifgb
-                fornow = tdrcco(ncotdr,jspec,ispec)
-                DO icp = ncotm1,1,-1
-                fornow = fornow*combo2 + tdrcco(icp,jspec,ispec)
-                END DO
-                ctrans(jspec) = fornow
-              
-!               COMBINATION RULE FOR THERMAL DIFFUSIION RATIO
-                fornow = yrhs(jspec,ic,jc,kc)*ovwmol(jspec)
-                tdrmix(ic,jc,kc) = tdrmix(ic,jc,kc)  &
-                  + fornow*wmomix(ic,jc,kc)*ctrans(jspec)
-              
-                END DO
-                END DO
-                END DO
-        
+
+                    rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+                    call ops_par_loop(math_MD_kernel_eqX, "THERMAL DIFFUSION RATIO FOR EACH SPECIES", senga_grid, 3, rangexyz, &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                    ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                                    ops_arg_dat(d_wmomix, 1, s3d_000, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(tdrcco, 1, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(ovwmol, 1, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(tdifgb, 1, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(ncotdr, 1, "integer", OPS_READ), &
+                                    ops_arg_gbl(jspec, 1, "integer", OPS_READ), &
+                                    ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
+                                    ops_arg_gbl(ncotm1, 1, "integer", OPS_READ), &
+                                    ops_arg_gbl(nspec, 1, "integer", OPS_READ), &
+                                    ops_arg_gbl(ndcfmx, 1, "integer", OPS_READ))
+
                 END IF
-      
+
             END DO
-    
+
         END IF
-  
+
 !       =======================================================================
   
 !       DIFFUSION CORRECTION VELOCITY
@@ -1089,24 +1084,25 @@ SUBROUTINE rhscal
 !       SPECIES H IS PARALLEL
 !       STORE SPECIES H IN UTMP FOR NOW
 !       STORE MIXTURE H IN WTMP FOR NOW
-        DO kc = kstab,kstob
-        DO jc = jstab,jstob
-        DO ic = istab,istob
-        
-        itint = 1 + MOD(itndex(ic,jc,kc,iindex),icoef1)/icoef2
-        fornow = amasch(ncpoly(itint,ispec),itint,ispec)
-        DO icp = ncpom1(itint,ispec),1,-1
-          fornow = fornow*trun(ic,jc,kc) + amasch(icp,itint,ispec)
-        END DO
-        utmp(ic,jc,kc) = amasch(ncenth(itint,ispec),itint,ispec)  &
-            + fornow*trun(ic,jc,kc)
-        
-!             MIXTURE H
-        wtmp(ic,jc,kc) = wtmp(ic,jc,kc) + utmp(ic,jc,kc)*yrhs(ispec,ic,jc,kc)
-        
-        END DO
-        END DO
-        END DO
+        rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+        call ops_par_loop(math_MD_kernel_eqZ, "SPECIES ENTHALPY", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_READ), &
+                        ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(amasch, 1, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ncpoly, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(ncpom1, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(nspec, 1, "integer", OPS_READ))
+
 !                                                         STORE1,2,3 = DYDX,Y,Z
 !                                                          STORE7 = DIFFUSIVITY
 !                                                  RATE = Y SOURCE TERMS
@@ -2585,40 +2581,21 @@ SUBROUTINE rhscal
 !   TRANSP CONTAINS LN(T)
 !   STORE VISCOSITY IN DIFMIX FOR NOW
     IF(flmavt)THEN
-  
-        DO kc = kstab,kstob
-        DO jc = jstab,jstob
-        DO ic = istab,istob
-        
-!             VISCOSITY FOR EACH SPECIES
-        DO ispec = 1, nspec
-          fornow = viscco(ncovis,ispec)
-          DO icp = ncovm1,1,-1
-            fornow = fornow*transp(ic,jc,kc) + viscco(icp,ispec)
-          END DO
-          ctrans(ispec) = EXP(fornow)
-        END DO
-        
-!             COMBINATION RULE FOR VISCOSITY
-        combo1 = zero
-        DO ispec = 1, nspec
-          combo2 = zero
-          DO jspec = 1, nspec
-            fornow = SQRT(ctrans(ispec)/ctrans(jspec))
-            fornow = one + fornow*wilko2(jspec,ispec)
-            fornow = wilko1(jspec,ispec)*fornow*fornow
-            combo2 = combo2 + yrhs(jspec,ic,jc,kc)*ovwmol(jspec)*fornow
-          END DO
-          fornow = ctrans(ispec)/combo2
-          combo1 = combo1 + yrhs(ispec,ic,jc,kc)*ovwmol(ispec)*fornow
-          
-        END DO
-        difmix(ic,jc,kc) = combo1
-        
-        END DO
-        END DO
-        END DO
-  
+ 
+        rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+        call ops_par_loop(math_MD_kernel_eqY, "STORE VISCOSITY IN DIFMIX", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_difmix, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(viscco, 1, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(wilko1, 1, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(wilko2, 1, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ovwmol, 1, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ncovis, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(ncovm1, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(nspec, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(nvcfmx, 1, "integer", OPS_READ))
+
     END IF
 
 !   =========================================================================
