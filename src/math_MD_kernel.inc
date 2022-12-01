@@ -491,3 +491,63 @@ SUBROUTINE math_MD_kernel_eqZ(utmp,wtmp,trun,itndex,yrhs,amasch,ncpoly,ncpom1,nc
     wtmp(OPS_ACC2(0,0,0)) = wtmp(OPS_ACC2(0,0,0)) + utmp(OPS_ACC1(0,0,0))*yrhs(OPS_ACC_MD5(ispec,0,0,0))
 
 END SUBROUTINE math_MD_kernel_eqZ
+
+SUBROUTINE math_MD_kernel_eqAA(store1,yrhs,ovwmol,scoef,ysmall,ydenom,ispec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: store1
+    real(kind=dp), dimension(1), intent(in) :: yrhs
+    integer, intent(in) ::  ispec
+    real(kind=dp), intent(in) :: ovwmol,scoef,ysmall,ydenom
+
+    real(kind=dp) :: fornow
+
+    fornow = yrhs(OPS_ACC_MD2(ispec,0,0,0))*ovwmol
+    fornow = MAX(fornow,ysmall)
+    fornow = EXP(scoef*LOG(fornow))
+    fornow = fornow/(1.0_dp+ydenom*fornow)
+    store1(OPS_ACC1(0,0,0)) = store1(OPS_ACC1(0,0,0))*fornow
+
+END SUBROUTINE math_MD_kernel_eqAA
+
+SUBROUTINE math_MD_kernel_eqAB(store2,trun,itndex,amolgb,ncpoly,ncpom1,ncenth,ncenpy,diffmu,nspimx,ntbase,ncofmx,ntinmx,nspec,nssmax,nstpmx,isspec,ispec,istep)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: store2
+    real(kind=dp), dimension(1), intent(in) :: trun
+    integer, dimension(1), intent(in) :: itndex
+    integer, intent(in) ::  nspimx,ntbase,ncofmx,ntinmx,nspec,nssmax,nstpmx,isspec,ispec,istep
+
+    real(kind=dp), dimension(ncofmx,ntinmx,nspec), intent(in) :: amolgb
+    real(kind=dp), dimension(nssmax,nstpmx), intent(in) :: diffmu
+    integer, dimension(ntinmx,nspec), intent(in) :: ncpoly,ncpom1,ncenth,ncenpy
+
+    integer :: iindex,ipower,icoef2,icoef1,itint,icp
+    real(kind=dp) :: gibbsp
+
+!   LOCATE THE TEMPERATURE IN AN INTERVAL
+    iindex = 1 + (ispec-1)/nspimx
+    ipower = ispec - (iindex-1)*nspimx - 1
+    icoef2 = ntbase**ipower
+    icoef1 = icoef2*ntbase
+    itint = 1 + MOD(itndex(OPS_ACC_MD3(iindex,0,0,0)),icoef1)/icoef2
+
+!   CONSTRUCT GIBBS FUNCTION FROM ITS POLYNOMIAL COEFFICIENTS
+    gibbsp = amolgb(ncpoly(itint,ispec),itint,ispec)
+
+    DO icp = ncpom1(itint,ispec),1,-1
+        gibbsp = amolgb(icp,itint,ispec) + gibbsp*trun(OPS_ACC2(0,0,0))
+    END DO
+
+    gibbsp = amolgb(ncenth(itint,ispec),itint,ispec)  &
+            /trun(OPS_ACC2(0,0,0)) - amolgb(ncenpy(itint,ispec),itint,ispec)  &
+            *LOG(trun(OPS_ACC2(0,0,0))) - gibbsp
+
+!   ADD GIBBS FUNCTION CONTRIBUTION TO RATE COEFFICIENT
+!   USING STEP SPECIES DELTA-LIST
+!   TO GET BACKWARD RATE COEFFICIENT
+    store2(OPS_ACC1(0,0,0)) = store2(OPS_ACC1(0,0,0)) + diffmu(isspec,istep)*gibbsp
+
+END SUBROUTINE math_MD_kernel_eqAB

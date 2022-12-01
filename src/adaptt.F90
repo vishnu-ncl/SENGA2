@@ -47,7 +47,7 @@ SUBROUTINE adaptt
 !   real(kind=dp) TSTLOC
     real(kind=dp) :: errloc
     real(kind=dp) :: fornow
-    integer :: ic,jc,kc,ispec
+    integer :: ispec
     integer :: rangexyz(6)
 
 !   BEGIN

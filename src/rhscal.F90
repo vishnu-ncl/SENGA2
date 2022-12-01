@@ -48,7 +48,7 @@ SUBROUTINE rhscal
 !   ==========
     real(kind=dp) :: ctrans(nspcmx)
     real(kind=dp) :: fornow,combo1,combo2,combo3
-    integer :: ic,jc,kc,ispec
+    integer :: ispec
     integer :: itint,icp,iindex,ipower,icoef1,icoef2
     logical :: flmtds
     integer :: rangexyz(6)

@@ -58,7 +58,6 @@ SUBROUTINE chrate
     integer :: ispec,isspec
     integer :: istep,ibody
     integer :: iindex,ipower,icoef1,icoef2,itint,icp
-    integer :: ic,jc,kc
     LOGICAL :: flthrd
     integer :: rangexyz(6)
 
@@ -158,36 +157,36 @@ SUBROUTINE chrate
 !   -----------------------------------------------
 
     DO istep = 1, nstep
-  
+
 !       =======================================================================
-  
+
 !       INCLUDE THIRD BODY CONCENTRATIONS, IF ANY
 !       -----------------------------------------
-  
+
 !       SET THIRD-BODY EVALUATION FLAG
 !       RSC/ZN 08-AUG-2012 BUG FIX PRESSURE-DEPENDENT RATES
         flthrd = .true.
-  
+
 !       CHECK THIRD-BODY LIST
         IF(mblist(istep) /= 0) THEN
-    
+
 !           GET THE INDEX OF THE THIRD BODY
             ibody = mblist(istep)
-    
+
 !           ZERO THE THIRD-BODY CONCENTRATION ACCUMULATOR
             rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
             call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE))
-    
+
 !           USE THE THIRD-BODY SPECIES-LIST
 !           AND THE THIRD-BODY EFFICIENCY LIST
 !           TO GET THE THIRD-BODY CONCENTRATION
             DO ispec = 1,nspec
-      
+
 !               GET THE THIRD-BODY EFFICIENCY FROM THE LIST
 !               AND COMBINE WITH THE RECIPROCAL MOLAR MASS
                 ovwmas = ovwmol(ispec)*effy3b(ispec,ibody)
-      
+
 !               EVALUATE THE THIRD BODY CONCENTRATION
 !               AND STORE IN TEMPORARY ARRAY
                 rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
@@ -199,100 +198,76 @@ SUBROUTINE chrate
 
             END DO
 !           THIRD-BODY SPECIES-LIST
-    
+
 !          DIAGNOSTICS
 !          WRITE(6,*)'3body',ISTEP,IBODY,FLTHRD,STORE3(250,1,1)
-    
+
         END IF
 !                                             STORE3 = THIRD BODY CONCENTRATION
 !       =======================================================================
-  
+
 !       EVALUATE THE SPECIFIC REACTION RATE CONSTANT FOR THIS STEP
 !       ----------------------------------------------------------
         racnst = rparam(1,istep)
         rncnst = rparam(2,istep)
         reovrr = rparam(3,istep)
-        DO kc = kstal,kstol
-        DO jc = jstal,jstol
-        DO ic = istal,istol
-        
-        store2(ic,jc,kc) = racnst + rncnst*LOG(trun(ic,jc,kc))  &
-            - reovrr/trun(ic,jc,kc)
-        store1(ic,jc,kc) = EXP(store2(ic,jc,kc))
-        
-        
-        END DO
-        END DO
-        END DO
-  
+
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(math_kernel_eqAQ, "EVALUATE THE SPECIFIC REACTION RATE CONSTANT", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(racnst, 1, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(rncnst, 1, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(reovrr, 1, "real(dp)", OPS_READ))
+
 !       DIAGNOSTICS
 !       WRITE(6,'("kf",I5,5(1PE12.4))') &
 !       ISTEP,RACNST,RNCNST,REOVRR,STORE1(250,1,1),STORE2(250,1,1)
-  
+
 !                                          STORE1 = FORWARD RATE CONSTANT
 !                                          STORE2 = LN(FORWARD RATE CONSTANT)
 !                                          STORE3 = THIRD BODY CONCENTRATION
 !       =====================================================================
-  
+
 !       INCLUDE LINDEMANN RATE EVALUATION, IF ANY
 !       -----------------------------------------
 !       RSC 13-SEP-2009 REFORMULATE FOR LINDEMANN RATE EXPRESSIONS
         IF(mllist(istep) /= 0) THEN
-    
+
             racnst = rclind(1,mllist(istep))
             rncnst = rclind(2,mllist(istep))
             reovrr = rclind(3,mllist(istep))
             flcnst = rclind(4,mllist(istep))
-    
-            DO kc = kstal,kstol
-            DO jc = jstal,jstol
-            DO ic = istal,istol
-          
-!               EVALUATE K0
-          store4(ic,jc,kc) = racnst + rncnst*LOG(trun(ic,jc,kc))  &
-              - reovrr/trun(ic,jc,kc)
-          store4(ic,jc,kc) = EXP(store4(ic,jc,kc))
-          
-!               EVALUATE REDUCED PRESURE
-          preduc = store3(ic,jc,kc)*store4(ic,jc,kc) /store1(ic,jc,kc)
-          
-!               EVALUATE UPDATED FORWARD RATE CONSTANT
-          fornow = flcnst*preduc/(one+preduc)
-          store1(ic,jc,kc) = store1(ic,jc,kc)*fornow
-          
-!               RSC/ZN 08-AUG-2012 BUG FIX PRESSURE-DEPENDENT RATES
-          store2(ic,jc,kc) = LOG(store1(ic,jc,kc))
-          
-!                DIAGNOSTICS
-!                WRITE(6,'("L",2I5,5(1PE12.4))')ISTEP,IC,
-!     +          STORE1(IC,JC,KC),STORE2(IC,JC,KC),STORE3(IC,JC,KC),
-!     +          STORE4(IC,JC,KC),FORNOW
-          
-            END DO
-            END DO
-            END DO
-    
-!         RSC/ZN 08-AUG-2012 BUG FIX PRESSURE-DEPENDENT RATES
-!         RESET THIRD BODY EVALUATION FLAG
+
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(math_kernel_eqAR, "REFORMULATE FOR LINDEMANN RATE EXPRESSIONS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(racnst, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(rncnst, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(reovrr, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(flcnst, 1, "real(dp)", OPS_READ))
+
+!           RSC/ZN 08-AUG-2012 BUG FIX PRESSURE-DEPENDENT RATES
+!           RESET THIRD BODY EVALUATION FLAG
             flthrd = .false.
-    
-!          DIAGNOSTICS
-!          WRITE(6,'("L",I5,6(1PE12.4))')
-!     +      ISTEP,FLCNST,RACNST,RNCNST,REOVRR,
-!     +            STORE1(250,1,1),STORE2(250,1,1)
-    
+
         END IF
 !       END OF LINDEMANN RATE EVALUATION
 !                                            STORE1 = FORWARD RATE CONSTANT
 !                                            STORE2 = LN(FORWARD RATE CONSTANT)
 !                                            STORE3 = THIRD BODY CONCENTRATION
 !       =======================================================================
-  
+
 !       INCLUDE TROE FORM RATE EVALUATION, IF ANY
 !       -----------------------------------------
 !       RSC 04-OCT-2009
         IF(mtlist(istep) /= 0) THEN
-    
+
             racnst = rctroe(1,mtlist(istep))
             rncnst = rctroe(2,mtlist(istep))
             reovrr = rctroe(3,mtlist(istep))
@@ -305,65 +280,47 @@ SUBROUTINE chrate
             encst1 = rctroe(10,mtlist(istep))
             encst2 = rctroe(11,mtlist(istep))
             dtcnst = rctroe(12,mtlist(istep))
-    
+
             omalph = one - talpha
-    
-            DO kc = kstal,kstol
-            DO jc = jstal,jstol
-            DO ic = istal,istol
-          
-!               EVALUATE K0
-          store4(ic,jc,kc) = racnst + rncnst*LOG(trun(ic,jc,kc))  &
-              - reovrr/trun(ic,jc,kc)
-          store4(ic,jc,kc) = EXP(store4(ic,jc,kc))
-          
-!               EVALUATE REDUCED PRESURE
-          preduc = store3(ic,jc,kc)*store4(ic,jc,kc) /store1(ic,jc,kc)
-          
-!               EVALUATE FCENT
-          trats1 = trun(ic,jc,kc)*ovtst1
-          trats2 = tstar2/trun(ic,jc,kc)
-          trats3 = trun(ic,jc,kc)*ovtst3
-          ftcent = omalph*EXP(trats3) + talpha*EXP(trats1)  &
-              + EXP(trats2)
-          ftcent = LOG10(ftcent)
-          
-!               EVALUATE BROADENING FACTOR
-          cfactr = cfcst1 + cfcst2*ftcent
-          enfact = encst1 + encst2*ftcent
-          fornow = LOG10(preduc) + cfactr
-          fornow = fornow/(enfact - dtcnst*fornow)
-          fornow = one + fornow*fornow
-          fbroad = ftcent/fornow
-          fbroad = EXP(fbroad*clnten)
-          
-!               EVALUATE UPDATED FORWARD RATE CONSTANT
-          fornow = fbroad*preduc/(one+preduc)
-          store1(ic,jc,kc) = store1(ic,jc,kc)*fornow
-          
-!               RSC/ZN 08-AUG-2012 BUG FIX PRESSURE-DEPENDENT RATES
-          store2(ic,jc,kc) = LOG(store1(ic,jc,kc))
-          
-            END DO
-            END DO
-            END DO
-    
+
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(math_kernel_eqAS, "INCLUDE TROE FORM RATE EVALUATION", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(racnst, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(rncnst, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(reovrr, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(talpha, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ovtst1, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(tstar2, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ovtst3, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(cfcst1, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(cfcst2, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(encst1, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(encst2, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(dtcnst, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(omalph, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(clnten, 1, "real(dp)", OPS_READ))
+
 !           RSC/ZN 08-AUG-2012 BUG FIX PRESSURE-DEPENDENT RATES
 !           RESET THIRD BODY EVALUATION FLAG
             flthrd = .false.
-    
+
         END IF
 !       END OF TROE FORM RATE EVALUATION
 !                                            STORE1 = FORWARD RATE CONSTANT
 !                                            STORE2 = LN(FORWARD RATE CONSTANT)
 !                                            STORE3 = THIRD BODY CONCENTRATION
 !       =======================================================================
-  
+
 !       INCLUDE SRI FORM RATE EVALUATION, IF ANY
 !       ----------------------------------------
 !       RSC 04-OCT-2009
         IF(mslist(istep) /= 0)THEN
-    
+
             racnst = rcsrif(1,mslist(istep))
             rncnst = rcsrif(2,mslist(istep))
             reovrr = rcsrif(3,mslist(istep))
@@ -372,50 +329,34 @@ SUBROUTINE chrate
             ovcsrm = rcsrif(6,mslist(istep))
             dcfsri = rcsrif(7,mslist(istep))
             ecfsri = rcsrif(8,mslist(istep))
-    
-            DO kc = kstal,kstol
-            DO jc = jstal,jstol
-            DO ic = istal,istol
-          
-!               EVALUATE K0
-          store4(ic,jc,kc) = racnst + rncnst*LOG(trun(ic,jc,kc))  &
-              - reovrr/trun(ic,jc,kc)
-          store4(ic,jc,kc) = EXP(store4(ic,jc,kc))
-          
-!               EVALUATE REDUCED PRESURE
-          preduc = store3(ic,jc,kc)*store4(ic,jc,kc) /store1(ic,jc,kc)
-!               EVALUATE FCENT
-          fornow = bcfsrm/trun(ic,jc,kc)
-          fbroad = acfsri*EXP(fornow)
-          fornow = trun(ic,jc,kc)*ovcsrm
-          fbroad = fbroad + EXP(fornow)
-          fornow = LOG10(preduc)
-          fornow = one/(one+LOG10(fornow))
-          fbroad = dcfsri*EXP(fornow*LOG(fbroad))
-          fornow = fbroad*EXP(ecfsri*LOG(trun(ic,jc,kc)))
-          
-!               EVALUATE UPDATED FORWARD RATE CONSTANT
-          fornow = fbroad*preduc/(one+preduc)
-          store1(ic,jc,kc) = store1(ic,jc,kc)*fornow
-          
-!               RSC/ZN 08-AUG-2012 BUG FIX PRESSURE-DEPENDENT RATES
-          store2(ic,jc,kc) = LOG(store1(ic,jc,kc))
-          
-            END DO
-            END DO
-            END DO
-    
+
+            rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+            call ops_par_loop(math_kernel_eqAT, "INCLUDE SRI FORM RATE EVALUATION", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(racnst, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(rncnst, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(reovrr, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(acfsri, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(bcfsrm, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ovcsrm, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(dcfsri, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ecfsri, 1, "real(dp)", OPS_READ))
+
 !           RSC/ZN 08-AUG-2012 BUG FIX PRESSURE-DEPENDENT RATES
 !           RESET THIRD BODY EVALUATION FLAG
             flthrd = .false.
-    
+
         END IF
 !       END OF SRI FORM RATE EVALUATION
 !                                            STORE1 = FORWARD RATE CONSTANT
 !                                            STORE2 = LN(FORWARD RATE CONSTANT)
 !                                            STORE3 = THIRD BODY CONCENTRATION
 !       =======================================================================
-  
+
 !       USE STEP REACTANT-LIST
 !       ----------------------
 !       TO FIND REACTANT SPECIES FOR THIS STEP
@@ -445,44 +386,40 @@ SUBROUTINE chrate
 !                                            STORE2 = LN(FORWARD RATE CONSTANT)
 !                                            STORE3 = THIRD BODY CONCENTRATION
 !       =======================================================================
-  
+
 !       USE STEP REACTANT COEFFICIENT-LIST
 !       ----------------------------------
 !       TO FIND REACTANT SPECIES FOR THIS STEP
 !       HAVING NON-POSITIVE-integer STOICHIOMETRIC COEFFICIENTS
 !       AND OBTAIN THE COEFFICIENTS
 !       RSC 04-SEP-2009 RECODE REACTANT AND PRODUCT COEFFICIENT LISTS
-  
+
 !       NOTE: THIRD BODIES ARE NOT INCLUDED IN THE STEP REACTANT-LIST
 !       AND ARE TREATED SEPARATELY (SEE BELOW)
-  
+
         IF(nrclen(istep) > 0) THEN
-    
+
             DO isspec = 1, nrclen(istep)
-      
+
 !               GET THE SPECIES NUMBER FROM THE STEP COEFFICIENT REACTANT-LIST
                 ispec = nrcpec(isspec,istep)
-      
+
 !               GET THE REACTANT STOICHIOMETRIC COEFFICIENT
                 scoef = crspec(isspec,istep)
-      
+
 !               EVALUATE REACTANT CONCENTRATIONS AND MULTIPLY UP
 !               CONCENTRATION IS RHO*Y/WMOLAR
 !               YRHS CONTAINS RHO*Y
-                DO kc = kstal,kstol
-                DO jc = jstal,jstol
-                DO ic = istal,istol
-            
-                fornow = yrhs(ispec,ic,jc,kc)*ovwmol(ispec)
-                fornow = MAX(fornow,ysmall)
-                fornow = EXP(scoef*LOG(fornow))
-                fornow = fornow/(one+ydenom*fornow)
-                store1(ic,jc,kc) = store1(ic,jc,kc)*fornow
-            
-                END DO
-                END DO
-                END DO
-      
+                rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(math_MD_kernel_eqAA, "EVALUATE REACTANT CONCENTRATIONS", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ovwmol(ispec), 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(scoef, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ysmall, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ydenom, 1, "real(dp)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
             END DO
 
         END IF
@@ -491,7 +428,7 @@ SUBROUTINE chrate
 !                                            STORE2 = LN(FORWARD RATE CONSTANT)
 !                                            STORE3 = THIRD BODY CONCENTRATION
 !       =======================================================================
-  
+
 !       INCLUDE BACKWARD RATE EVALUATION, IF ANY
 !       ----------------------------------------
         IF(mglist(istep) /= 0) THEN
@@ -508,42 +445,35 @@ SUBROUTINE chrate
                 ispec = nsspec(isspec,istep)
 
 !               EVALUATE GIBBS FUNCTION FOR EACH SPECIES
-                DO kc = kstal,kstol
-                DO jc = jstal,jstol
-                DO ic = istal,istol
-            
-!                   LOCATE THE TEMPERATURE IN AN INTERVAL
-                    iindex = 1 + (ispec-1)/nspimx
-                    ipower = ispec - (iindex-1)*nspimx - 1
-                    icoef2 = ntbase**ipower
-                    icoef1 = icoef2*ntbase
-                    itint = 1 + MOD(itndex(iindex,ic,jc,kc),icoef1)/icoef2
-            
-!                   CONSTRUCT GIBBS FUNCTION FROM ITS POLYNOMIAL COEFFICIENTS
-                gibbsp = amolgb(ncpoly(itint,ispec),itint,ispec)
-                DO icp = ncpom1(itint,ispec),1,-1
-                    gibbsp = amolgb(icp,itint,ispec) + gibbsp*trun(ic,jc,kc)
-                END DO
-                gibbsp = amolgb(ncenth(itint,ispec),itint,ispec)  &
-                /trun(ic,jc,kc) - amolgb(ncenpy(itint,ispec),itint,ispec)  &
-                *LOG(trun(ic,jc,kc)) - gibbsp
-            
-!                 ADD GIBBS FUNCTION CONTRIBUTION TO RATE COEFFICIENT
-!                 USING STEP SPECIES DELTA-LIST
-!                 TO GET BACKWARD RATE COEFFICIENT
-                store2(ic,jc,kc) = store2(ic,jc,kc) + diffmu(isspec,istep)*gibbsp
-            
-                END DO
-                END DO
-                END DO
-      
+                rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(math_MD_kernel_eqAB, "EVALUATE GIBBS FUNCTION FOR EACH SPECIES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_READ), &
+                                ops_arg_gbl(amolgb, 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ncpoly, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ncpom1, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ncenpy, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(diffmu, 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(nspec, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(nssmax, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(nstpmx, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(isspec, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(istep, 1, "integer", OPS_READ))
+
             END DO
 !           STEP SPECIES-LIST
 !                                           STORE1 = FORWARD REACTION RATE
 !                                           STORE2 = LN(BACKWARD RATE CONSTANT)
 !                                           STORE3 = THIRD BODY CONCENTRATION
 !           =====================================================================
-    
+
 !           FINALISE BACKWARD RATE COEFFICIENT
 !           ----------------------------------
             rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
@@ -554,20 +484,20 @@ SUBROUTINE chrate
 !                                               STORE2 = BACKWARD RATE CONSTANT
 !                                               STORE3 = THIRD BODY CONCENTRATION
 !           =====================================================================
-    
+
 !           USE STEP PRODUCT-LIST
 !           ---------------------
 !           TO FIND PRODUCT SPECIES FOR THIS STEP
 !           HAVING POSITIVE integer STOICHIOMETRIC COEFFICIENTS
-    
+
 !           NOTE: THIRD BODIES ARE NOT INCLUDED IN THE STEP PRODUCT-LIST
 !           AND ARE TREATED SEPARATELY (SEE BELOW)
-    
+
             DO isspec = 1, npslen(istep)
-      
+
 !               GET THE SPECIES NUMBER FROM THE PRODUCT-LIST
                 ispec = npspec(isspec,istep)
-      
+
 !               EVALUATE PRODUCT CONCENTRATIONS AND MULTIPLY UP
 !               CONCENTRATION IS RHO*Y/WMOLAR
 !               YRHS CONTAINS RHO*Y
@@ -584,53 +514,49 @@ SUBROUTINE chrate
 !                                               STORE2 = BACKWARD REACTION RATE
 !                                               STORE3 = THIRD BODY CONCENTRATION
 !           =====================================================================
-    
+
 !           USE STEP PRODUCT COEFFICIENT-LIST
 !           ---------------------------------
 !           TO FIND PRODUCT SPECIES FOR THIS STEP
 !           HAVING NON-POSITIVE-integer STOICHIOMETRIC COEFFICIENTS
 !           AND OBTAIN THE COEFFICIENTS
 !           RSC 04-SEP-2009 RECODE REACTANT AND PRODUCT COEFFICIENT LISTS
-    
+
 !           NOTE: THIRD BODIES ARE NOT INCLUDED IN THE STEP PRODUCT-LIST
 !           AND ARE TREATED SEPARATELY (SEE BELOW)
-    
+
             IF(npclen(istep) > 0) THEN
-      
+
                 DO isspec = 1, npclen(istep)
-        
+
 !                   GET THE SPECIES NUMBER FROM THE STEP COEFFICIENT PRODUCT-LIST
                     ispec = npcpec(isspec,istep)
-        
+
 !                   GET THE PRODUCT STOICHIOMETRIC COEFFICIENT
                     scoef = cpspec(isspec,istep)
-        
+
 !                   EVALUATE PRODUCT CONCENTRATIONS AND MULTIPLY UP
 !                   CONCENTRATION IS RHO*Y/WMOLAR
 !                   YRHS CONTAINS RHO*Y
-                    DO kc = kstal,kstol
-                    DO jc = jstal,jstol
-                    DO ic = istal,istol
-              
-              fornow = yrhs(ispec,ic,jc,kc)*ovwmol(ispec)
-              fornow = MAX(fornow,ysmall)
-              fornow = EXP(scoef*LOG(fornow))
-              fornow = fornow/(one+ydenom*fornow)
-              store2(ic,jc,kc) = store2(ic,jc,kc)*fornow
-              
-                    END DO
-                    END DO
-                    END DO
-        
+                    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+                    call ops_par_loop(math_MD_kernel_eqAA, "EVALUATE PRODUCT CONCENTRATIONS", senga_grid, 3, rangexyz,  &
+                                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                                    ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(ovwmol(ispec), 1, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(scoef, 1, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(ysmall, 1, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(ydenom, 1, "real(dp)", OPS_READ), &
+                                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
                 END DO
-      
+
             END IF
 !           END OF STEP PRODUCT COEFFICIENT-LIST
 !                                               STORE1 = FORWARD REACTION RATE
 !                                               STORE2 = BACKWARD REACTION RATE
 !                                               STORE3 = THIRD BODY CONCENTRATION
 !           =====================================================================
-    
+
 !           EVALUATE NET FORWARD REACTION RATE
 !           ----------------------------------
             rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
@@ -645,17 +571,17 @@ SUBROUTINE chrate
 !                                            STORE1 = NET FORWARD REACTION RATE
 !                                            STORE3 = THIRD BODY CONCENTRATION
 !       =======================================================================
-  
+
 !       INCLUDE THIRD BODY CONCENTRATIONS, IF ANY
 !       -----------------------------------------
-  
+
 !       CHECK THIRD-BODY LIST
         IF(mblist(istep) /= 0) THEN
-    
+
 !           RSC/ZN 08-AUG-2012 BUG FIX PRESSURE-DEPENDENT RATES
 !           CHECK THIRD-BODY EVALUATION FLAG
             IF(flthrd) THEN
-      
+
 !               INCLUDE THIRD BODY CONCENTRATION IN REACTION RATE FOR THE STEP
                 rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
                 call ops_par_loop(math_kernel_eqU, "A = A*B", senga_grid, 3, rangexyz,  &
@@ -664,20 +590,20 @@ SUBROUTINE chrate
 
             END IF
 !           END OF THIRD BODY EVALUATION FLAG
-    
+
         END IF
 !       END OF THIRD BODY TREATMENT
 !                                            STORE1 = NET FORWARD REACTION RATE
 !       =======================================================================
-  
+
 !       USE STEP SPECIES-LIST AND STEP SPECIES DELTA-LIST
 !       -------------------------------------------------
 !       TO GET DIFFERENCE OF STOICHIOMETRIC COEFFICIENTS FOR EACH SPECIES
 !       (ACTUALLY DELTA-MU TIMES WMOLAR)
 !       ADD STEP CONTRIBUTION TO TOTAL RATE FOR EACH SPECIES INVOLVED
-  
+
         DO isspec = 1, nsslen(istep)
-    
+
 !           GET THE SPECIES NUMBER FROM THE STEP SPECIES-LIST
             ispec = nsspec(isspec,istep)
             fornow = diffmw(isspec,istep)
@@ -690,9 +616,9 @@ SUBROUTINE chrate
 
         END DO
 !       STEP SPECIES-LIST
-  
+
 !     =========================================================================
-  
+
     END DO
 
 !   END OF RUN THROUGH ALL STEPS IN THE REACTION MECHANISM

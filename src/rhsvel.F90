@@ -43,7 +43,6 @@ SUBROUTINE rhsvel
 !   LOCAL DATA
 !   ==========
     real(kind=dp) :: fornow,prefer
-    integer :: ic,jc,kc
     integer :: rangexyz(6)
 
 !   BEGIN

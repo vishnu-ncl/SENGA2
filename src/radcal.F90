@@ -39,7 +39,7 @@ SUBROUTINE radcal
 !   LOCAL DATA
 !   ==========
     real(kind=dp) :: plspec,fornow
-    integer :: ic,jc,kc,ispec,jspec,icp
+    integer :: ispec,jspec,icp
     integer :: rangexyz(6)
 
 !   BEGIN

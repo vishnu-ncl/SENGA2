@@ -540,6 +540,128 @@ SUBROUTINE math_kernel_eqAP(out_arr1,out_arr2,in_arr1)
 
 END SUBROUTINE math_kernel_eqAP
 
+SUBROUTINE math_kernel_eqAQ(out_arr1,out_arr2,in_arr1,racnst,rncnst,reovrr)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: out_arr1, out_arr2
+    real(kind=dp), dimension(1), intent(in) :: in_arr1
+    real(kind=dp), intent(in) :: racnst,rncnst,reovrr
+
+    out_arr2(OPS_ACC2(0,0,0)) = racnst + rncnst*LOG(in_arr1(OPS_ACC3(0,0,0)))  &
+            - reovrr/in_arr1(OPS_ACC3(0,0,0))
+    out_arr1(OPS_ACC1(0,0,0)) = EXP(out_arr2(OPS_ACC2(0,0,0)))
+
+END SUBROUTINE math_kernel_eqAQ
+
+SUBROUTINE math_kernel_eqAR(out_arr1,out_arr2,out_arr3,in_arr1,in_arr2,racnst,rncnst,reovrr,flcnst)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: out_arr1, out_arr2, out_arr3
+    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2
+    real(kind=dp), intent(in) :: racnst,rncnst,reovrr,flcnst
+
+    real(kind=dp) :: preduc,fornow
+
+!   EVALUATE K0
+    out_arr3(OPS_ACC3(0,0,0)) = racnst + rncnst*LOG(in_arr1(OPS_ACC4(0,0,0)))  &
+                              - reovrr/in_arr1(OPS_ACC4(0,0,0))
+    out_arr3(OPS_ACC3(0,0,0)) = EXP(out_arr3(OPS_ACC3(0,0,0)))
+
+!   EVALUATE REDUCED PRESURE
+    preduc = in_arr2(OPS_ACC5(0,0,0))*out_arr3(OPS_ACC3(0,0,0)) /out_arr1(OPS_ACC1(0,0,0))
+
+!   EVALUATE UPDATED FORWARD RATE CONSTANT
+    fornow = flcnst*preduc/(1.0_dp+preduc)
+    out_arr1(OPS_ACC1(0,0,0)) = out_arr1(OPS_ACC1(0,0,0))*fornow
+
+!   RSC/ZN 08-AUG-2012 BUG FIX PRESSURE-DEPENDENT RATES
+    out_arr2(OPS_ACC2(0,0,0)) = LOG(out_arr1(OPS_ACC1(0,0,0)))
+
+END SUBROUTINE math_kernel_eqAR
+
+SUBROUTINE math_kernel_eqAS(out_arr1,out_arr2,out_arr3,in_arr1,in_arr2,racnst,rncnst,reovrr,talpha,ovtst1,tstar2,ovtst3,cfcst1,cfcst2,encst1,encst2,dtcnst,omalph,clnten)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: out_arr1, out_arr2, out_arr3
+    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2
+    real(kind=dp), intent(in) :: racnst,rncnst,reovrr,talpha,ovtst1,tstar2,ovtst3,cfcst1,cfcst2,encst1,encst2,dtcnst,omalph,clnten
+
+    real(kind=dp) :: preduc,fornow,trats1,trats2,trats3,ftcent,cfactr,enfact,fbroad
+
+!   EVALUATE K0
+    out_arr3(OPS_ACC3(0,0,0)) = racnst + rncnst*LOG(in_arr1(OPS_ACC4(0,0,0)))  &
+                              - reovrr/in_arr1(OPS_ACC4(0,0,0))
+    out_arr3(OPS_ACC3(0,0,0)) = EXP(out_arr3(OPS_ACC3(0,0,0)))
+
+!   EVALUATE REDUCED PRESURE
+    preduc = in_arr2(OPS_ACC5(0,0,0))*out_arr3(OPS_ACC3(0,0,0)) /out_arr1(OPS_ACC1(0,0,0))
+
+!   EVALUATE FCENT
+    trats1 = in_arr1(OPS_ACC4(0,0,0))*ovtst1
+    trats2 = tstar2/in_arr1(OPS_ACC4(0,0,0))
+    trats3 = in_arr1(OPS_ACC4(0,0,0))*ovtst3
+    ftcent = omalph*EXP(trats3) + talpha*EXP(trats1)  &
+           + EXP(trats2)
+    ftcent = LOG10(ftcent)
+
+!   EVALUATE BROADENING FACTOR
+    cfactr = cfcst1 + cfcst2*ftcent
+    enfact = encst1 + encst2*ftcent
+    fornow = LOG10(preduc) + cfactr
+    fornow = fornow/(enfact - dtcnst*fornow)
+    fornow = 1.0_dp + fornow*fornow
+    fbroad = ftcent/fornow
+    fbroad = EXP(fbroad*clnten)
+
+!   EVALUATE UPDATED FORWARD RATE CONSTANT
+    fornow = fbroad*preduc/(1.0_dp+preduc)
+    out_arr1(OPS_ACC1(0,0,0)) = out_arr1(OPS_ACC1(0,0,0))*fornow
+
+!   RSC/ZN 08-AUG-2012 BUG FIX PRESSURE-DEPENDENT RATES
+    out_arr2(OPS_ACC2(0,0,0)) = LOG(out_arr1(OPS_ACC1(0,0,0)))
+
+END SUBROUTINE math_kernel_eqAS
+
+SUBROUTINE math_kernel_eqAT(out_arr1,out_arr2,out_arr3,in_arr1,in_arr2,racnst,rncnst,reovrr,acfsri,bcfsrm,ovcsrm,dcfsri,ecfsri)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: out_arr1, out_arr2, out_arr3
+    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2
+    real(kind=dp), intent(in) :: racnst,rncnst,reovrr,acfsri,bcfsrm,ovcsrm,dcfsri,ecfsri
+
+    real(kind=dp) :: preduc,fornow,fbroad
+
+!   EVALUATE K0
+    out_arr3(OPS_ACC3(0,0,0)) = racnst + rncnst*LOG(in_arr1(OPS_ACC4(0,0,0)))  &
+                              - reovrr/in_arr1(OPS_ACC4(0,0,0))
+    out_arr3(OPS_ACC3(0,0,0)) = EXP(out_arr3(OPS_ACC3(0,0,0)))
+
+!   EVALUATE REDUCED PRESURE
+    preduc = in_arr2(OPS_ACC5(0,0,0))*out_arr3(OPS_ACC3(0,0,0)) /out_arr1(OPS_ACC1(0,0,0))
+
+!   EVALUATE FCENT
+    fornow = bcfsrm/in_arr1(OPS_ACC4(0,0,0))
+    fbroad = acfsri*EXP(fornow)
+    fornow = in_arr1(OPS_ACC4(0,0,0))*ovcsrm
+    fbroad = fbroad + EXP(fornow)
+    fornow = LOG10(preduc)
+    fornow = 1.0_dp/(1.0_dp+LOG10(fornow))
+    fbroad = dcfsri*EXP(fornow*LOG(fbroad))
+    fornow = fbroad*EXP(ecfsri*LOG(in_arr1(OPS_ACC4(0,0,0))))
+
+!   EVALUATE UPDATED FORWARD RATE CONSTANT
+    fornow = fbroad*preduc/(1.0_dp+preduc)
+    out_arr1(OPS_ACC1(0,0,0)) = out_arr1(OPS_ACC1(0,0,0))*fornow
+
+!   RSC/ZN 08-AUG-2012 BUG FIX PRESSURE-DEPENDENT RATES
+    out_arr2(OPS_ACC2(0,0,0)) = LOG(out_arr1(OPS_ACC1(0,0,0)))
+
+END SUBROUTINE math_kernel_eqAT
+
 SUBROUTINE math_kernel_eqtau(out_arr1,out_arr2,in_arr1,in_arr2,in_arr3,var)
     use data_types
     implicit none
