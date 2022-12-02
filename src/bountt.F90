@@ -109,14 +109,17 @@ SUBROUTINE bountt
         DO ispec = 1,nspec
           
           itint = 1
-          1000            CONTINUE
-          IF(strtxl(1,jc,kc) > tinthi(itint,ispec))THEN
-            IF(itint < ntint(ispec))THEN
-              itint = itint + 1
-              GO TO 1000
-            END IF
-          END IF
+!          1000            CONTINUE
+!          IF(strtxl(1,jc,kc) > tinthi(itint,ispec))THEN
+!            IF(itint < ntint(ispec))THEN
+!              itint = itint + 1
+!              GO TO 1000
+!            END IF
+!          END IF
 !               END OF LOOP 1000
+            DO WHILE (strtxl(1,jc,kc) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+                itint = itint + 1
+            END DO
           
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
@@ -302,15 +305,17 @@ SUBROUTINE bountt
         DO ispec = 1,nspec
           
           itint = 1
-          1100            CONTINUE
-          IF(strtxl(1,jc,kc) > tinthi(itint,ispec))THEN
-            IF(itint < ntint(ispec))THEN
-              itint = itint + 1
-              GO TO 1100
-            END IF
-          END IF
+!          1100            CONTINUE
+!          IF(strtxl(1,jc,kc) > tinthi(itint,ispec))THEN
+!            IF(itint < ntint(ispec))THEN
+!              itint = itint + 1
+!              GO TO 1100
+!            END IF
+!          END IF
 !               END OF LOOP 1100
-          
+            DO WHILE (strtxl(1,jc,kc) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+                itint = itint + 1
+            END DO         
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1
@@ -437,15 +442,17 @@ SUBROUTINE bountt
         DO ispec = 1,nspec
           
           itint = 1
-          1500            CONTINUE
-          IF(strtxr(1,jc,kc) > tinthi(itint,ispec))THEN
-            IF(itint < ntint(ispec))THEN
-              itint = itint + 1
-              GO TO 1500
-            END IF
-          END IF
+!          1500            CONTINUE
+!          IF(strtxr(1,jc,kc) > tinthi(itint,ispec))THEN
+!            IF(itint < ntint(ispec))THEN
+!              itint = itint + 1
+!              GO TO 1500
+!            END IF
+!          END IF
 !               END OF LOOP 1500
-          
+            DO WHILE (strtxr(1,jc,kc) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+                itint = itint + 1
+            END DO         
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1
@@ -632,15 +639,17 @@ SUBROUTINE bountt
         DO ispec = 1,nspec
           
           itint = 1
-          1600            CONTINUE
-          IF(strtxr(1,jc,kc) > tinthi(itint,ispec))THEN
-            IF(itint < ntint(ispec))THEN
-              itint = itint + 1
-              GO TO 1600
-            END IF
-          END IF
+!          1600            CONTINUE
+!          IF(strtxr(1,jc,kc) > tinthi(itint,ispec))THEN
+!            IF(itint < ntint(ispec))THEN
+!              itint = itint + 1
+!              GO TO 1600
+!            END IF
+!          END IF
 !               END OF LOOP 1600
-          
+            DO WHILE (strtxr(1,jc,kc) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+                itint = itint + 1
+            END DO         
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1
@@ -773,15 +782,17 @@ SUBROUTINE bountt
         DO ispec = 1,nspec
           
           itint = 1
-          2000            CONTINUE
-          IF(strtyl(ic,1,kc) > tinthi(itint,ispec))THEN
-            IF(itint < ntint(ispec))THEN
-              itint = itint + 1
-              GO TO 2000
-            END IF
-          END IF
+!          2000            CONTINUE
+!          IF(strtyl(ic,1,kc) > tinthi(itint,ispec))THEN
+!            IF(itint < ntint(ispec))THEN
+!              itint = itint + 1
+!              GO TO 2000
+!            END IF
+!          END IF
 !               END OF LOOP 2000
-          
+            DO WHILE (strtyl(ic,1,kc) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+                itint = itint + 1
+            END DO         
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1
@@ -966,15 +977,17 @@ SUBROUTINE bountt
         DO ispec = 1,nspec
           
           itint = 1
-          2100            CONTINUE
-          IF(strtyl(ic,1,kc) > tinthi(itint,ispec))THEN
-            IF(itint < ntint(ispec))THEN
-              itint = itint + 1
-              GO TO 2100
-            END IF
-          END IF
+!          2100            CONTINUE
+!          IF(strtyl(ic,1,kc) > tinthi(itint,ispec))THEN
+!            IF(itint < ntint(ispec))THEN
+!              itint = itint + 1
+!              GO TO 2100
+!            END IF
+!          END IF
 !               END OF LOOP 2100
-          
+            DO WHILE (strtyl(ic,1,kc) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+                itint = itint + 1
+            END DO         
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1
@@ -1108,15 +1121,18 @@ SUBROUTINE bountt
         DO ispec = 1,nspec
           
           itint = 1
-          2500            CONTINUE
-          IF(strtyr(ic,1,kc) > tinthi(itint,ispec))THEN
-            IF(itint < ntint(ispec))THEN
-              itint = itint + 1
-              GO TO 2500
-            END IF
-          END IF
+!          2500            CONTINUE
+!          IF(strtyr(ic,1,kc) > tinthi(itint,ispec))THEN
+!            IF(itint < ntint(ispec))THEN
+!              itint = itint + 1
+!              GO TO 2500
+!            END IF
+!          END IF
 !               END OF LOOP 2500
-          
+            DO WHILE (strtyr(ic,1,kc) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+                itint = itint + 1
+            END DO
+         
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1
@@ -1303,15 +1319,18 @@ SUBROUTINE bountt
         DO ispec = 1,nspec
           
           itint = 1
-          2600            CONTINUE
-          IF(strtyr(ic,1,kc) > tinthi(itint,ispec))THEN
-            IF(itint < ntint(ispec))THEN
-              itint = itint + 1
-              GO TO 2600
-            END IF
-          END IF
+!          2600            CONTINUE
+!          IF(strtyr(ic,1,kc) > tinthi(itint,ispec))THEN
+!            IF(itint < ntint(ispec))THEN
+!              itint = itint + 1
+!              GO TO 2600
+!            END IF
+!          END IF
 !               END OF LOOP 2600
-          
+            DO WHILE (strtyr(ic,1,kc) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+                itint = itint + 1
+            END DO 
+         
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1
@@ -1444,15 +1463,18 @@ SUBROUTINE bountt
         DO ispec = 1,nspec
           
           itint = 1
-          3000            CONTINUE
-          IF(strtzl(ic,jc,1) > tinthi(itint,ispec))THEN
-            IF(itint < ntint(ispec))THEN
-              itint = itint + 1
-              GO TO 3000
-            END IF
-          END IF
+!          3000            CONTINUE
+!          IF(strtzl(ic,jc,1) > tinthi(itint,ispec))THEN
+!            IF(itint < ntint(ispec))THEN
+!              itint = itint + 1
+!              GO TO 3000
+!            END IF
+!          END IF
 !               END OF LOOP 3000
-          
+            DO WHILE (strtzl(ic,jc,1) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+                itint = itint + 1
+            END DO
+         
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1
@@ -1639,15 +1661,18 @@ SUBROUTINE bountt
         DO ispec = 1,nspec
           
           itint = 1
-          3100            CONTINUE
-          IF(strtzl(ic,jc,1) > tinthi(itint,ispec))THEN
-            IF(itint < ntint(ispec))THEN
-              itint = itint + 1
-              GO TO 3100
-            END IF
-          END IF
+!          3100            CONTINUE
+!          IF(strtzl(ic,jc,1) > tinthi(itint,ispec))THEN
+!            IF(itint < ntint(ispec))THEN
+!              itint = itint + 1
+!              GO TO 3100
+!            END IF
+!          END IF
 !               END OF LOOP 3100
-          
+            DO WHILE (strtzl(ic,jc,1) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+                itint = itint + 1
+            END DO
+         
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1
@@ -1780,15 +1805,18 @@ SUBROUTINE bountt
         DO ispec = 1,nspec
           
           itint = 1
-          3500            CONTINUE
-          IF(strtzr(ic,jc,1) > tinthi(itint,ispec))THEN
-            IF(itint < ntint(ispec))THEN
-              itint = itint + 1
-              GO TO 3500
-            END IF
-          END IF
+!          3500            CONTINUE
+!          IF(strtzr(ic,jc,1) > tinthi(itint,ispec))THEN
+!            IF(itint < ntint(ispec))THEN
+!              itint = itint + 1
+!              GO TO 3500
+!            END IF
+!          END IF
 !               END OF LOOP 3500
-          
+            DO WHILE (strtzr(ic,jc,1) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+                itint = itint + 1
+            END DO
+         
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1
@@ -1975,15 +2003,18 @@ SUBROUTINE bountt
         DO ispec = 1,nspec
           
           itint = 1
-          3600            CONTINUE
-          IF(strtzr(ic,jc,1) > tinthi(itint,ispec))THEN
-            IF(itint < ntint(ispec))THEN
-              itint = itint + 1
-              GO TO 3600
-            END IF
-          END IF
+!          3600            CONTINUE
+!          IF(strtzr(ic,jc,1) > tinthi(itint,ispec))THEN
+!            IF(itint < ntint(ispec))THEN
+!              itint = itint + 1
+!              GO TO 3600
+!            END IF
+!          END IF
 !               END OF LOOP 3600
-          
+            DO WHILE (strtzr(ic,jc,1) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+                itint = itint + 1
+            END DO
+         
 !               SET THE TEMPERATURE INTERVAL INDEX
           iindex = 1 + (ispec-1)/nspimx
           ipower = ispec - (iindex-1)*nspimx - 1

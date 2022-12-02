@@ -1112,15 +1112,18 @@ SUBROUTINE indata
   
 !       TEMPERATURE INTERVAL INDEX
         itint = 1
-        1010    CONTINUE
-        IF(trin > tinthi(itint,ispec)) THEN
-            IF(itint < ntint(ispec)) THEN
-                itint = itint + 1
-                GO TO 1010
-            END IF
-        END IF
+!        1010    CONTINUE
+!        IF(trin > tinthi(itint,ispec)) THEN
+!            IF(itint < ntint(ispec)) THEN
+!                itint = itint + 1
+!                GO TO 1010
+!            END IF
+!        END IF
 !       END OF LOOP 1010
-  
+        DO WHILE (trin > tinthi(itint,ispec) .and. itint < ntint(ispec))
+            itint = itint + 1
+        END DO
+ 
         fornow = amasch(ncpoly(itint,ispec),itint,ispec)
         DO icp = ncpom1(itint,ispec),1,-1
             fornow = fornow*trin + amasch(icp,itint,ispec)
@@ -1197,15 +1200,18 @@ DO kc = kstab,kstob
       DO ispec = 1,nspec
         
         itint = 1
-        1000          CONTINUE
-        IF(trun(ic,jc,kc) > tinthi(itint,ispec))THEN
-          IF(itint < ntint(ispec))THEN
-            itint = itint + 1
-            GO TO 1000
-          END IF
-        END IF
+!        1000          CONTINUE
+!        IF(trun(ic,jc,kc) > tinthi(itint,ispec))THEN
+!          IF(itint < ntint(ispec))THEN
+!            itint = itint + 1
+!            GO TO 1000
+!          END IF
+!        END IF
 !             END OF LOOP 1000
-        
+        DO WHILE (trun(ic,jc,kc) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+            itint = itint + 1
+        END DO
+       
 !             SET THE TEMPERATURE INDEX
         iindex = 1 + (ispec-1)/nspimx
         ipower = ispec - (iindex-1)*nspimx - 1

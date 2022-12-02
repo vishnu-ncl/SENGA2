@@ -132,42 +132,86 @@ DO kc = kstalt,kstolt
 !           USING NEWTON-RAPHSON
       tempor = trun(ic,jc,kc)
       ititrs = 1
-      1000        CONTINUE
+!      1000        CONTINUE
       
 !             EVALUATE TEMPERATURE POLYNOMIAL AND ITS DERIVATIVE
-      tfpoly = tcoeff(nctmax)
-      tdpoly = tderiv(nctmax)
-      DO icp = nctmm1,1,-1
-        tfpoly = tcoeff(icp) + tfpoly*tempor
-        tdpoly = tderiv(icp) + tdpoly*tempor
-      END DO
-      tfpoly = tcoeff(0) + tfpoly*tempor
+!      tfpoly = tcoeff(nctmax)
+!      tdpoly = tderiv(nctmax)
+!      DO icp = nctmm1,1,-1
+!        tfpoly = tcoeff(icp) + tfpoly*tempor
+!        tdpoly = tderiv(icp) + tdpoly*tempor
+!      END DO
+!      tfpoly = tcoeff(0) + tfpoly*tempor
       
 !             EVALUATE TEMPERATURE CORRECTION
-      deltmp = -tfpoly/tdpoly
+!      deltmp = -tfpoly/tdpoly
       
 !             CHECK FOR CONVERGENCE
-      IF(ABS(deltmp) > toltmp)THEN
-        IF(ititrs < ntitrs)THEN
-          tempor = tempor + deltmp
-          ititrs = ititrs + 1
-          GO TO 1000
-        ELSE
-          WRITE(6,*) 'Fatal: TEMPER: T iteration failed to converge'
-          WRITE(6,*)'processor:',iproc
-          WRITE(6,*)'at point:',ic,jc,kc
-          WRITE(6,*)'with values:',tempor,deltmp
-          WRITE(6,*)drhs(ic,jc,kc)
-          WRITE(6,*)urhs(ic,jc,kc)
-          WRITE(6,*)vrhs(ic,jc,kc)
-          WRITE(6,*)wrhs(ic,jc,kc)
-          WRITE(6,*)erhs(ic,jc,kc)
-          STOP
-        END IF
-      END IF
+!      IF(ABS(deltmp) > toltmp)THEN
+!        IF(ititrs < ntitrs)THEN
+!          tempor = tempor + deltmp
+!          ititrs = ititrs + 1
+!          GO TO 1000
+!        ELSE
+!          WRITE(6,*) 'Fatal: TEMPER: T iteration failed to converge'
+!          WRITE(6,*)'processor:',iproc
+!          WRITE(6,*)'at point:',ic,jc,kc
+!          WRITE(6,*)'with values:',tempor,deltmp
+!          WRITE(6,*)drhs(ic,jc,kc)
+!          WRITE(6,*)urhs(ic,jc,kc)
+!          WRITE(6,*)vrhs(ic,jc,kc)
+!          WRITE(6,*)wrhs(ic,jc,kc)
+!          WRITE(6,*)erhs(ic,jc,kc)
+!          STOP
+!        END IF
+!      END IF
       
 !           END OF LOOP 1000
-      
+
+!       EVALUATE TEMPERATURE POLYNOMIAL AND ITS DERIVATIVE
+        tfpoly = tcoeff(nctmax)
+        tdpoly = tderiv(nctmax)
+        DO icp = nctmm1,1,-1
+            tfpoly = tcoeff(icp) + tfpoly*tempor
+            tdpoly = tderiv(icp) + tdpoly*tempor
+        END DO
+        tfpoly = tcoeff(0) + tfpoly*tempor
+
+!       EVALUATE TEMPERATURE CORRECTION
+        deltmp = -tfpoly/tdpoly
+
+!       CHECK FOR CONVERGENCE
+        DO WHILE (ABS(deltmp) > toltmp)
+            IF(ititrs < ntitrs)THEN
+                tempor = tempor + deltmp
+                ititrs = ititrs + 1
+
+!               RE-EVALUATE TEMPERATURE POLYNOMIAL AND ITS DERIVATIVE
+                tfpoly = tcoeff(nctmax)
+                tdpoly = tderiv(nctmax)
+                DO icp = nctmm1,1,-1
+                    tfpoly = tcoeff(icp) + tfpoly*tempor
+                    tdpoly = tderiv(icp) + tdpoly*tempor
+                END DO
+                tfpoly = tcoeff(0) + tfpoly*tempor
+
+!               RE-EVALUATE TEMPERATURE CORRECTION
+                deltmp = -tfpoly/tdpoly
+          
+            ELSE
+                WRITE(6,*) 'Fatal: TEMPER: T iteration failed to converge'
+                WRITE(6,*)'processor:',iproc
+                WRITE(6,*)'at point:',ic,jc,kc
+                WRITE(6,*)'with values:',tempor,deltmp
+                WRITE(6,*)drhs(ic,jc,kc)
+                WRITE(6,*)urhs(ic,jc,kc)
+                WRITE(6,*)vrhs(ic,jc,kc)
+                WRITE(6,*)wrhs(ic,jc,kc)
+                WRITE(6,*)erhs(ic,jc,kc)
+                STOP
+            END IF
+        END DO      
+
 !           ===================================================================
       
 !           SET THE NEW TEMPERATURE
@@ -184,15 +228,18 @@ DO kc = kstalt,kstolt
       DO ispec = 1,nspec
         
         itint = 1
-        1100          CONTINUE
-        IF(trun(ic,jc,kc) > tinthi(itint,ispec))THEN
-          IF(itint < ntint(ispec))THEN
-            itint = itint + 1
-            GO TO 1100
-          END IF
-        END IF
+!        1100          CONTINUE
+!        IF(trun(ic,jc,kc) > tinthi(itint,ispec))THEN
+!          IF(itint < ntint(ispec))THEN
+!            itint = itint + 1
+!            GO TO 1100
+!          END IF
+!        END IF
 !             END OF LOOP 1100
-        
+        DO WHILE (trun(ic,jc,kc) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+            itint = itint + 1
+        END DO
+       
 !             SET THE TEMPERATURE INTERVAL INDEX
         iindex = 1 + (ispec-1)/nspimx
         ipower = ispec - (iindex-1)*nspimx - 1

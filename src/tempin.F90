@@ -106,15 +106,18 @@ DO kc = kstalt,kstolt
       DO ispec = 1,nspec
         
         itint = 1
-        1100          CONTINUE
-        IF(tempor > tinthi(itint,ispec))THEN
-          IF(itint < ntint(ispec))THEN
-            itint = itint + 1
-            GO TO 1100
-          END IF
-        END IF
+!        1100          CONTINUE
+!        IF(tempor > tinthi(itint,ispec))THEN
+!          IF(itint < ntint(ispec))THEN
+!            itint = itint + 1
+!            GO TO 1100
+!          END IF
+!        END IF
 !             END OF LOOP 1100
-        
+        DO WHILE (tempor > tinthi(itint,ispec) .and. itint < ntint(ispec))
+            itint = itint + 1
+        END DO
+       
 !             CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
         tcoeff(0) = tcoeff(0) + yrhs(ispec,ic,jc,kc)*  &
             amascp(ncenth(itint,ispec),itint,ispec)
@@ -172,15 +175,18 @@ DO kc = kstalt,kstolt
         DO ispec = 1,nspec
           
           itint = 1
-          2100              CONTINUE
-          IF(tempor > tinthi(itint,ispec))THEN
-            IF(itint < ntint(ispec))THEN
-              itint = itint + 1
-              GO TO 2100
-            END IF
-          END IF
+!          2100              CONTINUE
+!          IF(tempor > tinthi(itint,ispec))THEN
+!            IF(itint < ntint(ispec))THEN
+!              itint = itint + 1
+!              GO TO 2100
+!            END IF
+!          END IF
 !                 END OF LOOP 2100
-          
+            DO WHILE (tempor > tinthi(itint,ispec) .and. itint < ntint(ispec))
+                itint = itint + 1
+            END DO
+         
 !                 CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
           tcoeff(0) = tcoeff(0) + yrhs(ispec,ic,jc,kc)*  &
               amascp(ncenth(itint,ispec),itint,ispec)
@@ -279,15 +285,18 @@ DO kc = kstalt,kstolt
         DO ispec = 1,nspec
           
           itint = 1
-          3100              CONTINUE
-          IF(tempor > tinthi(itint,ispec))THEN
-            IF(itint < ntint(ispec))THEN
-              itint = itint + 1
-              GO TO 3100
-            END IF
-          END IF
+!          3100              CONTINUE
+!          IF(tempor > tinthi(itint,ispec))THEN
+!            IF(itint < ntint(ispec))THEN
+!              itint = itint + 1
+!              GO TO 3100
+!            END IF
+!          END IF
 !                 END OF LOOP 3100
-          
+            DO WHILE (tempor > tinthi(itint,ispec) .and. itint < ntint(ispec))
+                itint = itint + 1
+            END DO
+         
 !                 CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
           tcoeff(0) = tcoeff(0) + yrhs(ispec,ic,jc,kc)*  &
               amascp(ncenth(itint,ispec),itint,ispec)
@@ -391,15 +400,18 @@ DO kc = kstalt,kstolt
         DO ispec = 1,nspec
           
           itint = 1
-          4100              CONTINUE
-          IF(tempor > tinthi(itint,ispec))THEN
-            IF(itint < ntint(ispec))THEN
-              itint = itint + 1
-              GO TO 4100
-            END IF
-          END IF
+!          4100              CONTINUE
+!          IF(tempor > tinthi(itint,ispec))THEN
+!            IF(itint < ntint(ispec))THEN
+!              itint = itint + 1
+!              GO TO 4100
+!            END IF
+!          END IF
 !                 END OF LOOP 4100
-          
+            DO WHILE (tempor > tinthi(itint,ispec) .and. itint < ntint(ispec))
+                itint = itint + 1
+            END DO
+         
 !                 CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
           tcoeff(0) = tcoeff(0) + yrhs(ispec,ic,jc,kc)*  &
               amascp(ncenth(itint,ispec),itint,ispec)
@@ -464,15 +476,18 @@ DO kc = kstalt,kstolt
       DO ispec = 1,nspec
         
         itint = 1
-        5100          CONTINUE
-        IF(trun(ic,jc,kc) > tinthi(itint,ispec))THEN
-          IF(itint < ntint(ispec))THEN
-            itint = itint + 1
-            GO TO 5100
-          END IF
-        END IF
+!        5100          CONTINUE
+!        IF(trun(ic,jc,kc) > tinthi(itint,ispec))THEN
+!          IF(itint < ntint(ispec))THEN
+!            itint = itint + 1
+!            GO TO 5100
+!          END IF
+!        END IF
 !             END OF LOOP 5100
-        
+        DO WHILE (trun(ic,jc,kc) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+            itint = itint + 1
+        END DO
+       
 !             SET THE TEMPERATURE INDEX
         iindex = 1 + (ispec-1)/nspimx
         ipower = ispec - (iindex-1)*nspimx - 1
