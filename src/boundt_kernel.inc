@@ -159,3 +159,329 @@ SUBROUTINE boundt_kernel_eqD_zdir(yrhs,stryz,strdz,ispec)
     yrhs(OPS_ACC_MD1(ispec,0,0,0)) = strdz(OPS_ACC3(0,0,0))*stryz(OPS_ACC_MD2(ispec,0,0,0))
 
 END SUBROUTINE boundt_kernel_eqD_zdir
+
+SUBROUTINE boundt_kernel_eqE_xdir(strtx,itndex,tinthi,ntint,ntbase,nintmx,nspimx,nspec)
+    use data_types
+    implicit none
+
+    integer, dimension(1) :: itndex
+    real(kind=dp), dimension(1), intent(in) :: strtx
+
+    integer, intent(in) :: ntbase,nintmx,nspimx,nspec
+
+    real(kind=dp), dimension(nintmx,nspec), intent(in) :: tinthi
+    integer, dimension(nspec), intent(in) :: ntint
+    integer :: iindex,ispec,itint,ipower
+
+    DO iindex = 1,nintmx
+        itndex(OPS_ACC_MD2(iindex,0,0,0)) = 0
+    END DO
+
+    DO ispec = 1,nspec
+        itint = 1
+!       1000            CONTINUE
+!       IF(strtx(OPS_ACC1(0,0,0)) > tinthi(itint,ispec))THEN
+!           IF(itint < ntint(ispec))THEN
+!               itint = itint + 1
+!               GO TO 1000
+!           END IF
+!       END IF
+!       END OF LOOP 1000
+        DO WHILE (strtx(OPS_ACC1(0,0,0)) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+            itint = itint + 1
+        END DO
+
+!       SET THE TEMPERATURE INTERVAL INDEX
+        iindex = 1 + (ispec-1)/nspimx
+        ipower = ispec - (iindex-1)*nspimx - 1
+
+        itndex(OPS_ACC_MD2(iindex,0,0,0)) = itndex(OPS_ACC_MD2(iindex,0,0,0))  &
+              + (itint-1)*ntbase**ipower
+
+    END DO
+
+END SUBROUTINE boundt_kernel_eqE_xdir
+
+SUBROUTINE boundt_kernel_eqE_ydir(strty,itndex,tinthi,ntint,ntbase,nintmx,nspimx,nspec)
+    use data_types
+    implicit none
+
+    integer, dimension(1) :: itndex
+    real(kind=dp), dimension(1), intent(in) :: strty
+
+    integer, intent(in) :: ntbase,nintmx,nspimx,nspec
+
+    real(kind=dp), dimension(nintmx,nspec), intent(in) :: tinthi
+    integer, dimension(nspec), intent(in) :: ntint
+    integer :: iindex,ispec,itint,ipower
+
+    DO iindex = 1,nintmx
+        itndex(OPS_ACC_MD2(iindex,0,0,0)) = 0
+    END DO
+
+    DO ispec = 1,nspec
+        itint = 1
+!       1000            CONTINUE
+!       IF(strty(OPS_ACC1(0,0,0)) > tinthi(itint,ispec))THEN
+!           IF(itint < ntint(ispec))THEN
+!               itint = itint + 1
+!               GO TO 1000
+!           END IF
+!       END IF
+!       END OF LOOP 1000
+        DO WHILE (strty(OPS_ACC1(0,0,0)) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+            itint = itint + 1
+        END DO
+
+!       SET THE TEMPERATURE INTERVAL INDEX
+        iindex = 1 + (ispec-1)/nspimx
+        ipower = ispec - (iindex-1)*nspimx - 1
+
+        itndex(OPS_ACC_MD2(iindex,0,0,0)) = itndex(OPS_ACC_MD2(iindex,0,0,0))  &
+              + (itint-1)*ntbase**ipower
+
+    END DO
+
+END SUBROUTINE boundt_kernel_eqE_ydir
+
+SUBROUTINE boundt_kernel_eqE_zdir(strtz,itndex,tinthi,ntint,ntbase,nintmx,nspimx,nspec)
+    use data_types
+    implicit none
+
+    integer, dimension(1) :: itndex
+    real(kind=dp), dimension(1), intent(in) :: strtz
+
+    integer, intent(in) :: ntbase,nintmx,nspimx,nspec
+
+    real(kind=dp), dimension(nintmx,nspec), intent(in) :: tinthi
+    integer, dimension(nspec), intent(in) :: ntint
+    integer :: iindex,ispec,itint,ipower
+
+    DO iindex = 1,nintmx
+        itndex(OPS_ACC_MD2(iindex,0,0,0)) = 0
+    END DO
+
+    DO ispec = 1,nspec
+        itint = 1
+!       1000            CONTINUE
+!       IF(strtz(OPS_ACC1(0,0,0)) > tinthi(itint,ispec))THEN
+!           IF(itint < ntint(ispec))THEN
+!               itint = itint + 1
+!               GO TO 1000
+!           END IF
+!       END IF
+!       END OF LOOP 1000
+        DO WHILE (strtz(OPS_ACC1(0,0,0)) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+            itint = itint + 1
+        END DO
+
+!       SET THE TEMPERATURE INTERVAL INDEX
+        iindex = 1 + (ispec-1)/nspimx
+        ipower = ispec - (iindex-1)*nspimx - 1
+
+        itndex(OPS_ACC_MD2(iindex,0,0,0)) = itndex(OPS_ACC_MD2(iindex,0,0,0))  &
+              + (itint-1)*ntbase**ipower
+
+    END DO
+
+END SUBROUTINE boundt_kernel_eqE_zdir
+
+SUBROUTINE boundt_kernel_eqF_xdir(erhs,yrhs,itndex,drhs,strtx,stryx,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) ::erhs,yrhs
+    integer, dimension(1), intent(in) :: itndex
+    real(kind=dp), dimension(1), intent(in) :: drhs,strtx,stryx
+
+    integer, intent(in) :: ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec
+
+    real(kind=dp), dimension(ncofmx,ntinmx,nspec), intent(in) :: amasch
+    real(kind=dp), intent(in) :: rgspec
+    integer, dimension(ntinmx,nspec), intent(in) :: ncpoly,ncpom1,ncenth
+
+    real(kind=dp) :: fornow
+    integer :: itint,icp
+
+    itint = 1 +MOD(itndex(OPS_ACC_MD3(iindex,0,0,0)),icoef1)/icoef2
+    fornow = amasch(ncpoly(itint,ispec),itint,ispec)
+
+    DO icp = ncpom1(itint,ispec),1,-1
+        fornow = fornow*strtx(OPS_ACC5(0,0,0)) + amasch(icp,itint,ispec)
+    END DO
+
+    fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
+              + fornow*strtx(OPS_ACC5(0,0,0))
+
+    yrhs(OPS_ACC_MD2(ispec,0,0,0)) = drhs(OPS_ACC4(0,0,0))*stryx(OPS_ACC_MD6(ispec,0,0,0))
+
+    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0))  &
+                      + (fornow-rgspec*strtx(OPS_ACC5(0,0,0)))*yrhs(OPS_ACC_MD2(ispec,0,0,0))
+
+END SUBROUTINE boundt_kernel_eqF_xdir
+
+SUBROUTINE boundt_kernel_eqF_ydir(erhs,yrhs,itndex,drhs,strty,stryy,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) ::erhs,yrhs
+    integer, dimension(1), intent(in) :: itndex
+    real(kind=dp), dimension(1), intent(in) :: drhs,strty,stryy
+    
+    integer, intent(in) :: ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec
+
+    real(kind=dp), dimension(ncofmx,ntinmx,nspec), intent(in) :: amasch
+    real(kind=dp), intent(in) :: rgspec
+    integer, dimension(ntinmx,nspec), intent(in) :: ncpoly,ncpom1,ncenth
+
+    real(kind=dp) :: fornow
+    integer :: itint,icp
+
+    itint = 1 +MOD(itndex(OPS_ACC_MD3(iindex,0,0,0)),icoef1)/icoef2
+    fornow = amasch(ncpoly(itint,ispec),itint,ispec)
+
+    DO icp = ncpom1(itint,ispec),1,-1
+        fornow = fornow*strty(OPS_ACC5(0,0,0)) + amasch(icp,itint,ispec)
+    END DO
+
+    fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
+              + fornow*strty(OPS_ACC5(0,0,0))
+
+    yrhs(OPS_ACC_MD2(ispec,0,0,0)) = drhs(OPS_ACC4(0,0,0))*stryy(OPS_ACC_MD6(ispec,0,0,0))
+
+    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0))  &
+                      + (fornow-rgspec*strty(OPS_ACC5(0,0,0)))*yrhs(OPS_ACC_MD2(ispec,0,0,0))
+
+END SUBROUTINE boundt_kernel_eqF_ydir
+
+SUBROUTINE boundt_kernel_eqF_zdir(erhs,yrhs,itndex,drhs,strtz,stryz,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) ::erhs,yrhs
+    integer, dimension(1), intent(in) :: itndex
+    real(kind=dp), dimension(1), intent(in) :: drhs,strtz,stryz
+
+    integer, intent(in) :: ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec
+
+    real(kind=dp), dimension(ncofmx,ntinmx,nspec), intent(in) :: amasch
+    real(kind=dp), intent(in) :: rgspec
+    integer, dimension(ntinmx,nspec), intent(in) :: ncpoly,ncpom1,ncenth
+
+    real(kind=dp) :: fornow
+    integer :: itint,icp
+
+    itint = 1 +MOD(itndex(OPS_ACC_MD3(iindex,0,0,0)),icoef1)/icoef2
+    fornow = amasch(ncpoly(itint,ispec),itint,ispec)
+
+    DO icp = ncpom1(itint,ispec),1,-1
+        fornow = fornow*strtz(OPS_ACC5(0,0,0)) + amasch(icp,itint,ispec)
+    END DO
+
+    fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
+              + fornow*strtz(OPS_ACC5(0,0,0))
+
+    yrhs(OPS_ACC_MD2(ispec,0,0,0)) = drhs(OPS_ACC4(0,0,0))*stryz(OPS_ACC_MD6(ispec,0,0,0))
+
+    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0))  &
+                      + (fornow-rgspec*strtz(OPS_ACC5(0,0,0)))*yrhs(OPS_ACC_MD2(ispec,0,0,0))
+
+END SUBROUTINE boundt_kernel_eqF_zdir
+
+SUBROUTINE boundt_kernel_eqG_xdir(erhs,yrhs,itndex,strtx,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) ::erhs,yrhs
+    integer, dimension(1), intent(in) :: itndex
+    real(kind=dp), dimension(1), intent(in) :: strtx
+
+    integer, intent(in) :: ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec
+
+    real(kind=dp), dimension(ncofmx,ntinmx,nspec), intent(in) :: amasch
+    real(kind=dp), intent(in) :: rgspec
+    integer, dimension(ntinmx,nspec), intent(in) :: ncpoly,ncpom1,ncenth
+
+    real(kind=dp) :: fornow
+    integer :: itint,icp
+
+    itint = 1 +MOD(itndex(OPS_ACC_MD3(iindex,0,0,0)),icoef1)/icoef2
+    fornow = amasch(ncpoly(itint,ispec),itint,ispec)
+
+    DO icp = ncpom1(itint,ispec),1,-1
+        fornow = fornow*strtx(OPS_ACC4(0,0,0)) + amasch(icp,itint,ispec)
+    END DO
+
+    fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
+              + fornow*strtx(OPS_ACC4(0,0,0))
+
+    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0))  &
+                      + (fornow-rgspec*strtx(OPS_ACC4(0,0,0)))*yrhs(OPS_ACC_MD2(ispec,0,0,0))
+
+END SUBROUTINE boundt_kernel_eqG_xdir
+
+SUBROUTINE boundt_kernel_eqG_ydir(erhs,yrhs,itndex,strty,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) ::erhs,yrhs
+    integer, dimension(1), intent(in) :: itndex
+    real(kind=dp), dimension(1), intent(in) :: strty
+
+    integer, intent(in) :: ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec
+
+    real(kind=dp), dimension(ncofmx,ntinmx,nspec), intent(in) :: amasch
+    real(kind=dp), intent(in) :: rgspec
+    integer, dimension(ntinmx,nspec), intent(in) :: ncpoly,ncpom1,ncenth
+
+    real(kind=dp) :: fornow
+    integer :: itint,icp
+
+    itint = 1 +MOD(itndex(OPS_ACC_MD3(iindex,0,0,0)),icoef1)/icoef2
+    fornow = amasch(ncpoly(itint,ispec),itint,ispec)
+
+    DO icp = ncpom1(itint,ispec),1,-1
+        fornow = fornow*strty(OPS_ACC4(0,0,0)) + amasch(icp,itint,ispec)
+    END DO
+
+    fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
+              + fornow*strty(OPS_ACC4(0,0,0))
+
+    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0))  &
+                      + (fornow-rgspec*strty(OPS_ACC4(0,0,0)))*yrhs(OPS_ACC_MD2(ispec,0,0,0))
+
+END SUBROUTINE boundt_kernel_eqG_ydir
+
+SUBROUTINE boundt_kernel_eqG_zdir(erhs,yrhs,itndex,strtz,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) ::erhs,yrhs
+    integer, dimension(1), intent(in) :: itndex
+    real(kind=dp), dimension(1), intent(in) :: strtz
+
+    integer, intent(in) :: ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec
+
+    real(kind=dp), dimension(ncofmx,ntinmx,nspec), intent(in) :: amasch
+    real(kind=dp), intent(in) :: rgspec
+    integer, dimension(ntinmx,nspec), intent(in) :: ncpoly,ncpom1,ncenth
+
+    real(kind=dp) :: fornow
+    integer :: itint,icp
+
+    itint = 1 +MOD(itndex(OPS_ACC_MD3(iindex,0,0,0)),icoef1)/icoef2
+    fornow = amasch(ncpoly(itint,ispec),itint,ispec)
+
+    DO icp = ncpom1(itint,ispec),1,-1
+        fornow = fornow*strtz(OPS_ACC4(0,0,0)) + amasch(icp,itint,ispec)
+    END DO
+
+    fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
+              + fornow*strtz(OPS_ACC4(0,0,0))
+
+    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0))  &
+                      + (fornow-rgspec*strtz(OPS_ACC4(0,0,0)))*yrhs(OPS_ACC_MD2(ispec,0,0,0))
+
+END SUBROUTINE boundt_kernel_eqG_zdir
+
+
