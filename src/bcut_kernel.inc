@@ -65,3 +65,67 @@ SUBROUTINE bcut_kernel_zdir(struz, strvz, strwz, dudtz, dvdtz, dwdtz, init_val)
     dwdtz(OPS_ACC6(0,0,0)) = 0.0_dp
 
 END SUBROUTINE bcut_kernel_zdir
+
+!A = A + B*val1
+SUBROUTINE bcut_kernel_xdir_eqA(out_arr, in_arr, val1)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: out_arr
+    real(kind=dp), dimension(1), intent(in) :: in_arr
+    real(kind=dp), intent(in) :: val1
+
+    out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) + in_arr(OPS_ACC2(0,0,0))*val1
+
+END SUBROUTINE bcut_kernel_xdir_eqA
+
+!A = A - val1*B*val2
+SUBROUTINE bcut_kernel_xdir_eqB(out_arr, in_arr, val1, val2)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: out_arr
+    real(kind=dp), dimension(1), intent(in) :: in_arr
+    real(kind=dp), intent(in) :: val1, val2
+
+    out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) - val1*in_arr(OPS_ACC2(0,0,0))*val2
+
+END SUBROUTINE bcut_kernel_xdir_eqB
+
+!A = A + val1*B*val2
+SUBROUTINE bcut_kernel_xdir_eqC(out_arr, in_arr, val1, val2)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: out_arr
+    real(kind=dp), dimension(1), intent(in) :: in_arr
+    real(kind=dp), intent(in) :: val1, val2
+
+    out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) + val1*in_arr(OPS_ACC2(0,0,0))*val2
+
+END SUBROUTINE bcut_kernel_xdir_eqC
+
+!A = A * val1
+SUBROUTINE bcut_kernel_xdir_eqD(out_arr, val1)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: out_arr
+    real(kind=dp), intent(in) :: val1
+
+    out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) * val1
+
+END SUBROUTINE bcut_kernel_xdir_eqD
+
+!A = A + val1
+SUBROUTINE bcut_kernel_xdir_eqE(out_arr, val1)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1) :: out_arr
+    real(kind=dp), intent(in) :: val1
+
+    out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) + val1
+
+END SUBROUTINE bcut_kernel_xdir_eqE
+

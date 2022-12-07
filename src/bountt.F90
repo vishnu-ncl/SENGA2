@@ -136,40 +136,40 @@ SUBROUTINE bountt
 
 !           SET MASS FRACTIONS AND TIME DERIVATIVES
             call bcytxl
-    
-!         CONSERVATIVE VARIABLES
-    DO ispec = 1,nspec
-      
-!           TEMPERATURE INTERVAL INDEXING
-      iindex = 1 + (ispec-1)/nspimx
-      ipower = ispec - (iindex-1)*nspimx - 1
-      icoef2 = ntbase**ipower
-      icoef1 = icoef2*ntbase
-      
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-          itint = 1 +MOD(itndex(iindex,istal,jc,kc),icoef1)/icoef2
-          fornow = amasch(ncpoly(itint,ispec),itint,ispec)
-          DO icp = ncpom1(itint,ispec),1,-1
-            fornow = fornow*strtxl(1,jc,kc) + amasch(icp,itint,ispec)
-          END DO
-          fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
-              + fornow*strtxl(1,jc,kc)
-          
-          yrhs(ispec,istal,jc,kc) = drhs(istal,jc,kc)*stryxl(ispec,1,jc,kc)
-          
-          yrun(ispec,istal,jc,kc) = yrhs(ispec,istal,jc,kc)
-          
-          yerr(ispec,istal,jc,kc) = zero
-          
-          erhs(istal,jc,kc) = erhs(istal,jc,kc)  &
-              + (fornow-rgspec(ispec)*strtxl(1,jc,kc))*yrhs(ispec,istal,jc,kc)
-          
-        END DO
-      END DO
-      
-    END DO
+
+!           CONSERVATIVE VARIABLES
+            DO ispec = 1,nspec
+
+!               TEMPERATURE INTERVAL INDEXING
+                iindex = 1 + (ispec-1)/nspimx
+                ipower = ispec - (iindex-1)*nspimx - 1
+                icoef2 = ntbase**ipower
+                icoef1 = icoef2*ntbase
+
+                rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(bountt_kernel_eqF_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yrun, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yerr, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_READ), &
+                                ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_stryxl, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(amasch, 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ncpoly, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ncpom1, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(nspec, 1, "integer", OPS_READ))
+
+            END DO
 
             rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
             call ops_par_loop(bountt_kernel_eqD, "init values", senga_grid, 3, rangexyz,  &
@@ -178,11 +178,11 @@ SUBROUTINE bountt
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ))                    
 
         END IF
-  
+
 !       =======================================================================
-  
+
         IF(nsbcxl == nsbci3) THEN
-    
+
 !           INFLOW BC No 3
 !           SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
     
@@ -329,11 +329,8 @@ SUBROUTINE bountt
                                 ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(nspec, 1, "integer", OPS_READ))
@@ -431,40 +428,40 @@ SUBROUTINE bountt
 
 !           SET MASS FRACTIONS AND TIME DERIVATIVES
             call bcytxr
-    
+
 !           CONSERVATIVE VARIABLES
             DO ispec = 1,nspec
-      
-!           TEMPERATURE INTERVAL INDEXING
-      iindex = 1 + (ispec-1)/nspimx
-      ipower = ispec - (iindex-1)*nspimx - 1
-      icoef2 = ntbase**ipower
-      icoef1 = icoef2*ntbase
-      
-      DO kc = kstal,kstol
-        DO jc = jstal,jstol
-          
-          itint = 1 +MOD(itndex(iindex,istol,jc,kc),icoef1)/icoef2
-          fornow = amasch(ncpoly(itint,ispec),itint,ispec)
-          DO icp = ncpom1(itint,ispec),1,-1
-            fornow = fornow*strtxr(1,jc,kc) + amasch(icp,itint,ispec)
-          END DO
-          fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
-              + fornow*strtxr(1,jc,kc)
-          
-          yrhs(ispec,istol,jc,kc) = drhs(istol,jc,kc)*stryxr(ispec,1,jc,kc)
-          
-          yrun(ispec,istol,jc,kc) = yrhs(ispec,istol,jc,kc)
-          
-          yerr(ispec,istol,jc,kc) = zero
-          
-          erhs(istol,jc,kc) = erhs(istol,jc,kc)  &
-              + (fornow-rgspec(ispec)*strtxr(1,jc,kc))*yrhs(ispec,istol,jc,kc)
-          
-        END DO
-      END DO
-      
-    END DO
+
+!               TEMPERATURE INTERVAL INDEXING
+                iindex = 1 + (ispec-1)/nspimx
+                ipower = ispec - (iindex-1)*nspimx - 1
+                icoef2 = ntbase**ipower
+                icoef1 = icoef2*ntbase
+
+                rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+                call ops_par_loop(bountt_kernel_eqF_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yrun, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yerr, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_READ), &
+                                ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_stryxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(amasch, 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ncpoly, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ncpom1, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(nspec, 1, "integer", OPS_READ))
+
+            END DO
 
             rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
             call ops_par_loop(bountt_kernel_eqD, "init values", senga_grid, 3, rangexyz,  &
@@ -473,11 +470,11 @@ SUBROUTINE bountt
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ))
 
         END IF
-  
+
 !       =======================================================================
-  
+
         IF(nsbcxr == nsbci3) THEN
-    
+
 !           INFLOW BC No 3
 !           SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
     
@@ -626,11 +623,8 @@ SUBROUTINE bountt
                                 ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(nspec, 1, "integer", OPS_READ))
@@ -734,40 +728,40 @@ SUBROUTINE bountt
 
 !           SET MASS FRACTIONS AND TIME DERIVATIVES
             call bcytyl
-    
+
 !           CONSERVATIVE VARIABLES
-    DO ispec = 1,nspec
-      
-!           TEMPERATURE INTERVAL INDEXING
-      iindex = 1 + (ispec-1)/nspimx
-      ipower = ispec - (iindex-1)*nspimx - 1
-      icoef2 = ntbase**ipower
-      icoef1 = icoef2*ntbase
-      
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-          itint = 1 +MOD(itndex(iindex,ic,jstal,kc),icoef1)/icoef2
-          fornow = amasch(ncpoly(itint,ispec),itint,ispec)
-          DO icp = ncpom1(itint,ispec),1,-1
-            fornow = fornow*strtyl(ic,1,kc) + amasch(icp,itint,ispec)
-          END DO
-          fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
-              + fornow*strtyl(ic,1,kc)
-          
-          yrhs(ispec,ic,jstal,kc) = drhs(ic,jstal,kc)*stryyl(ispec,ic,1,kc)
-          
-          yrun(ispec,ic,jstal,kc) = yrhs(ispec,ic,jstal,kc)
-          
-          yerr(ispec,ic,jstal,kc) = zero
-          
-          erhs(ic,jstal,kc) = erhs(ic,jstal,kc)  &
-              + (fornow-rgspec(ispec)*strtyl(ic,1,kc))*yrhs(ispec,ic,jstal,kc)
-          
-        END DO
-      END DO
-      
-    END DO
+            DO ispec = 1,nspec
+
+!               TEMPERATURE INTERVAL INDEXING
+                iindex = 1 + (ispec-1)/nspimx
+                ipower = ispec - (iindex-1)*nspimx - 1
+                icoef2 = ntbase**ipower
+                icoef1 = icoef2*ntbase
+
+                rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
+                call ops_par_loop(bountt_kernel_eqF_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yrun, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yerr, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_READ), &
+                                ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_stryyl, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(amasch, 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ncpoly, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ncpom1, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(nspec, 1, "integer", OPS_READ))
+
+            END DO
 
             rangexyz = (/istal,istol,jstal,jstal,kstal,kstol/)
             call ops_par_loop(bountt_kernel_eqD, "init values", senga_grid, 3, rangexyz,  &
@@ -776,11 +770,11 @@ SUBROUTINE bountt
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ))
 
         END IF
-  
+
 !       =======================================================================
-  
+
         IF(nsbcyl == nsbci3) THEN
-    
+
 !           INFLOW BC No 3
 !           SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
     
@@ -927,11 +921,8 @@ SUBROUTINE bountt
                                 ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(nspec, 1, "integer", OPS_READ))
@@ -1036,40 +1027,40 @@ SUBROUTINE bountt
 
 !           SET MASS FRACTIONS AND TIME DERIVATIVES
             call bcytyr
-    
+
 !           CONSERVATIVE VARIABLES
             DO ispec = 1,nspec
-      
-!           TEMPERATURE INTERVAL INDEXING
-      iindex = 1 + (ispec-1)/nspimx
-      ipower = ispec - (iindex-1)*nspimx - 1
-      icoef2 = ntbase**ipower
-      icoef1 = icoef2*ntbase
-      
-      DO kc = kstal,kstol
-        DO ic = istal,istol
-          
-          itint = 1 +MOD(itndex(iindex,ic,jstol,kc),icoef1)/icoef2
-          fornow = amasch(ncpoly(itint,ispec),itint,ispec)
-          DO icp = ncpom1(itint,ispec),1,-1
-            fornow = fornow*strtyr(ic,1,kc) + amasch(icp,itint,ispec)
-          END DO
-          fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
-              + fornow*strtyr(ic,1,kc)
-          
-          yrhs(ispec,ic,jstol,kc) = drhs(ic,jstol,kc)*stryyr(ispec,ic,1,kc)
-          
-          yrun(ispec,ic,jstol,kc) = yrhs(ispec,ic,jstol,kc)
-          
-          yerr(ispec,ic,jstol,kc) = zero
-          
-          erhs(ic,jstol,kc) = erhs(ic,jstol,kc)  &
-              + (fornow-rgspec(ispec)*strtyr(ic,1,kc))*yrhs(ispec,ic,jstol,kc)
-          
-        END DO
-      END DO
-      
-    END DO
+
+!               TEMPERATURE INTERVAL INDEXING
+                iindex = 1 + (ispec-1)/nspimx
+                ipower = ispec - (iindex-1)*nspimx - 1
+                icoef2 = ntbase**ipower
+                icoef1 = icoef2*ntbase
+
+                rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
+                call ops_par_loop(bountt_kernel_eqF_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yrun, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yerr, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_READ), &
+                                ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_stryyr, 9, s3d_000_strid3d_xz, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(amasch, 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ncpoly, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ncpom1, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(nspec, 1, "integer", OPS_READ))
+
+            END DO
 
             rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
             call ops_par_loop(bountt_kernel_eqD, "init values", senga_grid, 3, rangexyz,  &
@@ -1078,20 +1069,20 @@ SUBROUTINE bountt
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ))
 
         END IF
-  
+
 !       =======================================================================
-  
+
         IF(nsbcyr == nsbci3) THEN
-    
+
 !           INFLOW BC No 3
 !           SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
-    
+
 !           SET DENSITY AND TIME DERIVATIVE
             call bcdtyr
-    
+
 !           SET VELOCITY COMPONENTS AND TIME DERIVATIVES
             call bcutyr
-    
+
 !           CONSERVATIVE VARIABLES
             rangexyz = (/istal,istol,jstol,jstol,kstal,kstol/)
             call ops_par_loop(bountt_kernel_eqC_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
@@ -1231,11 +1222,8 @@ SUBROUTINE bountt
                                 ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(nspec, 1, "integer", OPS_READ))
@@ -1339,40 +1327,40 @@ SUBROUTINE bountt
 
 !           SET MASS FRACTIONS AND TIME DERIVATIVES
             call bcytzl
-    
+
 !           CONSERVATIVE VARIABLES
             DO ispec = 1,nspec
-      
-!           TEMPERATURE INTERVAL INDEXING
-      iindex = 1 + (ispec-1)/nspimx
-      ipower = ispec - (iindex-1)*nspimx - 1
-      icoef2 = ntbase**ipower
-      icoef1 = icoef2*ntbase
-      
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          itint = 1 +MOD(itndex(iindex,ic,jc,kstal),icoef1)/icoef2
-          fornow = amasch(ncpoly(itint,ispec),itint,ispec)
-          DO icp = ncpom1(itint,ispec),1,-1
-            fornow = fornow*strtzl(ic,jc,1) + amasch(icp,itint,ispec)
-          END DO
-          fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
-              + fornow*strtzl(ic,jc,1)
-          
-          yrhs(ispec,ic,jc,kstal) = drhs(ic,jc,kstal)*stryzl(ispec,ic,jc,1)
-          
-          yrun(ispec,ic,jc,kstal) = yrhs(ispec,ic,jc,kstal)
-          
-          yerr(ispec,ic,jc,kstal) = zero
-          
-          erhs(ic,jc,kstal) = erhs(ic,jc,kstal)  &
-              + (fornow-rgspec(ispec)*strtzl(ic,jc,1))*yrhs(ispec,ic,jc,kstal)
-          
-        END DO
-      END DO
-      
-    END DO
+
+!               TEMPERATURE INTERVAL INDEXING
+                iindex = 1 + (ispec-1)/nspimx
+                ipower = ispec - (iindex-1)*nspimx - 1
+                icoef2 = ntbase**ipower
+                icoef1 = icoef2*ntbase
+
+                rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
+                call ops_par_loop(bountt_kernel_eqF_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yrun, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yerr, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_READ), &
+                                ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strtzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_stryzl, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(amasch, 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ncpoly, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ncpom1, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(nspec, 1, "integer", OPS_READ))
+
+            END DO
 
             rangexyz = (/istal,istol,jstal,jstol,kstal,kstal/)
             call ops_par_loop(bountt_kernel_eqD, "init values", senga_grid, 3, rangexyz,  &
@@ -1381,11 +1369,11 @@ SUBROUTINE bountt
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ))
 
         END IF
-  
+
 !       =======================================================================
-  
+
         IF(nsbczl == nsbci3) THEN
-    
+
 !           INFLOW BC No 3
 !           SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
     
@@ -1534,11 +1522,8 @@ SUBROUTINE bountt
                                 ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(nspec, 1, "integer", OPS_READ))
@@ -1642,40 +1627,40 @@ SUBROUTINE bountt
 
 !           SET MASS FRACTIONS AND TIME DERIVATIVES
             call bcytzr
-    
+
 !           CONSERVATIVE VARIABLES
             DO ispec = 1,nspec
-      
-!           TEMPERATURE INTERVAL INDEXING
-      iindex = 1 + (ispec-1)/nspimx
-      ipower = ispec - (iindex-1)*nspimx - 1
-      icoef2 = ntbase**ipower
-      icoef1 = icoef2*ntbase
-      
-      DO jc = jstal,jstol
-        DO ic = istal,istol
-          
-          itint = 1 +MOD(itndex(iindex,ic,jc,kstol),icoef1)/icoef2
-          fornow = amasch(ncpoly(itint,ispec),itint,ispec)
-          DO icp = ncpom1(itint,ispec),1,-1
-            fornow = fornow*strtzr(ic,jc,1) + amasch(icp,itint,ispec)
-          END DO
-          fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
-              + fornow*strtzr(ic,jc,1)
-          
-          yrhs(ispec,ic,jc,kstol) = drhs(ic,jc,kstol)*stryzr(ispec,ic,jc,1)
-          
-          yrun(ispec,ic,jc,kstol) = yrhs(ispec,ic,jc,kstol)
-          
-          yerr(ispec,ic,jc,kstol) = zero
-          
-          erhs(ic,jc,kstol) = erhs(ic,jc,kstol)  &
-              + (fornow-rgspec(ispec)*strtzr(ic,jc,1))*yrhs(ispec,ic,jc,kstol)
-          
-        END DO
-      END DO
-      
-    END DO
+
+!               TEMPERATURE INTERVAL INDEXING
+                iindex = 1 + (ispec-1)/nspimx
+                ipower = ispec - (iindex-1)*nspimx - 1
+                icoef2 = ntbase**ipower
+                icoef1 = icoef2*ntbase
+
+                rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
+                call ops_par_loop(bountt_kernel_eqF_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yrun, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_yerr, 9, s3d_000, "real(dp)", OPS_WRITE),  &
+                                ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_READ), &
+                                ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_dat(d_stryzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(amasch, 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(rgspec(ispec), 1, "real(dp)", OPS_READ), &
+                                ops_arg_gbl(ncpoly, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ncpom1, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(nspec, 1, "integer", OPS_READ))
+
+            END DO
 
             rangexyz = (/istal,istol,jstal,jstol,kstol,kstol/)
             call ops_par_loop(bountt_kernel_eqD, "init values", senga_grid, 3, rangexyz,  &
@@ -1684,11 +1669,11 @@ SUBROUTINE bountt
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ))
 
         END IF
-  
+
 !       =======================================================================
-  
+
         IF(nsbczr == nsbci3) THEN
-    
+
 !           INFLOW BC No 3
 !           SUBSONIC REFLECTING INFLOW WITH SPECIFIED DENSITY
     
@@ -1837,11 +1822,8 @@ SUBROUTINE bountt
                                 ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(nspec, 1, "integer", OPS_READ))

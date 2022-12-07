@@ -286,15 +286,15 @@ SUBROUTINE boundt_kernel_eqE_zdir(strtz,itndex,tinthi,ntint,ntbase,nintmx,nspimx
 
 END SUBROUTINE boundt_kernel_eqE_zdir
 
-SUBROUTINE boundt_kernel_eqF_xdir(erhs,yrhs,itndex,drhs,strtx,stryx,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec)
+SUBROUTINE boundt_kernel_eqF_xdir(erhs,yrhs,itndex,drhs,strtx,stryx,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspec)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) ::erhs,yrhs
+    real(kind=dp), dimension(1) :: erhs,yrhs
     integer, dimension(1), intent(in) :: itndex
     real(kind=dp), dimension(1), intent(in) :: drhs,strtx,stryx
 
-    integer, intent(in) :: ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec
+    integer, intent(in) :: ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspec
 
     real(kind=dp), dimension(ncofmx,ntinmx,nspec), intent(in) :: amasch
     real(kind=dp), intent(in) :: rgspec
@@ -320,15 +320,15 @@ SUBROUTINE boundt_kernel_eqF_xdir(erhs,yrhs,itndex,drhs,strtx,stryx,amasch,rgspe
 
 END SUBROUTINE boundt_kernel_eqF_xdir
 
-SUBROUTINE boundt_kernel_eqF_ydir(erhs,yrhs,itndex,drhs,strty,stryy,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec)
+SUBROUTINE boundt_kernel_eqF_ydir(erhs,yrhs,itndex,drhs,strty,stryy,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspec)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) ::erhs,yrhs
+    real(kind=dp), dimension(1) :: erhs,yrhs
     integer, dimension(1), intent(in) :: itndex
     real(kind=dp), dimension(1), intent(in) :: drhs,strty,stryy
     
-    integer, intent(in) :: ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec
+    integer, intent(in) :: ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspec
 
     real(kind=dp), dimension(ncofmx,ntinmx,nspec), intent(in) :: amasch
     real(kind=dp), intent(in) :: rgspec
@@ -354,15 +354,15 @@ SUBROUTINE boundt_kernel_eqF_ydir(erhs,yrhs,itndex,drhs,strty,stryy,amasch,rgspe
 
 END SUBROUTINE boundt_kernel_eqF_ydir
 
-SUBROUTINE boundt_kernel_eqF_zdir(erhs,yrhs,itndex,drhs,strtz,stryz,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec)
+SUBROUTINE boundt_kernel_eqF_zdir(erhs,yrhs,itndex,drhs,strtz,stryz,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspec)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) ::erhs,yrhs
+    real(kind=dp), dimension(1) :: erhs,yrhs
     integer, dimension(1), intent(in) :: itndex
     real(kind=dp), dimension(1), intent(in) :: drhs,strtz,stryz
 
-    integer, intent(in) :: ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec
+    integer, intent(in) :: ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspec
 
     real(kind=dp), dimension(ncofmx,ntinmx,nspec), intent(in) :: amasch
     real(kind=dp), intent(in) :: rgspec
@@ -388,15 +388,15 @@ SUBROUTINE boundt_kernel_eqF_zdir(erhs,yrhs,itndex,drhs,strtz,stryz,amasch,rgspe
 
 END SUBROUTINE boundt_kernel_eqF_zdir
 
-SUBROUTINE boundt_kernel_eqG_xdir(erhs,yrhs,itndex,strtx,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec)
+SUBROUTINE boundt_kernel_eqG_xdir(erhs,yrhs,itndex,strtx,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspec)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) ::erhs,yrhs
+    real(kind=dp), dimension(1) :: erhs,yrhs
     integer, dimension(1), intent(in) :: itndex
     real(kind=dp), dimension(1), intent(in) :: strtx
 
-    integer, intent(in) :: ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec
+    integer, intent(in) :: ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspec
 
     real(kind=dp), dimension(ncofmx,ntinmx,nspec), intent(in) :: amasch
     real(kind=dp), intent(in) :: rgspec
@@ -420,15 +420,15 @@ SUBROUTINE boundt_kernel_eqG_xdir(erhs,yrhs,itndex,strtx,amasch,rgspec,ncpoly,nc
 
 END SUBROUTINE boundt_kernel_eqG_xdir
 
-SUBROUTINE boundt_kernel_eqG_ydir(erhs,yrhs,itndex,strty,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec)
+SUBROUTINE boundt_kernel_eqG_ydir(erhs,yrhs,itndex,strty,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspec)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) ::erhs,yrhs
+    real(kind=dp), dimension(1) :: erhs,yrhs
     integer, dimension(1), intent(in) :: itndex
     real(kind=dp), dimension(1), intent(in) :: strty
 
-    integer, intent(in) :: ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec
+    integer, intent(in) :: ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspec
 
     real(kind=dp), dimension(ncofmx,ntinmx,nspec), intent(in) :: amasch
     real(kind=dp), intent(in) :: rgspec
@@ -452,15 +452,15 @@ SUBROUTINE boundt_kernel_eqG_ydir(erhs,yrhs,itndex,strty,amasch,rgspec,ncpoly,nc
 
 END SUBROUTINE boundt_kernel_eqG_ydir
 
-SUBROUTINE boundt_kernel_eqG_zdir(erhs,yrhs,itndex,strtz,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec)
+SUBROUTINE boundt_kernel_eqG_zdir(erhs,yrhs,itndex,strtz,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspec)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) ::erhs,yrhs
+    real(kind=dp), dimension(1) :: erhs,yrhs
     integer, dimension(1), intent(in) :: itndex
     real(kind=dp), dimension(1), intent(in) :: strtz
 
-    integer, intent(in) :: ispec,iindex,ipower,icoef1,icoef2,ntbase,nspimx,ncofmx,ntinmx,nspec
+    integer, intent(in) :: ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspec
 
     real(kind=dp), dimension(ncofmx,ntinmx,nspec), intent(in) :: amasch
     real(kind=dp), intent(in) :: rgspec

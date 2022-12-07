@@ -20,6 +20,8 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_wd2y, d_pd2y, d_td2y
     TYPE(ops_dat) :: d_wd2z, d_pd2z, d_td2z
 
+    TYPE(ops_dat) :: d_ufxl, d_vfxl, d_wfxl
+
     TYPE(ops_dat) :: d_drun, d_urun, d_vrun, d_wrun, d_erun
     TYPE(ops_dat) :: d_drhs, d_urhs, d_vrhs, d_wrhs, d_erhs
     TYPE(ops_dat) :: d_derr, d_uerr, d_verr, d_werr, d_eerr 

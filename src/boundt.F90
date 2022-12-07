@@ -152,11 +152,8 @@ SUBROUTINE boundt
                                 ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(nspec, 1, "integer", OPS_READ))
@@ -293,11 +290,8 @@ SUBROUTINE boundt
                                 ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(nspec, 1, "integer", OPS_READ))
@@ -408,11 +402,8 @@ SUBROUTINE boundt
                                 ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(nspec, 1, "integer", OPS_READ))
@@ -549,11 +540,8 @@ SUBROUTINE boundt
                                 ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(nspec, 1, "integer", OPS_READ))
@@ -670,11 +658,8 @@ SUBROUTINE boundt
                                 ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(nspec, 1, "integer", OPS_READ))
@@ -811,11 +796,8 @@ SUBROUTINE boundt
                                 ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(nspec, 1, "integer", OPS_READ))
@@ -932,11 +914,8 @@ SUBROUTINE boundt
                                 ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(nspec, 1, "integer", OPS_READ))
@@ -1073,11 +1052,8 @@ SUBROUTINE boundt
                                 ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(nspec, 1, "integer", OPS_READ))
@@ -1194,11 +1170,8 @@ SUBROUTINE boundt
                                 ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(nspec, 1, "integer", OPS_READ))
@@ -1335,11 +1308,8 @@ SUBROUTINE boundt
                                 ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(nspec, 1, "integer", OPS_READ))
@@ -1456,11 +1426,8 @@ SUBROUTINE boundt
                                 ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(nspec, 1, "integer", OPS_READ))
@@ -1597,11 +1564,8 @@ SUBROUTINE boundt
                                 ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(nspec, 1, "integer", OPS_READ))

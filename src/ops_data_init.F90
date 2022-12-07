@@ -139,6 +139,10 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, pd2z, d_pd2z, "real(dp)", "PD2Z")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, td2z, d_td2z, "real(dp)", "TD2Z")
 
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, ufxl, d_ufxl, "real(dp)", "UFXL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, vfxl, d_vfxl, "real(dp)", "VFXL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, wfxl, d_wfxl, "real(dp)", "WFXL")
+
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, drun, d_drun, "real(dp)", "DRUN")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, urun, d_urun, "real(dp)", "URUN")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, vrun, d_vrun, "real(dp)", "VRUN")
