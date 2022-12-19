@@ -340,7 +340,7 @@ SUBROUTINE bcutxl
             END DO
 
 !           SCALING OF DFT
-            rangexyz = (/iim,iim,jstal,jstol,kstal,kstol/)
+            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
 !           VELOCITIES
             call ops_par_loop(bcut_kernel_xdir_eqD, "A = A * val1", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &

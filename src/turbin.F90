@@ -1,168 +1,169 @@
 SUBROUTINE turbin
  
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-26  Time: 15:26:33
+    use OPS_Fortran_Reference
 
-!     *************************************************************************
+    use OPS_CONSTANTS
+    use, intrinsic :: ISO_C_BINDING
 
-!     TURBIN
-!     ======
+    use data_types
+    use com_senga
+    use com_ops_senga
 
-!     AUTHOR
-!     ------
-!     R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
+!   *************************************************************************
 
-!     CHANGE RECORD
-!     -------------
-!     28-MAR-1997:  CREATED
-!     20-OCT-1999:  KWJ PARALLEL FFT IMPLEMENTATION
-!     24-MAY-2003:  RSC UPDATED FOR SENGA2
-!     08-SEP-2012:  RSC/RACG BUG FIX SPECIAL CASE OF ZERO 12-PLANE VECTOR
+!   TURBIN
+!   ======
 
-!     DESCRIPTION
-!     -----------
-!     DNS CODE SENGA2
-!     INITIAL TURBULENCE GENERATOR
-!     COMPUTES A HOMOGENEOUS ISOTROPIC TURBULENT VELOCITY FIELD
-!     SATISFYING CONTINUITY, ISOTROPY AND TOTAL ENERGY CONDITIONS
+!   AUTHOR
+!   ------
+!   R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
 
-!     FIELD IS BUILT IN FOURIER SPACE ACCORDING TO ROGALLO (NASA TM 81315)
+!   CHANGE RECORD
+!   -------------
+!   28-MAR-1997:  CREATED
+!   20-OCT-1999:  KWJ PARALLEL FFT IMPLEMENTATION
+!   24-MAY-2003:  RSC UPDATED FOR SENGA2
+!   08-SEP-2012:  RSC/RACG BUG FIX SPECIAL CASE OF ZERO 12-PLANE VECTOR
 
-!     *************************************************************************
+!   DESCRIPTION
+!   -----------
+!   DNS CODE SENGA2
+!   INITIAL TURBULENCE GENERATOR
+!   COMPUTES A HOMOGENEOUS ISOTROPIC TURBULENT VELOCITY FIELD
+!   SATISFYING CONTINUITY, ISOTROPY AND TOTAL ENERGY CONDITIONS
 
+!   FIELD IS BUILT IN FOURIER SPACE ACCORDING TO ROGALLO (NASA TM 81315)
 
-!     GLOBAL DATA
-!     ===========
-!     -------------------------------------------------------------------------
-use data_types
-use com_senga
-!     -------------------------------------------------------------------------
+!   *************************************************************************
 
+!   GLOBAL DATA
+!   ===========
+!   -------------------------------------------------------------------------
+!   -------------------------------------------------------------------------
 
-!     FUNCTIONS
-!     =========
-real(kind=dp) :: espect,ranuni
-EXTERNAL espect,ranuni
+!   FUNCTIONS
+!   =========
+    real(kind=dp) :: espect,ranuni
+    EXTERNAL espect,ranuni
 
+!   PARAMETERS
+!   ==========
+    real(kind=dp) :: vectol,tolimg
+    PARAMETER(vectol=0.00001_dp, tolimg=1.0E-6)
 
-!     PARAMETERS
-!     ==========
-real(kind=dp) :: vectol,tolimg
-PARAMETER(vectol=0.00001_dp, tolimg=1.0E-6)
+!   LOCAL DATA
+!   ==========
+    real(kind=dp) :: vectk1,vectk2,vectk3,vksize,ovksiz
+    real(kind=dp) :: velmag,vfactr,plnmag
+    real(kind=dp) :: ovplmg,aziang,cosazi,sinazi
+    real(kind=dp) :: phang1,phang2,cosph1,sinph1,cosph2,sinph2
+    real(kind=dp) :: vaterm,vbterm
+    real(kind=dp) :: tklodd
+    real(kind=dp) :: twopi,ovtopi
+    real(kind=dp) :: ubart,vbart,wbart,uvart,vvart,wvart,tket
+    real(kind=dp) :: ubartt,vbartt,wbartt,uvartt,vvartt,wvartt,tketot
+    real(kind=dp) :: ubartl,vbartl,wbartl,uvartl,vvartl,wvartl,tketl
+    real(kind=dp) :: ubartg,vbartg,wbartg,uvartg,vvartg,wvartg,tketg
+    real(kind=dp) :: udev,vdev,wdev,faclav,facgav
+    integer :: ic,jc,kc,ix,jx,kx,icproc
+    integer :: igofst,jgofst,kgofst,igofm1,jgofm1,kgofm1
+    integer :: igstal,jgstal,kgstal,igstol,jgstol,kgstol
+    integer :: nodblx,nodbly,nodblz
+    integer :: ngoddx,ngoddy,ngoddz
+    integer :: iseed
+    LOGICAL :: flagim
+    LOGICAL :: flrani,flranj,flrank
 
+    integer :: rangexyz(6)
 
-!     LOCAL DATA
-!     ==========
-real(kind=dp) :: vectk1,vectk2,vectk3,vksize,ovksiz
-real(kind=dp) :: velmag,vfactr,plnmag
-real(kind=dp) :: ovplmg,aziang,cosazi,sinazi
-real(kind=dp) :: phang1,phang2,cosph1,sinph1,cosph2,sinph2
-real(kind=dp) :: vaterm,vbterm
-real(kind=dp) :: tklodd
-real(kind=dp) :: twopi,ovtopi
-real(kind=dp) :: ubart,vbart,wbart,uvart,vvart,wvart,tket
-real(kind=dp) :: ubartt,vbartt,wbartt,uvartt,vvartt,wvartt,tketot
-real(kind=dp) :: ubartl,vbartl,wbartl,uvartl,vvartl,wvartl,tketl
-real(kind=dp) :: ubartg,vbartg,wbartg,uvartg,vvartg,wvartg,tketg
-real(kind=dp) :: udev,vdev,wdev,faclav,facgav
-INTEGER :: ic,jc,kc,ix,jx,kx,icproc
-INTEGER :: igofst,jgofst,kgofst,igofm1,jgofm1,kgofm1
-INTEGER :: igstal,jgstal,kgstal,igstol,jgstol,kgstol
-INTEGER :: nodblx,nodbly,nodblz
-INTEGER :: ngoddx,ngoddy,ngoddz
-INTEGER :: iseed
-LOGICAL :: flagim
-LOGICAL :: flrani,flranj,flrank
+!   BEGIN
+!   =====
 
+!   =========================================================================
 
-!     BEGIN
-!     =====
+!   INDEXING
+!   --------
 
-!     =========================================================================
+!   SET ODD-NUMBER INDICATORS
+    ngoddx = MOD(nxglbl,2)
+    ngoddy = MOD(nyglbl,2)
+    ngoddz = MOD(nzglbl,2)
 
-!     INDEXING
-!     --------
+!   SET ODDBALL WAVENUMBER INDICES
+    nodblx = nxglbl/2 - 1 + ngoddx
+    nodbly = nyglbl/2 - 1 + ngoddy
+    nodblz = nzglbl/2 - 1 + ngoddz
 
-!     SET ODD-NUMBER INDICATORS
-ngoddx = MOD(nxglbl,2)
-ngoddy = MOD(nyglbl,2)
-ngoddz = MOD(nzglbl,2)
+!   PHYSICAL-SPACE GLOBAL INDEX OFFSETS
+    igofst = 0
+    DO icproc = 0, ixproc-1
+        igofst = igofst + npmapx(icproc)
+    END DO
+    igstal = igofst+1
+    igstol = igofst + npmapx(ixproc)
+    igofm1 = igofst-1
 
-!     SET ODDBALL WAVENUMBER INDICES
-nodblx = nxglbl/2 - 1 + ngoddx
-nodbly = nyglbl/2 - 1 + ngoddy
-nodblz = nzglbl/2 - 1 + ngoddz
+    jgofst = 0
+    DO icproc = 0, iyproc-1
+        jgofst = jgofst + npmapy(icproc)
+    END DO
+    jgstal = jgofst+1
+    jgstol = jgofst + npmapy(iyproc)
+    jgofm1 = jgofst-1
 
-!     PHYSICAL-SPACE GLOBAL INDEX OFFSETS
-igofst = 0
-DO icproc = 0, ixproc-1
-  igofst = igofst + npmapx(icproc)
-END DO
-igstal = igofst+1
-igstol = igofst + npmapx(ixproc)
-igofm1 = igofst-1
+    kgofst = 0
+    DO icproc = 0, izproc-1
+        kgofst = kgofst + npmapz(icproc)
+    END DO
+    kgstal = kgofst+1
+    kgstol = kgofst + npmapz(izproc)
+    kgofm1 = kgofst-1
 
-jgofst = 0
-DO icproc = 0, iyproc-1
-  jgofst = jgofst + npmapy(icproc)
-END DO
-jgstal = jgofst+1
-jgstol = jgofst + npmapy(iyproc)
-jgofm1 = jgofst-1
+!   =========================================================================
 
-kgofst = 0
-DO icproc = 0, izproc-1
-  kgofst = kgofst + npmapz(icproc)
-END DO
-kgstal = kgofst+1
-kgstol = kgofst + npmapz(izproc)
-kgofm1 = kgofst-1
+!   SET OTHER FACTORS
+    twopi = two*pi
+    ovtopi = one/twopi
+    tklodd = zero
 
-!     =========================================================================
+!   =========================================================================
 
-!     SET OTHER FACTORS
-twopi = two*pi
-ovtopi = one/twopi
-tklodd = zero
+!   INITIALISE THE RANDOM NUMBER GENERATOR
+!   --------------------------------------
+    IF(inseed >= 0)THEN
 
-!     =========================================================================
-
-!     INITIALISE THE RANDOM NUMBER GENERATOR
-!     --------------------------------------
-IF(inseed >= 0)THEN
-  
 !       LOCAL INITIALISATION
 !       --------------------
 !       RANDOM SEED MUST BE DIFFERENT FOR EVERY PROCESSOR
-  iseed = inseed + iproc
-  CALL ranini(iseed)
-  
+        iseed = inseed + iproc
+        call ranini(iseed)
+
 !       SWEEP THROUGH LOCAL PHYSICAL SPACE
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      DO ic = istal,istol
+        DO kc = kstal,kstol
+            DO jc = jstal,jstol
+                DO ic = istal,istol
         
-!             GET AND SAVE THREE RANDOM NUMBERS
-        utmp(ic,jc,kc) = ranuni(iseed)
+!                   GET AND SAVE THREE RANDOM NUMBERS
+                    utmp(ic,jc,kc) = ranuni(iseed)
         vtmp(ic,jc,kc) = ranuni(iseed)
         wtmp(ic,jc,kc) = ranuni(iseed)
         
-      END DO
-    END DO
-  END DO
-  
-ELSE
-  
+        END DO
+        END DO
+        END DO
+
+    ELSE
+
 !       GLOBAL INITIALISATION
 !       ---------------------
 !       RANDOM SEED MUST BE IDENTICAL FOR EVERY PROCESSOR
-  iseed = inseed
-  CALL ranini(iseed)
+        iseed = inseed
+        call ranini(iseed)
   
 !       SWEEP THROUGH GLOBAL PHYSICAL SPACE
-  DO kc = 1,nzglbl
-    DO jc = 1,nyglbl
-      DO ic = 1,nxglbl
+        DO kc = 1,nzglbl
+        DO jc = 1,nyglbl
+        DO ic = 1,nxglbl
         
 !             GET THREE RANDOM NUMBERS
         aziang = ranuni(iseed)
@@ -188,32 +189,32 @@ ELSE
           
         END IF
         
-      END DO
-    END DO
-  END DO
-  
-END IF
+        END DO
+        END DO
+        END DO
 
-!     =========================================================================
+    END IF
 
-!     INITIALISE THE ENERGY SPECTRUM
-!     ------------------------------
-CALL espini
+!   =========================================================================
 
-!     =========================================================================
+!   INITIALISE THE ENERGY SPECTRUM
+!   ------------------------------
+    call espini
 
-!     EVALUATE VELOCITY COMPONENTS IN FOURIER SPACE
-!     ---------------------------------------------
+!   =========================================================================
 
-!     SWEEP THROUGH LOCAL PHYSICAL SPACE
-!     ----------------------------------
-DO kc = kstal,kstol
+!   EVALUATE VELOCITY COMPONENTS IN FOURIER SPACE
+!   ---------------------------------------------
+
+!   SWEEP THROUGH LOCAL PHYSICAL SPACE
+!   ----------------------------------
+    DO kc = kstal,kstol
   
 !       FOURIER-SPACE GLOBAL INDEXING
-  kx = kgofm1 + kc
-  IF(kx > nodblz)kx = kx-nzglbl
+    kx = kgofm1 + kc
+    IF(kx > nodblz)kx = kx-nzglbl
   
-  DO jc = jstal,jstol
+    DO jc = jstal,jstol
     
 !         FOURIER-SPACE GLOBAL INDEXING
     jx = jgofm1 + jc
@@ -325,50 +326,49 @@ DO kc = kstal,kstol
       END IF
       
     END DO
-  END DO
-END DO
-
-!     =========================================================================
-
-!     CHECK ENERGY CONTENT
-!     --------------------
-tket = zero
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      tket = tket + urun(ic,jc,kc)*urun(ic,jc,kc)  &
-          + utmp(ic,jc,kc)*utmp(ic,jc,kc) + vrun(ic,jc,kc)*vrun(ic,jc,kc)  &
-          + vtmp(ic,jc,kc)*vtmp(ic,jc,kc) + wrun(ic,jc,kc)*wrun(ic,jc,kc)  &
-          + wtmp(ic,jc,kc)*wtmp(ic,jc,kc)
-      
     END DO
-  END DO
-END DO
+    END DO
 
-!     SUM OVER ALL PROCESSORS
-CALL p_summ(tket,tketot)
+!   =========================================================================
 
-!     REPORT
-IF(iproc == 0)THEN
-  WRITE(ncrept,*)'Fourier-space turbulence kinetic energy'
-  WRITE(ncrept,'(1PE12.4)')tketot
-END IF
+!   CHECK ENERGY CONTENT
+!   --------------------
+    tket = zero
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(turbin_kernel_eqA, "CHECK ENERGY CONTENT", senga_grid, 3, rangexyz,  &
+                    &  ops_arg_dat(d_urun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    &  ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    &  ops_arg_dat(d_vrun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    &  ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    &  ops_arg_dat(d_wrun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    &  ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    &  ops_arg_reduce(h_tket, 1, "real(8)", OPS_INC))
 
-!     =========================================================================
+    call ops_reduction_result(h_tket, tket)
 
-!     CARRY OUT AN INVERSE FOURIER TRANSFORM
-!     ======================================
-!     WITH CONJUGATE ANTISYMMETRY
-CALL turbft
+!   SUM OVER ALL PROCESSORS
+    call p_summ(tket,tketot)
 
-!     =========================================================================
+!   REPORT
+    IF(iproc == 0)THEN
+        WRITE(ncrept,*)'Fourier-space turbulence kinetic energy'
+        WRITE(ncrept,'(1PE12.4)')tketot
+    END IF
 
-!     CHECK THAT TRANSFORMED DATA IS REAL
-!     -----------------------------------
+!   =========================================================================
 
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
+!   CARRY OUT AN INVERSE FOURIER TRANSFORM
+!   ======================================
+!   WITH CONJUGATE ANTISYMMETRY
+    call turbft
+
+!   =========================================================================
+
+!   CHECK THAT TRANSFORMED DATA IS REAL
+!   -----------------------------------
+
+    DO kc = kstal,kstol
+    DO jc = jstal,jstol
     DO ic = istal,istol
       
       flagim = .false.
@@ -382,109 +382,116 @@ DO kc = kstal,kstol
       END IF
       
     END DO
-  END DO
-END DO
-
-!     =========================================================================
-
-!     CHECK TURBULENCE STATISTICS
-!     ---------------------------
-
-!     AVERAGING FACTORS
-faclav = one/REAL(nxnode,kind=dp)/REAL(nynode,kind=dp)/REAL(nznode,kind=dp)
-facgav = one/REAL(nxglbl,kind=dp)/REAL(nyglbl,kind=dp)/REAL(nzglbl,kind=dp)
-
-
-!     VELOCITY MEANS
-!     --------------
-!     SUM OVER LOCAL VALUES
-ubart = zero
-vbart = zero
-wbart = zero
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      ubart = ubart + urun(ic,jc,kc)
-      vbart = vbart + vrun(ic,jc,kc)
-      wbart = wbart + wrun(ic,jc,kc)
-      
     END DO
-  END DO
-END DO
-
-!     LOCAL AVERAGES
-ubartl = ubart*faclav
-vbartl = vbart*faclav
-wbartl = wbart*faclav
-
-!     SUM OVER ALL PROCESSORS
-CALL p_summ(ubart,ubartt)
-CALL p_summ(vbart,vbartt)
-CALL p_summ(wbart,wbartt)
-
-!     GLOBAL AVERAGES
-ubartg = ubartt*facgav
-vbartg = vbartt*facgav
-wbartg = wbartt*facgav
-
-
-!     VELOCITY VARIANCES
-!     ------------------
-!     SUM OVER LOCAL VALUES
-uvart = zero
-vvart = zero
-wvart = zero
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
-    DO ic = istal,istol
-      
-      udev = urun(ic,jc,kc)-ubartg
-      uvart = uvart + udev*udev
-      vdev = vrun(ic,jc,kc)-vbartg
-      vvart = vvart + vdev*vdev
-      wdev = wrun(ic,jc,kc)-wbartg
-      wvart = wvart + wdev*wdev
-      
     END DO
-  END DO
-END DO
 
-!     TURBULENCE TOTAL ENERGY
-tket   = half*(uvart+vvart+wvart)
+!   =========================================================================
 
-!     LOCAL AVERAGES
-uvartl = uvart*faclav
-vvartl = vvart*faclav
-wvartl = wvart*faclav
-tketl  = half*(uvartl+vvartl+wvartl)
+!   CHECK TURBULENCE STATISTICS
+!   ---------------------------
 
-!     SUM OVER ALL PROCESSORS
-CALL p_summ(uvart,uvartt)
-CALL p_summ(vvart,vvartt)
-CALL p_summ(wvart,wvartt)
-CALL p_summ(tket,tketot)
+!   AVERAGING FACTORS
+    faclav = one/REAL(nxnode,kind=dp)/REAL(nynode,kind=dp)/REAL(nznode,kind=dp)
+    facgav = one/REAL(nxglbl,kind=dp)/REAL(nyglbl,kind=dp)/REAL(nzglbl,kind=dp)
 
-!     GLOBAL AVERAGES
-uvartg = uvartt*facgav
-vvartg = vvartt*facgav
-wvartg = wvartt*facgav
-tketg  = tketot*facgav
+!   VELOCITY MEANS
+!   --------------
+!   SUM OVER LOCAL VALUES
+    ubart = zero
+    vbart = zero
+    wbart = zero
+    
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(turbin_kernel_eqB, "VELOCITY MEANS", senga_grid, 3, rangexyz,  &
+                    &  ops_arg_dat(d_urun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    &  ops_arg_reduce(h_ubart, 1, "real(8)", OPS_INC))
+    call ops_reduction_result(h_ubart, ubart)
 
-!     REPORT
-IF(iproc == 0)THEN
-  WRITE(ncrept,*)'Physical-space turbulence kinetic energy'
-  WRITE(ncrept,'(1PE12.4)')tketg
-  WRITE(ncrept,*)
-  WRITE(ncrept,*)'Velocity means:'
-  WRITE(ncrept,'(3(1PE12.4))')ubartg,vbartg,wbartg
-  WRITE(ncrept,*)'Velocity variances:'
-  WRITE(ncrept,'(3(1PE12.4))')uvartg,vvartg,wvartg
-  WRITE(ncrept,*)
-END IF
+    call ops_par_loop(turbin_kernel_eqB, "VELOCITY MEANS", senga_grid, 3, rangexyz,  &
+                    &  ops_arg_dat(d_vrun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    &  ops_arg_reduce(h_vbart, 1, "real(8)", OPS_INC))
+    call ops_reduction_result(h_vbart, vbart)
 
-!     =========================================================================
+    call ops_par_loop(turbin_kernel_eqB, "VELOCITY MEANS", senga_grid, 3, rangexyz,  &
+                    &  ops_arg_dat(d_wrun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    &  ops_arg_reduce(h_wbart, 1, "real(8)", OPS_INC))
+    call ops_reduction_result(h_wbart, wbart)
+
+!   LOCAL AVERAGES
+    ubartl = ubart*faclav
+    vbartl = vbart*faclav
+    wbartl = wbart*faclav
+
+!   SUM OVER ALL PROCESSORS
+    call p_summ(ubart,ubartt)
+    call p_summ(vbart,vbartt)
+    call p_summ(wbart,wbartt)
+
+!   GLOBAL AVERAGES
+    ubartg = ubartt*facgav
+    vbartg = vbartt*facgav
+    wbartg = wbartt*facgav
 
 
-RETURN
+!   VELOCITY VARIANCES
+!   ------------------
+!   SUM OVER LOCAL VALUES
+    uvart = zero
+    vvart = zero
+    wvart = zero
+
+    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    call ops_par_loop(turbin_kernel_eqC, "VELOCITY VARIANCES", senga_grid, 3, rangexyz,  &
+                    &  ops_arg_dat(d_urun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    &  ops_arg_gbl(ubartg, 1, "real(dp)", OPS_READ), &
+                    &  ops_arg_reduce(h_uvart, 1, "real(8)", OPS_INC))
+    call ops_reduction_result(h_uvart, uvart)
+
+    call ops_par_loop(turbin_kernel_eqC, "VELOCITY VARIANCES", senga_grid, 3, rangexyz,  &
+                    &  ops_arg_dat(d_vrun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    &  ops_arg_gbl(vbartg, 1, "real(dp)", OPS_READ), &
+                    &  ops_arg_reduce(h_vvart, 1, "real(8)", OPS_INC))
+    call ops_reduction_result(h_vvart, vvart)
+
+    call ops_par_loop(turbin_kernel_eqC, "VELOCITY VARIANCES", senga_grid, 3, rangexyz,  &
+                    &  ops_arg_dat(d_wrun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    &  ops_arg_gbl(wbartg, 1, "real(dp)", OPS_READ), &
+                    &  ops_arg_reduce(h_wvart, 1, "real(8)", OPS_INC))
+    call ops_reduction_result(h_wvart, wvart)
+
+!   TURBULENCE TOTAL ENERGY
+    tket   = half*(uvart+vvart+wvart)
+
+!   LOCAL AVERAGES
+    uvartl = uvart*faclav
+    vvartl = vvart*faclav
+    wvartl = wvart*faclav
+    tketl  = half*(uvartl+vvartl+wvartl)
+
+!   SUM OVER ALL PROCESSORS
+    call p_summ(uvart,uvartt)
+    call p_summ(vvart,vvartt)
+    call p_summ(wvart,wvartt)
+    call p_summ(tket,tketot)
+
+!   GLOBAL AVERAGES
+    uvartg = uvartt*facgav
+    vvartg = vvartt*facgav
+    wvartg = wvartt*facgav
+    tketg  = tketot*facgav
+
+!   REPORT
+    IF(iproc == 0) THEN
+        WRITE(ncrept,*)'Physical-space turbulence kinetic energy'
+        WRITE(ncrept,'(1PE12.4)')tketg
+        WRITE(ncrept,*)
+        WRITE(ncrept,*)'Velocity means:'
+        WRITE(ncrept,'(3(1PE12.4))')ubartg,vbartg,wbartg
+        WRITE(ncrept,*)'Velocity variances:'
+        WRITE(ncrept,'(3(1PE12.4))')uvartg,vvartg,wvartg
+        WRITE(ncrept,*)
+    END IF
+
+!   =========================================================================
+
 END SUBROUTINE turbin

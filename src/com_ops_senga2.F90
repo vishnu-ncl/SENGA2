@@ -85,6 +85,7 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_crin
 
     TYPE(ops_reduction) :: h_erdtot, h_erutot, h_ervtot, h_erwtot, h_eretot, h_erytot, h_prefer
+    TYPE(ops_reduction) :: h_tket, h_ubart, h_vbart, h_wbart, h_uvart, h_vvart, h_wvart
 
     TYPE(ops_stencil) :: s3d_000
 
