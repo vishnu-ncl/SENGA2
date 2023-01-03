@@ -1,276 +1,83 @@
 SUBROUTINE temper
  
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-26  Time: 15:26:27
+    use OPS_Fortran_Reference
 
-!     *************************************************************************
+    use OPS_CONSTANTS
+    use, intrinsic :: ISO_C_BINDING
 
-!     TEMPER
-!     ======
+    use data_types
+    use com_senga
+    use com_ops_senga
 
-!     AUTHOR
-!     ------
-!     R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
+!   *************************************************************************
 
-!     CHANGE RECORD
-!     -------------
-!     16-NOV-2002:  CREATED
+!   TEMPER
+!   ======
 
-!     DESCRIPTION
-!     -----------
-!     DNS CODE SENGA2
-!     COMPUTES TEMPERATURE AND PRESSURE
+!   AUTHOR
+!   ------
+!   R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
 
-!     *************************************************************************
+!   CHANGE RECORD
+!   -------------
+!   16-NOV-2002:  CREATED
 
+!   DESCRIPTION
+!   -----------
+!   DNS CODE SENGA2
+!   COMPUTES TEMPERATURE AND PRESSURE
 
-!     GLOBAL DATA
-!     ===========
-!     -------------------------------------------------------------------------
-use data_types
-use com_senga
-!     -------------------------------------------------------------------------
+!   *************************************************************************
 
+!   GLOBAL DATA
+!   ===========
+!   -------------------------------------------------------------------------
+!   -------------------------------------------------------------------------
 
-!     PARAMETERS
-!     ==========
-real(kind=dp) :: toltmp
-PARAMETER(toltmp = 1.0E-10)
-INTEGER :: ntitrs
-PARAMETER(ntitrs = 100)
+    integer :: rangexyz(6)
 
+!   BEGIN
+!   =====
 
-!     LOCAL DATA
-!     ==========
-real(kind=dp) :: tcoeff(0:nctmax),tderiv(1:nctmax)
-real(kind=dp) :: ukuk
-real(kind=dp) :: tempor,tfpoly,tdpoly,deltmp,cpfory
-INTEGER :: ic,jc,kc,ispec,itint,icp,ititrs
-INTEGER :: iindex,ipower,icoef1,icoef2
+!   =========================================================================
 
+!   TEMPERATURE AND PRESSURE
+!   ------------------------
 
-!     BEGIN
-!     =====
+!   TEMPERATURE AND PRESSURE ARE PARALLEL
 
-!     =========================================================================
+    rangexyz = (/istalt,istolt,jstalt,jstolt,kstalt,kstolt/)
+    call ops_par_loop(temper_kernel_main, "temper kernel", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(amascp, 1, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(amasct, 1, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(ncpom1, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(ncpoly, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(tinthi, 1, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(rgspec, 1, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(ntint, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(nctmax, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(nintmx, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(nspec, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(nctmm1, 1, "integer", OPS_READ), &
+                    ops_arg_idx())
 
-!     TEMPERATURE AND PRESSURE
-!     ------------------------
+!   =========================================================================
 
-!     TEMPERATURE AND PRESSURE ARE PARALLEL
-
-DO kc = kstalt,kstolt
-  DO jc = jstalt,jstolt
-    DO ic = istalt,istolt
-      
-!           ===================================================================
-      
-!           KINETIC ENERGY TERM
-      ukuk = (urhs(ic,jc,kc)*urhs(ic,jc,kc)  &
-          +  vrhs(ic,jc,kc)*vrhs(ic,jc,kc)  &
-          +  wrhs(ic,jc,kc)*wrhs(ic,jc,kc))/drhs(ic,jc,kc)
-      
-!           ===================================================================
-      
-!           INITIALISE COEFFICIENTS OF TEMPERATURE POLYNOMIAL
-!           AND ITS DERIVATIVE
-      tcoeff(0) = half*ukuk - erhs(ic,jc,kc)
-      DO icp = 1, nctmax
-        tcoeff(icp) = zero
-        tderiv(icp) = zero
-      END DO
-      
-!           ===================================================================
-      
-!           USE STORE7 TO ACCUMULATE MIXTURE SPECIFIC GAS CONSTANT
-!           INITIALISE STORE7
-      store7(ic,jc,kc) = zero
-      
-!           ===================================================================
-      
-!           RUN THROUGH ALL SPECIES
-      DO ispec = 1,nspec
-        
-!             =================================================================
-        
-!             LOCATE TEMPERATURE IN AN INTERVAL
-        iindex = 1 + (ispec-1)/nspimx
-        ipower = ispec - (iindex-1)*nspimx - 1
-        icoef2 = ntbase**ipower
-        icoef1 = icoef2*ntbase
-        itint = 1 + MOD(itndex(iindex,ic,jc,kc),icoef1)/icoef2
-        
-!             =================================================================
-        
-!             CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
-        tcoeff(0) = tcoeff(0) + yrhs(ispec,ic,jc,kc)*  &
-            amascp(ncenth(itint,ispec),itint,ispec)
-        tcoeff(1) = tcoeff(1) + yrhs(ispec,ic,jc,kc)*amasct(1,itint,ispec)
-        tderiv(1) = tcoeff(1)
-        DO icp = 2, ncpoly(itint,ispec)
-          tcoeff(icp) = tcoeff(icp) + yrhs(ispec,ic,jc,kc)*  &
-              amasct(icp,itint,ispec)
-          tderiv(icp) = tderiv(icp) + yrhs(ispec,ic,jc,kc)*  &
-              amascp(icp,itint,ispec)
-        END DO
-        
-!             =================================================================
-        
-!             USE STORE7
-!             TO ACCUMULATE (DENSITY TIMES) MIXTURE SPECIFIC GAS CONSTANT
-        store7(ic,jc,kc) = store7(ic,jc,kc)  &
-            + yrhs(ispec,ic,jc,kc)*rgspec(ispec)
-        
-!             =================================================================
-        
-      END DO
-!           END OF RUN THROUGH ALL SPECIES
-      
-!           ===================================================================
-      
-!           SOLVE FOR TEMPERATURE
-!           USING NEWTON-RAPHSON
-      tempor = trun(ic,jc,kc)
-      ititrs = 1
-!      1000        CONTINUE
-      
-!             EVALUATE TEMPERATURE POLYNOMIAL AND ITS DERIVATIVE
-!      tfpoly = tcoeff(nctmax)
-!      tdpoly = tderiv(nctmax)
-!      DO icp = nctmm1,1,-1
-!        tfpoly = tcoeff(icp) + tfpoly*tempor
-!        tdpoly = tderiv(icp) + tdpoly*tempor
-!      END DO
-!      tfpoly = tcoeff(0) + tfpoly*tempor
-      
-!             EVALUATE TEMPERATURE CORRECTION
-!      deltmp = -tfpoly/tdpoly
-      
-!             CHECK FOR CONVERGENCE
-!      IF(ABS(deltmp) > toltmp)THEN
-!        IF(ititrs < ntitrs)THEN
-!          tempor = tempor + deltmp
-!          ititrs = ititrs + 1
-!          GO TO 1000
-!        ELSE
-!          WRITE(6,*) 'Fatal: TEMPER: T iteration failed to converge'
-!          WRITE(6,*)'processor:',iproc
-!          WRITE(6,*)'at point:',ic,jc,kc
-!          WRITE(6,*)'with values:',tempor,deltmp
-!          WRITE(6,*)drhs(ic,jc,kc)
-!          WRITE(6,*)urhs(ic,jc,kc)
-!          WRITE(6,*)vrhs(ic,jc,kc)
-!          WRITE(6,*)wrhs(ic,jc,kc)
-!          WRITE(6,*)erhs(ic,jc,kc)
-!          STOP
-!        END IF
-!      END IF
-      
-!           END OF LOOP 1000
-
-!       EVALUATE TEMPERATURE POLYNOMIAL AND ITS DERIVATIVE
-        tfpoly = tcoeff(nctmax)
-        tdpoly = tderiv(nctmax)
-        DO icp = nctmm1,1,-1
-            tfpoly = tcoeff(icp) + tfpoly*tempor
-            tdpoly = tderiv(icp) + tdpoly*tempor
-        END DO
-        tfpoly = tcoeff(0) + tfpoly*tempor
-
-!       EVALUATE TEMPERATURE CORRECTION
-        deltmp = -tfpoly/tdpoly
-
-!       CHECK FOR CONVERGENCE
-        DO WHILE (ABS(deltmp) > toltmp)
-            IF(ititrs < ntitrs)THEN
-                tempor = tempor + deltmp
-                ititrs = ititrs + 1
-
-!               RE-EVALUATE TEMPERATURE POLYNOMIAL AND ITS DERIVATIVE
-                tfpoly = tcoeff(nctmax)
-                tdpoly = tderiv(nctmax)
-                DO icp = nctmm1,1,-1
-                    tfpoly = tcoeff(icp) + tfpoly*tempor
-                    tdpoly = tderiv(icp) + tdpoly*tempor
-                END DO
-                tfpoly = tcoeff(0) + tfpoly*tempor
-
-!               RE-EVALUATE TEMPERATURE CORRECTION
-                deltmp = -tfpoly/tdpoly
-          
-            ELSE
-                WRITE(6,*) 'Fatal: TEMPER: T iteration failed to converge'
-                WRITE(6,*)'processor:',iproc
-                WRITE(6,*)'at point:',ic,jc,kc
-                WRITE(6,*)'with values:',tempor,deltmp
-                WRITE(6,*)drhs(ic,jc,kc)
-                WRITE(6,*)urhs(ic,jc,kc)
-                WRITE(6,*)vrhs(ic,jc,kc)
-                WRITE(6,*)wrhs(ic,jc,kc)
-                WRITE(6,*)erhs(ic,jc,kc)
-                STOP
-            END IF
-        END DO      
-
-!           ===================================================================
-      
-!           SET THE NEW TEMPERATURE
-      trun(ic,jc,kc) = tempor
-      
-!           ===================================================================
-      
-!           FOR ALL SPECIES RELOCATE TEMPERATURE IN AN INTERVAL
-!           EVALUATE MIXTURE SPECIFIC HEAT CP
-      DO iindex = 1,nintmx
-        itndex(iindex,ic,jc,kc) = 0
-      END DO
-      transp(ic,jc,kc) = zero
-      DO ispec = 1,nspec
-        
-        itint = 1
-!        1100          CONTINUE
-!        IF(trun(ic,jc,kc) > tinthi(itint,ispec))THEN
-!          IF(itint < ntint(ispec))THEN
-!            itint = itint + 1
-!            GO TO 1100
-!          END IF
-!        END IF
-!             END OF LOOP 1100
-        DO WHILE (trun(ic,jc,kc) > tinthi(itint,ispec) .and. itint < ntint(ispec))
-            itint = itint + 1
-        END DO
-       
-!             SET THE TEMPERATURE INTERVAL INDEX
-        iindex = 1 + (ispec-1)/nspimx
-        ipower = ispec - (iindex-1)*nspimx - 1
-        itndex(iindex,ic,jc,kc) = itndex(iindex,ic,jc,kc)  &
-            +(itint-1)*ntbase**ipower
-        
-!             =================================================================
-        
-!             EVALUATE MIXTURE SPECIFIC HEAT CP
-        cpfory = amascp(ncpoly(itint,ispec),itint,ispec)
-        DO icp = ncpom1(itint,ispec),1,-1
-          cpfory = cpfory*trun(ic,jc,kc) + amascp(icp,itint,ispec)
-        END DO
-        transp(ic,jc,kc) = transp(ic,jc,kc) + yrhs(ispec,ic,jc,kc)*cpfory
-        
-      END DO
-      transp(ic,jc,kc) = transp(ic,jc,kc)/drhs(ic,jc,kc)
-      
-!           ===================================================================
-      
-!           EVALUATE MIXTURE PRESSURE
-      prun(ic,jc,kc) = trun(ic,jc,kc)*store7(ic,jc,kc)
-      
-!           ===================================================================
-      
-    END DO
-  END DO
-END DO
-
-!     =========================================================================
-
-
-RETURN
 END SUBROUTINE temper
