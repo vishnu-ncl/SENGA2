@@ -1179,7 +1179,7 @@ SUBROUTINE indata
     call ops_par_loop(math_kernel_eqT, "A = B/C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_drun, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ),)
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
 
 !                                                           STORE1 = T*MIX RG
 !   -------------------------------------------------------------------------
@@ -1189,75 +1189,52 @@ SUBROUTINE indata
 !   INITIALISE TEMPERATURE INTERVAL INDEX
 !   FOR ALL SPECIES LOCATE TEMPERATURE IN AN INTERVAL
 !   BIGGER SIZE ARRAY
-DO kc = kstab,kstob
-  DO jc = jstab,jstob
-    DO ic = istab,istob
-      
-      DO iindex = 1,nintmx
-        itndex(iindex,ic,jc,kc) = 0
-      END DO
-      
-      DO ispec = 1,nspec
-        
-        itint = 1
-!        1000          CONTINUE
-!        IF(trun(ic,jc,kc) > tinthi(itint,ispec))THEN
-!          IF(itint < ntint(ispec))THEN
-!            itint = itint + 1
-!            GO TO 1000
-!          END IF
-!        END IF
-!             END OF LOOP 1000
-        DO WHILE (trun(ic,jc,kc) > tinthi(itint,ispec) .and. itint < ntint(ispec))
-            itint = itint + 1
-        END DO
-       
-!             SET THE TEMPERATURE INDEX
-        iindex = 1 + (ispec-1)/nspimx
-        ipower = ispec - (iindex-1)*nspimx - 1
-        itndex(iindex,ic,jc,kc) = itndex(iindex,ic,jc,kc)  &
-            +(itint-1)*ntbase**ipower
-        
-      END DO
-      
-    END DO
-  END DO
-END DO
+    rangexyz = (/istab,istob,jstab,jstob,kstab,kstob/)
+    call ops_par_loop(math_MD_kernel_eqAC, "INTERNAL ENERGY FIELD", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(tinthi, 1, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(ntint, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(nintmx, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
 !   PRE-INITIALISE INTERNAL ENERGY TO ZERO
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
     call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erun, 1, s3d_000, "real(dp)", OPS_WRITE))
 
-!     INITIALISE INTERNAL ENERGY
-DO ispec = 1,nspec
+!   INITIALISE INTERNAL ENERGY
+    DO ispec = 1,nspec
   
 !       TEMPERATURE INTERVAL INDEXING
-  iindex = 1 + (ispec-1)/nspimx
-  ipower = ispec - (iindex-1)*nspimx - 1
-  icoef2 = ntbase**ipower
-  icoef1 = icoef2*ntbase
+        iindex = 1 + (ispec-1)/nspimx
+        ipower = ispec - (iindex-1)*nspimx - 1
+        icoef2 = ntbase**ipower
+        icoef1 = icoef2*ntbase
   
 !       USE THERMOCHEMICAL DATA
-  DO kc = kstal,kstol
-    DO jc = jstal,jstol
-      DO ic = istal,istol
-        
-        itint = 1 + MOD(itndex(iindex,ic,jc,kc),icoef1)/icoef2
-        fornow = amasch(ncpoly(itint,ispec),itint,ispec)
-        DO icp = ncpom1(itint,ispec),1,-1
-          fornow = fornow*trun(ic,jc,kc) + amasch(icp,itint,ispec)
-        END DO
-        fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
-            + fornow*trun(ic,jc,kc)
-        
-        erun(ic,jc,kc) = erun(ic,jc,kc) + fornow*yrun(ispec,ic,jc,kc)
-        
-      END DO
+        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        call ops_par_loop(math_MD_kernel_eqAD, "INITIALISE INTERNAL ENERGY", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_erun, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_READ), &
+                        ops_arg_dat(d_yrun, 9, s3d_000, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(amasch, 1, "real(dp)", OPS_READ), &
+                        ops_arg_gbl(ncpoly, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(ncpom1, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(nspec, 1, "integer", OPS_READ))
+
     END DO
-  END DO
-  
-END DO
 
 !   FINALISE INTERNAL ENERGY
     rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)

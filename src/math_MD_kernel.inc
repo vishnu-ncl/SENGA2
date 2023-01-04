@@ -551,3 +551,70 @@ SUBROUTINE math_MD_kernel_eqAB(store2,trun,itndex,amolgb,ncpoly,ncpom1,ncenth,nc
     store2(OPS_ACC1(0,0,0)) = store2(OPS_ACC1(0,0,0)) + diffmu(isspec,istep)*gibbsp
 
 END SUBROUTINE math_MD_kernel_eqAB
+
+SUBROUTINE math_MD_kernel_eqAC(itndex,trun,tinthi,ntint,nspimx,ntbase,nintmx,nspec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1), intent(in) :: trun
+    integer, dimension(1) :: itndex
+
+    integer, intent(in) ::  nspimx,ntbase,nintmx,nspec
+
+    real(kind=dp), dimension(nintmx,nspec), intent(in) :: tinthi
+    integer, dimension(nspec), intent(in) :: ntint
+
+    integer :: iindex,ispec,itint,ipower
+
+    DO iindex = 1,nintmx
+        itndex(OPS_ACC_MD1(iindex,0,0,0)) = 0
+    END DO
+
+    DO ispec = 1,nspec
+
+        itint = 1
+
+        DO WHILE (trun(OPS_ACC2(0,0,0)) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+            itint = itint + 1
+        END DO
+
+!       SET THE TEMPERATURE INDEX
+        iindex = 1 + (ispec-1)/nspimx
+        ipower = ispec - (iindex-1)*nspimx - 1
+
+        itndex(OPS_ACC_MD1(iindex,0,0,0)) = itndex(OPS_ACC_MD1(iindex,0,0,0))  &
+            +(itint-1)*ntbase**ipower
+
+    END DO
+
+END SUBROUTINE math_MD_kernel_eqAC
+
+SUBROUTINE math_MD_kernel_eqAD(erun,trun,itndex,yrun,amasch,ncpoly,ncpom1,ncenth,ispec,iindex,ipower,icoef1,icoef2,ncofmx,ntinmx,nspec)
+    use data_types
+    implicit none
+
+    real(kind=dp), dimension(1), intent(in) :: trun, yrun
+    real(kind=dp), dimension(1) :: erun
+    integer, dimension(1), intent(in) :: itndex
+    
+    integer, intent(in) ::  ispec,iindex,ipower,icoef1,icoef2,ncofmx,ntinmx,nspec
+
+    real(kind=dp), dimension(ncofmx,ntinmx,nspec), intent(in) :: amasch
+    integer, dimension(ntinmx,nspec), intent(in) :: ncpoly,ncpom1,ncenth
+
+    real(kind=dp) :: fornow
+    integer :: icp,itint
+
+    itint = 1 + MOD(itndex(OPS_ACC_MD3(iindex,0,0,0)),icoef1)/icoef2
+    fornow = amasch(ncpoly(itint,ispec),itint,ispec)
+
+    DO icp = ncpom1(itint,ispec),1,-1
+        fornow = fornow*trun(OPS_ACC2(0,0,0)) + amasch(icp,itint,ispec)
+    END DO
+
+    fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
+           + fornow*trun(OPS_ACC2(0,0,0))
+
+    erun(OPS_ACC1(0,0,0)) = erun(OPS_ACC1(0,0,0)) + fornow*yrun(OPS_ACC_MD4(ispec,0,0,0))
+
+END SUBROUTINE math_MD_kernel_eqAD
