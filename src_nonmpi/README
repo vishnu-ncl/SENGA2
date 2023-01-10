@@ -1,0 +1,13 @@
+SENGA2 version 2.1 README file
+------------------------------
+
+To run the default laminar methane-air flame test case:
+
+1. Compile the code using the command ./Allmake
+
+2. Copy the dump data file using the shell command
+cp casefiles/25step/dmpi0000000.dat .
+
+3. Run the code using the command ./Senga2 1
+
+See the user guide "s2user.pdf" in the docs directory for further details.
