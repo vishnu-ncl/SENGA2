@@ -286,7 +286,7 @@ IF(MOD(itime,ntdump) == 0)THEN
 !         UNFORMATTED DUMP OUTPUT
     OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag+1),STATUS='OLD', FORM='UNFORMATTED')
     REWIND(ncdmpo)
-    WRITE(ncdmpo)nxnode,nynode,nznode,nspec, drun,urun,vrun,wrun,erun,yrun,  &
+    WRITE(ncdmpo)nxsize,nysize,nzsize,nspec, drun,urun,vrun,wrun,erun,yrun,  &
         etime,tstep,errold,errldr
     CLOSE(ncdmpo)
     
@@ -295,10 +295,10 @@ IF(MOD(itime,ntdump) == 0)THEN
 !         FORMATTED DUMP OUTPUT
     OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag+1),STATUS='OLD', FORM='FORMATTED')
     REWIND(ncdmpo)
-    WRITE(ncdmpo,*)nxnode,nynode,nznode,nspec
-    DO kc = 1,nznode
-      DO jc = 1,nynode
-        DO ic = 1,nxnode
+    WRITE(ncdmpo,*)nxsize,nysize,nzsize,nspec
+    DO kc = 1,nzsize
+      DO jc = 1,nysize
+        DO ic = 1,nxsize
           WRITE(ncdmpo,*)drun(ic,jc,kc),  &
               urun(ic,jc,kc),vrun(ic,jc,kc),wrun(ic,jc,kc), erun(ic,jc,kc),  &
               (yrun(ispec,ic,jc,kc),ispec=1,nspec)
@@ -363,11 +363,11 @@ END IF
 
 IF(iproc == 5)THEN
   WRITE(*,'(a,I7,a,F16.8)')  &
-      'test_drhs: (step=',itime,') value: ',drhs(5,jstal,kstal)
+      'test_drhs: (step=',itime,') value: ',drhs(5,nysize,nzsize)
   WRITE(*,'(a,I7,a,F16.8)')  &
-      'test_erhs: (step=',itime,') value: ',erhs(6,jstal,kstal)
+      'test_erhs: (step=',itime,') value: ',erhs(6,nysize,nzsize)
   WRITE(*,'(a,I7,a,F16.8)')  &
-      'test_urhs: (step=',itime,') value: ',urhs(7,jstal,kstal)
+      'test_urhs: (step=',itime,') value: ',urhs(7,nysize,nzsize)
 END IF
 
 !     =========================================================================

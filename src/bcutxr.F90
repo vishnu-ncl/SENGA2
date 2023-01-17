@@ -60,7 +60,7 @@ SUBROUTINE bcutxr
 !   CONSTANT U-VELOCITY
 !   PARAMETER I1=1, R1=U-VELOCITY
     IF(nxrprm(1) == 1) THEN
-        rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+        rangexyz = (/1,1,1,nysize,1,nzsize/)
         call ops_par_loop(bcut_kernel_xdir_const_uvel, "bcut_kernel_xdir_const_uvel", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
                         ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
@@ -82,7 +82,7 @@ SUBROUTINE bcutxr
         init_val1 = rxrprm(1)*SIN(argmnt)
         init_val2 = fornow*rxrprm(1)*COS(argmnt)  
 
-        rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+        rangexyz = (/1,1,1,nysize,1,nzsize/)
         call ops_par_loop(bcut_kernel_xdir_sinusoidal_uvel, "bcut_kernel_xdir_sinusoidal_uvel", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
                         ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &

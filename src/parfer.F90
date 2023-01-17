@@ -54,24 +54,24 @@ IF(proddx)THEN
 !         RECEIVE FROM THE LEFT
     
     CALL p_recv(parray,nparay,ixprom,itgxrl)
-    CALL inhalo(drhs,parray,istalo,istolo,jstal,jstol,kstal,kstol)
+    CALL inhalo(drhs,parray,1-nhalox,0,1,nysize,1,nzsize)
     
     CALL p_recv(parray,nparay,ixprom,itgxrl)
-    CALL inhalo(urhs,parray,istalo,istolo,jstal,jstol,kstal,kstol)
+    CALL inhalo(urhs,parray,1-nhalox,0,1,nysize,1,nzsize)
     
     CALL p_recv(parray,nparay,ixprom,itgxrl)
-    CALL inhalo(vrhs,parray,istalo,istolo,jstal,jstol,kstal,kstol)
+    CALL inhalo(vrhs,parray,1-nhalox,0,1,nysize,1,nzsize)
     
     CALL p_recv(parray,nparay,ixprom,itgxrl)
-    CALL inhalo(wrhs,parray,istalo,istolo,jstal,jstol,kstal,kstol)
+    CALL inhalo(wrhs,parray,1-nhalox,0,1,nysize,1,nzsize)
     
     CALL p_recv(parray,nparay,ixprom,itgxrl)
-    CALL inhalo(erhs,parray,istalo,istolo,jstal,jstol,kstal,kstol)
+    CALL inhalo(erhs,parray,1-nhalox,0,1,nysize,1,nzsize)
     
     DO ispec = 1,nspec
       
       CALL p_recv(parray,nparay,ixprom,itgxrl)
-      CALL inhals(yrhs,ispec,parray,istalo,istolo, jstal,jstol,kstal,kstol)
+      CALL inhals(yrhs,ispec,parray,1-nhalox,0, 1,nysize,1,nzsize)
       
     END DO
     
@@ -85,24 +85,24 @@ IF(proddx)THEN
     
     ncount = nhalox*nynode*nznode
     
-    CALL exhalo(drhs,parray,istari,istori,jstal,jstol,kstal,kstol)
+    CALL exhalo(drhs,parray,nxsize+1-nhalox,nxsize,1,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,ixprop,itgxsr)
     
-    CALL exhalo(urhs,parray,istari,istori,jstal,jstol,kstal,kstol)
+    CALL exhalo(urhs,parray,nxsize+1-nhalox,nxsize,1,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,ixprop,itgxsr)
     
-    CALL exhalo(vrhs,parray,istari,istori,jstal,jstol,kstal,kstol)
+    CALL exhalo(vrhs,parray,nxsize+1-nhalox,nxsize,1,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,ixprop,itgxsr)
     
-    CALL exhalo(wrhs,parray,istari,istori,jstal,jstol,kstal,kstol)
+    CALL exhalo(wrhs,parray,nxsize+1-nhalox,nxsize,1,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,ixprop,itgxsr)
     
-    CALL exhalo(erhs,parray,istari,istori,jstal,jstol,kstal,kstol)
+    CALL exhalo(erhs,parray,nxsize+1-nhalox,nxsize,1,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,ixprop,itgxsr)
     
     DO ispec = 1,nspec
       
-      CALL exhals(yrhs,ispec,parray,istari,istori, jstal,jstol,kstal,kstol)
+      CALL exhals(yrhs,ispec,parray,nxsize+1-nhalox,nxsize, 1,nysize,1,nzsize)
       CALL p_send(parray,nparay,ncount,ixprop,itgxsr)
       
     END DO
@@ -112,24 +112,24 @@ IF(proddx)THEN
 !         RECEIVE FROM THE RIGHT
     
     CALL p_recv(parray,nparay,ixprop,itgxrr)
-    CALL inhalo(drhs,parray,istaro,istoro,jstal,jstol,kstal,kstol)
+    CALL inhalo(drhs,parray,nxsize+1,nxsize+nhalox,1,nysize,1,nzsize)
     
     CALL p_recv(parray,nparay,ixprop,itgxrr)
-    CALL inhalo(urhs,parray,istaro,istoro,jstal,jstol,kstal,kstol)
+    CALL inhalo(urhs,parray,nxsize+1,nxsize+nhalox,1,nysize,1,nzsize)
     
     CALL p_recv(parray,nparay,ixprop,itgxrr)
-    CALL inhalo(vrhs,parray,istaro,istoro,jstal,jstol,kstal,kstol)
+    CALL inhalo(vrhs,parray,nxsize+1,nxsize+nhalox,1,nysize,1,nzsize)
     
     CALL p_recv(parray,nparay,ixprop,itgxrr)
-    CALL inhalo(wrhs,parray,istaro,istoro,jstal,jstol,kstal,kstol)
+    CALL inhalo(wrhs,parray,nxsize+1,nxsize+nhalox,1,nysize,1,nzsize)
     
     CALL p_recv(parray,nparay,ixprop,itgxrr)
-    CALL inhalo(erhs,parray,istaro,istoro,jstal,jstol,kstal,kstol)
+    CALL inhalo(erhs,parray,nxsize+1,nxsize+nhalox,1,nysize,1,nzsize)
     
     DO ispec = 1,nspec
       
       CALL p_recv(parray,nparay,ixprop,itgxrr)
-      CALL inhals(yrhs,ispec,parray,istaro,istoro, jstal,jstol,kstal,kstol)
+      CALL inhals(yrhs,ispec,parray,nxsize+1,nxsize+nhalox, 1,nysize,1,nzsize)
       
     END DO
     
@@ -143,24 +143,24 @@ IF(proddx)THEN
     
     ncount = nhalox*nynode*nznode
     
-    CALL exhalo(drhs,parray,istali,istoli,jstal,jstol,kstal,kstol)
+    CALL exhalo(drhs,parray,1,nhalox,1,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,ixprom,itgxsl)
     
-    CALL exhalo(urhs,parray,istali,istoli,jstal,jstol,kstal,kstol)
+    CALL exhalo(urhs,parray,1,nhalox,1,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,ixprom,itgxsl)
     
-    CALL exhalo(vrhs,parray,istali,istoli,jstal,jstol,kstal,kstol)
+    CALL exhalo(vrhs,parray,1,nhalox,1,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,ixprom,itgxsl)
     
-    CALL exhalo(wrhs,parray,istali,istoli,jstal,jstol,kstal,kstol)
+    CALL exhalo(wrhs,parray,1,nhalox,1,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,ixprom,itgxsl)
     
-    CALL exhalo(erhs,parray,istali,istoli,jstal,jstol,kstal,kstol)
+    CALL exhalo(erhs,parray,1,nhalox,1,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,ixprom,itgxsl)
     
     DO ispec = 1,nspec
       
-      CALL exhals(yrhs,ispec,parray,istali,istoli, jstal,jstol,kstal,kstol)
+      CALL exhals(yrhs,ispec,parray,1,nhalox, 1,nysize,1,nzsize)
       CALL p_send(parray,nparay,ncount,ixprom,itgxsl)
       
     END DO
@@ -180,24 +180,24 @@ ELSE
     
     ncount = nhalox*nynode*nznode
     
-    CALL exhalo(drhs,parray,istari,istori,jstal,jstol,kstal,kstol)
+    CALL exhalo(drhs,parray,nxsize+1-nhalox,nxsize,1,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,ixprop,itgxsr)
     
-    CALL exhalo(urhs,parray,istari,istori,jstal,jstol,kstal,kstol)
+    CALL exhalo(urhs,parray,nxsize+1-nhalox,nxsize,1,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,ixprop,itgxsr)
     
-    CALL exhalo(vrhs,parray,istari,istori,jstal,jstol,kstal,kstol)
+    CALL exhalo(vrhs,parray,nxsize+1-nhalox,nxsize,1,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,ixprop,itgxsr)
     
-    CALL exhalo(wrhs,parray,istari,istori,jstal,jstol,kstal,kstol)
+    CALL exhalo(wrhs,parray,nxsize+1-nhalox,nxsize,1,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,ixprop,itgxsr)
     
-    CALL exhalo(erhs,parray,istari,istori,jstal,jstol,kstal,kstol)
+    CALL exhalo(erhs,parray,nxsize+1-nhalox,nxsize,1,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,ixprop,itgxsr)
     
     DO ispec = 1,nspec
       
-      CALL exhals(yrhs,ispec,parray,istari,istori, jstal,jstol,kstal,kstol)
+      CALL exhals(yrhs,ispec,parray,nxsize+1-nhalox,nxsize, 1,nysize,1,nzsize)
       CALL p_send(parray,nparay,ncount,ixprop,itgxsr)
       
     END DO
@@ -211,24 +211,24 @@ ELSE
 !         RECEIVE FROM THE LEFT
     
     CALL p_recv(parray,nparay,ixprom,itgxrl)
-    CALL inhalo(drhs,parray,istalo,istolo,jstal,jstol,kstal,kstol)
+    CALL inhalo(drhs,parray,1-nhalox,0,1,nysize,1,nzsize)
     
     CALL p_recv(parray,nparay,ixprom,itgxrl)
-    CALL inhalo(urhs,parray,istalo,istolo,jstal,jstol,kstal,kstol)
+    CALL inhalo(urhs,parray,1-nhalox,0,1,nysize,1,nzsize)
     
     CALL p_recv(parray,nparay,ixprom,itgxrl)
-    CALL inhalo(vrhs,parray,istalo,istolo,jstal,jstol,kstal,kstol)
+    CALL inhalo(vrhs,parray,1-nhalox,0,1,nysize,1,nzsize)
     
     CALL p_recv(parray,nparay,ixprom,itgxrl)
-    CALL inhalo(wrhs,parray,istalo,istolo,jstal,jstol,kstal,kstol)
+    CALL inhalo(wrhs,parray,1-nhalox,0,1,nysize,1,nzsize)
     
     CALL p_recv(parray,nparay,ixprom,itgxrl)
-    CALL inhalo(erhs,parray,istalo,istolo,jstal,jstol,kstal,kstol)
+    CALL inhalo(erhs,parray,1-nhalox,0,1,nysize,1,nzsize)
     
     DO ispec = 1,nspec
       
       CALL p_recv(parray,nparay,ixprom,itgxrl)
-      CALL inhals(yrhs,ispec,parray,istalo,istolo, jstal,jstol,kstal,kstol)
+      CALL inhals(yrhs,ispec,parray,1-nhalox,0, 1,nysize,1,nzsize)
       
     END DO
     
@@ -238,24 +238,24 @@ ELSE
     
     ncount = nhalox*nynode*nznode
     
-    CALL exhalo(drhs,parray,istali,istoli,jstal,jstol,kstal,kstol)
+    CALL exhalo(drhs,parray,1,nhalox,1,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,ixprom,itgxsl)
     
-    CALL exhalo(urhs,parray,istali,istoli,jstal,jstol,kstal,kstol)
+    CALL exhalo(urhs,parray,1,nhalox,1,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,ixprom,itgxsl)
     
-    CALL exhalo(vrhs,parray,istali,istoli,jstal,jstol,kstal,kstol)
+    CALL exhalo(vrhs,parray,1,nhalox,1,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,ixprom,itgxsl)
     
-    CALL exhalo(wrhs,parray,istali,istoli,jstal,jstol,kstal,kstol)
+    CALL exhalo(wrhs,parray,1,nhalox,1,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,ixprom,itgxsl)
     
-    CALL exhalo(erhs,parray,istali,istoli,jstal,jstol,kstal,kstol)
+    CALL exhalo(erhs,parray,1,nhalox,1,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,ixprom,itgxsl)
     
     DO ispec = 1,nspec
       
-      CALL exhals(yrhs,ispec,parray,istali,istoli, jstal,jstol,kstal,kstol)
+      CALL exhals(yrhs,ispec,parray,1,nhalox, 1,nysize,1,nzsize)
       CALL p_send(parray,nparay,ncount,ixprom,itgxsl)
       
     END DO
@@ -269,24 +269,24 @@ ELSE
 !         RECEIVE FROM THE RIGHT
     
     CALL p_recv(parray,nparay,ixprop,itgxrr)
-    CALL inhalo(drhs,parray,istaro,istoro,jstal,jstol,kstal,kstol)
+    CALL inhalo(drhs,parray,nxsize+1,nxsize+nhalox,1,nysize,1,nzsize)
     
     CALL p_recv(parray,nparay,ixprop,itgxrr)
-    CALL inhalo(urhs,parray,istaro,istoro,jstal,jstol,kstal,kstol)
+    CALL inhalo(urhs,parray,nxsize+1,nxsize+nhalox,1,nysize,1,nzsize)
     
     CALL p_recv(parray,nparay,ixprop,itgxrr)
-    CALL inhalo(vrhs,parray,istaro,istoro,jstal,jstol,kstal,kstol)
+    CALL inhalo(vrhs,parray,nxsize+1,nxsize+nhalox,1,nysize,1,nzsize)
     
     CALL p_recv(parray,nparay,ixprop,itgxrr)
-    CALL inhalo(wrhs,parray,istaro,istoro,jstal,jstol,kstal,kstol)
+    CALL inhalo(wrhs,parray,nxsize+1,nxsize+nhalox,1,nysize,1,nzsize)
     
     CALL p_recv(parray,nparay,ixprop,itgxrr)
-    CALL inhalo(erhs,parray,istaro,istoro,jstal,jstol,kstal,kstol)
+    CALL inhalo(erhs,parray,nxsize+1,nxsize+nhalox,1,nysize,1,nzsize)
     
     DO ispec = 1,nspec
       
       CALL p_recv(parray,nparay,ixprop,itgxrr)
-      CALL inhals(yrhs,ispec,parray,istaro,istoro, jstal,jstol,kstal,kstol)
+      CALL inhals(yrhs,ispec,parray,nxsize+1,nxsize+nhalox, 1,nysize,1,nzsize)
       
     END DO
     
@@ -310,24 +310,24 @@ IF(proddy)THEN
 !         RECEIVE FROM THE LEFT
     
     CALL p_recv(parray,nparay,iyprom,itgyrl)
-    CALL inhalo(drhs,parray,istab,istob,jstalo,jstolo,kstal,kstol)
+    CALL inhalo(drhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,0,1,nzsize)
     
     CALL p_recv(parray,nparay,iyprom,itgyrl)
-    CALL inhalo(urhs,parray,istab,istob,jstalo,jstolo,kstal,kstol)
+    CALL inhalo(urhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,0,1,nzsize)
     
     CALL p_recv(parray,nparay,iyprom,itgyrl)
-    CALL inhalo(vrhs,parray,istab,istob,jstalo,jstolo,kstal,kstol)
+    CALL inhalo(vrhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,0,1,nzsize)
     
     CALL p_recv(parray,nparay,iyprom,itgyrl)
-    CALL inhalo(wrhs,parray,istab,istob,jstalo,jstolo,kstal,kstol)
+    CALL inhalo(wrhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,0,1,nzsize)
     
     CALL p_recv(parray,nparay,iyprom,itgyrl)
-    CALL inhalo(erhs,parray,istab,istob,jstalo,jstolo,kstal,kstol)
+    CALL inhalo(erhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,0,1,nzsize)
     
     DO ispec = 1,nspec
       
       CALL p_recv(parray,nparay,iyprom,itgyrl)
-      CALL inhals(yrhs,ispec,parray,istab,istob, jstalo,jstolo,kstal,kstol)
+      CALL inhals(yrhs,ispec,parray,1-nhalox,nxsize+nhalox, 1-nhaloy,0,1,nzsize)
       
     END DO
     
@@ -341,24 +341,24 @@ IF(proddy)THEN
     
     ncount = nhaloy*nxnbig*nznode
     
-    CALL exhalo(drhs,parray,istab,istob,jstari,jstori,kstal,kstol)
+    CALL exhalo(drhs,parray,1-nhalox,nxsize+nhalox,nysize+1-nhaloy,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,iyprop,itgysr)
     
-    CALL exhalo(urhs,parray,istab,istob,jstari,jstori,kstal,kstol)
+    CALL exhalo(urhs,parray,1-nhalox,nxsize+nhalox,nysize+1-nhaloy,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,iyprop,itgysr)
     
-    CALL exhalo(vrhs,parray,istab,istob,jstari,jstori,kstal,kstol)
+    CALL exhalo(vrhs,parray,1-nhalox,nxsize+nhalox,nysize+1-nhaloy,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,iyprop,itgysr)
     
-    CALL exhalo(wrhs,parray,istab,istob,jstari,jstori,kstal,kstol)
+    CALL exhalo(wrhs,parray,1-nhalox,nxsize+nhalox,nysize+1-nhaloy,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,iyprop,itgysr)
     
-    CALL exhalo(erhs,parray,istab,istob,jstari,jstori,kstal,kstol)
+    CALL exhalo(erhs,parray,1-nhalox,nxsize+nhalox,nysize+1-nhaloy,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,iyprop,itgysr)
     
     DO ispec = 1,nspec
       
-      CALL exhals(yrhs,ispec,parray,istab,istob, jstari,jstori,kstal,kstol)
+      CALL exhals(yrhs,ispec,parray,1-nhalox,nxsize+nhalox, nysize+1-nhaloy,nysize,1,nzsize)
       CALL p_send(parray,nparay,ncount,iyprop,itgysr)
       
     END DO
@@ -368,24 +368,24 @@ IF(proddy)THEN
 !         RECEIVE FROM THE RIGHT
     
     CALL p_recv(parray,nparay,iyprop,itgyrr)
-    CALL inhalo(drhs,parray,istab,istob,jstaro,jstoro,kstal,kstol)
+    CALL inhalo(drhs,parray,1-nhalox,nxsize+nhalox,nysize+1,nysize+nhaloy,1,nzsize)
     
     CALL p_recv(parray,nparay,iyprop,itgyrr)
-    CALL inhalo(urhs,parray,istab,istob,jstaro,jstoro,kstal,kstol)
+    CALL inhalo(urhs,parray,1-nhalox,nxsize+nhalox,nysize+1,nysize+nhaloy,1,nzsize)
     
     CALL p_recv(parray,nparay,iyprop,itgyrr)
-    CALL inhalo(vrhs,parray,istab,istob,jstaro,jstoro,kstal,kstol)
+    CALL inhalo(vrhs,parray,1-nhalox,nxsize+nhalox,nysize+1,nysize+nhaloy,1,nzsize)
     
     CALL p_recv(parray,nparay,iyprop,itgyrr)
-    CALL inhalo(wrhs,parray,istab,istob,jstaro,jstoro,kstal,kstol)
+    CALL inhalo(wrhs,parray,1-nhalox,nxsize+nhalox,nysize+1,nysize+nhaloy,1,nzsize)
     
     CALL p_recv(parray,nparay,iyprop,itgyrr)
-    CALL inhalo(erhs,parray,istab,istob,jstaro,jstoro,kstal,kstol)
+    CALL inhalo(erhs,parray,1-nhalox,nxsize+nhalox,nysize+1,nysize+nhaloy,1,nzsize)
     
     DO ispec = 1,nspec
       
       CALL p_recv(parray,nparay,iyprop,itgyrr)
-      CALL inhals(yrhs,ispec,parray,istab,istob, jstaro,jstoro,kstal,kstol)
+      CALL inhals(yrhs,ispec,parray,1-nhalox,nxsize+nhalox, nysize+1,nysize+nhaloy,1,nzsize)
       
     END DO
     
@@ -399,24 +399,24 @@ IF(proddy)THEN
     
     ncount = nhaloy*nxnbig*nznode
     
-    CALL exhalo(drhs,parray,istab,istob,jstali,jstoli,kstal,kstol)
+    CALL exhalo(drhs,parray,1-nhalox,nxsize+nhalox,1,nhaloy,1,nzsize)
     CALL p_send(parray,nparay,ncount,iyprom,itgysl)
     
-    CALL exhalo(urhs,parray,istab,istob,jstali,jstoli,kstal,kstol)
+    CALL exhalo(urhs,parray,1-nhalox,nxsize+nhalox,1,nhaloy,1,nzsize)
     CALL p_send(parray,nparay,ncount,iyprom,itgysl)
     
-    CALL exhalo(vrhs,parray,istab,istob,jstali,jstoli,kstal,kstol)
+    CALL exhalo(vrhs,parray,1-nhalox,nxsize+nhalox,1,nhaloy,1,nzsize)
     CALL p_send(parray,nparay,ncount,iyprom,itgysl)
     
-    CALL exhalo(wrhs,parray,istab,istob,jstali,jstoli,kstal,kstol)
+    CALL exhalo(wrhs,parray,1-nhalox,nxsize+nhalox,1,nhaloy,1,nzsize)
     CALL p_send(parray,nparay,ncount,iyprom,itgysl)
     
-    CALL exhalo(erhs,parray,istab,istob,jstali,jstoli,kstal,kstol)
+    CALL exhalo(erhs,parray,1-nhalox,nxsize+nhalox,1,nhaloy,1,nzsize)
     CALL p_send(parray,nparay,ncount,iyprom,itgysl)
     
     DO ispec = 1,nspec
       
-      CALL exhals(yrhs,ispec,parray,istab,istob, jstali,jstoli,kstal,kstol)
+      CALL exhals(yrhs,ispec,parray,1-nhalox,nxsize+nhalox, 1,nhaloy,1,nzsize)
       CALL p_send(parray,nparay,ncount,iyprom,itgysl)
       
     END DO
@@ -436,24 +436,24 @@ ELSE
     
     ncount = nhaloy*nxnbig*nznode
     
-    CALL exhalo(drhs,parray,istab,istob,jstari,jstori,kstal,kstol)
+    CALL exhalo(drhs,parray,1-nhalox,nxsize+nhalox,nysize+1-nhaloy,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,iyprop,itgysr)
     
-    CALL exhalo(urhs,parray,istab,istob,jstari,jstori,kstal,kstol)
+    CALL exhalo(urhs,parray,1-nhalox,nxsize+nhalox,nysize+1-nhaloy,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,iyprop,itgysr)
     
-    CALL exhalo(vrhs,parray,istab,istob,jstari,jstori,kstal,kstol)
+    CALL exhalo(vrhs,parray,1-nhalox,nxsize+nhalox,nysize+1-nhaloy,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,iyprop,itgysr)
     
-    CALL exhalo(wrhs,parray,istab,istob,jstari,jstori,kstal,kstol)
+    CALL exhalo(wrhs,parray,1-nhalox,nxsize+nhalox,nysize+1-nhaloy,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,iyprop,itgysr)
     
-    CALL exhalo(erhs,parray,istab,istob,jstari,jstori,kstal,kstol)
+    CALL exhalo(erhs,parray,1-nhalox,nxsize+nhalox,nysize+1-nhaloy,nysize,1,nzsize)
     CALL p_send(parray,nparay,ncount,iyprop,itgysr)
     
     DO ispec = 1,nspec
       
-      CALL exhals(yrhs,ispec,parray,istab,istob, jstari,jstori,kstal,kstol)
+      CALL exhals(yrhs,ispec,parray,1-nhalox,nxsize+nhalox, nysize+1-nhaloy,nysize,1,nzsize)
       CALL p_send(parray,nparay,ncount,iyprop,itgysr)
       
     END DO
@@ -467,24 +467,24 @@ ELSE
 !         RECEIVE FROM THE LEFT
     
     CALL p_recv(parray,nparay,iyprom,itgyrl)
-    CALL inhalo(drhs,parray,istab,istob,jstalo,jstolo,kstal,kstol)
+    CALL inhalo(drhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,0,1,nzsize)
     
     CALL p_recv(parray,nparay,iyprom,itgyrl)
-    CALL inhalo(urhs,parray,istab,istob,jstalo,jstolo,kstal,kstol)
+    CALL inhalo(urhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,0,1,nzsize)
     
     CALL p_recv(parray,nparay,iyprom,itgyrl)
-    CALL inhalo(vrhs,parray,istab,istob,jstalo,jstolo,kstal,kstol)
+    CALL inhalo(vrhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,0,1,nzsize)
     
     CALL p_recv(parray,nparay,iyprom,itgyrl)
-    CALL inhalo(wrhs,parray,istab,istob,jstalo,jstolo,kstal,kstol)
+    CALL inhalo(wrhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,0,1,nzsize)
     
     CALL p_recv(parray,nparay,iyprom,itgyrl)
-    CALL inhalo(erhs,parray,istab,istob,jstalo,jstolo,kstal,kstol)
+    CALL inhalo(erhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,0,1,nzsize)
     
     DO ispec = 1,nspec
       
       CALL p_recv(parray,nparay,iyprom,itgyrl)
-      CALL inhals(yrhs,ispec,parray,istab,istob, jstalo,jstolo,kstal,kstol)
+      CALL inhals(yrhs,ispec,parray,1-nhalox,nxsize+nhalox, 1-nhaloy,0,1,nzsize)
       
     END DO
     
@@ -494,24 +494,24 @@ ELSE
     
     ncount = nhaloy*nxnbig*nznode
     
-    CALL exhalo(drhs,parray,istab,istob,jstali,jstoli,kstal,kstol)
+    CALL exhalo(drhs,parray,1-nhalox,nxsize+nhalox,1,nhaloy,1,nzsize)
     CALL p_send(parray,nparay,ncount,iyprom,itgysl)
     
-    CALL exhalo(urhs,parray,istab,istob,jstali,jstoli,kstal,kstol)
+    CALL exhalo(urhs,parray,1-nhalox,nxsize+nhalox,1,nhaloy,1,nzsize)
     CALL p_send(parray,nparay,ncount,iyprom,itgysl)
     
-    CALL exhalo(vrhs,parray,istab,istob,jstali,jstoli,kstal,kstol)
+    CALL exhalo(vrhs,parray,1-nhalox,nxsize+nhalox,1,nhaloy,1,nzsize)
     CALL p_send(parray,nparay,ncount,iyprom,itgysl)
     
-    CALL exhalo(wrhs,parray,istab,istob,jstali,jstoli,kstal,kstol)
+    CALL exhalo(wrhs,parray,1-nhalox,nxsize+nhalox,1,nhaloy,1,nzsize)
     CALL p_send(parray,nparay,ncount,iyprom,itgysl)
     
-    CALL exhalo(erhs,parray,istab,istob,jstali,jstoli,kstal,kstol)
+    CALL exhalo(erhs,parray,1-nhalox,nxsize+nhalox,1,nhaloy,1,nzsize)
     CALL p_send(parray,nparay,ncount,iyprom,itgysl)
     
     DO ispec = 1,nspec
       
-      CALL exhals(yrhs,ispec,parray,istab,istob, jstali,jstoli,kstal,kstol)
+      CALL exhals(yrhs,ispec,parray,1-nhalox,nxsize+nhalox, 1,nhaloy,1,nzsize)
       CALL p_send(parray,nparay,ncount,iyprom,itgysl)
       
     END DO
@@ -525,24 +525,24 @@ ELSE
 !         RECEIVE FROM THE RIGHT
     
     CALL p_recv(parray,nparay,iyprop,itgyrr)
-    CALL inhalo(drhs,parray,istab,istob,jstaro,jstoro,kstal,kstol)
+    CALL inhalo(drhs,parray,1-nhalox,nxsize+nhalox,nysize+1,nysize+nhaloy,1,nzsize)
     
     CALL p_recv(parray,nparay,iyprop,itgyrr)
-    CALL inhalo(urhs,parray,istab,istob,jstaro,jstoro,kstal,kstol)
+    CALL inhalo(urhs,parray,1-nhalox,nxsize+nhalox,nysize+1,nysize+nhaloy,1,nzsize)
     
     CALL p_recv(parray,nparay,iyprop,itgyrr)
-    CALL inhalo(vrhs,parray,istab,istob,jstaro,jstoro,kstal,kstol)
+    CALL inhalo(vrhs,parray,1-nhalox,nxsize+nhalox,nysize+1,nysize+nhaloy,1,nzsize)
     
     CALL p_recv(parray,nparay,iyprop,itgyrr)
-    CALL inhalo(wrhs,parray,istab,istob,jstaro,jstoro,kstal,kstol)
+    CALL inhalo(wrhs,parray,1-nhalox,nxsize+nhalox,nysize+1,nysize+nhaloy,1,nzsize)
     
     CALL p_recv(parray,nparay,iyprop,itgyrr)
-    CALL inhalo(erhs,parray,istab,istob,jstaro,jstoro,kstal,kstol)
+    CALL inhalo(erhs,parray,1-nhalox,nxsize+nhalox,nysize+1,nysize+nhaloy,1,nzsize)
     
     DO ispec = 1,nspec
       
       CALL p_recv(parray,nparay,iyprop,itgyrr)
-      CALL inhals(yrhs,ispec,parray,istab,istob, jstaro,jstoro,kstal,kstol)
+      CALL inhals(yrhs,ispec,parray,1-nhalox,nxsize+nhalox, nysize+1,nysize+nhaloy,1,nzsize)
       
     END DO
     
@@ -566,24 +566,24 @@ IF(proddz)THEN
 !         RECEIVE FROM THE LEFT
     
     CALL p_recv(parray,nparay,izprom,itgzrl)
-    CALL inhalo(drhs,parray,istab,istob,jstab,jstob,kstalo,kstolo)
+    CALL inhalo(drhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,0)
     
     CALL p_recv(parray,nparay,izprom,itgzrl)
-    CALL inhalo(urhs,parray,istab,istob,jstab,jstob,kstalo,kstolo)
+    CALL inhalo(urhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,0)
     
     CALL p_recv(parray,nparay,izprom,itgzrl)
-    CALL inhalo(vrhs,parray,istab,istob,jstab,jstob,kstalo,kstolo)
+    CALL inhalo(vrhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,0)
     
     CALL p_recv(parray,nparay,izprom,itgzrl)
-    CALL inhalo(wrhs,parray,istab,istob,jstab,jstob,kstalo,kstolo)
+    CALL inhalo(wrhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,0)
     
     CALL p_recv(parray,nparay,izprom,itgzrl)
-    CALL inhalo(erhs,parray,istab,istob,jstab,jstob,kstalo,kstolo)
+    CALL inhalo(erhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,0)
     
     DO ispec = 1,nspec
       
       CALL p_recv(parray,nparay,izprom,itgzrl)
-      CALL inhals(yrhs,ispec,parray,istab,istob, jstab,jstob,kstalo,kstolo)
+      CALL inhals(yrhs,ispec,parray,1-nhalox,nxsize+nhalox, 1-nhaloy,nysize+nhaloy,1-nhaloz,0)
       
     END DO
     
@@ -597,24 +597,24 @@ IF(proddz)THEN
     
     ncount = nhaloz*nxnbig*nynbig
     
-    CALL exhalo(drhs,parray,istab,istob,jstab,jstob,kstari,kstori)
+    CALL exhalo(drhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,nzsize+1-nhaloz,nzsize)
     CALL p_send(parray,nparay,ncount,izprop,itgzsr)
     
-    CALL exhalo(urhs,parray,istab,istob,jstab,jstob,kstari,kstori)
+    CALL exhalo(urhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,nzsize+1-nhaloz,nzsize)
     CALL p_send(parray,nparay,ncount,izprop,itgzsr)
     
-    CALL exhalo(vrhs,parray,istab,istob,jstab,jstob,kstari,kstori)
+    CALL exhalo(vrhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,nzsize+1-nhaloz,nzsize)
     CALL p_send(parray,nparay,ncount,izprop,itgzsr)
     
-    CALL exhalo(wrhs,parray,istab,istob,jstab,jstob,kstari,kstori)
+    CALL exhalo(wrhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,nzsize+1-nhaloz,nzsize)
     CALL p_send(parray,nparay,ncount,izprop,itgzsr)
     
-    CALL exhalo(erhs,parray,istab,istob,jstab,jstob,kstari,kstori)
+    CALL exhalo(erhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,nzsize+1-nhaloz,nzsize)
     CALL p_send(parray,nparay,ncount,izprop,itgzsr)
     
     DO ispec = 1,nspec
       
-      CALL exhals(yrhs,ispec,parray,istab,istob, jstab,jstob,kstari,kstori)
+      CALL exhals(yrhs,ispec,parray,1-nhalox,nxsize+nhalox, 1-nhaloy,nysize+nhaloy,nzsize+1-nhaloz,nzsize)
       CALL p_send(parray,nparay,ncount,izprop,itgzsr)
       
     END DO
@@ -624,24 +624,24 @@ IF(proddz)THEN
 !         RECEIVE FROM THE RIGHT
     
     CALL p_recv(parray,nparay,izprop,itgzrr)
-    CALL inhalo(drhs,parray,istab,istob,jstab,jstob,kstaro,kstoro)
+    CALL inhalo(drhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,nzsize+1,nzsize+nhaloz)
     
     CALL p_recv(parray,nparay,izprop,itgzrr)
-    CALL inhalo(urhs,parray,istab,istob,jstab,jstob,kstaro,kstoro)
+    CALL inhalo(urhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,nzsize+1,nzsize+nhaloz)
     
     CALL p_recv(parray,nparay,izprop,itgzrr)
-    CALL inhalo(vrhs,parray,istab,istob,jstab,jstob,kstaro,kstoro)
+    CALL inhalo(vrhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,nzsize+1,nzsize+nhaloz)
     
     CALL p_recv(parray,nparay,izprop,itgzrr)
-    CALL inhalo(wrhs,parray,istab,istob,jstab,jstob,kstaro,kstoro)
+    CALL inhalo(wrhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,nzsize+1,nzsize+nhaloz)
     
     CALL p_recv(parray,nparay,izprop,itgzrr)
-    CALL inhalo(erhs,parray,istab,istob,jstab,jstob,kstaro,kstoro)
+    CALL inhalo(erhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,nzsize+1,nzsize+nhaloz)
     
     DO ispec = 1,nspec
       
       CALL p_recv(parray,nparay,izprop,itgzrr)
-      CALL inhals(yrhs,ispec,parray,istab,istob, jstab,jstob,kstaro,kstoro)
+      CALL inhals(yrhs,ispec,parray,1-nhalox,nxsize+nhalox, 1-nhaloy,nysize+nhaloy,nzsize+1,nzsize+nhaloz)
       
     END DO
     
@@ -655,24 +655,24 @@ IF(proddz)THEN
     
     ncount = nhaloz*nxnbig*nynbig
     
-    CALL exhalo(drhs,parray,istab,istob,jstab,jstob,kstali,kstoli)
+    CALL exhalo(drhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1,nhaloz)
     CALL p_send(parray,nparay,ncount,izprom,itgzsl)
     
-    CALL exhalo(urhs,parray,istab,istob,jstab,jstob,kstali,kstoli)
+    CALL exhalo(urhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1,nhaloz)
     CALL p_send(parray,nparay,ncount,izprom,itgzsl)
     
-    CALL exhalo(vrhs,parray,istab,istob,jstab,jstob,kstali,kstoli)
+    CALL exhalo(vrhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1,nhaloz)
     CALL p_send(parray,nparay,ncount,izprom,itgzsl)
     
-    CALL exhalo(wrhs,parray,istab,istob,jstab,jstob,kstali,kstoli)
+    CALL exhalo(wrhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1,nhaloz)
     CALL p_send(parray,nparay,ncount,izprom,itgzsl)
     
-    CALL exhalo(erhs,parray,istab,istob,jstab,jstob,kstali,kstoli)
+    CALL exhalo(erhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1,nhaloz)
     CALL p_send(parray,nparay,ncount,izprom,itgzsl)
     
     DO ispec = 1,nspec
       
-      CALL exhals(yrhs,ispec,parray,istab,istob, jstab,jstob,kstali,kstoli)
+      CALL exhals(yrhs,ispec,parray,1-nhalox,nxsize+nhalox, 1-nhaloy,nysize+nhaloy,1,nhaloz)
       CALL p_send(parray,nparay,ncount,izprom,itgzsl)
       
     END DO
@@ -692,24 +692,24 @@ ELSE
     
     ncount = nhaloz*nxnbig*nynbig
     
-    CALL exhalo(drhs,parray,istab,istob,jstab,jstob,kstari,kstori)
+    CALL exhalo(drhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,nzsize+1-nhaloz,nzsize)
     CALL p_send(parray,nparay,ncount,izprop,itgzsr)
     
-    CALL exhalo(urhs,parray,istab,istob,jstab,jstob,kstari,kstori)
+    CALL exhalo(urhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,nzsize+1-nhaloz,nzsize)
     CALL p_send(parray,nparay,ncount,izprop,itgzsr)
     
-    CALL exhalo(vrhs,parray,istab,istob,jstab,jstob,kstari,kstori)
+    CALL exhalo(vrhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,nzsize+1-nhaloz,nzsize)
     CALL p_send(parray,nparay,ncount,izprop,itgzsr)
     
-    CALL exhalo(wrhs,parray,istab,istob,jstab,jstob,kstari,kstori)
+    CALL exhalo(wrhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,nzsize+1-nhaloz,nzsize)
     CALL p_send(parray,nparay,ncount,izprop,itgzsr)
     
-    CALL exhalo(erhs,parray,istab,istob,jstab,jstob,kstari,kstori)
+    CALL exhalo(erhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,nzsize+1-nhaloz,nzsize)
     CALL p_send(parray,nparay,ncount,izprop,itgzsr)
     
     DO ispec = 1,nspec
       
-      CALL exhals(yrhs,ispec,parray,istab,istob, jstab,jstob,kstari,kstori)
+      CALL exhals(yrhs,ispec,parray,1-nhalox,nxsize+nhalox, 1-nhaloy,nysize+nhaloy,nzsize+1-nhaloz,nzsize)
       CALL p_send(parray,nparay,ncount,izprop,itgzsr)
       
     END DO
@@ -723,24 +723,24 @@ ELSE
 !         RECEIVE FROM THE LEFT
     
     CALL p_recv(parray,nparay,izprom,itgzrl)
-    CALL inhalo(drhs,parray,istab,istob,jstab,jstob,kstalo,kstolo)
+    CALL inhalo(drhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,0)
     
     CALL p_recv(parray,nparay,izprom,itgzrl)
-    CALL inhalo(urhs,parray,istab,istob,jstab,jstob,kstalo,kstolo)
+    CALL inhalo(urhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,0)
     
     CALL p_recv(parray,nparay,izprom,itgzrl)
-    CALL inhalo(vrhs,parray,istab,istob,jstab,jstob,kstalo,kstolo)
+    CALL inhalo(vrhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,0)
     
     CALL p_recv(parray,nparay,izprom,itgzrl)
-    CALL inhalo(wrhs,parray,istab,istob,jstab,jstob,kstalo,kstolo)
+    CALL inhalo(wrhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,0)
     
     CALL p_recv(parray,nparay,izprom,itgzrl)
-    CALL inhalo(erhs,parray,istab,istob,jstab,jstob,kstalo,kstolo)
+    CALL inhalo(erhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,0)
     
     DO ispec = 1,nspec
       
       CALL p_recv(parray,nparay,izprom,itgzrl)
-      CALL inhals(yrhs,ispec,parray,istab,istob, jstab,jstob,kstalo,kstolo)
+      CALL inhals(yrhs,ispec,parray,1-nhalox,nxsize+nhalox, 1-nhaloy,nysize+nhaloy,1-nhaloz,0)
       
     END DO
     
@@ -750,25 +750,25 @@ ELSE
     
     ncount = nhaloz*nxnbig*nynbig
     
-    CALL exhalo(drhs,parray,istab,istob,jstab,jstob,kstali,kstoli)
+    CALL exhalo(drhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1,nhaloz)
     CALL p_send(parray,nparay,ncount,izprom,itgzsl)
     
-    CALL exhalo(urhs,parray,istab,istob,jstab,jstob,kstali,kstoli)
+    CALL exhalo(urhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1,nhaloz)
     CALL p_send(parray,nparay,ncount,izprom,itgzsl)
     
 !         RSC/TDD BUG FIX JSTAB
-    CALL exhalo(vrhs,parray,istab,istob,jstab,jstob,kstali,kstoli)
+    CALL exhalo(vrhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1,nhaloz)
     CALL p_send(parray,nparay,ncount,izprom,itgzsl)
     
-    CALL exhalo(wrhs,parray,istab,istob,jstab,jstob,kstali,kstoli)
+    CALL exhalo(wrhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1,nhaloz)
     CALL p_send(parray,nparay,ncount,izprom,itgzsl)
     
-    CALL exhalo(erhs,parray,istab,istob,jstab,jstob,kstali,kstoli)
+    CALL exhalo(erhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1,nhaloz)
     CALL p_send(parray,nparay,ncount,izprom,itgzsl)
     
     DO ispec = 1,nspec
       
-      CALL exhals(yrhs,ispec,parray,istab,istob, jstab,jstob,kstali,kstoli)
+      CALL exhals(yrhs,ispec,parray,1-nhalox,nxsize+nhalox, 1-nhaloy,nysize+nhaloy,1,nhaloz)
       CALL p_send(parray,nparay,ncount,izprom,itgzsl)
       
     END DO
@@ -782,24 +782,24 @@ ELSE
 !         RECEIVE FROM THE RIGHT
     
     CALL p_recv(parray,nparay,izprop,itgzrr)
-    CALL inhalo(drhs,parray,istab,istob,jstab,jstob,kstaro,kstoro)
+    CALL inhalo(drhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,nzsize+1,nzsize+nhaloz)
     
     CALL p_recv(parray,nparay,izprop,itgzrr)
-    CALL inhalo(urhs,parray,istab,istob,jstab,jstob,kstaro,kstoro)
+    CALL inhalo(urhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,nzsize+1,nzsize+nhaloz)
     
     CALL p_recv(parray,nparay,izprop,itgzrr)
-    CALL inhalo(vrhs,parray,istab,istob,jstab,jstob,kstaro,kstoro)
+    CALL inhalo(vrhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,nzsize+1,nzsize+nhaloz)
     
     CALL p_recv(parray,nparay,izprop,itgzrr)
-    CALL inhalo(wrhs,parray,istab,istob,jstab,jstob,kstaro,kstoro)
+    CALL inhalo(wrhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,nzsize+1,nzsize+nhaloz)
     
     CALL p_recv(parray,nparay,izprop,itgzrr)
-    CALL inhalo(erhs,parray,istab,istob,jstab,jstob,kstaro,kstoro)
+    CALL inhalo(erhs,parray,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,nzsize+1,nzsize+nhaloz)
     
     DO ispec = 1,nspec
       
       CALL p_recv(parray,nparay,izprop,itgzrr)
-      CALL inhals(yrhs,ispec,parray,istab,istob, jstab,jstob,kstaro,kstoro)
+      CALL inhals(yrhs,ispec,parray,1-nhalox,nxsize+nhalox, 1-nhaloy,nysize+nhaloy,nzsize+1,nzsize+nhaloz)
       
     END DO
     
@@ -816,12 +816,12 @@ END IF
 !     ONLY NEED TO CHECK ONE END
 IF(nendxl == nperi)THEN
   
-  CALL cxhalo(drhs,jstal,jstol,kstal,kstol)
-  CALL cxhalo(urhs,jstal,jstol,kstal,kstol)
-  CALL cxhalo(vrhs,jstal,jstol,kstal,kstol)
-  CALL cxhalo(wrhs,jstal,jstol,kstal,kstol)
-  CALL cxhalo(erhs,jstal,jstol,kstal,kstol)
-  CALL cxhals(yrhs,jstal,jstol,kstal,kstol)
+  CALL cxhalo(drhs,1,nysize,1,nzsize)
+  CALL cxhalo(urhs,1,nysize,1,nzsize)
+  CALL cxhalo(vrhs,1,nysize,1,nzsize)
+  CALL cxhalo(wrhs,1,nysize,1,nzsize)
+  CALL cxhalo(erhs,1,nysize,1,nzsize)
+  CALL cxhals(yrhs,1,nysize,1,nzsize)
   
 END IF
 
@@ -830,12 +830,12 @@ END IF
 !     NOTE EXTENDED X-LIMITS FOR Y TRANSFERS
 IF(nendyl == nperi)THEN
   
-  CALL cyhalo(drhs,istab,istob,kstal,kstol)
-  CALL cyhalo(urhs,istab,istob,kstal,kstol)
-  CALL cyhalo(vrhs,istab,istob,kstal,kstol)
-  CALL cyhalo(wrhs,istab,istob,kstal,kstol)
-  CALL cyhalo(erhs,istab,istob,kstal,kstol)
-  CALL cyhals(yrhs,istab,istob,kstal,kstol)
+  CALL cyhalo(drhs,1-nhalox,nxsize+nhalox,1,nzsize)
+  CALL cyhalo(urhs,1-nhalox,nxsize+nhalox,1,nzsize)
+  CALL cyhalo(vrhs,1-nhalox,nxsize+nhalox,1,nzsize)
+  CALL cyhalo(wrhs,1-nhalox,nxsize+nhalox,1,nzsize)
+  CALL cyhalo(erhs,1-nhalox,nxsize+nhalox,1,nzsize)
+  CALL cyhals(yrhs,1-nhalox,nxsize+nhalox,1,nzsize)
   
 END IF
 
@@ -844,12 +844,12 @@ END IF
 !     NOTE EXTENDED X- AND Y-LIMITS FOR Z TRANSFERS
 IF(nendzl == nperi)THEN
   
-  CALL czhalo(drhs,istab,istob,jstab,jstob)
-  CALL czhalo(urhs,istab,istob,jstab,jstob)
-  CALL czhalo(vrhs,istab,istob,jstab,jstob)
-  CALL czhalo(wrhs,istab,istob,jstab,jstob)
-  CALL czhalo(erhs,istab,istob,jstab,jstob)
-  CALL czhals(yrhs,istab,istob,jstab,jstob)
+  CALL czhalo(drhs,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy)
+  CALL czhalo(urhs,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy)
+  CALL czhalo(vrhs,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy)
+  CALL czhalo(wrhs,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy)
+  CALL czhalo(erhs,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy)
+  CALL czhals(yrhs,1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy)
   
 END IF
 

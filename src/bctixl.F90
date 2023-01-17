@@ -89,7 +89,7 @@ SUBROUTINE bctixl
         CLOSE(nctixl)
   
 !       SET THE REAL PARTS
-        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_urun, 1, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ))
@@ -104,7 +104,7 @@ SUBROUTINE bctixl
 
 
 !       ZERO THE IMAGINARY PARTS
-        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_WRITE))
 

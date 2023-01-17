@@ -755,31 +755,6 @@ INTEGER :: npmapx(0:nxproc),npmapy(0:nyproc),npmapz(0:nzproc),  &
     nxnode,nynode,nznode,nxnbig,nynbig,nznbig, nxprm1,nyprm1,nzprm1,  &
     iproc,nproc,ixproc,iyproc,izproc,  &
     ixprom,ixprop,iyprom,iyprop,izprom,izprop,  &
-    istal, istol, jstal, jstol, kstal, kstol,  &
-    istap1,istom1,jstap1,jstom1,kstap1,kstom1,  &
-    istap2,istom2,jstap2,jstom2,kstap2,kstom2,  &
-    istap3,istom3,jstap3,jstom3,kstap3,kstom3,  &
-    istap4,istom4,jstap4,jstom4,kstap4,kstom4,  &
-    istap5,istom5,jstap5,jstom5,kstap5,kstom5,  &
-    istap6,istom6,jstap6,jstom6,kstap6,kstom6,  &
-    istap7,istom7,jstap7,jstom7,kstap7,kstom7,  &
-    istap8,istom8,jstap8,jstom8,kstap8,kstom8,  &
-    istap9,istom9,jstap9,jstom9,kstap9,kstom9,  &
-    istapa,istoma,jstapa,jstoma,kstapa,kstoma,  &
-    istapb,istomb,jstapb,jstomb,kstapb,kstomb,  &
-    istald,istold,jstald,jstold,kstald,kstold,  &
-    istalu,istolu,jstalu,jstolu,kstalu,kstolu,  &
-    istalv,istolv,jstalv,jstolv,kstalv,kstolv,  &
-    istalw,istolw,jstalw,jstolw,kstalw,kstolw,  &
-    istale,istole,jstale,jstole,kstale,kstole,  &
-    istaly,istoly,jstaly,jstoly,kstaly,kstoly,  &
-    istalt,istolt,jstalt,jstolt,kstalt,kstolt,  &
-    istab, istob, jstab, jstob, kstab, kstob,  &
-    istali,istoli,jstali,jstoli,kstali,kstoli,  &
-    istari,istori,jstari,jstori,kstari,kstori,  &
-    istalo,istolo,jstalo,jstolo,kstalo,kstolo,  &
-    istaro,istoro,jstaro,jstoro,kstaro,kstoro,  &
-    istaw, istow, jstaw, jstow, kstaw, kstow,  &
     itgxsl,itgxrl,itgysl,itgyrl,itgzsl,itgzrl,  &
     itgxsr,itgxrr,itgysr,itgyrr,itgzsr,itgzrr
 
@@ -789,31 +764,6 @@ COMMON/domdec/npmapx,npmapy,npmapz,nprocx,nprocy,nprocz,  &
     nxnode,nynode,nznode,nxnbig,nynbig,nznbig, nxprm1,nyprm1,nzprm1,  &
     iproc,nproc,ixproc,iyproc,izproc,  &
     ixprom,ixprop,iyprom,iyprop,izprom,izprop,  &
-    istal, istol, jstal, jstol, kstal, kstol,  &
-    istap1,istom1,jstap1,jstom1,kstap1,kstom1,  &
-    istap2,istom2,jstap2,jstom2,kstap2,kstom2,  &
-    istap3,istom3,jstap3,jstom3,kstap3,kstom3,  &
-    istap4,istom4,jstap4,jstom4,kstap4,kstom4,  &
-    istap5,istom5,jstap5,jstom5,kstap5,kstom5,  &
-    istap6,istom6,jstap6,jstom6,kstap6,kstom6,  &
-    istap7,istom7,jstap7,jstom7,kstap7,kstom7,  &
-    istap8,istom8,jstap8,jstom8,kstap8,kstom8,  &
-    istap9,istom9,jstap9,jstom9,kstap9,kstom9,  &
-    istapa,istoma,jstapa,jstoma,kstapa,kstoma,  &
-    istapb,istomb,jstapb,jstomb,kstapb,kstomb,  &
-    istald,istold,jstald,jstold,kstald,kstold,  &
-    istalu,istolu,jstalu,jstolu,kstalu,kstolu,  &
-    istalv,istolv,jstalv,jstolv,kstalv,kstolv,  &
-    istalw,istolw,jstalw,jstolw,kstalw,kstolw,  &
-    istale,istole,jstale,jstole,kstale,kstole,  &
-    istaly,istoly,jstaly,jstoly,kstaly,kstoly,  &
-    istalt,istolt,jstalt,jstolt,kstalt,kstolt,  &
-    istab, istob, jstab, jstob, kstab, kstob,  &
-    istali,istoli,jstali,jstoli,kstali,kstoli,  &
-    istari,istori,jstari,jstori,kstari,kstori,  &
-    istalo,istolo,jstalo,jstolo,kstalo,kstolo,  &
-    istaro,istoro,jstaro,jstoro,kstaro,kstoro,  &
-    istaw, istow, jstaw, jstow, kstaw, kstow,  &
     itgxsl,itgxrl,itgysl,itgyrl,itgzsl,itgzrl,  &
     itgxsr,itgxrr,itgysr,itgyrr,itgzsr,itgzrr,  &
     prgoxl,prgoxr,prgoyl,prgoyr,prgozl,prgozr, proddx,proddy,proddz

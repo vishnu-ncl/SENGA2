@@ -65,8 +65,8 @@ DO ispec = 1,nspec
 !       RIGHT OUTER HALO SET EQUAL TO LEFT INNER HALO
   DO kc = kndexl,kndexr
     
-    js = jstali - 1
-    DO jc = jstaro,jstoro
+    js = 0
+    DO jc = nysize+1,nysize+nhaloy
       
       js = js + 1
       
@@ -85,8 +85,8 @@ DO ispec = 1,nspec
 !       LEFT OUTER HALO SET EQUAL TO RIGHT INNER HALO
   DO kc = kndexl,kndexr
     
-    js = jstari - 1
-    DO jc = jstalo,jstolo
+    js = (nysize+1-nhaloy) - 1
+    DO jc = 1-nhaloy,0
       
       js = js + 1
       

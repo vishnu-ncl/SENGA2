@@ -139,9 +139,9 @@ SUBROUTINE turbin
         call ranini(iseed)
 
 !       SWEEP THROUGH LOCAL PHYSICAL SPACE
-        DO kc = kstal,kstol
-            DO jc = jstal,jstol
-                DO ic = istal,istol
+        DO kc = 1,nzsize
+            DO jc = 1,nysize
+                DO ic = 1,nxsize
         
 !                   GET AND SAVE THREE RANDOM NUMBERS
                     utmp(ic,jc,kc) = ranuni(iseed)
@@ -208,19 +208,19 @@ SUBROUTINE turbin
 
 !   SWEEP THROUGH LOCAL PHYSICAL SPACE
 !   ----------------------------------
-    DO kc = kstal,kstol
+    DO kc = 1,nzsize
   
 !       FOURIER-SPACE GLOBAL INDEXING
     kx = kgofm1 + kc
     IF(kx > nodblz)kx = kx-nzglbl
   
-    DO jc = jstal,jstol
+    DO jc = 1,nysize
     
 !         FOURIER-SPACE GLOBAL INDEXING
     jx = jgofm1 + jc
     IF(jx > nodbly)jx = jx-nyglbl
     
-    DO ic = istal,istol
+    DO ic = 1,nxsize
       
 !           FOURIER-SPACE GLOBAL INDEXING
       ix = igofm1 + ic
@@ -334,7 +334,7 @@ SUBROUTINE turbin
 !   CHECK ENERGY CONTENT
 !   --------------------
     tket = zero
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(turbin_kernel_eqA, "CHECK ENERGY CONTENT", senga_grid, 3, rangexyz,  &
                     &  ops_arg_dat(d_urun, 1, s3d_000, "real(dp)", OPS_READ), &
                     &  ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -348,6 +348,7 @@ SUBROUTINE turbin
 
 !   SUM OVER ALL PROCESSORS
     call p_summ(tket,tketot)
+!    tketot = tket
 
 !   REPORT
     IF(iproc == 0)THEN
@@ -367,9 +368,9 @@ SUBROUTINE turbin
 !   CHECK THAT TRANSFORMED DATA IS REAL
 !   -----------------------------------
 
-    DO kc = kstal,kstol
-    DO jc = jstal,jstol
-    DO ic = istal,istol
+    DO kc = 1,nzsize
+    DO jc = 1,nysize
+    DO ic = 1,nxsize
       
       flagim = .false.
       IF(utmp(ic,jc,kc) > tolimg)flagim = .true.
@@ -391,7 +392,7 @@ SUBROUTINE turbin
 !   ---------------------------
 
 !   AVERAGING FACTORS
-    faclav = one/REAL(nxnode,kind=dp)/REAL(nynode,kind=dp)/REAL(nznode,kind=dp)
+    faclav = one/REAL(nxsize,kind=dp)/REAL(nysize,kind=dp)/REAL(nzsize,kind=dp)
     facgav = one/REAL(nxglbl,kind=dp)/REAL(nyglbl,kind=dp)/REAL(nzglbl,kind=dp)
 
 !   VELOCITY MEANS
@@ -401,7 +402,7 @@ SUBROUTINE turbin
     vbart = zero
     wbart = zero
     
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(turbin_kernel_eqB, "VELOCITY MEANS", senga_grid, 3, rangexyz,  &
                     &  ops_arg_dat(d_urun, 1, s3d_000, "real(dp)", OPS_READ), &
                     &  ops_arg_reduce(h_ubart, 1, "real(8)", OPS_INC))
@@ -424,8 +425,11 @@ SUBROUTINE turbin
 
 !   SUM OVER ALL PROCESSORS
     call p_summ(ubart,ubartt)
+!    ubartt = ubart
     call p_summ(vbart,vbartt)
+!    vbartt = vbart
     call p_summ(wbart,wbartt)
+!    wbartt = wbart
 
 !   GLOBAL AVERAGES
     ubartg = ubartt*facgav
@@ -440,7 +444,7 @@ SUBROUTINE turbin
     vvart = zero
     wvart = zero
 
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(turbin_kernel_eqC, "VELOCITY VARIANCES", senga_grid, 3, rangexyz,  &
                     &  ops_arg_dat(d_urun, 1, s3d_000, "real(dp)", OPS_READ), &
                     &  ops_arg_gbl(ubartg, 1, "real(dp)", OPS_READ), &
@@ -470,9 +474,13 @@ SUBROUTINE turbin
 
 !   SUM OVER ALL PROCESSORS
     call p_summ(uvart,uvartt)
+!    uvartt = uvart
     call p_summ(vvart,vvartt)
+!    vvartt = vvart
     call p_summ(wvart,wvartt)
+!    wvartt = wvart
     call p_summ(tket,tketot)
+!    tketot = tket
 
 !   GLOBAL AVERAGES
     uvartg = uvartt*facgav

@@ -92,9 +92,9 @@ DO i=1,2
 !AN ARRAY OF THE SAME SIZE, SO WE USE THE BIGGEST VALUE OF
 !NXNODE, NYNODE AND NZNODE
     dims(1)=nproc
-    dims(2)=nxnode
-    dims(3)=nynode
-    dims(4)=nznode
+    dims(2)=nxsize
+    dims(3)=nysize
+    dims(4)=nzsize
     dims(5)=nspec
     CALL mpi_allreduce(mpi_in_place, dims, 5, mpi_integer,  &
         mpi_max, mpi_comm_world, ERR)
@@ -172,9 +172,9 @@ DO i=1,2
 !AN ARRAY OF THE SAME SIZE, SO WE USE THE BIGGEST VALUE OF
 !NXNODE, NYNODE AND NZNODE
     dims(1)=nproc
-    dims(2)=nxnode
-    dims(3)=nynode
-    dims(4)=nznode
+    dims(2)=nxsize
+    dims(3)=nysize
+    dims(4)=nzsize
     dims(5)=nspec
     CALL mpi_allreduce(mpi_in_place, dims, 5, mpi_integer,  &
         mpi_max, mpi_comm_world, ERR)
@@ -258,9 +258,9 @@ CALL h5sclose_f(space_id, ERR)
 CALL h5dclose_f(dset_id, ERR)
 CALL h5sclose_f(memspace_id, ERR)
 
-IF(nxnode /= consts(1))WRITE(6,*)'DUMP INPUT SIZE ERROR: X'
-IF(nynode /= consts(2))WRITE(6,*)'DUMP INPUT SIZE ERROR: Y'
-IF(nznode /= consts(3))WRITE(6,*)'DUMP INPUT SIZE ERROR: Z'
+IF(nxsize /= consts(1))WRITE(6,*)'DUMP INPUT SIZE ERROR: X'
+IF(nysize /= consts(2))WRITE(6,*)'DUMP INPUT SIZE ERROR: Y'
+IF(nzsize /= consts(3))WRITE(6,*)'DUMP INPUT SIZE ERROR: Z'
 IF(nspec /= consts(4))WRITE(6,*) 'DUMP INPUT SIZE ERROR: SPECIES'
 
 offset(1)=iproc
@@ -268,13 +268,13 @@ offset(2)=0
 offset(3)=0
 offset(4)=0
 count(1)=1
-count(2)=nxnode
-count(3)=nynode
-count(4)=nznode
+count(2)=nxsize
+count(3)=nysize
+count(4)=nzsize
 
 CALL h5screate_simple_f(4, count, memspace_id, ERR)
 
-dims3 = (/nxnode,nynode,nznode/)
+dims3 = (/nxsize,nysize,nzsize/)
 
 dset_name = "/DRUN"
 CALL h5dopen_f(file_id, dset_name, dset_id, ERR)
@@ -330,7 +330,7 @@ offset(5)=0
 count(5)=nspec
 CALL h5sclose_f(memspace_id, ERR)
 CALL h5screate_simple_f(5, count, memspace_id, ERR)
-dims4 = (/nxnode,nynode,nznode,nspec/)
+dims4 = (/nxsize,nysize,nzsize,nspec/)
 
 dset_name = "/YRUN"
 CALL h5dopen_f(file_id, dset_name, dset_id, ERR)
@@ -379,9 +379,9 @@ offset(1)=iproc
 offset(2)=0
 count(1)=1
 count(2)=4
-consts(1) = nxnode
-consts(2) = nynode
-consts(3) = nznode
+consts(1) = nxsize
+consts(2) = nysize
+consts(3) = nzsize
 consts(4) = nspec
 
 CALL h5screate_simple_f(2, count, memspace_id, ERR)
@@ -400,13 +400,13 @@ offset(2)=0
 offset(3)=0
 offset(4)=0
 count(1)=1
-count(2)=nxnode
-count(3)=nynode
-count(4)=nznode
+count(2)=nxsize
+count(3)=nysize
+count(4)=nzsize
 
 CALL h5screate_simple_f(4, count, memspace_id, ERR)
 
-dims3 = (/nxnode,nynode,nznode/)
+dims3 = (/nxsize,nysize,nzsize/)
 
 dset_name = "/DRUN"
 CALL h5dopen_f(file_id, dset_name, dset_id, ERR)
@@ -462,7 +462,7 @@ offset(5)=0
 count(5)=nspec
 CALL h5sclose_f(memspace_id, ERR)
 CALL h5screate_simple_f(5, count, memspace_id, ERR)
-dims4 = (/nxnode,nynode,nznode,nspec/)
+dims4 = (/nxsize,nysize,nzsize,nspec/)
 
 dset_name = "/YRUN"
 CALL h5dopen_f(file_id, dset_name, dset_id, ERR)

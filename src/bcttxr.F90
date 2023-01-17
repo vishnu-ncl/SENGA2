@@ -52,7 +52,7 @@ SUBROUTINE bcttxr
 !   =========================================================================
 
 !   EVALUATE AND RETURN STRTXR,DTDTXR
-    rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+    rangexyz = (/1,1,1,nysize,1,nzsize/)
     call ops_par_loop(bcdt_kernel_xdir, "bcdt_kernel_xdir", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
                     ops_arg_dat(d_dtdtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
@@ -62,7 +62,7 @@ SUBROUTINE bcttxr
 
 !   ISOTHERMAL WALL
     IF(nsbcxr == nsbcw2) THEN
-        rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+        rangexyz = (/1,1,1,nysize,1,nzsize/)
         call ops_par_loop(bcdt_kernel_xdir, "bcdt_kernel_xdir", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
                         ops_arg_dat(d_dtdtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &

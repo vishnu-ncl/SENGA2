@@ -103,6 +103,7 @@ SUBROUTINE ops_data_init()
     d_size = (/nxsize, nysize, nzsize/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
+    
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, store1, d_store1, "real(dp)", "STORE1")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, store2, d_store2, "real(dp)", "STORE2")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, store3, d_store3, "real(dp)", "STORE3")

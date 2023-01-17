@@ -63,8 +63,8 @@ DO ispec = 1,nspec
 !       =======================================================================
   
 !       RIGHT OUTER HALO SET EQUAL TO LEFT INNER HALO
-  ks = kstali - 1
-  DO kc = kstaro,kstoro
+  ks = 0
+  DO kc = nzsize+1,nzsize+nhaloz
     
     ks = ks + 1
     
@@ -81,8 +81,8 @@ DO ispec = 1,nspec
 !       =======================================================================
   
 !       LEFT OUTER HALO SET EQUAL TO RIGHT INNER HALO
-  ks = kstari - 1
-  DO kc = kstalo,kstolo
+  ks = (nzsize+1-nhaloz) - 1
+  DO kc = 1-nhaloz,0
     
     ks = ks + 1
     

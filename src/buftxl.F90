@@ -58,8 +58,8 @@ INTEGER :: npencl
 ipencl = 0
 
 !     LOOP OVER X-LINES
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
+DO kc = 1,nzsize
+  DO jc = 1,nysize
     
 !         PENCIL INDEXING
     ipencl = ipencl + 1
@@ -67,7 +67,7 @@ DO kc = kstal,kstol
     kpen(ipencl) = kc
     
 !         ASSEMBLE FFT DATA
-    DO ic = istal,istol
+    DO ic = 1,nxsize
       
       iic = 2*ic
       iim = iic-1
@@ -85,12 +85,12 @@ DO kc = kstal,kstol
       
 !           DO THE FFT
       npencl = ipencl
-      CALL fftixl(npencl,ixproc,nxproc,nxnode,nxglbl,nprocx)
+      CALL fftixl(npencl,ixproc,nxproc,nxsize,nxglbl,nprocx)
       
 !           RESTORE TRANSFORMED DATA
       DO ipencl = 1,npencl
         
-        DO ic = istal,istol
+        DO ic = 1,nxsize
           
           ufxl(ic,jpen(ipencl),kpen(ipencl)) = ftpart(ic,1,ipencl)
           vfxl(ic,jpen(ipencl),kpen(ipencl)) = ftpart(ic,2,ipencl)
@@ -112,12 +112,12 @@ IF(ipencl /= 0)THEN
   
 !       DO THE FFT
   npencl = ipencl
-  CALL fftixl(npencl,ixproc,nxproc,nxnode,nxglbl,nprocx)
+  CALL fftixl(npencl,ixproc,nxproc,nxsize,nxglbl,nprocx)
   
 !       RESTORE TRANSFORMED DATA
   DO ipencl = 1,npencl
     
-    DO ic = istal,istol
+    DO ic = 1,nxsize
       
       ufxl(ic,jpen(ipencl),kpen(ipencl)) = ftpart(ic,1,ipencl)
       vfxl(ic,jpen(ipencl),kpen(ipencl)) = ftpart(ic,2,ipencl)

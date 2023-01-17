@@ -65,7 +65,7 @@ SUBROUTINE bcutxl
 !   CONSTANT U-VELOCITY
 !   PARAMETER I1=1, R1=U-VELOCITY
     IF(nxlprm(1) == 1) THEN
-        rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+        rangexyz = (/1,1,1,nysize,1,nzsize/)
         call ops_par_loop(bcut_kernel_xdir_const_uvel, "bcut_kernel_xdir_const_uvel", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
                         ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
@@ -87,7 +87,7 @@ SUBROUTINE bcutxl
         init_val1 = rxlprm(1)*SIN(argmnt)
         init_val2 = fornow*rxlprm(1)*COS(argmnt)
 
-        rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+        rangexyz = (/1,1,1,nysize,1,nzsize/)
         call ops_par_loop(bcut_kernel_xdir_sinusoidal_uvel, "bcut_kernel_xdir_sinusoidal_uvel", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
                         ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
@@ -124,7 +124,7 @@ SUBROUTINE bcutxl
         kxbase = kminxl
 
 !       ZERO THE LOCAL-PROCESSOR CONTRIBUTION TO THE DFT
-        rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+        rangexyz = (/1,1,1,nysize,1,nzsize/)
         call ops_par_loop(set_zero_kernel_xdir, "set zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
         call ops_par_loop(set_zero_kernel_xdir, "set zero", senga_grid, 3, rangexyz,  &
@@ -150,7 +150,7 @@ SUBROUTINE bcutxl
             sinval = SIN(argval)
             iic = 1
 
-            rangexyz = (/iic,iic,jstal,jstol,kstal,kstol/)
+            rangexyz = (/1,1,1,nysize,1,nzsize/)
             call ops_par_loop(bcut_kernel_xdir_eqA, "A = A + B*val1", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
                             ops_arg_dat(d_ufxl, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -197,7 +197,7 @@ SUBROUTINE bcutxl
             sinval = SIN(argval)
             iim = 1
 
-            rangexyz = (/iim,iim,jstal,jstol,kstal,kstol/)
+            rangexyz = (/1,1,1,nysize,1,nzsize/)
             call ops_par_loop(bcut_kernel_xdir_eqC, "A = A + val1*B*val2", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
                             ops_arg_dat(d_ufxl, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -219,8 +219,8 @@ SUBROUTINE bcutxl
         END IF
 
 !       ALL OTHER WAVENUMBERS
-        DO kc = kstal,kstol
-            DO jc = jstal,jstol
+        DO kc = 1,nzsize
+            DO jc = 1,nysize
       
                 kx = kxbase
                 realkx = REAL(kx,kind=dp)
@@ -270,7 +270,12 @@ SUBROUTINE bcutxl
             sinval = SIN(argval)
             iim = istoxl + 1
     
-            rangexyz = (/iim,iim,jstal,jstol,kstal,kstol/)
+            rangexyz(1) = iim
+            rangexyz(2) = iim
+            rangexyz(3) = 1
+            rangexyz(4) = nysize
+            rangexyz(5) = 1
+            rangexyz(6) = nzsize
             call ops_par_loop(bcut_kernel_xdir_eqA, "A = A + B*val1", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
                             ops_arg_dat(d_ufxl, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -318,8 +323,8 @@ SUBROUTINE bcutxl
                 call p_recv(parray,nparay,irproc,irtag)
       
                 ncount = 0
-                DO kc = kstal,kstol
-                    DO jc = jstal,jstol
+                DO kc = 1,nzsize
+                    DO jc = 1,nysize
           
                         ncount = ncount + 1
                         struxl(1,jc,kc) = struxl(1,jc,kc) + parray(ncount)
@@ -340,7 +345,7 @@ SUBROUTINE bcutxl
             END DO
 
 !           SCALING OF DFT
-            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            rangexyz = (/1,1,1,nysize,1,nzsize/)
 !           VELOCITIES
             call ops_par_loop(bcut_kernel_xdir_eqD, "A = A * val1", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
@@ -384,8 +389,8 @@ SUBROUTINE bcutxl
 !           NOT THE LEFTMOST PROCESSOR IN X
 !           SEND TO LEFTMOST PROCESSOR IN X
             ncount = 0
-            DO kc = kstal,kstol
-                DO jc = jstal,jstol
+            DO kc = 1,nzsize
+                DO jc = 1,nysize
 
                     ncount = ncount + 1
                     parray(ncount) = struxl(1,jc,kc)

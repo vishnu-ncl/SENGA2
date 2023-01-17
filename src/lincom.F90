@@ -31,12 +31,10 @@ SUBROUTINE lincom
 
 !   *************************************************************************
 
-
 !   GLOBAL DATA
 !   ===========
 !   -------------------------------------------------------------------------
 !   -------------------------------------------------------------------------
-
 
 !   LOCAL DATA
 !   ==========
@@ -58,7 +56,19 @@ SUBROUTINE lincom
 
 !   DENSITY
 !   -------
-    rangexyz = (/istald,istold,jstald,jstold,kstald,kstold/)
+    rangexyz(1) = 1
+    IF (nsbcxl == nsbci3) rangexyz(1) = 2
+    rangexyz(2) = nxsize
+    IF (nsbcxr == nsbci3) rangexyz(2) = nxsize-1
+    rangexyz(3) = 1
+    IF (nsbcyl == nsbci3) rangexyz(3) = 2
+    rangexyz(4) = nysize
+    IF (nsbcyr == nsbci3) rangexyz(4) = nysize-1
+    rangexyz(5) = 1
+    IF (nsbczl == nsbci3) rangexyz(5) = 2
+    rangexyz(6) = nzsize
+    IF (nsbczr == nsbci3) rangexyz(6) = nzsize-1
+
     call ops_par_loop(lincom_kernel_main, "lincom_main", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_derr, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_drun, 1, s3d_000, "real(dp)", OPS_WRITE), &
@@ -70,7 +80,19 @@ SUBROUTINE lincom
 !   -------------------------------------------------------------------------
 !   U-VELOCITY
 !   ----------
-    rangexyz = (/istalu,istolu,jstalu,jstolu,kstalu,kstolu/)
+    rangexyz(1) = 1
+    IF (nsbcxl == nsbci2 .or. nsbcxl == nsbci3 .or. nsbcxl == nsbcw1 .or. nsbcxl == nsbcw2) rangexyz(1) = 2
+    rangexyz(2) = nxsize
+    IF (nsbcxr == nsbci2 .or. nsbcxr == nsbci3 .or. nsbcxr == nsbcw1 .or. nsbcxr == nsbcw2) rangexyz(2) = nxsize-1
+    rangexyz(3) = 1
+    IF (nsbcyl == nsbci2 .or. nsbcyl == nsbci3 .or. nsbcyl == nsbcw1 .or. nsbcyl == nsbcw2) rangexyz(3) = 2
+    rangexyz(4) = nysize
+    IF (nsbcyr == nsbci2 .or. nsbcyr == nsbci3 .or. nsbcyr == nsbcw1 .or. nsbcyr == nsbcw2) rangexyz(4) = nysize-1
+    rangexyz(5) = 1
+    IF (nsbczl == nsbci2 .or. nsbczl == nsbci3 .or. nsbczl == nsbcw1 .or. nsbczl == nsbcw2) rangexyz(5) = 2
+    rangexyz(6) = nzsize
+    IF (nsbczr == nsbci2 .or. nsbczr == nsbci3 .or. nsbczr == nsbcw1 .or. nsbczr == nsbcw2) rangexyz(6) = nzsize-1
+
     call ops_par_loop(lincom_kernel_main, "lincom_main", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_uerr, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_urun, 1, s3d_000, "real(dp)", OPS_WRITE), &
@@ -82,7 +104,6 @@ SUBROUTINE lincom
 !   -------------------------------------------------------------------------
 !   V-VELOCITY
 !   ----------
-    rangexyz = (/istalv,istolv,jstalv,jstolv,kstalv,kstolv/)
     call ops_par_loop(lincom_kernel_main, "lincom_main", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_verr, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_vrun, 1, s3d_000, "real(dp)", OPS_WRITE), &
@@ -94,7 +115,6 @@ SUBROUTINE lincom
 !   -------------------------------------------------------------------------
 !   W-VELOCITY
 !   ----------
-    rangexyz = (/istalw,istolw,jstalw,jstolw,kstalw,kstolw/)
     call ops_par_loop(lincom_kernel_main, "lincom_main", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_werr, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_wrun, 1, s3d_000, "real(dp)", OPS_WRITE), &
@@ -106,7 +126,19 @@ SUBROUTINE lincom
 !   -------------------------------------------------------------------------
 !   STAGNATION INTERNAL ENERGY
 !   --------------------------
-    rangexyz = (/istale,istole,jstale,jstole,kstale,kstole/)
+    rangexyz(1) = 1
+    IF (nsbcxl == nsbci2 .or. nsbcxl == nsbcw2) rangexyz(1) = 2
+    rangexyz(2) = nxsize
+    IF (nsbcxr == nsbci2 .or. nsbcxr == nsbcw2) rangexyz(2) = nxsize-1
+    rangexyz(3) = 1
+    IF (nsbcyl == nsbci2 .or. nsbcyl == nsbcw2) rangexyz(3) = 2
+    rangexyz(4) = nysize
+    IF (nsbcyr == nsbci2 .or. nsbcyr == nsbcw2) rangexyz(4) = nysize-1
+    rangexyz(5) = 1
+    IF (nsbczl == nsbci2 .or. nsbczl == nsbcw2) rangexyz(5) = 2
+    rangexyz(6) = nzsize
+    IF (nsbczr == nsbci2 .or. nsbczr == nsbcw2) rangexyz(6) = nzsize-1
+    
     call ops_par_loop(lincom_kernel_main, "lincom_main", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_eerr, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_erun, 1, s3d_000, "real(dp)", OPS_WRITE), &
@@ -120,9 +152,21 @@ SUBROUTINE lincom
 !   ----------------------
 !   RSC 08-AUG-2012 EVALUATE ALL SPECIES
 !   DO ISPEC = 1,NSPM1
+    rangexyz(1) = 1
+    IF (nsbcxl == nsbci2 .or. nsbcxl == nsbci3) rangexyz(1) = 2
+    rangexyz(2) = nxsize
+    IF (nsbcxr == nsbci2 .or. nsbcxr == nsbci3) rangexyz(2) = nxsize-1
+    rangexyz(3) = 1
+    IF (nsbcyl == nsbci2 .or. nsbcyl == nsbci3) rangexyz(3) = 2
+    rangexyz(4) = nysize
+    IF (nsbcyr == nsbci2 .or. nsbcyr == nsbci3) rangexyz(4) = nysize-1
+    rangexyz(5) = 1
+    IF (nsbczl == nsbci2 .or. nsbczl == nsbci3) rangexyz(5) = 2
+    rangexyz(6) = nzsize
+    IF (nsbczr == nsbci2 .or. nsbczr == nsbci3) rangexyz(6) = nzsize-1
+
     DO ispec = 1,nspec
 
-        rangexyz = (/istaly,istoly,jstaly,jstoly,kstaly,kstoly/)
         call ops_par_loop(lincom_kernel_MD, "lincom mulit-dim", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_yerr, 9, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_yrun, 9, s3d_000, "real(dp)", OPS_WRITE), &

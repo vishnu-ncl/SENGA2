@@ -51,7 +51,7 @@ SUBROUTINE radcal
 !   -----------------------------------------------------------
 
 !   INITIALISE THE ACCUMULATOR
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_WRITE))
 
@@ -61,7 +61,7 @@ SUBROUTINE radcal
     DO jspec = 1, nsprad
 
 !       PLANCK MEAN ABSORPTION COEFFICIENT OF EACH SPECIES
-        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(radcal_kernel_meancoef, "PLANCK MEAN ABSORPTION COEF", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &
@@ -76,7 +76,7 @@ SUBROUTINE radcal
         ispec = nsprid(jspec)
 
 !       ADD THE SPECIES CONTRIBUTION
-        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(radcal_kernel_addspecies, "ADD THE SPECIES CONTRIBUTION", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_WRITE), &
                         ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
@@ -90,7 +90,7 @@ SUBROUTINE radcal
 !   =========================================================================
 
 !   INCLUDE THE RADIATION TERM IN THE ENERGY EQUATION
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(radcal_kernel_addradiation, "INCLUDE THE RADIATION TERM IN THE ENERGY EQUATION", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_READ), &

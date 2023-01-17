@@ -53,7 +53,7 @@ SUBROUTINE bcytxr
 
 !   EVALUATE AND RETURN STRYXR,DYDTXR
     DO ispec = 1,nspec
-        rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+        rangexyz = (/1,1,1,nysize,1,nzsize/)
         call ops_par_loop(bcyt_kernel_xdir, "bcyt_kernel_xdir", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_stryxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
                             ops_arg_dat(d_dydtxr, 9, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &

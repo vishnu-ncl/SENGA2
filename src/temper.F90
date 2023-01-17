@@ -46,7 +46,30 @@ SUBROUTINE temper
 
 !   TEMPERATURE AND PRESSURE ARE PARALLEL
 
-    rangexyz = (/istalt,istolt,jstalt,jstolt,kstalt,kstolt/)
+    rangexyz(1) = 1-nhalox
+    IF (nsbcxl == nsbco1 .or. nsbcxl == nsbci1 .or. nsbcxl == nsbci2 .or. &
+        nsbcxl == nsbci3 .or. nsbcxl == nsbcw1 .or. nsbcxl == nsbcw2) rangexyz(1) = 1
+
+    rangexyz(2) = nxsize+nhalox
+    IF (nsbcxr == nsbco1 .or. nsbcxr == nsbci1 .or. nsbcxr == nsbci2 .or. &
+        nsbcxr == nsbci3 .or. nsbcxr == nsbcw1 .or. nsbcxr == nsbcw2) rangexyz(2) = nxsize
+
+    rangexyz(3) = 1-nhaloy
+    IF (nsbcyl == nsbco1 .or. nsbcyl == nsbci1 .or. nsbcyl == nsbci2 .or. &
+        nsbcyl == nsbci3 .or. nsbcyl == nsbcw1 .or. nsbcyl == nsbcw2) rangexyz(3) = 1
+
+    rangexyz(4) = nysize+nhaloy
+    IF (nsbcyr == nsbco1 .or. nsbcyr == nsbci1 .or. nsbcyr == nsbci2 .or. &
+        nsbcyr == nsbci3 .or. nsbcyr == nsbcw1 .or. nsbcyr == nsbcw2) rangexyz(4) = nysize
+
+    rangexyz(5) = 1-nhaloz
+    IF (nsbczl == nsbco1 .or. nsbczl == nsbci1 .or. nsbczl == nsbci2 .or. &
+        nsbczl == nsbci3 .or. nsbczl == nsbcw1 .or. nsbczl == nsbcw2) rangexyz(5) = 1
+
+    rangexyz(6) = nzsize+nhaloz
+    IF (nsbczr == nsbco1 .or. nsbczr == nsbci1 .or. nsbczr == nsbci2 .or. &
+        nsbczr == nsbci3 .or. nsbczr == nsbcw1 .or. nsbczr == nsbcw2) rangexyz(6) = nzsize
+
     call ops_par_loop(temper_kernel_main, "temper kernel", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
                     ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_WRITE), &

@@ -82,7 +82,7 @@ PROGRAM senga2
 !   INITIALISATION
 !   ==============
 
-    call ops_init(2)
+    call ops_init(3)
     
     call ops_data_init
 

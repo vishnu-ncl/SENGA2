@@ -23,7 +23,7 @@ use OPS_Fortran_Reference
 
 !   =========================================================================
 
-    rangexyz = (/istal,istol, jstal,jstol, kstol,kstol/)
+    rangexyz = (/1,nxsize, 1,nysize, nzsize,nzsize/)
     call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
                         ops_arg_dat(farray, 1, s3d_000, "real(dp)", OPS_WRITE))
 

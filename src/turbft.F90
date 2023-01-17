@@ -108,13 +108,13 @@ END IF
 ipencl = 0
 
 !     LOOP OVER X-LINES
-DO kc = kstal,kstol
+DO kc = 1,nzsize
   
 !       FOURIER-SPACE GLOBAL INDEXING
   kx = kgofm1 + kc
   IF(kx > nodblz)kx = kx-nzglbl
   
-  DO jc = jstal,jstol
+  DO jc = 1,nysize
     
 !         FOURIER-SPACE GLOBAL INDEXING
     jx = jgofm1 + jc
@@ -131,7 +131,7 @@ DO kc = kstal,kstol
       kpen(ipencl) = kc
       
 !           ASSEMBLE FFT DATA
-      DO ic = istal,istol
+      DO ic = 1,nxsize
         
         iic = 2*ic
         iim = iic-1
@@ -151,12 +151,12 @@ DO kc = kstal,kstol
         ndosym = 0
         npencl = ipencl
         
-        CALL fftsym(ndosym,npencl,ixproc,nxproc,nxnode,nxglbl,nprocx)
+        CALL fftsym(ndosym,npencl,ixproc,nxproc,nxsize,nxglbl,nprocx)
         
 !             RESTORE TRANSFORMED DATA
         DO ipencl = 1,npencl
           
-          DO ic = istal,istol
+          DO ic = 1,nxsize
             
             iic = 2*ic
             iim = iic-1
@@ -186,7 +186,7 @@ DO kc = kstal,kstol
         kpen(ipencl) = kc
         
 !             ASSEMBLE FFT DATA
-        DO ic = istal,istol
+        DO ic = 1,nxsize
           
           iic = 2*ic
           iim = iic-1
@@ -206,12 +206,12 @@ DO kc = kstal,kstol
           ndosym = 0
           npencl = ipencl
           
-          CALL fftsym(ndosym,npencl,ixproc,nxproc,nxnode,nxglbl,nprocx)
+          CALL fftsym(ndosym,npencl,ixproc,nxproc,nxsize,nxglbl,nprocx)
           
 !               RESTORE TRANSFORMED DATA
           DO ipencl = 1,npencl
             
-            DO ic = istal,istol
+            DO ic = 1,nxsize
               
               iic = 2*ic
               iim = iic-1
@@ -240,12 +240,12 @@ DO kc = kstal,kstol
           ndosym = 0
           npencl = ipencl
           
-          CALL fftsym(ndosym,npencl,ixproc,nxproc,nxnode,nxglbl,nprocx)
+          CALL fftsym(ndosym,npencl,ixproc,nxproc,nxsize,nxglbl,nprocx)
           
 !               RESTORE TRANSFORMED DATA
           DO ipencl = 1,npencl
             
-            DO ic = istal,istol
+            DO ic = 1,nxsize
               
               iic = 2*ic
               iim = iic-1
@@ -265,7 +265,7 @@ DO kc = kstal,kstol
 !             ASSEMBLE FFT DATA FOR KY=KZ=0
         ipencl = 1
         
-        DO ic = istal,istol
+        DO ic = 1,nxsize
           
           iic = 2*ic
           iim = iic-1
@@ -282,10 +282,10 @@ DO kc = kstal,kstol
         ndosym = 1
         npencl = 1
         
-        CALL fftsym(ndosym,npencl,ixproc,nxproc,nxnode,nxglbl,nprocx)
+        CALL fftsym(ndosym,npencl,ixproc,nxproc,nxsize,nxglbl,nprocx)
         
 !             RESTORE TRANSFORMED DATA
-        DO ic = istal,istol
+        DO ic = 1,nxsize
           
           iic = 2*ic
           iim = iic-1
@@ -325,12 +325,12 @@ IF(ipencl /= 0)THEN
   ndosym = 0
   npencl = ipencl
   
-  CALL fftsym(ndosym,npencl,ixproc,nxproc,nxnode,nxglbl,nprocx)
+  CALL fftsym(ndosym,npencl,ixproc,nxproc,nxsize,nxglbl,nprocx)
   
 !       RESTORE TRANSFORMED DATA
   DO ipencl = 1,npencl
     
-    DO ic = istal,istol
+    DO ic = 1,nxsize
       
       iic = 2*ic
       iim = iic-1
@@ -355,7 +355,7 @@ END IF
 !     PENCIL COUNTER
 ipencl = 0
 
-DO kc = kstal,kstol
+DO kc = 1,nzsize
   
 !       FOURIER-SPACE GLOBAL INDEXING
   kx = kgofm1 + kc
@@ -364,7 +364,7 @@ DO kc = kstal,kstol
 !       TRANSFORM ONLY FOR UPPER-CENTRAL WAVENUMBERS
   IF(kx > 0)THEN
     
-    DO ic = istal,istol
+    DO ic = 1,nxsize
       
 !           FOURIER-SPACE GLOBAL INDEXING
       ix = igofm1 + ic
@@ -376,7 +376,7 @@ DO kc = kstal,kstol
       kpen(ipencl) = kc
       
 !           ASSEMBLE FFT DATA
-      DO jc = jstal,jstol
+      DO jc = 1,nysize
         
         jjc = 2*jc
         jjm = jjc-1
@@ -396,12 +396,12 @@ DO kc = kstal,kstol
         ndosym = 0
         npencl = ipencl
         
-        CALL fftsym(ndosym,npencl,iyproc,nyproc,nynode,nyglbl,nprocy)
+        CALL fftsym(ndosym,npencl,iyproc,nyproc,nysize,nyglbl,nprocy)
         
 !             RESTORE TRANSFORMED DATA
         DO ipencl = 1,npencl
           
-          DO jc = jstal,jstol
+          DO jc = 1,nysize
             
             jjc = 2*jc
             jjm = jjc-1
@@ -432,12 +432,12 @@ DO kc = kstal,kstol
       ndosym = 0
       npencl = ipencl
       
-      CALL fftsym(ndosym,npencl,iyproc,nyproc,nynode,nyglbl,nprocy)
+      CALL fftsym(ndosym,npencl,iyproc,nyproc,nysize,nyglbl,nprocy)
       
 !           RESTORE TRANSFORMED DATA
       DO ipencl = 1,npencl
         
-        DO jc = jstal,jstol
+        DO jc = 1,nysize
           
           jjc = 2*jc
           jjm = jjc-1
@@ -457,7 +457,7 @@ DO kc = kstal,kstol
 !         ASSEMBLE FFT DATA FOR KZ=0
     ipencl = 0
     
-    DO ic = istal,istol
+    DO ic = 1,nxsize
       
 !           FOURIER-SPACE GLOBAL INDEXING
       ix = igofm1 + ic
@@ -469,7 +469,7 @@ DO kc = kstal,kstol
       kpen(ipencl) = kc
       
 !           ASSEMBLE FFT DATA
-      DO jc = jstal,jstol
+      DO jc = 1,nysize
         
         jjc = 2*jc
         jjm = jjc-1
@@ -483,18 +483,18 @@ DO kc = kstal,kstol
       END DO
       
 !           CHECK FOR MAX NO OF PENCILS
-      IF((ipencl == npenmx).OR.(ic == istol))THEN
+      IF((ipencl == npenmx).OR.(ic == nxsize))THEN
         
 !             DO THE FFT (SYMMETRY IMPOSED)
         ndosym = 1
         npencl = ipencl
         
-        CALL fftsym(ndosym,npencl,iyproc,nyproc,nynode,nyglbl,nprocy)
+        CALL fftsym(ndosym,npencl,iyproc,nyproc,nysize,nyglbl,nprocy)
         
 !             RESTORE TRANSFORMED DATA
         DO ipencl = 1,npencl
           
-          DO jc = jstal,jstol
+          DO jc = 1,nysize
             
             jjc = 2*jc
             jjm = jjc-1
@@ -530,12 +530,12 @@ IF(ipencl /= 0)THEN
   ndosym = 0
   npencl = ipencl
   
-  CALL fftsym(ndosym,npencl,iyproc,nyproc,nynode,nyglbl,nprocy)
+  CALL fftsym(ndosym,npencl,iyproc,nyproc,nysize,nyglbl,nprocy)
   
 !       RESTORE TRANSFORMED DATA
   DO ipencl = 1,npencl
     
-    DO jc = jstal,jstol
+    DO jc = 1,nysize
       
       jjc = 2*jc
       jjm = jjc-1
@@ -560,13 +560,13 @@ END IF
 !     PENCIL COUNTER
 ipencl = 0
 
-DO jc = jstal,jstol
+DO jc = 1,nysize
   
 !       FOURIER-SPACE GLOBAL INDEXING
   jx = jgofm1 + jc
   IF(jx > nodbly)jx = jx-nyglbl
   
-  DO ic = istal,istol
+  DO ic = 1,nxsize
     
 !         FOURIER-SPACE GLOBAL INDEXING
     ix = igofm1 + ic
@@ -578,7 +578,7 @@ DO jc = jstal,jstol
     jpen(ipencl) = jc
     
 !         ASSEMBLE FFT DATA
-    DO kc = kstal,kstol
+    DO kc = 1,nzsize
       
       kkc = 2*kc
       kkm = kkc-1
@@ -598,12 +598,12 @@ DO jc = jstal,jstol
       ndosym = 1
       npencl = ipencl
       
-      CALL fftsym(ndosym,npencl,izproc,nzproc,nznode,nzglbl,nprocz)
+      CALL fftsym(ndosym,npencl,izproc,nzproc,nzsize,nzglbl,nprocz)
       
 !           RESTORE TRANSFORMED DATA
       DO ipencl = 1,npencl
         
-        DO kc = kstal,kstol
+        DO kc = 1,nzsize
           
           kkc = 2*kc
           kkm = kkc-1
@@ -632,12 +632,12 @@ IF(ipencl /= 0)THEN
   ndosym = 1
   npencl = ipencl
   
-  CALL fftsym(ndosym,npencl,izproc,nzproc,nznode,nzglbl,nprocz)
+  CALL fftsym(ndosym,npencl,izproc,nzproc,nzsize,nzglbl,nprocz)
   
 !       RESTORE TRANSFORMED DATA
   DO ipencl = 1,npencl
     
-    DO kc = kstal,kstol
+    DO kc = 1,nzsize
       
       kkc = 2*kc
       kkm = kkc-1

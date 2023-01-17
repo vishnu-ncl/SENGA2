@@ -66,8 +66,8 @@ DO ispec = 1,nspec
   DO kc = kndexl,kndexr
     DO jc = jndexl,jndexr
       
-      is = istali - 1
-      DO ic = istaro,istoro
+      is = 0
+      DO ic = nxsize+1,nxsize+nhalox
         
         is = is + 1
         bigarr(ispec,ic,jc,kc) = bigarr(ispec,is,jc,kc)
@@ -82,8 +82,8 @@ DO ispec = 1,nspec
   DO kc = kndexl,kndexr
     DO jc = jndexl,jndexr
       
-      is = istari - 1
-      DO ic = istalo,istolo
+      is = (nxsize+1-nhalox) - 1
+      DO ic = 1-nhalox,0
         
         is = is + 1
         bigarr(ispec,ic,jc,kc) = bigarr(ispec,is,jc,kc)

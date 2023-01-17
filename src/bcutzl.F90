@@ -53,7 +53,7 @@ SUBROUTINE bcutzl
 !   CONSTANT W-VELOCITY
 !   PARAMETER I1=1, R1=W-VELOCITY
     IF(nzlprm(1) == 1) THEN
-        rangexyz = (/istal,istol,jstal,jstol,1,1/)  
+        rangexyz = (/1,nxsize,1,nysize,1,1/)  
         call ops_par_loop(bcut_kernel_zdir, "bcut_kernel_zdir", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE),  &
                         ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &

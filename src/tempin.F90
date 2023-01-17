@@ -51,7 +51,7 @@ REAL(KIND=dp) :: tempor,tupper,tlower,tresid,tuk2me,cpfory
 INTEGER :: ic,jc,kc,ispec,itint,icp
 INTEGER :: iindex,ipower
 LOGICAL :: fnconv
-
+INTEGER :: istalt,istolt,jstalt,jstolt,kstalt,kstolt
 
 !     BEGIN
 !     =====
@@ -62,6 +62,31 @@ LOGICAL :: fnconv
 !     ------------------------
 
 !     TEMPERATURE AND PRESSURE ARE PARALLEL
+
+istalt = 1-nhalox
+    IF (nsbcxl == nsbco1 .or. nsbcxl == nsbci1 .or. nsbcxl == nsbci2 .or. &
+        nsbcxl == nsbci3 .or. nsbcxl == nsbcw1 .or. nsbcxl == nsbcw2) istalt = 1
+
+    istolt = nxsize+nhalox
+    IF (nsbcxr == nsbco1 .or. nsbcxr == nsbci1 .or. nsbcxr == nsbci2 .or. &
+        nsbcxr == nsbci3 .or. nsbcxr == nsbcw1 .or. nsbcxr == nsbcw2) istolt = nxsize
+
+    jstalt = 1-nhaloy
+    IF (nsbcyl == nsbco1 .or. nsbcyl == nsbci1 .or. nsbcyl == nsbci2 .or. &
+        nsbcyl == nsbci3 .or. nsbcyl == nsbcw1 .or. nsbcyl == nsbcw2) jstalt = 1
+
+    jstolt = nysize+nhaloy
+    IF (nsbcyr == nsbco1 .or. nsbcyr == nsbci1 .or. nsbcyr == nsbci2 .or. &
+        nsbcyr == nsbci3 .or. nsbcyr == nsbcw1 .or. nsbcyr == nsbcw2) jstolt = nysize
+
+    kstalt = 1-nhaloz
+    IF (nsbczl == nsbco1 .or. nsbczl == nsbci1 .or. nsbczl == nsbci2 .or. &
+        nsbczl == nsbci3 .or. nsbczl == nsbcw1 .or. nsbczl == nsbcw2) kstalt = 1
+
+    kstolt = nzsize+nhaloz
+    IF (nsbczr == nsbco1 .or. nsbczr == nsbci1 .or. nsbczr == nsbci2 .or. &
+        nsbczr == nsbci3 .or. nsbczr == nsbcw1 .or. nsbczr == nsbcw2) kstolt = nzsize
+
 DO kc = kstalt,kstolt
   DO jc = jstalt,jstolt
     DO ic = istalt,istolt

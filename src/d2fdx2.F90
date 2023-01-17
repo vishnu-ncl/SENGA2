@@ -9,33 +9,39 @@ use OPS_Fortran_Reference
     use com_senga
     use com_ops_senga
 
+!   *************************************************************************
+
+!   D2FDX2
+!   ======
+
+!   AUTHOR
+!   ------
+!   R.S.CANT
+
+!   CHANGE RECORD
+!   -------------
+!   01-AUG-1996:  CREATED
+!   06-APR-2003:  RSC MODIFIED FOR SENGA2
+
+!   DESCRIPTION
+!   -----------
+!   DNS CODE SENGA2
+!   EVALUATES SECOND X-DERIVATIVE OF SPECIFIED FUNCTION
+!   EXPLICIT 10TH ORDER FINITE DIFFERENCE METHOD
+!   EXPLICIT 8TH,6TH,4TH,4TH ORDER END CONDITIONS
+
+!   *************************************************************************
+
+!   ARGUMENTS
+!   =========
     TYPE(ops_dat) :: functn, fderiv
 
+!   LOCAL DATA
+!   ==========
+    integer :: rangexyz(6)
 
-!     ARGUMENTS
-!     =========
-
-
-
-
-!     LOCAL DATA
-!     ==========
-INTEGER :: istart,ifinis
-INTEGER :: rangexyz(6)
-
-
-!     BEGIN
-!     =====
-
-!     =========================================================================
-
-!     END CONDITIONS
-!     ==============
-
-istart = istal
-ifinis = istol
-IF(nendxl == nbound)istart = istap5
-IF(nendxr == nbound)ifinis = istom5
+!   BEGIN
+!   =====
 
 !   =========================================================================
 
@@ -43,7 +49,16 @@ IF(nendxr == nbound)ifinis = istom5
 !   ===============
 
 !   TENTH ORDER EXPLICIT DIFFERENCES
-    rangexyz = (/istart,ifinis,jstal,jstol,kstal,kstol/)
+    rangexyz(1) = 1
+    rangexyz(2) = nxsize
+    IF(nendxl == nbound) rangexyz(1) = 6
+    IF(nendxr == nbound) rangexyz(2) = nxsize-5
+ 
+    rangexyz(3) = 1
+    rangexyz(4) = nysize
+    rangexyz(5) = 1
+    rangexyz(6) = nzsize
+    
     call ops_par_loop(d2fdx2_kernel_interior, "d2fdx2_interior_scheme", senga_grid, 3, rangexyz,  &
                       ops_arg_dat(functn, 1, s3d_p500_to_m500_x, "real(dp)", OPS_READ),  &
                       ops_arg_dat(fderiv, 1, s3d_000, "real(dp)", OPS_WRITE))
@@ -54,27 +69,27 @@ IF(nendxr == nbound)ifinis = istom5
 !   ======
     IF(nendxl == nbound)THEN
 
-        rangexyz = (/istal,istal,jstal,jstol,kstal,kstol/)
+        rangexyz = (/1,1,1,nysize,1,nzsize/)
         call ops_par_loop(d2fdx2_kernel_lhpoint_4th_onesided, "d2fdx2_lh_4th_onesided", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(functn, 1, s3d_000_to_p500_x, "real(dp)", OPS_READ),  &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(dp)", OPS_WRITE))
 
-        rangexyz = (/istap1,istap1,jstal,jstol,kstal,kstol/)
+        rangexyz = (/2,2,1,nysize,1,nzsize/)
         call ops_par_loop(d2fdx2_kernel_lhpoint_4th_mixed, "d2fdx2_lh_4th_mixed", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(functn, 1, s3d_p400_to_m100_x, "real(dp)", OPS_READ),  &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(dp)", OPS_WRITE))
 
-        rangexyz = (/istap2,istap2,jstal,jstol,kstal,kstol/)
+        rangexyz = (/3,3,1,nysize,1,nzsize/)
         call ops_par_loop(d2fdx2_kernel_lhpoint_4th_centered, "d2fdx2_lh_4th_centered", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(functn, 1, s3d_p200_to_m200_x, "real(dp)", OPS_READ),  &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(dp)", OPS_WRITE))
 
-        rangexyz = (/istap3,istap3,jstal,jstol,kstal,kstol/)
+        rangexyz = (/4,4,1,nysize,1,nzsize/)
         call ops_par_loop(d2fdx2_kernel_lhpoint_6th_centered, "d2fdx2_lh_6th_centered", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(functn, 1, s3d_p300_to_m300_x, "real(dp)", OPS_READ),  &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(dp)", OPS_WRITE))
 
-        rangexyz = (/istap4,istap4,jstal,jstol,kstal,kstol/)
+        rangexyz = (/5,5,1,nysize,1,nzsize/)
         call ops_par_loop(d2fdx2_kernel_lhpoint_8th_centered, "d2fdx2_lh_8th_centered", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(functn, 1, s3d_p400_to_m400_x, "real(dp)", OPS_READ),  &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(dp)", OPS_WRITE))
@@ -87,27 +102,27 @@ IF(nendxr == nbound)ifinis = istom5
 !   ======
     IF(nendxr == nbound)THEN
 
-        rangexyz = (/istom4,istom4,jstal,jstol,kstal,kstol/)
+        rangexyz = (/nxsize-4,nxsize-4,1,nysize,1,nzsize/)
         call ops_par_loop(d2fdx2_kernel_rhpoint_8th_centered, "d2fdx2_rh_8th_centered", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(functn, 1, s3d_p400_to_m400_x, "real(dp)", OPS_READ),  &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(dp)", OPS_WRITE))
 
-        rangexyz = (/istom3,istom3,jstal,jstol,kstal,kstol/)
+        rangexyz = (/nxsize-3,nxsize-3,1,nysize,1,nzsize/)
         call ops_par_loop(d2fdx2_kernel_rhpoint_6th_centered, "d2fdx2_rh_6th_centered", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(functn, 1, s3d_p300_to_m300_x, "real(dp)", OPS_READ),  &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(dp)", OPS_WRITE))
 
-        rangexyz = (/istom2,istom2,jstal,jstol,kstal,kstol/)
+        rangexyz = (/nxsize-2,nxsize-2,1,nysize,1,nzsize/)
         call ops_par_loop(d2fdx2_kernel_rhpoint_4th_centered, "d2fdx2_rh_4th_centered", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(functn, 1, s3d_p200_to_m200_x, "real(dp)", OPS_READ),  &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(dp)", OPS_WRITE))
 
-        rangexyz = (/istom1,istom1,jstal,jstol,kstal,kstol/)
+        rangexyz = (/nxsize-1,nxsize-1,1,nysize,1,nzsize/)
         call ops_par_loop(d2fdx2_kernel_rhpoint_4th_mixed, "d2fdx2_rh_4th_mixed", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(functn, 1, s3d_p100_to_m400_x, "real(dp)", OPS_READ),  &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(dp)", OPS_WRITE))
 
-        rangexyz = (/istol,istol,jstal,jstol,kstal,kstol/)
+        rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(d2fdx2_kernel_rhpoint_4th_onesided, "d2fdx2_rh_4th_onesided", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(functn, 1, s3d_000_to_m500_x, "real(dp)", OPS_READ),  &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(dp)", OPS_WRITE))
@@ -118,10 +133,9 @@ IF(nendxr == nbound)ifinis = istom5
 
 !   SCALING
 !   =======
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(d2fdx2_kernel_scaling, "d2fdx2_scaling", senga_grid, 3, rangexyz,  &
                       ops_arg_dat(fderiv, 1, s3d_000, "real(dp)", OPS_WRITE))
 !   =========================================================================
-
 
 END SUBROUTINE d2fdx2

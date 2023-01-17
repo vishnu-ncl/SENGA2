@@ -51,7 +51,7 @@ SUBROUTINE bcdtxr
 !   =========================================================================
 
 !   EVALUATE AND RETURN STRDXR,DDDTXR
-    rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+    rangexyz = (/1,1,1,nysize,1,nzsize/)
     call ops_par_loop(bcdt_kernel_xdir, "bcdt_kernel_xdir", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
                     ops_arg_dat(d_dddtxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
