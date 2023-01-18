@@ -433,98 +433,69 @@ COMMON/rknorm/erdrhs,erurhs,ervrhs,erwrhs,ererhs,eryrhs
 !     PRVARS-------------------------------------------------------------------
 
 !     PRINCIPAL VARIABLES (ALL STANDARD SIZE ARRAYS)
-REAL(KIND=dp) :: drun(nxsize,nysize,nzsize),urun(nxsize,nysize,nzsize),  &
-    vrun(nxsize,nysize,nzsize),wrun(nxsize,nysize,nzsize),  &
-    erun(nxsize,nysize,nzsize), yrun(nspcmx,nxsize,nysize,nzsize),  &
-    crin(nxsize,1,1)
+real(kind=dp), dimension(:,:,:), allocatable :: drun,urun,vrun,wrun,erun
+real(kind=dp), dimension(:,:,:,:), allocatable :: yrun
+real(kind=dp), dimension(:,:,:), allocatable :: crin
 
-COMMON/prvars/drun,urun,vrun,wrun,erun,yrun,crin
+!COMMON/prvars/drun,urun,vrun,wrun,erun,yrun,crin
 
 !     PRVARS-------------------------------------------------------------------
 !     TIMRHS-------------------------------------------------------------------
 
 !     TIME-STEPPING RHS TERMS (ALL BIGGER SIZE ARRAYS)
-REAL(KIND=dp) :: drhs(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr),  &
-    urhs(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr),  &
-    vrhs(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr),  &
-    wrhs(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr),  &
-    erhs(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr),  &
-    yrhs(nspcmx,nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
+real(kind=dp), dimension(:,:,:), allocatable :: drhs,urhs,vrhs,wrhs,erhs
+real(kind=dp), dimension(:,:,:,:), allocatable :: yrhs
 
-COMMON/timrhs/drhs,urhs,vrhs,wrhs,erhs,yrhs
+!COMMON/timrhs/drhs,urhs,vrhs,wrhs,erhs,yrhs
 
 !     TIMRHS-------------------------------------------------------------------
 !     TIMERR-------------------------------------------------------------------
 
 !     TIME-STEPPING ERROR ARRAYS (ALL STANDARD SIZE ARRAYS)
-REAL(KIND=dp) :: derr(nxsize,nysize,nzsize),uerr(nxsize,nysize,nzsize),  &
-    verr(nxsize,nysize,nzsize),werr(nxsize,nysize,nzsize),  &
-    eerr(nxsize,nysize,nzsize), yerr(nspcmx,nxsize,nysize,nzsize)
+real(kind=dp), dimension(:,:,:), allocatable :: derr,uerr,verr,werr,eerr
+real(kind=dp), dimension(:,:,:,:), allocatable :: yerr
 
-COMMON/timerr/derr,uerr,verr,werr,eerr,yerr
+!COMMON/timerr/derr,uerr,verr,werr,eerr,yerr
 
 !     TIMERR-------------------------------------------------------------------
 !     WORKSP-------------------------------------------------------------------
 
 !     WORKSPACE (STANDARD SIZE ARRAYS)
-REAL(KIND=dp) ::  &
-    store1(nxsize,nysize,nzsize),store2(nxsize,nysize,nzsize),  &
-    store3(nxsize,nysize,nzsize),store4(nxsize,nysize,nzsize),  &
-    store5(nxsize,nysize,nzsize),store6(nxsize,nysize,nzsize),  &
-    divm(nxsize,nysize,nzsize), rate(nspcmx,nxsize,nysize,nzsize),  &
-    rrte(nspcmx,nxsize,nysize,nzsize)
+real(kind=dp), dimension(:,:,:), allocatable :: store1,store2,store3,store4,store5,store6,divm
+real(kind=dp), dimension(:,:,:,:), allocatable :: rate,rrte
 
-COMMON/worksp/store1,store2,store3,store4,store5,store6,divm,rate, rrte
+!COMMON/worksp/store1,store2,store3,store4,store5,store6,divm,rate, rrte
 
 !     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !     WORKSPACE (DIFFUSIVE CORRECTION VELOCITY, STANDARD SIZE ARRAYS)
-REAL(KIND=dp) :: ucor(nxsize,nysize,nzsize),vcor(nxsize,nysize,nzsize),  &
-    wcor(nxsize,nysize,nzsize)
+real(kind=dp), dimension(:,:,:), allocatable :: ucor,vcor,wcor
 
-COMMON/worksc/ucor,vcor,wcor
+!COMMON/worksc/ucor,vcor,wcor
 !     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 !     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !     WORKSPACE (MIXTURE AVERAGED TRANSPORT, STANDARD SIZE ARRAYS)
-REAL(KIND=dp) :: wd1x(nxsize,nysize,nzsize),wd1y(nxsize,nysize,nzsize),  &
-    wd1z(nxsize,nysize,nzsize),  &
-    wd2x(nxsize,nysize,nzsize),wd2y(nxsize,nysize,nzsize),  &
-    wd2z(nxsize,nysize,nzsize),  &
-    pd1x(nxsize,nysize,nzsize),pd1y(nxsize,nysize,nzsize),  &
-    pd1z(nxsize,nysize,nzsize),  &
-    pd2x(nxsize,nysize,nzsize),pd2y(nxsize,nysize,nzsize),  &
-    pd2z(nxsize,nysize,nzsize),  &
-    td1x(nxsize,nysize,nzsize),td1y(nxsize,nysize,nzsize),  &
-    td1z(nxsize,nysize,nzsize),  &
-    td2x(nxsize,nysize,nzsize),td2y(nxsize,nysize,nzsize),  &
-    td2z(nxsize,nysize,nzsize)
+real(kind=dp), dimension(:,:,:), allocatable :: wd1x,pd1x,td1x,wd1y,pd1y,td1y,wd1z,pd1z,td1z
+real(kind=dp), dimension(:,:,:), allocatable :: wd2x,pd2x,td2x,wd2y,pd2y,td2y,wd2z,pd2z,td2z
 
-COMMON/workst/wd1x,wd1y,wd1z,wd2x,wd2y,wd2z, pd1x,pd1y,pd1z,pd2x,pd2y,pd2z,  &
-    td1x,td1y,td1z,td2x,td2y,td2z
+!COMMON/workst/wd1x,wd1y,wd1z,wd2x,wd2y,wd2z, pd1x,pd1y,pd1z,pd2x,pd2y,pd2z,  &
+!    td1x,td1y,td1z,td2x,td2y,td2z
 
 !     WORKSPACE (MIXTURE AVERAGED TRANSPORT, BIGGER SIZE ARRAYS)
-REAL(KIND=dp) :: wmomix(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr),  &
-    difmix(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr),  &
-    tdrmix(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
+real(kind=dp), dimension(:,:,:), allocatable :: wmomix,difmix,tdrmix
 
-COMMON/workbt/wmomix,difmix,tdrmix
+!COMMON/workbt/wmomix,difmix,tdrmix
 !     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 !     WORKSPACE (BIGGER SIZE ARRAYS)
-REAL(KIND=dp) :: utmp(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr),  &
-    vtmp(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr),  &
-    wtmp(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr),  &
-    prun(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr),  &
-    trun(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr),  &
-    transp(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr),  &
-    store7(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
+real(kind=dp), dimension(:,:,:), allocatable :: utmp,vtmp,wtmp,prun,trun,transp,store7
 
-COMMON/worksb/utmp,vtmp,wtmp,prun,trun,transp,store7
+!COMMON/worksb/utmp,vtmp,wtmp,prun,trun,transp,store7
 
 !     WORKSPACE (TEMPERATURE INDEXING)
-INTEGER :: itndex(nintmx,nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
+integer, dimension(:,:,:,:), allocatable :: itndex
 
-COMMON/worksi/itndex
+!COMMON/worksi/itndex
 
 !     WORKSPACE (PARALLEL TRANSFER ARRAY)
 REAL(KIND=dp) :: parray(nparay)
@@ -607,9 +578,8 @@ COMMON/nsbccp/rxlprm,rxrprm,rylprm,ryrprm,rzlprm,rzrprm,  &
 
 !     INFLOW VELOCITY FIELD DATA
 !     REQUIRED ONLY FOR TURBULENT INFLOW
-REAL(KIND=dp) :: ufxl(nxsize,nysize,nzsize), vfxl(nxsize,nysize,nzsize),  &
-    wfxl(nxsize,nysize,nzsize)
-COMMON/nbcinv/ufxl,vfxl,wfxl
+real(kind=dp), dimension(:,:,:), allocatable :: ufxl,vfxl,wfxl
+!COMMON/nbcinv/ufxl,vfxl,wfxl
 
 !     WALL BC DIFFERENCING DATA
 INTEGER :: ncbcsz
@@ -619,132 +589,78 @@ REAL(KIND=dp) :: acbcxl(ncbcsz),acbcxr(ncbcsz),  &
 COMMON/bcdifw/acbcxl,acbcxr,acbcyl,acbcyr,acbczl,acbczr
 
 !     X-DIRECTION LEFT-HAND END
-REAL(KIND=dp) ::  &
-    bclyxl(nspcmx,1,nysize,nzsize),stryxl(nspcmx,1,nysize,nzsize),  &
-    dydtxl(nspcmx,1,nysize,nzsize),ratexl(nspcmx,1,nysize,nzsize),  &
-    strhxl(nspcmx,1,nysize,nzsize), bcl1xl(1,nysize,nzsize),bcl2xl(1,nysize,nzsize),  &
-    bcl3xl(1,nysize,nzsize),bcl4xl(1,nysize,nzsize),  &
-    bcl5xl(1,nysize,nzsize),bcltxl(1,nysize,nzsize),  &
-    struxl(1,nysize,nzsize),strvxl(1,nysize,nzsize),  &
-    strwxl(1,nysize,nzsize),strpxl(1,nysize,nzsize),  &
-    strdxl(1,nysize,nzsize),strtxl(1,nysize,nzsize),  &
-    strexl(1,nysize,nzsize),strgxl(1,nysize,nzsize), strrxl(1,nysize,nzsize),  &
-    dudtxl(1,nysize,nzsize),dvdtxl(1,nysize,nzsize),  &
-    dwdtxl(1,nysize,nzsize),dtdtxl(1,nysize,nzsize), dddtxl(1,nysize,nzsize),  &
-    acouxl(1,nysize,nzsize),ova2xl(1,nysize,nzsize),  &
-    gam1xl(1,nysize,nzsize),ovgmxl(1,nysize,nzsize),  &
-    sydtxl(1,nysize,nzsize),sorpxl(1,nysize,nzsize)
-COMMON/nbccxl/bclyxl,stryxl,dydtxl,ratexl,strhxl,  &
-    bcl1xl,bcl2xl,bcl3xl,bcl4xl,bcl5xl,bcltxl,  &
-    struxl,strvxl,strwxl,strpxl,strdxl,strtxl, strexl,strgxl,strrxl,  &
-    dudtxl,dvdtxl,dwdtxl,dtdtxl,dddtxl, acouxl,ova2xl,gam1xl,ovgmxl,sydtxl,sorpxl
+real(kind=dp), dimension(:,:,:,:), allocatable :: bclyxl,stryxl,dydtxl,ratexl,strhxl
+real(kind=dp), dimension(:,:,:), allocatable :: bcl1xl,bcl2xl,bcl3xl,bcl4xl,bcl5xl, &
+    bcltxl,struxl,strvxl,strwxl,strpxl, &
+    strdxl,strtxl,strexl,strgxl,strrxl, &
+    dudtxl,dvdtxl,dwdtxl,dtdtxl,dddtxl, &
+    acouxl,ova2xl,gam1xl,ovgmxl,sydtxl,sorpxl
+!COMMON/nbccxl/bclyxl,stryxl,dydtxl,ratexl,strhxl,  &
+!    bcl1xl,bcl2xl,bcl3xl,bcl4xl,bcl5xl,bcltxl,  &
+!    struxl,strvxl,strwxl,strpxl,strdxl,strtxl, strexl,strgxl,strrxl,  &
+!    dudtxl,dvdtxl,dwdtxl,dtdtxl,dddtxl, acouxl,ova2xl,gam1xl,ovgmxl,sydtxl,sorpxl
 
 !     X-DIRECTION RIGHT-HAND END
-REAL(KIND=dp) ::  &
-    bclyxr(nspcmx,1,nysize,nzsize),stryxr(nspcmx,1,nysize,nzsize),  &
-    dydtxr(nspcmx,1,nysize,nzsize),ratexr(nspcmx,1,nysize,nzsize),  &
-    strhxr(nspcmx,1,nysize,nzsize), bcl1xr(1,nysize,nzsize),bcl2xr(1,nysize,nzsize),  &
-    bcl3xr(1,nysize,nzsize),bcl4xr(1,nysize,nzsize),  &
-    bcl5xr(1,nysize,nzsize),bcltxr(1,nysize,nzsize),  &
-    struxr(1,nysize,nzsize),strvxr(1,nysize,nzsize),  &
-    strwxr(1,nysize,nzsize),strpxr(1,nysize,nzsize),  &
-    strdxr(1,nysize,nzsize),strtxr(1,nysize,nzsize),  &
-    strexr(1,nysize,nzsize),strgxr(1,nysize,nzsize), strrxr(1,nysize,nzsize),  &
-    dudtxr(1,nysize,nzsize),dvdtxr(1,nysize,nzsize),  &
-    dwdtxr(1,nysize,nzsize),dtdtxr(1,nysize,nzsize), dddtxr(1,nysize,nzsize),  &
-    acouxr(1,nysize,nzsize),ova2xr(1,nysize,nzsize),  &
-    gam1xr(1,nysize,nzsize),ovgmxr(1,nysize,nzsize),  &
-    sydtxr(1,nysize,nzsize),sorpxr(1,nysize,nzsize)
-COMMON/nbccxr/bclyxr,stryxr,dydtxr,ratexr,strhxr,  &
-    bcl1xr,bcl2xr,bcl3xr,bcl4xr,bcl5xr,bcltxr,  &
-    struxr,strvxr,strwxr,strpxr,strdxr,strtxr, strexr,strgxr,strrxr,  &
-    dudtxr,dvdtxr,dwdtxr,dtdtxr,dddtxr, acouxr,ova2xr,gam1xr,ovgmxr,sydtxr,sorpxr
+real(kind=dp), dimension(:,:,:,:), allocatable :: bclyxr,stryxr,dydtxr,ratexr,strhxr
+real(kind=dp), dimension(:,:,:), allocatable :: bcl1xr,bcl2xr,bcl3xr,bcl4xr,bcl5xr, &
+    bcltxr,struxr,strvxr,strwxr,strpxr, &
+    strdxr,strtxr,strexr,strgxr,strrxr, &
+    dudtxr,dvdtxr,dwdtxr,dtdtxr,dddtxr, &
+    acouxr,ova2xr,gam1xr,ovgmxr,sydtxr,sorpxr
+!COMMON/nbccxr/bclyxr,stryxr,dydtxr,ratexr,strhxr,  &
+!    bcl1xr,bcl2xr,bcl3xr,bcl4xr,bcl5xr,bcltxr,  &
+!    struxr,strvxr,strwxr,strpxr,strdxr,strtxr, strexr,strgxr,strrxr,  &
+!    dudtxr,dvdtxr,dwdtxr,dtdtxr,dddtxr, acouxr,ova2xr,gam1xr,ovgmxr,sydtxr,sorpxr
 
 
 !     Y-DIRECTION LEFT-HAND END
-REAL(KIND=dp) ::  &
-    bclyyl(nspcmx,nxsize,1,nzsize),stryyl(nspcmx,nxsize,1,nzsize),  &
-    dydtyl(nspcmx,nxsize,1,nzsize),rateyl(nspcmx,nxsize,1,nzsize),  &
-    strhyl(nspcmx,nxsize,1,nzsize), bcl1yl(nxsize,1,nzsize),bcl2yl(nxsize,1,nzsize),  &
-    bcl3yl(nxsize,1,nzsize),bcl4yl(nxsize,1,nzsize),  &
-    bcl5yl(nxsize,1,nzsize),bcltyl(nxsize,1,nzsize),  &
-    struyl(nxsize,1,nzsize),strvyl(nxsize,1,nzsize),  &
-    strwyl(nxsize,1,nzsize),strpyl(nxsize,1,nzsize),  &
-    strdyl(nxsize,1,nzsize),strtyl(nxsize,1,nzsize),  &
-    streyl(nxsize,1,nzsize),strgyl(nxsize,1,nzsize), strryl(nxsize,1,nzsize),  &
-    dudtyl(nxsize,1,nzsize),dvdtyl(nxsize,1,nzsize),  &
-    dwdtyl(nxsize,1,nzsize),dtdtyl(nxsize,1,nzsize), dddtyl(nxsize,1,nzsize),  &
-    acouyl(nxsize,1,nzsize),ova2yl(nxsize,1,nzsize),  &
-    gam1yl(nxsize,1,nzsize),ovgmyl(nxsize,1,nzsize),  &
-    sydtyl(nxsize,1,nzsize),sorpyl(nxsize,1,nzsize)
-COMMON/nbccyl/bclyyl,stryyl,dydtyl,rateyl,strhyl,  &
-    bcl1yl,bcl2yl,bcl3yl,bcl4yl,bcl5yl,bcltyl,  &
-    struyl,strvyl,strwyl,strpyl,strdyl,strtyl, streyl,strgyl,strryl,  &
-    dudtyl,dvdtyl,dwdtyl,dtdtyl,dddtyl, acouyl,ova2yl,gam1yl,ovgmyl,sydtyl,sorpyl
+real(kind=dp), dimension(:,:,:,:), allocatable :: bclyyl,stryyl,dydtyl,rateyl,strhyl
+real(kind=dp), dimension(:,:,:), allocatable :: bcl1yl,bcl2yl,bcl3yl,bcl4yl,bcl5yl, &
+    bcltyl,struyl,strvyl,strwyl,strpyl, &
+    strdyl,strtyl,streyl,strgyl,strryl, &
+    dudtyl,dvdtyl,dwdtyl,dtdtyl,dddtyl, &
+    acouyl,ova2yl,gam1yl,ovgmyl,sydtyl,sorpyl
+!COMMON/nbccyl/bclyyl,stryyl,dydtyl,rateyl,strhyl,  &
+!    bcl1yl,bcl2yl,bcl3yl,bcl4yl,bcl5yl,bcltyl,  &
+!    struyl,strvyl,strwyl,strpyl,strdyl,strtyl, streyl,strgyl,strryl,  &
+!    dudtyl,dvdtyl,dwdtyl,dtdtyl,dddtyl, acouyl,ova2yl,gam1yl,ovgmyl,sydtyl,sorpyl
 
 !     Y-DIRECTION RIGHT-HAND END
-REAL(KIND=dp) ::  &
-    bclyyr(nspcmx,nxsize,1,nzsize),stryyr(nspcmx,nxsize,1,nzsize),  &
-    dydtyr(nspcmx,nxsize,1,nzsize),rateyr(nspcmx,nxsize,1,nzsize),  &
-    strhyr(nspcmx,nxsize,1,nzsize), bcl1yr(nxsize,1,nzsize),bcl2yr(nxsize,1,nzsize),  &
-    bcl3yr(nxsize,1,nzsize),bcl4yr(nxsize,1,nzsize),  &
-    bcl5yr(nxsize,1,nzsize),bcltyr(nxsize,1,nzsize),  &
-    struyr(nxsize,1,nzsize),strvyr(nxsize,1,nzsize),  &
-    strwyr(nxsize,1,nzsize),strpyr(nxsize,1,nzsize),  &
-    strdyr(nxsize,1,nzsize),strtyr(nxsize,1,nzsize),  &
-    streyr(nxsize,1,nzsize),strgyr(nxsize,1,nzsize), strryr(nxsize,1,nzsize),  &
-    dudtyr(nxsize,1,nzsize),dvdtyr(nxsize,1,nzsize),  &
-    dwdtyr(nxsize,1,nzsize),dtdtyr(nxsize,1,nzsize), dddtyr(nxsize,1,nzsize),  &
-    acouyr(nxsize,1,nzsize),ova2yr(nxsize,1,nzsize),  &
-    gam1yr(nxsize,1,nzsize),ovgmyr(nxsize,1,nzsize),  &
-    sydtyr(nxsize,1,nzsize),sorpyr(nxsize,1,nzsize)
-COMMON/nbccyr/bclyyr,stryyr,dydtyr,rateyr,strhyr,  &
-    bcl1yr,bcl2yr,bcl3yr,bcl4yr,bcl5yr,bcltyr,  &
-    struyr,strvyr,strwyr,strpyr,strdyr,strtyr, streyr,strgyr,strryr,  &
-    dudtyr,dvdtyr,dwdtyr,dtdtyr,dddtyr, acouyr,ova2yr,gam1yr,ovgmyr,sydtyr,sorpyr
+real(kind=dp), dimension(:,:,:,:), allocatable :: bclyyr,stryyr,dydtyr,rateyr,strhyr
+real(kind=dp), dimension(:,:,:), allocatable :: bcl1yr,bcl2yr,bcl3yr,bcl4yr,bcl5yr, &
+    bcltyr,struyr,strvyr,strwyr,strpyr, &
+    strdyr,strtyr,streyr,strgyr,strryr, &
+    dudtyr,dvdtyr,dwdtyr,dtdtyr,dddtyr, &
+    acouyr,ova2yr,gam1yr,ovgmyr,sydtyr,sorpyr
+!COMMON/nbccyr/bclyyr,stryyr,dydtyr,rateyr,strhyr,  &
+!    bcl1yr,bcl2yr,bcl3yr,bcl4yr,bcl5yr,bcltyr,  &
+!    struyr,strvyr,strwyr,strpyr,strdyr,strtyr, streyr,strgyr,strryr,  &
+!    dudtyr,dvdtyr,dwdtyr,dtdtyr,dddtyr, acouyr,ova2yr,gam1yr,ovgmyr,sydtyr,sorpyr
 
 
 !     Z-DIRECTION LEFT-HAND END
-REAL(KIND=dp) ::  &
-    bclyzl(nspcmx,nxsize,nysize,1),stryzl(nspcmx,nxsize,nysize,1),  &
-    dydtzl(nspcmx,nxsize,nysize,1),ratezl(nspcmx,nxsize,nysize,1),  &
-    strhzl(nspcmx,nxsize,nysize,1), bcl1zl(nxsize,nysize,1),bcl2zl(nxsize,nysize,1),  &
-    bcl3zl(nxsize,nysize,1),bcl4zl(nxsize,nysize,1),  &
-    bcl5zl(nxsize,nysize,1),bcltzl(nxsize,nysize,1),  &
-    struzl(nxsize,nysize,1),strvzl(nxsize,nysize,1),  &
-    strwzl(nxsize,nysize,1),strpzl(nxsize,nysize,1),  &
-    strdzl(nxsize,nysize,1),strtzl(nxsize,nysize,1),  &
-    strezl(nxsize,nysize,1),strgzl(nxsize,nysize,1), strrzl(nxsize,nysize,1),  &
-    dudtzl(nxsize,nysize,1),dvdtzl(nxsize,nysize,1),  &
-    dwdtzl(nxsize,nysize,1),dtdtzl(nxsize,nysize,1), dddtzl(nxsize,nysize,1),  &
-    acouzl(nxsize,nysize,1),ova2zl(nxsize,nysize,1),  &
-    gam1zl(nxsize,nysize,1),ovgmzl(nxsize,nysize,1),  &
-    sydtzl(nxsize,nysize,1),sorpzl(nxsize,nysize,1)
-COMMON/nbcczl/bclyzl,stryzl,dydtzl,ratezl,strhzl,  &
-    bcl1zl,bcl2zl,bcl3zl,bcl4zl,bcl5zl,bcltzl,  &
-    struzl,strvzl,strwzl,strpzl,strdzl,strtzl, strezl,strgzl,strrzl,  &
-    dudtzl,dvdtzl,dwdtzl,dtdtzl,dddtzl, acouzl,ova2zl,gam1zl,ovgmzl,sydtzl,sorpzl
+real(kind=dp), dimension(:,:,:,:), allocatable :: bclyzl,stryzl,dydtzl,ratezl,strhzl
+real(kind=dp), dimension(:,:,:), allocatable :: bcl1zl,bcl2zl,bcl3zl,bcl4zl,bcl5zl, &
+    bcltzl,struzl,strvzl,strwzl,strpzl, &
+    strdzl,strtzl,strezl,strgzl,strrzl, &
+    dudtzl,dvdtzl,dwdtzl,dtdtzl,dddtzl, &
+    acouzl,ova2zl,gam1zl,ovgmzl,sydtzl,sorpzl
+!COMMON/nbcczl/bclyzl,stryzl,dydtzl,ratezl,strhzl,  &
+!    bcl1zl,bcl2zl,bcl3zl,bcl4zl,bcl5zl,bcltzl,  &
+!    struzl,strvzl,strwzl,strpzl,strdzl,strtzl, strezl,strgzl,strrzl,  &
+!    dudtzl,dvdtzl,dwdtzl,dtdtzl,dddtzl, acouzl,ova2zl,gam1zl,ovgmzl,sydtzl,sorpzl
 
 !     Z-DIRECTION RIGHT-HAND END
-REAL(KIND=dp) ::  &
-    bclyzr(nspcmx,nxsize,nysize,1),stryzr(nspcmx,nxsize,nysize,1),  &
-    dydtzr(nspcmx,nxsize,nysize,1),ratezr(nspcmx,nxsize,nysize,1),  &
-    strhzr(nspcmx,nxsize,nysize,1), bcl1zr(nxsize,nysize,1),bcl2zr(nxsize,nysize,1),  &
-    bcl3zr(nxsize,nysize,1),bcl4zr(nxsize,nysize,1),  &
-    bcl5zr(nxsize,nysize,1),bcltzr(nxsize,nysize,1),  &
-    struzr(nxsize,nysize,1),strvzr(nxsize,nysize,1),  &
-    strwzr(nxsize,nysize,1),strpzr(nxsize,nysize,1),  &
-    strdzr(nxsize,nysize,1),strtzr(nxsize,nysize,1),  &
-    strezr(nxsize,nysize,1),strgzr(nxsize,nysize,1), strrzr(nxsize,nysize,1),  &
-    dudtzr(nxsize,nysize,1),dvdtzr(nxsize,nysize,1),  &
-    dwdtzr(nxsize,nysize,1),dtdtzr(nxsize,nysize,1), dddtzr(nxsize,nysize,1),  &
-    acouzr(nxsize,nysize,1),ova2zr(nxsize,nysize,1),  &
-    gam1zr(nxsize,nysize,1),ovgmzr(nxsize,nysize,1),  &
-    sydtzr(nxsize,nysize,1),sorpzr(nxsize,nysize,1)
-COMMON/nbcczr/bclyzr,stryzr,dydtzr,ratezr,strhzr,  &
-    bcl1zr,bcl2zr,bcl3zr,bcl4zr,bcl5zr,bcltzr,  &
-    struzr,strvzr,strwzr,strpzr,strdzr,strtzr, strezr,strgzr,strrzr,  &
-    dudtzr,dvdtzr,dwdtzr,dtdtzr,dddtzr, acouzr,ova2zr,gam1zr,ovgmzr,sydtzr,sorpzr
+real(kind=dp), dimension(:,:,:,:), allocatable :: bclyzr,stryzr,dydtzr,ratezr,strhzr
+real(kind=dp), dimension(:,:,:), allocatable :: bcl1zr,bcl2zr,bcl3zr,bcl4zr,bcl5zr, &
+    bcltzr,struzr,strvzr,strwzr,strpzr, &
+    strdzr,strtzr,strezr,strgzr,strrzr, &
+    dudtzr,dvdtzr,dwdtzr,dtdtzr,dddtzr, &
+    acouzr,ova2zr,gam1zr,ovgmzr,sydtzr,sorpzr
+!COMMON/nbcczr/bclyzr,stryzr,dydtzr,ratezr,strhzr,  &
+!    bcl1zr,bcl2zr,bcl3zr,bcl4zr,bcl5zr,bcltzr,  &
+!    struzr,strvzr,strwzr,strpzr,strdzr,strtzr, strezr,strgzr,strrzr,  &
+!    dudtzr,dvdtzr,dwdtzr,dtdtzr,dddtzr, acouzr,ova2zr,gam1zr,ovgmzr,sydtzr,sorpzr
 
 !     NSBCCL-------------------------------------------------------------------
 !     DOMDEC-------------------------------------------------------------------
