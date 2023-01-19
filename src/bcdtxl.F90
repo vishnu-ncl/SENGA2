@@ -53,9 +53,9 @@ SUBROUTINE bcdtxl
 !   EVALUATE AND RETURN STRDXL,DDDTXL
     rangexyz = (/1,1,1,nysize,1,nzsize/)
     call ops_par_loop(bcdt_kernel_xdir, "bcdt_kernel_xdir", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
-                    ops_arg_dat(d_dddtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                    ops_arg_gbl(drin, 1, "real(dp)", OPS_READ))    
+                    ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE),  &
+                    ops_arg_dat(d_dddtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                    ops_arg_gbl(drin, 1, "real(8)", OPS_READ))    
 
 !   =========================================================================
 

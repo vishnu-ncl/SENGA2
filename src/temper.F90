@@ -71,24 +71,24 @@ SUBROUTINE temper
         nsbczr == nsbci3 .or. nsbczr == nsbcw1 .or. nsbczr == nsbcw2) rangexyz(6) = nzsize
 
     call ops_par_loop(temper_kernel_main, "temper kernel", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_trun, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_WRITE), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_WRITE), &
                     ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_yrhs, 9, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_gbl(amascp, 1, "real(dp)", OPS_READ), &
-                    ops_arg_gbl(amasct, 1, "real(dp)", OPS_READ), &
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_gbl(amascp, 1, "real(8)", OPS_READ), &
+                    ops_arg_gbl(amasct, 1, "real(8)", OPS_READ), &
                     ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
                     ops_arg_gbl(ncpom1, 1, "integer", OPS_READ), &
                     ops_arg_gbl(ncpoly, 1, "integer", OPS_READ), &
-                    ops_arg_gbl(tinthi, 1, "real(dp)", OPS_READ), &
-                    ops_arg_gbl(rgspec, 1, "real(dp)", OPS_READ), &
+                    ops_arg_gbl(tinthi, 1, "real(8)", OPS_READ), &
+                    ops_arg_gbl(rgspec, 1, "real(8)", OPS_READ), &
                     ops_arg_gbl(ntint, 1, "integer", OPS_READ), &
                     ops_arg_gbl(nctmax, 1, "integer", OPS_READ), &
                     ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &

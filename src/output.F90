@@ -56,10 +56,10 @@ INTEGER :: iddump
 !     LOCAL DATA
 !     ==========
 !     DIAGNOSTICS
-REAL(KIND=dp) :: deltag,fornow
-REAL(KIND=dp) :: ttemp(nxsize,nysize,nzsize)
-REAL(KIND=dp) :: ptemp(nxsize,nysize,nzsize)
-REAL(KIND=dp) :: ytemp(nspec,nxsize,nysize,nzsize)
+REAL(KIND=8) :: deltag,fornow
+REAL(KIND=8) :: ttemp(nxsize,nysize,nzsize)
+REAL(KIND=8) :: ptemp(nxsize,nysize,nzsize)
+REAL(KIND=8) :: ytemp(nspec,nxsize,nysize,nzsize)
 
 INTEGER :: ispec
 INTEGER :: ic,jc,kc

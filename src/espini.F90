@@ -43,8 +43,8 @@ SUBROUTINE espini
 !   PARAMETERS
 !   ==========
 !   RSC 09-JUN-2008 ENHANCEMENTS
-    real(kind=dp) :: ten
-    PARAMETER(ten = 10.0_dp)
+    real(kind=8) :: ten
+    PARAMETER(ten = 10.0_8)
 
 !   FUNCTIONS
 !   =========
@@ -52,11 +52,11 @@ SUBROUTINE espini
 
 !   LOCAL DATA
 !   ==========
-    real(kind=dp) :: tenrgy,tinscl,tdisip
-    real(kind=dp) :: speclo,spechi
-    real(kind=dp) :: argmnt
+    real(kind=8) :: tenrgy,tinscl,tdisip
+    real(kind=8) :: speclo,spechi
+    real(kind=8) :: argmnt
 !   RSC 09-JUN-2008 ENHANCEMENTS
-    real(kind=dp) :: viscos,viskin,tkolmo,taylor,rtin,dvrin
+    real(kind=8) :: viscos,viskin,tkolmo,taylor,rtin,dvrin
     integer :: imodes,nmodes
 !   RSC 09-JUN-2008 ENHANCEMENTS
     integer :: ispec
@@ -92,7 +92,7 @@ SUBROUTINE espini
         DO imodes = 0, nmodes
 !           RSC 09-JUN-2008 BUG FIX
 !           ARGMNT = TWO*PI*REAL(IMODES)
-            argmnt = REAL(imodes,kind=dp)
+            argmnt = REAL(imodes,kind=8)
             WRITE(ncrept,'(I5,2(1PE12.4))')imodes,argmnt,espect(argmnt)
         END DO
         WRITE(ncrept,*)
@@ -102,7 +102,7 @@ SUBROUTINE espini
         speclo = zero
 !       RSC 09-JUN-2008 BUG FIX
 !       PECHI = TWO*PI*REAL(NMODES)
-        spechi = REAL(nmodes,kind=dp)
+        spechi = REAL(nmodes,kind=8)
   
 !       INTEGRATE FOR THE ENERGY
         call integf(espect,speclo,spechi,tenrgy)

@@ -2,9 +2,9 @@ SUBROUTINE lincom_kernel_main(err_arr,run_arr,rhs_arr,rkerr_irkstp,rklhs_irkstp,
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: err_arr, run_arr, rhs_arr
-    real(kind=dp), intent(in) :: rkerr_irkstp, rklhs_irkstp, rkrhs_irkstp
-    real(kind=dp) :: fornow
+    real(kind=8), dimension(1) :: err_arr, run_arr, rhs_arr
+    real(kind=8), intent(in) :: rkerr_irkstp, rklhs_irkstp, rkrhs_irkstp
+    real(kind=8) :: fornow
 
     err_arr(OPS_ACC1(0,0,0)) = err_arr(OPS_ACC1(0,0,0)) + rkerr_irkstp * rhs_arr(OPS_ACC3(0,0,0))
 
@@ -18,10 +18,10 @@ SUBROUTINE lincom_kernel_MD(err_arr,run_arr,rhs_arr,rkerr_irkstp,rklhs_irkstp,rk
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: err_arr, run_arr, rhs_arr
-    real(kind=dp), intent(in) :: rkerr_irkstp, rklhs_irkstp, rkrhs_irkstp
+    real(kind=8), dimension(1) :: err_arr, run_arr, rhs_arr
+    real(kind=8), intent(in) :: rkerr_irkstp, rklhs_irkstp, rkrhs_irkstp
     integer, intent(in) :: ispec
-    real(kind=dp) :: fornow
+    real(kind=8) :: fornow
 
     err_arr(OPS_ACC_MD1(ispec,0,0,0)) = err_arr(OPS_ACC_MD1(ispec,0,0,0)) + rkerr_irkstp * rhs_arr(OPS_ACC_MD3(ispec,0,0,0))
 

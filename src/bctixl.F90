@@ -91,28 +91,28 @@ SUBROUTINE bctixl
 !       SET THE REAL PARTS
         rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_urun, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ))
+                        ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ))
 
         call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_vrun, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ))
+                        ops_arg_dat(d_vrun, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_READ))
 
         call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_wrun, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ))
+                        ops_arg_dat(d_wrun, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_READ))
 
 
 !       ZERO THE IMAGINARY PARTS
         rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_WRITE))
 
         call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE))
 
         call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_WRITE))
   
 !       PARTIAL (X-WISE) FOURIER TRANSFORM
         call buftxl
@@ -148,8 +148,8 @@ SUBROUTINE bctixl
 
 !   INITIALISE SCALE FACTORS
     tpovxg = two*pi/xgdlen
-    scauxl = two/REAL(nxglbl,kind=dp)
-    scduxl = -two*pi*scauxl*REAL(nxglbl-1,kind=dp)/REAL(nxglbl,kind=dp)/xgdlen
+    scauxl = two/REAL(nxglbl,kind=8)
+    scduxl = -two*pi*scauxl*REAL(nxglbl-1,kind=8)/REAL(nxglbl,kind=8)/xgdlen
 
 !   INITIALISE FLAGS AND INDICES FOR INLET PLANE DFT
     fllixl = .false.

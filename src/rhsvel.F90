@@ -42,7 +42,7 @@ SUBROUTINE rhsvel
 
 !   LOCAL DATA
 !   ==========
-    real(kind=dp) :: fornow,prefer
+    real(kind=8) :: fornow,prefer
     integer :: rangexyz(6)
 
 !   BEGIN
@@ -58,19 +58,19 @@ SUBROUTINE rhsvel
 !   U,V,W ARE PARALLEL
     rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
     call ops_par_loop(math_kernel_eqT, "A=B/C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqT, "A=B/C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqT, "A=B/C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ))
 
 !   =========================================================================
 
@@ -81,23 +81,23 @@ SUBROUTINE rhsvel
     IF(fxlcnv)THEN
         rangexyz = (/1,1,1,nysize,1,nzsize/)
         call ops_par_loop(boundary_kernel_velcomp_xdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
 
     END IF
     IF(fxrcnv)THEN
         rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(boundary_kernel_velcomp_xdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
 
     END IF
 
@@ -105,23 +105,23 @@ SUBROUTINE rhsvel
     IF(fylcnv)THEN
         rangexyz = (/1,nxsize,1,1,1,nzsize/)
         call ops_par_loop(boundary_kernel_velcomp_ydir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_struyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_strwyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_struyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_strwyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
 
     END IF
     IF(fyrcnv)THEN
         rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
         call ops_par_loop(boundary_kernel_velcomp_ydir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
 
     END IF
 
@@ -129,23 +129,23 @@ SUBROUTINE rhsvel
     IF(fzlcnv)THEN
         rangexyz = (/1,nxsize,1,nysize,1,1/)
         call ops_par_loop(boundary_kernel_velcomp_zdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
 
     END IF
     IF(fzrcnv)THEN
         rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
         call ops_par_loop(boundary_kernel_velcomp_zdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_struzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_strvzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_struzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_strvzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
 
     END IF
 
@@ -159,9 +159,9 @@ SUBROUTINE rhsvel
 !   RHO U U IS PARALLEL
     rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
     call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ))
 
 !   D/DX RHO U U
 !   STRAIGHT INTO STORE4 FOR NOW
@@ -179,9 +179,9 @@ SUBROUTINE rhsvel
 !   RHO U V IS PARALLEL
     rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
     call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_READ))
 
 !   D/DY RHO V U
 !   D/DX RHO U V
@@ -196,8 +196,8 @@ SUBROUTINE rhsvel
 !   (HALF) D/DX RHO U V: ALREADY IN STORE5
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                             STORE4,5 = U,V CONVECTIVE TERMS
 !                                                        U,V,WRHS = RHO U,V,W
@@ -207,9 +207,9 @@ SUBROUTINE rhsvel
 !   RHO U W IS PARALLEL
     rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
     call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_READ))
 
 !   D/DZ RHO W U
 !   D/DX RHO U W
@@ -223,8 +223,8 @@ SUBROUTINE rhsvel
 !   (HALF) D/DX RHO U W: ALREADY IN STORE6
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                         STORE4,5,6 = U,V,W CONVECTIVE TERMS
 !                                                        U,V,WRHS = RHO U,V,W
@@ -234,9 +234,9 @@ SUBROUTINE rhsvel
 !   RHO V V IS PARALLEL
     rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
     call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_READ))
       
 !   D/DY RHO V V
     call dfbydy(d_store7,d_store1)
@@ -246,8 +246,8 @@ SUBROUTINE rhsvel
 !   (HALF) D/DY RHO V V
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                         STORE4,5,6 = U,V,W CONVECTIVE TERMS
 !                                                        U,V,WRHS = RHO U,V,W
@@ -257,9 +257,9 @@ SUBROUTINE rhsvel
 !   RHO V W IS PARALLEL
     rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
     call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_READ))
 
 !   D/DZ RHO W V
 !   D/DY RHO V W
@@ -273,12 +273,12 @@ SUBROUTINE rhsvel
 !   (HALF) D/DY RHO V W
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ))
     
 !                                         STORE4,5,6 = U,V,W CONVECTIVE TERMS
 !                                                        U,V,WRHS = RHO U,V,W
@@ -288,9 +288,9 @@ SUBROUTINE rhsvel
 !   RHO W W IS PARALLEL
     rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
     call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_READ))
 
 !   D/DZ RHO W W
     call dfbydz(d_store7,d_store1)
@@ -300,8 +300,8 @@ SUBROUTINE rhsvel
 !   (HALF) D/DZ RHO W W
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                         STORE4,5,6 = U,V,W CONVECTIVE TERMS
 !                                                        U,V,WRHS = RHO U,V,W
@@ -326,15 +326,15 @@ SUBROUTINE rhsvel
     IF(fxlcnv)THEN
         rangexyz = (/1,1,1,nysize,1,nzsize/)
         call ops_par_loop(boundary_kernel_velderiv_xdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_bcl1xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_bcl1xl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
 
     END IF
     IF(fxrcnv)THEN
         rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(boundary_kernel_velderiv_xdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
 
     END IF
 
@@ -342,15 +342,15 @@ SUBROUTINE rhsvel
     IF(fylcnv)THEN
         rangexyz = (/1,nxsize,1,1,1,nzsize/)
         call ops_par_loop(boundary_kernel_velderiv_ydir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_bcl1yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_bcl1yl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
 
     END IF
     IF(fyrcnv)THEN
         rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
         call ops_par_loop(boundary_kernel_velderiv_ydir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
 
     END IF
 
@@ -358,15 +358,15 @@ SUBROUTINE rhsvel
     IF(fzlcnv)THEN
         rangexyz = (/1,nxsize,1,nysize,1,1/)
         call ops_par_loop(boundary_kernel_velderiv_zdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_bcl1zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_bcl1zl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
 
     END IF
     IF(fzrcnv)THEN
         rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
         call ops_par_loop(boundary_kernel_velderiv_zdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
 
     END IF
 
@@ -377,72 +377,72 @@ SUBROUTINE rhsvel
 !   DIV RHO U U  + U DIV RHO U
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqQ, "A=B+C*D", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_divm, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_divm, 1, s3d_000, "real(8)", OPS_READ))
 
 !   RHO U DUDX
     call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ))
 
 !   HALF DIV RHO U U + HALF RHO U DUDX + HALF U DIV RHO U
 !   STORE IN URHS
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqAC, "A = -half*(B+C)", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ))
 
 !   V-EQUATION: CONVECTIVE TERMS
 !   ----------------------------
 !   DIV RHO U V + V DIV RHO U
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqQ, "A=B+C*D", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_divm, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_divm, 1, s3d_000, "real(8)", OPS_READ))
 
 !   RHO V DVDY
     call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ))
 
 !   HALF DIV RHO U V + HALF RHO V DVDY + HALF V DIV RHO U
 !   STORE IN VRHS
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqAC, "A = -half*(B+C)", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ))
 
 !   W-EQUATION: CONVECTIVE TERMS
 !   ----------------------------
 !   DIV RHO U W + W DIV RHO U
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqQ, "A=B+C*D", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_divm, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_divm, 1, s3d_000, "real(8)", OPS_READ))
 
 !   RHO W DWDZ
     call ops_par_loop(math_kernel_eqV, "A=B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
 !   HALF DIV RHO U W + HALF RHO W DWDZ + HALF W DIV RHO U
 !   STORE IN WRHS
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqAC, "A = -half*(B+C)", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ))
 
 !   U,V,WRHS CONTAIN U,V,W SOURCE TERMS THROUGHOUT REMAINDER OF THIS ROUTINE
 !                                                STORE1,2,3 = DUDX,DVDY,DWDZ
@@ -453,7 +453,7 @@ SUBROUTINE rhsvel
 
     rangexyz = (/ipref,ipref,jpref,jpref,kpref,kpref/)
     !call ops_par_loop(math_kernel_getval, "Get value", senga_grid, 3, rangexyz,  &
-    !                ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
+    !                ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_READ), &
     !                ops_arg_reduce(h_prefer, 1, "real(8)", OPS_INC))
 
     !call ops_reduction_result(h_prefer, prefer)
@@ -461,9 +461,9 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
     call ops_par_loop(math_kernel_eqG, "A = B-var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_gbl(prefer, 1, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_gbl(prefer, 1, "real(8)", OPS_READ))
 
 !   8DX,8DY,8DZ
     call dfbydx(d_store7,d_store4)
@@ -481,19 +481,19 @@ SUBROUTINE rhsvel
     IF(fxlcnv)THEN
         rangexyz = (/1,1,1,nysize,1,nzsize/)
         call ops_par_loop(boundary_kernel_pressure_xdir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_strpxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_strpxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
 
     END IF
     IF(fxrcnv)THEN
         rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(boundary_kernel_pressure_xdir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_strpxr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_bcl5xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_strpxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_bcl5xr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
 
     END IF
 
@@ -501,19 +501,19 @@ SUBROUTINE rhsvel
     IF(fylcnv)THEN
         rangexyz = (/1,nxsize,1,1,1,nzsize/)
         call ops_par_loop(boundary_kernel_pressure_ydir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_strpyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_strpyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
 
     END IF
     IF(fyrcnv)THEN
         rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
         call ops_par_loop(boundary_kernel_pressure_ydir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_strpyr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_bcl5yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_strpyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_bcl5yr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
 
     END IF
 
@@ -521,19 +521,19 @@ SUBROUTINE rhsvel
     IF(fzlcnv)THEN
         rangexyz = (/1,nxsize,1,nysize,1,1/)
         call ops_par_loop(boundary_kernel_pressure_zdir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_strpzl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_strpzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
 
     END IF
     IF(fzrcnv)THEN
         rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
         call ops_par_loop(boundary_kernel_pressure_zdir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_strpzr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_bcl5zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_strpzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_bcl5zr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
 
     END IF
 
@@ -546,25 +546,25 @@ SUBROUTINE rhsvel
 !   U 8DX + V 8DY + W 8DZ
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqW, "A = A-B", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqW, "A = A-B", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqW, "A = A-B", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqAG,"A = A-B*C-D*E-F*G", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                 STORE1,2,3 = DUDX,DVDY,DWDZ
 !   =========================================================================
@@ -574,11 +574,11 @@ SUBROUTINE rhsvel
 !   P DIV U
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqAF, "A = A-B*(C+D+E)", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_prun, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                 STORE1,2,3 = DUDX,DVDY,DWDZ
 !   =========================================================================
@@ -589,8 +589,8 @@ SUBROUTINE rhsvel
 !   VISCOSITY IS PARALLEL
     rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
     call ops_par_loop(math_kernel_eqC, "A = A*var", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_gbl(prantl,1,"real(dp)", OPS_READ))
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_gbl(prantl,1,"real(8)", OPS_READ))
 
 !                                                 STORE1,2,3 = DUDX,DVDY,DWDZ
 !    -------------------------------------------------------------------------
@@ -602,8 +602,8 @@ SUBROUTINE rhsvel
     IF(flmavt)THEN
         rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
         call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_difmix, 1, s3d_000, "real(dp)", OPS_READ))
+                        ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_difmix, 1, s3d_000, "real(8)", OPS_READ))
     
 !   DIAGNOSTICS
 !   KC = 1
@@ -637,27 +637,27 @@ SUBROUTINE rhsvel
 !   DVDY+DWDZ
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqK, "A=B+C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
 !   TAUXXb,e,f
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqI, "A = var1*B-var2*A", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_gbl(fthd, 1, "real(dp)", OPS_READ), &
-                    ops_arg_gbl(tthd, 1, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_gbl(fthd, 1, "real(8)", OPS_READ), &
+                    ops_arg_gbl(tthd, 1, "real(8)", OPS_READ))
 
 !   E-EQUATION: VISCOUS WORK TERMS
 !   ------------------------------
 !   TAUXXb,e,f DUDX
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqP, "A = A+B*C*D", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                 STORE1,2,3 = DUDX,DVDY,DWDZ
 !                                                         STORE6 = TAUXXb,e,f
@@ -680,8 +680,8 @@ SUBROUTINE rhsvel
     
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqU, "A=A*B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ))
 
 !   BOUNDARY CONDITIONS
 !   BC IN X: TAUXX,X TERM ZERO ON END POINTS
@@ -690,13 +690,13 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                 STORE1,2,3 = DUDX,DVDY,DWDZ
 !                                                              STORE4 = DMUDX
@@ -708,27 +708,27 @@ SUBROUTINE rhsvel
 !   DUDX+DWDZ
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqK, "A=B+C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
 !   TAUYYb,e,f
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqI, "A = var1*B-var2*A", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_gbl(fthd, 1, "real(dp)", OPS_READ), &
-                    ops_arg_gbl(tthd, 1, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_gbl(fthd, 1, "real(8)", OPS_READ), &
+                    ops_arg_gbl(tthd, 1, "real(8)", OPS_READ))
 
 !   E-EQUATION: VISCOUS WORK TERMS
 !   ------------------------------
 !   TAUYYb,e,f DVDY
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqP, "A = A+B*C*D", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                 STORE1,2,3 = DUDX,DVDY,DWDZ
 !                                                              STORE4 = DMUDX
@@ -751,8 +751,8 @@ SUBROUTINE rhsvel
 !   V TAUYY,Yb,e,f
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqU, "A=A*B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_READ))
 
 !   BOUNDARY CONDITIONS
 !   BC IN Y: TAUYY,Y TERM ZERO ON END POINTS
@@ -761,13 +761,13 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                 STORE1,2,3 = DUDX,DVDY,DWDZ
 !                                                          STORE4,5 = DMUDX,Y
@@ -779,26 +779,26 @@ SUBROUTINE rhsvel
 !   DUDX+DVDY
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ))
     
 !   TAUZZb,e,f
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqI, "A = var1*B-var2*A", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_gbl(fthd, 1, "real(dp)", OPS_READ), &
-                    ops_arg_gbl(tthd, 1, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_gbl(fthd, 1, "real(8)", OPS_READ), &
+                    ops_arg_gbl(tthd, 1, "real(8)", OPS_READ))
 
 !   E-EQUATION: VISCOUS WORK TERMS
 !   ------------------------------
 !   TAUZZb,e,f DWDZ
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqP, "A = A+B*C*D", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                               STORE3 = DWDZ
 !                                                          STORE4,5 = DMUDX,Y
@@ -821,8 +821,8 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqU, "A=A*B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_READ))
         
 !   BOUNDARY CONDITIONS
 !   BC IN Z: TAUZZ,Z TERM ZERO ON END POINTS
@@ -831,13 +831,13 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ))
       
 !                                                      STORE4,5,6 = DMUDX,Y,Z
 !   =========================================================================
@@ -855,15 +855,15 @@ SUBROUTINE rhsvel
     IF(fylcnv)THEN
         rangexyz = (/1,nxsize,1,1,1,nzsize/)
         call ops_par_loop(boundary_kernel_velderiv_ydir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_bcl3yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_bcl3yl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
 
     END IF
     IF(fyrcnv)THEN
         rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
         call ops_par_loop(boundary_kernel_velderiv_ydir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_bcl3yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_bcl3yr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
 
     END IF
 
@@ -877,10 +877,10 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqAE, "A = A-half*B*C*D", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ))
     
 !                                                               STORE1 = DUDY
 !                                                      STORE4,5,6 = DMUDX,Y,Z
@@ -897,15 +897,15 @@ SUBROUTINE rhsvel
     IF(fxlcnv)THEN
         rangexyz = (/1,1,1,nysize,1,nzsize/)
         call ops_par_loop(boundary_kernel_velderiv_xdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_bcl3xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_bcl3xl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
 
     END IF
     IF(fxrcnv)THEN
         rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(boundary_kernel_velderiv_xdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_bcl3xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_bcl3xr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
 
     END IF
 
@@ -919,10 +919,10 @@ SUBROUTINE rhsvel
 !   HALF RHO U DVDX
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqAE, "A = A-half*B*C*D", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                               STORE1 = DUDY
 !                                                               STORE2 = DVDX
@@ -935,9 +935,9 @@ SUBROUTINE rhsvel
 !   DUDY+DVDX
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqK, "A=B+C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ))
 
 !   D2UDXY
     call d2fdxy(d_utmp,d_store1)
@@ -958,10 +958,10 @@ SUBROUTINE rhsvel
 !   U TAUXX,Xc
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqE, "A = B*C*var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_gbl(tthd, 1, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_gbl(tthd, 1, "real(8)", OPS_READ))
 
 !   BOUNDARY CONDITIONS
 !   BC IN X: TAUXX,X TERMS ZERO ON END POINTS
@@ -970,13 +970,13 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqW, "A = A-B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqX, "A = A-B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                             STORE1 = D2UDXY
 !                                                             STORE2 = D2VDXY
@@ -992,10 +992,10 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqE, "A = B*C*var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_gbl(tthd, 1, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_gbl(tthd, 1, "real(8)", OPS_READ))
 
 
 !   BOUNDARY CONDITIONS
@@ -1005,13 +1005,13 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqW, "A = A-B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqX, "A = A-B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                             STORE1 = D2UDXY
 !                                                             STORE2 = D2VDXY
@@ -1025,8 +1025,8 @@ SUBROUTINE rhsvel
 !   D2UDY2+D2VDXY
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ))
 
 !   U-EQUATION: VISCOUS STRESS TERMS
 !   E-EQUATION: VISCOUS WORK TERMS
@@ -1036,10 +1036,10 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqR, "A = A*B+C*D", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_READ))
 
 !   BOUNDARY CONDITIONS
 !   BC IN Y: TAUXY,Y TERM ZERO ON END POINTS
@@ -1048,13 +1048,13 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                             STORE1 = D2UDXY
 !                                                        STORE7 = (DUDY+DVDX)
@@ -1067,8 +1067,8 @@ SUBROUTINE rhsvel
 !   D2UDXY+D2VDX2
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ))
 
 !   V-EQUATION: VISCOUS STRESS TERMS
 !   E-EQUATION: VISCOUS WORK TERMS
@@ -1078,10 +1078,10 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqR, "A = A*B+C*D", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ))
 
 !   BOUNDARY CONDITIONS
 !   BC IN X: TAUYX,X TERM ZERO ON END POINTS
@@ -1090,13 +1090,13 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                        STORE7 = (DUDY+DVDX)
 !                                                      STORE4,5,6 = DMUDX,Y,Z
@@ -1107,9 +1107,9 @@ SUBROUTINE rhsvel
 !   TAUXY(DUDY+DVDX)
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqO, "A = A+B*C*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                      STORE4,5,6 = DMUDX,Y,Z
 !   =========================================================================
@@ -1124,15 +1124,15 @@ SUBROUTINE rhsvel
     IF(fzlcnv)THEN
         rangexyz = (/1,nxsize,1,nysize,1,1/)
         call ops_par_loop(boundary_kernel_velderiv_zdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_bcl3zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_bcl3zl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
 
     END IF
     IF(fzrcnv)THEN
         rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
         call ops_par_loop(boundary_kernel_velderiv_zdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_bcl3zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_bcl3zr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
 
     END IF
 
@@ -1146,10 +1146,10 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqAE, "A = A-half*B*C*D", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                               STORE1 = DUDZ
 !                                                      STORE4,5,6 = DMUDX,Y,Z
@@ -1165,15 +1165,15 @@ SUBROUTINE rhsvel
     IF(fxlcnv)THEN
         rangexyz = (/1,1,1,nysize,1,nzsize/)
         call ops_par_loop(boundary_kernel_velderiv_xdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_bcl4xl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_bcl4xl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
 
     END IF
     IF(fxrcnv)THEN
         rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(boundary_kernel_velderiv_xdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_bcl4xr, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_bcl4xr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
 
     END IF
 
@@ -1188,10 +1188,10 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqAE, "A = A-half*B*C*D", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                               STORE1 = DUDZ
 !                                                               STORE2 = DWDX
@@ -1204,9 +1204,9 @@ SUBROUTINE rhsvel
 !   DUDZ+DWDX
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqK, "A=B+C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ))
 
 !   D2UDXZ
     call d2fdxz(d_utmp,d_store1)
@@ -1227,10 +1227,10 @@ SUBROUTINE rhsvel
 !   U TAUXX,Xd
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqE, "A = B*C*var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_gbl(tthd, 1, "real(dp)", OPS_READ))    
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_gbl(tthd, 1, "real(8)", OPS_READ))    
 
 !   BOUNDARY CONDITIONS
 !   BC IN X: TAUXX,X TERMS ZERO ON END POINTS
@@ -1239,13 +1239,13 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqW, "A = A-B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqX, "A = A-B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                             STORE1 = D2UDXZ
 !                                                             STORE2 = D2WDXZ
@@ -1260,10 +1260,10 @@ SUBROUTINE rhsvel
 !   W TAUZZ,Zc
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqE, "A = B*C*var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_gbl(tthd, 1, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_gbl(tthd, 1, "real(8)", OPS_READ))
 
 !   BOUNDARY CONDITIONS
 !   BC IN Z: TAUZZ,Z TERMS ZERO ON END POINTS
@@ -1272,13 +1272,13 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqW, "A = A-B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqX, "A = A-B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                             STORE1 = D2UDXZ
 !                                                             STORE2 = D2WDXZ
@@ -1292,8 +1292,8 @@ SUBROUTINE rhsvel
 !   D2UDZ2+D2WDXZ
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ))
 
 !   U-EQUATION: VISCOUS STRESS TERMS
 !   E-EQUATION: VISCOUS WORK TERMS
@@ -1303,10 +1303,10 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqR, "A = A*B+C*D", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_READ))
 
 !   BOUNDARY CONDITIONS
 !   BC IN Y: TAUXZ,Z TERM ZERO ON END POINTS
@@ -1315,13 +1315,13 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                             STORE1 = D2UDXZ
 !                                                        STORE7 = (DUDZ+DWDX)
@@ -1335,8 +1335,8 @@ SUBROUTINE rhsvel
 !   D2UDXZ+D2WDX2
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ))
 
 !   W-EQUATION: VISCOUS STRESS TERMS
 !   E-EQUATION: VISCOUS WORK TERMS
@@ -1346,10 +1346,10 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqR, "A = A*B+C*D", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store4, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ))
 
 !   BOUNDARY CONDITIONS
 !   BC IN X: TAUZX,X TERM ZERO ON END POINTS
@@ -1358,13 +1358,13 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                        STORE7 = (DUDZ+DWDX)
 !                                                          TRANSP = VISCOSITY
@@ -1377,9 +1377,9 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqO, "A = A+B*C*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                          TRANSP = VISCOSITY
 !                                                      STORE4,5,6 = DMUDX,Y,Z
@@ -1395,15 +1395,15 @@ SUBROUTINE rhsvel
     IF(fzlcnv)THEN
         rangexyz = (/1,nxsize,1,nysize,1,1/)
         call ops_par_loop(boundary_kernel_velderiv_zdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_bcl4zl, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_bcl4zl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
 
     END IF
     IF(fzrcnv)THEN
         rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
         call ops_par_loop(boundary_kernel_velderiv_zdir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_bcl4zr, 1, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_bcl4zr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
 
     END IF
 
@@ -1417,10 +1417,10 @@ SUBROUTINE rhsvel
 !   HALF RHO W DVDZ
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqAE, "A = A-half*B*C*D", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                               STORE1 = DVDZ
 !                                                          TRANSP = VISCOSITY
@@ -1437,15 +1437,15 @@ SUBROUTINE rhsvel
     IF(fylcnv)THEN
         rangexyz = (/1,nxsize,1,1,1,nzsize/)
         call ops_par_loop(boundary_kernel_velderiv_ydir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_bcl4yl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_bcl4yl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
 
     END IF
     IF(fyrcnv)THEN
         rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
         call ops_par_loop(boundary_kernel_velderiv_ydir, "COLLECT VELOCITY DERIVATIVES FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                        ops_arg_dat(d_bcl4yr, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_bcl4yr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
 
     END IF
 
@@ -1460,10 +1460,10 @@ SUBROUTINE rhsvel
 !   HALF RHO V DWDY
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqAE, "A = A-half*B*C*D", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                                STORE1 = DVDZ
 !                                                               STORE2 = DWDY
@@ -1477,9 +1477,9 @@ SUBROUTINE rhsvel
 !   DVDZ+DWDY
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqK, "A=B+C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ))
 
 !   D2VDYZ
     call d2fdyz(d_vtmp,d_store1)
@@ -1502,10 +1502,10 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqE, "A = B*C*var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_gbl(tthd, 1, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_gbl(tthd, 1, "real(8)", OPS_READ))
 
 !   BOUNDARY CONDITIONS
 !   BC IN Y: TAUYY,2 TERMS ZERO ON END POINTS
@@ -1514,13 +1514,13 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqW, "A = A-B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqX, "A = A-B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                             STORE1 = D2VDYZ
 !                                                             STORE2 = D2WDYZ
@@ -1537,10 +1537,10 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqE, "A = B*C*var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_gbl(tthd, 1, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_gbl(tthd, 1, "real(8)", OPS_READ))
 
 !   BOUNDARY CONDITIONS
 !   BC IN Z: TAUZZ,Z TERMS ZERO ON END POINTS
@@ -1549,13 +1549,13 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqW, "A = A-B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqX, "A = A-B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                             STORE1 = D2VDYZ
 !                                                             STORE2 = D2WDYZ
@@ -1570,8 +1570,8 @@ SUBROUTINE rhsvel
 !   D2VDZ2+D2WDYZ
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ))
 
 !   V-EQUATION: VISCOUS STRESS TERMS
 !   E-EQUATION: VISCOUS WORK TERMS
@@ -1581,10 +1581,10 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqR, "A = A*B+C*D", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store6, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_READ))
 
 !   BOUNDARY CONDITIONS
 !   BC IN Z: TAUYZ,Z TERM ZERO ON END POINTS
@@ -1593,13 +1593,13 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                             STORE1 = D2VDYZ
 !                                                        STORE7 = (DVDZ+DWDY)
@@ -1613,8 +1613,8 @@ SUBROUTINE rhsvel
 !   D2VDYZ+D2WDY2
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ))
 
 !   W-EQUATION: VISCOUS STRESS TERMS
 !   E-EQUATION: VISCOUS WORK TERMS
@@ -1624,10 +1624,10 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqR, "A = A*B+C*D", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store5, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_READ))
 
 !   BOUNDARY CONDITIONS
 !   BC IN Y: TAUZY,Y TERM ZERO ON END POINTS
@@ -1636,13 +1636,13 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqJ, "A=A+B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                        STORE7 = (DVDZ+DWDY)
 !                                                          TRANSP = VISCOSITY
@@ -1655,9 +1655,9 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqO, "A = A+B*C*C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                          TRANSP = VISCOSITY
 !                                                      STORE4,5,6 = DMUDX,Y,Z
@@ -1691,12 +1691,12 @@ SUBROUTINE rhsvel
 !   U TAUXX,Xa
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqtau, "TAU", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_gbl(fthd, 1, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_gbl(fthd, 1, "real(8)", OPS_READ))
 
 !   V-EQUATION: VISCOUS STRESS TERMS
 !   E-EQUATION: VISCOUS WORK TERMS
@@ -1706,12 +1706,12 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqtau, "TAU", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store2, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_gbl(fthd, 1, "real(dp)", OPS_READ))    
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_gbl(fthd, 1, "real(8)", OPS_READ))    
 
 !   W-EQUATION: VISCOUS STRESS TERMS
 !   E-EQUATION: VISCOUS WORK TERMS
@@ -1721,12 +1721,12 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqtau, "TAU", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_store3, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    ops_arg_gbl(fthd, 1, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_gbl(fthd, 1, "real(8)", OPS_READ))
 
 !   =========================================================================
 !   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -1738,8 +1738,8 @@ SUBROUTINE rhsvel
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqB, "A = -B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(dp)", OPS_WRITE), &
-                    ops_arg_dat(d_divm, 1, s3d_000, "real(dp)", OPS_READ))
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_divm, 1, s3d_000, "real(8)", OPS_READ))
 
 !   =========================================================================
 !   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

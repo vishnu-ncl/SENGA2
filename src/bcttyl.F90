@@ -54,9 +54,9 @@ SUBROUTINE bcttyl
 !   EVALUATE AND RETURN STRTYL,DTDTYL
     rangexyz = (/1,nxsize,1,1,1,nzsize/)
     call ops_par_loop(bcdt_kernel_ydir, "bcdt_kernel_ydir", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE),  &
-                    ops_arg_dat(d_dtdtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                    ops_arg_gbl(trin, 1, "real(dp)", OPS_READ))    
+                    ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE),  &
+                    ops_arg_dat(d_dtdtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
+                    ops_arg_gbl(trin, 1, "real(8)", OPS_READ))    
 
 !   =========================================================================
 
@@ -64,9 +64,9 @@ SUBROUTINE bcttyl
     IF(nsbcyl == nsbcw2) THEN
         rangexyz = (/1,nxsize,1,1,1,nzsize/)
         call ops_par_loop(bcdt_kernel_ydir, "bcdt_kernel_ydir", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE),  &
-                        ops_arg_dat(d_dtdtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                        ops_arg_gbl(rylprm(1), 1, "real(dp)", OPS_READ))
+                        ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE),  &
+                        ops_arg_dat(d_dtdtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
+                        ops_arg_gbl(rylprm(1), 1, "real(8)", OPS_READ))
         
     END IF
 

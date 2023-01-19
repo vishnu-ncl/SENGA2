@@ -40,13 +40,13 @@ SUBROUTINE adaptt
 
 !   LOCAL DATA
 !   ==========
-    real(kind=dp) :: erytot(nspcmx)
-    real(kind=dp) :: erdtot,erutot,ervtot,erwtot,eretot
-    real(kind=dp) :: errmax,tratio,tstold
+    real(kind=8) :: erytot(nspcmx)
+    real(kind=8) :: erdtot,erutot,ervtot,erwtot,eretot
+    real(kind=8) :: errmax,tratio,tstold
 !   RSC/RACG 09-AUG-2012 USE GLOBAL ERROR
-!   real(kind=dp) TSTLOC
-    real(kind=dp) :: errloc
-    real(kind=dp) :: fornow
+!   real(kind=8) TSTLOC
+    real(kind=8) :: errloc
+    real(kind=8) :: fornow
     integer :: ispec
     integer :: rangexyz(6)
 
@@ -96,9 +96,9 @@ SUBROUTINE adaptt
         IF (nsbczr == nsbci3) rangexyz(6) = nzsize-1
 
         call ops_par_loop(adaptt_kernel_err_eval, "EVALUATE ERROR NORMS", senga_grid, 3, rangexyz,  &
-                        &  ops_arg_dat(d_derr, 1, s3d_000, "real(dp)", OPS_READ), &
-                        &  ops_arg_dat(d_drun, 1, s3d_000, "real(dp)", OPS_READ), &
-                        &  ops_arg_gbl(erdnrm, 1, "real(dp)", OPS_READ), &
+                        &  ops_arg_dat(d_derr, 1, s3d_000, "real(8)", OPS_READ), &
+                        &  ops_arg_dat(d_drun, 1, s3d_000, "real(8)", OPS_READ), &
+                        &  ops_arg_gbl(erdnrm, 1, "real(8)", OPS_READ), &
                         &  ops_arg_reduce(h_erdtot, 1, "real(8)", OPS_MAX))
         call ops_reduction_result(h_erdtot, erdtot)
 
@@ -116,23 +116,23 @@ SUBROUTINE adaptt
         IF (nsbczr == nsbci2 .or. nsbczr == nsbci3 .or. nsbczr == nsbcw1 .or. nsbczr == nsbcw2) rangexyz(6) = nzsize-1
 
         call ops_par_loop(adaptt_kernel_err_eval, "EVALUATE ERROR NORMS", senga_grid, 3, rangexyz,  &
-                        &  ops_arg_dat(d_uerr, 1, s3d_000, "real(dp)", OPS_READ), &
-                        &  ops_arg_dat(d_urun, 1, s3d_000, "real(dp)", OPS_READ), &
-                        &  ops_arg_gbl(erunrm, 1, "real(dp)", OPS_READ), &
+                        &  ops_arg_dat(d_uerr, 1, s3d_000, "real(8)", OPS_READ), &
+                        &  ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_READ), &
+                        &  ops_arg_gbl(erunrm, 1, "real(8)", OPS_READ), &
                         &  ops_arg_reduce(h_erutot, 1, "real(8)", OPS_MAX))
         call ops_reduction_result(h_erutot, erutot)    
 
         call ops_par_loop(adaptt_kernel_err_eval, "EVALUATE ERROR NORMS", senga_grid, 3, rangexyz,  &
-                        &  ops_arg_dat(d_verr, 1, s3d_000, "real(dp)", OPS_READ), &
-                        &  ops_arg_dat(d_vrun, 1, s3d_000, "real(dp)", OPS_READ), &
-                        &  ops_arg_gbl(ervnrm, 1, "real(dp)", OPS_READ), &
+                        &  ops_arg_dat(d_verr, 1, s3d_000, "real(8)", OPS_READ), &
+                        &  ops_arg_dat(d_vrun, 1, s3d_000, "real(8)", OPS_READ), &
+                        &  ops_arg_gbl(ervnrm, 1, "real(8)", OPS_READ), &
                         &  ops_arg_reduce(h_ervtot, 1, "real(8)", OPS_MAX))
         call ops_reduction_result(h_ervtot, ervtot)
     
         call ops_par_loop(adaptt_kernel_err_eval, "EVALUATE ERROR NORMS", senga_grid, 3, rangexyz,  &
-                        &  ops_arg_dat(d_werr, 1, s3d_000, "real(dp)", OPS_READ), &
-                        &  ops_arg_dat(d_wrun, 1, s3d_000, "real(dp)", OPS_READ), &
-                        &  ops_arg_gbl(erwnrm, 1, "real(dp)", OPS_READ), &
+                        &  ops_arg_dat(d_werr, 1, s3d_000, "real(8)", OPS_READ), &
+                        &  ops_arg_dat(d_wrun, 1, s3d_000, "real(8)", OPS_READ), &
+                        &  ops_arg_gbl(erwnrm, 1, "real(8)", OPS_READ), &
                         &  ops_arg_reduce(h_erwtot, 1, "real(8)", OPS_MAX))
         call ops_reduction_result(h_erwtot, erwtot)
 
@@ -150,9 +150,9 @@ SUBROUTINE adaptt
         IF (nsbczr == nsbci2 .or. nsbczr == nsbcw2) rangexyz(6) = nzsize-1
 
         call ops_par_loop(adaptt_kernel_err_eval, "EVALUATE ERROR NORMS", senga_grid, 3, rangexyz,  &
-                        &  ops_arg_dat(d_eerr, 1, s3d_000, "real(dp)", OPS_READ), &
-                        &  ops_arg_dat(d_erun, 1, s3d_000, "real(dp)", OPS_READ), &
-                        &  ops_arg_gbl(erenrm, 1, "real(dp)", OPS_READ), &
+                        &  ops_arg_dat(d_eerr, 1, s3d_000, "real(8)", OPS_READ), &
+                        &  ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_READ), &
+                        &  ops_arg_gbl(erenrm, 1, "real(8)", OPS_READ), &
                         &  ops_arg_reduce(h_eretot, 1, "real(8)", OPS_MAX))
         call ops_reduction_result(h_eretot, eretot)
     
@@ -174,9 +174,9 @@ SUBROUTINE adaptt
         DO ispec = 1,nspec
 
             call ops_par_loop(adaptt_kernel_err_eval_MD, "EVALUATE ERROR NORMS - MULTIDIM", senga_grid, 3, rangexyz,  &
-                        &  ops_arg_dat(d_yerr, 9, s3d_000, "real(dp)", OPS_READ), &
-                        &  ops_arg_dat(d_yrun, 9, s3d_000, "real(dp)", OPS_READ), &
-                        &  ops_arg_gbl(erynrm(ispec), 1, "real(dp)", OPS_READ), &
+                        &  ops_arg_dat(d_yerr, 9, s3d_000, "real(8)", OPS_READ), &
+                        &  ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_READ), &
+                        &  ops_arg_gbl(erynrm(ispec), 1, "real(8)", OPS_READ), &
                         &  ops_arg_gbl(ispec, 1, "integer", OPS_READ), &  
                         &  ops_arg_reduce(h_erytot, 1, "real(8)", OPS_MAX))
             call ops_reduction_result(h_erytot, erytot(ispec))
@@ -229,7 +229,11 @@ SUBROUTINE adaptt
 !       RSC/RACG 09-AUG-2012 USE GLOBAL ERROR
         errloc = errmax
         call p_gmax(errloc,errmax)
-  
+
+        IF(iproc == 0) THEN
+            write(*,'(a,1PE12.4)') "MPI_MAX error: ",errmax
+        END IF
+
 !       =======================================================================
   
 !       EVALUATE THE NEW TIME STEP
@@ -292,26 +296,26 @@ SUBROUTINE adaptt
 !       -------------------------------
         rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_derr, 1, s3d_000, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_derr, 1, s3d_000, "real(8)", OPS_WRITE))
 
         call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_uerr, 1, s3d_000, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_uerr, 1, s3d_000, "real(8)", OPS_WRITE))
 
         call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_verr, 1, s3d_000, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_verr, 1, s3d_000, "real(8)", OPS_WRITE))
 
         call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_werr, 1, s3d_000, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_werr, 1, s3d_000, "real(8)", OPS_WRITE))
 
         call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_eerr, 1, s3d_000, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_eerr, 1, s3d_000, "real(8)", OPS_WRITE))
 
 !       RSC 08-AUG-2012 EVALUATE ALL SPECIES
 !       DO ISPEC = 1,NSPM1
         DO ispec = 1,nspec
             rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
             call ops_par_loop(set_zero_kernel_MD, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(d_yerr, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                            ops_arg_dat(d_yerr, 9, s3d_000, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END DO

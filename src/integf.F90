@@ -33,18 +33,18 @@ use data_types
 !     PARAMETERS
 !     ==========
 
-real(kind=dp), INTENT(IN)             :: argmin
-real(kind=dp), INTENT(IN OUT)         :: argmax
-real(kind=dp), INTENT(OUT)            :: answer
+real(kind=8), INTENT(IN)             :: argmin
+real(kind=8), INTENT(IN OUT)         :: argmax
+real(kind=8), INTENT(OUT)            :: answer
 
 
-real(kind=dp), PARAMETER :: tolint=0.000001_dp
+real(kind=8), PARAMETER :: tolint=0.000001_8
 INTEGER, PARAMETER :: intmax=20
-real(kind=dp), PARAMETER :: vsmall = 0.000000000000000000000000000001_dp
-real(kind=dp), PARAMETER :: zero=0.0_dp
-real(kind=dp), PARAMETER :: half=0.5_dp
-real(kind=dp), PARAMETER :: three=3.0_dp
-real(kind=dp), PARAMETER :: four=4.0_dp
+real(kind=8), PARAMETER :: vsmall = 0.000000000000000000000000000001_8
+real(kind=8), PARAMETER :: zero=0.0_8
+real(kind=8), PARAMETER :: half=0.5_8
+real(kind=8), PARAMETER :: three=3.0_8
+real(kind=8), PARAMETER :: four=4.0_8
 
 
 !     ARGUMENTS
@@ -55,7 +55,7 @@ EXTERNAL functn
 
 !     LOCAL DATA
 !     ==========
-real(kind=dp) :: oldtmp,oldans,tmpans,argtmp,deltrg,addpts
+real(kind=8) :: oldtmp,oldans,tmpans,argtmp,deltrg,addpts
 INTEGER :: icount,ic,interv
 
 
@@ -81,7 +81,7 @@ tmpans = half*(argmax-argmin)*(functn(argmin)+functn(argmax))
 oldans = answer
 oldtmp = tmpans
 
-deltrg = (argmax-argmin)/REAL(interv,kind=dp)
+deltrg = (argmax-argmin)/REAL(interv,kind=8)
 argtmp = argmin-half*deltrg
 
 addpts = zero

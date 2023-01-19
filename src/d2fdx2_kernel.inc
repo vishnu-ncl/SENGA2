@@ -2,10 +2,10 @@ SUBROUTINE d2fdx2_kernel_interior(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
-    real(kind=dp), dimension(1) :: fderiv
-    real(kind=dp) :: fdifap,fdifbp,fdifcp,fdifdp,fdifep
-    real(kind=dp) :: fdifam,fdifbm,fdifcm,fdifdm,fdifem
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdifap,fdifbp,fdifcp,fdifdp,fdifep
+    real(kind=8) :: fdifam,fdifbm,fdifcm,fdifdm,fdifem
 
     fdifap = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(0,0,0))
     fdifam = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(-1,0,0)) 
@@ -28,9 +28,9 @@ SUBROUTINE d2fdx2_kernel_lhpoint_4th_onesided(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
-    real(kind=dp), dimension(1) :: fderiv
-    real(kind=dp) :: fdifap,fdifbp,fdifcp,fdifdp,fdifep
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdifap,fdifbp,fdifcp,fdifdp,fdifep
 
     fdifap = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(0,0,0))
     fdifbp = functn(OPS_ACC1(2,0,0)) - functn(OPS_ACC1(0,0,0)) 
@@ -48,9 +48,9 @@ SUBROUTINE d2fdx2_kernel_lhpoint_4th_mixed(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
-    real(kind=dp), dimension(1) :: fderiv
-    real(kind=dp) :: fdifap,fdifbp,fdifcp,fdifdp,fdifep
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdifap,fdifbp,fdifcp,fdifdp,fdifep
 
     fdifap = functn(OPS_ACC1(-1,0,0)) - functn(OPS_ACC1(0,0,0))
     fdifbp = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(0,0,0))
@@ -68,10 +68,10 @@ SUBROUTINE d2fdx2_kernel_lhpoint_4th_centered(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
-    real(kind=dp), dimension(1) :: fderiv
-    real(kind=dp) :: fdifap,fdifbp
-    real(kind=dp) :: fdifam,fdifbm
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdifap,fdifbp
+    real(kind=8) :: fdifam,fdifbm
     
     fdifap = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(0,0,0))
     fdifam = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(-1,0,0))
@@ -86,10 +86,10 @@ SUBROUTINE d2fdx2_kernel_lhpoint_6th_centered(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
-    real(kind=dp), dimension(1) :: fderiv
-    real(kind=dp) :: fdifap,fdifbp,fdifcp
-    real(kind=dp) :: fdifam,fdifbm,fdifcm
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdifap,fdifbp,fdifcp
+    real(kind=8) :: fdifam,fdifbm,fdifcm
     
     fdifap = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(0,0,0))
     fdifam = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(-1,0,0))
@@ -107,10 +107,10 @@ SUBROUTINE d2fdx2_kernel_lhpoint_8th_centered(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
-    real(kind=dp), dimension(1) :: fderiv
-    real(kind=dp) :: fdifap,fdifbp,fdifcp,fdifdp
-    real(kind=dp) :: fdifam,fdifbm,fdifcm,fdifdm
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdifap,fdifbp,fdifcp,fdifdp
+    real(kind=8) :: fdifam,fdifbm,fdifcm,fdifdm
 
     fdifap = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(0,0,0))
     fdifam = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(-1,0,0))
@@ -131,10 +131,10 @@ SUBROUTINE d2fdx2_kernel_rhpoint_8th_centered(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
-    real(kind=dp), dimension(1) :: fderiv
-    real(kind=dp) :: fdifap,fdifbp,fdifcp,fdifdp
-    real(kind=dp) :: fdifam,fdifbm,fdifcm,fdifdm
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdifap,fdifbp,fdifcp,fdifdp
+    real(kind=8) :: fdifam,fdifbm,fdifcm,fdifdm
 
     fdifap = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(0,0,0))
     fdifam = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(-1,0,0))
@@ -155,10 +155,10 @@ SUBROUTINE d2fdx2_kernel_rhpoint_6th_centered(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
-    real(kind=dp), dimension(1) :: fderiv
-    real(kind=dp) :: fdifap,fdifbp,fdifcp
-    real(kind=dp) :: fdifam,fdifbm,fdifcm
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdifap,fdifbp,fdifcp
+    real(kind=8) :: fdifam,fdifbm,fdifcm
 
     fdifap = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(0,0,0))
     fdifam = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(-1,0,0))
@@ -176,10 +176,10 @@ SUBROUTINE d2fdx2_kernel_rhpoint_4th_centered(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
-    real(kind=dp), dimension(1) :: fderiv
-    real(kind=dp) :: fdifap,fdifbp
-    real(kind=dp) :: fdifam,fdifbm
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdifap,fdifbp
+    real(kind=8) :: fdifam,fdifbm
 
     fdifap = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(0,0,0))
     fdifam = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(-1,0,0))
@@ -194,9 +194,9 @@ SUBROUTINE d2fdx2_kernel_rhpoint_4th_mixed(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
-    real(kind=dp), dimension(1) :: fderiv
-    real(kind=dp) :: fdifap,fdifbp,fdifcp,fdifdp,fdifep
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdifap,fdifbp,fdifcp,fdifdp,fdifep
 
     fdifap = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(0,0,0))
     fdifbp = functn(OPS_ACC1(-1,0,0)) - functn(OPS_ACC1(0,0,0))
@@ -214,9 +214,9 @@ SUBROUTINE d2fdx2_kernel_rhpoint_4th_onesided(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
-    real(kind=dp), dimension(1) :: fderiv
-    real(kind=dp) :: fdifap,fdifbp,fdifcp,fdifdp,fdifep
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdifap,fdifbp,fdifcp,fdifdp,fdifep
 
     fdifap = functn(OPS_ACC1(-1,0,0)) - functn(OPS_ACC1(0,0,0))
     fdifbp = functn(OPS_ACC1(-2,0,0)) - functn(OPS_ACC1(0,0,0))
@@ -234,7 +234,7 @@ SUBROUTINE d2fdx2_kernel_scaling(fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: fderiv
+    real(kind=8), dimension(1) :: fderiv
         
     fderiv(OPS_ACC1(0,0,0)) = fderiv(OPS_ACC1(0,0,0))*ovdlx2
 

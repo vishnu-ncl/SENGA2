@@ -38,9 +38,9 @@ use com_senga
 !     ARGUMENTS
 !     =========
 
-REAL(KIND=dp), INTENT(OUT)            :: bigarr(nspcmx,nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
+REAL(KIND=8), INTENT(OUT)            :: bigarr(nspcmx,nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
 INTEGER, INTENT(IN OUT)                  :: ispec
-REAL(KIND=dp), INTENT(IN)             :: buffer(nparay)
+REAL(KIND=8), INTENT(IN)             :: buffer(nparay)
 INTEGER, INTENT(IN)                      :: indexl
 INTEGER, INTENT(IN)                      :: indexr
 INTEGER, INTENT(IN)                      :: jndexl

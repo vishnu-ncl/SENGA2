@@ -38,7 +38,7 @@ use com_senga
 
 !     LOCAL DATA
 !     ==========
-real(kind=dp) :: scalex,scaley,scalez
+real(kind=8) :: scalex,scaley,scalez
 INTEGER :: ipen(npenmx),jpen(npenmx),kpen(npenmx)
 INTEGER :: ic,jc,kc,ix,jx,kx,ipencl,icproc
 INTEGER :: iim,iic,jjm,jjc,kkm,kkc

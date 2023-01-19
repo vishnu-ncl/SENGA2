@@ -45,7 +45,7 @@ PARAMETER(strmol = 'Molecular transport control data')
 
 !     LOCAL DATA
 !     ==========
-real(kind=dp) :: pcount
+real(kind=8) :: pcount
 INTEGER :: ncount
 INTEGER :: ispec,jspec
 INTEGER :: ic
@@ -190,9 +190,9 @@ IF(iproc == 0)THEN
   nfmixp = 0
   nfmsor = 0
   nfmduf = 0
-  wmltdr = 0.0_dp
+  wmltdr = 0.0_8
   nfradn = 0
-  trefrn = 3.0_dp
+  trefrn = 3.0_8
   READ(nccont,'(A)')eoflin
   IF(eoflin(1:32) == strmol)THEN
     READ(nccont,*)
@@ -226,35 +226,35 @@ IF(iproc == 0)THEN
   ncount = ncount + 1
   parray(ncount) = tstep
   ncount = ncount + 1
-  parray(ncount) = REAL(ntime1,kind=dp)
+  parray(ncount) = REAL(ntime1,kind=8)
   ncount = ncount + 1
-  parray(ncount) = REAL(ntime,kind=dp)
+  parray(ncount) = REAL(ntime,kind=8)
   ncount = ncount + 1
-  parray(ncount) = REAL(nstpsw,kind=dp)
+  parray(ncount) = REAL(nstpsw,kind=8)
   
 !       INTERVALS BETWEEN DUMPS,REPORTS,STATISTICS; DUMP OUTPUT SWITCH
 !       RSC 11-JUL-2009
   ncount = ncount + 1
-  parray(ncount) = REAL(ntdump,kind=dp)
+  parray(ncount) = REAL(ntdump,kind=8)
   ncount = ncount + 1
-  parray(ncount) = REAL(ntrept,kind=dp)
+  parray(ncount) = REAL(ntrept,kind=8)
   ncount = ncount + 1
-  parray(ncount) = REAL(ntstat,kind=dp)
+  parray(ncount) = REAL(ntstat,kind=8)
   ncount = ncount + 1
-  parray(ncount) = REAL(ndofmt,kind=dp)
+  parray(ncount) = REAL(ndofmt,kind=8)
   
 !       COLD START SWITCH; DUMP INPUT SWITCH
 !       RSC 11-JUL-2009
   ncount = ncount + 1
-  parray(ncount) = REAL(ncdmpi,kind=dp)
+  parray(ncount) = REAL(ncdmpi,kind=8)
   ncount = ncount + 1
-  parray(ncount) = REAL(ndifmt,kind=dp)
+  parray(ncount) = REAL(ndifmt,kind=8)
   
 !       INITIAL TURBULENCE
   ncount = ncount + 1
-  parray(ncount) = REAL(inturb,kind=dp)
+  parray(ncount) = REAL(inturb,kind=8)
   ncount = ncount + 1
-  parray(ncount) = REAL(inseed,kind=dp)
+  parray(ncount) = REAL(inseed,kind=8)
   DO ispec = 1, nsparm
     ncount = ncount + 1
     parray(ncount) = sparam(ispec)
@@ -262,7 +262,7 @@ IF(iproc == 0)THEN
   
 !       FLAME START OPTION
   ncount = ncount + 1
-  parray(ncount) = REAL(inflam,kind=dp)
+  parray(ncount) = REAL(inflam,kind=8)
   
 !       DEFAULT INITIAL CONDITIONS
   ncount = ncount + 1
@@ -282,60 +282,60 @@ IF(iproc == 0)THEN
   
 !       GLOBAL BOUNDARY CONDITION TYPES
   ncount = ncount + 1
-  parray(ncount) = REAL(ngbcxl,kind=dp)
+  parray(ncount) = REAL(ngbcxl,kind=8)
   DO ic = 1, nbcpri
     ncount = ncount + 1
-    parray(ncount) = REAL(nxlprm(ic),kind=dp)
+    parray(ncount) = REAL(nxlprm(ic),kind=8)
   END DO
   DO ic = 1, nbcprr
     ncount = ncount + 1
     parray(ncount) = rxlprm(ic)
   END DO
   ncount = ncount + 1
-  parray(ncount) = REAL(ngbcxr,kind=dp)
+  parray(ncount) = REAL(ngbcxr,kind=8)
   DO ic = 1, nbcpri
     ncount = ncount + 1
-    parray(ncount) = REAL(nxrprm(ic),kind=dp)
+    parray(ncount) = REAL(nxrprm(ic),kind=8)
   END DO
   DO ic = 1, nbcprr
     ncount = ncount + 1
     parray(ncount) = rxrprm(ic)
   END DO
   ncount = ncount + 1
-  parray(ncount) = REAL(ngbcyl,kind=dp)
+  parray(ncount) = REAL(ngbcyl,kind=8)
   DO ic = 1, nbcpri
     ncount = ncount + 1
-    parray(ncount) = REAL(nylprm(ic),kind=dp)
+    parray(ncount) = REAL(nylprm(ic),kind=8)
   END DO
   DO ic = 1, nbcprr
     ncount = ncount + 1
     parray(ncount) = rylprm(ic)
   END DO
   ncount = ncount + 1
-  parray(ncount) = REAL(ngbcyr,kind=dp)
+  parray(ncount) = REAL(ngbcyr,kind=8)
   DO ic = 1, nbcpri
     ncount = ncount + 1
-    parray(ncount) = REAL(nyrprm(ic),kind=dp)
+    parray(ncount) = REAL(nyrprm(ic),kind=8)
   END DO
   DO ic = 1, nbcprr
     ncount = ncount + 1
     parray(ncount) = ryrprm(ic)
   END DO
   ncount = ncount + 1
-  parray(ncount) = REAL(ngbczl,kind=dp)
+  parray(ncount) = REAL(ngbczl,kind=8)
   DO ic = 1, nbcpri
     ncount = ncount + 1
-    parray(ncount) = REAL(nzlprm(ic),kind=dp)
+    parray(ncount) = REAL(nzlprm(ic),kind=8)
   END DO
   DO ic = 1, nbcprr
     ncount = ncount + 1
     parray(ncount) = rzlprm(ic)
   END DO
   ncount = ncount + 1
-  parray(ncount) = REAL(ngbczr,kind=dp)
+  parray(ncount) = REAL(ngbczr,kind=8)
   DO ic = 1, nbcpri
     ncount = ncount + 1
-    parray(ncount) = REAL(nzrprm(ic),kind=dp)
+    parray(ncount) = REAL(nzrprm(ic),kind=8)
   END DO
   DO ic = 1, nbcprr
     ncount = ncount + 1
@@ -345,27 +345,27 @@ IF(iproc == 0)THEN
 !       MIXTURE AVERAGED TRANSPORT
 !       RSC 05-MAY-2013
   ncount = ncount + 1
-  parray(ncount) = REAL(nfmavt,kind=dp)
+  parray(ncount) = REAL(nfmavt,kind=8)
   ncount = ncount + 1
-  parray(ncount) = REAL(nfmixw,kind=dp)
+  parray(ncount) = REAL(nfmixw,kind=8)
   ncount = ncount + 1
-  parray(ncount) = REAL(nfmixp,kind=dp)
+  parray(ncount) = REAL(nfmixp,kind=8)
   ncount = ncount + 1
-  parray(ncount) = REAL(nfmsor,kind=dp)
+  parray(ncount) = REAL(nfmsor,kind=8)
   ncount = ncount + 1
-  parray(ncount) = REAL(nfmduf,kind=dp)
+  parray(ncount) = REAL(nfmduf,kind=8)
   ncount = ncount + 1
   parray(ncount) = wmltdr
   
 !       RADIATION TREATMENT
 !       RSC 21-JUL-2013
   ncount = ncount + 1
-  parray(ncount) = REAL(nfradn,kind=dp)
+  parray(ncount) = REAL(nfradn,kind=8)
   ncount = ncount + 1
   parray(ncount) = trefrn
   
 !       BROADCAST COUNTER
-  pcount = REAL(ncount,kind=dp)
+  pcount = REAL(ncount,kind=8)
   
 !       CHECK BROADCAST COUNTER AGAINST BROADCAST ARRAY SIZE
   IF(ncount > nparay)THEN

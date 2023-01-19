@@ -1,11 +1,13 @@
 PROGRAM senga2
  
     use OPS_Fortran_Reference
+    use OPS_Fortran_hdf5_Declarations
     use OPS_CONSTANTS
 
     use, intrinsic :: ISO_C_BINDING
 
     use com_senga
+    use com_ops_senga
 
 !   *************************************************************************
 
@@ -73,6 +75,8 @@ PROGRAM senga2
 !   ==========
 !   RSC 29-DEC-2006 UPDATED INDEXING
     INTEGER :: jtime,jrkstp
+    character(len=5) :: char_i
+    character(len=32) :: filename
 
 !   BEGIN
 !   =====
@@ -125,7 +129,15 @@ PROGRAM senga2
     
 !           EVALUATE RHS FOR SCALARS
             call rhscal
-    
+
+!            IF(itime >= 39 .and. itime <=41 .and. iproc==0) THEN
+!                write(char_i, '(I5)') itime
+!                write(filename, '("drhs_timestep", A, ".h5")') trim(adjustl(char_i))
+!                filename=trim(adjustl(filename))//char(0)
+!                call ops_fetch_block_hdf5_file(senga_grid, filename)
+!                call ops_fetch_dat_hdf5_file(d_drhs, filename)
+!            END IF
+
 !           EVALUATE RHS FOR VELOCITIES
             call rhsvel
     

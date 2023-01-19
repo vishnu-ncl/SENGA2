@@ -3,8 +3,8 @@ SUBROUTINE math_kernel_eqA(out_arr, in_arr1)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1
 
     out_arr(OPS_ACC1(0,0,0)) = log(in_arr1(OPS_ACC2(0,0,0)))
 
@@ -15,8 +15,8 @@ SUBROUTINE math_kernel_eqB(out_arr, in_arr1)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1
 
     out_arr(OPS_ACC1(0,0,0)) = -in_arr1(OPS_ACC2(0,0,0))
 
@@ -27,8 +27,8 @@ SUBROUTINE math_kernel_eqC(out_arr, var)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), intent(in) :: var
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), intent(in) :: var
 
     out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) * var
 
@@ -39,9 +39,9 @@ SUBROUTINE math_kernel_eqD(out_arr, in_arr1, var)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1
-    real(kind=dp), intent(in) :: var
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1
+    real(kind=8), intent(in) :: var
 
     out_arr(OPS_ACC1(0,0,0)) = in_arr1(OPS_ACC2(0,0,0)) * var
 
@@ -52,9 +52,9 @@ SUBROUTINE math_kernel_eqE(out_arr, in_arr1, in_arr2, var)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2
-    real(kind=dp), intent(in) :: var
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
+    real(kind=8), intent(in) :: var
 
     out_arr(OPS_ACC1(0,0,0)) = in_arr1(OPS_ACC2(0,0,0)) * in_arr2(OPS_ACC3(0,0,0)) * var
 
@@ -65,9 +65,9 @@ SUBROUTINE math_kernel_eqF(out_arr, in_arr1, in_arr2, var)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2
-    real(kind=dp), intent(in) :: var
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
+    real(kind=8), intent(in) :: var
 
     out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) + var*in_arr1(OPS_ACC2(0,0,0))*in_arr2(OPS_ACC3(0,0,0))
 
@@ -78,9 +78,9 @@ SUBROUTINE math_kernel_eqG(out_arr, in_arr1, var)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1
-    real(kind=dp), intent(in) :: var
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1
+    real(kind=8), intent(in) :: var
 
     out_arr(OPS_ACC1(0,0,0)) = in_arr1(OPS_ACC2(0,0,0)) - var
 
@@ -91,9 +91,9 @@ SUBROUTINE math_kernel_eqH(out_arr, in_arr1, in_arr2, var)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2
-    real(kind=dp), intent(in) :: var
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
+    real(kind=8), intent(in) :: var
 
     out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) - var*in_arr1(OPS_ACC2(0,0,0))*in_arr2(OPS_ACC3(0,0,0))
 
@@ -104,9 +104,9 @@ SUBROUTINE math_kernel_eqI(out_arr, in_arr1, var1, var2)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1
-    real(kind=dp), intent(in) :: var1, var2
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1
+    real(kind=8), intent(in) :: var1, var2
 
     out_arr(OPS_ACC1(0,0,0)) = var1*in_arr1(OPS_ACC2(0,0,0)) - var2*out_arr(OPS_ACC1(0,0,0))
 
@@ -117,8 +117,8 @@ SUBROUTINE math_kernel_eqJ(out_arr, in_arr1)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1
 
     out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) + in_arr1(OPS_ACC2(0,0,0))
 
@@ -129,8 +129,8 @@ SUBROUTINE math_kernel_eqK(out_arr, in_arr1, in_arr2)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
 
     out_arr(OPS_ACC1(0,0,0)) = in_arr1(OPS_ACC2(0,0,0)) + in_arr2(OPS_ACC3(0,0,0))
 
@@ -141,8 +141,8 @@ SUBROUTINE math_kernel_eqL(out_arr, in_arr1, in_arr2, in_arr3)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
 
     out_arr(OPS_ACC1(0,0,0)) = in_arr1(OPS_ACC2(0,0,0)) + in_arr2(OPS_ACC3(0,0,0)) + in_arr3(OPS_ACC4(0,0,0))
 
@@ -153,8 +153,8 @@ SUBROUTINE math_kernel_eqM(out_arr, in_arr1, in_arr2, in_arr3)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
 
     out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) + in_arr1(OPS_ACC2(0,0,0)) + in_arr2(OPS_ACC3(0,0,0)) + in_arr3(OPS_ACC4(0,0,0))
 
@@ -165,8 +165,8 @@ SUBROUTINE math_kernel_eqN(out_arr, in_arr1, in_arr2)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
 
     out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) + (in_arr1(OPS_ACC2(0,0,0)) * in_arr2(OPS_ACC3(0,0,0)))
 
@@ -177,8 +177,8 @@ SUBROUTINE math_kernel_eqO(out_arr, in_arr1, in_arr2)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
 
     out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) + (in_arr1(OPS_ACC2(0,0,0)) * in_arr2(OPS_ACC3(0,0,0)) * in_arr2(OPS_ACC3(0,0,0)))
 
@@ -189,8 +189,8 @@ SUBROUTINE math_kernel_eqP(out_arr, in_arr1, in_arr2, in_arr3)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
 
     out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) + (in_arr1(OPS_ACC2(0,0,0)) * in_arr2(OPS_ACC3(0,0,0)) * in_arr3(OPS_ACC4(0,0,0)))
 
@@ -201,8 +201,8 @@ SUBROUTINE math_kernel_eqQ(out_arr, in_arr1, in_arr2, in_arr3)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
 
     out_arr(OPS_ACC1(0,0,0)) = in_arr1(OPS_ACC2(0,0,0)) + (in_arr2(OPS_ACC3(0,0,0)) * in_arr3(OPS_ACC4(0,0,0)))
 
@@ -213,8 +213,8 @@ SUBROUTINE math_kernel_eqR(out_arr, in_arr1, in_arr2, in_arr3)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
 
     out_arr(OPS_ACC1(0,0,0)) = (out_arr(OPS_ACC1(0,0,0))*in_arr1(OPS_ACC2(0,0,0))) + (in_arr2(OPS_ACC3(0,0,0)) * in_arr3(OPS_ACC4(0,0,0)))
 
@@ -225,8 +225,8 @@ SUBROUTINE math_kernel_eqS(out_arr, in_arr1)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1
 
     out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) / in_arr1(OPS_ACC2(0,0,0))
 
@@ -237,8 +237,8 @@ SUBROUTINE math_kernel_eqT(out_arr, in_arr1, in_arr2)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
 
     out_arr(OPS_ACC1(0,0,0)) = in_arr1(OPS_ACC2(0,0,0)) / in_arr2(OPS_ACC3(0,0,0))
 
@@ -249,8 +249,8 @@ SUBROUTINE math_kernel_eqU(out_arr, in_arr1)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1
 
     out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) * in_arr1(OPS_ACC2(0,0,0))
 
@@ -261,8 +261,8 @@ SUBROUTINE math_kernel_eqV(out_arr, in_arr1, in_arr2)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
 
     out_arr(OPS_ACC1(0,0,0)) = in_arr1(OPS_ACC2(0,0,0)) * in_arr2(OPS_ACC3(0,0,0))
 
@@ -273,8 +273,8 @@ SUBROUTINE math_kernel_eqW(out_arr, in_arr1)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1
 
     out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) - in_arr1(OPS_ACC2(0,0,0))
 
@@ -285,8 +285,8 @@ SUBROUTINE math_kernel_eqX(out_arr, in_arr1, in_arr2)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
 
     out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) - (in_arr1(OPS_ACC2(0,0,0)) * in_arr2(OPS_ACC3(0,0,0)))
 
@@ -297,8 +297,8 @@ SUBROUTINE math_kernel_eqY(out_arr, in_arr1, in_arr2, in_arr3, in_arr4)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4
 
     out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) + (in_arr1(OPS_ACC2(0,0,0)) &
                         + in_arr2(OPS_ACC3(0,0,0)) + in_arr3(OPS_ACC4(0,0,0))) * in_arr4(OPS_ACC5(0,0,0))
@@ -310,8 +310,8 @@ SUBROUTINE math_kernel_eqZ(out_arr, in_arr1, in_arr2, in_arr3, in_arr4, in_arr5)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4, in_arr5
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4, in_arr5
 
     out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) &
                             + (in_arr1(OPS_ACC2(0,0,0))+in_arr2(OPS_ACC3(0,0,0))+in_arr3(OPS_ACC4(0,0,0))) &
@@ -324,8 +324,8 @@ SUBROUTINE math_kernel_eqAA(out_arr, in_arr1, in_arr2, in_arr3, in_arr4, in_arr5
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6
 
     out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) &
                             +(in_arr1(OPS_ACC2(0,0,0))*in_arr2(OPS_ACC3(0,0,0)) &
@@ -339,8 +339,8 @@ SUBROUTINE math_kernel_eqAB(out_arr, in_arr1, in_arr2, in_arr3, in_arr4, in_arr5
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6, in_arr7
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6, in_arr7
 
     out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) &
                   + (  in_arr1(OPS_ACC2(0,0,0)) * in_arr2(OPS_ACC3(0,0,0)) &
@@ -355,10 +355,10 @@ SUBROUTINE math_kernel_eqAC(out_arr, in_arr1, in_arr2)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
 
-    out_arr(OPS_ACC1(0,0,0)) = -0.5_dp*(in_arr1(OPS_ACC2(0,0,0))+in_arr2(OPS_ACC3(0,0,0)))
+    out_arr(OPS_ACC1(0,0,0)) = -0.5_8*(in_arr1(OPS_ACC2(0,0,0))+in_arr2(OPS_ACC3(0,0,0)))
 
 END SUBROUTINE math_kernel_eqAC
 
@@ -367,10 +367,10 @@ SUBROUTINE math_kernel_eqAD(out_arr, in_arr1, in_arr2, in_arr3, in_arr4, in_arr5
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6, in_arr7
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6, in_arr7
 
-    out_arr(OPS_ACC1(0,0,0)) = -0.5_dp * (in_arr1(OPS_ACC2(0,0,0)) &
+    out_arr(OPS_ACC1(0,0,0)) = -0.5_8 * (in_arr1(OPS_ACC2(0,0,0)) &
                         + in_arr2(OPS_ACC3(0,0,0))*in_arr3(OPS_ACC4(0,0,0)) &
                         + in_arr4(OPS_ACC5(0,0,0))*in_arr5(OPS_ACC6(0,0,0)) &
                         + in_arr6(OPS_ACC7(0,0,0))*in_arr7(OPS_ACC8(0,0,0)))
@@ -382,10 +382,10 @@ SUBROUTINE math_kernel_eqAE(out_arr, in_arr1, in_arr2, in_arr3)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
 
-    out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) - 0.5_dp*in_arr1(OPS_ACC2(0,0,0))&
+    out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) - 0.5_8*in_arr1(OPS_ACC2(0,0,0))&
                                                             *in_arr2(OPS_ACC3(0,0,0))*in_arr3(OPS_ACC4(0,0,0))
 
 END SUBROUTINE math_kernel_eqAE
@@ -395,8 +395,8 @@ SUBROUTINE math_kernel_eqAF(out_arr, in_arr1, in_arr2, in_arr3, in_arr4)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4
 
     out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) - in_arr1(OPS_ACC2(0,0,0)) &
                 *(in_arr2(OPS_ACC3(0,0,0))+in_arr3(OPS_ACC4(0,0,0))+in_arr4(OPS_ACC5(0,0,0)))
@@ -408,8 +408,8 @@ SUBROUTINE math_kernel_eqAG(out_arr, in_arr1, in_arr2, in_arr3, in_arr4, in_arr5
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6
 
     out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) - in_arr1(OPS_ACC2(0,0,0))*in_arr2(OPS_ACC3(0,0,0)) &
                              - in_arr3(OPS_ACC4(0,0,0)) * in_arr4(OPS_ACC5(0,0,0)) &
@@ -422,8 +422,8 @@ SUBROUTINE math_kernel_eqAH(out_arr, in_arr1, in_arr2, in_arr3, in_arr4, in_arr5
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6, in_arr7, in_arr8
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6, in_arr7, in_arr8
 
     out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) - in_arr1(OPS_ACC2(0,0,0))*in_arr2(OPS_ACC3(0,0,0)) &
                              - in_arr3(OPS_ACC4(0,0,0)) * in_arr4(OPS_ACC5(0,0,0)) &
@@ -437,9 +437,9 @@ SUBROUTINE math_kernel_eqAI(out_arr, in_arr1, var1)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1
-    real(kind=dp), intent(in) :: var1
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1
+    real(kind=8), intent(in) :: var1
 
     out_arr(OPS_ACC1(0,0,0)) = var1/in_arr1(OPS_ACC2(0,0,0))
 
@@ -450,9 +450,9 @@ SUBROUTINE math_kernel_eqAJ(out_arr, in_arr1, in_arr2, var1)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2
-    real(kind=dp), intent(in) :: var1
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
+    real(kind=8), intent(in) :: var1
 
     out_arr(OPS_ACC1(0,0,0)) = var1/(in_arr1(OPS_ACC2(0,0,0))*in_arr2(OPS_ACC3(0,0,0)))
 
@@ -463,9 +463,9 @@ SUBROUTINE math_kernel_eqAK(out_arr,in_arr1,var1,var2)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1
-    real(kind=dp), intent(in) :: var1,var2
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1
+    real(kind=8), intent(in) :: var1,var2
 
     out_arr(OPS_ACC1(0,0,0)) = var1 + in_arr1(OPS_ACC2(0,0,0))*(var2-var1)
 
@@ -476,8 +476,8 @@ SUBROUTINE math_kernel_eqAL(out_arr)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp) :: fornow
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8) :: fornow
 
     fornow = out_arr(OPS_ACC1(0,0,0))
     out_arr(OPS_ACC1(0,0,0)) = EXP(fornow)
@@ -489,8 +489,8 @@ SUBROUTINE math_kernel_eqAM(out_arr,var)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), intent(in) :: var
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), intent(in) :: var
     
     out_arr(OPS_ACC1(0,0,0)) = var + out_arr(OPS_ACC1(0,0,0))
 
@@ -501,8 +501,8 @@ SUBROUTINE math_kernel_eqAN(out_arr,var)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), intent(in) :: var
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), intent(in) :: var
 
     out_arr(OPS_ACC1(0,0,0)) = var
 
@@ -513,15 +513,15 @@ SUBROUTINE math_kernel_eqAO(out_arr,in_arr1,in_arr2,in_arr3,in_arr4)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr
-    real(kind=dp), dimension(1), intent(in) :: in_arr1,in_arr2,in_arr3,in_arr4
-    real(kind=dp) :: fornow
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8), dimension(1), intent(in) :: in_arr1,in_arr2,in_arr3,in_arr4
+    real(kind=8) :: fornow
 
     fornow = in_arr2(OPS_ACC3(0,0,0))*in_arr2(OPS_ACC3(0,0,0))  & 
            + in_arr3(OPS_ACC4(0,0,0))*in_arr3(OPS_ACC4(0,0,0))  &
            + in_arr4(OPS_ACC5(0,0,0))*in_arr4(OPS_ACC5(0,0,0))
     
-    out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) - in_arr1(OPS_ACC2(0,0,0)) + 0.5_dp*fornow
+    out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) - in_arr1(OPS_ACC2(0,0,0)) + 0.5_8*fornow
 
 END SUBROUTINE math_kernel_eqAO
 
@@ -529,9 +529,9 @@ SUBROUTINE math_kernel_eqAP(out_arr1,out_arr2,in_arr1)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr1, out_arr2
-    real(kind=dp), dimension(1), intent(in) :: in_arr1
-    real(kind=dp) :: fornow
+    real(kind=8), dimension(1) :: out_arr1, out_arr2
+    real(kind=8), dimension(1), intent(in) :: in_arr1
+    real(kind=8) :: fornow
     
     fornow = alamda*EXP(rlamda*LOG(in_arr1(OPS_ACC3(0,0,0))))
 
@@ -544,9 +544,9 @@ SUBROUTINE math_kernel_eqAQ(out_arr1,out_arr2,in_arr1,racnst,rncnst,reovrr)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr1, out_arr2
-    real(kind=dp), dimension(1), intent(in) :: in_arr1
-    real(kind=dp), intent(in) :: racnst,rncnst,reovrr
+    real(kind=8), dimension(1) :: out_arr1, out_arr2
+    real(kind=8), dimension(1), intent(in) :: in_arr1
+    real(kind=8), intent(in) :: racnst,rncnst,reovrr
 
     out_arr2(OPS_ACC2(0,0,0)) = racnst + rncnst*LOG(in_arr1(OPS_ACC3(0,0,0)))  &
             - reovrr/in_arr1(OPS_ACC3(0,0,0))
@@ -558,11 +558,11 @@ SUBROUTINE math_kernel_eqAR(out_arr1,out_arr2,out_arr3,in_arr1,in_arr2,racnst,rn
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr1, out_arr2, out_arr3
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2
-    real(kind=dp), intent(in) :: racnst,rncnst,reovrr,flcnst
+    real(kind=8), dimension(1) :: out_arr1, out_arr2, out_arr3
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
+    real(kind=8), intent(in) :: racnst,rncnst,reovrr,flcnst
 
-    real(kind=dp) :: preduc,fornow
+    real(kind=8) :: preduc,fornow
 
 !   EVALUATE K0
     out_arr3(OPS_ACC3(0,0,0)) = racnst + rncnst*LOG(in_arr1(OPS_ACC4(0,0,0)))  &
@@ -573,7 +573,7 @@ SUBROUTINE math_kernel_eqAR(out_arr1,out_arr2,out_arr3,in_arr1,in_arr2,racnst,rn
     preduc = in_arr2(OPS_ACC5(0,0,0))*out_arr3(OPS_ACC3(0,0,0)) /out_arr1(OPS_ACC1(0,0,0))
 
 !   EVALUATE UPDATED FORWARD RATE CONSTANT
-    fornow = flcnst*preduc/(1.0_dp+preduc)
+    fornow = flcnst*preduc/(1.0_8+preduc)
     out_arr1(OPS_ACC1(0,0,0)) = out_arr1(OPS_ACC1(0,0,0))*fornow
 
 !   RSC/ZN 08-AUG-2012 BUG FIX PRESSURE-DEPENDENT RATES
@@ -585,11 +585,11 @@ SUBROUTINE math_kernel_eqAS(out_arr1,out_arr2,out_arr3,in_arr1,in_arr2,racnst,rn
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr1, out_arr2, out_arr3
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2
-    real(kind=dp), intent(in) :: racnst,rncnst,reovrr,talpha,ovtst1,tstar2,ovtst3,cfcst1,cfcst2,encst1,encst2,dtcnst,omalph,clnten
+    real(kind=8), dimension(1) :: out_arr1, out_arr2, out_arr3
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
+    real(kind=8), intent(in) :: racnst,rncnst,reovrr,talpha,ovtst1,tstar2,ovtst3,cfcst1,cfcst2,encst1,encst2,dtcnst,omalph,clnten
 
-    real(kind=dp) :: preduc,fornow,trats1,trats2,trats3,ftcent,cfactr,enfact,fbroad
+    real(kind=8) :: preduc,fornow,trats1,trats2,trats3,ftcent,cfactr,enfact,fbroad
 
 !   EVALUATE K0
     out_arr3(OPS_ACC3(0,0,0)) = racnst + rncnst*LOG(in_arr1(OPS_ACC4(0,0,0)))  &
@@ -612,12 +612,12 @@ SUBROUTINE math_kernel_eqAS(out_arr1,out_arr2,out_arr3,in_arr1,in_arr2,racnst,rn
     enfact = encst1 + encst2*ftcent
     fornow = LOG10(preduc) + cfactr
     fornow = fornow/(enfact - dtcnst*fornow)
-    fornow = 1.0_dp + fornow*fornow
+    fornow = 1.0_8 + fornow*fornow
     fbroad = ftcent/fornow
     fbroad = EXP(fbroad*clnten)
 
 !   EVALUATE UPDATED FORWARD RATE CONSTANT
-    fornow = fbroad*preduc/(1.0_dp+preduc)
+    fornow = fbroad*preduc/(1.0_8+preduc)
     out_arr1(OPS_ACC1(0,0,0)) = out_arr1(OPS_ACC1(0,0,0))*fornow
 
 !   RSC/ZN 08-AUG-2012 BUG FIX PRESSURE-DEPENDENT RATES
@@ -629,11 +629,11 @@ SUBROUTINE math_kernel_eqAT(out_arr1,out_arr2,out_arr3,in_arr1,in_arr2,racnst,rn
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr1, out_arr2, out_arr3
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2
-    real(kind=dp), intent(in) :: racnst,rncnst,reovrr,acfsri,bcfsrm,ovcsrm,dcfsri,ecfsri
+    real(kind=8), dimension(1) :: out_arr1, out_arr2, out_arr3
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
+    real(kind=8), intent(in) :: racnst,rncnst,reovrr,acfsri,bcfsrm,ovcsrm,dcfsri,ecfsri
 
-    real(kind=dp) :: preduc,fornow,fbroad
+    real(kind=8) :: preduc,fornow,fbroad
 
 !   EVALUATE K0
     out_arr3(OPS_ACC3(0,0,0)) = racnst + rncnst*LOG(in_arr1(OPS_ACC4(0,0,0)))  &
@@ -649,12 +649,12 @@ SUBROUTINE math_kernel_eqAT(out_arr1,out_arr2,out_arr3,in_arr1,in_arr2,racnst,rn
     fornow = in_arr1(OPS_ACC4(0,0,0))*ovcsrm
     fbroad = fbroad + EXP(fornow)
     fornow = LOG10(preduc)
-    fornow = 1.0_dp/(1.0_dp+LOG10(fornow))
+    fornow = 1.0_8/(1.0_8+LOG10(fornow))
     fbroad = dcfsri*EXP(fornow*LOG(fbroad))
     fornow = fbroad*EXP(ecfsri*LOG(in_arr1(OPS_ACC4(0,0,0))))
 
 !   EVALUATE UPDATED FORWARD RATE CONSTANT
-    fornow = fbroad*preduc/(1.0_dp+preduc)
+    fornow = fbroad*preduc/(1.0_8+preduc)
     out_arr1(OPS_ACC1(0,0,0)) = out_arr1(OPS_ACC1(0,0,0))*fornow
 
 !   RSC/ZN 08-AUG-2012 BUG FIX PRESSURE-DEPENDENT RATES
@@ -666,10 +666,10 @@ SUBROUTINE math_kernel_eqtau(out_arr1,out_arr2,in_arr1,in_arr2,in_arr3,var)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: out_arr1, out_arr2
-    real(kind=dp), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
-    real(kind=dp), intent(in) :: var
-    real(kind=dp) :: fornow
+    real(kind=8), dimension(1) :: out_arr1, out_arr2
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
+    real(kind=8), intent(in) :: var
+    real(kind=8) :: fornow
 
     fornow = in_arr1(OPS_ACC3(0,0,0))*var*in_arr2(OPS_ACC4(0,0,0))
     out_arr1(OPS_ACC1(0,0,0)) = out_arr1(OPS_ACC1(0,0,0)) + fornow
@@ -681,7 +681,7 @@ SUBROUTINE math_kernel_getval(prun,prefer)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: prun
+    real(kind=8), dimension(1), intent(in) :: prun
     real(kind=8) :: prefer
 
     prefer = prun(OPS_ACC1(0,0,0))
@@ -692,37 +692,37 @@ SUBROUTINE math_kernel_set_reaction_var(crin,deltag,clocat,cthick,igofst,idx)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: crin
-    real(kind=dp), intent(in) :: deltag,clocat,cthick
+    real(kind=8), dimension(1) :: crin
+    real(kind=8), intent(in) :: deltag,clocat,cthick
     integer, intent(in) :: igofst
     integer, dimension(3), intent(in) :: idx
 
-    real(kind=dp) :: xcoord,argmnt
+    real(kind=8) :: xcoord,argmnt
     
-    real(kind=dp) :: erfunc
+    real(kind=8) :: erfunc
     integer, parameter :: ncoeff = 5
     integer, parameter :: ncofm1 = ncoeff-1
 
-    real(kind=dp) :: ecoeff(ncoeff)
-    real(kind=dp) :: pcoeff
-    real(kind=dp) :: etotal,zvalue,tvalue
+    real(kind=8) :: ecoeff(ncoeff)
+    real(kind=8) :: pcoeff
+    real(kind=8) :: etotal,zvalue,tvalue
     integer :: ix,icoeff
 
 !   SET THE COEFFICIENTS
-    pcoeff = 0.3275911_dp
-    ecoeff(1) = 0.254829592_dp
-    ecoeff(2) =-0.284496736_dp
-    ecoeff(3) = 1.421413741_dp
-    ecoeff(4) =-1.453152027_dp
-    ecoeff(5) = 1.061405429_dp
+    pcoeff = 0.3275911_8
+    ecoeff(1) = 0.254829592_8
+    ecoeff(2) =-0.284496736_8
+    ecoeff(3) = 1.421413741_8
+    ecoeff(4) =-1.453152027_8
+    ecoeff(5) = 1.061405429_8
     
     ix = igofst + idx(1)
-    xcoord = real(ix-1,kind=dp)*deltag
+    xcoord = real(ix-1,kind=8)*deltag
     argmnt = (xcoord-clocat)/cthick
 
 !   EVALUATE ERROR FUNCTION
     zvalue = abs(argmnt)
-    tvalue = 1.0_dp/(1.0_dp+pcoeff*zvalue)
+    tvalue = 1.0_8/(1.0_8+pcoeff*zvalue)
 
     etotal = ecoeff(ncoeff)
     DO icoeff = ncofm1,1,-1
@@ -730,10 +730,10 @@ SUBROUTINE math_kernel_set_reaction_var(crin,deltag,clocat,cthick,igofst,idx)
     END DO
     etotal = etotal*tvalue
 
-    erfunc = 1.0_dp - etotal*exp(-zvalue*zvalue)
-    IF(argmnt < 0.0_dp) erfunc = -erfunc
+    erfunc = 1.0_8 - etotal*exp(-zvalue*zvalue)
+    IF(argmnt < 0.0_8) erfunc = -erfunc
 
-    crin(OPS_ACC1(0,0,0)) = 0.5_dp*(1.0_dp+erfunc)
+    crin(OPS_ACC1(0,0,0)) = 0.5_8*(1.0_8+erfunc)
 
 END SUBROUTINE math_kernel_set_reaction_var
 

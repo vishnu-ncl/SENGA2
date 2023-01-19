@@ -29,12 +29,12 @@ SUBROUTINE diffin
 
 !   PARAMETER
 !   =========
-    real(kind=dp) :: wmltol
-    PARAMETER(wmltol = 0.001_dp)
+    real(kind=8) :: wmltol
+    PARAMETER(wmltol = 0.001_8)
 
 !   LOCAL DATA
 !   ==========
-    real(kind=dp) :: pcount,fornow
+    real(kind=8) :: pcount,fornow
     integer :: ispec,jspec,kspec,icoeff
     integer :: ncount
     integer :: iroot
@@ -208,19 +208,19 @@ SUBROUTINE diffin
             parray(ncount) = tdifgb
             DO ispec = 1,nspec
                 ncount = ncount + 1
-                parray(ncount) = REAL(ncovis,kind=dp)
+                parray(ncount) = REAL(ncovis,kind=8)
                 DO icoeff = 1, ncovis
                     ncount = ncount + 1
                     parray(ncount) = viscco(icoeff,ispec)
                 END DO
                 ncount = ncount + 1
-                parray(ncount) = REAL(ncocon,kind=dp)
+                parray(ncount) = REAL(ncocon,kind=8)
                 DO icoeff = 1, ncocon
                     ncount = ncount + 1
                     parray(ncount) = condco(icoeff,ispec)
                 END DO
                 ncount = ncount + 1
-                parray(ncount) = REAL(ncodif,kind=dp)
+                parray(ncount) = REAL(ncodif,kind=8)
                 DO jspec = 1, ispec
                     DO icoeff = 1, ncodif
                         ncount = ncount + 1
@@ -228,7 +228,7 @@ SUBROUTINE diffin
                     END DO
                 END DO
                 ncount = ncount + 1
-                parray(ncount) = REAL(ncotdr,kind=dp)
+                parray(ncount) = REAL(ncotdr,kind=8)
                 DO jspec = 1, ispec-1
                     DO icoeff = 1, ncotdr
                         ncount = ncount + 1
@@ -240,7 +240,7 @@ SUBROUTINE diffin
 !           ---------------------------------------------------------------------
     
 !           BROADCAST COUNTER
-            pcount = REAL(ncount,kind=dp)
+            pcount = REAL(ncount,kind=8)
     
 !           CHECK BROADCAST COUNTER AGAINST BROADCAST ARRAY SIZE
             IF(ncount > nparay) THEN

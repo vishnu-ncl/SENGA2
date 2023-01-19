@@ -1,557 +1,109 @@
 SUBROUTINE tempin
  
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-04  Time: 20:55:58
+    use OPS_Fortran_Reference
 
-!     *************************************************************************
+    use OPS_CONSTANTS
+    use, intrinsic :: ISO_C_BINDING
 
-!     TEMPIN
-!     ======
+    use data_types
+    use com_senga
+    use com_ops_senga
 
-!     AUTHOR
-!     ------
-!     R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
+!   *************************************************************************
 
-!     CHANGE RECORD
-!     -------------
-!     15-MAY-2004:  CREATED
+!   TEMPIN
+!   ======
 
-!     DESCRIPTION
-!     -----------
-!     DNS CODE SENGA2
-!     INITIALISES TEMPERATURE AND PRESSURE
-!     USES BISECTION METHOD FOR ROBUSTNESS
+!   AUTHOR
+!   ------
+!   R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
 
-!     *************************************************************************
+!   CHANGE RECORD
+!   -------------
+!   15-MAY-2004:  CREATED
 
+!   DESCRIPTION
+!   -----------
+!   DNS CODE SENGA2
+!   INITIALISES TEMPERATURE AND PRESSURE
+!   USES BISECTION METHOD FOR ROBUSTNESS
 
-!     GLOBAL DATA
-!     ===========
-!     -------------------------------------------------------------------------
-use data_types
-use com_senga
-!     -------------------------------------------------------------------------
+!   *************************************************************************
 
+!   GLOBAL DATA
+!   ===========
+!   -------------------------------------------------------------------------
+!   -------------------------------------------------------------------------
 
-!     PARAMETERS
-!     ==========
-REAL(KIND=dp) :: toltmp
-PARAMETER(toltmp = 0.00010_dp)
-REAL(KIND=dp) :: tininc
-PARAMETER(tininc = 50.0_dp)
-REAL(KIND=dp) :: tlimlo,tlimhi
-PARAMETER(tlimlo = 200.0_dp, tlimhi = 3000.0_dp)
+    integer :: rangexyz(6)
 
+!   BEGIN
+!   =====
 
-!     LOCAL DATA
-!     ==========
-REAL(KIND=dp) :: tcoeff(0:nctmax)
-REAL(KIND=dp) :: ukuk
-REAL(KIND=dp) :: tempor,tupper,tlower,tresid,tuk2me,cpfory
-INTEGER :: ic,jc,kc,ispec,itint,icp
-INTEGER :: iindex,ipower
-LOGICAL :: fnconv
-INTEGER :: istalt,istolt,jstalt,jstolt,kstalt,kstolt
+!   =========================================================================
 
-!     BEGIN
-!     =====
+!   TEMPERATURE AND PRESSURE
+!   ------------------------
 
-!     =========================================================================
+!   TEMPERATURE AND PRESSURE ARE PARALLEL
 
-!     TEMPERATURE AND PRESSURE
-!     ------------------------
-
-!     TEMPERATURE AND PRESSURE ARE PARALLEL
-
-istalt = 1-nhalox
+    rangexyz(1) = 1-nhalox
     IF (nsbcxl == nsbco1 .or. nsbcxl == nsbci1 .or. nsbcxl == nsbci2 .or. &
-        nsbcxl == nsbci3 .or. nsbcxl == nsbcw1 .or. nsbcxl == nsbcw2) istalt = 1
+        nsbcxl == nsbci3 .or. nsbcxl == nsbcw1 .or. nsbcxl == nsbcw2) rangexyz(1) = 1
 
-    istolt = nxsize+nhalox
+    rangexyz(2) = nxsize+nhalox
     IF (nsbcxr == nsbco1 .or. nsbcxr == nsbci1 .or. nsbcxr == nsbci2 .or. &
-        nsbcxr == nsbci3 .or. nsbcxr == nsbcw1 .or. nsbcxr == nsbcw2) istolt = nxsize
+        nsbcxr == nsbci3 .or. nsbcxr == nsbcw1 .or. nsbcxr == nsbcw2) rangexyz(2) = nxsize
 
-    jstalt = 1-nhaloy
+    rangexyz(3) = 1-nhaloy
     IF (nsbcyl == nsbco1 .or. nsbcyl == nsbci1 .or. nsbcyl == nsbci2 .or. &
-        nsbcyl == nsbci3 .or. nsbcyl == nsbcw1 .or. nsbcyl == nsbcw2) jstalt = 1
+        nsbcyl == nsbci3 .or. nsbcyl == nsbcw1 .or. nsbcyl == nsbcw2) rangexyz(3) = 1
 
-    jstolt = nysize+nhaloy
+    rangexyz(4) = nysize+nhaloy
     IF (nsbcyr == nsbco1 .or. nsbcyr == nsbci1 .or. nsbcyr == nsbci2 .or. &
-        nsbcyr == nsbci3 .or. nsbcyr == nsbcw1 .or. nsbcyr == nsbcw2) jstolt = nysize
+        nsbcyr == nsbci3 .or. nsbcyr == nsbcw1 .or. nsbcyr == nsbcw2) rangexyz(4) = nysize
 
-    kstalt = 1-nhaloz
+    rangexyz(5) = 1-nhaloz
     IF (nsbczl == nsbco1 .or. nsbczl == nsbci1 .or. nsbczl == nsbci2 .or. &
-        nsbczl == nsbci3 .or. nsbczl == nsbcw1 .or. nsbczl == nsbcw2) kstalt = 1
+        nsbczl == nsbci3 .or. nsbczl == nsbcw1 .or. nsbczl == nsbcw2) rangexyz(5) = 1
 
-    kstolt = nzsize+nhaloz
+    rangexyz(6) = nzsize+nhaloz
     IF (nsbczr == nsbco1 .or. nsbczr == nsbci1 .or. nsbczr == nsbci2 .or. &
-        nsbczr == nsbci3 .or. nsbczr == nsbcw1 .or. nsbczr == nsbcw2) kstolt = nzsize
+        nsbczr == nsbci3 .or. nsbczr == nsbcw1 .or. nsbczr == nsbcw2) rangexyz(6) = nzsize
 
-DO kc = kstalt,kstolt
-  DO jc = jstalt,jstolt
-    DO ic = istalt,istolt
-      
-!           ===================================================================
-      
-!           KINETIC ENERGY TERM
-      ukuk = (urhs(ic,jc,kc)*urhs(ic,jc,kc)  &
-          +  vrhs(ic,jc,kc)*vrhs(ic,jc,kc)  &
-          +  wrhs(ic,jc,kc)*wrhs(ic,jc,kc))/drhs(ic,jc,kc)
-      
-      tuk2me = half*ukuk - erhs(ic,jc,kc)
-      
-!           ===================================================================
-      
-!           SOLVE FOR TEMPERATURE
-!           =====================
-!           USING BISECTION
-      tlower = tlimlo
-      tupper = tlimhi
-      
-!           SET NON-CONVERGENCE FLAG
-      fnconv = .true.
-      
-!           SET TEMPERATURE FROM INITIAL GUESS
-      tempor = trin
-      
-!           ===================================================================
-      
-!           FIRST BRACKET THE ROOT
-!           ======================
-      
-!           -------------------------------------------------------------------
-      
-!           INITIALISE COEFFICIENTS OF TEMPERATURE POLYNOMIAL
-      tcoeff(0) = tuk2me
-      DO icp = 1, nctmax
-        tcoeff(icp) = zero
-      END DO
-      
-!           FOR EACH SPECIES LOCATE TEMPERATURE IN AN INTERVAL
-      DO ispec = 1,nspec
-        
-        itint = 1
-!        1100          CONTINUE
-!        IF(tempor > tinthi(itint,ispec))THEN
-!          IF(itint < ntint(ispec))THEN
-!            itint = itint + 1
-!            GO TO 1100
-!          END IF
-!        END IF
-!             END OF LOOP 1100
-        DO WHILE (tempor > tinthi(itint,ispec) .and. itint < ntint(ispec))
-            itint = itint + 1
-        END DO
-       
-!             CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
-        tcoeff(0) = tcoeff(0) + yrhs(ispec,ic,jc,kc)*  &
-            amascp(ncenth(itint,ispec),itint,ispec)
-        
-        tcoeff(1) = tcoeff(1) + yrhs(ispec,ic,jc,kc)*amasct(1,itint,ispec)
-        DO icp = 2, ncpoly(itint,ispec)
-          tcoeff(icp) = tcoeff(icp)  &
-              + yrhs(ispec,ic,jc,kc)*amasct(icp,itint,ispec)
-        END DO
-        
-      END DO
-!           END OF RUN THROUGH ALL SPECIES
-      
-!           -------------------------------------------------------------------
-      
-!           EVALUATE TEMPERATURE RESIDUAL
-      tresid = tcoeff(nctmax)
-      DO icp = nctmm1,1,-1
-        tresid = tcoeff(icp) + tresid*tempor
-      END DO
-      tresid = tcoeff(0) + tresid*tempor
-      
-!           -------------------------------------------------------------------
-      
-!           CHECK INITIAL GUESS FOR CONVERGENCE
-      IF(ABS(tresid) < toltmp)THEN
-        
-!             -----------------------------------------------------------------
-        
-!             CONVERGED ON FIRST PASS
-        fnconv = .false.
-        
-!             -----------------------------------------------------------------
-        
-      ELSE IF(tresid < zero)THEN
-        
-!             -----------------------------------------------------------------
-        
-!             INITIAL GUESS IS TOO LOW
-        2000          CONTINUE
-        
-!               SET INITIAL GUESS AS LOWER LIMIT AND TRY AGAIN
-        tlower = tempor
-        tempor = tempor + tininc
-        
-!               ---------------------------------------------------------------
-        
-!               INITIALISE COEFFICIENTS OF TEMPERATURE POLYNOMIAL
-        tcoeff(0) = tuk2me
-        DO icp = 1, nctmax
-          tcoeff(icp) = zero
-        END DO
-        
-!               FOR EACH SPECIES LOCATE TEMPERATURE IN AN INTERVAL
-        DO ispec = 1,nspec
-          
-          itint = 1
-!          2100              CONTINUE
-!          IF(tempor > tinthi(itint,ispec))THEN
-!            IF(itint < ntint(ispec))THEN
-!              itint = itint + 1
-!              GO TO 2100
-!            END IF
-!          END IF
-!                 END OF LOOP 2100
-            DO WHILE (tempor > tinthi(itint,ispec) .and. itint < ntint(ispec))
-                itint = itint + 1
-            END DO
-         
-!                 CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
-          tcoeff(0) = tcoeff(0) + yrhs(ispec,ic,jc,kc)*  &
-              amascp(ncenth(itint,ispec),itint,ispec)
-          tcoeff(1) = tcoeff(1) + yrhs(ispec,ic,jc,kc)*amasct(1,itint,ispec)
-          DO icp = 2, ncpoly(itint,ispec)
-            tcoeff(icp) = tcoeff(icp)  &
-                + yrhs(ispec,ic,jc,kc)*amasct(icp,itint,ispec)
-          END DO
-          
-        END DO
-!               END OF RUN THROUGH ALL SPECIES
-        
-!               ---------------------------------------------------------------
-        
-!               EVALUATE TEMPERATURE RESIDUAL
-        tresid = tcoeff(nctmax)
-        DO icp = nctmm1,1,-1
-          tresid = tcoeff(icp) + tresid*tempor
-        END DO
-        tresid = tcoeff(0) + tresid*tempor
-        
-!               ---------------------------------------------------------------
-        
-!               CHECK NEW GUESS FOR CONVERGENCE
-        IF(ABS(tresid) < toltmp)THEN
-          
-!                 -------------------------------------------------------------
-          
-!                 NEW GUESS HAS CONVERGED
-          fnconv = .false.
-          
-!                 -------------------------------------------------------------
-          
-        ELSE IF(tresid < zero)THEN
-          
-!                 -------------------------------------------------------------
-          
-!                 NEW GUESS IS STILL TOO LOW: GO ROUND AGAIN
-          IF(tempor < tlimhi)THEN
-            GO TO 2000
-          ELSE
-            WRITE(6,*) 'Fatal: TEMPIN: T upper bracket failed to converge'
-            WRITE(6,*)'processor:',iproc
-            WRITE(6,*)'at point:',ic,jc,kc
-            WRITE(6,*)'with values:',tempor,tresid
-            WRITE(6,*)drhs(ic,jc,kc)
-            WRITE(6,*)urhs(ic,jc,kc)
-            WRITE(6,*)vrhs(ic,jc,kc)
-            WRITE(6,*)wrhs(ic,jc,kc)
-            WRITE(6,*)erhs(ic,jc,kc)
-            DO ispec = 1, nspec
-              WRITE(6,*)yrhs(ispec,ic,jc,kc)
-            END DO
-            STOP
-          END IF
-          
-!                 -------------------------------------------------------------
-          
-        ELSE IF(tresid > zero)THEN
-          
-!                 -------------------------------------------------------------
-          
-!                 ROOT IS BRACKETED
-          tupper = tempor
-          
-!                 -------------------------------------------------------------
-          
-        END IF
-        
-!               ---------------------------------------------------------------
-        
-!             END OF LOOP 2000
-        
-!             -----------------------------------------------------------------
-        
-      ELSE IF(tresid > zero)THEN
-        
-!             -----------------------------------------------------------------
-        
-!             INITIAL GUESS IS TOO HIGH
-        3000          CONTINUE
-        
-!               SET INITIAL GUESS AS UPPER LIMIT AND TRY AGAIN
-        tupper = tempor
-        tempor = tempor - tininc
-        
-!               ---------------------------------------------------------------
-        
-!               INITIALISE COEFFICIENTS OF TEMPERATURE POLYNOMIAL
-        tcoeff(0) = tuk2me
-        DO icp = 1, nctmax
-          tcoeff(icp) = zero
-        END DO
-        
-!               FOR EACH SPECIES LOCATE TEMPERATURE IN AN INTERVAL
-        DO ispec = 1,nspec
-          
-          itint = 1
-!          3100              CONTINUE
-!          IF(tempor > tinthi(itint,ispec))THEN
-!            IF(itint < ntint(ispec))THEN
-!              itint = itint + 1
-!              GO TO 3100
-!            END IF
-!          END IF
-!                 END OF LOOP 3100
-            DO WHILE (tempor > tinthi(itint,ispec) .and. itint < ntint(ispec))
-                itint = itint + 1
-            END DO
-         
-!                 CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
-          tcoeff(0) = tcoeff(0) + yrhs(ispec,ic,jc,kc)*  &
-              amascp(ncenth(itint,ispec),itint,ispec)
-          tcoeff(1) = tcoeff(1) + yrhs(ispec,ic,jc,kc)*amasct(1,itint,ispec)
-          DO icp = 2, ncpoly(itint,ispec)
-            tcoeff(icp) = tcoeff(icp)  &
-                + yrhs(ispec,ic,jc,kc)*amasct(icp,itint,ispec)
-          END DO
-          
-        END DO
-!               END OF RUN THROUGH ALL SPECIES
-        
-!               ---------------------------------------------------------------
-        
-!               EVALUATE TEMPERATURE RESIDUAL
-        tresid = tcoeff(nctmax)
-        DO icp = nctmm1,1,-1
-          tresid = tcoeff(icp) + tresid*tempor
-        END DO
-        tresid = tcoeff(0) + tresid*tempor
-        
-!               ---------------------------------------------------------------
-        
-!               CHECK NEW GUESS FOR CONVERGENCE
-        IF(ABS(tresid) < toltmp)THEN
-          
-!                 -------------------------------------------------------------
-          
-!                 NEW GUESS HAS CONVERGED
-          fnconv = .false.
-          
-!                 -------------------------------------------------------------
-          
-        ELSE IF(tresid > zero)THEN
-          
-!                 -------------------------------------------------------------
-          
-!                 NEW GUESS IS STILL TOO HIGH: GO ROUND AGAIN
-          IF(tempor > tlimlo)THEN
-            GO TO 3000
-          ELSE
-            WRITE(6,*) 'Fatal: TEMPIN: T lower bracket failed to converge'
-            WRITE(6,*)'processor:',iproc
-            WRITE(6,*)'at point:',ic,jc,kc
-            WRITE(6,*)'with values:',tempor,tresid
-            WRITE(6,*)drhs(ic,jc,kc)
-            WRITE(6,*)urhs(ic,jc,kc)
-            WRITE(6,*)vrhs(ic,jc,kc)
-            WRITE(6,*)wrhs(ic,jc,kc)
-            WRITE(6,*)erhs(ic,jc,kc)
-            DO ispec = 1, nspec
-              WRITE(6,*)yrhs(ispec,ic,jc,kc)
-            END DO
-            STOP
-          END IF
-          
-!                 -------------------------------------------------------------
-          
-        ELSE IF(tresid < zero)THEN
-          
-!                 -------------------------------------------------------------
-          
-!                 ROOT IS BRACKETED
-          tlower = tempor
-          
-!                 -------------------------------------------------------------
-          
-        END IF
-        
-!               ---------------------------------------------------------------
-        
-!             END OF LOOP 3000
-        
-!             -----------------------------------------------------------------
-        
-      END IF
-!           END OF CHECK INITIAL GUESS FOR CONVERGENCE
-      
-!           ===================================================================
-      
-!           ROOT IS BRACKETED
-!           =================
-!           NOW USE BISECTION TO REFINE THE ROOT
-      
-      IF(fnconv)THEN
-        
-        4000          CONTINUE
-        
-!               BISECT
-        tempor = half*(tlower+tupper)
-        
-!               ---------------------------------------------------------------
-        
-!               INITIALISE COEFFICIENTS OF TEMPERATURE POLYNOMIAL
-        tcoeff(0) = tuk2me
-        DO icp = 1, nctmax
-          tcoeff(icp) = zero
-        END DO
-        
-!               FOR EACH SPECIES LOCATE TEMPERATURE IN AN INTERVAL
-        DO ispec = 1,nspec
-          
-          itint = 1
-!          4100              CONTINUE
-!          IF(tempor > tinthi(itint,ispec))THEN
-!            IF(itint < ntint(ispec))THEN
-!              itint = itint + 1
-!              GO TO 4100
-!            END IF
-!          END IF
-!                 END OF LOOP 4100
-            DO WHILE (tempor > tinthi(itint,ispec) .and. itint < ntint(ispec))
-                itint = itint + 1
-            END DO
-         
-!                 CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
-          tcoeff(0) = tcoeff(0) + yrhs(ispec,ic,jc,kc)*  &
-              amascp(ncenth(itint,ispec),itint,ispec)
-          tcoeff(1) = tcoeff(1) + yrhs(ispec,ic,jc,kc)*amasct(1,itint,ispec)
-          DO icp = 2, ncpoly(itint,ispec)
-            tcoeff(icp) = tcoeff(icp)  &
-                + yrhs(ispec,ic,jc,kc)*amasct(icp,itint,ispec)
-          END DO
-          
-        END DO
-!               END OF RUN THROUGH ALL SPECIES
-        
-!               ---------------------------------------------------------------
-        
-!               EVALUATE TEMPERATURE RESIDUAL
-        tresid = tcoeff(nctmax)
-        DO icp = nctmm1,1,-1
-          tresid = tcoeff(icp) + tresid*tempor
-        END DO
-        tresid = tcoeff(0) + tresid*tempor
-        
-!               ---------------------------------------------------------------
-        
-        IF(ABS(tresid) < toltmp)THEN
-          
-!                 CONVERGED
-          trun(ic,jc,kc) = tempor
-          
-        ELSE IF(tresid < zero)THEN
-          
-          tlower = tempor
-          GO TO 4000
-          
-        ELSE IF(tresid > zero)THEN
-          
-          tupper = tempor
-          GO TO 4000
-          
-        END IF
-        
-!             -----------------------------------------------------------------
-!             END OF LOOP 4000
-        
-      END IF
-!           END OF BISECTION
-      
-!           ===================================================================
-      
-!           SET THE NEW TEMPERATURE
-      trun(ic,jc,kc) = tempor
-      
-!           ===================================================================
-      
-!           CONSTRUCT THE TEMPERATURE INTERVAL INDEX
-!           EVALUATE PRESSURE
-!           EVALUATE MIXTURE SPECIFIC HEAT CP
-      DO iindex = 1,nintmx
-        itndex(iindex,ic,jc,kc) = 0
-      END DO
-      store7(ic,jc,kc) = zero
-      transp(ic,jc,kc) = zero
-      DO ispec = 1,nspec
-        
-        itint = 1
-!        5100          CONTINUE
-!        IF(trun(ic,jc,kc) > tinthi(itint,ispec))THEN
-!          IF(itint < ntint(ispec))THEN
-!            itint = itint + 1
-!            GO TO 5100
-!          END IF
-!        END IF
-!             END OF LOOP 5100
-        DO WHILE (trun(ic,jc,kc) > tinthi(itint,ispec) .and. itint < ntint(ispec))
-            itint = itint + 1
-        END DO
-       
-!             SET THE TEMPERATURE INDEX
-        iindex = 1 + (ispec-1)/nspimx
-        ipower = ispec - (iindex-1)*nspimx - 1
-        itndex(iindex,ic,jc,kc) = itndex(iindex,ic,jc,kc)  &
-            + (itint-1)*ntbase**ipower
-        
-!             =================================================================
-        
-!             EVALUATE MIXTURE SPECIFIC HEAT CP
-        cpfory = amascp(ncpoly(itint,ispec),itint,ispec)
-        DO icp = ncpom1(itint,ispec),1,-1
-          cpfory = cpfory*trun(ic,jc,kc) + amascp(icp,itint,ispec)
-        END DO
-        transp(ic,jc,kc) = transp(ic,jc,kc) + yrhs(ispec,ic,jc,kc)*cpfory
-        
-!             =================================================================
-        
-!             EVALUATE (DENSITY TIMES) MIXTURE GAS CONSTANT FOR PRESSURE
-        store7(ic,jc,kc) = store7(ic,jc,kc)  &
-            + yrhs(ispec,ic,jc,kc)*rgspec(ispec)
-        
-!             =================================================================
-        
-      END DO
-      transp(ic,jc,kc) = transp(ic,jc,kc)/drhs(ic,jc,kc)
-      
-!           ===================================================================
-      
-!           EVALUATE PRESSURE
-      prun(ic,jc,kc) = trun(ic,jc,kc)*store7(ic,jc,kc)
-      
-!           ===================================================================
-      
-    END DO
-  END DO
-END DO
-
+    call ops_par_loop(tempin_kernel_main, "tempin kernel", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_gbl(amascp, 1, "real(8)", OPS_READ), &
+                    ops_arg_gbl(amasct, 1, "real(8)", OPS_READ), &
+                    ops_arg_gbl(ncpoly, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(ncpom1, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(tinthi, 1, "real(8)", OPS_READ), &
+                    ops_arg_gbl(rgspec, 1, "real(8)", OPS_READ), &
+                    ops_arg_gbl(trin, 1, "real(8)", OPS_READ), &
+                    ops_arg_gbl(ntint, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(nctmax, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(nintmx, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(nspec, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(nctmm1, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(iproc, 1, "integer", OPS_READ), &
+                    ops_arg_idx())
+    
 !     =========================================================================
 
-
-RETURN
 END SUBROUTINE tempin

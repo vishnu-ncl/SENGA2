@@ -61,7 +61,7 @@ PARAMETER(nxbigl=1-nhalox, nxbigr=nxsize+nhalox,  &
 INTEGER :: npenmx
 PARAMETER(npenmx=1)
 
-REAL(KIND=dp) :: fftrow(2*ngzmax,3,npenmx), ftpart(2*nszmax,3,npenmx),  &
+REAL(KIND=8) :: fftrow(2*ngzmax,3,npenmx), ftpart(2*nszmax,3,npenmx),  &
     fftinx(2*ngzmax)
 
 COMMON/ifturb/fftrow,ftpart,fftinx
@@ -105,28 +105,28 @@ INTEGER :: nllmax
 PARAMETER(nllmax=10)
 
 !     UNIVERSAL GAS CONSTANT
-REAL(KIND=dp) :: rguniv
-PARAMETER(rguniv=8314.20_dp)
+REAL(KIND=8) :: rguniv
+PARAMETER(rguniv=8314.20_8)
 
 !     CHEMICAL DATA
 !     =============
-REAL(KIND=dp) :: amolcp(ncofmx,ntinmx,nspcmx)
-REAL(KIND=dp) :: amolgb(ncofmx,ntinmx,nspcmx)
-REAL(KIND=dp) :: amascp(ncofmx,ntinmx,nspcmx)
-REAL(KIND=dp) :: amasct(ncofmx,ntinmx,nspcmx)
-REAL(KIND=dp) :: amasch(ncofmx,ntinmx,nspcmx)
-REAL(KIND=dp) :: amascs(ncofmx,ntinmx,nspcmx)
-REAL(KIND=dp) :: tintlo(ntinmx,nspcmx),tinthi(ntinmx,nspcmx)
-REAL(KIND=dp) :: diffmu(nssmax,nstpmx),diffmw(nssmax,nstpmx)
-REAL(KIND=dp) :: crspec(nssmax,nstpmx),cpspec(nssmax,nstpmx)
-REAL(KIND=dp) :: effy3b(nspcmx,nbdymx)
-REAL(KIND=dp) :: rparam(3,nstpmx)
-REAL(KIND=dp) :: rclind(4,nllmax)
-REAL(KIND=dp) :: rctroe(12,nllmax)
-REAL(KIND=dp) :: rcsrif(8,nllmax)
-REAL(KIND=dp) :: wmolar(nspcmx),ovwmol(nspcmx),rgspec(nspcmx)
-REAL(KIND=dp) :: clewis(nspcmx),olewis(nspcmx)
-REAL(KIND=dp) :: prefgb
+REAL(KIND=8) :: amolcp(ncofmx,ntinmx,nspcmx)
+REAL(KIND=8) :: amolgb(ncofmx,ntinmx,nspcmx)
+REAL(KIND=8) :: amascp(ncofmx,ntinmx,nspcmx)
+REAL(KIND=8) :: amasct(ncofmx,ntinmx,nspcmx)
+REAL(KIND=8) :: amasch(ncofmx,ntinmx,nspcmx)
+REAL(KIND=8) :: amascs(ncofmx,ntinmx,nspcmx)
+REAL(KIND=8) :: tintlo(ntinmx,nspcmx),tinthi(ntinmx,nspcmx)
+REAL(KIND=8) :: diffmu(nssmax,nstpmx),diffmw(nssmax,nstpmx)
+REAL(KIND=8) :: crspec(nssmax,nstpmx),cpspec(nssmax,nstpmx)
+REAL(KIND=8) :: effy3b(nspcmx,nbdymx)
+REAL(KIND=8) :: rparam(3,nstpmx)
+REAL(KIND=8) :: rclind(4,nllmax)
+REAL(KIND=8) :: rctroe(12,nllmax)
+REAL(KIND=8) :: rcsrif(8,nllmax)
+REAL(KIND=8) :: wmolar(nspcmx),ovwmol(nspcmx),rgspec(nspcmx)
+REAL(KIND=8) :: clewis(nspcmx),olewis(nspcmx)
+REAL(KIND=8) :: prefgb
 
 INTEGER :: nsspec(nssmax,nstpmx)
 INTEGER :: nrspec(nssmax,nstpmx),npspec(nssmax,nstpmx)
@@ -166,21 +166,21 @@ COMMON/chemic/amolcp,amolgb,amascp,amasct,amasch,amascs, tintlo,tinthi,  &
 !     MIXTURE AVERAGED TRANSPORT
 
 !     MASS FRACTION TOLERANCE
-REAL(KIND=dp) :: dfctol
-PARAMETER(dfctol = 0.0000000000010_dp)
+REAL(KIND=8) :: dfctol
+PARAMETER(dfctol = 0.0000000000010_8)
 
 !     MAX NUMBERS OF POLYNOMIAL COEFFICIENTS
 INTEGER :: ndcfmx,nvcfmx,nccfmx
 PARAMETER(ndcfmx = 4, nvcfmx = 4, nccfmx = 4)
 
 !     MOLECULAR TRANSPORT DATA
-REAL(KIND=dp) :: diffco(ndcfmx,nspcmx,nspcmx)
-REAL(KIND=dp) :: tdrcco(ndcfmx,nspcmx,nspcmx)
-REAL(KIND=dp) :: wilko1(nspcmx,nspcmx),wilko2(nspcmx,nspcmx)
-REAL(KIND=dp) :: viscco(nvcfmx,nspcmx)
-REAL(KIND=dp) :: condco(nccfmx,nspcmx)
-REAL(KIND=dp) :: pdifgb,tdifgb
-REAL(KIND=dp) :: wmltdr
+REAL(KIND=8) :: diffco(ndcfmx,nspcmx,nspcmx)
+REAL(KIND=8) :: tdrcco(ndcfmx,nspcmx,nspcmx)
+REAL(KIND=8) :: wilko1(nspcmx,nspcmx),wilko2(nspcmx,nspcmx)
+REAL(KIND=8) :: viscco(nvcfmx,nspcmx)
+REAL(KIND=8) :: condco(nccfmx,nspcmx)
+REAL(KIND=8) :: pdifgb,tdifgb
+REAL(KIND=8) :: wmltdr
 
 INTEGER :: ncodif,ncotdr,ncovis,ncocon
 INTEGER :: ncodm1,ncotm1,ncovm1,ncocm1
@@ -200,14 +200,14 @@ COMMON/diffus/diffco,tdrcco,wilko1,wilko2,viscco,condco,  &
 
 !     RADIATION TREATMENT
 
-REAL(KIND=dp) :: stefbo
-PARAMETER(stefbo = 0.00000005670373210_dp)
+REAL(KIND=8) :: stefbo
+PARAMETER(stefbo = 0.00000005670373210_8)
 
 INTEGER :: ncfrmx
 PARAMETER(ncfrmx = 6)
 
-REAL(KIND=dp) :: akprad(ncfrmx,nspcmx)
-REAL(KIND=dp) :: trefrn
+REAL(KIND=8) :: akprad(ncfrmx,nspcmx)
+REAL(KIND=8) :: trefrn
 
 INTEGER :: nsprid(nspcmx),nkprad(nspcmx),nkprm1(nspcmx)
 INTEGER :: nsprad,nfradn
@@ -223,14 +223,14 @@ COMMON/radiat/akprad,trefrn,nsprid,nkprad,nkprm1,nsprad,  &
 !     PHYSICAL AND NUMERICAL PARAMETERS
 
 !     MASS FRACTION TOLERANCE
-REAL(KIND=dp) :: ytoler
+REAL(KIND=8) :: ytoler
 PARAMETER(ytoler = 1.0E-10)
 
 !     NUMBERS
-REAL(KIND=dp) :: zero,one,two,three,four,eight,  &
+REAL(KIND=8) :: zero,one,two,three,four,eight,  &
     half,thrf,thrd,tthd,fthd,qrtr
-PARAMETER(zero=0.0_dp, one=1.0_dp, two=2.0_dp, three=3.0_dp,  &
-    four=4.0_dp, eight=8.0_dp)
+PARAMETER(zero=0.0_8, one=1.0_8, two=2.0_8, three=3.0_8,  &
+    four=4.0_8, eight=8.0_8)
 PARAMETER(half=one/two,  thrf=three*half, thrd=one/three,  &
     tthd=two*thrd, fthd=two*tthd,   qrtr=one/four)
 
@@ -239,10 +239,10 @@ INTEGER :: ipref,jpref,kpref
 PARAMETER(ipref=1,jpref=1,kpref=1)
 
 !     PHYSICAL AND NUMERICAL DATA
-REAL(KIND=dp) :: yrin(nspcmx)
-REAL(KIND=dp) :: prin,trin,drin,urin,vrin,wrin,erin
-REAL(KIND=dp) :: xgdlen,ygdlen,zgdlen
-REAL(KIND=dp) :: etime,tstep,deltax,deltay,deltaz,pi,clnten
+REAL(KIND=8) :: yrin(nspcmx)
+REAL(KIND=8) :: prin,trin,drin,urin,vrin,wrin,erin
+REAL(KIND=8) :: xgdlen,ygdlen,zgdlen
+REAL(KIND=8) :: etime,tstep,deltax,deltay,deltaz,pi,clnten
 INTEGER :: itime,ntime,ntime1,ntime2,nstpsw,nsaved, inturb,inflam,inseed,  &
     nxgreq,nygreq,nzgreq,nxpreq,nypreq,nzpreq,nspreq,  &
     ntdump,ntrept,niters,itstat,ntstat,idflag,  &
@@ -270,7 +270,7 @@ INTEGER :: nobc,nbound,nperi
 PARAMETER(nobc=0,nbound=1,nperi=2)
 
 !     COEFFICIENTS OF SPATIAL DIFFERENCING SCHEMES
-REAL(KIND=dp) :: acoeff,bcoeff,ccoeff,dcoeff,ecoeff,  &
+REAL(KIND=8) :: acoeff,bcoeff,ccoeff,dcoeff,ecoeff,  &
     acoef1,bcoef1,ccoef1,dcoef1,  &
     acoef2,bcoef2,ccoef2,dcoef2,  &
     acoef3,bcoef3,  &
@@ -332,7 +332,7 @@ COMMON/dfdiff/acoeff,bcoeff,ccoeff,dcoeff,ecoeff,  &
 !     EMSTRT-------------------------------------------------------------------
 
 !     DATA FOR MESH STRETCHING
-REAL(KIND=dp) :: gcmreg(nszmax),gcmstr(nszmax),  &
+REAL(KIND=8) :: gcmreg(nszmax),gcmstr(nszmax),  &
     dgdhat(nszmax),dgdhsq(nszmax),d2gdh2(nszmax)
 
 COMMON/emstrt/gcmreg,gcmstr,dgdhat,dgdhsq,d2gdh2
@@ -341,7 +341,7 @@ COMMON/emstrt/gcmreg,gcmstr,dgdhat,dgdhsq,d2gdh2
 !     FILCOM-------------------------------------------------------------------
 
 !     SPATIAL FILTER COEFFICIENTS
-REAL(KIND=dp) :: facofx,fbcofx,fccofx,fdcofx,fecofx,ffcofx,fgcofx,  &
+REAL(KIND=8) :: facofx,fbcofx,fccofx,fdcofx,fecofx,ffcofx,fgcofx,  &
     facofy,fbcofy,fccofy,fdcofy,fecofy,ffcofy,fgcofy,  &
     facofz,fbcofz,fccofz,fdcofz,fecofz,ffcofz,fgcofz,  &
     facf1x,fbcf1x,fccf1x,fdcf1x,fecf1x,ffcf1x,fgcf1x,  &
@@ -404,13 +404,13 @@ COMMON/filcom/facofx,fbcofx,fccofx,fdcofx,fecofx,ffcofx,fgcofx,  &
 INTEGER :: nrkmax
 PARAMETER(nrkmax=5)
 
-REAL(KIND=dp) :: rklhs(nrkmax),rkrhs(nrkmax)
-REAL(KIND=dp) :: rkerr(nrkmax),rktim(nrkmax)
-REAL(KIND=dp) :: ctmult,ctalph,ctbeta,ctgama
-REAL(KIND=dp) :: errtol,errlow,trmin,trmax,tsmin,tsmax
-REAL(KIND=dp) :: errold,errldr,btime
-REAL(KIND=dp) :: erdnrm,erunrm,ervnrm,erwnrm,erenrm
-REAL(KIND=dp) :: erynrm(nspcmx)
+REAL(KIND=8) :: rklhs(nrkmax),rkrhs(nrkmax)
+REAL(KIND=8) :: rkerr(nrkmax),rktim(nrkmax)
+REAL(KIND=8) :: ctmult,ctalph,ctbeta,ctgama
+REAL(KIND=8) :: errtol,errlow,trmin,trmax,tsmin,tsmax
+REAL(KIND=8) :: errold,errldr,btime
+REAL(KIND=8) :: erdnrm,erunrm,ervnrm,erwnrm,erenrm
+REAL(KIND=8) :: erynrm(nspcmx)
 INTEGER :: irkstp,nrkstp,nrksm1
 INTEGER :: inderr
 LOGICAL :: fupelc
@@ -423,9 +423,9 @@ COMMON/runkut/rklhs,rkrhs,rkerr,rktim, ctmult,ctalph,ctbeta,ctgama,  &
 !     RKNORM-------------------------------------------------------------------
 
 !     RUNGE-KUTTA SUBSTEP ERROR NORMS
-REAL(KIND=dp) :: erdrhs(nrkmax),erurhs(nrkmax),ervrhs(nrkmax),  &
+REAL(KIND=8) :: erdrhs(nrkmax),erurhs(nrkmax),ervrhs(nrkmax),  &
     erwrhs(nrkmax),ererhs(nrkmax)
-REAL(KIND=dp) :: eryrhs(nspcmx,nrkmax)
+REAL(KIND=8) :: eryrhs(nspcmx,nrkmax)
 
 COMMON/rknorm/erdrhs,erurhs,ervrhs,erwrhs,ererhs,eryrhs
 
@@ -433,72 +433,55 @@ COMMON/rknorm/erdrhs,erurhs,ervrhs,erwrhs,ererhs,eryrhs
 !     PRVARS-------------------------------------------------------------------
 
 !     PRINCIPAL VARIABLES (ALL STANDARD SIZE ARRAYS)
-real(kind=dp), dimension(:,:,:), allocatable :: drun,urun,vrun,wrun,erun
-real(kind=dp), dimension(:,:,:,:), allocatable :: yrun
-real(kind=dp), dimension(:,:,:), allocatable :: crin
-
-!COMMON/prvars/drun,urun,vrun,wrun,erun,yrun,crin
+real(kind=8), dimension(:,:,:), allocatable :: drun,urun,vrun,wrun,erun
+real(kind=8), dimension(:,:,:,:), allocatable :: yrun
+real(kind=8), dimension(:,:,:), allocatable :: crin
 
 !     PRVARS-------------------------------------------------------------------
 !     TIMRHS-------------------------------------------------------------------
 
 !     TIME-STEPPING RHS TERMS (ALL BIGGER SIZE ARRAYS)
-real(kind=dp), dimension(:,:,:), allocatable :: drhs,urhs,vrhs,wrhs,erhs
-real(kind=dp), dimension(:,:,:,:), allocatable :: yrhs
-
-!COMMON/timrhs/drhs,urhs,vrhs,wrhs,erhs,yrhs
+real(kind=8), dimension(:,:,:), allocatable :: drhs,urhs,vrhs,wrhs,erhs
+real(kind=8), dimension(:,:,:,:), allocatable :: yrhs
 
 !     TIMRHS-------------------------------------------------------------------
 !     TIMERR-------------------------------------------------------------------
 
 !     TIME-STEPPING ERROR ARRAYS (ALL STANDARD SIZE ARRAYS)
-real(kind=dp), dimension(:,:,:), allocatable :: derr,uerr,verr,werr,eerr
-real(kind=dp), dimension(:,:,:,:), allocatable :: yerr
-
-!COMMON/timerr/derr,uerr,verr,werr,eerr,yerr
+real(kind=8), dimension(:,:,:), allocatable :: derr,uerr,verr,werr,eerr
+real(kind=8), dimension(:,:,:,:), allocatable :: yerr
 
 !     TIMERR-------------------------------------------------------------------
 !     WORKSP-------------------------------------------------------------------
 
 !     WORKSPACE (STANDARD SIZE ARRAYS)
-real(kind=dp), dimension(:,:,:), allocatable :: store1,store2,store3,store4,store5,store6,divm
-real(kind=dp), dimension(:,:,:,:), allocatable :: rate,rrte
-
-!COMMON/worksp/store1,store2,store3,store4,store5,store6,divm,rate, rrte
+real(kind=8), dimension(:,:,:), allocatable :: store1,store2,store3,store4,store5,store6,divm
+real(kind=8), dimension(:,:,:,:), allocatable :: rate,rrte
 
 !     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !     WORKSPACE (DIFFUSIVE CORRECTION VELOCITY, STANDARD SIZE ARRAYS)
-real(kind=dp), dimension(:,:,:), allocatable :: ucor,vcor,wcor
+real(kind=8), dimension(:,:,:), allocatable :: ucor,vcor,wcor
 
-!COMMON/worksc/ucor,vcor,wcor
 !     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 !     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !     WORKSPACE (MIXTURE AVERAGED TRANSPORT, STANDARD SIZE ARRAYS)
-real(kind=dp), dimension(:,:,:), allocatable :: wd1x,pd1x,td1x,wd1y,pd1y,td1y,wd1z,pd1z,td1z
-real(kind=dp), dimension(:,:,:), allocatable :: wd2x,pd2x,td2x,wd2y,pd2y,td2y,wd2z,pd2z,td2z
-
-!COMMON/workst/wd1x,wd1y,wd1z,wd2x,wd2y,wd2z, pd1x,pd1y,pd1z,pd2x,pd2y,pd2z,  &
-!    td1x,td1y,td1z,td2x,td2y,td2z
+real(kind=8), dimension(:,:,:), allocatable :: wd1x,pd1x,td1x,wd1y,pd1y,td1y,wd1z,pd1z,td1z
+real(kind=8), dimension(:,:,:), allocatable :: wd2x,pd2x,td2x,wd2y,pd2y,td2y,wd2z,pd2z,td2z
 
 !     WORKSPACE (MIXTURE AVERAGED TRANSPORT, BIGGER SIZE ARRAYS)
-real(kind=dp), dimension(:,:,:), allocatable :: wmomix,difmix,tdrmix
+real(kind=8), dimension(:,:,:), allocatable :: wmomix,difmix,tdrmix
 
-!COMMON/workbt/wmomix,difmix,tdrmix
 !     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 !     WORKSPACE (BIGGER SIZE ARRAYS)
-real(kind=dp), dimension(:,:,:), allocatable :: utmp,vtmp,wtmp,prun,trun,transp,store7
-
-!COMMON/worksb/utmp,vtmp,wtmp,prun,trun,transp,store7
+real(kind=8), dimension(:,:,:), allocatable :: utmp,vtmp,wtmp,prun,trun,transp,store7
 
 !     WORKSPACE (TEMPERATURE INDEXING)
 integer, dimension(:,:,:,:), allocatable :: itndex
 
-!COMMON/worksi/itndex
-
 !     WORKSPACE (PARALLEL TRANSFER ARRAY)
-REAL(KIND=dp) :: parray(nparay)
+REAL(KIND=8) :: parray(nparay)
 
 COMMON/workpt/parray
 
@@ -541,11 +524,11 @@ COMMON/nsbccf/fxlcnv,fxlvsn,fxlvst,fxlcon,fxladb,fxldif,  &
     fzrcnw,fzradw,fzrdfw, fxltrb,fxrtrb,fyltrb,fyrtrb,fzltrb,fzrtrb
 
 !     BC DATA
-REAL(KIND=dp) :: rxlprm(nbcprr),rxrprm(nbcprr),  &
+REAL(KIND=8) :: rxlprm(nbcprr),rxrprm(nbcprr),  &
     rylprm(nbcprr),ryrprm(nbcprr), rzlprm(nbcprr),rzrprm(nbcprr)
-REAL(KIND=dp) :: cobcxl,cobcxr,cobcyl,cobcyr,cobczl,cobczr,  &
+REAL(KIND=8) :: cobcxl,cobcxr,cobcyl,cobcyr,cobczl,cobczr,  &
     pinfxl,pinfxr,pinfyl,pinfyr,pinfzl,pinfzr
-REAL(KIND=dp) :: slocxl,slocxr,slocyl,slocyr,sloczl,sloczr,  &
+REAL(KIND=8) :: slocxl,slocxr,slocyl,slocyr,sloczl,sloczr,  &
     elocxl,elocxr,elocyl,elocyr,eloczl,eloczr,  &
     bvelxl,bvelxr,bvelyl,bvelyr,bvelzl,bvelzr,  &
     svelxl,svelxr,svelyl,svelyr,svelzl,svelzr,  &
@@ -578,89 +561,62 @@ COMMON/nsbccp/rxlprm,rxrprm,rylprm,ryrprm,rzlprm,rzrprm,  &
 
 !     INFLOW VELOCITY FIELD DATA
 !     REQUIRED ONLY FOR TURBULENT INFLOW
-real(kind=dp), dimension(:,:,:), allocatable :: ufxl,vfxl,wfxl
-!COMMON/nbcinv/ufxl,vfxl,wfxl
+real(kind=8), dimension(:,:,:), allocatable :: ufxl,vfxl,wfxl
 
 !     WALL BC DIFFERENCING DATA
 INTEGER :: ncbcsz
 PARAMETER(ncbcsz=5)
-REAL(KIND=dp) :: acbcxl(ncbcsz),acbcxr(ncbcsz),  &
+REAL(KIND=8) :: acbcxl(ncbcsz),acbcxr(ncbcsz),  &
     acbcyl(ncbcsz),acbcyr(ncbcsz), acbczl(ncbcsz),acbczr(ncbcsz)
 COMMON/bcdifw/acbcxl,acbcxr,acbcyl,acbcyr,acbczl,acbczr
 
 !     X-DIRECTION LEFT-HAND END
-real(kind=dp), dimension(:,:,:,:), allocatable :: bclyxl,stryxl,dydtxl,ratexl,strhxl
-real(kind=dp), dimension(:,:,:), allocatable :: bcl1xl,bcl2xl,bcl3xl,bcl4xl,bcl5xl, &
+real(kind=8), dimension(:,:,:,:), allocatable :: bclyxl,stryxl,dydtxl,ratexl,strhxl
+real(kind=8), dimension(:,:,:), allocatable :: bcl1xl,bcl2xl,bcl3xl,bcl4xl,bcl5xl, &
     bcltxl,struxl,strvxl,strwxl,strpxl, &
     strdxl,strtxl,strexl,strgxl,strrxl, &
     dudtxl,dvdtxl,dwdtxl,dtdtxl,dddtxl, &
     acouxl,ova2xl,gam1xl,ovgmxl,sydtxl,sorpxl
-!COMMON/nbccxl/bclyxl,stryxl,dydtxl,ratexl,strhxl,  &
-!    bcl1xl,bcl2xl,bcl3xl,bcl4xl,bcl5xl,bcltxl,  &
-!    struxl,strvxl,strwxl,strpxl,strdxl,strtxl, strexl,strgxl,strrxl,  &
-!    dudtxl,dvdtxl,dwdtxl,dtdtxl,dddtxl, acouxl,ova2xl,gam1xl,ovgmxl,sydtxl,sorpxl
 
 !     X-DIRECTION RIGHT-HAND END
-real(kind=dp), dimension(:,:,:,:), allocatable :: bclyxr,stryxr,dydtxr,ratexr,strhxr
-real(kind=dp), dimension(:,:,:), allocatable :: bcl1xr,bcl2xr,bcl3xr,bcl4xr,bcl5xr, &
+real(kind=8), dimension(:,:,:,:), allocatable :: bclyxr,stryxr,dydtxr,ratexr,strhxr
+real(kind=8), dimension(:,:,:), allocatable :: bcl1xr,bcl2xr,bcl3xr,bcl4xr,bcl5xr, &
     bcltxr,struxr,strvxr,strwxr,strpxr, &
     strdxr,strtxr,strexr,strgxr,strrxr, &
     dudtxr,dvdtxr,dwdtxr,dtdtxr,dddtxr, &
     acouxr,ova2xr,gam1xr,ovgmxr,sydtxr,sorpxr
-!COMMON/nbccxr/bclyxr,stryxr,dydtxr,ratexr,strhxr,  &
-!    bcl1xr,bcl2xr,bcl3xr,bcl4xr,bcl5xr,bcltxr,  &
-!    struxr,strvxr,strwxr,strpxr,strdxr,strtxr, strexr,strgxr,strrxr,  &
-!    dudtxr,dvdtxr,dwdtxr,dtdtxr,dddtxr, acouxr,ova2xr,gam1xr,ovgmxr,sydtxr,sorpxr
-
 
 !     Y-DIRECTION LEFT-HAND END
-real(kind=dp), dimension(:,:,:,:), allocatable :: bclyyl,stryyl,dydtyl,rateyl,strhyl
-real(kind=dp), dimension(:,:,:), allocatable :: bcl1yl,bcl2yl,bcl3yl,bcl4yl,bcl5yl, &
+real(kind=8), dimension(:,:,:,:), allocatable :: bclyyl,stryyl,dydtyl,rateyl,strhyl
+real(kind=8), dimension(:,:,:), allocatable :: bcl1yl,bcl2yl,bcl3yl,bcl4yl,bcl5yl, &
     bcltyl,struyl,strvyl,strwyl,strpyl, &
     strdyl,strtyl,streyl,strgyl,strryl, &
     dudtyl,dvdtyl,dwdtyl,dtdtyl,dddtyl, &
     acouyl,ova2yl,gam1yl,ovgmyl,sydtyl,sorpyl
-!COMMON/nbccyl/bclyyl,stryyl,dydtyl,rateyl,strhyl,  &
-!    bcl1yl,bcl2yl,bcl3yl,bcl4yl,bcl5yl,bcltyl,  &
-!    struyl,strvyl,strwyl,strpyl,strdyl,strtyl, streyl,strgyl,strryl,  &
-!    dudtyl,dvdtyl,dwdtyl,dtdtyl,dddtyl, acouyl,ova2yl,gam1yl,ovgmyl,sydtyl,sorpyl
 
 !     Y-DIRECTION RIGHT-HAND END
-real(kind=dp), dimension(:,:,:,:), allocatable :: bclyyr,stryyr,dydtyr,rateyr,strhyr
-real(kind=dp), dimension(:,:,:), allocatable :: bcl1yr,bcl2yr,bcl3yr,bcl4yr,bcl5yr, &
+real(kind=8), dimension(:,:,:,:), allocatable :: bclyyr,stryyr,dydtyr,rateyr,strhyr
+real(kind=8), dimension(:,:,:), allocatable :: bcl1yr,bcl2yr,bcl3yr,bcl4yr,bcl5yr, &
     bcltyr,struyr,strvyr,strwyr,strpyr, &
     strdyr,strtyr,streyr,strgyr,strryr, &
     dudtyr,dvdtyr,dwdtyr,dtdtyr,dddtyr, &
     acouyr,ova2yr,gam1yr,ovgmyr,sydtyr,sorpyr
-!COMMON/nbccyr/bclyyr,stryyr,dydtyr,rateyr,strhyr,  &
-!    bcl1yr,bcl2yr,bcl3yr,bcl4yr,bcl5yr,bcltyr,  &
-!    struyr,strvyr,strwyr,strpyr,strdyr,strtyr, streyr,strgyr,strryr,  &
-!    dudtyr,dvdtyr,dwdtyr,dtdtyr,dddtyr, acouyr,ova2yr,gam1yr,ovgmyr,sydtyr,sorpyr
-
 
 !     Z-DIRECTION LEFT-HAND END
-real(kind=dp), dimension(:,:,:,:), allocatable :: bclyzl,stryzl,dydtzl,ratezl,strhzl
-real(kind=dp), dimension(:,:,:), allocatable :: bcl1zl,bcl2zl,bcl3zl,bcl4zl,bcl5zl, &
+real(kind=8), dimension(:,:,:,:), allocatable :: bclyzl,stryzl,dydtzl,ratezl,strhzl
+real(kind=8), dimension(:,:,:), allocatable :: bcl1zl,bcl2zl,bcl3zl,bcl4zl,bcl5zl, &
     bcltzl,struzl,strvzl,strwzl,strpzl, &
     strdzl,strtzl,strezl,strgzl,strrzl, &
     dudtzl,dvdtzl,dwdtzl,dtdtzl,dddtzl, &
     acouzl,ova2zl,gam1zl,ovgmzl,sydtzl,sorpzl
-!COMMON/nbcczl/bclyzl,stryzl,dydtzl,ratezl,strhzl,  &
-!    bcl1zl,bcl2zl,bcl3zl,bcl4zl,bcl5zl,bcltzl,  &
-!    struzl,strvzl,strwzl,strpzl,strdzl,strtzl, strezl,strgzl,strrzl,  &
-!    dudtzl,dvdtzl,dwdtzl,dtdtzl,dddtzl, acouzl,ova2zl,gam1zl,ovgmzl,sydtzl,sorpzl
 
 !     Z-DIRECTION RIGHT-HAND END
-real(kind=dp), dimension(:,:,:,:), allocatable :: bclyzr,stryzr,dydtzr,ratezr,strhzr
-real(kind=dp), dimension(:,:,:), allocatable :: bcl1zr,bcl2zr,bcl3zr,bcl4zr,bcl5zr, &
+real(kind=8), dimension(:,:,:,:), allocatable :: bclyzr,stryzr,dydtzr,ratezr,strhzr
+real(kind=8), dimension(:,:,:), allocatable :: bcl1zr,bcl2zr,bcl3zr,bcl4zr,bcl5zr, &
     bcltzr,struzr,strvzr,strwzr,strpzr, &
     strdzr,strtzr,strezr,strgzr,strrzr, &
     dudtzr,dvdtzr,dwdtzr,dtdtzr,dddtzr, &
     acouzr,ova2zr,gam1zr,ovgmzr,sydtzr,sorpzr
-!COMMON/nbcczr/bclyzr,stryzr,dydtzr,ratezr,strhzr,  &
-!    bcl1zr,bcl2zr,bcl3zr,bcl4zr,bcl5zr,bcltzr,  &
-!    struzr,strvzr,strwzr,strpzr,strdzr,strtzr, strezr,strgzr,strrzr,  &
-!    dudtzr,dvdtzr,dwdtzr,dtdtzr,dddtzr, acouzr,ova2zr,gam1zr,ovgmzr,sydtzr,sorpzr
 
 !     NSBCCL-------------------------------------------------------------------
 !     DOMDEC-------------------------------------------------------------------
@@ -692,7 +648,7 @@ COMMON/domdec/npmapx,npmapy,npmapz,nprocx,nprocy,nprocz,  &
 INTEGER :: nstore
 PARAMETER(nstore=32)
 
-REAL(KIND=dp) :: umax(nstore),umin(nstore),vmax(nstore),vmin(nstore),  &
+REAL(KIND=8) :: umax(nstore),umin(nstore),vmax(nstore),vmin(nstore),  &
     wmax(nstore),wmin(nstore), ubar(nstore),vbar(nstore),wbar(nstore),  &
     uvar(nstore),vvar(nstore),wvar(nstore),  &
     tke(nstore),dissip(nstore),dissom(nstore),  &

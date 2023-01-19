@@ -36,7 +36,7 @@ use com_senga
 !     ARGUMENTS
 !     =========
 
-REAL(KIND=dp), INTENT(OUT)            :: bigarr(nspcmx,nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
+REAL(KIND=8), INTENT(OUT)            :: bigarr(nspcmx,nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
 INTEGER, INTENT(IN)                      :: jndexl
 INTEGER, INTENT(IN)                      :: jndexr
 INTEGER, INTENT(IN)                      :: kndexl

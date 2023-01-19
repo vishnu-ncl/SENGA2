@@ -14,13 +14,13 @@ INTEGER :: nsparm
 PARAMETER(nsparm = 4)
 
 !     SPECTRUM PARAMETERS
-REAL(KIND=dp) :: sparam(nsparm)
+REAL(KIND=8) :: sparam(nsparm)
 
 
 !     DATA SPECIFIC TO THE SPECTRUM FUNCTION
 !     --------------------------------------
 !     BATCHELOR-TOWNSEND SPECTRUM
-REAL(KIND=dp) :: const0,ck0,ovk0,covk0
+REAL(KIND=8) :: const0,ck0,ovk0,covk0
 
 
 COMMON/espcom/sparam, const0,ck0,ovk0,covk0

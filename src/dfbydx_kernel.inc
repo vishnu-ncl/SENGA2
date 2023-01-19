@@ -2,9 +2,9 @@ SUBROUTINE dfbydx_kernel_interior(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
-    real(kind=dp), dimension(1) :: fderiv
-    real(kind=dp) :: fdiffa, fdiffb, fdiffc, fdiffd, fdiffe
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd, fdiffe
 
     fdiffa = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(-1,0,0))
     fdiffb = functn(OPS_ACC1(2,0,0)) - functn(OPS_ACC1(-2,0,0))
@@ -22,9 +22,9 @@ SUBROUTINE dfbydx_kernel_lhpoint_4th_onesided(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
-    real(kind=dp), dimension(1) :: fderiv
-    real(kind=dp) :: fdiffa, fdiffb, fdiffc, fdiffd
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd
 
 !   lh point: 4th order one-sided
     fdiffa = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(0,0,0))
@@ -40,9 +40,9 @@ SUBROUTINE dfbydx_kernel_lhpoint_4th_mixed(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
-    real(kind=dp), dimension(1) :: fderiv
-    real(kind=dp) :: fdiffa, fdiffb, fdiffc, fdiffd
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd
 
 !   lh point plus 1: 4th order mixed
     fdiffa = functn(OPS_ACC1(-1,0,0)) - functn(OPS_ACC1(0,0,0))
@@ -58,9 +58,9 @@ SUBROUTINE dfbydx_kernel_lhpoint_4th_centered(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
-    real(kind=dp), dimension(1) :: fderiv
-    real(kind=dp) :: fdiffa, fdiffb
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdiffa, fdiffb
 
 !   lh point plus 2: 4th order centered
     fdiffa = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(-1,0,0))
@@ -73,9 +73,9 @@ SUBROUTINE dfbydx_kernel_lhpoint_6th_centered(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
-    real(kind=dp), dimension(1) :: fderiv
-    real(kind=dp) :: fdiffa, fdiffb, fdiffc
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdiffa, fdiffb, fdiffc
 
 !   lh point plus 3: 6th order centered
     fdiffa = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(-1,0,0))
@@ -90,9 +90,9 @@ SUBROUTINE dfbydx_kernel_lhpoint_8th_centered(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
-    real(kind=dp), dimension(1) :: fderiv
-    real(kind=dp) :: fdiffa, fdiffb, fdiffc, fdiffd
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd
 
 !   lh point plus 4: 8th order centered
     fdiffa = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(-1,0,0))
@@ -108,9 +108,9 @@ SUBROUTINE dfbydx_kernel_rhpoint_8th_centered(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
-    real(kind=dp), dimension(1) :: fderiv
-    real(kind=dp) :: fdiffa, fdiffb, fdiffc, fdiffd
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd
 
 !   rh point minus 4: 8th order centered
     fdiffa = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(-1,0,0))
@@ -126,9 +126,9 @@ SUBROUTINE dfbydx_kernel_rhpoint_6th_centered(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
-    real(kind=dp), dimension(1) :: fderiv
-    real(kind=dp) :: fdiffa, fdiffb, fdiffc
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdiffa, fdiffb, fdiffc
 
 !   rh point minus 3: 6th order centered
     fdiffa = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(-1,0,0))
@@ -143,9 +143,9 @@ SUBROUTINE dfbydx_kernel_rhpoint_4th_centered(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
-    real(kind=dp), dimension(1) :: fderiv
-    real(kind=dp) :: fdiffa, fdiffb
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdiffa, fdiffb
 
 !   rh point minus 2: 4th order centered
     fdiffa = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(-1,0,0))
@@ -158,9 +158,9 @@ SUBROUTINE dfbydx_kernel_rhpoint_4th_mixed(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
-    real(kind=dp), dimension(1) :: fderiv
-    real(kind=dp) :: fdiffa, fdiffb, fdiffc, fdiffd
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd
 
 !   rh point minus 1: 4th order mixed
     fdiffa = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(1,0,0))
@@ -176,9 +176,9 @@ SUBROUTINE dfbydx_kernel_rhpoint_4th_onesided(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: functn
-    real(kind=dp), dimension(1) :: fderiv
-    real(kind=dp) :: fdiffa, fdiffb, fdiffc, fdiffd
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd
 
 !   rh point: 4th order one-sided
     fdiffa = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(-1,0,0))
@@ -194,7 +194,7 @@ SUBROUTINE dfbydx_kernel_scaling(fderiv)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: fderiv
+    real(kind=8), dimension(1) :: fderiv
 
     fderiv(OPS_ACC1(0,0,0)) = fderiv(OPS_ACC1(0,0,0))*ovdelx
 

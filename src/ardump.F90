@@ -26,7 +26,7 @@ SUBROUTINE ardump(array,nxphys,nyphys,nzphys)
 !   ARGUMENTS
 !   =========
 
-    real(kind=dp), intent(IN OUT)       :: array(nxphys,nyphys,nzphys)
+    real(kind=8), intent(IN OUT)       :: array(nxphys,nyphys,nzphys)
     integer, intent(IN OUT)             :: nxphys
     integer, intent(IN)                 :: nyphys
     integer, intent(IN)                 :: nzphys
