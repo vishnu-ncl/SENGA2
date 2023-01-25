@@ -392,9 +392,9 @@ SUBROUTINE boundt_kernel_eqG_xdir(erhs,yrhs,itndex,strtx,amasch,rgspec,ncpoly,nc
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: erhs,yrhs
+    real(kind=8), dimension(1) :: erhs
     integer, dimension(1), intent(in) :: itndex
-    real(kind=8), dimension(1), intent(in) :: strtx
+    real(kind=8), dimension(1), intent(in) :: yrhs,strtx
 
     integer, intent(in) :: ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspec
 
@@ -424,9 +424,9 @@ SUBROUTINE boundt_kernel_eqG_ydir(erhs,yrhs,itndex,strty,amasch,rgspec,ncpoly,nc
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: erhs,yrhs
+    real(kind=8), dimension(1) :: erhs
     integer, dimension(1), intent(in) :: itndex
-    real(kind=8), dimension(1), intent(in) :: strty
+    real(kind=8), dimension(1), intent(in) :: yrhs,strty
 
     integer, intent(in) :: ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspec
 
@@ -456,9 +456,9 @@ SUBROUTINE boundt_kernel_eqG_zdir(erhs,yrhs,itndex,strtz,amasch,rgspec,ncpoly,nc
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: erhs,yrhs
+    real(kind=8), dimension(1) :: erhs
     integer, dimension(1), intent(in) :: itndex
-    real(kind=8), dimension(1), intent(in) :: strtz
+    real(kind=8), dimension(1), intent(in) :: yrhs,strtz
 
     integer, intent(in) :: ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspec
 

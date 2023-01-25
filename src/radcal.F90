@@ -78,7 +78,7 @@ SUBROUTINE radcal
 !       ADD THE SPECIES CONTRIBUTION
         rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(radcal_kernel_addspecies, "ADD THE SPECIES CONTRIBUTION", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
                         ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
@@ -92,7 +92,7 @@ SUBROUTINE radcal
 !   INCLUDE THE RADIATION TERM IN THE ENERGY EQUATION
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(radcal_kernel_addradiation, "INCLUDE THE RADIATION TERM IN THE ENERGY EQUATION", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ))
 

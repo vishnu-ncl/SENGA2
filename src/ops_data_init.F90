@@ -10,7 +10,6 @@ SUBROUTINE ops_data_init()
     INTEGER :: d_p(3) !max boundary depths for the dat in the possitive direction
     INTEGER :: d_m(3) !max boundary depths for the dat in the negative direction
 
-
     INTEGER a3d_000(3)    /0,0,0/
 
     integer stride3d_x(3) /1,0,0/
@@ -29,6 +28,11 @@ SUBROUTINE ops_data_init()
 
     INTEGER a3d_p100_to_p400_x(12) /1,0,0, 2,0,0, 3,0,0, 4,0,0/
     INTEGER a3d_m100_to_m400_x(12) /-1,0,0, -2,0,0, -3,0,0, -4,0,0/
+
+    INTEGER a3d_p200_to_m200_x_no000(12) /2,0,0, 1,0,0, -1,0,0, -2,0,0/
+    INTEGER a3d_p300_to_m300_x_no000(18) /3,0,0, 2,0,0, 1,0,0, -1,0,0, -2,0,0, -3,0,0/
+    INTEGER a3d_p400_to_m400_x_no000(24) /4,0,0, 3,0,0, 2,0,0, 1,0,0, -1,0,0, -2,0,0, -3,0,0, -4,0,0/
+    INTEGER a3d_p500_to_m500_x_no000(30) /5,0,0, 4,0,0, 3,0,0, 2,0,0, 1,0,0, -1,0,0, -2,0,0, -3,0,0, -4,0,0, -5,0,0/
 
     INTEGER a3d_p200_to_m200_x(15) /2,0,0, 1,0,0, 0,0,0, -1,0,0, -2,0,0/
     INTEGER a3d_p300_to_m300_x(21) /3,0,0, 2,0,0, 1,0,0, 0,0,0, -1,0,0, -2,0,0, -3,0,0/
@@ -50,6 +54,11 @@ SUBROUTINE ops_data_init()
     INTEGER a3d_p010_to_p040_y(12) /0,1,0, 0,2,0, 0,3,0, 0,4,0/
     INTEGER a3d_m010_to_m040_y(12) /0,-1,0, 0,-2,0, 0,-3,0, 0,-4,0/
 
+    INTEGER a3d_p020_to_m020_y_no000(12) /0,2,0, 0,1,0, 0,-1,0, 0,-2,0/
+    INTEGER a3d_p030_to_m030_y_no000(18) /0,3,0, 0,2,0, 0,1,0, 0,-1,0, 0,-2,0, 0,-3,0/
+    INTEGER a3d_p040_to_m040_y_no000(24) /0,4,0, 0,3,0, 0,2,0, 0,1,0, 0,-1,0, 0,-2,0, 0,-3,0, 0,-4,0/
+    INTEGER a3d_p050_to_m050_y_no000(30) /0,5,0, 0,4,0, 0,3,0, 0,2,0, 0,1,0, 0,-1,0, 0,-2,0, 0,-3,0, 0,-4,0, 0,-5,0/
+
     INTEGER a3d_p020_to_m020_y(15) /0,2,0, 0,1,0, 0,0,0, 0,-1,0, 0,-2,0/
     INTEGER a3d_p030_to_m030_y(21) /0,3,0, 0,2,0, 0,1,0, 0,0,0, 0,-1,0, 0,-2,0, 0,-3,0/
     INTEGER a3d_p040_to_m040_y(27) /0,4,0, 0,3,0, 0,2,0, 0,1,0, 0,0,0, 0,-1,0, 0,-2,0, 0,-3,0, 0,-4,0/
@@ -69,6 +78,11 @@ SUBROUTINE ops_data_init()
 
     INTEGER a3d_p001_to_p004_z(12) /0,0,1, 0,0,2, 0,0,3, 0,0,4/
     INTEGER a3d_m001_to_m004_z(12) /0,0,-1, 0,0,-2, 0,0,-3, 0,0,-4/
+
+    INTEGER a3d_p002_to_m002_z_no000(12) /0,0,2, 0,0,1, 0,0,-1, 0,0,-2/
+    INTEGER a3d_p003_to_m003_z_no000(18) /0,0,3, 0,0,2, 0,0,1, 0,0,-1, 0,0,-2, 0,0,-3/
+    INTEGER a3d_p004_to_m004_z_no000(24) /0,0,4, 0,0,3, 0,0,2, 0,0,1, 0,0,-1, 0,0,-2, 0,0,-3, 0,0,-4/
+    INTEGER a3d_p005_to_m005_z_no000(30) /0,0,5, 0,0,4, 0,0,3, 0,0,2, 0,0,1, 0,0,-1, 0,0,-2, 0,0,-3, 0,0,-4, 0,0,-5/
 
     INTEGER a3d_p002_to_m002_z(15) /0,0,2, 0,0,1, 0,0,0, 0,0,-1, 0,0,-2/
     INTEGER a3d_p003_to_m003_z(21) /0,0,3, 0,0,2, 0,0,1, 0,0,0, 0,0,-1, 0,0,-2, 0,0,-3/
@@ -97,7 +111,7 @@ SUBROUTINE ops_data_init()
 
 !   *----------------------------OPS Declarations----------------------------*
 !   Declare OPS Block
-    call ops_decl_block(3, senga_grid, "senga grid")
+    call ops_decl_block(3, senga_grid, "SENGA_GRID")
 
 !   Declare OPS Dats
     d_size = (/nxsize, nysize, nzsize/)
@@ -699,6 +713,11 @@ SUBROUTINE ops_data_init()
     call ops_decl_stencil( 3, 4, a3d_p100_to_p400_x, s3d_p100_to_p400_x, "1,0,0 to 4,0,0")
     call ops_decl_stencil( 3, 4, a3d_m100_to_m400_x, s3d_m100_to_m400_x, "-1,0,0 to -4,0,0")
 
+    call ops_decl_stencil( 3,  4, a3d_p200_to_m200_x_no000, s3d_p200_to_m200_x_no000, "2,0,0 to -2,0,0")
+    call ops_decl_stencil( 3,  6, a3d_p300_to_m300_x_no000, s3d_p300_to_m300_x_no000, "3,0,0 to -3,0,0")
+    call ops_decl_stencil( 3,  8, a3d_p400_to_m400_x_no000, s3d_p400_to_m400_x_no000, "4,0,0 to -4,0,0")
+    call ops_decl_stencil( 3, 10, a3d_p500_to_m500_x_no000, s3d_p500_to_m500_x_no000, "5,0,0 to -5,0,0")
+    
     call ops_decl_stencil( 3,  5, a3d_p200_to_m200_x, s3d_p200_to_m200_x, "2,0,0 to -2,0,0")
     call ops_decl_stencil( 3,  7, a3d_p300_to_m300_x, s3d_p300_to_m300_x, "3,0,0 to -3,0,0")
     call ops_decl_stencil( 3,  9, a3d_p400_to_m400_x, s3d_p400_to_m400_x, "4,0,0 to -4,0,0")
@@ -719,6 +738,11 @@ SUBROUTINE ops_data_init()
     call ops_decl_stencil( 3, 4, a3d_p010_to_p040_y, s3d_p010_to_p040_y, "0,1,0 to 0,4,0")
     call ops_decl_stencil( 3, 4, a3d_m010_to_m040_y, s3d_m010_to_m040_y, "0,-1,0 to 0,-4,0")
 
+    call ops_decl_stencil( 3,  4, a3d_p020_to_m020_y_no000, s3d_p020_to_m020_y_no000, "0,2,0 to  0,-2,0")
+    call ops_decl_stencil( 3,  6, a3d_p030_to_m030_y_no000, s3d_p030_to_m030_y_no000, "0,3,0 to  0,-3,0")
+    call ops_decl_stencil( 3,  8, a3d_p040_to_m040_y_no000, s3d_p040_to_m040_y_no000, "0,4,0 to  0,-4,0")
+    call ops_decl_stencil( 3, 10, a3d_p050_to_m050_y_no000, s3d_p050_to_m050_y_no000, "0,5,0 to  0,-5,0")
+
     call ops_decl_stencil( 3,  5, a3d_p020_to_m020_y, s3d_p020_to_m020_y, "0,2,0 to  0,-2,0")
     call ops_decl_stencil( 3,  7, a3d_p030_to_m030_y, s3d_p030_to_m030_y, "0,3,0 to  0,-3,0")
     call ops_decl_stencil( 3,  9, a3d_p040_to_m040_y, s3d_p040_to_m040_y, "0,4,0 to  0,-4,0")
@@ -738,6 +762,11 @@ SUBROUTINE ops_data_init()
 
     call ops_decl_stencil( 3, 4, a3d_p001_to_p004_z, s3d_p001_to_p004_z, "0,0,1 to 0,0,4")
     call ops_decl_stencil( 3, 4, a3d_m001_to_m004_z, s3d_m001_to_m004_z, "0,0,-1 to 0,0,-4")
+
+    call ops_decl_stencil( 3,  4, a3d_p002_to_m002_z_no000, s3d_p002_to_m002_z_no000, "0,0,2 to  0,0,-2")
+    call ops_decl_stencil( 3,  6, a3d_p003_to_m003_z_no000, s3d_p003_to_m003_z_no000, "0,0,3 to  0,0,-3")
+    call ops_decl_stencil( 3,  8, a3d_p004_to_m004_z_no000, s3d_p004_to_m004_z_no000, "0,0,4 to  0,0,-4")
+    call ops_decl_stencil( 3, 10, a3d_p005_to_m005_z_no000, s3d_p005_to_m005_z_no000, "0,0,5 to  0,0,-5")
 
     call ops_decl_stencil( 3,  5, a3d_p002_to_m002_z, s3d_p002_to_m002_z, "0,0,2 to  0,0,-2")
     call ops_decl_stencil( 3,  7, a3d_p003_to_m003_z, s3d_p003_to_m003_z, "0,0,3 to  0,0,-3")

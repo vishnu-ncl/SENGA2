@@ -64,7 +64,7 @@ use OPS_Fortran_Reference
         IF(nendzr == nbound)    rangexyz(6) = nzsize-5
 
         call ops_par_loop(dfbydz_kernel_interior, "dfbydz_interior_scheme", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(functn, 1, s3d_p005_to_m005_z, "real(8)", OPS_READ),  &
+                        ops_arg_dat(functn, 1, s3d_p005_to_m005_z_no000, "real(8)", OPS_READ),  &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
  
@@ -89,19 +89,19 @@ use OPS_Fortran_Reference
             rangexyz(5) = 3
             rangexyz(6) = 3
             call ops_par_loop(dfbydz_kernel_lhpoint_4th_centered, "dfbydz_lh_4th_centered", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(functn, 1, s3d_p002_to_m002_z, "real(8)", OPS_READ),  &
+                            ops_arg_dat(functn, 1, s3d_p002_to_m002_z_no000, "real(8)", OPS_READ),  &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
             rangexyz(5) = 4
             rangexyz(6) = 4
             call ops_par_loop(dfbydz_kernel_lhpoint_6th_centered, "dfbydz_lh_6th_centered", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(functn, 1, s3d_p003_to_m003_z, "real(8)", OPS_READ),  &
+                            ops_arg_dat(functn, 1, s3d_p003_to_m003_z_no000, "real(8)", OPS_READ),  &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
             rangexyz(5) = 5
             rangexyz(6) = 5
             call ops_par_loop(dfbydz_kernel_lhpoint_8th_centered, "dfbydz_lh_8th_centered", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(functn, 1, s3d_p004_to_m004_z, "real(8)", OPS_READ),  &
+                            ops_arg_dat(functn, 1, s3d_p004_to_m004_z_no000, "real(8)", OPS_READ),  &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
         END IF
@@ -113,19 +113,19 @@ use OPS_Fortran_Reference
             rangexyz(5) = nzsize-4
             rangexyz(6) = nzsize-4
             call ops_par_loop(dfbydz_kernel_rhpoint_8th_centered, "dfbydz_rh_8th_centered", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(functn, 1, s3d_p004_to_m004_z, "real(8)", OPS_READ),  &
+                            ops_arg_dat(functn, 1, s3d_p004_to_m004_z_no000, "real(8)", OPS_READ),  &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
             rangexyz(5) = nzsize-3
             rangexyz(6) = nzsize-3
             call ops_par_loop(dfbydz_kernel_rhpoint_6th_centered, "dfbydz_rh_6th_centered", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(functn, 1, s3d_p003_to_m003_z, "real(8)", OPS_READ),  &
+                            ops_arg_dat(functn, 1, s3d_p003_to_m003_z_no000, "real(8)", OPS_READ),  &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
             rangexyz(5) = nzsize-2
             rangexyz(6) = nzsize-2
             call ops_par_loop(dfbydz_kernel_rhpoint_4th_centered, "dfbydz_rh_4th_centered", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(functn, 1, s3d_p002_to_m002_z, "real(8)", OPS_READ),  &
+                            ops_arg_dat(functn, 1, s3d_p002_to_m002_z_no000, "real(8)", OPS_READ),  &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
             rangexyz(5) = nzsize-1
@@ -148,7 +148,7 @@ use OPS_Fortran_Reference
 !       =======
         rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(dfbydz_kernel_scaling, "dfbydz_scaling", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
+                        ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_RW))
 !       =========================================================================
 
     end if

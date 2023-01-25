@@ -194,7 +194,7 @@ SUBROUTINE rhscal
     IF (nsbczr == nsbco1 .or. nsbczr == nsbci1 .or. nsbczr == nsbci2 .or. &
         nsbczr == nsbci3 .or. nsbczr == nsbcw1 .or. nsbczr == nsbcw2) rangexyz(6) = nzsize
     call ops_par_loop(math_kernel_eqS, "A=A/B", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                            ALL STORES CLEAR
@@ -305,7 +305,7 @@ SUBROUTINE rhscal
 !   COLLECT DIV RHO U E IN STORE4 FOR NOW
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqM, "A=A+B+C+D", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
@@ -429,7 +429,7 @@ SUBROUTINE rhscal
     rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
     call ops_par_loop(math_kernel_eqAP, "THERMAL CONDUCTIVITY", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ))
 
 !   MIXTURE AVERAGED TRANSPORT
@@ -439,7 +439,7 @@ SUBROUTINE rhscal
     IF(flmavt) THEN
         rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
         call ops_par_loop(math_MD_kernel_eqV, "THERMAL CONDUCTIVITY", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_RW), &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
                         ops_arg_dat(d_wmomix, 1, s3d_000, "real(8)", OPS_WRITE), &
                         ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
@@ -476,7 +476,7 @@ SUBROUTINE rhscal
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqAA, "A = A+(B*C+D*E+F*G)", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_READ), &
@@ -494,7 +494,7 @@ SUBROUTINE rhscal
     IF(fxlcnw) THEN
         rangexyz = (/1,1,1,nysize,1,nzsize/)
         call ops_par_loop(heat_flux_kernel_thermal_fxlcnw, "HEAT FLUX: Thermal fxlcnw", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store1, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store7, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
                         ops_arg_gbl(acbcxl, 1, "real(8)", OPS_READ))
@@ -503,7 +503,7 @@ SUBROUTINE rhscal
     IF(fxrcnw) THEN
         rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(heat_flux_kernel_thermal_fxrcnw, "HEAT FLUX: Thermal fxrcnw", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_dat(d_store1, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
                     ops_arg_dat(d_store7, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
                     ops_arg_gbl(acbcxr, 1, "real(8)", OPS_READ))
@@ -512,7 +512,7 @@ SUBROUTINE rhscal
     IF(fylcnw) THEN
         rangexyz = (/1,nxsize,1,1,1,nzsize/)
         call ops_par_loop(heat_flux_kernel_thermal_fylcnw, "HEAT FLUX: Thermal fylcnw", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_dat(d_store2, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
                     ops_arg_dat(d_store7, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
                     ops_arg_gbl(acbcyl, 1, "real(8)", OPS_READ))
@@ -521,7 +521,7 @@ SUBROUTINE rhscal
     IF(fyrcnw) THEN
         rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
         call ops_par_loop(heat_flux_kernel_thermal_fyrcnw, "HEAT FLUX: Thermal fyrcnw", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_dat(d_store2, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
                     ops_arg_dat(d_store7, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
                     ops_arg_gbl(acbcyr, 1, "real(8)", OPS_READ))
@@ -530,7 +530,7 @@ SUBROUTINE rhscal
     IF(fzlcnw) THEN
         rangexyz = (/1,nxsize,1,nysize,1,1/)
         call ops_par_loop(heat_flux_kernel_thermal_fzlcnw, "HEAT FLUX: Thermal fzlcnw", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_dat(d_store3, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
                     ops_arg_dat(d_store7, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
                     ops_arg_gbl(acbczl, 1, "real(8)", OPS_READ))    
@@ -539,7 +539,7 @@ SUBROUTINE rhscal
     IF(fzrcnw)THEN
         rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
         call ops_par_loop(heat_flux_kernel_thermal_fzrcnw, "HEAT FLUX: Thermal fzrcnw", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store3, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store7, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
                     ops_arg_gbl(acbczr, 1, "real(8)", OPS_READ))
@@ -573,7 +573,7 @@ SUBROUTINE rhscal
 !   COLLECT CONDUCTIVITY TERMS
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqY, "A = A+(B+C+D)*E", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ), &
@@ -805,7 +805,7 @@ SUBROUTINE rhscal
             nsbczr == nsbci3 .or. nsbczr == nsbcw1 .or. nsbczr == nsbcw2) rangexyz(6) = nzsize
 
         call ops_par_loop(math_MD_kernel_eqE, "A_multidim = A_multidim/B", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_RW), &
                         ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
@@ -818,7 +818,7 @@ SUBROUTINE rhscal
 !       COLLECT Y SOURCE TERMS IN RATE FOR NOW
         rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(math_MD_kernel_eqI, "A_multidim = A_multidim - half*B_multidim*C", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_divm, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
@@ -868,7 +868,7 @@ SUBROUTINE rhscal
 !       COLLECT DIV RHO U Y IN RATE FOR NOW
         rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(math_MD_kernel_eqH, "A_multidim = A_multidim - half*(B+C+D)", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ), &
@@ -980,7 +980,7 @@ SUBROUTINE rhscal
 !       COLLECT HALF RHO U.DEL Y IN RATE FOR NOW
         rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(math_MD_kernel_eqJ, "A_multidim = A_multidim - half*(B*C+D*E+F*G)", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1031,7 +1031,7 @@ SUBROUTINE rhscal
 !           RELATIVE TO CURRENT SPECIES
             rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
             call ops_par_loop(math_MD_kernel_eqW, "MASS DIFFUSIVITY FOR EACH SPECIES", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(d_difmix, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_difmix, 1, s3d_000, "real(8)", OPS_RW), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
                             ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1071,7 +1071,7 @@ SUBROUTINE rhscal
 
                     rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
                     call ops_par_loop(math_MD_kernel_eqX, "THERMAL DIFFUSION RATIO FOR EACH SPECIES", senga_grid, 3, rangexyz, &
-                                    ops_arg_dat(d_tdrmix, 1, s3d_000, "real(8)", OPS_WRITE), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_000, "real(8)", OPS_INC), &
                                     ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_wmomix, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1096,17 +1096,17 @@ SUBROUTINE rhscal
 !       DIFFUSION CORRECTION VELOCITY
         rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_ucor, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_ucor, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &    
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ))
 
         call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_vcor, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_vcor, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ))
 
         call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_wcor, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_wcor, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
@@ -1131,8 +1131,8 @@ SUBROUTINE rhscal
 !       STORE MIXTURE H IN WTMP FOR NOW
         rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
         call ops_par_loop(math_MD_kernel_eqZ, "SPECIES ENTHALPY", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_RW), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_READ), &
                         ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_READ), &
@@ -1227,7 +1227,7 @@ SUBROUTINE rhscal
         IF(flmduf(ispec)) THEN
             rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
             call ops_par_loop(math_kernel_eqF, "A = A+var*B*C", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_tdrmix, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_gbl(rgspec(ispec), 1, "real(8)", OPS_READ))
@@ -1259,8 +1259,8 @@ SUBROUTINE rhscal
  
         rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(math_MD_kernel_eqL, "multiple math equations", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1285,7 +1285,7 @@ SUBROUTINE rhscal
 !       E EQUATION
         rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1339,7 +1339,7 @@ SUBROUTINE rhscal
 
         rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1364,9 +1364,9 @@ SUBROUTINE rhscal
         IF(fxldfw) THEN
             rangexyz = (/1,1,1,nysize,1,nzsize/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fxldfw, "HEAT FLUX: Enthalpy fxldfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store1, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
@@ -1377,9 +1377,9 @@ SUBROUTINE rhscal
         IF(fxrdfw) THEN
             rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fxrdfw, "HEAT FLUX: Enthalpy fxrdfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store1, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
@@ -1390,9 +1390,9 @@ SUBROUTINE rhscal
         IF(fyldfw) THEN
             rangexyz = (/1,nxsize,1,1,1,nzsize/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fyldfw, "HEAT FLUX: Enthalpy fyldfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store2, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
@@ -1403,9 +1403,9 @@ SUBROUTINE rhscal
         IF(fyrdfw) THEN
             rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fyrdfw, "HEAT FLUX: Enthalpy fyrdfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store2, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
@@ -1416,9 +1416,9 @@ SUBROUTINE rhscal
         IF(fzldfw) THEN
             rangexyz = (/1,nxsize,1,nysize,1,1/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fzldfw, "HEAT FLUX: Enthalpy fzldfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store3, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
@@ -1429,9 +1429,9 @@ SUBROUTINE rhscal
         IF(fzrdfw) THEN
             rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fzrdfw, "HEAT FLUX: Enthalpy fzrdfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store3, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
@@ -1480,8 +1480,8 @@ SUBROUTINE rhscal
  
         rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(math_MD_kernel_eqM, "multiple math equations", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1504,7 +1504,7 @@ SUBROUTINE rhscal
 !       E EQUATION
         rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(math_kernel_eqZ, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1534,17 +1534,17 @@ SUBROUTINE rhscal
 !           FIRST DERIVATIVES OF LN(MIXTURE MOLAR MASS) ALREADY STORED
             rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
             call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_ucor, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_ucor, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1x, 1, s3d_000, "real(8)", OPS_READ))
 
             call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_vcor, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_vcor, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1y, 1, s3d_000, "real(8)", OPS_READ))
 
             call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_wcor, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_wcor, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1z, 1, s3d_000, "real(8)", OPS_READ)) 
     
@@ -1573,8 +1573,8 @@ SUBROUTINE rhscal
 
             rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
             call ops_par_loop(math_MD_kernel_eqL, "multiple math equations", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_wd1x, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1599,7 +1599,7 @@ SUBROUTINE rhscal
 !           E EQUATION
             rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
             call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1x, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1641,7 +1641,7 @@ SUBROUTINE rhscal
 
             rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
             call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1x, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1660,9 +1660,9 @@ SUBROUTINE rhscal
             IF(fxldfw) THEN
                 rangexyz = (/1,1,1,nysize,1,nzsize/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fxldfw, "HEAT FLUX: Enthalpy fxldfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1x, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
@@ -1673,9 +1673,9 @@ SUBROUTINE rhscal
             IF(fxrdfw) THEN
                 rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fxrdfw, "HEAT FLUX: Enthalpy fxrdfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1x, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
@@ -1686,9 +1686,9 @@ SUBROUTINE rhscal
             IF(fyldfw) THEN
                 rangexyz = (/1,nxsize,1,1,1,nzsize/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fyldfw, "HEAT FLUX: Enthalpy fyldfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1y, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
@@ -1699,9 +1699,9 @@ SUBROUTINE rhscal
             IF(fyrdfw) THEN
                 rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fyrdfw, "HEAT FLUX: Enthalpy fyrdfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1y, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
@@ -1712,9 +1712,9 @@ SUBROUTINE rhscal
             IF(fzldfw) THEN
                 rangexyz = (/1,nxsize,1,nysize,1,1/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fzldfw, "HEAT FLUX: Enthalpy fzldfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1z, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
@@ -1725,9 +1725,9 @@ SUBROUTINE rhscal
             IF(fzrdfw) THEN
                 rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fzrdfw, "HEAT FLUX: Enthalpy fzrdfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1z, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
@@ -1758,8 +1758,8 @@ SUBROUTINE rhscal
 
             rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
             call ops_par_loop(math_MD_kernel_eqM, "multiple math equations", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_wd2x, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_wd2y, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_wd2z, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1782,7 +1782,7 @@ SUBROUTINE rhscal
 !           E EQUATION
             rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
             call ops_par_loop(math_kernel_eqZ, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_wd2x, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd2y, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd2z, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1811,17 +1811,17 @@ SUBROUTINE rhscal
 !           FIRST DERIVATIVES OF LN(PRESSURE) ALREADY STORED
             rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
             call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_ucor, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_ucor, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1x, 1, s3d_000, "real(8)", OPS_READ))
 
             call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_vcor, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_vcor, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1y, 1, s3d_000, "real(8)", OPS_READ))
 
             call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_wcor, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_wcor, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1z, 1, s3d_000, "real(8)", OPS_READ))
 
@@ -1850,8 +1850,8 @@ SUBROUTINE rhscal
 
             rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
             call ops_par_loop(math_MD_kernel_eqL, "multiple math equations", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_pd1x, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1875,7 +1875,7 @@ SUBROUTINE rhscal
 
             rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
             call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1x, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1917,7 +1917,7 @@ SUBROUTINE rhscal
 
             rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
             call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1x, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1936,9 +1936,9 @@ SUBROUTINE rhscal
             IF(fxldfw) THEN
                 rangexyz = (/1,1,1,nysize,1,nzsize/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fxldfw, "HEAT FLUX: Enthalpy fxldfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1x, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
@@ -1949,9 +1949,9 @@ SUBROUTINE rhscal
             IF(fxrdfw) THEN
                 rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fxrdfw, "HEAT FLUX: Enthalpy fxrdfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1x, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
@@ -1962,9 +1962,9 @@ SUBROUTINE rhscal
             IF(fyldfw) THEN
                 rangexyz = (/1,nxsize,1,1,1,nzsize/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fyldfw, "HEAT FLUX: Enthalpy fyldfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1y, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
@@ -1975,9 +1975,9 @@ SUBROUTINE rhscal
             IF(fyrdfw) THEN
                 rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fyrdfw, "HEAT FLUX: Enthalpy fyrdfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1y, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
@@ -1988,9 +1988,9 @@ SUBROUTINE rhscal
             IF(fzldfw) THEN
                 rangexyz = (/1,nxsize,1,nysize,1,1/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fzldfw, "HEAT FLUX: Enthalpy fzldfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1z, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
@@ -2001,9 +2001,9 @@ SUBROUTINE rhscal
             IF(fzrdfw) THEN
                 rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fzrdfw, "HEAT FLUX: Enthalpy fzrdfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1z, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
@@ -2034,8 +2034,8 @@ SUBROUTINE rhscal
 
             rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
             call ops_par_loop(math_MD_kernel_eqM, "multiple math equations", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_pd2x, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_pd2y, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_pd2z, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2058,7 +2058,7 @@ SUBROUTINE rhscal
 !           E EQUATION
             rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
             call ops_par_loop(math_kernel_eqZ, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_pd2x, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd2y, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd2z, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2086,17 +2086,17 @@ SUBROUTINE rhscal
 !           FIRST DERIVATIVES OF LN(TEMPERATURE) ALREADY STORED
             rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
             call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_ucor, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_ucor, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_td1x, 1, s3d_000, "real(8)", OPS_READ))
 
             call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_vcor, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_vcor, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_td1y, 1, s3d_000, "real(8)", OPS_READ))
 
             call ops_par_loop(math_kernel_eqN, "A=A+B*C", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_wcor, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_wcor, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_td1z, 1, s3d_000, "real(8)", OPS_READ))
 
@@ -2125,8 +2125,8 @@ SUBROUTINE rhscal
 
             rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
             call ops_par_loop(math_MD_kernel_eqL, "multiple math equations", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_td1x, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2140,7 +2140,7 @@ SUBROUTINE rhscal
             IF(flmduf(ispec))THEN
                 rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
                 call ops_par_loop(math_kernel_eqH, "A = A-var*B*C", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                                ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_tdrmix, 1, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_gbl(rgspec(ispec), 1, "real(8)", OPS_READ))
@@ -2163,7 +2163,7 @@ SUBROUTINE rhscal
 !           E EQUATION
             rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
             call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_td1x, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2208,7 +2208,7 @@ SUBROUTINE rhscal
 
             rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
             call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_td1x, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2227,9 +2227,9 @@ SUBROUTINE rhscal
             IF(fxldfw) THEN
                 rangexyz = (/1,1,1,nysize,1,nzsize/)
                 call ops_par_loop(heat_flux_kernel_enthalpy_fxldfw, "HEAT FLUX: Enthalpy fxldfw", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                                ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                                ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                                ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                                ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_tdrmix, 1, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2243,9 +2243,9 @@ SUBROUTINE rhscal
             IF(fxrdfw) THEN
                 rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
                 call ops_par_loop(heat_flux_kernel_enthalpy_fxrdfw, "HEAT FLUX: Enthalpy fxrdfw", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                                ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                                ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                                ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                                ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_tdrmix, 1, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2259,9 +2259,9 @@ SUBROUTINE rhscal
             IF(fyldfw) THEN
                 rangexyz = (/1,nxsize,1,1,1,nzsize/)
                 call ops_par_loop(heat_flux_kernel_enthalpy_fyldfw, "HEAT FLUX: Enthalpy fyldfw", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                                ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                                ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                                ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                                ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_tdrmix, 1, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2275,9 +2275,9 @@ SUBROUTINE rhscal
             IF(fyrdfw) THEN
                 rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
                 call ops_par_loop(heat_flux_kernel_enthalpy_fyrdfw, "HEAT FLUX: Enthalpy fyrdfw", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                                ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                                ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                                ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                                ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_tdrmix, 1, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2291,9 +2291,9 @@ SUBROUTINE rhscal
             IF(fzldfw) THEN
                 rangexyz = (/1,nxsize,1,nysize,1,1/)
                 call ops_par_loop(heat_flux_kernel_enthalpy_fzldfw, "HEAT FLUX: Enthalpy fzldfw", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                                ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                                ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                                ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                                ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_tdrmix, 1, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2307,9 +2307,9 @@ SUBROUTINE rhscal
             IF(fzrdfw) THEN
                 rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
                 call ops_par_loop(heat_flux_kernel_enthalpy_fzrdfw, "HEAT FLUX: Enthalpy fzrdfw", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                                ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                                ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                                ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
+                                ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_tdrmix, 1, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2329,7 +2329,7 @@ SUBROUTINE rhscal
                 IF(fxlcnw) THEN
                     rangexyz = (/1,1,1,nysize,1,nzsize/)
                     call ops_par_loop(heat_flux_kernel_soret_fxlcnw, "HEAT FLUX: Soret and DUFOUR fxlcnw", senga_grid, 3, rangexyz,  &
-                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_WRITE), &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_INC), &
                                     ops_arg_dat(d_trun,   1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_tdrmix, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_store7, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
@@ -2341,7 +2341,7 @@ SUBROUTINE rhscal
                 IF(fxrcnw) THEN
                     rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
                     call ops_par_loop(heat_flux_kernel_soret_fxrcnw, "HEAT FLUX: Soret and DUFOUR fxrcnw", senga_grid, 3, rangexyz,  &
-                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_WRITE), &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_INC), &
                                     ops_arg_dat(d_trun,   1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_tdrmix, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_store7, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
@@ -2353,7 +2353,7 @@ SUBROUTINE rhscal
                 IF(fylcnw) THEN
                     rangexyz = (/1,nxsize,1,1,1,nzsize/)
                     call ops_par_loop(heat_flux_kernel_soret_fylcnw, "HEAT FLUX: Soret and DUFOUR fylcnw", senga_grid, 3, rangexyz,  &
-                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_WRITE), &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_INC), &
                                     ops_arg_dat(d_trun,   1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_tdrmix, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_store7, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
@@ -2365,7 +2365,7 @@ SUBROUTINE rhscal
                 IF(fyrcnw) THEN
                     rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
                     call ops_par_loop(heat_flux_kernel_soret_fyrcnw, "HEAT FLUX: Soret and DUFOUR fyrcnw", senga_grid, 3, rangexyz,  &
-                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_WRITE), &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_INC), &
                                     ops_arg_dat(d_trun,   1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_tdrmix, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_store7, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
@@ -2377,7 +2377,7 @@ SUBROUTINE rhscal
                 IF(fzlcnw) THEN
                     rangexyz = (/1,nxsize,1,nysize,1,1/)
                     call ops_par_loop(heat_flux_kernel_soret_fzlcnw, "HEAT FLUX: Soret and DUFOUR fzlcnw", senga_grid, 3, rangexyz,  &
-                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_WRITE), &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_INC), &
                                     ops_arg_dat(d_trun,   1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_tdrmix, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_store7, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
@@ -2389,7 +2389,7 @@ SUBROUTINE rhscal
                 IF(fzrcnw) THEN
                     rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
                     call ops_par_loop(heat_flux_kernel_soret_fzrcnw, "HEAT FLUX: Soret and DUFOUR fzrcnw", senga_grid, 3, rangexyz,  &
-                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_WRITE), &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_INC), &
                                     ops_arg_dat(d_trun,   1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_tdrmix, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_store7, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
@@ -2404,7 +2404,7 @@ SUBROUTINE rhscal
                 IF(fxladw) THEN
                     rangexyz = (/1,1,1,nysize,1,nzsize/)
                     call ops_par_loop(heat_flux_kernel_isothermal_fxladw, "HEAT FLUX: Isothermal fxladw", senga_grid, 3, rangexyz,  &
-                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_WRITE), &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_INC), &
                                     ops_arg_dat(d_trun,   1, s3d_000_to_p400_x, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_tdrmix, 1, s3d_000_to_p400_x, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_store7, 1, s3d_000_to_p400_x, "real(8)", OPS_READ), &
@@ -2416,7 +2416,7 @@ SUBROUTINE rhscal
                 IF(fxradw) THEN
                     rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
                     call ops_par_loop(heat_flux_kernel_isothermal_fxradw, "HEAT FLUX: Isothermal fxradw", senga_grid, 3, rangexyz,  &
-                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_WRITE), &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_INC), &
                                     ops_arg_dat(d_trun,   1, s3d_000_to_m400_x, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_tdrmix, 1, s3d_000_to_m400_x, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_store7, 1, s3d_000_to_m400_x, "real(8)", OPS_READ), &
@@ -2428,7 +2428,7 @@ SUBROUTINE rhscal
                 IF(fyladw) THEN
                     rangexyz = (/1,nxsize,1,1,1,nzsize/)
                     call ops_par_loop(heat_flux_kernel_isothermal_fyladw, "HEAT FLUX: Isothermal fyladw", senga_grid, 3, rangexyz,  &
-                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_WRITE), &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_INC), &
                                     ops_arg_dat(d_trun,   1, s3d_000_to_p040_y, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_tdrmix, 1, s3d_000_to_p040_y, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_store7, 1, s3d_000_to_p040_y, "real(8)", OPS_READ), &
@@ -2440,7 +2440,7 @@ SUBROUTINE rhscal
                 IF(fyradw) THEN
                     rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
                     call ops_par_loop(heat_flux_kernel_isothermal_fyradw, "HEAT FLUX: Isothermal fyradw", senga_grid, 3, rangexyz,  &
-                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_WRITE), &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_INC), &
                                     ops_arg_dat(d_trun,   1, s3d_000_to_m040_y, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_tdrmix, 1, s3d_000_to_m040_y, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_store7, 1, s3d_000_to_m040_y, "real(8)", OPS_READ), &
@@ -2452,7 +2452,7 @@ SUBROUTINE rhscal
                 IF(fzladw) THEN
                     rangexyz = (/1,nxsize,1,nysize,1,1/)
                     call ops_par_loop(heat_flux_kernel_isothermal_fzladw, "HEAT FLUX: Isothermal fzladw", senga_grid, 3, rangexyz,  &
-                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_WRITE), &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_INC), &
                                     ops_arg_dat(d_trun,   1, s3d_000_to_p004_z, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_tdrmix, 1, s3d_000_to_p004_z, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_store7, 1, s3d_000_to_p004_z, "real(8)", OPS_READ), &
@@ -2464,7 +2464,7 @@ SUBROUTINE rhscal
                 IF(fzradw)THEN
                     rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
                     call ops_par_loop(heat_flux_kernel_isothermal_fzradw, "HEAT FLUX: Isothermal fzradw", senga_grid, 3, rangexyz,  &
-                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_WRITE), &
+                                    ops_arg_dat(d_erhs,   1, s3d_000, "real(8)", OPS_INC), &
                                     ops_arg_dat(d_trun,   1, s3d_000_to_m004_z, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_tdrmix, 1, s3d_000_to_m004_z, "real(8)", OPS_READ), &
                                     ops_arg_dat(d_store7, 1, s3d_000_to_m004_z, "real(8)", OPS_READ), &
@@ -2498,8 +2498,8 @@ SUBROUTINE rhscal
 
             rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
             call ops_par_loop(math_MD_kernel_eqM, "multiple math equations", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_INC), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_td2x, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_td2y, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_td2z, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2522,7 +2522,7 @@ SUBROUTINE rhscal
 !           E EQUATION
             rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
             call ops_par_loop(math_kernel_eqZ, "A=A+(B+C+D)*E*F", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_td2x, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_td2y, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_td2z, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2605,7 +2605,7 @@ SUBROUTINE rhscal
 !   DIV RHO VCORR HMIX
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqAH, "A = A-B*C-D*E-F*G-H*I", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2680,7 +2680,7 @@ SUBROUTINE rhscal
 !       STORE Y SOURCE TERMS IN YRHS
         rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(math_MD_kernel_eqK, "A_multidim = B_multidim - A_multidim*C - D*E - F*G - H*I", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_RW), &
                         ops_arg_dat(d_rate, 9, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &

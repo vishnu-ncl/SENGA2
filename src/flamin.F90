@@ -218,7 +218,7 @@ SUBROUTINE flamin
     DO ispec = 1, nspm1
         rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(math_MD_kernel_eqN, "A_multidim = A_multidim + A_multidim", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_RW), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
                         ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
@@ -227,7 +227,7 @@ SUBROUTINE flamin
 
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_MD_kernel_eqO, "A_multidim = 1.0 - A_multidim", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
 !   SET TEMPERATURE PROFILE
@@ -250,7 +250,7 @@ SUBROUTINE flamin
     DO ispec = 1,nspec
         rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(math_MD_kernel_eqP, "A = A + var*B_multidim", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(rgspec(ispec), 1, "real(8)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))

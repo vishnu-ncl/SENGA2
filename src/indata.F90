@@ -1056,15 +1056,15 @@ SUBROUTINE indata
 !   --------------------------------
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqAM, "A = A + var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_gbl(urin, 1, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqAM, "A = A + var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_vrun, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_vrun, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_gbl(vrin, 1, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqAM, "A = A + var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_wrun, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_wrun, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_gbl(wrin, 1, "real(8)", OPS_READ))
 
 !   =========================================================================
@@ -1163,7 +1163,7 @@ SUBROUTINE indata
     DO ispec = 1,nspec
         rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(math_MD_kernel_eqP, "A = A + var*B_multidim", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(rgspec(ispec), 1, "real(8)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
@@ -1173,7 +1173,7 @@ SUBROUTINE indata
 !   DENSITY
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqU, "A = A*B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqT, "A = B/C", senga_grid, 3, rangexyz,  &
@@ -1191,7 +1191,7 @@ SUBROUTINE indata
 !   BIGGER SIZE ARRAY
     rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
     call ops_par_loop(math_MD_kernel_eqAC, "INTERNAL ENERGY FIELD", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
+                    ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW), &
                     ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_gbl(tinthi, 1, "real(8)", OPS_READ), &
                     ops_arg_gbl(ntint, 1, "integer", OPS_READ), &
@@ -1217,7 +1217,7 @@ SUBROUTINE indata
 !       USE THERMOCHEMICAL DATA
         rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(math_MD_kernel_eqAD, "INITIALISE INTERNAL ENERGY", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_READ), &
                         ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_READ), &
@@ -1239,7 +1239,7 @@ SUBROUTINE indata
 !   FINALISE INTERNAL ENERGY
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqAO, "A = A - B + half*(C*C+D*D+E*E)", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_vrun, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1252,25 +1252,25 @@ SUBROUTINE indata
 !   ======================================
     rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
     call ops_par_loop(math_kernel_eqU, "A = A*B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_dat(d_drun, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqU, "A = A*B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_vrun, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_vrun, 1, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_dat(d_drun, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqU, "A = A*B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_wrun, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_wrun, 1, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_dat(d_drun, 1, s3d_000, "real(8)", OPS_READ))
 
     call ops_par_loop(math_kernel_eqU, "A = A*B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_dat(d_drun, 1, s3d_000, "real(8)", OPS_READ))
 
     DO ispec = 1,nspec
         rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(math_MD_kernel_eqU, "A_multidim = B*A_multidim", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_RW), &
                         ops_arg_dat(d_drun, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
