@@ -80,6 +80,10 @@ SUBROUTINE turbin
 !   =====
 
 !   =========================================================================
+    write(*, '(a)') "Using the arrays not allocated by OPS, &
+                        Please implement the function in OPS first, turbin.F90: ID=84"
+            STOP
+
 
 !   INDEXING
 !   --------
@@ -138,6 +142,7 @@ SUBROUTINE turbin
         iseed = inseed + iproc
         call ranini(iseed)
 
+
 !       SWEEP THROUGH LOCAL PHYSICAL SPACE
         DO kc = 1,nzsize
             DO jc = 1,nysize
@@ -145,11 +150,11 @@ SUBROUTINE turbin
         
 !                   GET AND SAVE THREE RANDOM NUMBERS
                     utmp(ic,jc,kc) = ranuni(iseed)
-        vtmp(ic,jc,kc) = ranuni(iseed)
-        wtmp(ic,jc,kc) = ranuni(iseed)
+                    vtmp(ic,jc,kc) = ranuni(iseed)
+                    wtmp(ic,jc,kc) = ranuni(iseed)
         
-        END DO
-        END DO
+                END DO
+            END DO
         END DO
 
     ELSE
@@ -181,8 +186,12 @@ SUBROUTINE turbin
           ix = ic - igofst
           jx = jc - jgofst
           kx = kc - kgofst
-          
-!               SAVE THE THREE RANDOM NUMBERS
+
+          write(*, '(a)') "Using the arrays not allocated by OPS, &
+                        Please implement the function in OPS first, turbin.F90: line number 190"
+          STOP  
+
+!         SAVE THE THREE RANDOM NUMBERS
           utmp(ix,jx,kx) = aziang
           vtmp(ix,jx,kx) = phang1
           wtmp(ix,jx,kx) = phang2
@@ -371,7 +380,8 @@ SUBROUTINE turbin
     DO kc = 1,nzsize
     DO jc = 1,nysize
     DO ic = 1,nxsize
-      
+
+
       flagim = .false.
       IF(utmp(ic,jc,kc) > tolimg)flagim = .true.
       IF(vtmp(ic,jc,kc) > tolimg)flagim = .true.

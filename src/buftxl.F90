@@ -71,6 +71,11 @@ DO kc = 1,nzsize
       
       iic = 2*ic
       iim = iic-1
+
+        write(*, '(a)') "Using the arrays not allocated by OPS, &
+                        Please implement the function in OPS first, buftxl.F90: ID=76"
+            STOP
+
       ftpart(iim,1,ipencl) = urun(ic,jc,kc)
       ftpart(iic,1,ipencl) = utmp(ic,jc,kc)
       ftpart(iim,2,ipencl) = vrun(ic,jc,kc)
@@ -91,7 +96,11 @@ DO kc = 1,nzsize
       DO ipencl = 1,npencl
         
         DO ic = 1,nxsize
-          
+         
+            write(*, '(a)') "Using the arrays not allocated by OPS, &
+                        Please implement the function in OPS first, buftxl.F90: ID=101"
+            STOP
+ 
           ufxl(ic,jpen(ipencl),kpen(ipencl)) = ftpart(ic,1,ipencl)
           vfxl(ic,jpen(ipencl),kpen(ipencl)) = ftpart(ic,2,ipencl)
           wfxl(ic,jpen(ipencl),kpen(ipencl)) = ftpart(ic,3,ipencl)
@@ -118,7 +127,11 @@ IF(ipencl /= 0)THEN
   DO ipencl = 1,npencl
     
     DO ic = 1,nxsize
-      
+     
+        write(*, '(a)') "Using the arrays not allocated by OPS, &
+                        Please implement the function in OPS first, buftxl.F90: ID=132"
+        STOP
+ 
       ufxl(ic,jpen(ipencl),kpen(ipencl)) = ftpart(ic,1,ipencl)
       vfxl(ic,jpen(ipencl),kpen(ipencl)) = ftpart(ic,2,ipencl)
       wfxl(ic,jpen(ipencl),kpen(ipencl)) = ftpart(ic,3,ipencl)

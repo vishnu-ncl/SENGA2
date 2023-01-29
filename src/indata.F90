@@ -1302,7 +1302,11 @@ SUBROUTINE indata
 !       RSC 11-JUL-2009 ADD A DUMP FORMAT SWITCH
 #ifndef HDF5
         IF(ndifmt == 0) THEN
-    
+
+            write(*, '(a)') "Using the arrays not allocated by OPS, &
+                        Please implement the function in OPS first, indata.F90: ID=1307"
+            STOP
+
 !           UNFORMATTED DUMP INPUT
             OPEN(UNIT=ncdmpi,FILE=fndmpo(2),STATUS='OLD', FORM='UNFORMATTED')
             READ(ncdmpi)nxdmax,nydmax,nzdmax,ndspec, drun,urun,vrun,wrun,erun,yrun,  &
@@ -1326,7 +1330,11 @@ SUBROUTINE indata
             IF(nydmax /= nysize)WRITE(6,*)'Dump input size error: y'
             IF(nzdmax /= nzsize)WRITE(6,*)'Dump input size error: z'
             IF(ndspec /= nspec)WRITE(6,*)'Dump input size error: species'
-    
+
+            write(*, '(a)') "Using the arrays not allocated by OPS, &
+                        Please implement the function in OPS first, indata.F90: ID=1335"
+            STOP
+
             DO kc = 1, nzsize
                 DO jc = 1, nysize
                     DO ic = 1, nxsize

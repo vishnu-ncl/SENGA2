@@ -21,14 +21,14 @@ PARAMETER(ngzmax=nxglbl)
 
 !     NUMBER OF PROCESSORS
 INTEGER :: nxproc,nyproc,nzproc
-PARAMETER(nxproc=40, nyproc=1, nzproc=1)
+PARAMETER(nxproc=1, nyproc=1, nzproc=1)
 INTEGER :: nprmax
 !     SET NPRMAX=MAX(NXPROC,NYPROC,NZPROC)
 PARAMETER(nprmax=nxproc)
 
 !     LOCAL GRID SIZE
 INTEGER :: nxsize,nysize,nzsize
-PARAMETER(nxsize=50, nysize=1, nzsize=1)
+PARAMETER(nxsize=2000, nysize=1, nzsize=1)
 INTEGER :: nszmax
 !     SET NSZMAX=MAX(NXSIZE,NYSIZE,NZSIZE)
 PARAMETER(nszmax=nxsize)
@@ -429,56 +429,17 @@ REAL(KIND=8) :: eryrhs(nspcmx,nrkmax)
 
 COMMON/rknorm/erdrhs,erurhs,ervrhs,erwrhs,ererhs,eryrhs
 
-!     RKNORM-------------------------------------------------------------------
-!     PRVARS-------------------------------------------------------------------
-
 !     PRINCIPAL VARIABLES (ALL STANDARD SIZE ARRAYS)
 real(kind=8), dimension(:,:,:), allocatable :: drun,urun,vrun,wrun,erun
 real(kind=8), dimension(:,:,:,:), allocatable :: yrun
-real(kind=8), dimension(:,:,:), allocatable :: crin
-
-!     PRVARS-------------------------------------------------------------------
-!     TIMRHS-------------------------------------------------------------------
-
-!     TIME-STEPPING RHS TERMS (ALL BIGGER SIZE ARRAYS)
-real(kind=8), dimension(:,:,:), allocatable :: drhs,urhs,vrhs,wrhs,erhs
-real(kind=8), dimension(:,:,:,:), allocatable :: yrhs
-
-!     TIMRHS-------------------------------------------------------------------
-!     TIMERR-------------------------------------------------------------------
-
-!     TIME-STEPPING ERROR ARRAYS (ALL STANDARD SIZE ARRAYS)
-real(kind=8), dimension(:,:,:), allocatable :: derr,uerr,verr,werr,eerr
-real(kind=8), dimension(:,:,:,:), allocatable :: yerr
-
-!     TIMERR-------------------------------------------------------------------
-!     WORKSP-------------------------------------------------------------------
 
 !     WORKSPACE (STANDARD SIZE ARRAYS)
-real(kind=8), dimension(:,:,:), allocatable :: store1,store2,store3,store4,store5,store6,divm
-real(kind=8), dimension(:,:,:,:), allocatable :: rate,rrte
-
-!     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-!     WORKSPACE (DIFFUSIVE CORRECTION VELOCITY, STANDARD SIZE ARRAYS)
-real(kind=8), dimension(:,:,:), allocatable :: ucor,vcor,wcor
-
-!     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-!     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-!     WORKSPACE (MIXTURE AVERAGED TRANSPORT, STANDARD SIZE ARRAYS)
-real(kind=8), dimension(:,:,:), allocatable :: wd1x,pd1x,td1x,wd1y,pd1y,td1y,wd1z,pd1z,td1z
-real(kind=8), dimension(:,:,:), allocatable :: wd2x,pd2x,td2x,wd2y,pd2y,td2y,wd2z,pd2z,td2z
-
-!     WORKSPACE (MIXTURE AVERAGED TRANSPORT, BIGGER SIZE ARRAYS)
-real(kind=8), dimension(:,:,:), allocatable :: wmomix,difmix,tdrmix
+real(kind=8), dimension(:,:,:,:), allocatable :: rrte
 
 !     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 !     WORKSPACE (BIGGER SIZE ARRAYS)
-real(kind=8), dimension(:,:,:), allocatable :: utmp,vtmp,wtmp,prun,trun,transp,store7
-
-!     WORKSPACE (TEMPERATURE INDEXING)
-integer, dimension(:,:,:,:), allocatable :: itndex
+real(kind=8), dimension(:,:,:), allocatable :: utmp,vtmp,wtmp,prun,trun
 
 !     WORKSPACE (PARALLEL TRANSFER ARRAY)
 REAL(KIND=8) :: parray(nparay)
@@ -571,52 +532,7 @@ REAL(KIND=8) :: acbcxl(ncbcsz),acbcxr(ncbcsz),  &
 COMMON/bcdifw/acbcxl,acbcxr,acbcyl,acbcyr,acbczl,acbczr
 
 !     X-DIRECTION LEFT-HAND END
-real(kind=8), dimension(:,:,:,:), allocatable :: bclyxl,stryxl,dydtxl,ratexl,strhxl
-real(kind=8), dimension(:,:,:), allocatable :: bcl1xl,bcl2xl,bcl3xl,bcl4xl,bcl5xl, &
-    bcltxl,struxl,strvxl,strwxl,strpxl, &
-    strdxl,strtxl,strexl,strgxl,strrxl, &
-    dudtxl,dvdtxl,dwdtxl,dtdtxl,dddtxl, &
-    acouxl,ova2xl,gam1xl,ovgmxl,sydtxl,sorpxl
-
-!     X-DIRECTION RIGHT-HAND END
-real(kind=8), dimension(:,:,:,:), allocatable :: bclyxr,stryxr,dydtxr,ratexr,strhxr
-real(kind=8), dimension(:,:,:), allocatable :: bcl1xr,bcl2xr,bcl3xr,bcl4xr,bcl5xr, &
-    bcltxr,struxr,strvxr,strwxr,strpxr, &
-    strdxr,strtxr,strexr,strgxr,strrxr, &
-    dudtxr,dvdtxr,dwdtxr,dtdtxr,dddtxr, &
-    acouxr,ova2xr,gam1xr,ovgmxr,sydtxr,sorpxr
-
-!     Y-DIRECTION LEFT-HAND END
-real(kind=8), dimension(:,:,:,:), allocatable :: bclyyl,stryyl,dydtyl,rateyl,strhyl
-real(kind=8), dimension(:,:,:), allocatable :: bcl1yl,bcl2yl,bcl3yl,bcl4yl,bcl5yl, &
-    bcltyl,struyl,strvyl,strwyl,strpyl, &
-    strdyl,strtyl,streyl,strgyl,strryl, &
-    dudtyl,dvdtyl,dwdtyl,dtdtyl,dddtyl, &
-    acouyl,ova2yl,gam1yl,ovgmyl,sydtyl,sorpyl
-
-!     Y-DIRECTION RIGHT-HAND END
-real(kind=8), dimension(:,:,:,:), allocatable :: bclyyr,stryyr,dydtyr,rateyr,strhyr
-real(kind=8), dimension(:,:,:), allocatable :: bcl1yr,bcl2yr,bcl3yr,bcl4yr,bcl5yr, &
-    bcltyr,struyr,strvyr,strwyr,strpyr, &
-    strdyr,strtyr,streyr,strgyr,strryr, &
-    dudtyr,dvdtyr,dwdtyr,dtdtyr,dddtyr, &
-    acouyr,ova2yr,gam1yr,ovgmyr,sydtyr,sorpyr
-
-!     Z-DIRECTION LEFT-HAND END
-real(kind=8), dimension(:,:,:,:), allocatable :: bclyzl,stryzl,dydtzl,ratezl,strhzl
-real(kind=8), dimension(:,:,:), allocatable :: bcl1zl,bcl2zl,bcl3zl,bcl4zl,bcl5zl, &
-    bcltzl,struzl,strvzl,strwzl,strpzl, &
-    strdzl,strtzl,strezl,strgzl,strrzl, &
-    dudtzl,dvdtzl,dwdtzl,dtdtzl,dddtzl, &
-    acouzl,ova2zl,gam1zl,ovgmzl,sydtzl,sorpzl
-
-!     Z-DIRECTION RIGHT-HAND END
-real(kind=8), dimension(:,:,:,:), allocatable :: bclyzr,stryzr,dydtzr,ratezr,strhzr
-real(kind=8), dimension(:,:,:), allocatable :: bcl1zr,bcl2zr,bcl3zr,bcl4zr,bcl5zr, &
-    bcltzr,struzr,strvzr,strwzr,strpzr, &
-    strdzr,strtzr,strezr,strgzr,strrzr, &
-    dudtzr,dvdtzr,dwdtzr,dtdtzr,dddtzr, &
-    acouzr,ova2zr,gam1zr,ovgmzr,sydtzr,sorpzr
+real(kind=8), dimension(:,:,:), allocatable :: struxl,strvxl,strwxl,dudtxl,dvdtxl,dwdtxl
 
 !     NSBCCL-------------------------------------------------------------------
 !     DOMDEC-------------------------------------------------------------------

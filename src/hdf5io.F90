@@ -408,6 +408,10 @@ CALL h5screate_simple_f(4, count, memspace_id, ERR)
 
 dims3 = (/nxsize,nysize,nzsize/)
 
+write(*, '(a)') "Using the arrays not allocated by OPS, &
+                        Please implement the function in OPS first, hdf5io.F90: ID=412"
+            STOP
+
 dset_name = "/DRUN"
 CALL h5dopen_f(file_id, dset_name, dset_id, ERR)
 CALL h5dget_space_f(dset_id, space_id, ERR)

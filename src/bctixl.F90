@@ -133,6 +133,9 @@ SUBROUTINE bctixl
 !       INLET RESTART
 !       -------------
 !       READ THE RESTART INLET TURBULENT VELOCITY FIELD
+        write(*, '(a)') "Using the arrays not allocated by OPS, &
+                        Please implement the function in OPS first, bctixl.F90: ID=137"
+            STOP
         OPEN(UNIT=nctixl,FILE=fntixl,STATUS='OLD',FORM='UNFORMATTED')
             READ(nctixl)ufxl,vfxl,wfxl,elocxl,svelxl,bvelxl
         CLOSE(nctixl)

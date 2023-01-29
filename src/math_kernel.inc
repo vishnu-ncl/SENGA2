@@ -737,4 +737,35 @@ SUBROUTINE math_kernel_set_reaction_var(crin,deltag,clocat,cthick,igofst,idx)
 
 END SUBROUTINE math_kernel_set_reaction_var
 
+SUBROUTINE math_kernel_print_drhs(out_arr, itime)
+    implicit none
 
+    real(kind=8), dimension(1), intent(in) :: out_arr
+    integer, intent(in) :: itime
+
+    WRITE(*,'(a,I7,a,F16.8)')  &
+      'test_drhs: (step=',itime,') value: ',out_arr(OPS_ACC1(0,0,0))
+
+END SUBROUTINE math_kernel_print_drhs
+
+SUBROUTINE math_kernel_print_erhs(out_arr, itime)
+    implicit none
+
+    real(kind=8), dimension(1), intent(in) :: out_arr
+    integer, intent(in) :: itime
+
+    WRITE(*,'(a,I7,a,F16.8)')  &
+      'test_erhs: (step=',itime,') value: ',out_arr(OPS_ACC1(0,0,0))
+
+END SUBROUTINE math_kernel_print_erhs
+
+SUBROUTINE math_kernel_print_urhs(out_arr, itime)
+    implicit none
+
+    real(kind=8), dimension(1), intent(in) :: out_arr
+    integer, intent(in) :: itime
+
+    WRITE(*,'(a,I7,a,F16.8)')  &
+      'test_urhs: (step=',itime,') value: ',out_arr(OPS_ACC1(0,0,0))
+
+END SUBROUTINE math_kernel_print_urhs

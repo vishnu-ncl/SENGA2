@@ -101,6 +101,10 @@ END IF
 
 !     =========================================================================
 
+write(*, '(a)') "Using the arrays not allocated by OPS, &
+                        Please implement the function in OPS first, turbft.F90: ID=105"
+            STOP
+
 !     X-DIRECTION
 !     -----------
 

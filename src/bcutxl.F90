@@ -229,7 +229,9 @@ SUBROUTINE bcutxl
                 sinval = SIN(argval)
       
                 DO ic = istaxl,istoxl,2
-        
+                    write(*, '(a)') "Using the arrays not allocated by OPS, &
+                        Please implement the function in OPS first, bcutxl.F90: ID=233"
+                    STOP 
                     iim = ic
                     iic = ic+1
         
@@ -325,7 +327,11 @@ SUBROUTINE bcutxl
                 ncount = 0
                 DO kc = 1,nzsize
                     DO jc = 1,nysize
-          
+         
+                        write(*, '(a)') "Using the arrays not allocated by OPS, &
+                                         Please implement the function in OPS first, bcutxl.F90: ID=332"
+                        STOP
+ 
                         ncount = ncount + 1
                         struxl(1,jc,kc) = struxl(1,jc,kc) + parray(ncount)
                         ncount = ncount + 1
@@ -391,6 +397,10 @@ SUBROUTINE bcutxl
             ncount = 0
             DO kc = 1,nzsize
                 DO jc = 1,nysize
+
+                    write(*, '(a)') "Using the arrays not allocated by OPS, &
+                                    Please implement the function in OPS first, bcutxl.F90: ID=402"
+                    STOP
 
                     ncount = ncount + 1
                     parray(ncount) = struxl(1,jc,kc)

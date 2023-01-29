@@ -4,10 +4,15 @@ MODULE com_ops_senga
     
     implicit none
 
-    !Senga2 OPS vars
+!------------------------------------------------------------------------------------------------------------
+!   Senga2 OPS vars
 
+!------------------------------------------------------------------------------------------------------------
+!   OPS block
     TYPE(ops_block) :: senga_grid
 
+!------------------------------------------------------------------------------------------------------------
+!   OPS dats
     TYPE(ops_dat) :: d_store1, d_store2, d_store3, d_store4, d_store5, d_store6, d_divm
     
     TYPE(ops_dat) :: d_ucor, d_vcor, d_wcor
@@ -82,11 +87,15 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_acouzl, d_ova2zl, d_gam1zl, d_ovgmzl, d_sydtzl, d_sorpzl
     TYPE(ops_dat) :: d_acouzr, d_ova2zr, d_gam1zr, d_ovgmzr, d_sydtzr, d_sorpzr
 
-    TYPE(ops_dat) :: d_crin
+    TYPE(ops_dat) :: d_crin, d_prefer
 
-    TYPE(ops_reduction) :: h_erdtot, h_erutot, h_ervtot, h_erwtot, h_eretot, h_erytot, h_prefer
+!------------------------------------------------------------------------------------------------------------
+!   OPS reduction handles
+    TYPE(ops_reduction) :: h_erdtot, h_erutot, h_ervtot, h_erwtot, h_eretot, h_erytot
     TYPE(ops_reduction) :: h_tket, h_ubart, h_vbart, h_wbart, h_uvart, h_vvart, h_wvart
 
+!------------------------------------------------------------------------------------------------------------
+!   OPS stencils
     TYPE(ops_stencil) :: s3d_000
 
     TYPE(ops_stencil) :: s3d_000_strid3d_x, s3d_000_strid3d_y, s3d_000_strid3d_z
@@ -126,5 +135,13 @@ MODULE com_ops_senga
     TYPE(ops_stencil) :: s3d_p420_m020_mixed_xy, s3d_p020_m420_mixed_xy
     TYPE(ops_stencil) :: s3d_p220_m220_mixed_xy, s3d_p330_m330_mixed_xy, s3d_p440_m440_mixed_xy
     TYPE(ops_stencil) :: s3d_p550_to_m550_xy
+
+!------------------------------------------------------------------------------------------------------------
+!   ops_halos
+    TYPE(ops_halo) :: halos_x(12), halos_y(12), halos_z(12)
+
+!------------------------------------------------------------------------------------------------------------
+!   ops_halo group
+    TYPE(ops_halo_group) :: halos_grp_x, halos_grp_y, halos_grp_z
 
 END MODULE com_ops_senga
