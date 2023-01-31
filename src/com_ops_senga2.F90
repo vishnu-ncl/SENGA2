@@ -93,6 +93,7 @@ MODULE com_ops_senga
 !   OPS reduction handles
     TYPE(ops_reduction) :: h_erdtot, h_erutot, h_ervtot, h_erwtot, h_eretot, h_erytot
     TYPE(ops_reduction) :: h_tket, h_ubart, h_vbart, h_wbart, h_uvart, h_vvart, h_wvart
+    TYPE(ops_reduction) :: h_prefer
 
 !------------------------------------------------------------------------------------------------------------
 !   OPS stencils

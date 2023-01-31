@@ -271,13 +271,11 @@ SUBROUTINE bcutxl
             cosval = COS(argval)
             sinval = SIN(argval)
             iim = istoxl + 1
-    
-            rangexyz(1) = iim
-            rangexyz(2) = iim
-            rangexyz(3) = 1
-            rangexyz(4) = nysize
-            rangexyz(5) = 1
-            rangexyz(6) = nzsize
+
+            write(*, '(a)') "Please correct range for the OPS par loop, bcutxl.F90: ID=275"
+            STOP
+
+            rangexyz = (/iim,iim,1,nysize,1,nzsize/)
             call ops_par_loop(bcut_kernel_xdir_eqA, "A = A + B*val1", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
                             ops_arg_dat(d_ufxl, 1, s3d_000, "real(8)", OPS_READ), &

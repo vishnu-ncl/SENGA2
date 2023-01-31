@@ -188,22 +188,9 @@ PROGRAM senga2
 !       PROCESS THE RESULTS
 !       ===================
         call output
-!            IF(itime >= 35 .and. itime <=41 .and. iproc==0) THEN
-!                write(char_i, '(I5)') itime
-!                write(filename, '("drhs_timestep", A, ".h5")') trim(adjustl(char_i))
-!                filename=trim(adjustl(filename))//char(0)
-!                call ops_fetch_block_hdf5_file(senga_grid, filename)
-!                call ops_fetch_dat_hdf5_file(d_drhs, filename)
-
-!                write(filename, '("urhs_timestep", A, ".h5")') trim(adjustl(char_i))
-!                filename=trim(adjustl(filename))//char(0)
-!                call ops_fetch_block_hdf5_file(senga_grid, filename)
-!                call ops_fetch_dat_hdf5_file(d_urhs, filename)
-
-!                write(filename, '("erhs_timestep", A, ".h5")') trim(adjustl(char_i))
-!                filename=trim(adjustl(filename))//char(0)
-!                call ops_fetch_block_hdf5_file(senga_grid, filename)
-!                call ops_fetch_dat_hdf5_file(d_erhs, filename)
+!            IF(itime >= 34 .and. itime <=35) THEN
+!                call print_dats()
+!                IF(itime == 35) STOP
 !            END IF
 
 !       =======================================================================

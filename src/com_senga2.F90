@@ -297,9 +297,6 @@ REAL(KIND=8) :: acoeff,bcoeff,ccoeff,dcoeff,ecoeff,  &
     acc1yz,bcc1yz,ccc1yz,dcc1yz, &
     acc2xz,bcc2xz,ccc2xz,dcc2xz, acc2yz,bcc2yz,ccc2yz,dcc2yz
 
-!     SPATIAL DERIVATIVE END CONDITIONS
-INTEGER :: nendxl,nendxr,nendyl,nendyr,nendzl,nendzr
-
 COMMON/dfdiff/acoeff,bcoeff,ccoeff,dcoeff,ecoeff,  &
     acoef1,bcoef1,ccoef1,dcoef1,  &
     acoef2,bcoef2,ccoef2,dcoef2,  &
@@ -325,8 +322,7 @@ COMMON/dfdiff/acoeff,bcoeff,ccoeff,dcoeff,ecoeff,  &
     acofc1,bcofc1,ccofc1,dcofc1, acofc2,bcofc2,ccofc2,dcofc2,  &
     acc1xz,bcc1xz,ccc1xz,dcc1xz, &
     acc1yz,bcc1yz,ccc1yz,dcc1yz, &
-    acc2xz,bcc2xz,ccc2xz,dcc2xz, acc2yz,bcc2yz,ccc2yz,dcc2yz,  &
-    nendxl,nendxr,nendyl,nendyr,nendzl,nendzr
+    acc2xz,bcc2xz,ccc2xz,dcc2xz, acc2yz,bcc2yz,ccc2yz,dcc2yz
 
 !     DFDIFF-------------------------------------------------------------------
 !     EMSTRT-------------------------------------------------------------------
@@ -540,21 +536,18 @@ real(kind=8), dimension(:,:,:), allocatable :: struxl,strvxl,strwxl,dudtxl,dvdtx
 !     PARALLEL DOMAIN DECOMPOSITION DATA
 INTEGER :: npmapx(0:nxproc),npmapy(0:nyproc),npmapz(0:nzproc),  &
     nprocx(0:nxproc),nprocy(0:nyproc),nprocz(0:nzproc),  &
-    nxnode,nynode,nznode,nxnbig,nynbig,nznbig, nxprm1,nyprm1,nzprm1,  &
+    nxnode,nynode,nznode, nxprm1,nyprm1,nzprm1,  &
     iproc,nproc,ixproc,iyproc,izproc,  &
     ixprom,ixprop,iyprom,iyprop,izprom,izprop,  &
     itgxsl,itgxrl,itgysl,itgyrl,itgzsl,itgzrl,  &
     itgxsr,itgxrr,itgysr,itgyrr,itgzsr,itgzrr
 
-LOGICAL :: prgoxl,prgoxr,prgoyl,prgoyr,prgozl,prgozr, proddx,proddy,proddz
-
 COMMON/domdec/npmapx,npmapy,npmapz,nprocx,nprocy,nprocz,  &
-    nxnode,nynode,nznode,nxnbig,nynbig,nznbig, nxprm1,nyprm1,nzprm1,  &
+    nxnode,nynode,nznode, nxprm1,nyprm1,nzprm1,  &
     iproc,nproc,ixproc,iyproc,izproc,  &
     ixprom,ixprop,iyprom,iyprop,izprom,izprop,  &
     itgxsl,itgxrl,itgysl,itgyrl,itgzsl,itgzrl,  &
-    itgxsr,itgxrr,itgysr,itgyrr,itgzsr,itgzrr,  &
-    prgoxl,prgoxr,prgoyl,prgoyr,prgozl,prgozr, proddx,proddy,proddz
+    itgxsr,itgxrr,itgysr,itgyrr,itgzsr,itgzrr
 
 !     DOMDEC-------------------------------------------------------------------
 !     STATIS-------------------------------------------------------------------

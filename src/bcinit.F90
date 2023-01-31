@@ -46,97 +46,44 @@ use com_senga
 !     X-LEFT
 IF(ixproc == 0)THEN
   nsbcxl = ngbcxl
-  nendxl = nbound
-  IF(nsbcxl == nsperi)THEN
-    nendxl = nobc
-    IF(nxproc == 1)nendxl = nperi
-  END IF
 ELSE
   nsbcxl = nsnull
-  nendxl = nobc
 END IF
 
 !     X-RIGHT
 IF(ixproc == nxprm1)THEN
   nsbcxr = ngbcxr
-  nendxr = nbound
-  IF(nsbcxr == nsperi)THEN
-    nendxr = nobc
-    IF(nxproc == 1)nendxr = nperi
-  END IF
 ELSE
   nsbcxr = nsnull
-  nendxr = nobc
 END IF
 
 !     Y-LEFT
 IF(iyproc == 0)THEN
   nsbcyl = ngbcyl
-  nendyl = nbound
-  IF(nsbcyl == nsperi)THEN
-    nendyl = nobc
-    IF(nyproc == 1)nendyl = nperi
-  END IF
 ELSE
   nsbcyl = nsnull
-  nendyl = nobc
 END IF
 
 !     Y-RIGHT
 IF(iyproc == nyprm1)THEN
   nsbcyr = ngbcyr
-  nendyr = nbound
-  IF(nsbcyr == nsperi)THEN
-    nendyr = nobc
-    IF(nyproc == 1)nendyr = nperi
-  END IF
 ELSE
   nsbcyr = nsnull
-  nendyr = nobc
 END IF
 
 !     Z-LEFT
 IF(izproc == 0)THEN
   nsbczl = ngbczl
-  nendzl = nbound
-  IF(nsbczl == nsperi)THEN
-    nendzl = nobc
-    IF(nzproc == 1)nendzl = nperi
-  END IF
 ELSE
   nsbczl = nsnull
-  nendzl = nobc
 END IF
 
 !     Z-RIGHT
 IF(izproc == nzprm1)THEN
   nsbczr = ngbczr
-  nendzr = nbound
-  IF(nsbczr == nsperi)THEN
-    nendzr = nobc
-    IF(nzproc == 1)nendzr = nperi
-  END IF
 ELSE
   nsbczr = nsnull
-  nendzr = nobc
 END IF
-
-!     =========================================================================
-
-!     INITIALISE PARALLEL TRANSFER BC FLAGS
-!     =====================================
-prgoxl = .false.
-IF(nendxl == nobc)prgoxl = .true.
-prgoxr = .false.
-IF(nendxr == nobc)prgoxr = .true.
-prgoyl = .false.
-IF(nendyl == nobc)prgoyl = .true.
-prgoyr = .false.
-IF(nendyr == nobc)prgoyr = .true.
-prgozl = .false.
-IF(nendzl == nobc)prgozl = .true.
-prgozr = .false.
-IF(nendzr == nobc)prgozr = .true.
 
 !     =========================================================================
 

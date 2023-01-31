@@ -46,101 +46,83 @@ use OPS_Fortran_Reference
 
 !   =========================================================================
 
-    IF (nyglbl == 1) THEN
-        rangexyz = (/1,nxsize, 1,nysize, 1,nzsize/)
+    IF (nysize == 1) THEN
+        rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(d2fdz2_kernel_null, "d2fdz2_null", senga_grid, 3, rangexyz, &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
+
     ELSE
 !       INTERIOR SCHEME
 !       ===============
 
 !       TENTH ORDER EXPLICIT DIFFERENCES
-        rangexyz(1) = 1
-        rangexyz(2) = nxsize
-        rangexyz(3) = 1
-        rangexyz(4) = nysize
 
-        rangexyz(5) = 1
-        rangexyz(6) = nzsize
-        IF(nendzl == nbound)    rangexyz(5) = 6
-        IF(nendzr == nbound)    rangexyz(6) = nzsize-5
-    
+        rangexyz = (/1,nxsize,1,nysize,6,nzsize-5/)
         call ops_par_loop(d2fdz2_kernel_interior, "d2fdz2_interior_scheme", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(functn, 1, s3d_p005_to_m005_z, "real(8)", OPS_READ),  &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
+!       =========================================================================
 
 !       LH END
 !       ======
-        IF(nendzl == nbound)THEN
+!       EXPLICIT 4TH,4TH,4TH,6TH,8TH ORDER BOUNDARY TREATMENT
 
-            rangexyz(5) = 1
-            rangexyz(6) = 1
+            rangexyz = (/1,nxsize,1,nysize,1,1/)
             call ops_par_loop(d2fdz2_kernel_lhpoint_4th_onesided, "d2fdz2_lh_4th_onesided", senga_grid, 3, rangexyz,  &
                               ops_arg_dat(functn, 1, s3d_000_to_p005_z, "real(8)", OPS_READ),  &
                               ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz(5) = 2
-            rangexyz(6) = 2
+            rangexyz = (/1,nxsize,1,nysize,2,2/)
             call ops_par_loop(d2fdz2_kernel_lhpoint_4th_mixed, "d2fdz2_lh_4th_mixed", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(functn, 1, s3d_p004_to_m001_z, "real(8)", OPS_READ),  &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz(5) = 3
-            rangexyz(6) = 3
+            rangexyz = (/1,nxsize,1,nysize,3,3/)
             call ops_par_loop(d2fdz2_kernel_lhpoint_4th_centered, "d2fdz2_lh_4th_centered", senga_grid, 3, rangexyz,  &
                               ops_arg_dat(functn, 1, s3d_p002_to_m002_z, "real(8)", OPS_READ),  &
                               ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz(5) = 4
-            rangexyz(6) = 4
+            rangexyz = (/1,nxsize,1,nysize,4,4/)
             call ops_par_loop(d2fdz2_kernel_lhpoint_6th_centered, "d2fdz2_lh_6th_centered", senga_grid, 3, rangexyz,  &
                               ops_arg_dat(functn, 1, s3d_p003_to_m003_z, "real(8)", OPS_READ),  &
                               ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz(5) = 5
-            rangexyz(6) = 5
+            rangexyz = (/1,nxsize,1,nysize,5,5/)
             call ops_par_loop(d2fdz2_kernel_lhpoint_8th_centered, "d2fdz2_lh_8th_centered", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(functn, 1, s3d_p004_to_m004_z, "real(8)", OPS_READ),  &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-        END IF
+!       =========================================================================
 
 !       RH END
 !       ======
-        IF(nendzr == nbound)THEN
+!       EXPLICIT 4TH,4TH,4TH,6TH,8TH ORDER BOUNDARY TREATMENT
 
-            rangexyz(5) = nzsize-4
-            rangexyz(6) = nzsize-4
+            rangexyz = (/1,nxsize,1,nysize,nzsize-4,nzsize-4/)
             call ops_par_loop(d2fdz2_kernel_rhpoint_8th_centered, "d2fdz2_rh_8th_centered", senga_grid, 3, rangexyz,  &
                           ops_arg_dat(functn, 1, s3d_p004_to_m004_z, "real(8)", OPS_READ),  &
                           ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz(5) = nzsize-3
-            rangexyz(6) = nzsize-3
+            rangexyz = (/1,nxsize,1,nysize,nzsize-3,nzsize-3/)
             call ops_par_loop(d2fdz2_kernel_rhpoint_6th_centered, "d2fdz2_rh_6th_centered", senga_grid, 3, rangexyz,  &
                               ops_arg_dat(functn, 1, s3d_p003_to_m003_z, "real(8)", OPS_READ),  &
                               ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz(5) = nzsize-2
-            rangexyz(6) = nzsize-2
+            rangexyz = (/1,nxsize,1,nysize,nzsize-2,nzsize-2/)
             call ops_par_loop(d2fdz2_kernel_rhpoint_4th_centered, "d2fdz2_rh_4th_centered", senga_grid, 3, rangexyz,  &
                               ops_arg_dat(functn, 1, s3d_p002_to_m002_z, "real(8)", OPS_READ),  &
                               ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz(5) = nzsize-1
-            rangexyz(6) = nzsize-1
+            rangexyz = (/1,nxsize,1,nysize,nzsize-1,nzsize-1/)
             call ops_par_loop(d2fdz2_kernel_rhpoint_4th_mixed, "d2fdz2_rh_4th_mixed", senga_grid, 3, rangexyz,  &
                               ops_arg_dat(functn, 1, s3d_p001_to_m004_z, "real(8)", OPS_READ),  &
                               ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz(5) = nzsize
-            rangexyz(6) = nzsize
+            rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
             call ops_par_loop(d2fdz2_kernel_rhpoint_4th_onesided, "d2fdz2_rh_4th_onesided", senga_grid, 3, rangexyz,  &
                               ops_arg_dat(functn, 1, s3d_000_to_m005_z, "real(8)", OPS_READ),  &
                               ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
-
-        END IF
 
 !       =========================================================================
 
@@ -149,9 +131,10 @@ use OPS_Fortran_Reference
         rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
         call ops_par_loop(d2fdz2_kernel_scaling, "d2fdz2_scaling", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_RW))
-!       =========================================================================
 
-    end if
+!   =========================================================================
+
+    END IF
 
 !   =========================================================================
 

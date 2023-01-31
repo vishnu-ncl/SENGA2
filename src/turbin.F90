@@ -356,8 +356,8 @@ SUBROUTINE turbin
     call ops_reduction_result(h_tket, tket)
 
 !   SUM OVER ALL PROCESSORS
-    call p_summ(tket,tketot)
-!    tketot = tket
+!    call p_summ(tket,tketot)
+    tketot = tket
 
 !   REPORT
     IF(iproc == 0)THEN
@@ -434,12 +434,12 @@ SUBROUTINE turbin
     wbartl = wbart*faclav
 
 !   SUM OVER ALL PROCESSORS
-    call p_summ(ubart,ubartt)
-!    ubartt = ubart
-    call p_summ(vbart,vbartt)
-!    vbartt = vbart
-    call p_summ(wbart,wbartt)
-!    wbartt = wbart
+!    call p_summ(ubart,ubartt)
+    ubartt = ubart
+!    call p_summ(vbart,vbartt)
+    vbartt = vbart
+!    call p_summ(wbart,wbartt)
+    wbartt = wbart
 
 !   GLOBAL AVERAGES
     ubartg = ubartt*facgav
@@ -483,14 +483,14 @@ SUBROUTINE turbin
     tketl  = half*(uvartl+vvartl+wvartl)
 
 !   SUM OVER ALL PROCESSORS
-    call p_summ(uvart,uvartt)
-!    uvartt = uvart
-    call p_summ(vvart,vvartt)
-!    vvartt = vvart
-    call p_summ(wvart,wvartt)
-!    wvartt = wvart
-    call p_summ(tket,tketot)
-!    tketot = tket
+!    call p_summ(uvart,uvartt)
+    uvartt = uvart
+!    call p_summ(vvart,vvartt)
+    vvartt = vvart
+!    call p_summ(wvart,wvartt)
+    wvartt = wvart
+!    call p_summ(tket,tketot)
+    tketot = tket
 
 !   GLOBAL AVERAGES
     uvartg = uvartt*facgav

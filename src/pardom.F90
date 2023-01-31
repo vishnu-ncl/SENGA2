@@ -53,14 +53,14 @@ SUBROUTINE pardom
 
 !   GET THE NUMBER OF PROCESSORS NPROC
 !   AND THE LOCAL PROCESSOR ID IPROC: IPROC=0,NPROC-1
-!#ifdef OPS_MPI
+#ifdef OPS_MPI
     call p_size(nproc,iproc)
-!#else
-!    nproc = 1
-!    iproc = 0
-!#endif
+#else
+    nproc = 1
+    iproc = 0
+#endif
 
-!    write(*, '(a,i5,a,i5)') "Senga2 nproc: ",nproc,"  iproc: ",iproc
+    write(*, '(a,i5,a,i5)') "Senga2 nproc: ",nproc,"  iproc: ",iproc
 
 !   =========================================================================
 
@@ -88,9 +88,8 @@ SUBROUTINE pardom
         npmapx(icproc) = nxnode
         IF(icproc >= nextra) npmapx(icproc) = nxnode+1
     END DO
-!   nxnode = npmapx(ixproc)
-    nxnode = nxsize
-    nxnbig = nxnode+2*nhalox
+   nxnode = npmapx(ixproc)
+!    nxnode = nxsize
 
     nynode = nyglbl/nyproc
     nextra = MOD(nyglbl,nyproc)
@@ -100,9 +99,8 @@ SUBROUTINE pardom
         npmapy(icproc) = nynode
         IF(icproc >= nextra) npmapy(icproc) = nynode+1
    END DO
-!   nynode = npmapy(iyproc)
-    nynode = nysize
-    nynbig = nynode+2*nhaloy
+   nynode = npmapy(iyproc)
+!    nynode = nysize
 
     nznode = nzglbl/nzproc
     nextra = MOD(nzglbl,nzproc)
@@ -112,9 +110,8 @@ SUBROUTINE pardom
         npmapz(icproc) = nznode
         IF(icproc >= nextra) npmapz(icproc) = nznode+1
     END DO
-!   nznode = npmapz(izproc)
-    nznode = nzsize
-    nznbig = nznode+2*nhaloz
+   nznode = npmapz(izproc)
+!    nznode = nzsize
 
 !   =========================================================================
 
@@ -156,16 +153,6 @@ SUBROUTINE pardom
     izprop = ixproc+nxproc*(iyproc+izprop*nyproc)
 
 !   =========================================================================
-
-!   SET FLAGS AND TAGS FOR MESSAGE-PASSING
-!   ======================================
-!   LOCAL PROCESSOR EVEN/ODD FLAGS
-    proddx = .true.
-    IF(MOD(ixproc,2) == 0) proddx = .false.
-    proddy = .true.
-    IF(MOD(iyproc,2) == 0) proddy = .false.
-    proddz = .true.
-    IF(MOD(izproc,2) == 0) proddz = .false.
 
 !   SET MESSAGE TAGS
 !   EACH TAG UNIQUELY IDENTIFIES THE SENDING AND RECEIVING PROCESS

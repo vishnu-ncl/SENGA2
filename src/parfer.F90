@@ -46,30 +46,17 @@ SUBROUTINE parfer
 
 !   X-DIRECTION
 !   ONLY NEED TO CHECK ONE END
-    IF(nendxl == nperi) THEN
-
         call ops_halo_transfer(halos_grp_x)
-
-    END IF
-
 
 !   Y-DIRECTION
 !   ONLY NEED TO CHECK ONE END
 !   NOTE EXTENDED X-LIMITS FOR Y TRANSFERS
-    IF(nendyl == nperi)THEN
-
         IF(nhaloy /= 0) call ops_halo_transfer(halos_grp_y)
-
-    END IF
 
 !   Z-DIRECTION
 !   ONLY NEED TO CHECK ONE END
 !   NOTE EXTENDED X- AND Y-LIMITS FOR Z TRANSFERS
-    IF(nendzl == nperi) THEN
-
         IF(nhaloz /= 0) call ops_halo_transfer(halos_grp_z)
-
-    END IF
 
 !   =========================================================================
 

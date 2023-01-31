@@ -227,8 +227,8 @@ SUBROUTINE adaptt
 !       FIND THE LARGEST GLOBAL ERROR
 !       -----------------------------
 !       RSC/RACG 09-AUG-2012 USE GLOBAL ERROR
-        errloc = errmax
-        call p_gmax(errloc,errmax)
+!        errloc = errmax
+!        call p_gmax(errloc,errmax)
 
         IF(iproc == 0) THEN
             write(*,'(a,1PE12.4)') "MPI_MAX error: ",errmax

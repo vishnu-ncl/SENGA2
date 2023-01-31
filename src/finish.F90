@@ -64,7 +64,7 @@ END IF
 CALL hdf5_close
 #endif
 !     TERMINATE PARALLEL MESSAGE PASSING
-CALL p_stop
+!CALL p_stop
 
 !     =========================================================================
 

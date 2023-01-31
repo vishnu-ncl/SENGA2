@@ -44,6 +44,10 @@ SUBROUTINE rhsvel
 !   ==========
     real(kind=8) :: fornow,prefer
     integer :: rangexyz(6)
+    CHARACTER (LEN=60) :: fname
+    CHARACTER (LEN=4) :: proc
+    CHARACTER (LEN=4) :: pnxres
+    PARAMETER(pnxres = '.res')
 
 !   BEGIN
 !   =====
@@ -451,14 +455,17 @@ SUBROUTINE rhsvel
 !   PRESSURE GRADIENTS
 !   ------------------
 
-!    rangexyz = (/ipref,ipref,jpref,jpref,kpref,kpref/)
-!    call ops_par_loop(math_kernel_getval, "Get value", senga_grid, 3, rangexyz,  &
-!                    ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_READ), &
-!                    ops_arg_dat(d_prefer, 1, s3d_000, "real(8)", OPS_WRITE), &
-!                    ops_arg_idx())
+    rangexyz = (/1,1,1,1,1,1/)
+    call ops_par_loop(math_kernel_getval, "Get value", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_reduce(h_prefer, 1, "real(8)", OPS_INC))
+    call ops_reduction_result(h_prefer, prefer)
 
-    !call ops_reduction_result(h_prefer, prefer)
-    prefer = prun(ipref,jpref,kpref)
+!    WRITE(proc,'(I4.4)') iproc
+!    fname = 'output/val_prefer'//proc//pnxres
+!    call ops_print_dat_to_txtfile(d_prefer, trim(fname))
+
+!    prefer = prun(ipref,jpref,kpref)
 
     rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
     call ops_par_loop(math_kernel_eqG, "A = B-var", senga_grid, 3, rangexyz,  &
