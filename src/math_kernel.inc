@@ -688,13 +688,12 @@ SUBROUTINE math_kernel_getval(prun,prefer)
 
 END SUBROUTINE math_kernel_getval
 
-SUBROUTINE math_kernel_set_reaction_var(crin,deltag,clocat,cthick,igofst,idx)
+SUBROUTINE math_kernel_set_reaction_var(crin,deltag,clocat,cthick,idx)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: crin
     real(kind=8), intent(in) :: deltag,clocat,cthick
-    integer, intent(in) :: igofst
     integer, dimension(3), intent(in) :: idx
 
     real(kind=8) :: xcoord,argmnt
@@ -716,7 +715,7 @@ SUBROUTINE math_kernel_set_reaction_var(crin,deltag,clocat,cthick,igofst,idx)
     ecoeff(4) =-1.453152027_8
     ecoeff(5) = 1.061405429_8
     
-    ix = igofst + idx(1)
+    ix = idx(1)
     xcoord = real(ix-1,kind=8)*deltag
     argmnt = (xcoord-clocat)/cthick
 

@@ -1045,14 +1045,6 @@ SUBROUTINE indata
   
 !       TEMPERATURE INTERVAL INDEX
         itint = 1
-!        1010    CONTINUE
-!        IF(trin > tinthi(itint,ispec)) THEN
-!            IF(itint < ntint(ispec)) THEN
-!                itint = itint + 1
-!                GO TO 1010
-!            END IF
-!        END IF
-!       END OF LOOP 1010
         DO WHILE (trin > tinthi(itint,ispec) .and. itint < ntint(ispec))
             itint = itint + 1
         END DO

@@ -63,7 +63,6 @@ SUBROUTINE flamin
     real(kind=8) :: deltag,xcoord,argmnt
     real(kind=8) :: flxmas
     integer :: icproc
-    integer :: igofst
     integer :: ix
     integer :: ic,jc,kc
     integer :: ispec
@@ -117,14 +116,6 @@ SUBROUTINE flamin
 !   WRITE TO REPORT FILE
     IF(iproc == 0) THEN
   
-!        OPEN(UNIT=NCREPT,FILE=FNREPT,STATUS='OLD',FORM='FORMATTED')
-  
-!C       GO TO EOF
-!1000    CONTINUE
-!          READ(NCREPT,9000,END=1010)
-!          GOTO 1000
-!1010    BACKSPACE(NCREPT)
-  
         WRITE(ncrept,*)
         WRITE(ncrept,*)'FLAMIN: reactant mass fractions:'
         DO ispec = 1,nspec
@@ -142,19 +133,11 @@ SUBROUTINE flamin
         WRITE(ncrept,'(2(1PE15.7))')trinr,trinp
         WRITE(ncrept,*)
   
-!       CLOSE(NCREPT)
-
     END IF
 
 !   GLOBAL INDEXING
 !   ---------------
     deltag = xgdlen/(REAL(nxglbl-1,kind=8))
-
-    igofst = 0
-    DO icproc = 0, ixproc-1
-        igofst = igofst + npmapx(icproc)
-    END DO
-
 
 !   SET REACTION PROGRESS VARIABLE PROFILE
 !   --------------------------------------
@@ -165,19 +148,7 @@ SUBROUTINE flamin
                     ops_arg_gbl(deltag, 1, "real(8)", OPS_READ), &
                     ops_arg_gbl(clocat, 1, "real(8)", OPS_READ), &
                     ops_arg_gbl(cthick, 1, "real(8)", OPS_READ), &
-                    ops_arg_gbl(igofst, 1, "integer", OPS_READ), &
                     ops_arg_idx())
-
-!C     SIMPLE 1D RIGHT-FACING ERROR FUNCTION PROFILE
-!      DO IC = ISTAL,ISTOL
-
-!        IX = IGOFST + IC
-!        XCOORD = REAL(IX-1)*DELTAG
-!        ARGMNT = (XCOORD-CLOCAT)/CTHICK
-!        CRIN(IC) = HALF*(ONE+ERFUNC(-ARGMNT))
-
-!      ENDDO
-
 
 !   SET SPECIES MASS FRACTION PROFILES
 !   ----------------------------------
@@ -192,24 +163,6 @@ SUBROUTINE flamin
 
     END DO
 
-!C     SG 25-STEP MECHANISM
-!C     ADD A PINCH OF HYDROGEN ATOM
-!C     AND HYDROGEN MOLECULE
-!      DO KC = KSTAL,KSTOL
-!        DO JC = JSTAL,JSTOL
-!          DO IC = ISTAL,ISTOL
-
-!            IX = IGOFST + IC
-!            XCOORD = REAL(IX-1)*DELTAG
-!            ARGMNT = (XCOORD-H2LOCT)/H2THCK
-!            YRUN(IC,JC,KC,5) = H2PNCH*EXP(-ARGMNT*ARGMNT)
-!            ARGMNT = (XCOORD-HLOCAT)/HTHICK
-!            YRUN(IC,JC,KC,8) = HPINCH*EXP(-ARGMNT*ARGMNT)
-
-!          ENDDO
-!        ENDDO
-!      ENDDO
-
     rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(set_zero_kernel_MD, "set zero multi-dim", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_WRITE), &
@@ -223,7 +176,6 @@ SUBROUTINE flamin
                         ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
     END DO
-
 
     rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(math_MD_kernel_eqO, "A_multidim = 1.0 - A_multidim", senga_grid, 3, rangexyz,  &

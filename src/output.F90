@@ -65,7 +65,7 @@ SUBROUTINE output
 
     INTEGER :: ispec
     INTEGER :: ic,jc,kc
-    INTEGER :: igofst,ix
+    INTEGER :: ix
     INTEGER :: rangexyz(6)
     CHARACTER (LEN=21) :: fndiag
 
@@ -116,11 +116,6 @@ SUBROUTINE output
   
 !       GLOBAL INDEXING
         deltag = xgdlen/(REAL(nxglbl-1))
-  
-        igofst = 0
-        DO ic = 0, ixproc-1
-            igofst = igofst + npmapx(ic)
-        END DO
   
 !        STRQTY = 'output/pres'
 !        FNDIAG = STRQTY//PNPROC//PNXRES
