@@ -948,7 +948,7 @@ SUBROUTINE indata
 
 !   PRE-INITIALISE THE VELOCITY FIELD TO ZERO
 !   ---------------------------------
-    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_WRITE))
 
@@ -968,7 +968,7 @@ SUBROUTINE indata
 
 !   COPY TURBULENT INFLOW VELOCITY FIELD INTO THE DOMAIN
     IF(inturb == 2) THEN
-        rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+        rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
         call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_WRITE), &
                         ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ))
@@ -987,7 +987,7 @@ SUBROUTINE indata
 
 !   ADD ON THE DEFAULT MEAN VELOCITY
 !   --------------------------------
-    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(math_kernel_eqAM, "A = A + var", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_gbl(urin, 1, "real(8)", OPS_READ))
@@ -1009,7 +1009,7 @@ SUBROUTINE indata
 !   PRE-INITIALISE SPECIES MASS FRACTIONS TO DEFAULT VALUES
 !   -------------------------------------
     DO ispec = 1,nspec
-        rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+        rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
         call ops_par_loop(math_MD_kernel_eqT, "A_multidim = var", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_WRITE), &
                         ops_arg_gbl(yrin(ispec), 1, "real(8)", OPS_READ), &
@@ -1020,7 +1020,7 @@ SUBROUTINE indata
 !   PRE-INITIALISE PRESSURE AND TEMPERATURE TO DEFAULT VALUES
 !   ---------------------------------------
 !   BIGGER SIZE ARRAYS
-    rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
+    rangexyz = (/1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz/)
     call ops_par_loop(math_kernel_eqAN, "A = var", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_WRITE), &
                     ops_arg_gbl(prin, 1, "real(8)", OPS_READ))
@@ -1087,14 +1087,14 @@ SUBROUTINE indata
 !   -------------
 !   USE STORE1 AS AN ACCUMULATOR FOR MIXTURE GAS CONSTANT
 !   INITIALISE TO ZERO
-    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_WRITE))
 
 
 !   MIXTURE GAS CONSTANT
     DO ispec = 1,nspec
-        rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+        rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
         call ops_par_loop(math_MD_kernel_eqP, "A = A + var*B_multidim", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_READ), &
@@ -1104,7 +1104,7 @@ SUBROUTINE indata
     END DO
 
 !   DENSITY
-    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(math_kernel_eqU, "A = A*B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ))
@@ -1122,7 +1122,7 @@ SUBROUTINE indata
 !   INITIALISE TEMPERATURE INTERVAL INDEX
 !   FOR ALL SPECIES LOCATE TEMPERATURE IN AN INTERVAL
 !   BIGGER SIZE ARRAY
-    rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
+    rangexyz = (/1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz/)
     call ops_par_loop(math_MD_kernel_eqAC, "INTERNAL ENERGY FIELD", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW), &
                     ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1134,7 +1134,7 @@ SUBROUTINE indata
                     ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
 !   PRE-INITIALISE INTERNAL ENERGY TO ZERO
-    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_WRITE))
 
@@ -1148,7 +1148,7 @@ SUBROUTINE indata
         icoef1 = icoef2*ntbase
   
 !       USE THERMOCHEMICAL DATA
-        rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+        rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
         call ops_par_loop(math_MD_kernel_eqAD, "INITIALISE INTERNAL ENERGY", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1170,7 +1170,7 @@ SUBROUTINE indata
     END DO
 
 !   FINALISE INTERNAL ENERGY
-    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(math_kernel_eqAO, "A = A - B + half*(C*C+D*D+E*E)", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1183,7 +1183,7 @@ SUBROUTINE indata
 
 !   CONVERT VARIABLES TO CONSERVATIVE FORM
 !   ======================================
-    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(math_kernel_eqU, "A = A*B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_dat(d_drun, 1, s3d_000, "real(8)", OPS_READ))
@@ -1201,7 +1201,7 @@ SUBROUTINE indata
                     ops_arg_dat(d_drun, 1, s3d_000, "real(8)", OPS_READ))
 
     DO ispec = 1,nspec
-        rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+        rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
         call ops_par_loop(math_MD_kernel_eqU, "A_multidim = B*A_multidim", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_RW), &
                         ops_arg_dat(d_drun, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1308,7 +1308,7 @@ SUBROUTINE indata
         dyrin(ispec) = drin*yrin(ispec)
     END DO
 
-    rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
+    rangexyz = (/1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz/)
     call ops_par_loop(math_kernel_eqAN, "A = var", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_WRITE), &
                     ops_arg_gbl(drin, 1, "real(8)", OPS_READ))
@@ -1330,7 +1330,7 @@ SUBROUTINE indata
                     ops_arg_gbl(derin, 1, "real(8)", OPS_READ))
 
     DO ispec = 1,nspec
-        rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
+        rangexyz = (/1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz/)
         call ops_par_loop(math_MD_kernel_eqT, "A_multidim = var", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_WRITE), &
                         ops_arg_gbl(dyrin(ispec), 1, "real(8)", OPS_READ), &
@@ -1341,7 +1341,7 @@ SUBROUTINE indata
 !   NOTE THAT THESE ARE BIGGER SIZE ARRAYS
 !   BUT THAT NO HALO DATA IS YET AVAILABLE
 !   THEREFORE ONLY THE STANDARD DOMAIN SIZE IS INITIALISED
-    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_WRITE), &
                     ops_arg_dat(d_drun, 1, s3d_000, "real(8)", OPS_READ))
@@ -1363,7 +1363,7 @@ SUBROUTINE indata
                     ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_READ))
 
     DO ispec = 1,nspec
-        rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+        rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
         call ops_par_loop(math_MD_kernel_eqB, "A_multidim = B_multidim", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_WRITE), &
                         ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_READ), &

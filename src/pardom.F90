@@ -49,7 +49,9 @@ SUBROUTINE pardom
 !   INITIALISE PARALLEL MESSAGE PASSING
 !   ===================================
 !   INITIALISE
+#ifndef OPS_MPI
    CALL p_init
+#endif
 
 !   GET THE NUMBER OF PROCESSORS NPROC
 !   AND THE LOCAL PROCESSOR ID IPROC: IPROC=0,NPROC-1
@@ -89,7 +91,6 @@ SUBROUTINE pardom
         IF(icproc >= nextra) npmapx(icproc) = nxnode+1
     END DO
    nxnode = npmapx(ixproc)
-!    nxnode = nxsize
 
     nynode = nyglbl/nyproc
     nextra = MOD(nyglbl,nyproc)
@@ -100,7 +101,6 @@ SUBROUTINE pardom
         IF(icproc >= nextra) npmapy(icproc) = nynode+1
    END DO
    nynode = npmapy(iyproc)
-!    nynode = nysize
 
     nznode = nzglbl/nzproc
     nextra = MOD(nzglbl,nzproc)
@@ -111,7 +111,6 @@ SUBROUTINE pardom
         IF(icproc >= nextra) npmapz(icproc) = nznode+1
     END DO
    nznode = npmapz(izproc)
-!    nznode = nzsize
 
 !   =========================================================================
 
@@ -126,50 +125,6 @@ SUBROUTINE pardom
     DO icproc = 0,nzprm1
         nprocz(icproc) = ixproc+nxproc*(iyproc+nyproc*icproc)
     END DO
-
-!   =========================================================================
-
-!   IDENTIFY NEAREST NEIGHBOURS FOR MESSAGE-PASSING
-!   ===============================================
-    ixprom = ixproc-1
-    IF(ixprom < 0) ixprom = nxproc-1
-    ixprop = ixproc+1
-    IF(ixprop >= nxproc) ixprop = 0
-    ixprom = ixprom+nxproc*(iyproc+izproc*nyproc)
-    ixprop = ixprop+nxproc*(iyproc+izproc*nyproc)
-
-    iyprom = iyproc-1
-    IF(iyprom < 0) iyprom = nyproc-1
-    iyprop = iyproc+1
-    IF(iyprop >= nyproc) iyprop = 0
-    iyprom = ixproc+nxproc*(iyprom+izproc*nyproc)
-    iyprop = ixproc+nxproc*(iyprop+izproc*nyproc)
-
-    izprom = izproc-1
-    IF(izprom < 0) izprom = nzproc-1
-    izprop = izproc+1
-    IF(izprop >= nzproc) izprop = 0
-    izprom = ixproc+nxproc*(iyproc+izprom*nyproc)
-    izprop = ixproc+nxproc*(iyproc+izprop*nyproc)
-
-!   =========================================================================
-
-!   SET MESSAGE TAGS
-!   EACH TAG UNIQUELY IDENTIFIES THE SENDING AND RECEIVING PROCESS
-!   FOR EACH PROCESSOR FOR EACH DIRECTION THERE ARE FOUR TAGS
-!   CORRESPONDING TO SEND AND RECEIVE LEFT AND RIGHT
-    itgxsl = iproc*nproc + ixprom
-    itgxrl = ixprom*nproc + iproc
-    itgxsr = iproc*nproc + ixprop
-    itgxrr = ixprop*nproc + iproc
-    itgysl = iproc*nproc + iyprom
-    itgyrl = iyprom*nproc + iproc
-    itgysr = iproc*nproc + iyprop
-    itgyrr = iyprop*nproc + iproc
-    itgzsl = iproc*nproc + izprom
-    itgzrl = izprom*nproc + iproc
-    itgzsr = iproc*nproc + izprop
-    itgzrr = izprop*nproc + iproc
 
 !   =========================================================================
 

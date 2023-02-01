@@ -44,46 +44,22 @@ use com_senga
 !     ===================================================
 
 !     X-LEFT
-IF(ixproc == 0)THEN
   nsbcxl = ngbcxl
-ELSE
-  nsbcxl = nsnull
-END IF
 
 !     X-RIGHT
-IF(ixproc == nxprm1)THEN
   nsbcxr = ngbcxr
-ELSE
-  nsbcxr = nsnull
-END IF
 
 !     Y-LEFT
-IF(iyproc == 0)THEN
   nsbcyl = ngbcyl
-ELSE
-  nsbcyl = nsnull
-END IF
 
 !     Y-RIGHT
-IF(iyproc == nyprm1)THEN
   nsbcyr = ngbcyr
-ELSE
-  nsbcyr = nsnull
-END IF
 
 !     Z-LEFT
-IF(izproc == 0)THEN
   nsbczl = ngbczl
-ELSE
-  nsbczl = nsnull
-END IF
 
 !     Z-RIGHT
-IF(izproc == nzprm1)THEN
   nsbczr = ngbczr
-ELSE
-  nsbczr = nsnull
-END IF
 
 !     =========================================================================
 

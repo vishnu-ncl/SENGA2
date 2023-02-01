@@ -446,9 +446,9 @@ COMMON/workpt/parray
 !     NSBCCL-------------------------------------------------------------------
 
 !     BC TYPE PARAMETERS
-INTEGER :: nsnull,nsperi, nsbci1,nsbci2,nsbci3,nsbci4,  &
+INTEGER :: nsbci1,nsbci2,nsbci3,nsbci4,  &
     nsbco1,nsbco2,nsbco3,nsbco4, nsbcw1,nsbcw2,nsbcw3,nsbcw4
-PARAMETER(nsnull=0, nsperi=1, nsbci1=11,nsbci2=12,nsbci3=13,nsbci4=14,  &
+PARAMETER(nsbci1=11,nsbci2=12,nsbci3=13,nsbci4=14,  &
     nsbco1=21,nsbco2=22,nsbco3=23,nsbco4=24,  &
     nsbcw1=31,nsbcw2=32,nsbcw3=33,nsbcw4=34)
 
@@ -537,17 +537,11 @@ real(kind=8), dimension(:,:,:), allocatable :: struxl,strvxl,strwxl,dudtxl,dvdtx
 INTEGER :: npmapx(0:nxproc),npmapy(0:nyproc),npmapz(0:nzproc),  &
     nprocx(0:nxproc),nprocy(0:nyproc),nprocz(0:nzproc),  &
     nxnode,nynode,nznode, nxprm1,nyprm1,nzprm1,  &
-    iproc,nproc,ixproc,iyproc,izproc,  &
-    ixprom,ixprop,iyprom,iyprop,izprom,izprop,  &
-    itgxsl,itgxrl,itgysl,itgyrl,itgzsl,itgzrl,  &
-    itgxsr,itgxrr,itgysr,itgyrr,itgzsr,itgzrr
+    iproc,nproc,ixproc,iyproc,izproc
 
 COMMON/domdec/npmapx,npmapy,npmapz,nprocx,nprocy,nprocz,  &
     nxnode,nynode,nznode, nxprm1,nyprm1,nzprm1,  &
-    iproc,nproc,ixproc,iyproc,izproc,  &
-    ixprom,ixprop,iyprom,iyprop,izprom,izprop,  &
-    itgxsl,itgxrl,itgysl,itgyrl,itgzsl,itgzrl,  &
-    itgxsr,itgxrr,itgysr,itgyrr,itgzsr,itgzrr
+    iproc,nproc,ixproc,iyproc,izproc
 
 !     DOMDEC-------------------------------------------------------------------
 !     STATIS-------------------------------------------------------------------

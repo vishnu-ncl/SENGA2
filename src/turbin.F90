@@ -343,7 +343,7 @@ SUBROUTINE turbin
 !   CHECK ENERGY CONTENT
 !   --------------------
     tket = zero
-    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(turbin_kernel_eqA, "CHECK ENERGY CONTENT", senga_grid, 3, rangexyz,  &
                     &  ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_READ), &
                     &  ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
@@ -412,7 +412,7 @@ SUBROUTINE turbin
     vbart = zero
     wbart = zero
     
-    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(turbin_kernel_eqB, "VELOCITY MEANS", senga_grid, 3, rangexyz,  &
                     &  ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_READ), &
                     &  ops_arg_reduce(h_ubart, 1, "real(8)", OPS_INC))
@@ -454,7 +454,7 @@ SUBROUTINE turbin
     vvart = zero
     wvart = zero
 
-    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(turbin_kernel_eqC, "VELOCITY VARIANCES", senga_grid, 3, rangexyz,  &
                     &  ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_READ), &
                     &  ops_arg_gbl(ubartg, 1, "real(8)", OPS_READ), &

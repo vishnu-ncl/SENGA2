@@ -363,22 +363,22 @@ SUBROUTINE output
         WRITE(*,'(I7,1PE12.4,I5)')itime,tstep,inderr
     END IF
 
-    IF(iproc == 0) THEN
-        rangexyz = (/5,5,nysize,nysize,nzsize,nzsize/)
+!    IF(iproc == 0) THEN
+        rangexyz = (/255,255,nyglbl,nyglbl,nzglbl,nzglbl/)
         call ops_par_loop(math_kernel_print_drhs, "print single value", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(itime, 1, "integer", OPS_READ))
 
-        rangexyz = (/6,6,nysize,nysize,nzsize,nzsize/)
+        rangexyz = (/256,256,nyglbl,nyglbl,nzglbl,nzglbl/)
         call ops_par_loop(math_kernel_print_erhs, "print single value", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(itime, 1, "integer", OPS_READ))
 
-        rangexyz = (/7,7,nysize,nysize,nzsize,nzsize/)
+        rangexyz = (/257,257,nyglbl,nyglbl,nzglbl,nzglbl/)
         call ops_par_loop(math_kernel_print_urhs, "print single value", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(itime, 1, "integer", OPS_READ))
-    END IF
+!    END IF
 
 !   =========================================================================
 

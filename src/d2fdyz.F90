@@ -45,8 +45,8 @@ use OPS_Fortran_Reference
 
 !   =========================================================================
 
-    IF (nysize == 1) THEN
-        rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+    IF (nyglbl == 1) THEN
+        rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
         call ops_par_loop(d2fdyz_kernel_null, "d2fdyz_null", senga_grid, 3, rangexyz, &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
@@ -58,7 +58,7 @@ use OPS_Fortran_Reference
 
 !       TENTH ORDER EXPLICIT DIFFERENCES
 
-        rangexyz = (/1,nxsize,6,nysize-5,6,nzsize-5/)
+        rangexyz = (/1,nxglbl,6,nyglbl-5,6,nzglbl-5/)
 
     END IF
 

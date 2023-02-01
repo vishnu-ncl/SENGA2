@@ -99,7 +99,7 @@ SUBROUTINE bountt
             call bcttxl
     
 !           SET TEMPERATURE INTERVAL INDEX
-            rangexyz = (/1,1,1,nysize,1,nzsize/)
+            rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
             call ops_par_loop(boundt_kernel_eqE_xdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_READ), &
                             ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
@@ -111,7 +111,7 @@ SUBROUTINE bountt
                             ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/1,1,1,nysize,1,nzsize/)
+            rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqA_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -146,7 +146,7 @@ SUBROUTINE bountt
                 icoef2 = ntbase**ipower
                 icoef1 = icoef2*ntbase
 
-                rangexyz = (/1,1,1,nysize,1,nzsize/)
+                rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
                 call ops_par_loop(bountt_kernel_eqF_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC),  &
                                 ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_RW),  &
@@ -171,7 +171,7 @@ SUBROUTINE bountt
 
             END DO
 
-            rangexyz = (/1,1,1,nysize,1,nzsize/)
+            rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqD, "init values", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_WRITE),  &
                             ops_arg_dat(d_eerr, 1, s3d_000, "real(8)", OPS_WRITE),  &
@@ -193,7 +193,7 @@ SUBROUTINE bountt
             call bcutxl
     
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/1,1,1,nysize,1,nzsize/)
+            rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqC_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -217,7 +217,7 @@ SUBROUTINE bountt
     
 !           CONSERVATIVE VARIABLES
             DO ispec = 1,nspec
-                rangexyz = (/1,1,1,nysize,1,nzsize/)
+                rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
                 call ops_par_loop(bountt_kernel_eqE_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_RW),  &
                                 ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_WRITE),  &
@@ -241,7 +241,7 @@ SUBROUTINE bountt
             call bcutxl
     
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/1,1,1,nysize,1,nzsize/)
+            rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqA_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -273,7 +273,7 @@ SUBROUTINE bountt
             call bcttxl
     
 !           SET TEMPERATURE INTERVAL INDEX
-            rangexyz = (/1,1,1,nysize,1,nzsize/)
+            rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
             call ops_par_loop(boundt_kernel_eqE_xdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_READ), &
                             ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
@@ -285,7 +285,7 @@ SUBROUTINE bountt
                             ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/1,1,1,nysize,1,nzsize/)
+            rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqA_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -316,7 +316,7 @@ SUBROUTINE bountt
                 icoef2 = ntbase**ipower
                 icoef1 = icoef2*ntbase
 
-                rangexyz = (/1,1,1,nysize,1,nzsize/)
+                rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
                 call ops_par_loop(boundt_kernel_eqG_xdir, "TEMPERATURE INTERVAL INDEXING", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC),  &
                                 ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_READ),  &
@@ -337,7 +337,7 @@ SUBROUTINE bountt
 
             END DO
    
-            rangexyz = (/1,1,1,nysize,1,nzsize/)
+            rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqD, "init values", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_WRITE),  &
                             ops_arg_dat(d_eerr, 1, s3d_000, "real(8)", OPS_WRITE),  &
@@ -391,7 +391,7 @@ SUBROUTINE bountt
             call bcttxr
     
 !           SET TEMPERATURE INTERVAL INDEX
-            rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
+            rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
             call ops_par_loop(boundt_kernel_eqE_xdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_READ), &
                             ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
@@ -403,7 +403,7 @@ SUBROUTINE bountt
                             ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
+            rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqA_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -438,7 +438,7 @@ SUBROUTINE bountt
                 icoef2 = ntbase**ipower
                 icoef1 = icoef2*ntbase
 
-                rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
+                rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
                 call ops_par_loop(bountt_kernel_eqF_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC),  &
                                 ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_RW),  &
@@ -463,7 +463,7 @@ SUBROUTINE bountt
 
             END DO
 
-            rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
+            rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqD, "init values", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_WRITE),  &
                             ops_arg_dat(d_eerr, 1, s3d_000, "real(8)", OPS_WRITE),  &
@@ -485,7 +485,7 @@ SUBROUTINE bountt
             call bcutxr
     
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
+            rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqC_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -509,7 +509,7 @@ SUBROUTINE bountt
     
 !           CONSERVATIVE VARIABLES
             DO ispec = 1,nspec
-                rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
+                rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
                 call ops_par_loop(bountt_kernel_eqE_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_RW),  &
                                 ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_WRITE),  &
@@ -534,7 +534,7 @@ SUBROUTINE bountt
             call bcutxr
     
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
+            rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqA_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -567,7 +567,7 @@ SUBROUTINE bountt
             call bcttxr
     
 !           SET TEMPERATURE INTERVAL INDEX
-            rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
+            rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
             call ops_par_loop(boundt_kernel_eqE_xdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_READ), &
                             ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
@@ -579,7 +579,7 @@ SUBROUTINE bountt
                             ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
+            rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqA_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -610,7 +610,7 @@ SUBROUTINE bountt
                 icoef2 = ntbase**ipower
                 icoef1 = icoef2*ntbase
 
-                rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
+                rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
                 call ops_par_loop(boundt_kernel_eqG_xdir, "TEMPERATURE INTERVAL INDEXING", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC),  &
                                 ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_READ),  &
@@ -631,7 +631,7 @@ SUBROUTINE bountt
 
             END DO
 
-            rangexyz = (/nxsize,nxsize,1,nysize,1,nzsize/)
+            rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqD, "init values", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_WRITE),  &
                             ops_arg_dat(d_eerr, 1, s3d_000, "real(8)", OPS_WRITE),  &
@@ -691,7 +691,7 @@ SUBROUTINE bountt
             call bcttyl
     
 !           SET TEMPERATURE INTERVAL INDEX
-            rangexyz = (/1,nxsize,1,1,1,nzsize/)
+            rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
             call ops_par_loop(boundt_kernel_eqE_ydir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
@@ -703,7 +703,7 @@ SUBROUTINE bountt
                             ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/1,nxsize,1,1,1,nzsize/)
+            rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqA_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -738,7 +738,7 @@ SUBROUTINE bountt
                 icoef2 = ntbase**ipower
                 icoef1 = icoef2*ntbase
 
-                rangexyz = (/1,nxsize,1,1,1,nzsize/)
+                rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
                 call ops_par_loop(bountt_kernel_eqF_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC),  &
                                 ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_RW),  &
@@ -763,7 +763,7 @@ SUBROUTINE bountt
 
             END DO
 
-            rangexyz = (/1,nxsize,1,1,1,nzsize/)
+            rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqD, "init values", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_WRITE),  &
                             ops_arg_dat(d_eerr, 1, s3d_000, "real(8)", OPS_WRITE),  &
@@ -785,7 +785,7 @@ SUBROUTINE bountt
             call bcutyl
     
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/1,nxsize,1,1,1,nzsize/)
+            rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqC_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -809,7 +809,7 @@ SUBROUTINE bountt
     
 !           CONSERVATIVE VARIABLES
             DO ispec = 1,nspec
-                rangexyz = (/1,nxsize,1,1,1,nzsize/)
+                rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
                 call ops_par_loop(bountt_kernel_eqE_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_RW),  &
                                 ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_WRITE),  &
@@ -833,7 +833,7 @@ SUBROUTINE bountt
             call bcutyl
     
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/1,nxsize,1,1,1,nzsize/)
+            rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqA_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -865,7 +865,7 @@ SUBROUTINE bountt
             call bcttyl
     
 !           SET TEMPERATURE INTERVAL INDEX
-            rangexyz = (/1,nxsize,1,1,1,nzsize/)
+            rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
             call ops_par_loop(boundt_kernel_eqE_ydir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
@@ -877,7 +877,7 @@ SUBROUTINE bountt
                             ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/1,nxsize,1,1,1,nzsize/)
+            rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqA_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -908,7 +908,7 @@ SUBROUTINE bountt
                 icoef2 = ntbase**ipower
                 icoef1 = icoef2*ntbase
 
-                rangexyz = (/1,nxsize,1,1,1,nzsize/)
+                rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
                 call ops_par_loop(boundt_kernel_eqG_ydir, "TEMPERATURE INTERVAL INDEXING", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC),  &
                                 ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_READ),  &
@@ -929,7 +929,7 @@ SUBROUTINE bountt
 
             END DO
 
-            rangexyz = (/1,nxsize,1,1,1,nzsize/)
+            rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqD, "init values", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_WRITE),  &
                             ops_arg_dat(d_eerr, 1, s3d_000, "real(8)", OPS_WRITE),  &
@@ -990,7 +990,7 @@ SUBROUTINE bountt
             call bcttyr
     
 !           SET TEMPERATURE INTERVAL INDEX
-            rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
+            rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
             call ops_par_loop(boundt_kernel_eqE_ydir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
@@ -1002,7 +1002,7 @@ SUBROUTINE bountt
                             ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
+            rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqA_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -1037,7 +1037,7 @@ SUBROUTINE bountt
                 icoef2 = ntbase**ipower
                 icoef1 = icoef2*ntbase
 
-                rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
+                rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
                 call ops_par_loop(bountt_kernel_eqF_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC),  &
                                 ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_RW),  &
@@ -1062,7 +1062,7 @@ SUBROUTINE bountt
 
             END DO
 
-            rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
+            rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqD, "init values", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_WRITE),  &
                             ops_arg_dat(d_eerr, 1, s3d_000, "real(8)", OPS_WRITE),  &
@@ -1084,7 +1084,7 @@ SUBROUTINE bountt
             call bcutyr
 
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
+            rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqC_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -1108,7 +1108,7 @@ SUBROUTINE bountt
     
 !           CONSERVATIVE VARIABLES
             DO ispec = 1,nspec
-                rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
+                rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
                 call ops_par_loop(bountt_kernel_eqE_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_RW),  &
                                 ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_WRITE),  &
@@ -1133,7 +1133,7 @@ SUBROUTINE bountt
             call bcutyr
     
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
+            rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqA_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -1166,7 +1166,7 @@ SUBROUTINE bountt
             call bcttyr
     
 !           SET TEMPERATURE INTERVAL INDEX
-            rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
+            rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
             call ops_par_loop(boundt_kernel_eqE_ydir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
@@ -1178,7 +1178,7 @@ SUBROUTINE bountt
                             ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
+            rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqA_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -1209,7 +1209,7 @@ SUBROUTINE bountt
                 icoef2 = ntbase**ipower
                 icoef1 = icoef2*ntbase
 
-                rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
+                rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
                 call ops_par_loop(boundt_kernel_eqG_ydir, "TEMPERATURE INTERVAL INDEXING", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC),  &
                                 ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_READ),  &
@@ -1230,7 +1230,7 @@ SUBROUTINE bountt
 
             END DO
 
-            rangexyz = (/1,nxsize,nysize,nysize,1,nzsize/)
+            rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
             call ops_par_loop(bountt_kernel_eqD, "init values", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_WRITE),  &
                             ops_arg_dat(d_eerr, 1, s3d_000, "real(8)", OPS_WRITE),  &
@@ -1290,7 +1290,7 @@ SUBROUTINE bountt
             call bcttzl
     
 !           SET TEMPERATURE INTERVAL INDEX
-            rangexyz = (/1,nxsize,1,nysize,1,1/)
+            rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
             call ops_par_loop(boundt_kernel_eqE_zdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_strtzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
                             ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
@@ -1302,7 +1302,7 @@ SUBROUTINE bountt
                             ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/1,nxsize,1,nysize,1,1/)
+            rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
             call ops_par_loop(bountt_kernel_eqA_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -1337,7 +1337,7 @@ SUBROUTINE bountt
                 icoef2 = ntbase**ipower
                 icoef1 = icoef2*ntbase
 
-                rangexyz = (/1,nxsize,1,nysize,1,1/)
+                rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
                 call ops_par_loop(bountt_kernel_eqF_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC),  &
                                 ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_RW),  &
@@ -1362,7 +1362,7 @@ SUBROUTINE bountt
 
             END DO
 
-            rangexyz = (/1,nxsize,1,nysize,1,1/)
+            rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
             call ops_par_loop(bountt_kernel_eqD, "init values", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_WRITE),  &
                             ops_arg_dat(d_eerr, 1, s3d_000, "real(8)", OPS_WRITE),  &
@@ -1384,7 +1384,7 @@ SUBROUTINE bountt
             call bcutzl
     
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/1,nxsize,1,nysize,1,1/)
+            rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
             call ops_par_loop(bountt_kernel_eqC_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -1408,7 +1408,7 @@ SUBROUTINE bountt
     
 !           CONSERVATIVE VARIABLES
             DO ispec = 1,nspec
-                rangexyz = (/1,nxsize,1,nysize,1,1/)
+                rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
                 call ops_par_loop(bountt_kernel_eqE_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_RW),  &
                                 ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_WRITE),  &
@@ -1433,7 +1433,7 @@ SUBROUTINE bountt
             call bcutzl
     
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/1,nxsize,1,nysize,1,1/)
+            rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
             call ops_par_loop(bountt_kernel_eqA_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -1466,7 +1466,7 @@ SUBROUTINE bountt
             call bcttzl
     
 !           SET TEMPERATURE INTERVAL INDEX
-            rangexyz = (/1,nxsize,1,nysize,1,1/)
+            rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
             call ops_par_loop(boundt_kernel_eqE_zdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_strtzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
                             ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
@@ -1478,7 +1478,7 @@ SUBROUTINE bountt
                             ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/1,nxsize,1,nysize,1,1/)
+            rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
             call ops_par_loop(bountt_kernel_eqA_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -1509,7 +1509,7 @@ SUBROUTINE bountt
                 icoef2 = ntbase**ipower
                 icoef1 = icoef2*ntbase
 
-                rangexyz = (/1,nxsize,1,nysize,1,1/)
+                rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
                 call ops_par_loop(boundt_kernel_eqG_zdir, "TEMPERATURE INTERVAL INDEXING", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC),  &
                                 ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_READ),  &
@@ -1530,7 +1530,7 @@ SUBROUTINE bountt
 
             END DO
 
-            rangexyz = (/1,nxsize,1,nysize,1,1/)
+            rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
             call ops_par_loop(bountt_kernel_eqD, "init values", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_WRITE),  &
                             ops_arg_dat(d_eerr, 1, s3d_000, "real(8)", OPS_WRITE),  &
@@ -1590,7 +1590,7 @@ SUBROUTINE bountt
             call bcttzr
     
 !           SET TEMPERATURE INTERVAL INDEX
-            rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
+            rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
             call ops_par_loop(boundt_kernel_eqE_zdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
                             ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
@@ -1602,7 +1602,7 @@ SUBROUTINE bountt
                             ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
+            rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
             call ops_par_loop(bountt_kernel_eqA_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -1637,7 +1637,7 @@ SUBROUTINE bountt
                 icoef2 = ntbase**ipower
                 icoef1 = icoef2*ntbase
 
-                rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
+                rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
                 call ops_par_loop(bountt_kernel_eqF_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC),  &
                                 ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_RW),  &
@@ -1662,7 +1662,7 @@ SUBROUTINE bountt
 
             END DO
 
-            rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
+            rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
             call ops_par_loop(bountt_kernel_eqD, "init values", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_WRITE),  &
                             ops_arg_dat(d_eerr, 1, s3d_000, "real(8)", OPS_WRITE),  &
@@ -1684,7 +1684,7 @@ SUBROUTINE bountt
             call bcutzr
     
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
+            rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
             call ops_par_loop(bountt_kernel_eqC_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -1708,7 +1708,7 @@ SUBROUTINE bountt
     
 !           CONSERVATIVE VARIABLES
             DO ispec = 1,nspec
-                rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
+                rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
                 call ops_par_loop(bountt_kernel_eqE_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_RW),  &
                                 ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_WRITE),  &
@@ -1733,7 +1733,7 @@ SUBROUTINE bountt
             call bcutzr
     
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
+            rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
             call ops_par_loop(bountt_kernel_eqA_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -1766,7 +1766,7 @@ SUBROUTINE bountt
             call bcttzr
     
 !           SET TEMPERATURE INTERVAL INDEX
-            rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
+            rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
             call ops_par_loop(boundt_kernel_eqE_zdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
                             ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
@@ -1778,7 +1778,7 @@ SUBROUTINE bountt
                             ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
 !           CONSERVATIVE VARIABLES
-            rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
+            rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
             call ops_par_loop(bountt_kernel_eqA_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW),  &
                             ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_RW),  &
@@ -1809,7 +1809,7 @@ SUBROUTINE bountt
                 icoef2 = ntbase**ipower
                 icoef1 = icoef2*ntbase
      
-                rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
+                rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
                 call ops_par_loop(boundt_kernel_eqG_zdir, "TEMPERATURE INTERVAL INDEXING", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC),  &
                                 ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_READ),  &
@@ -1830,7 +1830,7 @@ SUBROUTINE bountt
 
             END DO
 
-            rangexyz = (/1,nxsize,1,nysize,nzsize,nzsize/)
+            rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
             call ops_par_loop(bountt_kernel_eqD, "init values", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_WRITE),  &
                             ops_arg_dat(d_eerr, 1, s3d_000, "real(8)", OPS_WRITE),  &

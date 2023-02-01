@@ -125,7 +125,7 @@ SUBROUTINE ops_data_init()
     call ops_decl_block(3, senga_grid, "SENGA_GRID")
 
 !   Declare OPS Dats
-    d_size = (/nxsize, nysize, nzsize/)
+    d_size = (/nxglbl, nyglbl, nzglbl/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
 
@@ -182,7 +182,7 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_eerr, "real(8)", "EERR")
 
 !---------------------------------------MULTI-DIM DAT--------------------------------------------------------
-    d_size = (/nxsize, nysize, nzsize/)
+    d_size = (/nxglbl, nyglbl, nzglbl/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_yrun, "real(8)", "YRUN")
@@ -190,13 +190,13 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_rate, "real(8)", "RATE")
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_rrte, "real(8)", "RRTE")
 
-    d_size = (/nxsize, nysize, nzsize/)
+    d_size = (/nxglbl, nyglbl, nzglbl/)
     d_m = (/-nhalox,-nhaloy,-nhaloz/)
     d_p = (/nhalox,nhaloy,nhaloz/)
     call ops_decl_dat(senga_grid, nintmx, d_size, d_base, d_m, d_p, temp_int_null, d_itndex, "integer", "ITNDEX")
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_yrhs, "real(8)", "YRHS")
 
-    d_size = (/1, nysize, nzsize/)
+    d_size = (/1, nyglbl, nzglbl/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_bclyxl, "real(8)", "BCLYXL")
@@ -210,7 +210,7 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_strhxl, "real(8)", "STRHXL")
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_strhxr, "real(8)", "STRHXR")
 
-    d_size = (/nxsize, 1, nzsize/)
+    d_size = (/nxglbl, 1, nzglbl/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_bclyyl, "real(8)", "BCLYYL")
@@ -224,7 +224,7 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_strhyl, "real(8)", "STRHYL")
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_strhyr, "real(8)", "STRHYR")
 
-    d_size = (/nxsize, nysize, 1/)
+    d_size = (/nxglbl, nyglbl, 1/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_bclyzl, "real(8)", "BCLYZL")
@@ -239,7 +239,7 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_strhzr, "real(8)", "STRHZR")
 
 !---------------------------------------WITH HALOS-----------------------------------------------------------
-    d_size = (/nxsize, nysize, nzsize/)
+    d_size = (/nxglbl, nyglbl, nzglbl/)
     d_m = (/-nhalox,-nhaloy,-nhaloz/)
     d_p = (/nhalox,nhaloy,nhaloz/)
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_drhs, "real(8)", "DRHS")
@@ -261,7 +261,7 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tdrmix, "real(8)", "TDRMIX")
 
 !-----------------------------------------Boundary YZ--------------------------------------------------------
-    d_size = (/1, nysize, nzsize/)
+    d_size = (/1, nyglbl, nzglbl/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_bcl1xl, "real(8)", "BCL1XL")
@@ -319,7 +319,7 @@ SUBROUTINE ops_data_init()
 
 
 !-----------------------------------------Boundary XZ--------------------------------------------------------
-    d_size = (/nxsize, 1, nzsize/)
+    d_size = (/nxglbl, 1, nzglbl/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_bcl1yl, "real(8)", "BCL1YL")
@@ -377,7 +377,7 @@ SUBROUTINE ops_data_init()
 
 
 !-----------------------------------------Boundary XY--------------------------------------------------------
-    d_size = (/nxsize, nysize, 1/)
+    d_size = (/nxglbl, nyglbl, 1/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_bcl1zl, "real(8)", "BCL1ZL")
@@ -434,7 +434,7 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_sorpzr, "real(8)", "SORPZR")
 
 !------------------------------------Only X-direction--------------------------------------------------------
-    d_size = (/nxsize, 1, 1/)
+    d_size = (/nxglbl, 1, 1/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_crin, "real(8)", "CRIN")
@@ -566,9 +566,9 @@ SUBROUTINE ops_data_init()
     dir_to = (/1,2,3/)
 
 !   X-DIRECTION : RIGHT OUTER HALO SET EQUAL TO LEFT INNER HALO
-    iter_size = (/nhalox,nysize,nzsize/)
+    iter_size = (/nhalox,nyglbl,nzglbl/)
     base_from = (/1,1,1/)
-    base_to = (/nxsize+1,1,1/)
+    base_to = (/nxglbl+1,1,1/)
 
     halo_idx = 0
 
@@ -591,8 +591,8 @@ SUBROUTINE ops_data_init()
     call ops_decl_halo(d_yrhs, d_yrhs, iter_size, base_from, base_to, dir_from, dir_to, halos_x(halo_idx))
 
 !   X-DIRECTION : LEFT OUTER HALO SET EQUAL TO RIGHT INNER HALO
-    iter_size = (/nhalox,nysize,nzsize/)
-    base_from = (/nxsize-nhalox+1,1,1/)
+    iter_size = (/nhalox,nyglbl,nzglbl/)
+    base_from = (/nxglbl-nhalox+1,1,1/)
     base_to = (/1-nhalox,1,1/)
 
     halo_idx = halo_idx+1
@@ -619,9 +619,9 @@ SUBROUTINE ops_data_init()
 !------------------------------------------------------------------------------------------------------------
 
 !   Y-DIRECTION : RIGHT OUTER HALO SET EQUAL TO LEFT INNER HALO
-    iter_size = (/nxsize+2*nhalox,nhaloy,nzsize/)
+    iter_size = (/nxglbl+2*nhalox,nhaloy,nzglbl/)
     base_from = (/1-nhalox,1,1/)
-    base_to = (/1-nhalox,nysize+1,1/)
+    base_to = (/1-nhalox,nyglbl+1,1/)
 
     halo_idx = 0
 
@@ -644,8 +644,8 @@ SUBROUTINE ops_data_init()
     call ops_decl_halo(d_yrhs, d_yrhs, iter_size, base_from, base_to, dir_from, dir_to, halos_y(halo_idx))
 
 !   Y-DIRECTION : LEFT OUTER HALO SET EQUAL TO RIGHT INNER HALO
-    iter_size = (/nxsize+2*nhalox,nhaloy,nzsize/)
-    base_from = (/1-nhalox,nysize-nhaloy+1,1/)
+    iter_size = (/nxglbl+2*nhalox,nhaloy,nzglbl/)
+    base_from = (/1-nhalox,nyglbl-nhaloy+1,1/)
     base_to = (/1-nhalox,1-nhaloy,1/)
 
     halo_idx = halo_idx+1
@@ -672,9 +672,9 @@ SUBROUTINE ops_data_init()
 !------------------------------------------------------------------------------------------------------------
 
 !   Z-DIRECTION : RIGHT OUTER HALO SET EQUAL TO LEFT INNER HALO
-    iter_size = (/nxsize+2*nhalox,nysize+2*nhaloy,nhaloz/)
+    iter_size = (/nxglbl+2*nhalox,nyglbl+2*nhaloy,nhaloz/)
     base_from = (/1-nhalox,1-nhaloy,1/)
-    base_to = (/1-nhalox,1-nhaloy,nzsize+1/)
+    base_to = (/1-nhalox,1-nhaloy,nzglbl+1/)
 
     halo_idx = 0
 
@@ -697,8 +697,8 @@ SUBROUTINE ops_data_init()
     call ops_decl_halo(d_yrhs, d_yrhs, iter_size, base_from, base_to, dir_from, dir_to, halos_z(halo_idx))
 
 !   Z-DIRECTION : LEFT OUTER HALO SET EQUAL TO RIGHT INNER HALO
-    iter_size = (/nxsize+2*nhalox,nysize+2*nhaloy,nhaloz/)
-    base_from = (/1-nhalox,1-nhaloy,nzsize-nhaloz+1/)
+    iter_size = (/nxglbl+2*nhalox,nyglbl+2*nhaloy,nhaloz/)
+    base_from = (/1-nhalox,1-nhaloy,nzglbl-nhaloz+1/)
     base_to = (/1-nhalox,1-nhaloy,1-nhaloz/)
 
     halo_idx = halo_idx+1
@@ -729,7 +729,7 @@ SUBROUTINE ops_data_init()
 !------------------------------------------------------------------------------------------------------------
 
 !---------------------------------First touch - OPS DATS without halos---------------------------------------
-    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
 
     call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_WRITE))
@@ -824,7 +824,7 @@ SUBROUTINE ops_data_init()
                         ops_arg_dat(d_eerr, 1, s3d_000, "real(8)", OPS_WRITE))
 
 !-------------------------------First touch - OPS DATS without halos-----------------------------------------
-    rangexyz = (/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
+    rangexyz = (/1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz/)
 
     call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_WRITE))
@@ -860,7 +860,7 @@ SUBROUTINE ops_data_init()
                         ops_arg_dat(d_tdrmix, 1, s3d_000, "real(8)", OPS_WRITE))
 
 !------------------------------------First touch - OPS DATS Boundary YZ--------------------------------------
-    rangexyz = (/1,1,1,nysize,1,nzsize/)
+    rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
 
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_bcl1xl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
@@ -968,7 +968,7 @@ SUBROUTINE ops_data_init()
                     ops_arg_dat(d_sorpxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
 
 !--------------------------First touch - OPS DATS Boundary XZ------------------------------------------------
-    rangexyz = (/1,nxsize,1,1,1,nzsize/)
+    rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
 
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_bcl1yl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
@@ -1076,7 +1076,7 @@ SUBROUTINE ops_data_init()
                     ops_arg_dat(d_sorpyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
 
 !------------------------------First touch - OPS DATS Boundary XY--------------------------------------------
-    rangexyz = (/1,nxsize,1,nysize,1,1/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
 
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_bcl1zl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
@@ -1184,7 +1184,7 @@ SUBROUTINE ops_data_init()
                     ops_arg_dat(d_sorpzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
 
 !--------------------------------First touch - MULTI-DIM DAT-------------------------------------------------
-    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     DO ispec = 1,nspcmx
         call ops_par_loop(set_zero_kernel_MD, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_WRITE), &
@@ -1201,7 +1201,7 @@ SUBROUTINE ops_data_init()
 
     END DO
 
-    rangexyz=(/1-nhalox,nxsize+nhalox,1-nhaloy,nysize+nhaloy,1-nhaloz,nzsize+nhaloz/)
+    rangexyz=(/1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz/)
     DO ispec = 1,nintmx
         call ops_par_loop(set_zero_kernel_MD_int, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
@@ -1213,7 +1213,7 @@ SUBROUTINE ops_data_init()
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
     END DO
 
-    rangexyz = (/1,1,1,nysize,1,nzsize/)
+    rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
     DO ispec = 1,nspcmx
         call ops_par_loop(set_zero_kernel_MD_xdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_bclyxl, 9, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
@@ -1247,7 +1247,7 @@ SUBROUTINE ops_data_init()
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
     END DO
 
-    rangexyz = (/1,nxsize,1,1,1,nzsize/)
+    rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
     DO ispec = 1,nspcmx
         call ops_par_loop(set_zero_kernel_MD_ydir, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_bclyyl, 9, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
@@ -1281,7 +1281,7 @@ SUBROUTINE ops_data_init()
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
     END DO
 
-    rangexyz = (/1,nxsize,1,nysize,1,1/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
     DO ispec = 1,nspcmx
         call ops_par_loop(set_zero_kernel_MD_zdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_bclyzl, 9, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &

@@ -60,16 +60,16 @@ SUBROUTINE fincom
 !   ----------
     rangexyz(1) = 1
     IF (nsbcxl == nsbci3) rangexyz(1) = 2
-    rangexyz(2) = nxsize
-    IF (nsbcxr == nsbci3) rangexyz(2) = nxsize-1
+    rangexyz(2) = nxglbl
+    IF (nsbcxr == nsbci3) rangexyz(2) = nxglbl-1
     rangexyz(3) = 1
     IF (nsbcyl == nsbci3) rangexyz(3) = 2
-    rangexyz(4) = nysize
-    IF (nsbcyr == nsbci3) rangexyz(4) = nysize-1
+    rangexyz(4) = nyglbl
+    IF (nsbcyr == nsbci3) rangexyz(4) = nyglbl-1
     rangexyz(5) = 1
     IF (nsbczl == nsbci3) rangexyz(5) = 2
-    rangexyz(6) = nzsize
-    IF (nsbczr == nsbci3) rangexyz(6) = nzsize-1
+    rangexyz(6) = nzglbl
+    IF (nsbczr == nsbci3) rangexyz(6) = nzglbl-1
 
     call ops_par_loop(fincom_kernel_main, "fincom_main", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_derr, 1, s3d_000, "real(8)", OPS_INC), &
@@ -83,16 +83,16 @@ SUBROUTINE fincom
 !   ----------
     rangexyz(1) = 1
     IF (nsbcxl == nsbci2 .or. nsbcxl == nsbci3 .or. nsbcxl == nsbcw1 .or. nsbcxl == nsbcw2) rangexyz(1) = 2
-    rangexyz(2) = nxsize
-    IF (nsbcxr == nsbci2 .or. nsbcxr == nsbci3 .or. nsbcxr == nsbcw1 .or. nsbcxr == nsbcw2) rangexyz(2) = nxsize-1
+    rangexyz(2) = nxglbl
+    IF (nsbcxr == nsbci2 .or. nsbcxr == nsbci3 .or. nsbcxr == nsbcw1 .or. nsbcxr == nsbcw2) rangexyz(2) = nxglbl-1
     rangexyz(3) = 1
     IF (nsbcyl == nsbci2 .or. nsbcyl == nsbci3 .or. nsbcyl == nsbcw1 .or. nsbcyl == nsbcw2) rangexyz(3) = 2
-    rangexyz(4) = nysize
-    IF (nsbcyr == nsbci2 .or. nsbcyr == nsbci3 .or. nsbcyr == nsbcw1 .or. nsbcyr == nsbcw2) rangexyz(4) = nysize-1
+    rangexyz(4) = nyglbl
+    IF (nsbcyr == nsbci2 .or. nsbcyr == nsbci3 .or. nsbcyr == nsbcw1 .or. nsbcyr == nsbcw2) rangexyz(4) = nyglbl-1
     rangexyz(5) = 1
     IF (nsbczl == nsbci2 .or. nsbczl == nsbci3 .or. nsbczl == nsbcw1 .or. nsbczl == nsbcw2) rangexyz(5) = 2
-    rangexyz(6) = nzsize
-    IF (nsbczr == nsbci2 .or. nsbczr == nsbci3 .or. nsbczr == nsbcw1 .or. nsbczr == nsbcw2) rangexyz(6) = nzsize-1
+    rangexyz(6) = nzglbl
+    IF (nsbczr == nsbci2 .or. nsbczr == nsbci3 .or. nsbczr == nsbcw1 .or. nsbczr == nsbcw2) rangexyz(6) = nzglbl-1
 
     call ops_par_loop(fincom_kernel_main, "fincom_main", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_uerr, 1, s3d_000, "real(8)", OPS_INC), &
@@ -126,16 +126,16 @@ SUBROUTINE fincom
 !   --------------------------
     rangexyz(1) = 1
     IF (nsbcxl == nsbci2 .or. nsbcxl == nsbcw2) rangexyz(1) = 2
-    rangexyz(2) = nxsize
-    IF (nsbcxr == nsbci2 .or. nsbcxr == nsbcw2) rangexyz(2) = nxsize-1
+    rangexyz(2) = nxglbl
+    IF (nsbcxr == nsbci2 .or. nsbcxr == nsbcw2) rangexyz(2) = nxglbl-1
     rangexyz(3) = 1
     IF (nsbcyl == nsbci2 .or. nsbcyl == nsbcw2) rangexyz(3) = 2
-    rangexyz(4) = nysize
-    IF (nsbcyr == nsbci2 .or. nsbcyr == nsbcw2) rangexyz(4) = nysize-1
+    rangexyz(4) = nyglbl
+    IF (nsbcyr == nsbci2 .or. nsbcyr == nsbcw2) rangexyz(4) = nyglbl-1
     rangexyz(5) = 1
     IF (nsbczl == nsbci2 .or. nsbczl == nsbcw2) rangexyz(5) = 2
-    rangexyz(6) = nzsize
-    IF (nsbczr == nsbci2 .or. nsbczr == nsbcw2) rangexyz(6) = nzsize-1
+    rangexyz(6) = nzglbl
+    IF (nsbczr == nsbci2 .or. nsbczr == nsbcw2) rangexyz(6) = nzglbl-1
 
     call ops_par_loop(fincom_kernel_main, "fincom_main", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_eerr, 1, s3d_000, "real(8)", OPS_INC), &
@@ -151,16 +151,16 @@ SUBROUTINE fincom
 !   DO ISPEC = 1,NSPM1
     rangexyz(1) = 1
     IF (nsbcxl == nsbci2 .or. nsbcxl == nsbci3) rangexyz(1) = 2
-    rangexyz(2) = nxsize
-    IF (nsbcxr == nsbci2 .or. nsbcxr == nsbci3) rangexyz(2) = nxsize-1
+    rangexyz(2) = nxglbl
+    IF (nsbcxr == nsbci2 .or. nsbcxr == nsbci3) rangexyz(2) = nxglbl-1
     rangexyz(3) = 1
     IF (nsbcyl == nsbci2 .or. nsbcyl == nsbci3) rangexyz(3) = 2
-    rangexyz(4) = nysize
-    IF (nsbcyr == nsbci2 .or. nsbcyr == nsbci3) rangexyz(4) = nysize-1
+    rangexyz(4) = nyglbl
+    IF (nsbcyr == nsbci2 .or. nsbcyr == nsbci3) rangexyz(4) = nyglbl-1
     rangexyz(5) = 1
     IF (nsbczl == nsbci2 .or. nsbczl == nsbci3) rangexyz(5) = 2
-    rangexyz(6) = nzsize
-    IF (nsbczr == nsbci2 .or. nsbczr == nsbci3) rangexyz(6) = nzsize-1
+    rangexyz(6) = nzglbl
+    IF (nsbczr == nsbci2 .or. nsbczr == nsbci3) rangexyz(6) = nzglbl-1
 
     DO ispec = 1,nspec
 

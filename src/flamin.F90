@@ -159,7 +159,7 @@ SUBROUTINE flamin
 !   SET REACTION PROGRESS VARIABLE PROFILE
 !   --------------------------------------
 !   SIMPLE 1D LEFT-FACING ERROR FUNCTION PROFILE
-    rangexyz = (/1,nxsize,1,1,1,1/)
+    rangexyz = (/1,nxglbl,1,1,1,1/)
     call ops_par_loop(math_kernel_set_reaction_var, "SIMPLE 1D LEFT-FACING ERROR FUNCTION PROFILE", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_crin, 1, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
                     ops_arg_gbl(deltag, 1, "real(8)", OPS_READ), &
@@ -182,7 +182,7 @@ SUBROUTINE flamin
 !   SET SPECIES MASS FRACTION PROFILES
 !   ----------------------------------
     DO ispec = 1, nspm1
-        rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+        rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
         call ops_par_loop(math_MD_kernel_eqQ, "SET SPECIES MASS FRACTION PROFILES", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_WRITE), &
                         ops_arg_dat(d_crin, 1, s3d_000_strid3d_x, "real(8)", OPS_READ), &
@@ -210,13 +210,13 @@ SUBROUTINE flamin
 !        ENDDO
 !      ENDDO
 
-    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(set_zero_kernel_MD, "set zero multi-dim", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_WRITE), &
                     ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
     DO ispec = 1, nspm1
-        rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+        rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
         call ops_par_loop(math_MD_kernel_eqN, "A_multidim = A_multidim + A_multidim", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_RW), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
@@ -225,14 +225,14 @@ SUBROUTINE flamin
     END DO
 
 
-    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(math_MD_kernel_eqO, "A_multidim = 1.0 - A_multidim", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
 !   SET TEMPERATURE PROFILE
 !   -----------------------
-    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(math_kernel_eqAK, "A = var1 + B_xdimonly*(var2-var1)", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_WRITE), &
                     ops_arg_dat(d_crin, 1, s3d_000_strid3d_x, "real(8)", OPS_READ), &
@@ -243,12 +243,12 @@ SUBROUTINE flamin
 !   -------------------
 !   PRESSURE SET IN CONTROL FILE
 
-    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_WRITE))
 
     DO ispec = 1,nspec
-        rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+        rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
         call ops_par_loop(math_MD_kernel_eqP, "A = A + var*B_multidim", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_READ), &
@@ -257,7 +257,7 @@ SUBROUTINE flamin
 
     END DO
 
-    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(math_kernel_eqAJ, "A = var/(B*C)", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_drun, 1, s3d_000, "real(8)", OPS_WRITE), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
@@ -268,7 +268,7 @@ SUBROUTINE flamin
 !   --------------------
 !   INITIAL (INLET) VEOCITY SET IN CONTROL FILE
     flxmas = drin*urin
-    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(math_kernel_eqAI, "A = var/B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_WRITE), &
                     ops_arg_dat(d_drun, 1, s3d_000, "real(8)", OPS_READ), &
