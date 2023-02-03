@@ -261,7 +261,7 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tdrmix, "real(8)", "TDRMIX")
 
 !-----------------------------------------Boundary YZ--------------------------------------------------------
-    d_size = (/1, nyglbl, nzglbl/)
+    d_size = (/1,nyglbl,nzglbl/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_bcl1xl, "real(8)", "BCL1XL")
@@ -319,7 +319,7 @@ SUBROUTINE ops_data_init()
 
 
 !-----------------------------------------Boundary XZ--------------------------------------------------------
-    d_size = (/nxglbl, 1, nzglbl/)
+    d_size = (/nxglbl,1,nzglbl/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_bcl1yl, "real(8)", "BCL1YL")
@@ -377,7 +377,7 @@ SUBROUTINE ops_data_init()
 
 
 !-----------------------------------------Boundary XY--------------------------------------------------------
-    d_size = (/nxglbl, nyglbl, 1/)
+    d_size = (/nxglbl,nyglbl,1/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_bcl1zl, "real(8)", "BCL1ZL")
@@ -434,13 +434,13 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_sorpzr, "real(8)", "SORPZR")
 
 !------------------------------------Only X-direction--------------------------------------------------------
-    d_size = (/nxglbl, 1, 1/)
+    d_size = (/nxglbl,1,1/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_crin, "real(8)", "CRIN")
 
 !------------------------------------X=Y=Z=1-----------------------------------------------------------------    
-    d_size = (/1, 1, 1/)
+    d_size = (/1,1,1/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_prefer, "real(8)", "PREFER")
@@ -865,105 +865,108 @@ SUBROUTINE ops_data_init()
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_bcl1xl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_bcl2xr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_bcl3xl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_bcl3xr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_bcl4xl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_bcl4xr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_bcl5xr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_bcltxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_bcltxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strpxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strpxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strexl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strexr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strgxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strgxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strrxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strrxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_dudtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_dudtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_dvdtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_dvdtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_dwdtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_dtdtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_dtdtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_dddtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_dddtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_acouxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_acouxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_gam1xl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_gam1xr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_ovgmxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_ovgmxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_sydtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_sydtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_sorpxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+
+    rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
+
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_bcl2xr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_bcl3xr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_bcl4xr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_bcl5xr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_bcltxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strpxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strexr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strgxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strrxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_dudtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_dvdtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_dwdtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_dtdtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_dddtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_acouxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_gam1xr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_ovgmxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_sydtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_sorpxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
 
@@ -973,105 +976,109 @@ SUBROUTINE ops_data_init()
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_bcl1yl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_bcl2yl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_bcl2yr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_bcl3yl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_bcl3yr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_bcl4yl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_bcl4yr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_bcl5yr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_bcltyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_bcltyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_struyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strwyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strpyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strpyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_streyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_streyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strgyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strgyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strryl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strryr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_dudtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_dudtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_dvdtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_dvdtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_dwdtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_dwdtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_dtdtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_dtdtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_dddtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_dddtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_acouyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_acouyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_gam1yl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_gam1yr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_ovgmyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_ovgmyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_sydtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_sydtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_sorpyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+
+
+    rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
+
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_bcl2yr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_bcl3yr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_bcl4yr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_bcl5yr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_bcltyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strpyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_streyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strgyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strryr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_dudtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_dvdtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_dwdtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_dtdtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_dddtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_acouyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_gam1yr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_ovgmyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_sydtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_sorpyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
 
@@ -1081,105 +1088,109 @@ SUBROUTINE ops_data_init()
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_bcl1zl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_bcl2zl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_bcl2zr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_bcl3zl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_bcl3zr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_bcl4zl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_bcl4zr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_bcl5zr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_bcltzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_bcltzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_struzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strvzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strpzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strpzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strtzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strezl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strezr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strgzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strgzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strrzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strrzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_dudtzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_dudtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_dvdtzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_dvdtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_dwdtzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_dwdtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_dtdtzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_dtdtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_dddtzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_dddtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_acouzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_acouzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_gam1zl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_gam1zr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_ovgmzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_ovgmzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_sydtzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_sydtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_sorpzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+
+
+    rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
+
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_bcl2zr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_bcl3zr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_bcl4zr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_bcl5zr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_bcltzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_struzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strvzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strpzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strezr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strgzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_strrzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_dudtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_dvdtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_dwdtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_dtdtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_dddtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_acouzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_gam1zr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_ovgmzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_sydtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_sorpzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
 
@@ -1219,28 +1230,32 @@ SUBROUTINE ops_data_init()
                           ops_arg_dat(d_bclyxl, 9, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
         call ops_par_loop(set_zero_kernel_MD_xdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_bclyxr, 9, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-        call ops_par_loop(set_zero_kernel_MD_xdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_stryxl, 9, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-        call ops_par_loop(set_zero_kernel_MD_xdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_stryxr, 9, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
         call ops_par_loop(set_zero_kernel_MD_xdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_dydtxl, 9, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
         call ops_par_loop(set_zero_kernel_MD_xdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_dydtxr, 9, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-        call ops_par_loop(set_zero_kernel_MD_xdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_ratexl, 9, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
         call ops_par_loop(set_zero_kernel_MD_xdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_ratexr, 9, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                          ops_arg_dat(d_strhxl, 9, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+    END DO
+
+    rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
+    DO ispec = 1,nspcmx
+        call ops_par_loop(set_zero_kernel_MD_xdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
+                          ops_arg_dat(d_bclyxr, 9, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
         call ops_par_loop(set_zero_kernel_MD_xdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_strhxl, 9, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                          ops_arg_dat(d_stryxr, 9, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+        call ops_par_loop(set_zero_kernel_MD_xdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
+                          ops_arg_dat(d_dydtxr, 9, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+        call ops_par_loop(set_zero_kernel_MD_xdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
+                          ops_arg_dat(d_ratexr, 9, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
         call ops_par_loop(set_zero_kernel_MD_xdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_strhxr, 9, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
@@ -1253,28 +1268,32 @@ SUBROUTINE ops_data_init()
                           ops_arg_dat(d_bclyyl, 9, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
         call ops_par_loop(set_zero_kernel_MD_ydir, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_bclyyr, 9, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-        call ops_par_loop(set_zero_kernel_MD_ydir, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_stryyl, 9, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-        call ops_par_loop(set_zero_kernel_MD_ydir, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_stryyr, 9, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
         call ops_par_loop(set_zero_kernel_MD_ydir, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_dydtyl, 9, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
         call ops_par_loop(set_zero_kernel_MD_ydir, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_dydtyr, 9, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-        call ops_par_loop(set_zero_kernel_MD_ydir, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_rateyl, 9, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
         call ops_par_loop(set_zero_kernel_MD_ydir, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_rateyr, 9, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
+                          ops_arg_dat(d_strhyl, 9, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
+                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+    END DO
+
+    rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
+    DO ispec = 1,nspcmx
+        call ops_par_loop(set_zero_kernel_MD_ydir, "set_zero_multidim", senga_grid, 3, rangexyz, &
+                          ops_arg_dat(d_bclyyr, 9, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
         call ops_par_loop(set_zero_kernel_MD_ydir, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_strhyl, 9, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
+                          ops_arg_dat(d_stryyr, 9, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
+                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+        call ops_par_loop(set_zero_kernel_MD_ydir, "set_zero_multidim", senga_grid, 3, rangexyz, &
+                          ops_arg_dat(d_dydtyr, 9, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
+                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+        call ops_par_loop(set_zero_kernel_MD_ydir, "set_zero_multidim", senga_grid, 3, rangexyz, &
+                          ops_arg_dat(d_rateyr, 9, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
         call ops_par_loop(set_zero_kernel_MD_ydir, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_strhyr, 9, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
@@ -1287,28 +1306,32 @@ SUBROUTINE ops_data_init()
                           ops_arg_dat(d_bclyzl, 9, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
         call ops_par_loop(set_zero_kernel_MD_zdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_bclyzr, 9, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-        call ops_par_loop(set_zero_kernel_MD_zdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_stryzl, 9, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-        call ops_par_loop(set_zero_kernel_MD_zdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_stryzr, 9, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
         call ops_par_loop(set_zero_kernel_MD_zdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_dydtzl, 9, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
         call ops_par_loop(set_zero_kernel_MD_zdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_dydtzr, 9, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-        call ops_par_loop(set_zero_kernel_MD_zdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_ratezl, 9, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
         call ops_par_loop(set_zero_kernel_MD_zdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_ratezr, 9, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
+                          ops_arg_dat(d_strhzl, 9, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
+                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+    END DO
+
+    rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
+    DO ispec = 1,nspcmx
+        call ops_par_loop(set_zero_kernel_MD_zdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
+                          ops_arg_dat(d_bclyzr, 9, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
         call ops_par_loop(set_zero_kernel_MD_zdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_strhzl, 9, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
+                          ops_arg_dat(d_stryzr, 9, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
+                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+        call ops_par_loop(set_zero_kernel_MD_zdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
+                          ops_arg_dat(d_dydtzr, 9, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
+                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+        call ops_par_loop(set_zero_kernel_MD_zdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
+                          ops_arg_dat(d_ratezr, 9, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
         call ops_par_loop(set_zero_kernel_MD_zdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_strhzr, 9, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &

@@ -71,4 +71,8 @@ SUBROUTINE print_dats()
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
     call ops_fetch_dat_hdf5_file(d_prun, trim(fname))
 
+    fname = 'test_dir/store7_timestep'//citime//pnxres
+    call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
+    call ops_fetch_dat_hdf5_file(d_store7, trim(fname))
+
 END SUBROUTINE print_dats
