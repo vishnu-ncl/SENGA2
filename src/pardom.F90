@@ -62,8 +62,6 @@ SUBROUTINE pardom
     iproc = 0
 #endif
 
-    write(*, '(a,i5,a,i5)') "Senga2 nproc: ",nproc,"  iproc: ",iproc
-
 !   =========================================================================
 
 !   GET XYZ COORDINATES OF LOCAL PROCESSOR

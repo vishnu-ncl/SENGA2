@@ -21,14 +21,14 @@ PARAMETER(ngzmax=nxglbl)
 
 !     NUMBER OF PROCESSORS
 INTEGER :: nxproc,nyproc,nzproc
-PARAMETER(nxproc=1, nyproc=1, nzproc=1)
+PARAMETER(nxproc=40, nyproc=1, nzproc=1)
 INTEGER :: nprmax
 !     SET NPRMAX=MAX(NXPROC,NYPROC,NZPROC)
 PARAMETER(nprmax=nxproc)
 
 !     LOCAL GRID SIZE
 INTEGER :: nxsize,nysize,nzsize
-PARAMETER(nxsize=2000, nysize=1, nzsize=1)
+PARAMETER(nxsize=50, nysize=1, nzsize=1)
 INTEGER :: nszmax
 !     SET NSZMAX=MAX(NXSIZE,NYSIZE,NZSIZE)
 PARAMETER(nszmax=nxsize)

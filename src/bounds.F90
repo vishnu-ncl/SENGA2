@@ -2911,7 +2911,7 @@ SUBROUTINE bounds
 
 !           LYZ
             DO ispec = 1,nspec
-                rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl)
+                rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
                 call ops_par_loop(bounds_kernel_inflowBC1_LYZ_zr, "LYZ", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_bclyzr, 9, s3d_000_strid3d_xy, "real(8)", OPS_RW), &
                                 ops_arg_dat(d_ratezr, 9, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
