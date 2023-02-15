@@ -3,24 +3,24 @@
 #  Makes a library of the FFT routines
 #
 #
-h5pfc -O3 -Wall -c fftgen.f
-h5pfc -O3 -Wall -c fftgin.f
+ftn -O3 -Wall -c fftgen.f
+ftn -O3 -Wall -c fftgin.f
 #
-h5pfc -O3 -Wall -c fftfr2.f
-h5pfc -O3 -Wall -c fftfr3.f
-h5pfc -O3 -Wall -c fftfr5.f
-h5pfc -O3 -Wall -c fftfr7.f
-h5pfc -O3 -Wall -c fftfra.f
+ftn -O3 -Wall -c fftfr2.f
+ftn -O3 -Wall -c fftfr3.f
+ftn -O3 -Wall -c fftfr5.f
+ftn -O3 -Wall -c fftfr7.f
+ftn -O3 -Wall -c fftfra.f
 #
-h5pfc -O3 -Wall -c fftnr2.f
-h5pfc -O3 -Wall -c fftnr3.f
-h5pfc -O3 -Wall -c fftnr5.f
-h5pfc -O3 -Wall -c fftnr7.f
-h5pfc -O3 -Wall -c fftnra.f
+ftn -O3 -Wall -c fftnr2.f
+ftn -O3 -Wall -c fftnr3.f
+ftn -O3 -Wall -c fftnr5.f
+ftn -O3 -Wall -c fftnr7.f
+ftn -O3 -Wall -c fftnra.f
 #
-h5pfc -O3 -Wall -c fftp1d.f
-h5pfc -O3 -Wall -c fftpin.f
-h5pfc -O3 -Wall -c fftf1d.f
+ftn -O3 -Wall -c fftp1d.f
+ftn -O3 -Wall -c fftpin.f
+ftn -O3 -Wall -c fftf1d.f
 #
 ar rcsv fftlib.a \
         fftgen.o fftgin.o \
