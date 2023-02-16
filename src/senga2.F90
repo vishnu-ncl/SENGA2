@@ -86,7 +86,7 @@ PROGRAM senga2
 !   INITIALISATION
 !   ==============
 
-    call ops_init(3)
+    call ops_init(6)
     
     call ops_data_init
 
@@ -201,6 +201,7 @@ PROGRAM senga2
 
 !   TERMINATION
 !   ===========
+    call ops_timing_output( )
 
 !   TERMINATE THE PROGRAM
     call finish
