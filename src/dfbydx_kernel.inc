@@ -1,4 +1,4 @@
-SUBROUTINE dfbydx_kernel_interior(functn, fderiv)
+SUBROUTINE dfbydx_kernel_main(functn, fderiv, nxglbl, idx)
     use data_types
     implicit none
 
@@ -6,32 +6,25 @@ SUBROUTINE dfbydx_kernel_interior(functn, fderiv)
     real(kind=8), dimension(1) :: fderiv
     real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd, fdiffe
 
-    fdiffa = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(-1,0,0))
-    fdiffb = functn(OPS_ACC1(2,0,0)) - functn(OPS_ACC1(-2,0,0))
-    fdiffc = functn(OPS_ACC1(3,0,0)) - functn(OPS_ACC1(-3,0,0))
-    fdiffd = functn(OPS_ACC1(4,0,0)) - functn(OPS_ACC1(-4,0,0))
-    fdiffe = functn(OPS_ACC1(5,0,0)) - functn(OPS_ACC1(-5,0,0))
-
-    fderiv(OPS_ACC2(0,0,0)) = acoffx*fdiffa + bcoffx*fdiffb  &
-          + ccoffx*fdiffc + dcoffx*fdiffd  &
-          + ecoffx*fdiffe
-
-END SUBROUTINE dfbydx_kernel_interior
-
-SUBROUTINE dfbydx_kernel_lhpoint(functn, fderiv, idx)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
-    real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd
-
+    integer, intent(in) :: nxglbl
     integer, dimension(3), intent(in) :: idx
     integer :: ic
 
     ic = idx(1)
 
-    IF (ic == 1) THEN
+    IF (ic >= 6 .and. ic <= nxglbl-5) THEN
+!       interior scheme
+        fdiffa = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(-1,0,0))
+        fdiffb = functn(OPS_ACC1(2,0,0)) - functn(OPS_ACC1(-2,0,0))
+        fdiffc = functn(OPS_ACC1(3,0,0)) - functn(OPS_ACC1(-3,0,0))
+        fdiffd = functn(OPS_ACC1(4,0,0)) - functn(OPS_ACC1(-4,0,0))
+        fdiffe = functn(OPS_ACC1(5,0,0)) - functn(OPS_ACC1(-5,0,0))
+
+        fderiv(OPS_ACC2(0,0,0)) = acoffx*fdiffa + bcoffx*fdiffb  &
+                                + ccoffx*fdiffc + dcoffx*fdiffd  &
+                                + ecoffx*fdiffe
+
+    ELSE IF (ic == 1) THEN
 !       lh point: 4th order one-sided
         fdiffa = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(0,0,0))
         fdiffb = functn(OPS_ACC1(2,0,0)) - functn(OPS_ACC1(0,0,0))
@@ -77,25 +70,7 @@ SUBROUTINE dfbydx_kernel_lhpoint(functn, fderiv, idx)
         fderiv(OPS_ACC2(0,0,0)) = acof5x*fdiffa + bcof5x*fdiffb  &
                                 + ccof5x*fdiffc + dcof5x*fdiffd
 
-    END IF
-
-END SUBROUTINE dfbydx_kernel_lhpoint
-
-SUBROUTINE dfbydx_kernel_rhpoint(functn, fderiv, nxglbl, idx)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
-    real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd
-
-    integer, intent(in) :: nxglbl
-    integer, dimension(3), intent(in) :: idx
-    integer :: ic
-
-    ic = idx(1)
-
-    IF (ic == nxglbl-4) THEN
+    ELSE IF (ic == nxglbl-4) THEN
 !       rh point minus 4: 8th order centered
         fdiffa = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(-1,0,0))
         fdiffb = functn(OPS_ACC1(2,0,0)) - functn(OPS_ACC1(-2,0,0))
@@ -143,14 +118,7 @@ SUBROUTINE dfbydx_kernel_rhpoint(functn, fderiv, nxglbl, idx)
 
     END IF
 
-END SUBROUTINE dfbydx_kernel_rhpoint
-
-SUBROUTINE dfbydx_kernel_scaling(fderiv)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1) :: fderiv
-
+!   scaling
     fderiv(OPS_ACC1(0,0,0)) = fderiv(OPS_ACC1(0,0,0))*ovdelx
 
-END SUBROUTINE dfbydx_kernel_scaling
+END SUBROUTINE dfbydx_kernel_main

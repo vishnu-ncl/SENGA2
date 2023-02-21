@@ -8,7 +8,7 @@ SUBROUTINE dfbydy_kernel_null(fderiv)
 
 END SUBROUTINE dfbydy_kernel_null
 
-SUBROUTINE dfbydy_kernel_interior(functn, fderiv)
+SUBROUTINE dfbydy_kernel_main(functn, fderiv, nyglbl, idx)
     use data_types
     implicit none
 
@@ -16,196 +16,119 @@ SUBROUTINE dfbydy_kernel_interior(functn, fderiv)
     real(kind=8), dimension(1) :: fderiv
     real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd, fdiffe
 
-    fdiffa = functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,-1,0))
-    fdiffb = functn(OPS_ACC1(0,2,0)) - functn(OPS_ACC1(0,-2,0))
-    fdiffc = functn(OPS_ACC1(0,3,0)) - functn(OPS_ACC1(0,-3,0))
-    fdiffd = functn(OPS_ACC1(0,4,0)) - functn(OPS_ACC1(0,-4,0))
-    fdiffe = functn(OPS_ACC1(0,5,0)) - functn(OPS_ACC1(0,-5,0))
+    integer, intent(in) :: nyglbl
+    integer, dimension(3), intent(in) :: idx
+    integer :: jc
 
-    fderiv(OPS_ACC2(0,0,0)) = acoffy*fdiffa + bcoffy*fdiffb  &
-          + ccoffy*fdiffc + dcoffy*fdiffd  &
-          + ecoffy*fdiffe
+    jc = idx(2)
 
-END SUBROUTINE dfbydy_kernel_interior
+    IF (jc >= 6 .and. jc <= nyglbl-5) THEN
+!       interior scheme
+        fdiffa = functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,-1,0))
+        fdiffb = functn(OPS_ACC1(0,2,0)) - functn(OPS_ACC1(0,-2,0))
+        fdiffc = functn(OPS_ACC1(0,3,0)) - functn(OPS_ACC1(0,-3,0))
+        fdiffd = functn(OPS_ACC1(0,4,0)) - functn(OPS_ACC1(0,-4,0))
+        fdiffe = functn(OPS_ACC1(0,5,0)) - functn(OPS_ACC1(0,-5,0))
 
-SUBROUTINE dfbydy_kernel_lhpoint_4th_onesided(functn, fderiv)
-    use data_types
-    implicit none
+        fderiv(OPS_ACC2(0,0,0)) = acoffy*fdiffa + bcoffy*fdiffb  &
+                                + ccoffy*fdiffc + dcoffy*fdiffd  &
+                                + ecoffy*fdiffe
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
-    real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd
+    ELSE IF (jc == 1) THEN
+!       lh point: 4th order one-sided
+        fdiffa = functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,0,0))
+        fdiffb = functn(OPS_ACC1(0,2,0)) - functn(OPS_ACC1(0,0,0))
+        fdiffc = functn(OPS_ACC1(0,3,0)) - functn(OPS_ACC1(0,0,0))
+        fdiffd = functn(OPS_ACC1(0,4,0)) - functn(OPS_ACC1(0,0,0))
 
-!   lh point: 4th order one-sided
-    fdiffa = functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,0,0))
-    fdiffb = functn(OPS_ACC1(0,2,0)) - functn(OPS_ACC1(0,0,0))
-    fdiffc = functn(OPS_ACC1(0,3,0)) - functn(OPS_ACC1(0,0,0))
-    fdiffd = functn(OPS_ACC1(0,4,0)) - functn(OPS_ACC1(0,0,0))
-    fderiv(OPS_ACC2(0,0,0)) =  acof1y*fdiffa + bcof1y*fdiffb  &
-          + ccof1y*fdiffc + dcof1y*fdiffd
+        fderiv(OPS_ACC2(0,0,0)) = acof1y*fdiffa + bcof1y*fdiffb  &
+                                + ccof1y*fdiffc + dcof1y*fdiffd
 
-END SUBROUTINE dfbydy_kernel_lhpoint_4th_onesided
+    ELSE IF (jc == 2) THEN
+!       lh point plus 1: 4th order mixed
+        fdiffa = functn(OPS_ACC1(0,-1,0)) - functn(OPS_ACC1(0,0,0))
+        fdiffb = functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,0,0))
+        fdiffc = functn(OPS_ACC1(0,2,0)) - functn(OPS_ACC1(0,0,0))
+        fdiffd = functn(OPS_ACC1(0,3,0)) - functn(OPS_ACC1(0,0,0))
 
-SUBROUTINE dfbydy_kernel_lhpoint_4th_mixed(functn, fderiv)
-    use data_types
-    implicit none
+        fderiv(OPS_ACC2(0,0,0)) = acof2y*fdiffa + bcof2y*fdiffb  &
+                                + ccof2y*fdiffc + dcof2y*fdiffd
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
-    real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd
+    ELSE IF (jc == 3) THEN
+!       lh point plus 2: 4th order centered
+        fdiffa = functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,-1,0))
+        fdiffb = functn(OPS_ACC1(0,2,0)) - functn(OPS_ACC1(0,-2,0))
 
-!   lh point plus 1: 4th order mixed
-    fdiffa = functn(OPS_ACC1(0,-1,0)) - functn(OPS_ACC1(0,0,0))
-    fdiffb = functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,0,0))
-    fdiffc = functn(OPS_ACC1(0,2,0)) - functn(OPS_ACC1(0,0,0))
-    fdiffd = functn(OPS_ACC1(0,3,0)) - functn(OPS_ACC1(0,0,0))
-    fderiv(OPS_ACC2(0,0,0)) = acof2y*fdiffa + bcof2y*fdiffb  &
-          + ccof2y*fdiffc + dcof2y*fdiffd
+        fderiv(OPS_ACC2(0,0,0)) = acof3y*fdiffa + bcof3y*fdiffb
 
-END SUBROUTINE dfbydy_kernel_lhpoint_4th_mixed
+    ELSE IF (jc == 4) THEN
+!       lh point plus 3: 6th order centered
+        fdiffa = functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,-1,0))
+        fdiffb = functn(OPS_ACC1(0,2,0)) - functn(OPS_ACC1(0,-2,0))
+        fdiffc = functn(OPS_ACC1(0,3,0)) - functn(OPS_ACC1(0,-3,0))
 
-SUBROUTINE dfbydy_kernel_lhpoint_4th_centered(functn, fderiv)
-    use data_types
-    implicit none
+        fderiv(OPS_ACC2(0,0,0)) = acof4y*fdiffa + bcof4y*fdiffb  &
+                                + ccof4y*fdiffc
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
-    real(kind=8) :: fdiffa, fdiffb
+    ELSE IF (jc == 5) THEN
+!       lh point plus 4: 8th order centered
+        fdiffa = functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,-1,0))
+        fdiffb = functn(OPS_ACC1(0,2,0)) - functn(OPS_ACC1(0,-2,0))
+        fdiffc = functn(OPS_ACC1(0,3,0)) - functn(OPS_ACC1(0,-3,0))
+        fdiffd = functn(OPS_ACC1(0,4,0)) - functn(OPS_ACC1(0,-4,0))
 
-!   lh point plus 2: 4th order centered
-    fdiffa = functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,-1,0))
-    fdiffb = functn(OPS_ACC1(0,2,0)) - functn(OPS_ACC1(0,-2,0))
-    fderiv(OPS_ACC2(0,0,0)) = acof3y*fdiffa + bcof3y*fdiffb
+        fderiv(OPS_ACC2(0,0,0)) = acof5y*fdiffa + bcof5y*fdiffb  &
+                                + ccof5y*fdiffc + dcof5y*fdiffd
 
-END SUBROUTINE dfbydy_kernel_lhpoint_4th_centered
+    ELSE IF (jc == nyglbl-4) THEN
+!       rh point minus 4: 8th order centered
+        fdiffa = functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,-1,0))
+        fdiffb = functn(OPS_ACC1(0,2,0)) - functn(OPS_ACC1(0,-2,0))
+        fdiffc = functn(OPS_ACC1(0,3,0)) - functn(OPS_ACC1(0,-3,0))
+        fdiffd = functn(OPS_ACC1(0,4,0)) - functn(OPS_ACC1(0,-4,0))
 
-SUBROUTINE dfbydy_kernel_lhpoint_6th_centered(functn, fderiv)
-    use data_types
-    implicit none
+        fderiv(OPS_ACC2(0,0,0)) = acof5y*fdiffa + bcof5y*fdiffb  &
+                                + ccof5y*fdiffc + dcof5y*fdiffd
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
-    real(kind=8) :: fdiffa, fdiffb, fdiffc
+    ELSE IF (jc == nyglbl-3) THEN
+!       rh point minus 3: 6th order centered
+        fdiffa = functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,-1,0))
+        fdiffb = functn(OPS_ACC1(0,2,0)) - functn(OPS_ACC1(0,-2,0))
+        fdiffc = functn(OPS_ACC1(0,3,0)) - functn(OPS_ACC1(0,-3,0))
 
-!   lh point plus 3: 6th order centered
-    fdiffa = functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,-1,0))
-    fdiffb = functn(OPS_ACC1(0,2,0)) - functn(OPS_ACC1(0,-2,0))
-    fdiffc = functn(OPS_ACC1(0,3,0)) - functn(OPS_ACC1(0,-3,0))
-    fderiv(OPS_ACC2(0,0,0)) = acof4y*fdiffa + bcof4y*fdiffb  &
-          + ccof4y*fdiffc
+        fderiv(OPS_ACC2(0,0,0)) = acof4y*fdiffa + bcof4y*fdiffb  &
+                                + ccof4y*fdiffc
 
-END SUBROUTINE dfbydy_kernel_lhpoint_6th_centered
+    ELSE IF (jc == nyglbl-2) THEN
+!       rh point minus 2: 4th order centered
+        fdiffa = functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,-1,0))
+        fdiffb = functn(OPS_ACC1(0,2,0)) - functn(OPS_ACC1(0,-2,0))
 
-SUBROUTINE dfbydy_kernel_lhpoint_8th_centered(functn, fderiv)
-    use data_types
-    implicit none
+        fderiv(OPS_ACC2(0,0,0)) = acof3y*fdiffa + bcof3y*fdiffb
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
-    real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd
+    ELSE IF (jc == nyglbl-1) THEN
+!       rh point minus 1: 4th order mixed
+        fdiffa = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,1,0))
+        fdiffb = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,-1,0))
+        fdiffc = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,-2,0))
+        fdiffd = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,-3,0))
 
-!   lh point plus 4: 8th order centered
-    fdiffa = functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,-1,0))
-    fdiffb = functn(OPS_ACC1(0,2,0)) - functn(OPS_ACC1(0,-2,0))
-    fdiffc = functn(OPS_ACC1(0,3,0)) - functn(OPS_ACC1(0,-3,0))
-    fdiffd = functn(OPS_ACC1(0,4,0)) - functn(OPS_ACC1(0,-4,0))
-    fderiv(OPS_ACC2(0,0,0)) = acof5y*fdiffa + bcof5y*fdiffb  &
-          + ccof5y*fdiffc + dcof5y*fdiffd
+        fderiv(OPS_ACC2(0,0,0)) = acof2y*fdiffa + bcof2y*fdiffb  &
+                                + ccof2y*fdiffc + dcof2y*fdiffd
 
-END SUBROUTINE dfbydy_kernel_lhpoint_8th_centered
+    ELSE IF (jc == nyglbl) THEN
+!       rh point: 4th order one-sided
+        fdiffa = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,-1,0))
+        fdiffb = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,-2,0))
+        fdiffc = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,-3,0))
+        fdiffd = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,-4,0))
 
-SUBROUTINE dfbydy_kernel_rhpoint_8th_centered(functn, fderiv)
-    use data_types
-    implicit none
+        fderiv(OPS_ACC2(0,0,0)) = acof1y*fdiffa + bcof1y*fdiffb  &
+                                + ccof1y*fdiffc + dcof1y*fdiffd
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
-    real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd
+    END IF
 
-!   rh point minus 4: 8th order centered
-    fdiffa = functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,-1,0))
-    fdiffb = functn(OPS_ACC1(0,2,0)) - functn(OPS_ACC1(0,-2,0))
-    fdiffc = functn(OPS_ACC1(0,3,0)) - functn(OPS_ACC1(0,-3,0))
-    fdiffd = functn(OPS_ACC1(0,4,0)) - functn(OPS_ACC1(0,-4,0))
-    fderiv(OPS_ACC2(0,0,0)) = acof5y*fdiffa + bcof5y*fdiffb  &
-          + ccof5y*fdiffc + dcof5y*fdiffd
-
-END SUBROUTINE dfbydy_kernel_rhpoint_8th_centered
-
-SUBROUTINE dfbydy_kernel_rhpoint_6th_centered(functn, fderiv)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
-    real(kind=8) :: fdiffa, fdiffb, fdiffc
-
-!   rh point minus 3: 6th order centered
-    fdiffa = functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,-1,0))
-    fdiffb = functn(OPS_ACC1(0,2,0)) - functn(OPS_ACC1(0,-2,0))
-    fdiffc = functn(OPS_ACC1(0,3,0)) - functn(OPS_ACC1(0,-3,0))
-    fderiv(OPS_ACC2(0,0,0)) = acof4y*fdiffa + bcof4y*fdiffb  &
-          + ccof4y*fdiffc
-
-END SUBROUTINE dfbydy_kernel_rhpoint_6th_centered
-
-SUBROUTINE dfbydy_kernel_rhpoint_4th_centered(functn, fderiv)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
-    real(kind=8) :: fdiffa, fdiffb
-
-!   rh point minus 2: 4th order centered
-    fdiffa = functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,-1,0))
-    fdiffb = functn(OPS_ACC1(0,2,0)) - functn(OPS_ACC1(0,-2,0))
-    fderiv(OPS_ACC2(0,0,0)) = acof3y*fdiffa + bcof3y*fdiffb
-
-END SUBROUTINE dfbydy_kernel_rhpoint_4th_centered
-
-SUBROUTINE dfbydy_kernel_rhpoint_4th_mixed(functn, fderiv)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
-    real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd
-
-!   rh point minus 1: 4th order mixed
-    fdiffa = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,1,0))
-    fdiffb = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,-1,0))
-    fdiffc = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,-2,0))
-    fdiffd = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,-3,0))
-    fderiv(OPS_ACC2(0,0,0)) =  acof2y*fdiffa + bcof2y*fdiffb  &
-          + ccof2y*fdiffc + dcof2y*fdiffd
-
-END SUBROUTINE dfbydy_kernel_rhpoint_4th_mixed
-
-SUBROUTINE dfbydy_kernel_rhpoint_4th_onesided(functn, fderiv)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
-    real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd
-
-!   rh point: 4th order one-sided
-    fdiffa = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,-1,0))
-    fdiffb = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,-2,0))
-    fdiffc = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,-3,0))
-    fdiffd = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,-4,0))
-    fderiv(OPS_ACC2(0,0,0)) = acof1y*fdiffa + bcof1y*fdiffb  &
-          + ccof1y*fdiffc + dcof1y*fdiffd
-
-END SUBROUTINE dfbydy_kernel_rhpoint_4th_onesided
-
-SUBROUTINE dfbydy_kernel_scaling(fderiv)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1) :: fderiv
-
+!   scaling
     fderiv(OPS_ACC1(0,0,0)) = fderiv(OPS_ACC1(0,0,0))*ovdely
 
-END SUBROUTINE dfbydy_kernel_scaling
+END SUBROUTINE dfbydy_kernel_main
