@@ -282,6 +282,7 @@ SUBROUTINE d2fdxy_kernel_rh_xdir_4th_onesided(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_rh_xdir_4th_onesided
 
+!a3d_p240_m200_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_ydir_4th_onesided(functn, fderiv)
     use data_types
     implicit none
@@ -313,6 +314,7 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_4th_onesided(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_4th_onesided
 
+!a3d_p230_m210_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_ydir_4th_mixed(functn, fderiv)
     use data_types
     implicit none
@@ -344,6 +346,7 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_4th_mixed(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_4th_mixed
 
+!a3d_p220_m220_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_ydir_4th_centered(functn, fderiv)
     use data_types
     implicit none
@@ -362,6 +365,7 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_4th_centered(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_4th_centered
 
+!a3d_p330_m330_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_ydir_6th_centered(functn, fderiv)
     use data_types
     implicit none
@@ -383,6 +387,7 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_6th_centered(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_6th_centered
 
+!a3d_p440_m440_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_ydir_8th_centered(functn, fderiv)
     use data_types
     implicit none
@@ -406,6 +411,7 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_8th_centered(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_8th_centered
 
+!a3d_p440_p000_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqA(functn, fderiv)
     use data_types
     implicit none
@@ -429,6 +435,7 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqA(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqA
 
+!a3d_p330_m110_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqB(functn, fderiv)
     use data_types
     implicit none
@@ -452,6 +459,7 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqB(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqB
 
+!a3d_p430_m010_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqC(functn, fderiv)
     use data_types
     implicit none
@@ -500,6 +508,7 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqC(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqC
 
+!a3d_p340_m100_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqD(functn, fderiv)
     use data_types
     implicit none
@@ -547,6 +556,7 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqD(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqD
 
+!a3d_p240_m200_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqE(functn, fderiv)
     use data_types
     implicit none
@@ -578,6 +588,7 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqE(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqE
 
+!a3d_p230_m210_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqF(functn, fderiv)
     use data_types
     implicit none
@@ -609,6 +620,7 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqF(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqF
 
+!a3d_p420_m020_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqG(functn, fderiv)
     use data_types
     implicit none
@@ -640,6 +652,7 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqG(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqG
 
+!a3d_p320_m120_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqH(functn, fderiv)
     use data_types
     implicit none
@@ -671,6 +684,7 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqH(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqH
 
+!a3d_p040_m400_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqL(functn, fderiv)
     use data_types
     implicit none
@@ -694,6 +708,7 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqL(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqL
 
+!a3d_p100_m300_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqM(functn, fderiv)
     use data_types
     implicit none
@@ -717,6 +732,7 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqM(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqM
 
+!a3d_p030_m410_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqN(functn, fderiv)
     use data_types
     implicit none
@@ -764,6 +780,7 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqN(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqN
 
+!a3d_p140_m300_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqO(functn, fderiv)
     use data_types
     implicit none
@@ -811,6 +828,7 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqO(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqO
 
+!a3d_p240_m200_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqP(functn, fderiv)
     use data_types
     implicit none
@@ -842,6 +860,7 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqP(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqP
 
+!a3d_p230_m210_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqQ(functn, fderiv)
     use data_types
     implicit none
@@ -873,6 +892,7 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqQ(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqQ
 
+!a3d_p020_m420_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqR(functn, fderiv)
     use data_types
     implicit none
@@ -907,6 +927,7 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqR(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqR
 
+!a3d_p120_m320_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqS(functn, fderiv)
     use data_types
     implicit none

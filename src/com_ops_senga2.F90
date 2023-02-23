@@ -132,9 +132,11 @@ MODULE com_ops_senga
     TYPE(ops_stencil) :: s3d_p003_to_m001_z, s3d_p001_to_m003_z
     TYPE(ops_stencil) :: s3d_p004_to_m001_z, s3d_p001_to_m004_z
 
-    TYPE(ops_stencil) :: s3d_p320_m120_mixed_xy, s3d_p120_m320_mixed_xy
-    TYPE(ops_stencil) :: s3d_p420_m020_mixed_xy, s3d_p020_m420_mixed_xy
-    TYPE(ops_stencil) :: s3d_p220_m220_mixed_xy, s3d_p330_m330_mixed_xy, s3d_p440_m440_mixed_xy
+    TYPE(ops_stencil) :: s3d_p020_m420_mixed_xy, s3d_p030_m410_mixed_xy, s3d_p040_m400_mixed_xy
+    TYPE(ops_stencil) :: s3d_p100_m300_mixed_xy, s3d_p120_m320_mixed_xy, s3d_p140_m300_mixed_xy
+    TYPE(ops_stencil) :: s3d_p220_m220_mixed_xy, s3d_p230_m210_mixed_xy, s3d_p240_m200_mixed_xy
+    TYPE(ops_stencil) :: s3d_p320_m120_mixed_xy, s3d_p330_m330_mixed_xy, s3d_p330_m110_mixed_xy, s3d_p340_m100_mixed_xy
+    TYPE(ops_stencil) :: s3d_p420_m020_mixed_xy, s3d_p430_m010_mixed_xy, s3d_p440_p000_mixed_xy, s3d_p440_m440_mixed_xy
     TYPE(ops_stencil) :: s3d_p550_to_m550_xy
 
 !------------------------------------------------------------------------------------------------------------

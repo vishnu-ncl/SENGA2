@@ -127,6 +127,10 @@ use data_types
     real(kind=8), constant :: acofy1_opsconstant,bcofy1_opsconstant
     real(kind=8), constant :: acofz1_opsconstant,bcofz1_opsconstant
 
+    real(kind=8) :: acofx1,bcofx1,acofy1,bcofy1,acofz1,bcofz1
+
+!---------------------------------------------------------------------------------------------------------------------------------
+
     real(kind=8), constant :: acofxy_opsconstant,bcofxy_opsconstant,ccofxy_opsconstant,dcofxy_opsconstant,ecofxy_opsconstant
 
     real(kind=8), constant :: acf1xy_opsconstant,bcf1xy_opsconstant,ccf1xy_opsconstant,dcf1xy_opsconstant
@@ -138,9 +142,6 @@ use data_types
     real(kind=8), constant :: acc1xy_opsconstant,bcc1xy_opsconstant,ccc1xy_opsconstant,dcc1xy_opsconstant
     real(kind=8), constant :: acc2xy_opsconstant,bcc2xy_opsconstant,ccc2xy_opsconstant,dcc2xy_opsconstant
 
-
-    real(kind=8) :: acofx1,bcofx1,acofy1,bcofy1,acofz1,bcofz1
-
     real(kind=8) :: acofxy,bcofxy,ccofxy,dcofxy,ecofxy
 
     real(kind=8) :: acf1xy,bcf1xy,ccf1xy,dcf1xy
@@ -151,6 +152,54 @@ use data_types
 
     real(kind=8) :: acc1xy,bcc1xy,ccc1xy,dcc1xy
     real(kind=8) :: acc2xy,bcc2xy,ccc2xy,dcc2xy            
+
+!---------------------------------------------------------------------------------------------------------------------------------
+
+    real(kind=8), constant :: acofxz_opsconstant,bcofxz_opsconstant,ccofxz_opsconstant,dcofxz_opsconstant,ecofxz_opsconstant
+
+    real(kind=8), constant :: acf1xz_opsconstant,bcf1xz_opsconstant,ccf1xz_opsconstant,dcf1xz_opsconstant
+    real(kind=8), constant :: acf2xz_opsconstant,bcf2xz_opsconstant,ccf2xz_opsconstant,dcf2xz_opsconstant
+    real(kind=8), constant :: acf3xz_opsconstant,bcf3xz_opsconstant
+    real(kind=8), constant :: acf4xz_opsconstant,bcf4xz_opsconstant,ccf4xz_opsconstant
+    real(kind=8), constant :: acf5xz_opsconstant,bcf5xz_opsconstant,ccf5xz_opsconstant,dcf5xz_opsconstant
+
+    real(kind=8), constant :: acc1xz_opsconstant,bcc1xz_opsconstant,ccc1xz_opsconstant,dcc1xz_opsconstant
+    real(kind=8), constant :: acc2xz_opsconstant,bcc2xz_opsconstant,ccc2xz_opsconstant,dcc2xz_opsconstant
+
+    real(kind=8) :: acofxz,bcofxz,ccofxz,dcofxz,ecofxz
+
+    real(kind=8) :: acf1xz,bcf1xz,ccf1xz,dcf1xz
+    real(kind=8) :: acf2xz,bcf2xz,ccf2xz,dcf2xz
+    real(kind=8) :: acf3xz,bcf3xz
+    real(kind=8) :: acf4xz,bcf4xz,ccf4xz
+    real(kind=8) :: acf5xz,bcf5xz,ccf5xz,dcf5xz
+
+    real(kind=8) :: acc1xz,bcc1xz,ccc1xz,dcc1xz
+    real(kind=8) :: acc2xz,bcc2xz,ccc2xz,dcc2xz
+
+!---------------------------------------------------------------------------------------------------------------------------------
+
+    real(kind=8), constant :: acofyz_opsconstant,bcofyz_opsconstant,ccofyz_opsconstant,dcofyz_opsconstant,ecofyz_opsconstant
+
+    real(kind=8), constant :: acf1yz_opsconstant,bcf1yz_opsconstant,ccf1yz_opsconstant,dcf1yz_opsconstant
+    real(kind=8), constant :: acf2yz_opsconstant,bcf2yz_opsconstant,ccf2yz_opsconstant,dcf2yz_opsconstant
+    real(kind=8), constant :: acf3yz_opsconstant,bcf3yz_opsconstant
+    real(kind=8), constant :: acf4yz_opsconstant,bcf4yz_opsconstant,ccf4yz_opsconstant
+    real(kind=8), constant :: acf5yz_opsconstant,bcf5yz_opsconstant,ccf5yz_opsconstant,dcf5yz_opsconstant
+
+    real(kind=8), constant :: acc1yz_opsconstant,bcc1yz_opsconstant,ccc1yz_opsconstant,dcc1yz_opsconstant
+    real(kind=8), constant :: acc2yz_opsconstant,bcc2yz_opsconstant,ccc2yz_opsconstant,dcc2yz_opsconstant
+
+    real(kind=8) :: acofyz,bcofyz,ccofyz,dcofyz,ecofyz
+
+    real(kind=8) :: acf1yz,bcf1yz,ccf1yz,dcf1yz
+    real(kind=8) :: acf2yz,bcf2yz,ccf2yz,dcf2yz
+    real(kind=8) :: acf3yz,bcf3yz
+    real(kind=8) :: acf4yz,bcf4yz,ccf4yz
+    real(kind=8) :: acf5yz,bcf5yz,ccf5yz,dcf5yz
+
+    real(kind=8) :: acc1yz,bcc1yz,ccc1yz,dcc1yz
+    real(kind=8) :: acc2yz,bcc2yz,ccc2yz,dcc2yz
     
 !---------------------------------------------------------------------------------------------------------------------------------
 
@@ -232,7 +281,9 @@ use data_types
 !-------------------------------------------------------------------
 
     real(kind=8) :: acofx1,bcofx1,acofy1,bcofy1,acofz1,bcofz1
-    
+
+!-------------------------------------------------------------------
+
     real(kind=8) :: acofxy,bcofxy,ccofxy,dcofxy,ecofxy
 
     real(kind=8) :: acf1xy,bcf1xy,ccf1xy,dcf1xy
@@ -246,10 +297,39 @@ use data_types
 
 !-------------------------------------------------------------------
 
+    real(kind=8) :: acofxz,bcofxz,ccofxz,dcofxz,ecofxz
+
+    real(kind=8) :: acf1xz,bcf1xz,ccf1xz,dcf1xz
+    real(kind=8) :: acf2xz,bcf2xz,ccf2xz,dcf2xz
+    real(kind=8) :: acf3xz,bcf3xz
+    real(kind=8) :: acf4xz,bcf4xz,ccf4xz
+    real(kind=8) :: acf5xz,bcf5xz,ccf5xz,dcf5xz
+
+    real(kind=8) :: acc1xz,bcc1xz,ccc1xz,dcc1xz
+    real(kind=8) :: acc2xz,bcc2xz,ccc2xz,dcc2xz
+
+!-------------------------------------------------------------------
+
+    real(kind=8) :: acofyz,bcofyz,ccofyz,dcofyz,ecofyz
+
+    real(kind=8) :: acf1yz,bcf1yz,ccf1yz,dcf1yz
+    real(kind=8) :: acf2yz,bcf2yz,ccf2yz,dcf2yz
+    real(kind=8) :: acf3yz,bcf3yz
+    real(kind=8) :: acf4yz,bcf4yz,ccf4yz
+    real(kind=8) :: acf5yz,bcf5yz,ccf5yz,dcf5yz
+
+    real(kind=8) :: acc1yz,bcc1yz,ccc1yz,dcc1yz
+    real(kind=8) :: acc2yz,bcc2yz,ccc2yz,dcc2yz
+
+!-------------------------------------------------------------------
+
     real(kind=8) :: foursb,trfrth
+
 !-------------------------------------------------------------------
 
     real(kind=8) :: alamdc,rlamda,tlamda,prantl,alamda
+
+!-------------------------------------------------------------------
 
 #endif
 

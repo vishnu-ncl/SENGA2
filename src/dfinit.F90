@@ -526,6 +526,9 @@ SUBROUTINE dfinit
 !   =========================================================================
 
 #ifdef OPS_WITH_CUDAFOR
+
+!   ======================================
+
     acoffx_opsconstant = acoffx
     bcoffx_opsconstant = bcoffx
     ccoffx_opsconstant = ccoffx
@@ -555,6 +558,8 @@ SUBROUTINE dfinit
     dcof5x_opsconstant = dcof5x
 
     ovdelx_opsconstant = ovdelx
+
+!   ======================================
 
     acofsx_opsconstant = acofsx
     bcofsx_opsconstant = bcofsx
@@ -588,6 +593,8 @@ SUBROUTINE dfinit
 
     ovdlx2_opsconstant = ovdlx2
 
+!   ======================================
+
     acoffy_opsconstant = acoffy
     bcoffy_opsconstant = bcoffy
     ccoffy_opsconstant = ccoffy
@@ -617,6 +624,8 @@ SUBROUTINE dfinit
     dcof5y_opsconstant = dcof5y
 
     ovdely_opsconstant = ovdely
+
+!   ======================================
 
     acofsy_opsconstant = acofsy
     bcofsy_opsconstant = bcofsy
@@ -649,6 +658,8 @@ SUBROUTINE dfinit
     dcfs5y_opsconstant = dcfs5y
 
     ovdly2_opsconstant = ovdly2
+
+!   ======================================
     
     acoffz_opsconstant = acoffz
     bcoffz_opsconstant = bcoffz
@@ -679,6 +690,8 @@ SUBROUTINE dfinit
     dcof5z_opsconstant = dcof5z
 
     ovdelz_opsconstant = ovdelz
+
+!   ======================================
 
     acofsz_opsconstant = acofsz
     bcofsz_opsconstant = bcofsz
@@ -712,12 +725,16 @@ SUBROUTINE dfinit
 
     ovdlz2_opsconstant = ovdlz2
 
+!   ======================================
+
     acofx1_opsconstant = acofx1
     bcofx1_opsconstant = bcofx1
     acofy1_opsconstant = acofy1
     bcofy1_opsconstant = bcofy1
     acofz1_opsconstant = acofz1
     bcofz1_opsconstant = bcofz1
+
+!   ======================================
 
     acofxy_opsconstant = acofxy
     bcofxy_opsconstant = bcofxy
@@ -757,7 +774,91 @@ SUBROUTINE dfinit
     ccc2xy_opsconstant = ccc2xy
     dcc2xy_opsconstant = dcc2xy
 
+!   ======================================
+
+    acofxz_opsconstant = acofxz
+    bcofxz_opsconstant = bcofxz
+    ccofxz_opsconstant = ccofxz
+    dcofxz_opsconstant = dcofxz
+    ecofxz_opsconstant = ecofxz
+
+    acf1xz_opsconstant = acf1xz
+    bcf1xz_opsconstant = bcf1xz
+    ccf1xz_opsconstant = ccf1xz
+    dcf1xz_opsconstant = dcf1xz
+
+    acf2xz_opsconstant = acf2xz
+    bcf2xz_opsconstant = bcf2xz
+    ccf2xz_opsconstant = ccf2xz
+    dcf2xz_opsconstant = dcf2xz
+
+    acf3xz_opsconstant = acf3xz
+    bcf3xz_opsconstant = bcf3xz
+
+    acf4xz_opsconstant = acf4xz
+    bcf4xz_opsconstant = bcf4xz
+    ccf4xz_opsconstant = ccf4xz
+
+    acf5xz_opsconstant = acf5xz
+    bcf5xz_opsconstant = bcf5xz
+    ccf5xz_opsconstant = ccf5xz
+    dcf5xz_opsconstant = dcf5xz
+
+    acc1xz_opsconstant = acc1xz
+    bcc1xz_opsconstant = bcc1xz
+    ccc1xz_opsconstant = ccc1xz
+    dcc1xz_opsconstant = dcc1xz
+
+    acc2xz_opsconstant = acc2xz
+    bcc2xz_opsconstant = bcc2xz
+    ccc2xz_opsconstant = ccc2xz
+    dcc2xz_opsconstant = dcc2xz
+
+!   ======================================
+
+    acofyz_opsconstant = acofyz
+    bcofyz_opsconstant = bcofyz
+    ccofyz_opsconstant = ccofyz
+    dcofyz_opsconstant = dcofyz
+    ecofyz_opsconstant = ecofyz
+
+    acf1yz_opsconstant = acf1yz
+    bcf1yz_opsconstant = bcf1yz
+    ccf1yz_opsconstant = ccf1yz
+    dcf1yz_opsconstant = dcf1yz
+
+    acf2yz_opsconstant = acf2yz
+    bcf2yz_opsconstant = bcf2yz
+    ccf2yz_opsconstant = ccf2yz
+    dcf2yz_opsconstant = dcf2yz
+
+    acf3yz_opsconstant = acf3yz
+    bcf3yz_opsconstant = bcf3yz
+
+    acf4yz_opsconstant = acf4yz
+    bcf4yz_opsconstant = bcf4yz
+    ccf4yz_opsconstant = ccf4yz
+
+    acf5yz_opsconstant = acf5yz
+    bcf5yz_opsconstant = bcf5yz
+    ccf5yz_opsconstant = ccf5yz
+    dcf5yz_opsconstant = dcf5yz
+
+    acc1yz_opsconstant = acc1yz
+    bcc1yz_opsconstant = bcc1yz
+    ccc1yz_opsconstant = ccc1yz
+    dcc1yz_opsconstant = dcc1yz
+
+    acc2yz_opsconstant = acc2yz
+    bcc2yz_opsconstant = bcc2yz
+    ccc2yz_opsconstant = ccc2yz
+    dcc2yz_opsconstant = dcc2yz
+
+!   ======================================
+
 #endif
+
+!   ==============================================================
 
     call ops_decl_const("acoffx", 1, "double", acoffx)
     call ops_decl_const("bcoffx", 1, "double", bcoffx)
@@ -788,6 +889,8 @@ SUBROUTINE dfinit
     call ops_decl_const("dcof5x", 1, "double", dcof5x)
 
     call ops_decl_const("ovdelx", 1, "double", ovdelx)
+
+!   ==============================================================
 
     call ops_decl_const("acofsx", 1, "double", acofsx)
     call ops_decl_const("bcofsx", 1, "double", bcofsx)
@@ -821,6 +924,8 @@ SUBROUTINE dfinit
 
     call ops_decl_const("ovdlx2", 1, "double", ovdlx2)
 
+!   ==============================================================
+
     call ops_decl_const("acoffy", 1, "double", acoffy)
     call ops_decl_const("bcoffy", 1, "double", bcoffy)
     call ops_decl_const("ccoffy", 1, "double", ccoffy)
@@ -850,6 +955,8 @@ SUBROUTINE dfinit
     call ops_decl_const("dcof5y", 1, "double", dcof5y)
 
     call ops_decl_const("ovdely", 1, "double", ovdely)
+
+!   ==============================================================
 
     call ops_decl_const("acofsy", 1, "double", acofsy)
     call ops_decl_const("bcofsy", 1, "double", bcofsy)
@@ -883,6 +990,8 @@ SUBROUTINE dfinit
 
     call ops_decl_const("ovdly2", 1, "double", ovdly2)
 
+!   ==============================================================
+
     call ops_decl_const("acoffz", 1, "double", acoffz)
     call ops_decl_const("bcoffz", 1, "double", bcoffz)
     call ops_decl_const("ccoffz", 1, "double", ccoffz)
@@ -912,6 +1021,8 @@ SUBROUTINE dfinit
     call ops_decl_const("dcof5z", 1, "double", dcof5z)
 
     call ops_decl_const("ovdelz", 1, "double", ovdelz)
+
+!   ==============================================================
 
     call ops_decl_const("acofsz", 1, "double", acofsz)
     call ops_decl_const("bcofsz", 1, "double", bcofsz)
@@ -945,12 +1056,16 @@ SUBROUTINE dfinit
 
     call ops_decl_const("ovdlz2", 1, "double", ovdlz2)
 
+!   ==============================================================
+
     call ops_decl_const("acofx1", 1, "double", acofx1)
     call ops_decl_const("bcofx1", 1, "double", bcofx1)
     call ops_decl_const("acofy1", 1, "double", acofy1)
     call ops_decl_const("bcofy1", 1, "double", bcofy1)
     call ops_decl_const("acofz1", 1, "double", acofz1)
     call ops_decl_const("bcofz1", 1, "double", bcofz1)
+
+!   ==============================================================
 
     call ops_decl_const("acofxy", 1, "double", acofxy)
     call ops_decl_const("bcofxy", 1, "double", bcofxy)
@@ -989,5 +1104,87 @@ SUBROUTINE dfinit
     call ops_decl_const("bcc2xy", 1, "double", bcc2xy)
     call ops_decl_const("ccc2xy", 1, "double", ccc2xy)
     call ops_decl_const("dcc2xy", 1, "double", dcc2xy)
+
+!   ==============================================================
+
+    call ops_decl_const("acofxz", 1, "double", acofxz)
+    call ops_decl_const("bcofxz", 1, "double", bcofxz)
+    call ops_decl_const("ccofxz", 1, "double", ccofxz)
+    call ops_decl_const("dcofxz", 1, "double", dcofxz)
+    call ops_decl_const("ecofxz", 1, "double", ecofxz)
+
+    call ops_decl_const("acf1xz", 1, "double", acf1xz)
+    call ops_decl_const("bcf1xz", 1, "double", bcf1xz)
+    call ops_decl_const("ccf1xz", 1, "double", ccf1xz)
+    call ops_decl_const("dcf1xz", 1, "double", dcf1xz)
+
+    call ops_decl_const("acf2xz", 1, "double", acf2xz)
+    call ops_decl_const("bcf2xz", 1, "double", bcf2xz)
+    call ops_decl_const("ccf2xz", 1, "double", ccf2xz)
+    call ops_decl_const("dcf2xz", 1, "double", dcf2xz)
+
+    call ops_decl_const("acf3xz", 1, "double", acf3xz)
+    call ops_decl_const("bcf3xz", 1, "double", bcf3xz)
+
+    call ops_decl_const("acf4xz", 1, "double", acf4xz)
+    call ops_decl_const("bcf4xz", 1, "double", bcf4xz)
+    call ops_decl_const("ccf4xz", 1, "double", ccf4xz)
+
+    call ops_decl_const("acf5xz", 1, "double", acf5xz)
+    call ops_decl_const("bcf5xz", 1, "double", bcf5xz)
+    call ops_decl_const("ccf5xz", 1, "double", ccf5xz)
+    call ops_decl_const("dcf5xz", 1, "double", dcf5xz)
+
+    call ops_decl_const("acc1xz", 1, "double", acc1xz)
+    call ops_decl_const("bcc1xz", 1, "double", bcc1xz)
+    call ops_decl_const("ccc1xz", 1, "double", ccc1xz)
+    call ops_decl_const("dcc1xz", 1, "double", dcc1xz)
+
+    call ops_decl_const("acc2xz", 1, "double", acc2xz)
+    call ops_decl_const("bcc2xz", 1, "double", bcc2xz)
+    call ops_decl_const("ccc2xz", 1, "double", ccc2xz)
+    call ops_decl_const("dcc2xz", 1, "double", dcc2xz)
+
+!   ==============================================================
+
+    call ops_decl_const("acofyz", 1, "double", acofyz)
+    call ops_decl_const("bcofyz", 1, "double", bcofyz)
+    call ops_decl_const("ccofyz", 1, "double", ccofyz)
+    call ops_decl_const("dcofyz", 1, "double", dcofyz)
+    call ops_decl_const("ecofyz", 1, "double", ecofyz)
+
+    call ops_decl_const("acf1yz", 1, "double", acf1yz)
+    call ops_decl_const("bcf1yz", 1, "double", bcf1yz)
+    call ops_decl_const("ccf1yz", 1, "double", ccf1yz)
+    call ops_decl_const("dcf1yz", 1, "double", dcf1yz)
+
+    call ops_decl_const("acf2yz", 1, "double", acf2yz)
+    call ops_decl_const("bcf2yz", 1, "double", bcf2yz)
+    call ops_decl_const("ccf2yz", 1, "double", ccf2yz)
+    call ops_decl_const("dcf2yz", 1, "double", dcf2yz)
+
+    call ops_decl_const("acf3yz", 1, "double", acf3yz)
+    call ops_decl_const("bcf3yz", 1, "double", bcf3yz)
+
+    call ops_decl_const("acf4yz", 1, "double", acf4yz)
+    call ops_decl_const("bcf4yz", 1, "double", bcf4yz)
+    call ops_decl_const("ccf4yz", 1, "double", ccf4yz)
+
+    call ops_decl_const("acf5yz", 1, "double", acf5yz)
+    call ops_decl_const("bcf5yz", 1, "double", bcf5yz)
+    call ops_decl_const("ccf5yz", 1, "double", ccf5yz)
+    call ops_decl_const("dcf5yz", 1, "double", dcf5yz)
+
+    call ops_decl_const("acc1yz", 1, "double", acc1yz)
+    call ops_decl_const("bcc1yz", 1, "double", bcc1yz)
+    call ops_decl_const("ccc1yz", 1, "double", ccc1yz)
+    call ops_decl_const("dcc1yz", 1, "double", dcc1yz)
+
+    call ops_decl_const("acc2yz", 1, "double", acc2yz)
+    call ops_decl_const("bcc2yz", 1, "double", bcc2yz)
+    call ops_decl_const("ccc2yz", 1, "double", ccc2yz)
+    call ops_decl_const("dcc2yz", 1, "double", dcc2yz)
+
+!   ==============================================================
 
 END SUBROUTINE dfinit
