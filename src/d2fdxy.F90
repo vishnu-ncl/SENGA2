@@ -59,7 +59,7 @@ use OPS_Fortran_Reference
 
         rangexyz = (/6,nxglbl-5,6,nyglbl-5,1,nzglbl/)
         call ops_par_loop(d2fdxy_kernel_interior, "d2fdxy_interior", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(functn, 1, s3d_p550_to_m550_xy, "real(8)", OPS_READ), &
+                        ops_arg_dat(functn, 1, s3d_p550_m550_mixed_xy, "real(8)", OPS_READ), &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
 !       =========================================================================

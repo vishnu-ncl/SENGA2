@@ -8,6 +8,7 @@ SUBROUTINE d2fdxz_kernel_null(fderiv)
 
 END SUBROUTINE d2fdxz_kernel_null
 
+!a3d_p505_m505_mixed_xz
 SUBROUTINE d2fdxz_kernel_interior(functn, fderiv)
     use data_types
     implicit none
@@ -34,6 +35,7 @@ SUBROUTINE d2fdxz_kernel_interior(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_interior
 
+!a3d_p402_m002_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_xdir_4th_onesided(functn, fderiv)
     use data_types
     implicit none
@@ -65,6 +67,7 @@ SUBROUTINE d2fdxz_kernel_lh_xdir_4th_onesided(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_xdir_4th_onesided
 
+!a3d_p302_m102_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_xdir_4th_mixed(functn, fderiv)
     use data_types
     implicit none
@@ -96,6 +99,7 @@ SUBROUTINE d2fdxz_kernel_lh_xdir_4th_mixed(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_xdir_4th_mixed
 
+!a3d_p202_m202_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_xdir_4th_centered(functn, fderiv)
     use data_types
     implicit none
@@ -114,6 +118,7 @@ SUBROUTINE d2fdxz_kernel_lh_xdir_4th_centered(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_xdir_4th_centered
 
+!a3d_p303_m303_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_xdir_6th_centered(functn, fderiv)
     use data_types
     implicit none
@@ -135,6 +140,7 @@ SUBROUTINE d2fdxz_kernel_lh_xdir_6th_centered(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_xdir_6th_centered
 
+!a3d_p404_m404_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_xdir_8th_centered(functn, fderiv)
     use data_types
     implicit none
@@ -158,6 +164,7 @@ SUBROUTINE d2fdxz_kernel_lh_xdir_8th_centered(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_xdir_8th_centered
 
+!a3d_p404_m404_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_xdir_8th_centered(functn, fderiv)
     use data_types
     implicit none
@@ -181,6 +188,7 @@ SUBROUTINE d2fdxz_kernel_rh_xdir_8th_centered(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_xdir_8th_centered
 
+!a3d_p303_m303_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_xdir_6th_centered(functn, fderiv)
     use data_types
     implicit none
@@ -202,6 +210,7 @@ SUBROUTINE d2fdxz_kernel_rh_xdir_6th_centered(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_xdir_6th_centered
 
+!a3d_p202_m202_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_xdir_4th_centered(functn, fderiv)
     use data_types
     implicit none
@@ -220,6 +229,7 @@ SUBROUTINE d2fdxz_kernel_rh_xdir_4th_centered(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_xdir_4th_centered
 
+!a3d_p102_m302_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_xdir_4th_mixed(functn, fderiv)
     use data_types
     implicit none
@@ -251,6 +261,7 @@ SUBROUTINE d2fdxz_kernel_rh_xdir_4th_mixed(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_xdir_4th_mixed
 
+!a3d_p002_m402_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_xdir_4th_onesided(functn, fderiv)
     use data_types
     implicit none
@@ -282,6 +293,7 @@ SUBROUTINE d2fdxz_kernel_rh_xdir_4th_onesided(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_xdir_4th_onesided
 
+!a3d_p204_m200_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_zdir_4th_onesided(functn, fderiv)
     use data_types
     implicit none
@@ -313,6 +325,7 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_4th_onesided(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_4th_onesided
 
+!a3d_p203_m201_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_zdir_4th_mixed(functn, fderiv)
     use data_types
     implicit none
@@ -344,6 +357,7 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_4th_mixed(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_4th_mixed
 
+!a3d_p202_m202_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_zdir_4th_centered(functn, fderiv)
     use data_types
     implicit none
@@ -362,6 +376,7 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_4th_centered(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_4th_centered
 
+!a3d_p303_m303_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_zdir_6th_centered(functn, fderiv)
     use data_types
     implicit none
@@ -383,6 +398,7 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_6th_centered(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_6th_centered
 
+!a3d_p404_m404_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_zdir_8th_centered(functn, fderiv)
     use data_types
     implicit none
@@ -406,6 +422,7 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_8th_centered(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_8th_centered
 
+!a3d_p404_p000_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqA(functn, fderiv)
     use data_types
     implicit none
@@ -429,6 +446,7 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqA(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqA
 
+!a3d_p303_m101_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqB(functn, fderiv)
     use data_types
     implicit none
@@ -452,6 +470,7 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqB(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqB
 
+!a3d_p403_m001_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqC(functn, fderiv)
     use data_types
     implicit none
@@ -499,6 +518,7 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqC(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqC
 
+!a3d_p304_m100_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqD(functn, fderiv)
     use data_types
     implicit none
@@ -546,6 +566,7 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqD(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqD
 
+!a3d_p204_m200_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqE(functn, fderiv)
     use data_types
     implicit none
@@ -577,6 +598,7 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqE(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqE
 
+!a3d_p203_m201_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqF(functn, fderiv)
     use data_types
     implicit none
@@ -608,6 +630,7 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqF(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqF
 
+!a3d_p402_m002_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqG(functn, fderiv)
     use data_types
     implicit none
@@ -639,6 +662,7 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqG(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqG
 
+!a3d_p302_m102_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqH(functn, fderiv)
     use data_types
     implicit none
@@ -670,6 +694,7 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqH(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqH
 
+!a3d_p004_m400_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqL(functn, fderiv)
     use data_types
     implicit none
@@ -693,6 +718,7 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqL(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqL
 
+!a3d_p100_m300_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqM(functn, fderiv)
     use data_types
     implicit none
@@ -716,6 +742,7 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqM(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqM
 
+!a3d_p003_m401_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqN(functn, fderiv)
     use data_types
     implicit none
@@ -763,6 +790,7 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqN(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqN
 
+!a3d_p104_m300_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqO(functn, fderiv)
     use data_types
     implicit none
@@ -810,6 +838,7 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqO(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqO
 
+!a3d_p204_m200_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqP(functn, fderiv)
     use data_types
     implicit none
@@ -841,6 +870,7 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqP(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqP
 
+!a3d_p203_m201_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqQ(functn, fderiv)
     use data_types
     implicit none
@@ -872,6 +902,7 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqQ(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqQ
 
+!a3d_p002_m402_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqR(functn, fderiv)
     use data_types
     implicit none
@@ -903,6 +934,7 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqR(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqR
 
+!a3d_p102_m302_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqS(functn, fderiv)
     use data_types
     implicit none
@@ -934,6 +966,7 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqS(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqS
 
+!a3d_p404_m404_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_8th_centered(functn, fderiv)
     use data_types
     implicit none
@@ -957,6 +990,7 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_8th_centered(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_zdir_8th_centered
 
+!a3d_p303_m303_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_6th_centered(functn, fderiv)
     use data_types
     implicit none
@@ -978,6 +1012,7 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_6th_centered(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_zdir_6th_centered
 
+!a3d_p202_m202_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_4th_centered(functn, fderiv)
     use data_types
     implicit none
@@ -996,6 +1031,7 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_4th_centered(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_zdir_4th_centered
 
+!a3d_p201_m203_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_4th_mixed(functn, fderiv)
     use data_types
     implicit none
@@ -1027,6 +1063,7 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_4th_mixed(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_zdir_4th_mixed
 
+!a3d_p200_m204_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_4th_onesided(functn, fderiv)
     use data_types
     implicit none
@@ -1058,6 +1095,7 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_4th_onesided(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_zdir_4th_onesided
 
+!a3d_p400_p004_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqA(functn, fderiv)
     use data_types
     implicit none
@@ -1081,6 +1119,7 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqA(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqA
 
+!a3d_p300_m100_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqB(functn, fderiv)
     use data_types
     implicit none
@@ -1104,6 +1143,7 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqB(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqB
 
+!a3d_p401_p003_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqC(functn, fderiv)
     use data_types
     implicit none
@@ -1151,6 +1191,7 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqC(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqC
 
+!a3d_p300_m104_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqD(functn, fderiv)
     use data_types
     implicit none
@@ -1198,6 +1239,7 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqD(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqD
 
+!a3d_p201_m203_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqE(functn, fderiv)
     use data_types
     implicit none
@@ -1229,6 +1271,7 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqE(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqE
 
+!a3d_p200_m204_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqF(functn, fderiv)
     use data_types
     implicit none
@@ -1260,6 +1303,7 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqF(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqF
 
+!a3d_p402_m002_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqG(functn, fderiv)
     use data_types
     implicit none
@@ -1291,6 +1335,7 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqG(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqG
 
+!a3d_p302_m102_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqH(functn, fderiv)
     use data_types
     implicit none
@@ -1322,6 +1367,7 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqH(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqH
 
+!a3d_p000_m404_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqL(functn, fderiv)
     use data_types
     implicit none
@@ -1345,6 +1391,7 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqL(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqL
 
+!a3d_p101_m303_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqM(functn, fderiv)
     use data_types
     implicit none
@@ -1368,6 +1415,7 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqM(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqM
 
+!a3d_p001_m403_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqN(functn, fderiv)
     use data_types
     implicit none
@@ -1415,6 +1463,7 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqN(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqN
 
+!a3d_p100_m304_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqO(functn, fderiv)
     use data_types
     implicit none
@@ -1462,6 +1511,7 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqO(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqO
 
+!a3d_p201_m203_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqP(functn, fderiv)
     use data_types
     implicit none
@@ -1493,6 +1543,7 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqP(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqP
 
+!a3d_p200_m204_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqQ(functn, fderiv)
     use data_types
     implicit none
@@ -1524,6 +1575,7 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqQ(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqQ
 
+!a3d_p002_m402_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqR(functn, fderiv)
     use data_types
     implicit none
@@ -1555,6 +1607,7 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqR(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqR
 
+!a3d_p102_m302_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqS(functn, fderiv)
     use data_types
     implicit none
