@@ -8,6 +8,7 @@ SUBROUTINE d2fdxy_kernel_null(fderiv)
 
 END SUBROUTINE d2fdxy_kernel_null
 
+!a3d_p550_m550_mixed_xy
 SUBROUTINE d2fdxy_kernel_interior(functn, fderiv)
     use data_types
     implicit none
@@ -34,6 +35,7 @@ SUBROUTINE d2fdxy_kernel_interior(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_interior
 
+!a3d_p420_m020_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_xdir_4th_onesided(functn, fderiv)
     use data_types
     implicit none
@@ -65,6 +67,7 @@ SUBROUTINE d2fdxy_kernel_lh_xdir_4th_onesided(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_xdir_4th_onesided
 
+!a3d_p320_m120_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_xdir_4th_mixed(functn, fderiv)
     use data_types
     implicit none
@@ -96,6 +99,7 @@ SUBROUTINE d2fdxy_kernel_lh_xdir_4th_mixed(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_xdir_4th_mixed
 
+!a3d_p220_m220_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_xdir_4th_centered(functn, fderiv)
     use data_types
     implicit none
@@ -114,6 +118,7 @@ SUBROUTINE d2fdxy_kernel_lh_xdir_4th_centered(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_xdir_4th_centered
 
+!a3d_p330_m330_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_xdir_6th_centered(functn, fderiv)
     use data_types
     implicit none
@@ -135,6 +140,7 @@ SUBROUTINE d2fdxy_kernel_lh_xdir_6th_centered(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_xdir_6th_centered
 
+!a3d_p440_m440_mixed_xy
 SUBROUTINE d2fdxy_kernel_lh_xdir_8th_centered(functn, fderiv)
     use data_types
     implicit none
@@ -158,6 +164,7 @@ SUBROUTINE d2fdxy_kernel_lh_xdir_8th_centered(functn, fderiv)
     
 END SUBROUTINE d2fdxy_kernel_lh_xdir_8th_centered
 
+!a3d_p440_m440_mixed_xy
 SUBROUTINE d2fdxy_kernel_rh_xdir_8th_centered(functn, fderiv)
     use data_types
     implicit none
@@ -181,6 +188,7 @@ SUBROUTINE d2fdxy_kernel_rh_xdir_8th_centered(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_rh_xdir_8th_centered
 
+!a3d_p330_m330_mixed_xy
 SUBROUTINE d2fdxy_kernel_rh_xdir_6th_centered(functn, fderiv)
     use data_types
     implicit none
@@ -202,6 +210,7 @@ SUBROUTINE d2fdxy_kernel_rh_xdir_6th_centered(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_rh_xdir_6th_centered
 
+!a3d_p220_m220_mixed_xy
 SUBROUTINE d2fdxy_kernel_rh_xdir_4th_centered(functn, fderiv)
     use data_types
     implicit none
@@ -220,6 +229,7 @@ SUBROUTINE d2fdxy_kernel_rh_xdir_4th_centered(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_rh_xdir_4th_centered
 
+!a3d_p120_m320_mixed_xy
 SUBROUTINE d2fdxy_kernel_rh_xdir_4th_mixed(functn, fderiv)
     use data_types
     implicit none
@@ -251,6 +261,7 @@ SUBROUTINE d2fdxy_kernel_rh_xdir_4th_mixed(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_rh_xdir_4th_mixed
 
+!a3d_p020_m420_mixed_xy
 SUBROUTINE d2fdxy_kernel_rh_xdir_4th_onesided(functn, fderiv)
     use data_types
     implicit none
