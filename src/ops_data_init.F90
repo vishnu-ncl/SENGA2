@@ -551,19 +551,19 @@ SUBROUTINE ops_data_init()
     d_size = (/1,1,nzglbl/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
-    call ops_decl_dat(senga_grid, 9, d_size, d_base, d_m, d_p, temp_real_null, d_fstoreaxy, "real(8)", "FSTOREA_XY")
-    call ops_decl_dat(senga_grid, 9, d_size, d_base, d_m, d_p, temp_real_null, d_fstorebxy, "real(8)", "FSTOREB_XY")
-    call ops_decl_dat(senga_grid, 4, d_size, d_base, d_m, d_p, temp_real_null, d_fstorecxy, "real(8)", "FSTOREC_XY")
+    call ops_decl_dat(senga_grid, 9, d_size, d_base, d_m, d_p, temp_real_null, d_fstoraxy, "real(8)", "FSTOREA_XY")
+    call ops_decl_dat(senga_grid, 9, d_size, d_base, d_m, d_p, temp_real_null, d_fstorbxy, "real(8)", "FSTOREB_XY")
+    call ops_decl_dat(senga_grid, 4, d_size, d_base, d_m, d_p, temp_real_null, d_fstorcxy, "real(8)", "FSTOREC_XY")
 
     d_size = (/1,nyglbl,1/)
-    call ops_decl_dat(senga_grid, 9, d_size, d_base, d_m, d_p, temp_real_null, d_fstoreaxz, "real(8)", "FSTOREA_XZ")
-    call ops_decl_dat(senga_grid, 9, d_size, d_base, d_m, d_p, temp_real_null, d_fstorebxz, "real(8)", "FSTOREB_XZ")
-    call ops_decl_dat(senga_grid, 4, d_size, d_base, d_m, d_p, temp_real_null, d_fstorecxz, "real(8)", "FSTOREC_XZ")
+    call ops_decl_dat(senga_grid, 9, d_size, d_base, d_m, d_p, temp_real_null, d_fstoraxz, "real(8)", "FSTOREA_XZ")
+    call ops_decl_dat(senga_grid, 9, d_size, d_base, d_m, d_p, temp_real_null, d_fstorbxz, "real(8)", "FSTOREB_XZ")
+    call ops_decl_dat(senga_grid, 4, d_size, d_base, d_m, d_p, temp_real_null, d_fstorcxz, "real(8)", "FSTOREC_XZ")
 
     d_size = (/nxglbl,1,1/)
-    call ops_decl_dat(senga_grid, 9, d_size, d_base, d_m, d_p, temp_real_null, d_fstoreayz, "real(8)", "FSTOREA_YZ")
-    call ops_decl_dat(senga_grid, 9, d_size, d_base, d_m, d_p, temp_real_null, d_fstorebyz, "real(8)", "FSTOREB_YZ")
-    call ops_decl_dat(senga_grid, 4, d_size, d_base, d_m, d_p, temp_real_null, d_fstorecyz, "real(8)", "FSTOREC_YZ")
+    call ops_decl_dat(senga_grid, 9, d_size, d_base, d_m, d_p, temp_real_null, d_fstorayz, "real(8)", "FSTOREA_YZ")
+    call ops_decl_dat(senga_grid, 9, d_size, d_base, d_m, d_p, temp_real_null, d_fstorbyz, "real(8)", "FSTOREB_YZ")
+    call ops_decl_dat(senga_grid, 4, d_size, d_base, d_m, d_p, temp_real_null, d_fstorcyz, "real(8)", "FSTOREC_YZ")
 
 !------------------------------------OPS Reduction Handles---------------------------------------------------
 

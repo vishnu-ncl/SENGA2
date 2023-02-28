@@ -312,7 +312,7 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_4th_onesided(functn, fderiv)
            + bcofx1*(functn(OPS_ACC1(2,2,0)) - functn(OPS_ACC1(-2,2,0))  &
                   - functn(OPS_ACC1(2,0,0))  + functn(OPS_ACC1(-2,0,0)))
     fdiffc = acofx1*(functn(OPS_ACC1(1,3,0)) - functn(OPS_ACC1(-1,3,0))  &
-                   - functn(OPS_ACC1(1,0,0)  + functn(OPS_ACC1(-1,0,0))  &
+                   - functn(OPS_ACC1(1,0,0))  + functn(OPS_ACC1(-1,0,0)))  &
            + bcofx1*(functn(OPS_ACC1(2,3,0)) - functn(OPS_ACC1(-2,3,0))  &
                   - functn(OPS_ACC1(2,0,0))  + functn(OPS_ACC1(-2,0,0)))
     fdiffd = acofx1*(functn(OPS_ACC1(1,4,0)) - functn(OPS_ACC1(-1,4,0))  &
@@ -695,12 +695,12 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqH(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqH
 
-SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqI(functn, fderiv, fstorea, fstoreb, idx)
+SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqI(functn, fderiv, fstora, fstorb, idx)
     use data_types
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv, fstorea, fstoreb
+    real(kind=8), dimension(1) :: fderiv, fstora, fstorb
     real(kind=8) :: fdiffa, fdiffb
 
     integer, dimension(3), intent(in) :: idx
@@ -721,11 +721,11 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqI(functn, fderiv, fstorea, fstoreb, id
     
 END SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqI
 
-SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqJ(functn, fderiv, fstorea, fstoreb, fstorc, idx)
+SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqJ(functn, fderiv, fstora, fstorb, fstorc, idx)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn, fstorea, fstoreb
+    real(kind=8), dimension(1), intent(in) :: functn, fstora, fstorb
     real(kind=8), dimension(1) :: fderiv, fstorc
     real(kind=8) :: fdiffc
 
@@ -748,11 +748,11 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqJ(functn, fderiv, fstorea, fstoreb, fs
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqJ
 
-SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqK(functn, fderiv, fstorea, fstoreb, fstorc, idx)
+SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqK(functn, fderiv, fstora, fstorb, fstorc, idx)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn, fstorea, fstoreb, fstorc
+    real(kind=8), dimension(1), intent(in) :: functn, fstora, fstorb, fstorc
     real(kind=8), dimension(1) :: fderiv
     real(kind=8) :: fdiffd
 
@@ -784,14 +784,14 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqL(functn, fderiv)
 
     real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
-    fdiffa = functn(OPS_ACC1(OPS_ACC1(0,1,0))  - functn(OPS_ACC1(OPS_ACC1(0,0,0))  &
-           - functn(OPS_ACC1(OPS_ACC1(-1,1,0)) + functn(OPS_ACC1(OPS_ACC1(-1,0,0))
-    fdiffb = functn(OPS_ACC1(OPS_ACC1(0,2,0))  - functn(OPS_ACC1(OPS_ACC1(0,0,0))  &
-           - functn(OPS_ACC1(OPS_ACC1(-2,2,0)) + functn(OPS_ACC1(OPS_ACC1(-2,0,0))
-    fdiffc = functn(OPS_ACC1(OPS_ACC1(0,3,0))  - functn(OPS_ACC1(OPS_ACC1(0,0,0))  &
-           - functn(OPS_ACC1(OPS_ACC1(-3,3,0)) + functn(OPS_ACC1(OPS_ACC1(-3,0,0))
-    fdiffd = functn(OPS_ACC1(OPS_ACC1(0,4,0))  - functn(OPS_ACC1(OPS_ACC1(0,0,0))  &
-           - functn(OPS_ACC1(OPS_ACC1(-4,4,0)) + functn(OPS_ACC1(OPS_ACC1(-4,0,0))
+    fdiffa = functn(OPS_ACC1(0,1,0))  - functn(OPS_ACC1(0,0,0))  &
+           - functn(OPS_ACC1(-1,1,0)) + functn(OPS_ACC1(-1,0,0))
+    fdiffb = functn(OPS_ACC1(0,2,0))  - functn(OPS_ACC1(0,0,0))  &
+           - functn(OPS_ACC1(-2,2,0)) + functn(OPS_ACC1(-2,0,0))
+    fdiffc = functn(OPS_ACC1(0,3,0))  - functn(OPS_ACC1(0,0,0))  &
+           - functn(OPS_ACC1(-3,3,0)) + functn(OPS_ACC1(-3,0,0))
+    fdiffd = functn(OPS_ACC1(0,4,0))  - functn(OPS_ACC1(0,0,0))  &
+           - functn(OPS_ACC1(-4,4,0)) + functn(OPS_ACC1(-4,0,0))
 
     fderiv(OPS_ACC2(0,0,0)) = acc1xy*fdiffa + bcc1xy*fdiffb  &
           + ccc1xy*fdiffc + dcc1xy*fdiffd
@@ -1049,12 +1049,12 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqS(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqS
 
-SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqT(functn, fderiv, fstorea, fstoreb, nxglblm4, idx)
+SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqT(functn, fderiv, fstora, fstorb, nxglblm4, idx)
     use data_types
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv, fstorea, fstoreb
+    real(kind=8), dimension(1) :: fderiv, fstora, fstorb
     real(kind=8) :: fdiffa, fdiffb
 
     integer, dimension(3), intent(in) :: idx
@@ -1077,11 +1077,11 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqT(functn, fderiv, fstorea, fstoreb, nx
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqT
 
-SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqU(functn, fderiv, fstorea, fstoreb, fstorc, nxglblm4, idx)
+SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqU(functn, fderiv, fstora, fstorb, fstorc, nxglblm4, idx)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn, fstorea, fstoreb
+    real(kind=8), dimension(1), intent(in) :: functn, fstora, fstorb
     real(kind=8), dimension(1) :: fderiv, fstorc
     real(kind=8) :: fdiffc
 
@@ -1105,11 +1105,11 @@ SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqU(functn, fderiv, fstorea, fstoreb, fs
 
 END SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqU
 
-SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqV(functn, fderiv, fstorea, fstoreb, fstorc, nxglblm4, idx)
+SUBROUTINE d2fdxy_kernel_lh_ydir_corner_eqV(functn, fderiv, fstora, fstorb, fstorc, nxglblm4, idx)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn, fstorea, fstoreb, fstorc
+    real(kind=8), dimension(1), intent(in) :: functn, fstora, fstorb, fstorc
     real(kind=8), dimension(1) :: fderiv
     real(kind=8) :: fdiffd
 
@@ -1533,12 +1533,12 @@ SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqH(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqH
 
-SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqI(functn, fderiv, fstorea, fstoreb, nyglblm4, idx)
+SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqI(functn, fderiv, fstora, fstorb, nyglblm4, idx)
     use data_types
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv, fstorea, fstoreb
+    real(kind=8), dimension(1) :: fderiv, fstora, fstorb
     real(kind=8) :: fdiffa, fdiffb
 
     integer, dimension(3), intent(in) :: idx
@@ -1561,11 +1561,11 @@ SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqI(functn, fderiv, fstorea, fstoreb, ny
 
 END SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqI
 
-SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqJ(functn, fderiv, fstorea, fstoreb, fstorc, nyglblm4, idx)
+SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqJ(functn, fderiv, fstora, fstorb, fstorc, nyglblm4, idx)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn, fstorea, fstoreb
+    real(kind=8), dimension(1), intent(in) :: functn, fstora, fstorb
     real(kind=8), dimension(1) :: fderiv, fstorc
     real(kind=8) :: fdiffc
 
@@ -1589,11 +1589,11 @@ SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqJ(functn, fderiv, fstorea, fstoreb, fs
 
 END SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqJ
 
-SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqK(functn, fderiv, fstorea, fstoreb, fstorc, nyglblm4, idx)
+SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqK(functn, fderiv, fstora, fstorb, fstorc, nyglblm4, idx)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn, fstorea, fstoreb, fstorc
+    real(kind=8), dimension(1), intent(in) :: functn, fstora, fstorb, fstorc
     real(kind=8), dimension(1) :: fderiv
     real(kind=8) :: fdiffd
 
@@ -1888,12 +1888,12 @@ SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqS(functn, fderiv)
 
 END SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqS
 
-SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqT(functn, fderiv, fstorea, fstoreb, nxglblm4, nyglblm4, idx)
+SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqT(functn, fderiv, fstora, fstorb, nxglblm4, nyglblm4, idx)
     use data_types
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv, fstorea, fstoreb
+    real(kind=8), dimension(1) :: fderiv, fstora, fstorb
     real(kind=8) :: fdiffa, fdiffb
 
     integer, dimension(3), intent(in) :: idx
@@ -1916,11 +1916,11 @@ SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqT(functn, fderiv, fstorea, fstoreb, nx
 
 END SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqT
 
-SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqU(functn, fderiv, fstorea, fstoreb, fstorc, nxglblm4, nyglblm4, idx)
+SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqU(functn, fderiv, fstora, fstorb, fstorc, nxglblm4, nyglblm4, idx)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn, fstorea, fstoreb
+    real(kind=8), dimension(1), intent(in) :: functn, fstora, fstorb
     real(kind=8), dimension(1) :: fderiv, fstorc
     real(kind=8) :: fdiffc
 
@@ -1943,11 +1943,11 @@ SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqU(functn, fderiv, fstorea, fstoreb, fs
 
 END SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqU
 
-SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqV(functn, fderiv, fstorea, fstoreb, fstorc, nxglblm4, nyglblm4, idx)
+SUBROUTINE d2fdxy_kernel_rh_ydir_corner_eqV(functn, fderiv, fstora, fstorb, fstorc, nxglblm4, nyglblm4, idx)
      use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn, fstorea, fstoreb, fstorc
+    real(kind=8), dimension(1), intent(in) :: functn, fstora, fstorb, fstorc
     real(kind=8), dimension(1) :: fderiv
     real(kind=8) :: fdiffd
 

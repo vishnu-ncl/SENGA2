@@ -89,9 +89,9 @@ MODULE com_ops_senga
 
     TYPE(ops_dat) :: d_crin
 
-    TYPE(ops_dat) :: d_fstoreaxy, d_fstorebxy, d_fstorecxy
-    TYPE(ops_dat) :: d_fstoreaxz, d_fstorebxz, d_fstorecxz
-    TYPE(ops_dat) :: d_fstoreayz, d_fstorebyz, d_fstorecyz
+    TYPE(ops_dat) :: d_fstoraxy, d_fstorbxy, d_fstorcxy
+    TYPE(ops_dat) :: d_fstoraxz, d_fstorbxz, d_fstorcxz
+    TYPE(ops_dat) :: d_fstorayz, d_fstorbyz, d_fstorcyz
 
 !------------------------------------------------------------------------------------------------------------
 !   OPS reduction handles
@@ -143,7 +143,7 @@ MODULE com_ops_senga
     TYPE(ops_stencil) :: s3d_p200_m240_mixed_xy, s3d_p210_m230_mixed_xy, s3d_p220_m220_mixed_xy, s3d_p230_m210_mixed_xy, s3d_p240_m200_mixed_xy
     TYPE(ops_stencil) :: s3d_p300_m100_mixed_xy, s3d_p300_m140_mixed_xy, s3d_p320_m120_mixed_xy, s3d_p330_m110_mixed_xy, s3d_p330_m330_mixed_small_xy, s3d_p330_m330_mixed_xy, s3d_p340_m100_mixed_xy
     TYPE(ops_stencil) :: s3d_p400_p040_mixed_xy, s3d_p410_p030_mixed_xy, s3d_p420_m020_mixed_xy, s3d_p430_m010_mixed_xy, s3d_p440_p000_mixed_xy, s3d_p440_m440_mixed_small_xy, s3d_p440_m440_mixed_xy
-    TYPE(ops_stencil) :: s3d_p550_to_m550_xy
+    TYPE(ops_stencil) :: s3d_p550_m550_mixed_xy
 
 !------------------------------------------------------------------------------------------------------------
 
@@ -161,7 +161,7 @@ MODULE com_ops_senga
     TYPE(ops_stencil) :: s3d_p020_m024_mixed_yz, s3d_p021_m023_mixed_yz, s3d_p022_m022_mixed_yz, s3d_p023_m021_mixed_yz, s3d_p024_m020_mixed_yz
     TYPE(ops_stencil) :: s3d_p030_m010_mixed_yz, s3d_p030_m014_mixed_yz, s3d_p032_m012_mixed_yz, s3d_p033_m011_mixed_yz, s3d_p033_m033_mixed_small_yz, s3d_p033_m033_mixed_yz, s3d_p034_m010_mixed_yz
     TYPE(ops_stencil) :: s3d_p040_p004_mixed_yz, s3d_p041_p003_mixed_yz, s3d_p042_m002_mixed_yz, s3d_p043_m001_mixed_yz, s3d_p044_p000_mixed_yz, s3d_p044_m044_mixed_small_yz, s3d_p044_m044_mixed_yz
-    TYPE(ops_stencil) :: s3d_p055_to_m055_yz
+    TYPE(ops_stencil) :: s3d_p055_m055_mixed_yz
 
 !------------------------------------------------------------------------------------------------------------
 !   ops_halos
