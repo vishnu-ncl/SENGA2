@@ -694,6 +694,85 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqH(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqH
 
+SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqI(functn, fderiv, fstorea, fstoreb, idx)
+    use data_types
+    implicit none
+
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv, fstorea, fstoreb
+    real(kind=8) :: fdiffa, fdiffb
+
+    integer, dimension(3) :: idx
+    integer :: is, ks, iks
+    is = idx(1) -3
+    ks = idx(3) -3
+    iks = is*3+ks +1
+
+    fdiffa = functn(OPS_ACC1(1,0,1)) - functn(OPS_ACC1(1,0,-1))  &
+           - functn(OPS_ACC1(-1,0,1)) + functn(OPS_ACC1(-1,0,-1))
+    fdiffb = functn(OPS_ACC1(2,0,2)) - functn(OPS_ACC1(2,0,-2))  &
+           - functn(OPS_ACC1(-2,0,2)) + functn(OPS_ACC1(-2,0,-2))
+
+    fderiv(OPS_ACC2(0,0,0)) = acf3xz*fdiffa + bcf3xz*fdiffb
+
+    fstora(OPS_ACC_MD3(iks,0,0,0)) = fdiffa
+    fstorb(OPS_ACC_MD4(iks,0,0,0)) = fdiffb
+
+END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqI
+
+SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqJ(functn, fderiv, fstorea, fstoreb, fstorc, idx)
+    use data_types
+    implicit none
+
+    real(kind=8), dimension(1), intent(in) :: functn, fstorea, fstoreb
+    real(kind=8), dimension(1) :: fderiv, fstorc
+    real(kind=8) :: fdiffc
+
+    integer, dimension(3), intent(in) :: idx
+    integer :: is, ks, iks
+    is = idx(1) -3
+    ks = idx(3) -3
+    iks = is*3+ks +1
+
+    fdiffc = functn(OPS_ACC1(3,0,3)) - functn(OPS_ACC1(3,0,-3))  &
+           - functn(OPS_ACC1(-3,0,3)) + functn(OPS_ACC1(-3,0,-3))
+
+    fderiv(OPS_ACC2(0,0,0)) = acf4xz*fstora(OPS_ACC_MD3(iks,0,0,0)) + bcf4xz*fstorb(OPS_ACC_MD4(iks,0,0,0))  &
+              + ccf4xz*fdiffc
+
+    is = is-1
+    ks = ks-1
+    iks = is*2+ks +1
+    fstorc(OPS_ACC_MD5(iks,0,0,0)) = fdiffc
+
+END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqJ
+
+SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqK(functn, fderiv, fstorea, fstoreb, fstorc, idx)
+    use data_types
+    implicit none
+
+    real(kind=8), dimension(1), intent(in) :: functn, fstorea, fstoreb, fstorc
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdiffd
+
+    integer, dimension(3), intent(in) :: idx
+    integer :: is, ks, iks1, iks2
+    is = idx(1) -3
+    ks = idx(3) -3
+    iks1 = is*3+ks +1
+
+    is = is-1
+    ks = ks-1
+    iks2 = is*2+ks +1
+
+    fdiffd = functn(OPS_ACC1(4,0,4)) - functn(OPS_ACC1(4,0,-4))  &
+           - functn(OPS_ACC1(-4,0,4)) + functn(OPS_ACC1(-4,0,-4))
+
+    fderiv(OPS_ACC2(0,0,0)) = acf5xz*fstora(OPS_ACC_MD3(iks1,0,0,0)) + bcf5xz*fstorb(OPS_ACC_MD4(iks1,0,0,0))  &
+                            + ccf5xz*fstorc(OPS_ACC_MD5(iks2,0,0,0)) + dcf5xz*fdiffd
+
+END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqK
+
 !a3d_p004_m400_mixed_xz
 SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqL(functn, fderiv)
     use data_types
@@ -965,6 +1044,89 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqS(functn, fderiv)
             + ccf2xz*fdiffc + dcf2xz*fdiffd
 
 END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqS
+
+SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqT(functn, fderiv, fstorea, fstoreb, nxglblm4, idx)
+    use data_types
+    implicit none
+
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv, fstorea, fstoreb
+    real(kind=8) :: fdiffa, fdiffb
+
+    integer, dimension(3), intent(in) :: idx
+    integer, intent(in) :: nxglblm4
+
+    integer :: is, ks, iks
+    is = idx(1) -nxglblm4
+    ks = idx(3) -3
+    iks = is*3+ks +1
+
+    fdiffa = functn(OPS_ACC1(1,0,1)) - functn(OPS_ACC1(1,0,-1))  &
+           - functn(OPS_ACC1(-1,0,1)) + functn(OPS_ACC1(-1,0,-1))
+    fdiffb = functn(OPS_ACC1(2,0,2)) - functn(OPS_ACC1(2,0,-2))  &
+           - functn(OPS_ACC1(-2,0,2)) + functn(OPS_ACC1(-2,0,-2))
+
+    fderiv(OPS_ACC2(0,0,0)) = acf3xz*fdiffa + bcf3xz*fdiffb
+
+    fstora(OPS_ACC_MD3(iks,0,0,0)) = fdiffa
+    fstorb(OPS_ACC_MD4(iks,0,0,0)) = fdiffb
+
+END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqT
+
+SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqU(functn, fderiv, fstorea, fstoreb, fstorc, nxglblm4, idx)
+    use data_types
+    implicit none
+
+    real(kind=8), dimension(1), intent(in) :: functn, fstorea, fstoreb
+    real(kind=8), dimension(1) :: fderiv, fstorc
+    real(kind=8) :: fdiffc
+
+    integer, dimension(3), intent(in) :: idx
+    integer, intent(in) :: nxglblm4
+
+    integer :: is, ks, iks
+    is = idx(1) -nxglblm4
+    ks = idx(3) -3
+    iks = is*3+ks +1
+
+    fdiffc = functn(OPS_ACC1(3,0,3)) - functn(OPS_ACC1(3,0,-3))  &
+           - functn(OPS_ACC1(-3,0,3)) + functn(OPS_ACC1(-3,0,-3))
+
+    fderiv(OPS_ACC2(0,0,0)) = acf4xz*fstora(OPS_ACC_MD3(iks,0,0,0)) + bcf4xz*fstorb(OPS_ACC_MD4(iks,0,0,0))  &
+              + ccf4xz*fdiffc
+
+    ks = ks-1
+    iks = is*2+ks +1
+    fstorc(OPS_ACC_MD5(iks,0,0,0)) = fdiffc
+
+END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqU
+
+SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqV(functn, fderiv, fstorea, fstoreb, fstorc, nxglblm4, idx)
+    use data_types
+    implicit none
+
+    real(kind=8), dimension(1), intent(in) :: functn, fstorea, fstoreb, fstorc
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdiffd
+
+    integer, dimension(3), intent(in) :: idx
+    integer, intent(in) :: nxglblm4
+
+    integer :: is, ks, iks1, iks2
+    is = idx(1) -nxglblm4
+    ks = idx(3) -3
+    iks1 = is*3+ks +1
+
+    ks = ks-1
+    iks2 = is*2+ks +1
+
+    fdiffd = functn(OPS_ACC1(4,0,4)) - functn(OPS_ACC1(4,0,-4))  &
+           - functn(OPS_ACC1(-4,0,4)) + functn(OPS_ACC1(-4,0,-4))
+
+    fderiv(OPS_ACC2(0,0,0)) = acf5xz*fstora(OPS_ACC_MD3(iks1,0,0,0)) + bcf5xz*fstorb(OPS_ACC_MD4(iks1,0,0,0))  &
+                            + ccf5xz*fstorc(OPS_ACC_MD5(iks2,0,0,0)) + dcf5xz*fdiffd
+
+END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqV
 
 !a3d_p404_m404_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_8th_centered(functn, fderiv)
@@ -1367,6 +1529,89 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqH(functn, fderiv)
 
 END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqH
 
+SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqI(functn, fderiv, fstorea, fstoreb, nzglblm4, idx)
+    use data_types
+    implicit none
+
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv, fstorea, fstoreb
+    real(kind=8) :: fdiffa, fdiffb
+
+    integer, dimension(3), intent(in) :: idx
+    integer, intent(in) :: nzglblm4
+
+    integer :: is, ks, iks
+    is = idx(1) -3
+    ks = idx(3) -nzglblm4
+    iks = is*3+ks +1
+
+    fdiffa = functn(OPS_ACC1(1,0,1)) - functn(OPS_ACC1(1,0,-1))  &
+           - functn(OPS_ACC1(-1,0,1)) + functn(OPS_ACC1(-1,0,-1))
+    fdiffb = functn(OPS_ACC1(2,0,2)) - functn(OPS_ACC1(2,0,-2))  &
+           - functn(OPS_ACC1(-2,0,2)) + functn(OPS_ACC1(-2,0,-2))
+
+    fderiv(OPS_ACC2(0,0,0)) = acf3xz*fdiffa + bcf3xz*fdiffb
+
+    fstora(OPS_ACC_MD3(iks,0,0,0)) = fdiffa
+    fstorb(OPS_ACC_MD4(iks,0,0,0)) = fdiffb
+
+END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqI
+
+SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqJ(functn, fderiv, fstorea, fstoreb, fstorc, nzglblm4, idx)
+    use data_types
+    implicit none
+
+    real(kind=8), dimension(1), intent(in) :: functn, fstorea, fstoreb
+    real(kind=8), dimension(1) :: fderiv, fstorc
+    real(kind=8) :: fdiffc
+
+    integer, dimension(3), intent(in) :: idx
+    integer, intent(in) :: nzglblm4
+
+    integer :: is, ks, iks
+    is = idx(1) -3
+    ks = idx(3) -nzglblm4
+    iks = is*3+ks +1
+
+    fdiffc = functn(OPS_ACC1(3,0,3)) - functn(OPS_ACC1(3,0,-3))  &
+           - functn(OPS_ACC1(-3,0,3)) + functn(OPS_ACC1(-3,0,-3))
+
+    fderiv(OPS_ACC2(0,0,0)) = acf4xz*fstora(OPS_ACC_MD3(iks,0,0,0)) + bcf4xz*fstorb(OPS_ACC_MD4(iks,0,0,0))  &
+              + ccf4xz*fdiffc
+
+    is = is-1
+    iks = is*2+ks +1
+    fstorc(OPS_ACC_MD5(iks,0,0,0)) = fdiffc
+
+END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqJ
+
+SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqK(functn, fderiv, fstorea, fstoreb, fstorc, nzglblm4, idx)
+    use data_types
+    implicit none
+
+    real(kind=8), dimension(1), intent(in) :: functn, fstorea, fstoreb, fstorc
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdiffd
+
+    integer, dimension(3), intent(in) :: idx
+    integer, intent(in) :: nzglblm4
+
+    integer :: is, ks, iks1, iks2
+    is = idx(1) -3
+    ks = idx(3) -nzglblm4
+    iks1 = is*3+ks +1
+
+    is = is-1
+    iks2 = is*2+ks +1
+
+    fdiffd = functn(OPS_ACC1(4,0,4)) - functn(OPS_ACC1(4,0,-4))  &
+           - functn(OPS_ACC1(-4,0,4)) + functn(OPS_ACC1(-4,0,-4))
+
+    fderiv(OPS_ACC2(0,0,0)) = acf5xz*fstora(OPS_ACC_MD3(iks1,0,0,0)) + bcf5xz*fstorb(OPS_ACC_MD4(iks1,0,0,0))  &
+                            + ccf5xz*fstorc(OPS_ACC_MD5(iks2,0,0,0)) + dcf5xz*fdiffd
+
+END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqK
+
 !a3d_p000_m404_mixed_xz
 SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqL(functn, fderiv)
     use data_types
@@ -1638,6 +1883,87 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqS(functn, fderiv)
             + ccf2xz*fdiffc + dcf2xz*fdiffd
 
 END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqS
+
+SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqT(functn, fderiv, fstorea, fstoreb, nxglblm4, nzglblm4, idx)
+    use data_types
+    implicit none
+
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv, fstorea, fstoreb
+    real(kind=8) :: fdiffa, fdiffb
+
+    integer, dimension(3), intent(in) :: idx
+    integer, intent(in) :: nxglblm4, nzglblm4
+
+    integer :: is, ks, iks
+    is = idx(1) -nxglblm4
+    ks = idx(3) -nzglblm4
+    iks = is*3+ks +1
+
+    fdiffa = functn(OPS_ACC1(1,0,1)) - functn(OPS_ACC1(1,0,-1))  &
+           - functn(OPS_ACC1(-1,0,1)) + functn(OPS_ACC1(-1,0,-1))
+    fdiffb = functn(OPS_ACC1(2,0,2)) - functn(OPS_ACC1(2,0,-2))  &
+           - functn(OPS_ACC1(-2,0,2)) + functn(OPS_ACC1(-2,0,-2))
+
+    fderiv(OPS_ACC2(0,0,0)) = acf3xz*fdiffa + bcf3xz*fdiffb
+
+    fstora(OPS_ACC_MD3(iks,0,0,0)) = fdiffa
+    fstorb(OPS_ACC_MD4(iks,0,0,0)) = fdiffb
+
+END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqT
+
+SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqU(functn, fderiv, fstorea, fstoreb, fstorc, nxglblm4, nzglblm4, idx)
+    use data_types
+    implicit none
+
+    real(kind=8), dimension(1), intent(in) :: functn, fstorea, fstoreb
+    real(kind=8), dimension(1) :: fderiv, fstorc
+    real(kind=8) :: fdiffc
+
+    integer, dimension(3), intent(in) :: idx
+    integer, intent(in) :: nxglblm4, nzglblm4
+
+    integer :: is, ks, iks
+    is = idx(1) -nxglblm4
+    ks = idx(3) -nzglblm4
+    iks = is*3+ks +1
+
+    fdiffc = functn(OPS_ACC1(3,0,3)) - functn(OPS_ACC1(3,0,-3))  &
+           - functn(OPS_ACC1(-3,0,3)) + functn(OPS_ACC1(-3,0,-3))
+
+    fderiv(OPS_ACC2(0,0,0)) = acf4xz*fstora(OPS_ACC_MD3(iks,0,0,0)) + bcf4xz*fstorb(OPS_ACC_MD4(iks,0,0,0))  &
+              + ccf4xz*fdiffc
+
+    iks = is*2+ks +1
+    fstorc(OPS_ACC_MD5(iks,0,0,0)) = fdiffc
+
+END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqU
+
+SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqV(functn, fderiv, fstorea, fstoreb, fstorc, nxglblm4, nzglblm4, idx)
+    use data_types
+    implicit none
+
+    real(kind=8), dimension(1), intent(in) :: functn, fstorea, fstoreb, fstorc
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdiffd
+
+    integer, dimension(3), intent(in) :: idx
+    integer, intent(in) :: nxglblm4, nzglblm4
+
+    integer :: is, ks, iks1, iks2
+    is = idx(1) -nxglblm4
+    ks = idx(3) -nzglblm4
+
+    iks1 = is*3+ks +1
+    iks2 = is*2+ks +1
+
+    fdiffd = functn(OPS_ACC1(4,0,4)) - functn(OPS_ACC1(4,0,-4))  &
+           - functn(OPS_ACC1(-4,0,4)) + functn(OPS_ACC1(-4,0,-4))
+
+    fderiv(OPS_ACC2(0,0,0)) = acf5xz*fstora(OPS_ACC_MD3(iks1,0,0,0)) + bcf5xz*fstorb(OPS_ACC_MD4(iks1,0,0,0))  &
+                            + ccf5xz*fstorc(OPS_ACC_MD5(iks2,0,0,0)) + dcf5xz*fdiffd
+
+END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqV
 
 SUBROUTINE d2fdxz_kernel_scaling(fderiv)
     use data_types
