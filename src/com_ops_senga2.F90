@@ -87,7 +87,11 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_acouzl, d_ova2zl, d_gam1zl, d_ovgmzl, d_sydtzl, d_sorpzl
     TYPE(ops_dat) :: d_acouzr, d_ova2zr, d_gam1zr, d_ovgmzr, d_sydtzr, d_sorpzr
 
-    TYPE(ops_dat) :: d_crin, d_prefer
+    TYPE(ops_dat) :: d_crin
+
+    TYPE(ops_dat) :: d_fstoreaxy, d_fstorebxy, d_fstorecxy
+    TYPE(ops_dat) :: d_fstoreaxz, d_fstorebxz, d_fstorecxz
+    TYPE(ops_dat) :: d_fstoreayz, d_fstorebyz, d_fstorecyz
 
 !------------------------------------------------------------------------------------------------------------
 !   OPS reduction handles
@@ -137,8 +141,8 @@ MODULE com_ops_senga
     TYPE(ops_stencil) :: s3d_p000_m440_mixed_xy, s3d_p010_m430_mixed_xy, s3d_p020_m420_mixed_xy, s3d_p030_m410_mixed_xy, s3d_p040_m400_mixed_xy
     TYPE(ops_stencil) :: s3d_p100_m300_mixed_xy, s3d_p100_m340_mixed_xy, s3d_p110_m330_mixed_xy, s3d_p120_m320_mixed_xy, s3d_p140_m300_mixed_xy
     TYPE(ops_stencil) :: s3d_p200_m240_mixed_xy, s3d_p210_m230_mixed_xy, s3d_p220_m220_mixed_xy, s3d_p230_m210_mixed_xy, s3d_p240_m200_mixed_xy
-    TYPE(ops_stencil) :: s3d_p300_m100_mixed_xy, s3d_p300_m140_mixed_xy, s3d_p320_m120_mixed_xy, s3d_p330_m110_mixed_xy, s3d_p330_m330_mixed_xy, s3d_p340_m100_mixed_xy
-    TYPE(ops_stencil) :: s3d_p400_p040_mixed_xy, s3d_p410_p030_mixed_xy, s3d_p420_m020_mixed_xy, s3d_p430_m010_mixed_xy, s3d_p440_p000_mixed_xy, s3d_p440_m440_mixed_xy
+    TYPE(ops_stencil) :: s3d_p300_m100_mixed_xy, s3d_p300_m140_mixed_xy, s3d_p320_m120_mixed_xy, s3d_p330_m110_mixed_xy, s3d_p330_m330_mixed_small_xy, s3d_p330_m330_mixed_xy, s3d_p340_m100_mixed_xy
+    TYPE(ops_stencil) :: s3d_p400_p040_mixed_xy, s3d_p410_p030_mixed_xy, s3d_p420_m020_mixed_xy, s3d_p430_m010_mixed_xy, s3d_p440_p000_mixed_xy, s3d_p440_m440_mixed_small_xy, s3d_p440_m440_mixed_xy
     TYPE(ops_stencil) :: s3d_p550_to_m550_xy
 
 !------------------------------------------------------------------------------------------------------------

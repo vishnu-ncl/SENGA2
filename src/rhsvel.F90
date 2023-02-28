@@ -461,12 +461,6 @@ SUBROUTINE rhsvel
                     ops_arg_reduce(h_prefer, 1, "real(8)", OPS_INC))
     call ops_reduction_result(h_prefer, prefer)
 
-!    WRITE(proc,'(I4.4)') iproc
-!    fname = 'output/val_prefer'//proc//pnxres
-!    call ops_print_dat_to_txtfile(d_prefer, trim(fname))
-
-!    prefer = prun(ipref,jpref,kpref)
-
     rangexyz = (/1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz/)
     call ops_par_loop(math_kernel_eqG, "A = B-var", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
