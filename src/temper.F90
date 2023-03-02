@@ -81,7 +81,7 @@ SUBROUTINE temper
                     ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_gbl(amascp, 1, "real(8)", OPS_READ), &
                     ops_arg_gbl(amasct, 1, "real(8)", OPS_READ), &
                     ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &

@@ -432,45 +432,6 @@ SUBROUTINE math_kernel_eqAH(out_arr, in_arr1, in_arr2, in_arr3, in_arr4, in_arr5
 
 END SUBROUTINE math_kernel_eqAH
 
-!A = var/B
-SUBROUTINE math_kernel_eqAI(out_arr, in_arr1, var1)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1) :: out_arr
-    real(kind=8), dimension(1), intent(in) :: in_arr1
-    real(kind=8), intent(in) :: var1
-
-    out_arr(OPS_ACC1(0,0,0)) = var1/in_arr1(OPS_ACC2(0,0,0))
-
-END SUBROUTINE math_kernel_eqAI
-
-!A = var/(B*C)
-SUBROUTINE math_kernel_eqAJ(out_arr, in_arr1, in_arr2, var1)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1) :: out_arr
-    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
-    real(kind=8), intent(in) :: var1
-
-    out_arr(OPS_ACC1(0,0,0)) = var1/(in_arr1(OPS_ACC2(0,0,0))*in_arr2(OPS_ACC3(0,0,0)))
-
-END SUBROUTINE math_kernel_eqAJ
-
-!A = var1 + B_xdimonly*(var2-var1)
-SUBROUTINE math_kernel_eqAK(out_arr,in_arr1,var1,var2)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1) :: out_arr
-    real(kind=8), dimension(1), intent(in) :: in_arr1
-    real(kind=8), intent(in) :: var1,var2
-
-    out_arr(OPS_ACC1(0,0,0)) = var1 + in_arr1(OPS_ACC2(0,0,0))*(var2-var1)
-
-END SUBROUTINE math_kernel_eqAK
-
 !A = exp(A)
 SUBROUTINE math_kernel_eqAL(out_arr)
     use data_types
@@ -687,54 +648,6 @@ SUBROUTINE math_kernel_getval(prun,prefer)
     prefer = prun(OPS_ACC1(0,0,0))
 
 END SUBROUTINE math_kernel_getval
-
-SUBROUTINE math_kernel_set_reaction_var(crin,deltag,clocat,cthick,idx)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1) :: crin
-    real(kind=8), intent(in) :: deltag,clocat,cthick
-    integer, dimension(3), intent(in) :: idx
-
-    real(kind=8) :: xcoord,argmnt
-    
-    real(kind=8) :: erfunc
-    integer, parameter :: ncoeff = 5
-    integer, parameter :: ncofm1 = ncoeff-1
-
-    real(kind=8) :: ecoeff(ncoeff)
-    real(kind=8) :: pcoeff
-    real(kind=8) :: etotal,zvalue,tvalue
-    integer :: ix,icoeff
-
-!   SET THE COEFFICIENTS
-    pcoeff = 0.3275911_8
-    ecoeff(1) = 0.254829592_8
-    ecoeff(2) =-0.284496736_8
-    ecoeff(3) = 1.421413741_8
-    ecoeff(4) =-1.453152027_8
-    ecoeff(5) = 1.061405429_8
-    
-    ix = idx(1)
-    xcoord = real(ix-1,kind=8)*deltag
-    argmnt = (xcoord-clocat)/cthick
-
-!   EVALUATE ERROR FUNCTION
-    zvalue = abs(argmnt)
-    tvalue = 1.0_8/(1.0_8+pcoeff*zvalue)
-
-    etotal = ecoeff(ncoeff)
-    DO icoeff = ncofm1,1,-1
-        etotal = ecoeff(icoeff) + etotal*tvalue
-    END DO
-    etotal = etotal*tvalue
-
-    erfunc = 1.0_8 - etotal*exp(-zvalue*zvalue)
-    IF(argmnt < 0.0_8) erfunc = -erfunc
-
-    crin(OPS_ACC1(0,0,0)) = 0.5_8*(1.0_8+erfunc)
-
-END SUBROUTINE math_kernel_set_reaction_var
 
 SUBROUTINE math_kernel_print_drhs(out_arr, itime)
     implicit none

@@ -14,28 +14,28 @@ MODULE com_senga
 
 !     GLOBAL GRID SIZE
 INTEGER :: nxglbl,nyglbl,nzglbl
-PARAMETER(nxglbl=16, nyglbl=16, nzglbl=16)
+PARAMETER(nxglbl=2000, nyglbl=1, nzglbl=1)
 INTEGER :: ngzmax
 !     SET NGZMAX=MAX(NXGLBL,NYGLBL,NZGLBL)
 PARAMETER(ngzmax=nxglbl)
 
 !     NUMBER OF PROCESSORS
 INTEGER :: nxproc,nyproc,nzproc
-PARAMETER(nxproc=1, nyproc=1, nzproc=1)
+PARAMETER(nxproc=40, nyproc=1, nzproc=1)
 INTEGER :: nprmax
 !     SET NPRMAX=MAX(NXPROC,NYPROC,NZPROC)
 PARAMETER(nprmax=nxproc)
 
 !     LOCAL GRID SIZE
 INTEGER :: nxsize,nysize,nzsize
-PARAMETER(nxsize=16, nysize=16, nzsize=16)
+PARAMETER(nxsize=50, nysize=1, nzsize=1)
 INTEGER :: nszmax
 !     SET NSZMAX=MAX(NXSIZE,NYSIZE,NZSIZE)
 PARAMETER(nszmax=nxsize)
 
 !     SIZE OF HALO
 INTEGER :: nhalox,nhaloy,nhaloz
-PARAMETER(nhalox=5,nhaloy=5,nhaloz=5)
+PARAMETER(nhalox=5,nhaloy=0,nhaloz=0)
 
 !     SIZE OF PARALLEL TRANSFER ARRAY
 !     NPARAY MUST BE >= MAX(NHALOX,NHALOY,NHALOZ)
@@ -45,7 +45,7 @@ PARAMETER(nhalox=5,nhaloy=5,nhaloz=5)
 !     AND ALSO LARGE ENOUGH FOR PARALLEL BROADCAST OF CHEMICAL DATA
 !     AND ALSO LARGE ENOUGH FOR PARALLEL TRANSFER OF INITIAL TURBULENCE DATA
 INTEGER :: nparay
-PARAMETER(nparay=8000000)
+PARAMETER(nparay=80000)
 
 !     LOCAL BIG ARRAY SIZE
 INTEGER :: nxbigl,nxbigr,nybigl,nybigr,nzbigl,nzbigr
@@ -73,7 +73,7 @@ COMMON/ifturb/fftrow,ftpart,fftinx
 !     ==========
 !     MAX NO OF SPECIES, NO OF STEPS
 INTEGER :: nspcmx,nstpmx
-PARAMETER(nspcmx=2, nstpmx=1)
+PARAMETER(nspcmx=9, nstpmx=21)
 
 !     THERMODYNAMIC DATA
 !     MAX NO OF TEMPERATURE INTERVALS, THERMO POLYNOMIAL COEFFICIENTS

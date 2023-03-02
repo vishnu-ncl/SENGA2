@@ -165,9 +165,9 @@ SUBROUTINE fincom
     DO ispec = 1,nspec
 
         call ops_par_loop(fincom_kernel_MD, "fincom mulit-dim", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_yerr, 9, s3d_000, "real(8)", OPS_INC), &
-                        ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_RW), &
-                        ops_arg_dat(d_yrhs, 9, s3d_000, "real(8)", OPS_RW), &
+                        ops_arg_dat(d_yerr, 2, s3d_000, "real(8)", OPS_INC), &
+                        ops_arg_dat(d_yrun, 2, s3d_000, "real(8)", OPS_RW), &
+                        ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_RW), &
                         ops_arg_gbl(rkerr(irkstp), 1, "real(8)", OPS_READ), &
                         ops_arg_gbl(rklhs(irkstp), 1, "real(8)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))

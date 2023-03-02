@@ -359,17 +359,17 @@ SUBROUTINE output
     END IF
 
 !    IF(iproc == 0) THEN
-        rangexyz = (/255,255,nyglbl,nyglbl,nzglbl,nzglbl/)
+        rangexyz = (/1,1,1,1,3,3/)
         call ops_par_loop(math_kernel_print_drhs, "print single value", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(itime, 1, "integer", OPS_READ))
 
-        rangexyz = (/256,256,nyglbl,nyglbl,nzglbl,nzglbl/)
+        rangexyz = (/2,2,2,2,4,4/)
         call ops_par_loop(math_kernel_print_erhs, "print single value", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(itime, 1, "integer", OPS_READ))
 
-        rangexyz = (/257,257,nyglbl,nyglbl,nzglbl,nzglbl/)
+        rangexyz = (/3,3,3,3,5,5/)
         call ops_par_loop(math_kernel_print_urhs, "print single value", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(itime, 1, "integer", OPS_READ))

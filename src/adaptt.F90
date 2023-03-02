@@ -174,8 +174,8 @@ SUBROUTINE adaptt
         DO ispec = 1,nspec
 
             call ops_par_loop(adaptt_kernel_err_eval_MD, "EVALUATE ERROR NORMS - MULTIDIM", senga_grid, 3, rangexyz,  &
-                        &  ops_arg_dat(d_yerr, 9, s3d_000, "real(8)", OPS_READ), &
-                        &  ops_arg_dat(d_yrun, 9, s3d_000, "real(8)", OPS_READ), &
+                        &  ops_arg_dat(d_yerr, 2, s3d_000, "real(8)", OPS_READ), &
+                        &  ops_arg_dat(d_yrun, 2, s3d_000, "real(8)", OPS_READ), &
                         &  ops_arg_gbl(erynrm(ispec), 1, "real(8)", OPS_READ), &
                         &  ops_arg_gbl(ispec, 1, "integer", OPS_READ), &  
                         &  ops_arg_reduce(h_erytot, 1, "real(8)", OPS_MAX))
@@ -315,7 +315,7 @@ SUBROUTINE adaptt
         DO ispec = 1,nspec
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
             call ops_par_loop(set_zero_kernel_MD, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(d_yerr, 9, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_yerr, 2, s3d_000, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END DO

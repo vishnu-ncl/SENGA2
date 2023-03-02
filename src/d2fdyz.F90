@@ -1,4 +1,4 @@
-SUBROUTINE d2fdyz(functn,fderiv)
+SUBROUTINE d2fdyz(functn,fderiv,fstora,fstorb,fstorc)
 
 use OPS_Fortran_Reference
 
@@ -35,6 +35,7 @@ use OPS_Fortran_Reference
 !   ARGUMENTS
 !   =========
     TYPE(ops_dat) :: functn, fderiv
+    TYPE(ops_dat) :: fstora, fstorb, fstorc
 
 !   LOCAL DATA
 !   ==========
@@ -205,26 +206,26 @@ use OPS_Fortran_Reference
             call ops_par_loop(d2fdyz_kernel_lh_zdir_corner_eqI, "d2fdyz_lh_zdir_corner_eqI", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p022_m022_mixed_yz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_fstorayz, 9, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_fstorbyz, 9, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(fstora, 9, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
                             ops_arg_idx())
 
             rangexyz = (/1,nxglbl,4,5,4,5/)
             call ops_par_loop(d2fdyz_kernel_lh_zdir_corner_eqJ, "d2fdyz_lh_zdir_corner_eqJ", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p033_m033_mixed_small_yz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_fstorayz, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_fstorbyz, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_fstorcyz, 4, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(fstora, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
+                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
+                            ops_arg_dat(fstorc, 4, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
                             ops_arg_idx())
 
             rangexyz = (/1,nxglbl,5,5,5,5/)
             call ops_par_loop(d2fdyz_kernel_lh_zdir_corner_eqK, "d2fdyz_lh_zdir_corner_eqK", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p044_m044_mixed_small_yz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_fstorayz, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_fstorbyz, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_fstorcyz, 4, s3d_000_strid3d_x, "real(8)", OPS_READ), &
+                            ops_arg_dat(fstora, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
+                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
+                            ops_arg_dat(fstorc, 4, s3d_000_strid3d_x, "real(8)", OPS_READ), &
                             ops_arg_idx())
 
 !           RH IN Y LH IN Z CORNER
@@ -273,8 +274,8 @@ use OPS_Fortran_Reference
             call ops_par_loop(d2fdyz_kernel_lh_zdir_corner_eqT, "d2fdyz_lh_zdir_corner_eqT", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p022_m022_mixed_yz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_fstorayz, 9, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_fstorbyz, 9, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(fstora, 9, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(nyglblm4, 1, "integer", OPS_READ), &
                             ops_arg_idx())
 
@@ -282,9 +283,9 @@ use OPS_Fortran_Reference
             call ops_par_loop(d2fdyz_kernel_lh_zdir_corner_eqU, "d2fdyz_lh_zdir_corner_eqU", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p033_m033_mixed_small_yz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_fstorayz, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_fstorbyz, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_fstorcyz, 4, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(fstora, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
+                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
+                            ops_arg_dat(fstorc, 4, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(nyglblm4, 1, "integer", OPS_READ), &
                             ops_arg_idx())
 
@@ -292,9 +293,9 @@ use OPS_Fortran_Reference
             call ops_par_loop(d2fdyz_kernel_lh_zdir_corner_eqV, "d2fdyz_lh_zdir_corner_eqV", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p044_m044_mixed_small_yz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_fstorayz, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_fstorbyz, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_fstorcyz, 4, s3d_000_strid3d_x, "real(8)", OPS_READ), &
+                            ops_arg_dat(fstora, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
+                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
+                            ops_arg_dat(fstorc, 4, s3d_000_strid3d_x, "real(8)", OPS_READ), &
                             ops_arg_gbl(nyglblm4, 1, "integer", OPS_READ), &
                             ops_arg_idx())
 
@@ -375,8 +376,8 @@ use OPS_Fortran_Reference
             call ops_par_loop(d2fdyz_kernel_rh_zdir_corner_eqI, "d2fdyz_rh_zdir_corner_eqI", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p022_m022_mixed_yz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_fstorayz, 9, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_fstorbyz, 9, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(fstora, 9, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(nzglblm4, 1, "integer", OPS_READ), &
                             ops_arg_idx())
 
@@ -384,9 +385,9 @@ use OPS_Fortran_Reference
             call ops_par_loop(d2fdyz_kernel_rh_zdir_corner_eqJ, "d2fdyz_rh_zdir_corner_eqJ", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p033_m033_mixed_small_yz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_fstorayz, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_fstorbyz, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_fstorcyz, 4, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(fstora, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
+                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
+                            ops_arg_dat(fstorc, 4, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(nzglblm4, 1, "integer", OPS_READ), &
                             ops_arg_idx())
 
@@ -394,9 +395,9 @@ use OPS_Fortran_Reference
             call ops_par_loop(d2fdyz_kernel_rh_zdir_corner_eqK, "d2fdyz_rh_zdir_corner_eqK", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p044_m044_mixed_small_yz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_fstorayz, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_fstorbyz, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_fstorcyz, 4, s3d_000_strid3d_x, "real(8)", OPS_READ), &
+                            ops_arg_dat(fstora, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
+                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
+                            ops_arg_dat(fstorc, 4, s3d_000_strid3d_x, "real(8)", OPS_READ), &
                             ops_arg_gbl(nzglblm4, 1, "integer", OPS_READ), &
                             ops_arg_idx())
 
@@ -446,8 +447,8 @@ use OPS_Fortran_Reference
             call ops_par_loop(d2fdyz_kernel_rh_zdir_corner_eqT, "d2fdyz_rh_zdir_corner_eqT", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p022_m022_mixed_yz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_fstorayz, 9, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_fstorbyz, 9, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(fstora, 9, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(nyglblm4, 1, "integer", OPS_READ), &
                             ops_arg_gbl(nzglblm4, 1, "integer", OPS_READ), &
                             ops_arg_idx())
@@ -456,9 +457,9 @@ use OPS_Fortran_Reference
             call ops_par_loop(d2fdyz_kernel_rh_zdir_corner_eqU, "d2fdyz_rh_zdir_corner_eqU", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p033_m033_mixed_small_yz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_fstorayz, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_fstorbyz, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_fstorcyz, 4, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(fstora, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
+                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
+                            ops_arg_dat(fstorc, 4, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(nyglblm4, 1, "integer", OPS_READ), &
                             ops_arg_gbl(nzglblm4, 1, "integer", OPS_READ), &
                             ops_arg_idx())
@@ -467,9 +468,9 @@ use OPS_Fortran_Reference
             call ops_par_loop(d2fdyz_kernel_rh_zdir_corner_eqV, "d2fdyz_rh_zdir_corner_eqV", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p044_m044_mixed_small_yz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_fstorayz, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_fstorbyz, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_fstorcyz, 4, s3d_000_strid3d_x, "real(8)", OPS_READ), &
+                            ops_arg_dat(fstora, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
+                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_x, "real(8)", OPS_READ), &
+                            ops_arg_dat(fstorc, 4, s3d_000_strid3d_x, "real(8)", OPS_READ), &
                             ops_arg_gbl(nyglblm4, 1, "integer", OPS_READ), &
                             ops_arg_gbl(nzglblm4, 1, "integer", OPS_READ), &
                             ops_arg_idx())

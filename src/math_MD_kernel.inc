@@ -188,30 +188,6 @@ SUBROUTINE math_MD_kernel_eqM(out_arr1,out_arr2,in_arr1,in_arr2,in_arr3,in_arr4,
 
 END SUBROUTINE math_MD_kernel_eqM
 
-!A_multidim_lastIdx = A_multidim_lastIdx + A_multidim_loopIdx
-SUBROUTINE math_MD_kernel_eqN(out_arr1,ispec,nspec)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1) :: out_arr1
-    integer, intent(in) :: ispec,nspec
-
-    out_arr1(OPS_ACC_MD1(nspec,0,0,0)) = out_arr1(OPS_ACC_MD1(nspec,0,0,0)) + out_arr1(OPS_ACC_MD1(ispec,0,0,0))
-
-END SUBROUTINE math_MD_kernel_eqN
-
-!A_multidim = 1.0 - A_multidim
-SUBROUTINE math_MD_kernel_eqO(out_arr1,nspec)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1) :: out_arr1
-    integer, intent(in) :: nspec
-
-    out_arr1(OPS_ACC_MD1(nspec,0,0,0)) = 1.0_8 - out_arr1(OPS_ACC_MD1(nspec,0,0,0))
-
-END SUBROUTINE math_MD_kernel_eqO
-
 !A = A + var*B_multidim
 SUBROUTINE math_MD_kernel_eqP(out_arr1,in_arr1,val1,ispec)
     use data_types
@@ -221,24 +197,10 @@ SUBROUTINE math_MD_kernel_eqP(out_arr1,in_arr1,val1,ispec)
     real(kind=8), dimension(1), intent(in) :: in_arr1
     real(kind=8), intent(in) :: val1
     integer, intent(in) :: ispec
-    
+
     out_arr1(OPS_ACC1(0,0,0)) = out_arr1(OPS_ACC1(0,0,0)) + val1*in_arr1(OPS_ACC_MD2(ispec,0,0,0))
 
 END SUBROUTINE math_MD_kernel_eqP
-
-!A_multidim = var1 + B*(var2-var1)
-SUBROUTINE math_MD_kernel_eqQ(out_arr1,in_arr1,val1,val2,ispec)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1) :: out_arr1
-    real(kind=8), dimension(1), intent(in) :: in_arr1
-    real(kind=8), intent(in) :: val1,val2
-    integer, intent(in) :: ispec
-
-    out_arr1(OPS_ACC_MD1(ispec,0,0,0)) = val1 + in_arr1(OPS_ACC2(0,0,0))*(val2-val1)
-    
-END SUBROUTINE math_MD_kernel_eqQ
 
 !A = A*max(B_multidim*var    zero)
 SUBROUTINE math_MD_kernel_eqR(out_arr1,in_arr1,val1,ispec)
