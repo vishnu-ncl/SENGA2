@@ -309,66 +309,6 @@ REAL(KIND=8) :: gcmreg(nszmax),gcmstr(nszmax),  &
 
 COMMON/emstrt/gcmreg,gcmstr,dgdhat,dgdhsq,d2gdh2
 
-!     EMSTRT-------------------------------------------------------------------
-!     FILCOM-------------------------------------------------------------------
-
-!     SPATIAL FILTER COEFFICIENTS
-REAL(KIND=8) :: facofx,fbcofx,fccofx,fdcofx,fecofx,ffcofx,fgcofx,  &
-    facofy,fbcofy,fccofy,fdcofy,fecofy,ffcofy,fgcofy,  &
-    facofz,fbcofz,fccofz,fdcofz,fecofz,ffcofz,fgcofz,  &
-    facf1x,fbcf1x,fccf1x,fdcf1x,fecf1x,ffcf1x,fgcf1x,  &
-    facf1y,fbcf1y,fccf1y,fdcf1y,fecf1y,ffcf1y,fgcf1y,  &
-    facf1z,fbcf1z,fccf1z,fdcf1z,fecf1z,ffcf1z,fgcf1z,  &
-    facf2x,fbcf2x,fccf2x,fdcf2x,fecf2x,ffcf2x,fgcf2x, fhcf2x,  &
-    facf2y,fbcf2y,fccf2y,fdcf2y,fecf2y,ffcf2y,fgcf2y, fhcf2y,  &
-    facf2z,fbcf2z,fccf2z,fdcf2z,fecf2z,ffcf2z,fgcf2z, fhcf2z,  &
-    facf3x,fbcf3x,fccf3x,fdcf3x,fecf3x,ffcf3x,fgcf3x, fhcf3x,ficf3x,  &
-    facf3y,fbcf3y,fccf3y,fdcf3y,fecf3y,ffcf3y,fgcf3y, fhcf3y,ficf3y,  &
-    facf3z,fbcf3z,fccf3z,fdcf3z,fecf3z,ffcf3z,fgcf3z, fhcf3z,ficf3z,  &
-    facf4x,fbcf4x,fccf4x,fdcf4x,fecf4x,ffcf4x,fgcf4x, fhcf4x,ficf4x,fjcf4x,  &
-    facf4y,fbcf4y,fccf4y,fdcf4y,fecf4y,ffcf4y,fgcf4y, fhcf4y,ficf4y,fjcf4y,  &
-    facf4z,fbcf4z,fccf4z,fdcf4z,fecf4z,ffcf4z,fgcf4z, fhcf4z,ficf4z,fjcf4z,  &
-    facf5x,fbcf5x,fccf5x,fdcf5x,fecf5x,ffcf5x,fgcf5x,  &
-    fhcf5x,ficf5x,fjcf5x,fkcf5x,  &
-    facf5y,fbcf5y,fccf5y,fdcf5y,fecf5y,ffcf5y,fgcf5y,  &
-    fhcf5y,ficf5y,fjcf5y,fkcf5y,  &
-    facf5z,fbcf5z,fccf5z,fdcf5z,fecf5z,ffcf5z,fgcf5z,  &
-    fhcf5z,ficf5z,fjcf5z,fkcf5z,  &
-    facf6x,fbcf6x,fccf6x,fdcf6x,fecf6x,ffcf6x,fgcf6x,  &
-    fhcf6x,ficf6x,fjcf6x,fkcf6x,flcf6x,  &
-    facf6y,fbcf6y,fccf6y,fdcf6y,fecf6y,ffcf6y,fgcf6y,  &
-    fhcf6y,ficf6y,fjcf6y,fkcf6y,flcf6y,  &
-    facf6z,fbcf6z,fccf6z,fdcf6z,fecf6z,ffcf6z,fgcf6z,  &
-    fhcf6z,ficf6z,fjcf6z,fkcf6z,flcf6z
-
-COMMON/filcom/facofx,fbcofx,fccofx,fdcofx,fecofx,ffcofx,fgcofx,  &
-    facofy,fbcofy,fccofy,fdcofy,fecofy,ffcofy,fgcofy,  &
-    facofz,fbcofz,fccofz,fdcofz,fecofz,ffcofz,fgcofz,  &
-    facf1x,fbcf1x,fccf1x,fdcf1x,fecf1x,ffcf1x,fgcf1x,  &
-    facf1y,fbcf1y,fccf1y,fdcf1y,fecf1y,ffcf1y,fgcf1y,  &
-    facf1z,fbcf1z,fccf1z,fdcf1z,fecf1z,ffcf1z,fgcf1z,  &
-    facf2x,fbcf2x,fccf2x,fdcf2x,fecf2x,ffcf2x,fgcf2x, fhcf2x,  &
-    facf2y,fbcf2y,fccf2y,fdcf2y,fecf2y,ffcf2y,fgcf2y, fhcf2y,  &
-    facf2z,fbcf2z,fccf2z,fdcf2z,fecf2z,ffcf2z,fgcf2z, fhcf2z,  &
-    facf3x,fbcf3x,fccf3x,fdcf3x,fecf3x,ffcf3x,fgcf3x, fhcf3x,ficf3x,  &
-    facf3y,fbcf3y,fccf3y,fdcf3y,fecf3y,ffcf3y,fgcf3y, fhcf3y,ficf3y,  &
-    facf3z,fbcf3z,fccf3z,fdcf3z,fecf3z,ffcf3z,fgcf3z, fhcf3z,ficf3z,  &
-    facf4x,fbcf4x,fccf4x,fdcf4x,fecf4x,ffcf4x,fgcf4x, fhcf4x,ficf4x,fjcf4x,  &
-    facf4y,fbcf4y,fccf4y,fdcf4y,fecf4y,ffcf4y,fgcf4y, fhcf4y,ficf4y,fjcf4y,  &
-    facf4z,fbcf4z,fccf4z,fdcf4z,fecf4z,ffcf4z,fgcf4z, fhcf4z,ficf4z,fjcf4z,  &
-    facf5x,fbcf5x,fccf5x,fdcf5x,fecf5x,ffcf5x,fgcf5x,  &
-    fhcf5x,ficf5x,fjcf5x,fkcf5x,  &
-    facf5y,fbcf5y,fccf5y,fdcf5y,fecf5y,ffcf5y,fgcf5y,  &
-    fhcf5y,ficf5y,fjcf5y,fkcf5y,  &
-    facf5z,fbcf5z,fccf5z,fdcf5z,fecf5z,ffcf5z,fgcf5z,  &
-    fhcf5z,ficf5z,fjcf5z,fkcf5z,  &
-    facf6x,fbcf6x,fccf6x,fdcf6x,fecf6x,ffcf6x,fgcf6x,  &
-    fhcf6x,ficf6x,fjcf6x,fkcf6x,flcf6x,  &
-    facf6y,fbcf6y,fccf6y,fdcf6y,fecf6y,ffcf6y,fgcf6y,  &
-    fhcf6y,ficf6y,fjcf6y,fkcf6y,flcf6y,  &
-    facf6z,fbcf6z,fccf6z,fdcf6z,fecf6z,ffcf6z,fgcf6z,  &
-    fhcf6z,ficf6z,fjcf6z,fkcf6z,flcf6z
-
 !     FILCOM-------------------------------------------------------------------
 !     RUNKUT-------------------------------------------------------------------
 

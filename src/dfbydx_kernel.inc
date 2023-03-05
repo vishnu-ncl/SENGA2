@@ -119,6 +119,6 @@ SUBROUTINE dfbydx_kernel_main(functn, fderiv, nxglbl, idx)
     END IF
 
 !   scaling
-    fderiv(OPS_ACC1(0,0,0)) = fderiv(OPS_ACC1(0,0,0))*ovdelx
+    fderiv(OPS_ACC2(0,0,0)) = fderiv(OPS_ACC2(0,0,0))*ovdelx
 
 END SUBROUTINE dfbydx_kernel_main

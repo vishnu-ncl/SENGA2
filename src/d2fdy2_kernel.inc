@@ -163,6 +163,6 @@ SUBROUTINE d2fdy2_kernel_main(functn, fderiv, nyglbl, idx)
     END IF
 
 !   scaling
-    fderiv(OPS_ACC1(0,0,0)) = fderiv(OPS_ACC1(0,0,0))*ovdly2
+    fderiv(OPS_ACC2(0,0,0)) = fderiv(OPS_ACC2(0,0,0))*ovdly2
 
 END SUBROUTINE d2fdy2_kernel_main

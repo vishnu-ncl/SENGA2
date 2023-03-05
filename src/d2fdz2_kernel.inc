@@ -163,6 +163,6 @@ SUBROUTINE d2fdz2_kernel_main(functn, fderiv, nzglbl, idx)
     END IF
 
 !   scaling
-    fderiv(OPS_ACC1(0,0,0)) = fderiv(OPS_ACC1(0,0,0))*ovdlz2
+    fderiv(OPS_ACC2(0,0,0)) = fderiv(OPS_ACC2(0,0,0))*ovdlz2
 
 END SUBROUTINE d2fdz2_kernel_main

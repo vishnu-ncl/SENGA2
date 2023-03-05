@@ -41,7 +41,7 @@ SUBROUTINE flamin
 !   ==========
 !   ESTIMATED FLAME LOCATION AND THICKNESS
     real(kind=8) :: clocat,cthick
-    PARAMETER(clocat = 0.0025_dp, cthick = 0.0005_dp)
+    PARAMETER(clocat = 0.0025_8, cthick = 0.0005_8)
 
 !   FUNCTION
 !   ========
@@ -69,7 +69,7 @@ SUBROUTINE flamin
 !   -----------------------
 !   REACTANT TEMPERATURE SET IN CONTROL FILE
     trinr = trin
-    u0 = 34.789806_dp
+    u0 = 34.789806_8
 
 !   Mixture gas constant
     rglocl = zero

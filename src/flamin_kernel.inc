@@ -24,8 +24,8 @@ SUBROUTINE flamin_kernel_set_velocity_tgv(urun, vrun, wrun, prun, prin, drin, u0
     zrgmnt = angfrz*zcoord
 
 !  set taylor-green vortex velocity field
-   urun(OPS_ACC1(0,0,0)) = u0 * dsin(xrgmnt) * dcos(yrgmnt) * dcos(zrgmnt)
-   vrun(OPS_ACC2(0,0,0)) = -u0 * dcos(xrgmnt) * dsin(yrgmnt) * dcos(zrgmnt)
+   urun(OPS_ACC1(0,0,0)) = u0 * sin(xrgmnt) * cos(yrgmnt) * cos(zrgmnt)
+   vrun(OPS_ACC2(0,0,0)) = -u0 * cos(xrgmnt) * sin(yrgmnt) * cos(zrgmnt)
    wrun(OPS_ACC3(0,0,0)) = 0.0_8
 
 !  set pressure profile assuming constant density
@@ -33,7 +33,7 @@ SUBROUTINE flamin_kernel_set_velocity_tgv(urun, vrun, wrun, prun, prin, drin, u0
    yrgmnt = 2.0_8*yrgmnt
    zrgmnt = 2.0_8*zrgmnt
 
-   prun(OPS_ACC4(0,0,0)) = prin+((drin*u0*u0)/16.0_8)*(dcos(xrgmnt)+dcos(yrgmnt))*(dcos(zrgmnt)+2.0_8)
+   prun(OPS_ACC4(0,0,0)) = prin+((drin*u0*u0)/16.0_8)*(cos(xrgmnt)+cos(yrgmnt))*(cos(zrgmnt)+2.0_8)
 
 END SUBROUTINE flamin_kernel_set_velocity_tgv
 

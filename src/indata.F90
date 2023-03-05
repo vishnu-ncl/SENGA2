@@ -1392,7 +1392,7 @@ SUBROUTINE indata
 
 !   INITIALISE SPATIAL FILTERING
 !   ============================
-    call flinit
+!    call flinit
 
 !   ==========================================================================
 

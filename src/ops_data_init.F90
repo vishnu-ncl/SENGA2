@@ -1575,45 +1575,45 @@ SUBROUTINE ops_data_init()
 
     rangexyz = (/1,1,1,1,1,nzglbl/)
     DO ispec = 1,9
-        call ops_par_loop(set_zero_kernel_MD_xy, "set_zero_multidim", senga_grid, 3, rangexyz, &
+        call ops_par_loop(set_zero_kernel_MD_xy_dim9, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_fstoraxy, 9, s3d_000_strid3d_z, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-        call ops_par_loop(set_zero_kernel_MD_xy, "set_zero_multidim", senga_grid, 3, rangexyz, &
+        call ops_par_loop(set_zero_kernel_MD_xy_dim9, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_fstorbxy, 9, s3d_000_strid3d_z, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
     END DO
     DO ispec = 1,4
-        call ops_par_loop(set_zero_kernel_MD_xy, "set_zero_multidim", senga_grid, 3, rangexyz, &
+        call ops_par_loop(set_zero_kernel_MD_xy_dim4, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_fstorcxy, 4, s3d_000_strid3d_z, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
     END DO
 
     rangexyz = (/1,1,1,nyglbl,1,1/)
     DO ispec = 1,9
-        call ops_par_loop(set_zero_kernel_MD_xz, "set_zero_multidim", senga_grid, 3, rangexyz, &
+        call ops_par_loop(set_zero_kernel_MD_xz_dim9, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_fstoraxz, 9, s3d_000_strid3d_y, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-        call ops_par_loop(set_zero_kernel_MD_xz, "set_zero_multidim", senga_grid, 3, rangexyz, &
+        call ops_par_loop(set_zero_kernel_MD_xz_dim9, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_fstorbxz, 9, s3d_000_strid3d_y, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
     END DO
     DO ispec = 1,4
-        call ops_par_loop(set_zero_kernel_MD_xz, "set_zero_multidim", senga_grid, 3, rangexyz, &
+        call ops_par_loop(set_zero_kernel_MD_xz_dim4, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_fstorcxz, 4, s3d_000_strid3d_y, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
     END DO
 
     rangexyz = (/1,nxglbl,1,1,1,1/)
     DO ispec = 1,9
-        call ops_par_loop(set_zero_kernel_MD_yz, "set_zero_multidim", senga_grid, 3, rangexyz, &
+        call ops_par_loop(set_zero_kernel_MD_yz_dim9, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_fstorayz, 9, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-        call ops_par_loop(set_zero_kernel_MD_yz, "set_zero_multidim", senga_grid, 3, rangexyz, &
+        call ops_par_loop(set_zero_kernel_MD_yz_dim9, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_fstorbyz, 9, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
     END DO
     DO ispec = 1,4
-        call ops_par_loop(set_zero_kernel_MD_yz, "set_zero_multidim", senga_grid, 3, rangexyz, &
+        call ops_par_loop(set_zero_kernel_MD_yz_dim4, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_fstorcyz, 4, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
     END DO

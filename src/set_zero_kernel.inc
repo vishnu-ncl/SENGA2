@@ -68,7 +68,7 @@ SUBROUTINE set_zero_kernel_MD_zdir(farray, ispec)
 END SUBROUTINE set_zero_kernel_MD_zdir
 
 !range x=1,1   y=1,1   z=1,nzglbl
-SUBROUTINE set_zero_kernel_MD_xy(farray, ispec)
+SUBROUTINE set_zero_kernel_MD_xy_dim9(farray, ispec)
     use data_types
     implicit none
 
@@ -77,10 +77,21 @@ SUBROUTINE set_zero_kernel_MD_xy(farray, ispec)
 
     farray(OPS_ACC_MD1(ispec,0,0,0)) = 0.0_8
 
-END SUBROUTINE set_zero_kernel_MD_xy
+END SUBROUTINE set_zero_kernel_MD_xy_dim9
+
+SUBROUTINE set_zero_kernel_MD_xy_dim4(farray, ispec)
+    use data_types
+    implicit none
+
+    real(kind=8), dimension(1) :: farray
+    integer :: ispec
+
+    farray(OPS_ACC_MD1(ispec,0,0,0)) = 0.0_8
+
+END SUBROUTINE set_zero_kernel_MD_xy_dim4
 
 !range x=1,1   y=1,nyglbl   z=1,1
-SUBROUTINE set_zero_kernel_MD_xz(farray, ispec)
+SUBROUTINE set_zero_kernel_MD_xz_dim9(farray, ispec)
     use data_types
     implicit none
 
@@ -89,10 +100,21 @@ SUBROUTINE set_zero_kernel_MD_xz(farray, ispec)
 
     farray(OPS_ACC_MD1(ispec,0,0,0)) = 0.0_8
 
-END SUBROUTINE set_zero_kernel_MD_xz
+END SUBROUTINE set_zero_kernel_MD_xz_dim9
+
+SUBROUTINE set_zero_kernel_MD_xz_dim4(farray, ispec)
+    use data_types
+    implicit none
+
+    real(kind=8), dimension(1) :: farray
+    integer :: ispec
+
+    farray(OPS_ACC_MD1(ispec,0,0,0)) = 0.0_8
+
+END SUBROUTINE set_zero_kernel_MD_xz_dim4
 
 !range x=1,nxglbl   y=1,1   z=1,1
-SUBROUTINE set_zero_kernel_MD_yz(farray, ispec)
+SUBROUTINE set_zero_kernel_MD_yz_dim9(farray, ispec)
     use data_types
     implicit none
 
@@ -101,7 +123,18 @@ SUBROUTINE set_zero_kernel_MD_yz(farray, ispec)
 
     farray(OPS_ACC_MD1(ispec,0,0,0)) = 0.0_8
 
-END SUBROUTINE set_zero_kernel_MD_yz
+END SUBROUTINE set_zero_kernel_MD_yz_dim9
+
+SUBROUTINE set_zero_kernel_MD_yz_dim4(farray, ispec)
+    use data_types
+    implicit none
+
+    real(kind=8), dimension(1) :: farray
+    integer :: ispec
+
+    farray(OPS_ACC_MD1(ispec,0,0,0)) = 0.0_8
+
+END SUBROUTINE set_zero_kernel_MD_yz_dim4
 
 !range x=1,1   y=1,nyglbl   z=1,nzglbl
 !set zero for y,z dimension
