@@ -130,7 +130,6 @@ SUBROUTINE ops_data_init()
     INTEGER a3d_p300_m140_mixed_xy(75) /3,0,0, 3,-1,0, 3,-2,0, 3,-3,0, 3,-4,0, 2,0,0, 2,-1,0, 2,-2,0, 2,-3,0, 2,-4,0, 1,0,0, 1,-1,0, 1,-2,0, 1,-3,0, 1,-4,0, 0,0,0, 0,-1,0, 0,-2,0, 0,-3,0, 0,-4,0, -1,0,0, -1,-1,0, -1,-2,0, -1,-3,0, -1,-4,0/
     INTEGER a3d_p320_m120_mixed_xy(60) /3,2,0, 3,1,0, 3,-1,0, 3,-2,0, 2,2,0, 2,1,0, 2,-1,0, 2,-2,0, 1,2,0, 1,1,0, 1,-1,0, 1,-2,0, 0,2,0, 0,1,0, 0,-1,0, 0,-2,0, -1,2,0, -1,1,0, -1,-1,0, -1,-2,0/
     INTEGER a3d_p330_m110_mixed_xy(39) /3,3,0, 3,0,0, 2,2,0, 2,0,0, 1,1,0, 1,0,0, 0,3,0, 0,2,0, 0,1,0, 0,0,0, 0,-1,0, -1,0,0, -1,-1,0/
-    INTEGER a3d_p330_m330_mixed_small_xy(12) /3,3,0, 3,-3,0, -3,3,0, -3,-3,0/
     INTEGER a3d_p330_m330_mixed_xy(36) /3,3,0, 3,-3,0, 2,2,0, 2,-2,0, 1,1,0, 1,-1,0, -1,1,0, -1,-1,0, -2,2,0, -2,-2,0, -3,3,0, -3,-3,0/
     INTEGER a3d_p340_m100_mixed_xy(75) /3,4,0, 3,3,0, 3,2,0, 3,1,0, 3,0,0, 2,4,0, 2,3,0, 2,2,0, 2,1,0, 2,0,0, 1,4,0, 1,3,0, 1,2,0, 1,1,0, 1,0,0, 0,4,0, 0,3,0, 0,2,0, 0,1,0, 0,0,0, -1,4,0, -1,3,0, -1,2,0, -1,1,0, -1,0,0/
 
@@ -139,7 +138,6 @@ SUBROUTINE ops_data_init()
     INTEGER a3d_p420_m020_mixed_xy(60) /4,2,0, 4,1,0, 4,-1,0, 4,-2,0, 3,2,0, 3,1,0, 3,-1,0, 3,-2,0, 2,2,0, 2,1,0, 2,-1,0, 2,-2,0, 1,2,0, 1,1,0, 1,-1,0, 1,-2,0, 0,2,0, 0,1,0, 0,-1,0, 0,-2,0/
     INTEGER a3d_p430_m010_mixed_xy(75) /4,3,0, 4,2,0, 4,1,0, 4,0,0, 4,-1,0, 3,3,0, 3,2,0, 3,1,0, 3,0,0, 3,-1,0, 2,3,0, 2,2,0, 2,1,0, 2,0,0, 2,-1,0, 1,3,0, 1,2,0, 1,1,0, 1,0,0, 1,-1,0, 0,3,0, 0,2,0, 0,1,0, 0,0,0, 0,-1,0/
     INTEGER a3d_p440_p000_mixed_xy(39) /4,4,0, 4,0,0, 3,3,0, 3,0,0, 2,2,0, 2,0,0, 1,1,0, 1,0,0, 0,4,0, 0,3,0, 0,2,0, 0,1,0, 0,0,0/
-    INTEGER a3d_p440_m440_mixed_small_xy(12) /4,4,0, 4,-4,0, -4,4,0, -4,-4,0/
     INTEGER a3d_p440_m440_mixed_xy(48) /4,4,0, 4,-4,0, 3,3,0, 3,-3,0, 2,2,0, 2,-2,0, 1,1,0, 1,-1,0, -1,1,0, -1,-1,0, -2,2,0, -2,-2,0, -3,3,0, -3,-3,0, -4,4,0, -4,-4,0/
 
     INTEGER a3d_p550_m550_mixed_xy(60) /5,5,0, 5,-5,0, 4,4,0, 4,-4,0, 3,3,0, 3,-3,0, 2,2,0, 2,-2,0, 1,1,0, 1,-1,0, -1,1,0, -1,-1,0, -2,2,0, -2,-2,0, -3,3,0, -3,-3,0, -4,4,0, -4,-4,0, -5,5,0, -5,-5,0/
@@ -168,7 +166,6 @@ SUBROUTINE ops_data_init()
     INTEGER a3d_p300_m104_mixed_xz(75) /3,0,0, 3,0,-1, 3,0,-2, 3,0,-3, 3,0,-4, 2,0,0, 2,0,-1, 2,0,-2, 2,0,-3, 2,0,-4, 1,0,0, 1,0,-1, 1,0,-2, 1,0,-3, 1,0,-4, 0,0,0, 0,0,-1, 0,0,-2, 0,0,-3, 0,0,-4, -1,0,0, -1,0,-1, -1,0,-2, -1,0,-3, -1,0,-4/
     INTEGER a3d_p302_m102_mixed_xz(60) /3,0,2, 3,0,1, 3,0,-1, 3,0,-2, 2,0,2, 2,0,1, 2,0,-1, 2,0,-2, 1,0,2, 1,0,1, 1,0,-1, 1,0,-2, 0,0,2, 0,0,1, 0,0,-1, 0,0,-2, -1,0,2, -1,0,1, -1,0,-1, -1,0,-2/
     INTEGER a3d_p303_m101_mixed_xz(39) /3,0,3, 3,0,0, 2,0,2, 2,0,0, 1,0,1, 1,0,0, 0,0,3, 0,0,2, 0,0,1, 0,0,0, 0,0,-1, -1,0,0, -1,0,-1/
-    INTEGER a3d_p303_m303_mixed_small_xz(12) /3,0,3, 3,0,-3, -3,0,3, -3,0,-3/
     INTEGER a3d_p303_m303_mixed_xz(36) /3,0,3, 3,0,-3, 2,0,2, 2,0,-2, 1,0,1, 1,0,-1, -1,0,1, -1,0,-1, -2,0,2, -2,0,-2, -3,0,3, -3,0,-3/
     INTEGER a3d_p304_m100_mixed_xz(75) /3,0,4, 3,0,3, 3,0,2, 3,0,1, 3,0,0, 2,0,4, 2,0,3, 2,0,2, 2,0,1, 2,0,0, 1,0,4, 1,0,3, 1,0,2, 1,0,1, 1,0,0, 0,0,4, 0,0,3, 0,0,2, 0,0,1, 0,0,0, -1,0,4, -1,0,3, -1,0,2, -1,0,1, -1,0,0/
 
@@ -177,7 +174,6 @@ SUBROUTINE ops_data_init()
     INTEGER a3d_p402_m002_mixed_xz(60) /4,0,2, 4,0,1, 4,0,-1, 4,0,-2, 3,0,2, 3,0,1, 3,0,-1, 3,0,-2, 2,0,2, 2,0,1, 2,0,-1, 2,0,-2, 1,0,2, 1,0,1, 1,0,-1, 1,0,-2, 0,0,2, 0,0,1, 0,0,-1, 0,0,-2/
     INTEGER a3d_p403_m001_mixed_xz(75) /4,0,3, 4,0,2, 4,0,1, 4,0,0, 4,0,-1, 3,0,3, 3,0,2, 3,0,1, 3,0,0, 3,0,-1, 2,0,3, 2,0,2, 2,0,1, 2,0,0, 2,0,-1, 1,0,3, 1,0,2, 1,0,1, 1,0,0, 1,0,-1, 0,0,3, 0,0,2, 0,0,1, 0,0,0, 0,0,-1/
     INTEGER a3d_p404_p000_mixed_xz(39) /4,0,4, 4,0,0, 3,0,3, 3,0,0, 2,0,2, 2,0,0, 1,0,1, 1,0,0, 0,0,4, 0,0,3, 0,0,2, 0,0,1, 0,0,0/
-    INTEGER a3d_p404_m404_mixed_small_xz(12) /4,0,4, 4,0,-4, -4,0,4, -4,0,-4/
     INTEGER a3d_p404_m404_mixed_xz(48) /4,0,4, 4,0,-4, 3,0,3, 3,0,-3, 2,0,2, 2,0,-2, 1,0,1, 1,0,-1, -1,0,1, -1,0,-1, -2,0,2, -2,0,-2, -3,0,3, -3,0,-3, -4,0,4, -4,0,-4/
 
     INTEGER a3d_p505_m505_mixed_xz(60) /5,0,5, 5,0,-5, 4,0,4, 4,0,-4, 3,0,3, 3,0,-3, 2,0,2, 2,0,-2, 1,0,1, 1,0,-1, -1,0,1, -1,0,-1, -2,0,2, -2,0,-2, -3,0,3, -3,0,-3, -4,0,4, -4,0,-4, -5,0,5, -5,0,-5/    
@@ -206,7 +202,6 @@ SUBROUTINE ops_data_init()
     INTEGER a3d_p030_m014_mixed_yz(75) /0,3,0, 0,3,-1, 0,3,-2, 0,3,-3, 0,3,-4, 0,2,0, 0,2,-1, 0,2,-2, 0,2,-3, 0,2,-4, 0,1,0, 0,1,-1, 0,1,-2, 0,1,-3, 0,1,-4, 0,0,0, 0,0,-1, 0,0,-2, 0,0,-3, 0,0,-4, 0,-1,0, 0,-1,-1, 0,-1,-2, 0,-1,-3, 0,-1,-4/
     INTEGER a3d_p032_m012_mixed_yz(60) /0,3,2, 0,3,1, 0,3,-1, 0,3,-2, 0,2,2, 0,2,1, 0,2,-1, 0,2,-2, 0,1,2, 0,1,1, 0,1,-1, 0,1,-2, 0,0,2, 0,0,1, 0,0,-1, 0,0,-2, 0,-1,2, 0,-1,1, 0,-1,-1, 0,-1,-2/
     INTEGER a3d_p033_m011_mixed_yz(39) /0,3,3, 0,3,0, 0,2,2, 0,2,0, 0,1,1, 0,1,0, 0,0,3, 0,0,2, 0,0,1, 0,0,0, 0,0,-1, 0,-1,0, 0,-1,-1/
-    INTEGER a3d_p033_m033_mixed_small_yz(12) /0,3,3, 0,3,-3, 0,-3,3, 0,-3,-3/
     INTEGER a3d_p033_m033_mixed_yz(36) /0,3,3, 0,3,-3, 0,2,2, 0,2,-2, 0,1,1, 0,1,-1, 0,-1,1, 0,-1,-1, 0,-2,2, 0,-2,-2, 0,-3,3, 0,-3,-3/
     INTEGER a3d_p034_m010_mixed_yz(75) /0,3,4, 0,3,3, 0,3,2, 0,3,1, 0,3,0, 0,2,4, 0,2,3, 0,2,2, 0,2,1, 0,2,0, 0,1,4, 0,1,3, 0,1,2, 0,1,1, 0,1,0, 0,0,4, 0,0,3, 0,0,2, 0,0,1, 0,0,0, 0,-1,4, 0,-1,3, 0,-1,2, 0,-1,1, 0,-1,0/
     
@@ -215,7 +210,6 @@ SUBROUTINE ops_data_init()
     INTEGER a3d_p042_m002_mixed_yz(60) /0,4,2, 0,4,1, 0,4,-1, 0,4,-2, 0,3,2, 0,3,1, 0,3,-1, 0,3,-2, 0,2,2, 0,2,1, 0,2,-1, 0,2,-2, 0,1,2, 0,1,1, 0,1,-1, 0,1,-2, 0,0,2, 0,0,1, 0,0,-1, 0,0,-2/
     INTEGER a3d_p043_m001_mixed_yz(75) /0,4,3, 0,4,2, 0,4,1, 0,4,0, 0,4,-1, 0,3,3, 0,3,2, 0,3,1, 0,3,0, 0,3,-1, 0,2,3, 0,2,2, 0,2,1, 0,2,0, 0,2,-1, 0,1,3, 0,1,2, 0,1,1, 0,1,0, 0,1,-1, 0,0,3, 0,0,2, 0,0,1, 0,0,0, 0,0,-1/
     INTEGER a3d_p044_p000_mixed_yz(39) /0,4,4, 0,4,0, 0,3,3, 0,3,0, 0,2,2, 0,2,0, 0,1,1, 0,1,0, 0,0,4, 0,0,3, 0,0,2, 0,0,1, 0,0,0/
-    INTEGER a3d_p044_m044_mixed_small_yz(12) /0,4,4, 0,4,-4, 0,-4,4, 0,-4,-4/
     INTEGER a3d_p044_m044_mixed_yz(48) /0,4,4, 0,4,-4, 0,3,3, 0,3,-3, 0,2,2, 0,2,-2, 0,1,1, 0,1,-1, 0,-1,1, 0,-1,-1, 0,-2,2, 0,-2,-2, 0,-3,3, 0,-3,-3, 0,-4,4, 0,-4,-4/
 
     INTEGER a3d_p055_m055_mixed_yz(60) /0,5,5, 0,5,-5, 0,4,4, 0,4,-4, 0,3,3, 0,3,-3, 0,2,2, 0,2,-2, 0,1,1, 0,1,-1, 0,-1,1, 0,-1,-1, 0,-2,2, 0,-2,-2, 0,-3,3, 0,-3,-3, 0,-4,4, 0,-4,-4, 0,-5,5, 0,-5,-5/
@@ -341,27 +335,6 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_ratezr, "real(8)", "RATEZR")
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_strhzl, "real(8)", "STRHZL")
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_strhzr, "real(8)", "STRHZR")
-
-    d_size = (/1,1,nzglbl/)
-    d_m = (/0,0,0/)
-    d_p = (/0,0,0/)
-    call ops_decl_dat(senga_grid, 9, d_size, d_base, d_m, d_p, temp_real_null, d_fstoraxy, "real(8)", "FSTORA_XY")
-    call ops_decl_dat(senga_grid, 9, d_size, d_base, d_m, d_p, temp_real_null, d_fstorbxy, "real(8)", "FSTORB_XY")
-    call ops_decl_dat(senga_grid, 4, d_size, d_base, d_m, d_p, temp_real_null, d_fstorcxy, "real(8)", "FSTORC_XY")
-
-    d_size = (/1,nyglbl,1/)
-    d_m = (/0,0,0/)
-    d_p = (/0,0,0/)
-    call ops_decl_dat(senga_grid, 9, d_size, d_base, d_m, d_p, temp_real_null, d_fstoraxz, "real(8)", "FSTORA_XZ")
-    call ops_decl_dat(senga_grid, 9, d_size, d_base, d_m, d_p, temp_real_null, d_fstorbxz, "real(8)", "FSTORB_XZ")
-    call ops_decl_dat(senga_grid, 4, d_size, d_base, d_m, d_p, temp_real_null, d_fstorcxz, "real(8)", "FSTORC_XZ")
-
-    d_size = (/nxglbl,1,1/)
-    d_m = (/0,0,0/)
-    d_p = (/0,0,0/)
-    call ops_decl_dat(senga_grid, 9, d_size, d_base, d_m, d_p, temp_real_null, d_fstorayz, "real(8)", "FSTORA_YZ")
-    call ops_decl_dat(senga_grid, 9, d_size, d_base, d_m, d_p, temp_real_null, d_fstorbyz, "real(8)", "FSTORB_YZ")
-    call ops_decl_dat(senga_grid, 4, d_size, d_base, d_m, d_p, temp_real_null, d_fstorcyz, "real(8)", "FSTORC_YZ")
 
 !---------------------------------------WITH HALOS-----------------------------------------------------------
 
@@ -703,7 +676,6 @@ SUBROUTINE ops_data_init()
     call ops_decl_stencil( 3, 25, a3d_p300_m140_mixed_xy, s3d_p300_m140_mixed_xy, "3,0,0 to -1,-4,0")
     call ops_decl_stencil( 3, 20, a3d_p320_m120_mixed_xy, s3d_p320_m120_mixed_xy, "3,2,0 to -1,-2,0")
     call ops_decl_stencil( 3, 13, a3d_p330_m110_mixed_xy, s3d_p330_m110_mixed_xy, "3,3,0 to -1,-1,0")
-    call ops_decl_stencil( 3, 4, a3d_p330_m330_mixed_small_xy, s3d_p330_m330_mixed_small_xy, "3,3,0 to -3,-3,0")
     call ops_decl_stencil( 3, 12, a3d_p330_m330_mixed_xy, s3d_p330_m330_mixed_xy, "3,3,0 to -3,-3,0")
     call ops_decl_stencil( 3, 25, a3d_p340_m100_mixed_xy, s3d_p340_m100_mixed_xy, "3,4,0 to -1,0,0")
 
@@ -712,7 +684,6 @@ SUBROUTINE ops_data_init()
     call ops_decl_stencil( 3, 20, a3d_p420_m020_mixed_xy, s3d_p420_m020_mixed_xy, "4,2,0 to 0,-2,0")
     call ops_decl_stencil( 3, 25, a3d_p430_m010_mixed_xy, s3d_p430_m010_mixed_xy, "4,3,0 to 0,-1,0")
     call ops_decl_stencil( 3, 13, a3d_p440_p000_mixed_xy, s3d_p440_p000_mixed_xy, "4,4,0 to 0,0,0")
-    call ops_decl_stencil( 3, 4, a3d_p440_m440_mixed_small_xy, s3d_p440_m440_mixed_small_xy, "4,4,0 to -4,-4,0")
     call ops_decl_stencil( 3, 16, a3d_p440_m440_mixed_xy, s3d_p440_m440_mixed_xy, "4,4,0 to -4,-4,0")
 
     call ops_decl_stencil( 3, 20, a3d_p550_m550_mixed_xy, s3d_p550_m550_mixed_xy, "5,5,0 to -5,-5,0")
@@ -741,7 +712,6 @@ SUBROUTINE ops_data_init()
     call ops_decl_stencil( 3, 25, a3d_p300_m104_mixed_xz, s3d_p300_m104_mixed_xz, "3,0,0 to -1,0,-4")
     call ops_decl_stencil( 3, 20, a3d_p302_m102_mixed_xz, s3d_p302_m102_mixed_xz, "3,0,2 to -1,0,-2")
     call ops_decl_stencil( 3, 13, a3d_p303_m101_mixed_xz, s3d_p303_m101_mixed_xz, "3,0,3 to -1,0,-1")
-    call ops_decl_stencil( 3, 4, a3d_p303_m303_mixed_small_xz, s3d_p303_m303_mixed_small_xz, "3,0,3 to -3,0,-3")
     call ops_decl_stencil( 3, 12, a3d_p303_m303_mixed_xz, s3d_p303_m303_mixed_xz, "3,0,3 to -3,0,-3")
     call ops_decl_stencil( 3, 25, a3d_p304_m100_mixed_xz, s3d_p304_m100_mixed_xz, "3,0,4 to -1,0,0")
 
@@ -750,7 +720,6 @@ SUBROUTINE ops_data_init()
     call ops_decl_stencil( 3, 20, a3d_p402_m002_mixed_xz, s3d_p402_m002_mixed_xz, "4,0,2 to 0,0,-2")
     call ops_decl_stencil( 3, 25, a3d_p403_m001_mixed_xz, s3d_p403_m001_mixed_xz, "4,0,3 to 0,0,-1")
     call ops_decl_stencil( 3, 13, a3d_p404_p000_mixed_xz, s3d_p404_p000_mixed_xz, "4,0,4 to 0,0,0")
-    call ops_decl_stencil( 3, 4, a3d_p404_m404_mixed_small_xz, s3d_p404_m404_mixed_small_xz, "4,0,4 to -4,0,-4")
     call ops_decl_stencil( 3, 16, a3d_p404_m404_mixed_xz, s3d_p404_m404_mixed_xz, "4,0,4 to -4,0,-4")
 
     call ops_decl_stencil( 3, 20, a3d_p505_m505_mixed_xz, s3d_p505_m505_mixed_xz, "5,0,5 to -5,0,-5")
@@ -779,7 +748,6 @@ SUBROUTINE ops_data_init()
     call ops_decl_stencil( 3, 25, a3d_p030_m014_mixed_yz, s3d_p030_m014_mixed_yz, "0,3,0 to 0,-1,-4")
     call ops_decl_stencil( 3, 20, a3d_p032_m012_mixed_yz, s3d_p032_m012_mixed_yz, "0,3,2 to 0,-1,-2")
     call ops_decl_stencil( 3, 13, a3d_p033_m011_mixed_yz, s3d_p033_m011_mixed_yz, "0,3,3 to 0,-1,-1")
-    call ops_decl_stencil( 3, 4, a3d_p033_m033_mixed_small_yz, s3d_p033_m033_mixed_small_yz, "0,3,3 to 0,-3,-3")
     call ops_decl_stencil( 3, 12, a3d_p033_m033_mixed_yz, s3d_p033_m033_mixed_yz, "0,3,3 to 0,-3,-3")
     call ops_decl_stencil( 3, 25, a3d_p034_m010_mixed_yz, s3d_p034_m010_mixed_yz, "0,3,4 to 0,-1,0")
 
@@ -788,7 +756,6 @@ SUBROUTINE ops_data_init()
     call ops_decl_stencil( 3, 20, a3d_p042_m002_mixed_yz, s3d_p042_m002_mixed_yz, "0,4,2 to 0,0,-2")
     call ops_decl_stencil( 3, 25, a3d_p043_m001_mixed_yz, s3d_p043_m001_mixed_yz, "0,4,3 to 0,0,-1")
     call ops_decl_stencil( 3, 13, a3d_p044_p000_mixed_yz, s3d_p044_p000_mixed_yz, "0,4,4 to 0,0,0")
-    call ops_decl_stencil( 3, 4, a3d_p044_m044_mixed_small_yz, s3d_p044_m044_mixed_small_yz, "0,4,4 to 0,-4,-4")
     call ops_decl_stencil( 3, 16, a3d_p044_m044_mixed_yz, s3d_p044_m044_mixed_yz, "0,4,4 to 0,-4,-4")
 
     call ops_decl_stencil( 3, 20, a3d_p055_m055_mixed_yz, s3d_p055_m055_mixed_yz, "0,5,5 to 0,-5,-5")
@@ -1570,51 +1537,6 @@ SUBROUTINE ops_data_init()
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
         call ops_par_loop(set_zero_kernel_MD_zdir, "set_zero_multidim", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_strhzr, 2, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-    END DO
-
-    rangexyz = (/1,1,1,1,1,nzglbl/)
-    DO ispec = 1,9
-        call ops_par_loop(set_zero_kernel_MD_xy_dim9, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_fstoraxy, 9, s3d_000_strid3d_z, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-        call ops_par_loop(set_zero_kernel_MD_xy_dim9, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_fstorbxy, 9, s3d_000_strid3d_z, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-    END DO
-    DO ispec = 1,4
-        call ops_par_loop(set_zero_kernel_MD_xy_dim4, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_fstorcxy, 4, s3d_000_strid3d_z, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-    END DO
-
-    rangexyz = (/1,1,1,nyglbl,1,1/)
-    DO ispec = 1,9
-        call ops_par_loop(set_zero_kernel_MD_xz_dim9, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_fstoraxz, 9, s3d_000_strid3d_y, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-        call ops_par_loop(set_zero_kernel_MD_xz_dim9, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_fstorbxz, 9, s3d_000_strid3d_y, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-    END DO
-    DO ispec = 1,4
-        call ops_par_loop(set_zero_kernel_MD_xz_dim4, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_fstorcxz, 4, s3d_000_strid3d_y, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-    END DO
-
-    rangexyz = (/1,nxglbl,1,1,1,1/)
-    DO ispec = 1,9
-        call ops_par_loop(set_zero_kernel_MD_yz_dim9, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_fstorayz, 9, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-        call ops_par_loop(set_zero_kernel_MD_yz_dim9, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_fstorbyz, 9, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-    END DO
-    DO ispec = 1,4
-        call ops_par_loop(set_zero_kernel_MD_yz_dim4, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_fstorcyz, 4, s3d_000_strid3d_x, "real(8)", OPS_WRITE), &
                           ops_arg_gbl(ispec, 1, "integer", OPS_READ))
     END DO
 

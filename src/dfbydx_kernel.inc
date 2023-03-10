@@ -1,4 +1,4 @@
-SUBROUTINE dfbydx_kernel_main(functn, fderiv, nxglbl, idx)
+SUBROUTINE dfbydx_kernel_main(functn, fderiv, nxglbl, nendxl, nendxr, nbound, idx)
     use data_types
     implicit none
 
@@ -6,13 +6,18 @@ SUBROUTINE dfbydx_kernel_main(functn, fderiv, nxglbl, idx)
     real(kind=8), dimension(1) :: fderiv
     real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd, fdiffe
 
-    integer, intent(in) :: nxglbl
+    integer, intent(in) :: nxglbl, nendxl, nendxr, nbound
     integer, dimension(3), intent(in) :: idx
-    integer :: ic
+    integer :: ic, istart, ifinis
+
+    istart = 1
+    ifinis = nxglbl
+    IF(nendxl == nbound) istart = 6
+    IF(nendxr == nbound) ifinis = nxglbl-5
 
     ic = idx(1)
 
-    IF (ic >= 6 .and. ic <= nxglbl-5) THEN
+    IF (ic >= istart .and. ic <= ifinis) THEN
 !       interior scheme
         fdiffa = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(-1,0,0))
         fdiffb = functn(OPS_ACC1(2,0,0)) - functn(OPS_ACC1(-2,0,0))
@@ -25,6 +30,7 @@ SUBROUTINE dfbydx_kernel_main(functn, fderiv, nxglbl, idx)
                                 + ecoffx*fdiffe
 
     ELSE IF (ic == 1) THEN
+    print *, "dfbydx......"
 !       lh point: 4th order one-sided
         fdiffa = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(0,0,0))
         fdiffb = functn(OPS_ACC1(2,0,0)) - functn(OPS_ACC1(0,0,0))
@@ -71,6 +77,7 @@ SUBROUTINE dfbydx_kernel_main(functn, fderiv, nxglbl, idx)
                                 + ccof5x*fdiffc + dcof5x*fdiffd
 
     ELSE IF (ic == nxglbl-4) THEN
+    print *, "dfbydx......"
 !       rh point minus 4: 8th order centered
         fdiffa = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(-1,0,0))
         fdiffb = functn(OPS_ACC1(2,0,0)) - functn(OPS_ACC1(-2,0,0))

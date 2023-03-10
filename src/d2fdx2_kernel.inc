@@ -1,4 +1,4 @@
-SUBROUTINE d2fdx2_kernel_main(functn, fderiv, nxglbl, idx)
+SUBROUTINE d2fdx2_kernel_main(functn, fderiv, nxglbl, nendxl, nendxr, nbound, idx)
     use data_types
     implicit none
 
@@ -7,13 +7,18 @@ SUBROUTINE d2fdx2_kernel_main(functn, fderiv, nxglbl, idx)
     real(kind=8) :: fdifap,fdifbp,fdifcp,fdifdp,fdifep
     real(kind=8) :: fdifam,fdifbm,fdifcm,fdifdm,fdifem
 
-    integer, intent(in) :: nxglbl
+    integer, intent(in) :: nxglbl, nendxl, nendxr, nbound
     integer, dimension(3), intent(in) :: idx
-    integer :: ic
+    integer :: ic, istart, ifinis
+
+    istart = 1
+    ifinis = nxglbl
+    IF(nendxl == nbound) istart = 6
+    IF(nendxr == nbound) ifinis = nxglbl-5
 
     ic = idx(1)
 
-    IF (ic >= 6 .and. ic <= nxglbl-5) THEN
+    IF (ic >= istart .and. ic <= ifinis) THEN
 !       interior scheme
         fdifap = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(0,0,0))
         fdifam = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(-1,0,0))

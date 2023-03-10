@@ -38,7 +38,6 @@ SUBROUTINE lincom
 
 !   LOCAL DATA
 !   ==========
-    real(kind=8) :: fornow
     integer :: ispec
     integer :: rangexyz(6)
 

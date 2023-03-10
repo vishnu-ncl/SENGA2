@@ -46,10 +46,8 @@ SUBROUTINE rhscal
 
 !   LOCAL DATA
 !   ==========
-    real(kind=8) :: ctrans(nspcmx)
-    real(kind=8) :: fornow,combo1,combo2,combo3
     integer :: ispec
-    integer :: itint,icp,iindex,ipower,icoef1,icoef2
+    integer :: iindex,ipower,icoef1,icoef2
     logical :: flmtds
     integer :: rangexyz(6)
 

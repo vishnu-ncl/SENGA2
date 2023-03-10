@@ -89,10 +89,6 @@ MODULE com_ops_senga
 
     TYPE(ops_dat) :: d_crin
 
-    TYPE(ops_dat) :: d_fstoraxy, d_fstorbxy, d_fstorcxy
-    TYPE(ops_dat) :: d_fstoraxz, d_fstorbxz, d_fstorcxz
-    TYPE(ops_dat) :: d_fstorayz, d_fstorbyz, d_fstorcyz
-
 !------------------------------------------------------------------------------------------------------------
 !   OPS reduction handles
     TYPE(ops_reduction) :: h_erdtot, h_erutot, h_ervtot, h_erwtot, h_eretot, h_erytot

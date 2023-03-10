@@ -8,7 +8,7 @@ SUBROUTINE d2fdy2_kernel_null(fderiv)
 
 END SUBROUTINE d2fdy2_kernel_null
 
-SUBROUTINE d2fdy2_kernel_main(functn, fderiv, nyglbl, idx)
+SUBROUTINE d2fdy2_kernel_main(functn, fderiv, nyglbl, nendyl, nendyr, nbound, idx)
     use data_types
     implicit none
 
@@ -17,13 +17,18 @@ SUBROUTINE d2fdy2_kernel_main(functn, fderiv, nyglbl, idx)
     real(kind=8) :: fdifap,fdifbp,fdifcp,fdifdp,fdifep
     real(kind=8) :: fdifam,fdifbm,fdifcm,fdifdm,fdifem
 
-    integer, intent(in) :: nyglbl
+    integer, intent(in) :: nyglbl, nendyl, nendyr, nbound
     integer, dimension(3), intent(in) :: idx
-    integer :: jc
+    integer :: jc, jstart, jfinis
+
+    jstart = 1
+    jfinis = nyglbl
+    IF(nendyl == nbound) jstart = 6
+    IF(nendyr == nbound) jfinis = nyglbl-5
 
     jc = idx(2)
 
-    IF (jc >= 6 .and. jc <= nyglbl-5) THEN
+    IF (jc >= jstart .and. jc <= jfinis) THEN
 !       interior scheme
         fdifap = functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,0,0))
         fdifam = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,-1,0))

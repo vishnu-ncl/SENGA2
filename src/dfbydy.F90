@@ -58,6 +58,9 @@ use OPS_Fortran_Reference
                         ops_arg_dat(functn, 1, s3d_p050_to_m050_y, "real(8)", OPS_READ),  &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
                         ops_arg_gbl(nyglbl, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(nendyl, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(nendyr, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(nbound, 1, "integer", OPS_READ), &
                         ops_arg_idx())
 
     END IF

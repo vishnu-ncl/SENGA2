@@ -1,4 +1,4 @@
-SUBROUTINE d2fdxz(functn,fderiv,fstora,fstorb,fstorc)
+SUBROUTINE d2fdxz(functn,fderiv)
 
 use OPS_Fortran_Reference
 
@@ -34,22 +34,18 @@ use OPS_Fortran_Reference
 !   ARGUMENTS
 !   =========
     TYPE(ops_dat) :: functn, fderiv
-    TYPE(ops_dat) :: fstora, fstorb, fstorc
 
 !   LOCAL DATA
 !   ==========
     integer :: rangexyz(6)
-    integer :: nxglblm4, nzglblm4
+    integer :: istart,ifinis,kstart,kfinis
 
 !   BEGIN
 !   =====
 
-    nxglblm4 = nxglbl-4
-    nzglblm4 = nzglbl-4
-
 !   =========================================================================
 
-    IF (nyglbl == 1) THEN
+    IF (nxglbl==1 || nzglbl==1) THEN
         rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
         call ops_par_loop(d2fdxz_kernel_null, "d2fdxz_null", senga_grid, 3, rangexyz, &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
@@ -57,10 +53,22 @@ use OPS_Fortran_Reference
     ELSE
 !       =========================================================================
 
+!       END CONDITIONS
+!       ==============
+
+        istart = 1
+        ifinis = nxglbl
+        kstart = 1
+        kfinis = nzglbl
+        IF(nendxl == nbound) istart = 6
+        IF(nendxr == nbound) ifinis = nxglbl-5
+        IF(nendzl == nbound) kstart = 6
+        IF(nendzr == nbound) kfinis = nzglbl-5
+
 !       INTERIOR SCHEME
 !       ===============
 !       TENTH ORDER EXPLICIT DIFFERENCES
-        rangexyz = (/6,nxglbl-5,1,nyglbl,6,nzglbl-5/)
+        rangexyz = (/istart,ifinis,1,nyglbl,kstart,kfinis/)
         call ops_par_loop(d2fdxz_kernel_interior, "d2fdxz_interior", senga_grid, 3, rangexyz, &
                         ops_arg_dat(functn, 1, s3d_p505_m505_mixed_xz, "real(8)", OPS_READ), &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
@@ -68,96 +76,106 @@ use OPS_Fortran_Reference
 !       =========================================================================
 
 !       LH END X-DIRECTION
-!       ==================    
+!       ==================
+        IF(nendxl == nbound) THEN
 !           TAKE SECOND XZ-DERIVATIVE IN X-LEFT INNER HALO
 !           EXPLICIT 4TH,4TH,4TH,6TH,8TH COMPATIBLE ORDER BOUNDARY TREATMENT
-            rangexyz = (/1,1,1,nyglbl,6,nzglbl-5/)
+            rangexyz = (/1,1,1,nyglbl,kstart,kfinis/)
             call ops_par_loop(d2fdxz_kernel_lh_xdir_4th_onesided, "d2fdxz_lh_xdir_4th_onesided", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p402_m002_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz = (/2,2,1,nyglbl,6,nzglbl-5/)
+            rangexyz = (/2,2,1,nyglbl,kstart,kfinis/)
             call ops_par_loop(d2fdxz_kernel_lh_xdir_4th_mixed, "d2fdxz_lh_xdir_4th_mixed", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p302_m102_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz = (/3,3,1,nyglbl,6,nzglbl-5/)
+            rangexyz = (/3,3,1,nyglbl,kstart,kfinis/)
             call ops_par_loop(d2fdxz_kernel_lh_xdir_4th_centered, "d2fdxz_lh_xdir_4th_centered", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p202_m202_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz = (/4,4,1,nyglbl,6,nzglbl-5/)
+            rangexyz = (/4,4,1,nyglbl,kstart,kfinis/)
             call ops_par_loop(d2fdxz_kernel_lh_xdir_6th_centered, "d2fdxz_lh_xdir_6th_centered", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p303_m303_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz = (/5,5,1,nyglbl,6,nzglbl-5/)
+            rangexyz = (/5,5,1,nyglbl,kstart,kfinis/)
             call ops_par_loop(d2fdxz_kernel_lh_xdir_8th_centered, "d2fdxz_lh_xdir_8th_centered", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p404_m404_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
+
+        END IF
 
 !       =========================================================================
 
 !       RH END X-DIRECTION
 !       ==================
+        IF(nendxr == nbound) THEN
 !           TAKE SECOND XZ-DERIVATIVE IN X-RIGHT INNER HALO
 !           EXPLICIT 4TH,4TH,4TH,6TH,8TH COMPATIBLE ORDER BOUNDARY TREATMENT
-            rangexyz = (/nxglbl-4,nxglbl-4,1,nyglbl,6,nzglbl-5/) 
+            rangexyz = (/nxglbl-4,nxglbl-4,1,nyglbl,kstart,kfinis/)
             call ops_par_loop(d2fdxz_kernel_rh_xdir_8th_centered, "d2fdxz_rh_xdir_8th_centered", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p404_m404_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz = (/nxglbl-3,nxglbl-3,1,nyglbl,6,nzglbl-5/)
+            rangexyz = (/nxglbl-3,nxglbl-3,1,nyglbl,kstart,kfinis/)
             call ops_par_loop(d2fdxz_kernel_rh_xdir_6th_centered, "d2fdxz_rh_xdir_6th_centered", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p303_m303_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz = (/nxglbl-2,nxglbl-2,1,nyglbl,6,nzglbl-5/)
+            rangexyz = (/nxglbl-2,nxglbl-2,1,nyglbl,kstart,kfinis/)
             call ops_par_loop(d2fdxz_kernel_rh_xdir_4th_centered, "d2fdxz_rh_xdir_4th_centered", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p202_m202_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz = (/nxglbl-1,nxglbl-1,1,nyglbl,6,nzglbl-5/)
+            rangexyz = (/nxglbl-1,nxglbl-1,1,nyglbl,kstart,kfinis/)
             call ops_par_loop(d2fdxz_kernel_rh_xdir_4th_mixed, "d2fdxz_rh_xdir_4th_mixed", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p102_m302_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz = (/nxglbl,nxglbl,1,nyglbl,6,nzglbl-5/)
+            rangexyz = (/nxglbl,nxglbl,1,nyglbl,kstart,kfinis/)
             call ops_par_loop(d2fdxz_kernel_rh_xdir_4th_onesided, "d2fdxz_rh_xdir_4th_onesided", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p002_m402_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))            
 
+        END IF
+
 !       =========================================================================
 
 !       LH END Z-DIRECTION
-!       ==================        
+!       ==================
+        IF(nendxl == nbound) THEN
 !           TAKE SECOND XZ-DERIVATIVE IN Z-LEFT INNER HALO
 !           EXPLICIT 4TH,4TH,4TH,6TH,8TH COMPATIBLE ORDER BOUNDARY TREATMENT
-            rangexyz = (/6,nxglbl-5,1,nyglbl,1,1/)
+            rangexyz = (/istart,ifinis,1,nyglbl,1,1/)
             call ops_par_loop(d2fdxz_kernel_lh_zdir_4th_onesided, "d2fdxz_lh_zdir_4th_onesided", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p204_m200_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz = (/6,nxglbl-5,1,nyglbl,2,2/)
+            rangexyz = (/istart,ifinis,1,nyglbl,2,2/)
             call ops_par_loop(d2fdxz_kernel_lh_zdir_4th_mixed, "d2fdxz_lh_zdir_4th_mixed", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p203_m201_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz = (/6,nxglbl-5,1,nyglbl,3,3/)
+            rangexyz = (/istart,ifinis,1,nyglbl,3,3/)
             call ops_par_loop(d2fdxz_kernel_lh_zdir_4th_centered, "d2fdxz_lh_zdir_4th_centered", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p202_m202_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz = (/6,nxglbl-5,1,nyglbl,4,4/)
+            rangexyz = (/istart,ifinis,1,nyglbl,4,4/)
             call ops_par_loop(d2fdxz_kernel_lh_zdir_6th_centered, "d2fdxz_lh_zdir_6th_centered", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p303_m303_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz = (/6,nxglbl-5,1,nyglbl,5,5/)
+            rangexyz = (/istart,ifinis,1,nyglbl,5,5/)
             call ops_par_loop(d2fdxz_kernel_lh_zdir_8th_centered, "d2fdxz_lh_zdir_8th_centered", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p404_m404_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
+!           LH IN X LH IN Z CORNER
+!           ======================
+            IF(nendxl == nbound) THEN
             rangexyz = (/1,1,1,nyglbl,1,1/)
             call ops_par_loop(d2fdxz_kernel_lh_zdir_corner_eqA, "d2fdxz_lh_zdir_corner_eqA", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p404_p000_mixed_xz, "real(8)", OPS_READ), &
@@ -200,32 +218,15 @@ use OPS_Fortran_Reference
 
             rangexyz = (/3,5,1,nyglbl,3,5/)
             call ops_par_loop(d2fdxz_kernel_lh_zdir_corner_eqI, "d2fdxz_lh_zdir_corner_eqI", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(functn, 1, s3d_p202_m202_mixed_xz, "real(8)", OPS_READ), &
+                            ops_arg_dat(functn, 1, s3d_p404_m404_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(fstora, 9, s3d_000_strid3d_y, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_y, "real(8)", OPS_WRITE), &
                             ops_arg_idx())
 
-            rangexyz = (/4,5,1,nyglbl,4,5/)
-            call ops_par_loop(d2fdxz_kernel_lh_zdir_corner_eqJ, "d2fdxz_lh_zdir_corner_eqJ", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(functn, 1, s3d_p303_m303_mixed_small_xz, "real(8)", OPS_READ), &
-                            ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(fstora, 9, s3d_000_strid3d_y, "real(8)", OPS_READ), &
-                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_y, "real(8)", OPS_READ), &
-                            ops_arg_dat(fstorc, 4, s3d_000_strid3d_y, "real(8)", OPS_WRITE), &
-                            ops_arg_idx())
-
-            rangexyz = (/5,5,1,nyglbl,5,5/)
-            call ops_par_loop(d2fdxz_kernel_lh_zdir_corner_eqK, "d2fdxz_lh_zdir_corner_eqK", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(functn, 1, s3d_p404_m404_mixed_small_xz, "real(8)", OPS_READ), &
-                            ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(fstora, 9, s3d_000_strid3d_y, "real(8)", OPS_READ), &
-                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_y, "real(8)", OPS_READ), &
-                            ops_arg_dat(fstorc, 4, s3d_000_strid3d_y, "real(8)", OPS_READ), &
-                            ops_arg_idx())
+            END IF
 
 !           RH IN X LH IN Z CORNER
 !           ======================
+            IF(nendxr == nbound)THEN
             rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,1/)
             call ops_par_loop(d2fdxz_kernel_lh_zdir_corner_eqL, "d2fdxz_lh_zdir_corner_eqL", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p004_m400_mixed_xz, "real(8)", OPS_READ), &
@@ -268,66 +269,50 @@ use OPS_Fortran_Reference
 
             rangexyz = (/nxglbl-4,nxglbl-2,1,nyglbl,3,5/)
             call ops_par_loop(d2fdxz_kernel_lh_zdir_corner_eqT, "d2fdxz_lh_zdir_corner_eqT", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(functn, 1, s3d_p202_m202_mixed_xz, "real(8)", OPS_READ), &
+                            ops_arg_dat(functn, 1, s3d_p404_m404_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(fstora, 9, s3d_000_strid3d_y, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_y, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(nxglblm4, 1, "integer", OPS_READ), &
                             ops_arg_idx())
 
-            rangexyz = (/nxglbl-4,nxglbl-3,1,nyglbl,4,5/)
-            call ops_par_loop(d2fdxz_kernel_lh_zdir_corner_eqU, "d2fdxz_lh_zdir_corner_eqU", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(functn, 1, s3d_p303_m303_mixed_small_xz, "real(8)", OPS_READ), &
-                            ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(fstora, 9, s3d_000_strid3d_y, "real(8)", OPS_READ), &
-                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_y, "real(8)", OPS_READ), &
-                            ops_arg_dat(fstorc, 4, s3d_000_strid3d_y, "real(8)", OPS_WRITE), &
-                            ops_arg_gbl(nxglblm4, 1, "integer", OPS_READ), &
-                            ops_arg_idx())
+            END IF
 
-            rangexyz = (/nxglbl-4,nxglbl-4,1,nyglbl,5,5/)
-            call ops_par_loop(d2fdxz_kernel_lh_zdir_corner_eqV, "d2fdxz_lh_zdir_corner_eqV", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(functn, 1, s3d_p404_m404_mixed_small_xz, "real(8)", OPS_READ), &
-                            ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(fstora, 9, s3d_000_strid3d_y, "real(8)", OPS_READ), &
-                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_y, "real(8)", OPS_READ), &
-                            ops_arg_dat(fstorc, 4, s3d_000_strid3d_y, "real(8)", OPS_READ), &
-                            ops_arg_gbl(nxglblm4, 1, "integer", OPS_READ), &
-                            ops_arg_idx())
+        END IF
 
 !       =========================================================================
 
 !       RH END Z-DIRECTION
 !       ==================
+        IF(nendzr == nbound) THEN
 !           TAKE SECOND XZ-DERIVATIVE IN Z-RIGHT INNER HALO
 !           EXPLICIT 2ND,2ND,4TH,6TH,8TH COMPATIBLE ORDER BOUNDARY TREATMENT
-            rangexyz = (/6,nxglbl-5,1,nyglbl,nzglbl-4,nzglbl-4/)
+            rangexyz = (/istart,ifinis,1,nyglbl,nzglbl-4,nzglbl-4/)
             call ops_par_loop(d2fdxz_kernel_rh_zdir_8th_centered, "d2fdxz_rh_zdir_8th_centered", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p404_m404_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz = (/6,nxglbl-5,1,nyglbl,nzglbl-3,nzglbl-3/)
+            rangexyz = (/istart,ifinis,1,nyglbl,nzglbl-3,nzglbl-3/)
             call ops_par_loop(d2fdxz_kernel_rh_zdir_6th_centered, "d2fdxz_rh_zdir_6th_centered", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p303_m303_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz = (/6,nxglbl-5,1,nyglbl,nzglbl-2,nzglbl-2/)
+            rangexyz = (/istart,ifinis,1,nyglbl,nzglbl-2,nzglbl-2/)
             call ops_par_loop(d2fdxz_kernel_rh_zdir_4th_centered, "d2fdxz_rh_zdir_4th_centered", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p202_m202_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz = (/6,nxglbl-5,1,nyglbl,nzglbl-1,nzglbl-1/)
+            rangexyz = (/istart,ifinis,1,nyglbl,nzglbl-1,nzglbl-1/)
             call ops_par_loop(d2fdxz_kernel_rh_zdir_4th_mixed, "d2fdxz_rh_zdir_4th_mixed", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p201_m203_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
-            rangexyz = (/6,nxglbl-5,1,nyglbl,nzglbl,nzglbl/)
+            rangexyz = (/istart,ifinis,1,nyglbl,nzglbl,nzglbl/)
             call ops_par_loop(d2fdxz_kernel_rh_zdir_4th_onesided, "d2fdxz_rh_zdir_4th_onesided", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p200_m204_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
 
 !           LH IN X RH IN Z CORNER
 !           ======================
+            IF(nendxl == nbound) THEN
             rangexyz = (/1,1,1,nyglbl,nzglbl,nzglbl/)
             call ops_par_loop(d2fdxz_kernel_rh_zdir_corner_eqA, "d2fdxz_rh_zdir_corner_eqA", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p400_p004_mixed_xz, "real(8)", OPS_READ), &
@@ -370,35 +355,16 @@ use OPS_Fortran_Reference
 
             rangexyz = (/3,5,1,nyglbl,nzglbl-4,nzglbl-2/)
             call ops_par_loop(d2fdxz_kernel_rh_zdir_corner_eqI, "d2fdxz_rh_zdir_corner_eqI", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(functn, 1, s3d_p202_m202_mixed_xz, "real(8)", OPS_READ), &
+                            ops_arg_dat(functn, 1, s3d_p404_m404_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(fstora, 9, s3d_000_strid3d_y, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_y, "real(8)", OPS_WRITE), &
-                            ops_arg_gbl(nzglblm4, 1, "integer", OPS_READ), &
+                            ops_arg_gbl(nzglbl, 1, "integer", OPS_READ), &
                             ops_arg_idx())
 
-            rangexyz = (/4,5,1,nyglbl,nzglbl-4,nzglbl-3/)
-            call ops_par_loop(d2fdxz_kernel_rh_zdir_corner_eqJ, "d2fdxz_rh_zdir_corner_eqJ", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(functn, 1, s3d_p303_m303_mixed_small_xz, "real(8)", OPS_READ), &
-                            ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(fstora, 9, s3d_000_strid3d_y, "real(8)", OPS_READ), &
-                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_y, "real(8)", OPS_READ), &
-                            ops_arg_dat(fstorc, 4, s3d_000_strid3d_y, "real(8)", OPS_WRITE), &
-                            ops_arg_gbl(nzglblm4, 1, "integer", OPS_READ), &
-                            ops_arg_idx())
-
-            rangexyz = (/5,5,1,nyglbl,nzglbl-4,nzglbl-4/)
-            call ops_par_loop(d2fdxz_kernel_rh_zdir_corner_eqK, "d2fdxz_rh_zdir_corner_eqK", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(functn, 1, s3d_p404_m404_mixed_small_xz, "real(8)", OPS_READ), &
-                            ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(fstora, 9, s3d_000_strid3d_y, "real(8)", OPS_READ), &
-                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_y, "real(8)", OPS_READ), &
-                            ops_arg_dat(fstorc, 4, s3d_000_strid3d_y, "real(8)", OPS_READ), &
-                            ops_arg_gbl(nzglblm4, 1, "integer", OPS_READ), &
-                            ops_arg_idx())
+            END IF
 
 !           RH IN X RH IN Z CORNER
 !           ======================
+            IF(nendxr == nbound) THEN
             rangexyz = (/nxglbl,nxglbl,1,nyglbl,nzglbl,nzglbl/)
             call ops_par_loop(d2fdxz_kernel_rh_zdir_corner_eqL, "d2fdxz_rh_zdir_corner_eqL", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p000_m404_mixed_xz, "real(8)", OPS_READ), &
@@ -441,35 +407,15 @@ use OPS_Fortran_Reference
 
             rangexyz = (/nxglbl-4,nxglbl-2,1,nyglbl,nzglbl-4,nzglbl-2/)
             call ops_par_loop(d2fdxz_kernel_rh_zdir_corner_eqT, "d2fdxz_rh_zdir_corner_eqT", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(functn, 1, s3d_p202_m202_mixed_xz, "real(8)", OPS_READ), &
+                            ops_arg_dat(functn, 1, s3d_p404_m404_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(fstora, 9, s3d_000_strid3d_y, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_y, "real(8)", OPS_WRITE), &
-                            ops_arg_gbl(nxglblm4, 1, "integer", OPS_READ), &
-                            ops_arg_gbl(nzglblm4, 1, "integer", OPS_READ), &
+                            ops_arg_gbl(nxglbl, 1, "integer", OPS_READ), &
+                            ops_arg_gbl(nzglbl, 1, "integer", OPS_READ), &
                             ops_arg_idx())
 
-            rangexyz = (/nxglbl-4,nxglbl-3,1,nyglbl,nzglbl-4,nzglbl-3/)
-            call ops_par_loop(d2fdxz_kernel_rh_zdir_corner_eqU, "d2fdxz_rh_zdir_corner_eqU", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(functn, 1, s3d_p303_m303_mixed_small_xz, "real(8)", OPS_READ), &
-                            ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(fstora, 9, s3d_000_strid3d_y, "real(8)", OPS_READ), &
-                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_y, "real(8)", OPS_READ), &
-                            ops_arg_dat(fstorc, 4, s3d_000_strid3d_y, "real(8)", OPS_WRITE), &
-                            ops_arg_gbl(nxglblm4, 1, "integer", OPS_READ), &
-                            ops_arg_gbl(nzglblm4, 1, "integer", OPS_READ), &
-                            ops_arg_idx())
+            END IF
 
-            rangexyz = (/nxglbl-4,nxglbl-4,1,nyglbl,nzglbl-4,nzglbl-4/)
-            call ops_par_loop(d2fdxz_kernel_rh_zdir_corner_eqV, "d2fdxz_rh_zdir_corner_eqV", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(functn, 1, s3d_p303_m303_mixed_small_xz, "real(8)", OPS_READ), &
-                            ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(fstora, 9, s3d_000_strid3d_y, "real(8)", OPS_READ), &
-                            ops_arg_dat(fstorb, 9, s3d_000_strid3d_y, "real(8)", OPS_READ), &
-                            ops_arg_dat(fstorc, 4, s3d_000_strid3d_y, "real(8)", OPS_WRITE), &
-                            ops_arg_gbl(nxglblm4, 1, "integer", OPS_READ), &
-                            ops_arg_gbl(nzglblm4, 1, "integer", OPS_READ), &
-                            ops_arg_idx())
+        END IF
 
 !       =========================================================================
 

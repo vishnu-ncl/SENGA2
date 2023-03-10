@@ -46,7 +46,7 @@ use OPS_Fortran_Reference
 
 !   =========================================================================
 
-    IF (nyglbl == 1) THEN
+    IF (nzglbl == 1) THEN
         rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
         call ops_par_loop(d2fdz2_kernel_null, "d2fdz2_null", senga_grid, 3, rangexyz, &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
@@ -62,6 +62,9 @@ use OPS_Fortran_Reference
                         ops_arg_dat(functn, 1, s3d_p005_to_m005_z, "real(8)", OPS_READ),  &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
                         ops_arg_gbl(nzglbl, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(nendzl, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(nendzr, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(nbound, 1, "integer", OPS_READ), &
                         ops_arg_idx())
 
     END IF

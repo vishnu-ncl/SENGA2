@@ -1,65 +1,99 @@
 SUBROUTINE bcinit
  
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-26  Time: 15:24:34
+!   *************************************************************************
 
-!     *************************************************************************
+!   BCINIT
+!   ======
 
-!     BCINIT
-!     ======
+!   AUTHOR
+!   ------
+!   R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
 
-!     AUTHOR
-!     ------
-!     R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
+!   CHANGE RECORD
+!   -------------
+!   26-MAR-2003:  CREATED
+!   26-OCT-2008:  RSC/TDD BUG FIX BCTIXL
+!   23-JAN-2015:  RSC BUG FIX WALL MASS FLUX BC
+!   19-MAY-2015:  RSC UPDATE WALL DIFFUSIVE BC
 
-!     CHANGE RECORD
-!     -------------
-!     26-MAR-2003:  CREATED
-!     26-OCT-2008:  RSC/TDD BUG FIX BCTIXL
-!     23-JAN-2015:  RSC BUG FIX WALL MASS FLUX BC
-!     19-MAY-2015:  RSC UPDATE WALL DIFFUSIVE BC
+!   DESCRIPTION
+!   -----------
+!   DNS CODE SENGA2
+!   CARRIES OUT INITIALISATION OF BOUNDARY CONDITIONS
 
-!     DESCRIPTION
-!     -----------
-!     DNS CODE SENGA2
-!     CARRIES OUT INITIALISATION OF BOUNDARY CONDITIONS
+!   *************************************************************************
 
-!     *************************************************************************
+!   GLOBAL DATA
+!   ===========
+!   -------------------------------------------------------------------------
+    use data_types
+    use com_senga
+!   -------------------------------------------------------------------------
 
+!   BEGIN
+!   =====
+    IF ((nxproc*nyproc*nzproc) /= nproc) THEN
+        print *, "Error... nxproc X nyproc X nzproc must be equal to total number of processes"
+        print *, "Please correct the input parameters..."
+        STOP
+    END IF
 
-!     GLOBAL DATA
-!     ===========
-!     -------------------------------------------------------------------------
-use data_types
-use com_senga
-!     -------------------------------------------------------------------------
+!   =========================================================================
 
+!   APPLY GLOBAL BOUNDARY CONDITIONS TO LOCAL PROCESSOR
+!   ===================================================
 
-!     BEGIN
-!     =====
+!   X-LEFT
+    nsbcxl = ngbcxl
+    nendxl = nbound
+    IF(nsbcxl == nsperi)THEN
+        nendxl = nobc
+        IF(nxproc == 1) nendxl = nperi
+    END IF
 
-!     =========================================================================
+!   X-RIGHT
+    nsbcxr = ngbcxr
+    nendxr = nbound
+    IF(nsbcxr == nsperi)THEN
+        nendxr = nobc
+        IF(nxproc == 1) nendxr = nperi
+    END IF
 
-!     APPLY GLOBAL BOUNDARY CONDITIONS TO LOCAL PROCESSOR
-!     ===================================================
+!   Y-LEFT
+    nsbcyl = ngbcyl
+    nendyl = nbound
+    IF(nsbcyl == nsperi)THEN
+        nendyl = nobc
+        IF(nyproc == 1) nendyl = nperi
+    END IF
 
-!     X-LEFT
-  nsbcxl = ngbcxl
+!   Y-RIGHT
+    nsbcyr = ngbcyr
+    nendyr = nbound
+    IF(nsbcyr == nsperi)THEN
+        nendyr = nobc
+        IF(nyproc == 1) nendyr = nperi
+    END IF
 
-!     X-RIGHT
-  nsbcxr = ngbcxr
+!   Z-LEFT
+    nsbczl = ngbczl
+    nendzl = nbound
+    IF(nsbczl == nsperi)THEN
+        nendzl = nobc
+        IF(nzproc == 1) nendzl = nperi
+    END IF
 
-!     Y-LEFT
-  nsbcyl = ngbcyl
+!   Z-RIGHT
+    nsbczr = ngbczr
+    nendzr = nbound
+    IF(nsbczr == nsperi)THEN
+        nendzr = nobc
+        IF(nzproc == 1) nendzr = nperi
+    END IF
 
-!     Y-RIGHT
-  nsbcyr = ngbcyr
-
-!     Z-LEFT
-  nsbczl = ngbczl
-
-!     Z-RIGHT
-  nsbczr = ngbczr
+    print *, "nendxl:",nendxl, " nendxr:",nendxr
+    print *, "nendyl:",nendyl, " nendyr:",nendyr
+    print *, "nendzl:",nendzl, " nendzr:",nendzr
 
 !     =========================================================================
 

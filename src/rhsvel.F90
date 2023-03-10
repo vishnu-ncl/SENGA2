@@ -42,12 +42,8 @@ SUBROUTINE rhsvel
 
 !   LOCAL DATA
 !   ==========
-    real(kind=8) :: fornow,prefer
+    real(kind=8) :: prefer
     integer :: rangexyz(6)
-    CHARACTER (LEN=60) :: fname
-    CHARACTER (LEN=4) :: proc
-    CHARACTER (LEN=4) :: pnxres
-    PARAMETER(pnxres = '.res')
 
 !   BEGIN
 !   =====
@@ -942,10 +938,10 @@ SUBROUTINE rhsvel
                     ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ))
 
 !   D2UDXY
-    call d2fdxy(d_utmp,d_store1,d_fstoraxy,d_fstorbxy,d_fstorcxy)
+    call d2fdxy(d_utmp,d_store1)
 
 !   D2VDXY
-    call d2fdxy(d_vtmp,d_store2,d_fstoraxy,d_fstorbxy,d_fstorcxy)
+    call d2fdxy(d_vtmp,d_store2)
 
 !                                                             STORE1 = D2UDXY
 !                                                             STORE2 = D2VDXY
@@ -1211,10 +1207,10 @@ SUBROUTINE rhsvel
                     ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ))
 
 !   D2UDXZ
-    call d2fdxz(d_utmp,d_store1,d_fstoraxz,d_fstorbxz,d_fstorcxz)
+    call d2fdxz(d_utmp,d_store1)
 
 !   D2WDXZ
-    call d2fdxz(d_wtmp,d_store2,d_fstoraxz,d_fstorbxz,d_fstorcxz)
+    call d2fdxz(d_wtmp,d_store2)
 
 !                                                             STORE1 = D2UDXZ
 !                                                             STORE2 = D2WDXZ
@@ -1484,10 +1480,10 @@ SUBROUTINE rhsvel
                     ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ))
 
 !   D2VDYZ
-    call d2fdyz(d_vtmp,d_store1,d_fstorayz,d_fstorbyz,d_fstorcyz)
+    call d2fdyz(d_vtmp,d_store1)
 
 !   D2WDYZ
-    call d2fdyz(d_wtmp,d_store2,d_fstorayz,d_fstorbyz,d_fstorcyz)
+    call d2fdyz(d_wtmp,d_store2)
 
 !                                                             STORE1 = D2VDYZ
 !                                                             STORE2 = D2WDYZ

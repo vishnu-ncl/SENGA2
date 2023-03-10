@@ -45,13 +45,13 @@ SUBROUTINE dfinit
 
 !   SPATIAL STEP SIZES
 !   ==================
-    deltax = xgdlen/DBLE(nxglbl-1)
+    deltax = xgdlen/((nxglbl-1)*one)
     ovdelx = one/deltax
     ovdlx2 = ovdelx*ovdelx
-    deltay = ygdlen/DBLE(nyglbl-1)
+    deltay = ygdlen/((nyglbl-1)*one)
     ovdely = one/deltay
     ovdly2 = ovdely*ovdely
-    deltaz = zgdlen/DBLE(nzglbl-1)
+    deltaz = zgdlen/((nzglbl-1)*one)
     ovdelz = one/deltaz
     ovdlz2 = ovdelz*ovdelz
 

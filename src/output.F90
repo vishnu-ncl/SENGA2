@@ -86,36 +86,36 @@ SUBROUTINE output
 
 !   REPORT OUTPUT
 !   =============
-    IF(MOD(itime,ntrept) == 0) THEN
+!ops    IF(MOD(itime,ntrept) == 0) THEN
   
 !       REPORT ON PROCESSOR NO.1 ONLY
 !       ------
-        IF(iproc == 0) THEN
+!ops        IF(iproc == 0) THEN
     
-            OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
+!ops            OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
     
 !           GO TO EOF
-            1000      CONTINUE
-            READ(ncrept,9000,END=1010)
-            GO TO 1000
-            1010      BACKSPACE(ncrept)
+!ops            1000      CONTINUE
+!ops            READ(ncrept,9000,END=1010)
+!ops            GO TO 1000
+!ops            1010      BACKSPACE(ncrept)
     
-            WRITE(ncrept,9100)itime
-            WRITE(ncrept,9110)etime,tstep
-            CLOSE(ncrept)
+!ops            WRITE(ncrept,9100)itime
+!ops            WRITE(ncrept,9110)etime,tstep
+!ops            CLOSE(ncrept)
     
-        END IF
+!ops        END IF
   
 !       =======================================================================
   
 !       DIAGNOSTICS
-        jc = MAX(nyglbl/2,1)
-        kc = MAX(nzglbl/2,1)
+!ops        jc = MAX(nyglbl/2,1)
+!ops        kc = MAX(nzglbl/2,1)
   
-        WRITE(pnproc,'(I6.6)')iproc
+!ops        WRITE(pnproc,'(I6.6)')iproc
   
 !       GLOBAL INDEXING
-        deltag = xgdlen/(REAL(nxglbl-1))
+!ops        deltag = xgdlen/(REAL(nxglbl-1))
   
 !        STRQTY = 'output/pres'
 !        FNDIAG = STRQTY//PNPROC//PNXRES
@@ -235,18 +235,18 @@ SUBROUTINE output
 !C        WRITE(NCDIAG,*)
 !C        CLOSE(NCDIAG)
   
-    END IF
+!ops    END IF
 
 !   =========================================================================
 !   UMOD START
 !   DATA OUTPUT FOR POST-PROCESSING
 !   ======
-    IF(MOD(itime,ntdump) == 0) THEN
-        iddump=itime/ntdump
-        WRITE(ipdump,'(I5.5)') iddump
-        WRITE(proc,'(I4.4)') iproc
+!ops    IF(MOD(itime,ntdump) == 0) THEN
+!ops        iddump=itime/ntdump
+!ops        WRITE(ipdump,'(I5.5)') iddump
+!ops        WRITE(proc,'(I4.4)') iproc
 
-        fname = 'output/out'//ipdump//proc//pnxres
+!ops        fname = 'output/out'//ipdump//proc//pnxres
 
 
 !ops        DO kc = 1,nzsize
@@ -265,20 +265,20 @@ SUBROUTINE output
 !ops        WRITE(16)drun,urun/drun,vrun/drun,wrun/drun,erun/drun,ttemp,  &
 !ops                 ptemp,ytemp,rrte,etime
 !ops        CLOSE(16)
-    END IF
+!ops    END IF
 
 !   UMOD END
 !   =====
 !   FULL DUMP OUTPUT
 !   ================
-    IF(MOD(itime,ntdump) == 0) THEN
+!ops    IF(MOD(itime,ntdump) == 0) THEN
   
 !       CARRY OUT A FULL DUMP
 !       ---------------------
 !       USE THE DUMP FILE INDICATED BY IDFLAG
 !       RSC 11-JUL-2009 ADD A DUMP FORMAT SWITCH
-#ifndef HDF5
-        IF(ndofmt == 0) THEN
+!ops#ifndef HDF5
+!ops        IF(ndofmt == 0) THEN
     
 !           UNFORMATTED DUMP OUTPUT
 !ops            OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag+1),STATUS='OLD', FORM='UNFORMATTED')
@@ -287,7 +287,7 @@ SUBROUTINE output
 !ops                         etime,tstep,errold,errldr
 !ops            CLOSE(ncdmpo)
     
-        ELSE
+!ops        ELSE
     
 !           FORMATTED DUMP OUTPUT
 !ops            OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag+1),STATUS='OLD', FORM='FORMATTED')
@@ -305,41 +305,41 @@ SUBROUTINE output
 !ops            WRITE(ncdmpo,*)etime,tstep,errold,errldr
 !ops            CLOSE(ncdmpo)
     
-        END IF
+!ops        END IF
   
-#else
-    CALL write_h5_dumpfile
-#endif
+!ops#else
+!ops    CALL write_h5_dumpfile
+!ops#endif
 
 !       REPORT THE DUMP
 !       RSC 11-JUL-2009
-        IF(iproc == 0) THEN
+!ops        IF(iproc == 0) THEN
   
-            OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
-            3000      CONTINUE
-            READ(ncrept,9000,END=3010)
-            GO TO 3000
-            3010      BACKSPACE(ncrept)
-            WRITE(ncrept,9120)fndmpo(idflag+1)
-            CLOSE(ncrept)
+!ops            OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
+!ops            3000      CONTINUE
+!ops            READ(ncrept,9000,END=3010)
+!ops            GO TO 3000
+!ops            3010      BACKSPACE(ncrept)
+!ops            WRITE(ncrept,9120)fndmpo(idflag+1)
+!ops            CLOSE(ncrept)
 
-        END IF
+!ops        END IF
 
 !       RESET THE DUMP FLAG
-        idflag = MOD(idflag+1,2)
+!ops        idflag = MOD(idflag+1,2)
 
-    END IF
+!ops    END IF
 
 !   =========================================================================
 
 !   DUMP BC INFORMATION AS REQUIRED
 !   ===============================
-    IF(MOD(itime,ntdump) == 0) THEN
+!ops    IF(MOD(itime,ntdump) == 0) THEN
   
-        bcflag = (nsbcxl == nsbci2).OR.(nsbcxl == nsbci3)
-        bcflag = bcflag.AND.(nxlprm(1) == 3)
+!ops        bcflag = (nsbcxl == nsbci2).OR.(nsbcxl == nsbci3)
+!ops        bcflag = bcflag.AND.(nxlprm(1) == 3)
   
-        IF(bcflag) THEN
+!ops        IF(bcflag) THEN
     
 !           DUMP THE INLET TURBULENT VELOCITY FIELD
 !ops            OPEN(UNIT=nctixl,FILE=fntixl,STATUS='OLD', FORM='UNFORMATTED')
@@ -347,9 +347,9 @@ SUBROUTINE output
 !ops            WRITE(nctixl)ufxl,vfxl,wfxl,slocxl,svelxl,bvelxl
 !ops            CLOSE(nctixl)
     
-        END IF
+!ops        END IF
   
-    END IF
+!ops    END IF
 
 !   =========================================================================
 
@@ -359,17 +359,17 @@ SUBROUTINE output
     END IF
 
 !    IF(iproc == 0) THEN
-        rangexyz = (/1,1,1,1,3,3/)
+        rangexyz = (/3,3,11,11,7,7/)
         call ops_par_loop(math_kernel_print_drhs, "print single value", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(itime, 1, "integer", OPS_READ))
 
-        rangexyz = (/2,2,2,2,4,4/)
+        rangexyz = (/4,4,12,12,8,8/)
         call ops_par_loop(math_kernel_print_erhs, "print single value", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(itime, 1, "integer", OPS_READ))
 
-        rangexyz = (/3,3,3,3,5,5/)
+        rangexyz = (/5,5,13,13,9,9/)
         call ops_par_loop(math_kernel_print_urhs, "print single value", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(itime, 1, "integer", OPS_READ))
@@ -382,7 +382,7 @@ SUBROUTINE output
 
 !   STATISTICS MASTER SWITCH
 !   ------------------------
-    IF(ntstat >= 0) THEN
+!ops    IF(ntstat >= 0) THEN
   
 !       =========================================================================
   
@@ -391,46 +391,46 @@ SUBROUTINE output
   
 !       STATISTICS ON ONE PROCESSOR ONLY
 !       ----------
-        IF(iproc == 0) THEN
+!ops        IF(iproc == 0) THEN
     
-            IF(MOD(itime,ntstat) == 0) THEN
+!ops            IF(MOD(itime,ntstat) == 0) THEN
       
-                OPEN(UNIT=ncstat,FILE=fnstat,STATUS='OLD',FORM='FORMATTED')
+!ops                OPEN(UNIT=ncstat,FILE=fnstat,STATUS='OLD',FORM='FORMATTED')
       
 !               GO TO EOF
-                2000        CONTINUE
-                READ(ncstat,9200,END=2010)
-                GO TO 2000
-                2010        BACKSPACE(ncstat)
+!ops                2000        CONTINUE
+!ops                READ(ncstat,9200,END=2010)
+!ops                GO TO 2000
+!ops                2010        BACKSPACE(ncstat)
       
-                WRITE(ncstat,9100)itime
+!ops                WRITE(ncstat,9100)itime
       
-                CLOSE(ncstat)
+!ops                CLOSE(ncstat)
       
-            END IF
+!ops            END IF
     
-        END IF
+!ops        END IF
   
 !       RESET STORAGE INDEX
-        itstat = 0
+!ops        itstat = 0
   
 !       =========================================================================
   
 !   STATISTICS MASTER SWITCH
-    END IF
+!ops    END IF
 
 !   =========================================================================
 
-9000  FORMAT(a)
-9100  FORMAT('Time step number: ',i7)
-9110  FORMAT('Elapsed time: ',1PE12.4,';',2X,'next time step:',1PE12.4)
-9120  FORMAT('Dump completed: ',a)
-9200  FORMAT(i5,/ 5X,6(1PE12.4)/  &
-    5X,6(1PE12.4)/ 5X,6(1PE12.4)/  &
-    5X,4(1PE12.4)/ 5X,3(1PE12.4)/  &
-    5X,3(1PE12.4)/ 5X,3(1PE12.4)/  &
-    5X,3(1PE12.4)/ 5X,3(1PE12.4)/  &
-    5X,2(1PE12.4))
-9300  FORMAT(2(1PE15.7))
+!ops9000  FORMAT(a)
+!ops9100  FORMAT('Time step number: ',i7)
+!ops9110  FORMAT('Elapsed time: ',1PE12.4,';',2X,'next time step:',1PE12.4)
+!ops9120  FORMAT('Dump completed: ',a)
+!ops9200  FORMAT(i5,/ 5X,6(1PE12.4)/  &
+!ops    5X,6(1PE12.4)/ 5X,6(1PE12.4)/  &
+!ops    5X,4(1PE12.4)/ 5X,3(1PE12.4)/  &
+!ops    5X,3(1PE12.4)/ 5X,3(1PE12.4)/  &
+!ops    5X,3(1PE12.4)/ 5X,3(1PE12.4)/  &
+!ops    5X,2(1PE12.4))
+!ops9300  FORMAT(2(1PE15.7))
 
 END SUBROUTINE output

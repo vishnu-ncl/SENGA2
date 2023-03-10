@@ -71,6 +71,30 @@ SUBROUTINE print_dats()
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
     call ops_fetch_dat_hdf5_file(d_prun, trim(fname))
 
+    fname = 'test_dir/store1_timestep'//citime//pnxres
+    call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
+    call ops_fetch_dat_hdf5_file(d_store1, trim(fname))
+
+    fname = 'test_dir/store2_timestep'//citime//pnxres
+    call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
+    call ops_fetch_dat_hdf5_file(d_store2, trim(fname))
+
+    fname = 'test_dir/store3_timestep'//citime//pnxres
+    call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
+    call ops_fetch_dat_hdf5_file(d_store3, trim(fname))
+
+    fname = 'test_dir/store4_timestep'//citime//pnxres
+    call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
+    call ops_fetch_dat_hdf5_file(d_store4, trim(fname))
+
+    fname = 'test_dir/store5_timestep'//citime//pnxres
+    call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
+    call ops_fetch_dat_hdf5_file(d_store5, trim(fname))
+
+    fname = 'test_dir/store6_timestep'//citime//pnxres
+    call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
+    call ops_fetch_dat_hdf5_file(d_store6, trim(fname))
+
     fname = 'test_dir/store7_timestep'//citime//pnxres
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
     call ops_fetch_dat_hdf5_file(d_store7, trim(fname))

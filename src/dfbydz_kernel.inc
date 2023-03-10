@@ -8,7 +8,7 @@ SUBROUTINE dfbydz_kernel_null(fderiv)
 
 END SUBROUTINE dfbydz_kernel_null
 
-SUBROUTINE dfbydz_kernel_main(functn, fderiv, nzglbl, idx)
+SUBROUTINE dfbydz_kernel_main(functn, fderiv, nzglbl, nendzl, nendzr, nbound, idx)
     use data_types
     implicit none
 
@@ -16,13 +16,18 @@ SUBROUTINE dfbydz_kernel_main(functn, fderiv, nzglbl, idx)
     real(kind=8), dimension(1) :: fderiv
     real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd, fdiffe
 
-    integer, intent(in) :: nzglbl
+    integer, intent(in) :: nzglbl, nendzl, nendzr, nbound
     integer, dimension(3), intent(in) :: idx
-    integer :: kc
+    integer :: kc, kstart, kfinis
+
+    kstart = 1
+    kfinis = nzglbl
+    IF(nendzl == nbound) kstart = 6
+    IF(nendzr == nbound) kfinis = nzglbl-5
 
     kc = idx(3)
 
-    IF (kc >= 6 .and. kc <= nzglbl-5) THEN
+    IF (kc >= kstart .and. kc <= kfinis) THEN
 !       interior scheme
         fdiffa = functn(OPS_ACC1(0,0,1)) - functn(OPS_ACC1(0,0,-1))
         fdiffb = functn(OPS_ACC1(0,0,2)) - functn(OPS_ACC1(0,0,-2))

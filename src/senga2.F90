@@ -75,8 +75,10 @@ PROGRAM senga2
 !   ==========
 !   RSC 29-DEC-2006 UPDATED INDEXING
     INTEGER :: jtime,jrkstp
-    character(len=5) :: char_i
-    character(len=21) :: filename
+
+!   profiling
+    real(kind=c_double) :: startTime = 0
+    real(kind=c_double) :: endTime = 0
 
 !   BEGIN
 !   =====
@@ -87,6 +89,8 @@ PROGRAM senga2
 !   ==============
 
     call ops_init(6)
+
+    call ops_timers ( startTime )
     
     call ops_data_init
 
@@ -188,10 +192,6 @@ PROGRAM senga2
 !       PROCESS THE RESULTS
 !       ===================
         call output
-!            IF(itime >= 34 .and. itime <=35) THEN
-!                call print_dats()
-!                IF(itime == 35) STOP
-!            END IF
 
 !       =======================================================================
     END DO
@@ -201,7 +201,11 @@ PROGRAM senga2
 
 !   TERMINATION
 !   ===========
+    call ops_timers ( endTime )
     call ops_timing_output( )
+    IF (ops_is_root() .eq. 1) THEN
+        write (*,'(a,f16.7,a)') 'Max total runtime =', endTime - startTime,' seconds'
+    END IF
 
 !   TERMINATE THE PROGRAM
     call finish
