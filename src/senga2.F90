@@ -110,85 +110,85 @@ PROGRAM senga2
 
 !   RSC 29-DEC-2006 UPDATED INDEXING
     DO jtime = ntime1,ntime2
-  
+
         itime = jtime
-  
+
 !       =======================================================================
-  
+
 !       RUNGE-KUTTA SUBSTEPS
 !       ====================
-  
+
 !       STANDARD SUBSTEPS
 !       -----------------
 !       RSC 29-DEC-2006 UPDATED INDEXING
         DO jrkstp = 1,nrksm1
-    
+
             irkstp = jrkstp
-    
+
 !           APPLY BCS ON PRIMITIVE VARIABLES
             call boundt
-    
+
 !           PARALLEL DATA TRANSFER
             call parfer
-    
+
 !           EVALUATE RHS FOR SCALARS
             call rhscal
 
 !           EVALUATE RHS FOR VELOCITIES
             call rhsvel
-    
+
 !           APPLY BCS ON SOURCE TERMS
             call bounds
-    
+
 !           RUNGE-KUTTA ADVANCEMENT
             call lincom
-    
+
         END DO
-  
+
 !       =======================================================================
-  
+
 !       LAST SUBSTEP IS DIFFERENT
 !       -------------------------
         irkstp = nrkstp
-  
+
 !       APPLY BCS ON PRIMITIVE VARIABLES
         call boundt
-  
+
 !       PARALLEL DATA TRANSFER
         call parfer
-  
+
 !       EVALUATE RHS FOR SCALARS
         call rhscal
-  
+
 !       EVALUATE RHS FOR VELOCITIES
         call rhsvel
-  
+
 !       APPLY BCS ON SOURCE TERMS
         call bounds
-  
+
 !       RUNGE-KUTTA ADVANCEMENT
         call fincom
-  
+
 !       =======================================================================
-  
+
 !       UPDATE THE ELAPSED TIME
 !       =======================
         etime = etime + tstep
-  
+
 !       =======================================================================
-  
+
 !       SYNCHRONISE THE TIME-DEPENDENT BCS
 !       ==================================
         call bountt
-  
+
 !       =======================================================================
-  
+
 !       ADJUST THE TIME STEP
 !       ====================
         call adaptt
-  
+
 !       =======================================================================
-  
+
 !       PROCESS THE RESULTS
 !       ===================
         call output

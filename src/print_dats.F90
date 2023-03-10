@@ -99,4 +99,20 @@ SUBROUTINE print_dats()
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
     call ops_fetch_dat_hdf5_file(d_store7, trim(fname))
 
+    fname = 'test_dir/utmp_timestep'//citime//pnxres
+    call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
+    call ops_fetch_dat_hdf5_file(d_utmp, trim(fname))
+
+    fname = 'test_dir/vtmp_timestep'//citime//pnxres
+    call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
+    call ops_fetch_dat_hdf5_file(d_vtmp, trim(fname))
+
+    fname = 'test_dir/wtmp_timestep'//citime//pnxres
+    call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
+    call ops_fetch_dat_hdf5_file(d_wtmp, trim(fname))
+
+    fname = 'test_dir/transp_timestep'//citime//pnxres
+    call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
+    call ops_fetch_dat_hdf5_file(d_transp, trim(fname))
+
 END SUBROUTINE print_dats

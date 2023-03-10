@@ -46,7 +46,7 @@ use OPS_Fortran_Reference
 
 !   =========================================================================
 
-    IF (nyglbl==1 || nzglbl==1) THEN
+    IF (nyglbl==1 .or. nzglbl==1) THEN
         rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
         call ops_par_loop(d2fdyz_kernel_null, "d2fdyz_null", senga_grid, 3, rangexyz, &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
@@ -57,14 +57,14 @@ use OPS_Fortran_Reference
 !       END CONDITIONS
 !       ==============
 
-    jstart = 1
-    jfinis = nyglbl
-    kstart = 1
-    kfinis = nzglbl
-    IF(nendyl == nbound) jstart = 6
-    IF(nendyr == nbound) jfinis = nyglbl-5
-    IF(nendzl == nbound) kstart = 6
-    IF(nendzr == nbound) kfinis = nzglbl-5
+        jstart = 1
+        jfinis = nyglbl
+        kstart = 1
+        kfinis = nzglbl
+        IF(nendyl == nbound) jstart = 6
+        IF(nendyr == nbound) jfinis = nyglbl-5
+        IF(nendzl == nbound) kstart = 6
+        IF(nendzr == nbound) kfinis = nzglbl-5
 
 !       INTERIOR SCHEME
 !       ===============

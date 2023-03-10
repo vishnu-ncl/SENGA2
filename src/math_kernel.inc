@@ -56,7 +56,7 @@ SUBROUTINE math_kernel_eqE(out_arr, in_arr1, in_arr2, var)
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
     real(kind=8), intent(in) :: var
 
-    out_arr(OPS_ACC1(0,0,0)) = in_arr1(OPS_ACC2(0,0,0)) * in_arr2(OPS_ACC3(0,0,0)) * var
+    out_arr(OPS_ACC1(0,0,0)) = var * in_arr1(OPS_ACC2(0,0,0)) * in_arr2(OPS_ACC3(0,0,0))
 
 END SUBROUTINE math_kernel_eqE
 

@@ -955,7 +955,7 @@ SUBROUTINE rhsvel
 !   TAUXX,Xc
 !   U TAUXX,Xc
     rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-    call ops_par_loop(math_kernel_eqE, "A = B*C*var", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqE, "A = var*B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
@@ -989,7 +989,7 @@ SUBROUTINE rhsvel
 !   V TAUYY,Yc
 
     rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-    call ops_par_loop(math_kernel_eqE, "A = B*C*var", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqE, "A = var*B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1224,7 +1224,7 @@ SUBROUTINE rhsvel
 !   TAUXX,Xd
 !   U TAUXX,Xd
     rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-    call ops_par_loop(math_kernel_eqE, "A = B*C*var", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqE, "A = var*B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1257,7 +1257,7 @@ SUBROUTINE rhsvel
 !   TAUZZ,Zc
 !   W TAUZZ,Zc
     rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-    call ops_par_loop(math_kernel_eqE, "A = B*C*var", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqE, "A = var*B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1499,7 +1499,7 @@ SUBROUTINE rhsvel
 !   V TAUYY,Yd
 
     rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-    call ops_par_loop(math_kernel_eqE, "A = B*C*var", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqE, "A = var*B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1534,7 +1534,7 @@ SUBROUTINE rhsvel
 !   W TAUZZ,Zd
 
     rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-    call ops_par_loop(math_kernel_eqE, "A = B*C*var", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(math_kernel_eqE, "A = var*B*C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1680,7 +1680,6 @@ SUBROUTINE rhsvel
 !   BC IN Z: TAUZZ,Za TERM ZERO ON END POINTS
     IF(fzlvsn) call zerozl(d_store3)
     IF(fzrvsn) call zerozr(d_store3)
-
 
 !   U-EQUATION: VISCOUS STRESS TERMS
 !   E-EQUATION: VISCOUS WORK TERMS
