@@ -91,9 +91,11 @@ SUBROUTINE bcinit
         IF(nzproc == 1) nendzr = nperi
     END IF
 
-    print *, "nendxl:",nendxl, " nendxr:",nendxr
-    print *, "nendyl:",nendyl, " nendyr:",nendyr
-    print *, "nendzl:",nendzl, " nendzr:",nendzr
+    IF (iproc == 0) THEN
+        print *, "nendxl:",nendxl, " nendxr:",nendxr
+        print *, "nendyl:",nendyl, " nendyr:",nendyr
+        print *, "nendzl:",nendzl, " nendzr:",nendzr
+    END IF
 
 !     =========================================================================
 
