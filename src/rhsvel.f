@@ -60,6 +60,12 @@ C     U,V,W ARE PARALLEL
         ENDDO
       ENDDO
 
+C    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+
+
+      CALL DFBYDY(UTMP,STORE1)
+      CALL DFBYDZ(UTMP,STORE2)     
+
 C     =========================================================================
 
 C     COLLECT VELOCITY COMPONENTS FOR BCs
@@ -73,7 +79,10 @@ C     X-DIRECTION
             STRUXL(JC,KC) = UTMP(ISTAL,JC,KC)
             STRVXL(JC,KC) = VTMP(ISTAL,JC,KC)
             STRWXL(JC,KC) = WTMP(ISTAL,JC,KC)
-
+            
+C    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+            T2BXL(JC,KC)=-VTMP(ISTAL,JC,KC)*STORE1(ISTAL,JC,KC)
+     +                       -WTMP(ISTAL,JC,KC)*STORE2(ISTAL,JC,KC)            
           ENDDO
         ENDDO
       ENDIF
@@ -85,9 +94,19 @@ C     X-DIRECTION
             STRVXR(JC,KC) = VTMP(ISTOL,JC,KC)
             STRWXR(JC,KC) = WTMP(ISTOL,JC,KC)
 
+C    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+            T2BXR(JC,KC)=-VTMP(ISTOL,JC,KC)*STORE1(ISTOL,JC,KC)
+     +                       -WTMP(ISTOL,JC,KC)*STORE2(ISTOL,JC,KC)
           ENDDO
         ENDDO
       ENDIF
+
+C    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+
+
+      CALL DFBYDX(VTMP,STORE1)
+      CALL DFBYDZ(VTMP,STORE2)
+
 
 C     Y-DIRECTION
       IF(FYLCNV)THEN
@@ -97,6 +116,10 @@ C     Y-DIRECTION
             STRUYL(IC,KC) = UTMP(IC,JSTAL,KC)
             STRVYL(IC,KC) = VTMP(IC,JSTAL,KC)
             STRWYL(IC,KC) = WTMP(IC,JSTAL,KC)
+
+C    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+            T2BYL(IC,KC)=-UTMP(IC,JSTAL,KC)*STORE1(IC,JSTAL,KC)
+     +                       -WTMP(IC,JSTAL,KC)*STORE2(IC,JSTAL,KC)
 
           ENDDO
         ENDDO
@@ -109,9 +132,15 @@ C     Y-DIRECTION
             STRVYR(IC,KC) = VTMP(IC,JSTOL,KC)
             STRWYR(IC,KC) = WTMP(IC,JSTOL,KC)
 
+C    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+            T2BYR(IC,KC)=-UTMP(IC,JSTOL,KC)*STORE1(IC,JSTOL,KC)
+     +                       -WTMP(IC,JSTOL,KC)*STORE2(IC,JSTOL,KC)
           ENDDO
         ENDDO
       ENDIF
+
+      CALL DFBYDX(WTMP,STORE1)
+      CALL DFBYDY(WTMP,STORE2)
 
 C     Z-DIRECTION
       IF(FZLCNV)THEN
@@ -122,6 +151,9 @@ C     Z-DIRECTION
             STRVZL(IC,JC) = VTMP(IC,JC,KSTAL)
             STRWZL(IC,JC) = WTMP(IC,JC,KSTAL)
 
+C    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+            T2BZL(IC,JC)=-UTMP(IC,JC,KSTAL)*STORE1(IC,JC,KSTAL)
+     +                       -VTMP(IC,JC,KSTAL)*STORE2(IC,JC,KSTAL)
           ENDDO
         ENDDO
       ENDIF
@@ -133,6 +165,170 @@ C     Z-DIRECTION
             STRVZR(IC,JC) = VTMP(IC,JC,KSTOL)
             STRWZR(IC,JC) = WTMP(IC,JC,KSTOL)
 
+C    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+            T2BZR(IC,JC)=-UTMP(IC,JC,KSTOL)*STORE1(IC,JC,KSTOL)
+     +                       -VTMP(IC,JC,KSTOL)*STORE2(IC,JC,KSTOL)
+          ENDDO
+        ENDDO
+      ENDIF
+
+      CALL DFBYDY(VTMP,STORE1)
+      CALL DFBYDZ(VTMP,STORE2)
+
+C     X-DIRECTION
+      IF(FXLCNV)THEN
+        DO KC = KSTAL,KSTOL
+          DO JC = JSTAL,JSTOL
+
+C    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+           T3BXL(JC,KC)=-VTMP(ISTAL,JC,KC)*STORE1(ISTAL,JC,KC)
+     +                  -WTMP(ISTAL,JC,KC)*STORE2(ISTAL,JC,KC)
+
+
+          ENDDO
+        ENDDO
+      ENDIF
+      IF(FXRCNV)THEN
+        DO KC = KSTAL,KSTOL
+          DO JC = JSTAL,JSTOL
+
+C    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+            T3BXR(JC,KC)=-VTMP(ISTOL,JC,KC)*STORE1(ISTOL,JC,KC)
+     +                  -WTMP(ISTOL,JC,KC)*STORE2(ISTOL,JC,KC)
+
+          ENDDO
+        ENDDO
+      ENDIF
+
+      CALL DFBYDX(WTMP,STORE1)
+      CALL DFBYDZ(WTMP,STORE2)
+
+C     Y-DIRECTION
+      IF(FYLCNV)THEN
+        DO KC = KSTAL,KSTOL
+          DO IC = ISTAL,ISTOL
+
+C    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+            T3BYL(IC,KC)=-UTMP(IC,JSTAL,KC)*STORE1(IC,JSTAL,KC)
+     +                       -WTMP(IC,JSTAL,KC)*STORE2(IC,JSTAL,KC)
+
+          ENDDO
+        ENDDO
+      ENDIF
+      IF(FYRCNV)THEN
+        DO KC = KSTAL,KSTOL
+          DO IC = ISTAL,ISTOL
+
+C    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+            T3BYR(IC,KC)=-UTMP(IC,JSTOL,KC)*STORE1(IC,JSTOL,KC)
+     +                       -WTMP(IC,JSTOL,KC)*STORE2(IC,JSTOL,KC)
+          ENDDO
+        ENDDO
+      ENDIF
+
+
+      CALL DFBYDX(UTMP,STORE1)
+      CALL DFBYDY(UTMP,STORE2)
+
+C     Z-DIRECTION
+      IF(FZLCNV)THEN
+        DO JC = JSTAL,JSTOL
+          DO IC = ISTAL,ISTOL
+
+C    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+            T3BZL(IC,JC)=-UTMP(IC,JC,KSTAL)*STORE1(IC,JC,KSTAL)
+     +                       -VTMP(IC,JC,KSTAL)*STORE2(IC,JC,KSTAL)
+          ENDDO
+        ENDDO
+      ENDIF
+      IF(FZRCNV)THEN
+        DO JC = JSTAL,JSTOL
+          DO IC = ISTAL,ISTOL
+
+C    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+            T3BZR(IC,JC)=-UTMP(IC,JC,KSTOL)*STORE1(IC,JC,KSTOL)
+     +                       -VTMP(IC,JC,KSTOL)*STORE2(IC,JC,KSTOL)
+          ENDDO
+        ENDDO
+      ENDIF
+
+
+      CALL DFBYDY(WTMP,STORE1)
+      CALL DFBYDZ(WTMP,STORE2)
+
+C     X-DIRECTION
+      IF(FXLCNV)THEN
+        DO KC = KSTAL,KSTOL
+          DO JC = JSTAL,JSTOL
+
+C    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+           T4BXL(JC,KC)=-VTMP(ISTAL,JC,KC)*STORE1(ISTAL,JC,KC)
+     +                  -WTMP(ISTAL,JC,KC)*STORE2(ISTAL,JC,KC)
+
+
+          ENDDO
+        ENDDO
+      ENDIF
+
+      IF(FXRCNV)THEN
+        DO KC = KSTAL,KSTOL
+          DO JC = JSTAL,JSTOL
+
+C    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+            T4BXR(JC,KC)=-VTMP(ISTOL,JC,KC)*STORE1(ISTOL,JC,KC)
+     +                  -WTMP(ISTOL,JC,KC)*STORE2(ISTOL,JC,KC)
+
+          ENDDO
+        ENDDO
+      ENDIF
+
+      CALL DFBYDX(UTMP,STORE1)
+      CALL DFBYDZ(UTMP,STORE2)
+
+C     Y-DIRECTION
+      IF(FYLCNV)THEN
+        DO KC = KSTAL,KSTOL
+          DO IC = ISTAL,ISTOL
+
+C    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+            T4BYL(IC,KC)=-UTMP(IC,JSTAL,KC)*STORE1(IC,JSTAL,KC)
+     +                       -WTMP(IC,JSTAL,KC)*STORE2(IC,JSTAL,KC)
+
+          ENDDO
+        ENDDO
+      ENDIF
+      IF(FYRCNV)THEN
+        DO KC = KSTAL,KSTOL
+          DO IC = ISTAL,ISTOL
+
+C    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+            T4BYR(IC,KC)=-UTMP(IC,JSTOL,KC)*STORE1(IC,JSTOL,KC)
+     +                       -WTMP(IC,JSTOL,KC)*STORE2(IC,JSTOL,KC)
+          ENDDO
+        ENDDO
+      ENDIF
+
+      CALL DFBYDX(VTMP,STORE1)
+      CALL DFBYDY(VTMP,STORE2)
+
+C     Z-DIRECTION
+      IF(FZLCNV)THEN
+        DO JC = JSTAL,JSTOL
+          DO IC = ISTAL,ISTOL
+
+C    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+            T4BZL(IC,JC)=-UTMP(IC,JC,KSTAL)*STORE1(IC,JC,KSTAL)
+     +                       -VTMP(IC,JC,KSTAL)*STORE2(IC,JC,KSTAL)
+          ENDDO
+        ENDDO
+      ENDIF
+      IF(FZRCNV)THEN
+        DO JC = JSTAL,JSTOL
+          DO IC = ISTAL,ISTOL
+
+C    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+            T4BZR(IC,JC)=-UTMP(IC,JC,KSTOL)*STORE1(IC,JC,KSTOL)
+     +                       -VTMP(IC,JC,KSTOL)*STORE2(IC,JC,KSTOL)
           ENDDO
         ENDDO
       ENDIF
@@ -359,7 +555,7 @@ C     X-DIRECTION: DUDX
         DO KC = KSTAL,KSTOL
           DO JC = JSTAL,JSTOL
 
-            BCL1XL(JC,KC) = STORE1(ISTAL,JC,KC)
+            BCL1XL(JC,KC) = STORE1(ISTAL,JC,KC)            
 
           ENDDO
         ENDDO
@@ -568,6 +764,15 @@ C     X-DIRECTION: P AND DPDX
             STRPXL(JC,KC) = PRUN(ISTAL,JC,KC)
             BCL5XL(JC,KC) = STORE4(ISTAL,JC,KC)
 
+C           BOUNDARY CONDITION DUE TO LODATO's FORMULATION
+            T3BXL(JC,KC) = T3BXL(JC,KC)-
+     +                     STORE5(ISTAL,JC,KC)/DRHS(ISTAL,JC,KC)
+            T4BXL(JC,KC) = T4BXL(JC,KC)-
+     +                     STORE6(ISTAL,JC,KC)/DRHS(ISTAL,JC,KC)
+            T51BXL(JC,KC)=-VTMP(ISTAL,JC,KC)*STORE5(ISTAL,JC,KC)
+     +                        -WTMP(ISTAL,JC,KC)*STORE6(ISTAL,JC,KC)
+            T52BXL(JC,KC)=-PRUN(ISTAL,JC,KC)*(STORE2(ISTAL,JC,KC)+
+     +                                            STORE3(ISTAL,JC,KC))
           ENDDO
         ENDDO
       ENDIF
@@ -577,7 +782,15 @@ C     X-DIRECTION: P AND DPDX
 
             STRPXR(JC,KC) = PRUN(ISTOL,JC,KC)
             BCL5XR(JC,KC) = STORE4(ISTOL,JC,KC)
-
+C           BOUNDARY CONDITION DUE TO LODATO's FORMULATION
+            T3BXR(JC,KC) = T3BXR(JC,KC)-
+     +                     STORE5(ISTOL,JC,KC)/DRHS(ISTOL,JC,KC)
+            T4BXR(JC,KC) = T4BXR(JC,KC)-
+     +                     STORE6(ISTOL,JC,KC)/DRHS(ISTOL,JC,KC)
+            T51BXR(JC,KC)=-VTMP(ISTOL,JC,KC)*STORE5(ISTOL,JC,KC)
+     +                        -WTMP(ISTOL,JC,KC)*STORE6(ISTOL,JC,KC)
+            T52BXR(JC,KC)=-PRUN(ISTOL,JC,KC)*(STORE2(ISTOL,JC,KC)+
+     +                                            STORE3(ISTOL,JC,KC))
           ENDDO
         ENDDO
       ENDIF
@@ -589,7 +802,15 @@ C     Y-DIRECTION: P AND DPDY
 
             STRPYL(IC,KC) = PRUN(IC,JSTAL,KC)
             BCL5YL(IC,KC) = STORE5(IC,JSTAL,KC)
-
+C           BOUNDARY CONDITION DUE TO LODATO's FORMULATION
+            T3BYL(IC,KC) = T3BYL(IC,KC)-
+     +                     STORE6(IC,JSTAL,KC)/DRHS(IC,JSTAL,KC)
+            T4BYL(IC,KC) = T4BYL(IC,KC)-
+     +                     STORE4(IC,JSTAL,KC)/DRHS(IC,JSTAL,KC)
+            T51BYL(IC,KC)=-UTMP(IC,JSTAL,KC)*STORE4(IC,JSTAL,KC)
+     +                        -WTMP(IC,JSTAL,KC)*STORE6(IC,JSTAL,KC)
+            T52BYL(IC,KC)=-PRUN(IC,JSTAL,KC)*(STORE1(IC,JSTAL,KC)+
+     +                                            STORE3(IC,JSTAL,KC))
           ENDDO
         ENDDO
       ENDIF
@@ -599,7 +820,15 @@ C     Y-DIRECTION: P AND DPDY
 
             STRPYR(IC,KC) = PRUN(IC,JSTOL,KC)
             BCL5YR(IC,KC) = STORE5(IC,JSTOL,KC)
-
+C           BOUNDARY CONDITION DUE TO LODATO's FORMULATION
+            T3BYR(IC,KC) = T3BYR(IC,KC)-
+     +                     STORE6(IC,JSTOL,KC)/DRHS(IC,JSTOL,KC)
+            T4BYR(IC,KC) = T4BYR(IC,KC)-
+     +                     STORE4(IC,JSTOL,KC)/DRHS(IC,JSTOL,KC)
+            T51BYR(IC,KC)=-UTMP(IC,JSTOL,KC)*STORE4(IC,JSTOL,KC)
+     +                        -WTMP(IC,JSTOL,KC)*STORE6(IC,JSTOL,KC)
+            T52BYR(IC,KC)=-PRUN(IC,JSTOL,KC)*(STORE1(IC,JSTOL,KC)+
+     +                                            STORE3(IC,JSTOL,KC))
           ENDDO
         ENDDO
       ENDIF
@@ -611,7 +840,15 @@ C     Z-DIRECTION: P AND DPDZ
 
             STRPZL(IC,JC) = PRUN(IC,JC,KSTAL)
             BCL5ZL(IC,JC) = STORE6(IC,JC,KSTAL)
-
+C           BOUNDARY CONDITION DUE TO LODATO's FORMULATION
+            T3BZL(IC,JC) = T3BZL(IC,JC)-
+     +                     STORE4(IC,JC,KSTAL)/DRHS(IC,JC,KSTAL)
+            T4BZL(IC,JC) = T4BZL(IC,JC)-
+     +                     STORE5(IC,JC,KSTAL)/DRHS(IC,JC,KSTAL)
+            T51BZL(IC,JC)=-UTMP(IC,JC,KSTAL)*STORE4(IC,JC,KSTAL)
+     +                        -VTMP(IC,JC,KSTAL)*STORE5(IC,JC,KSTAL)
+            T52BZL(IC,JC)=-PRUN(IC,JC,KSTAL)*(STORE1(IC,JC,KSTAL)+
+     +                                            STORE2(IC,JC,KSTAL))
           ENDDO
         ENDDO
       ENDIF
@@ -621,7 +858,15 @@ C     Z-DIRECTION: P AND DPDZ
 
             STRPZR(IC,JC) = PRUN(IC,JC,KSTOL)
             BCL5ZR(IC,JC) = STORE6(IC,JC,KSTOL)
-
+C           BOUNDARY CONDITION DUE TO LODATO's FORMULATION
+            T3BZR(IC,JC) = T3BZR(IC,JC)-
+     +                     STORE4(IC,JC,KSTOL)/DRHS(IC,JC,KSTOL)
+            T4BZR(IC,JC) = T4BZR(IC,JC)-
+     +                     STORE5(IC,JC,KSTOL)/DRHS(IC,JC,KSTOL)
+            T51BZR(IC,JC)=-UTMP(IC,JC,KSTOL)*STORE4(IC,JC,KSTOL)
+     +                        -VTMP(IC,JC,KSTOL)*STORE5(IC,JC,KSTOL)
+            T52BZR(IC,JC)=-PRUN(IC,JC,KSTOL)*(STORE1(IC,JC,KSTOL)+
+     +                                            STORE2(IC,JC,KSTOL))
           ENDDO
         ENDDO
       ENDIF

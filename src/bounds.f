@@ -23,6 +23,10 @@ C     COMPUTES CHARACTERISTIC BOUNDARY CONDITIONS FOR ALL PDES
 C
 C     *************************************************************************
 
+! VISHNU MOHAN (VM), KHALIL ABO AMSHA (KAA) AND NILANJAN CHAKRABORTY (NC)
+! IMPLEMENTED THE TRANSVERSE DERIVATIVE TERMS FOR BOUNDARY CONDITION AS PER METHOD
+! OF YOO AND IM
+
 
 C     GLOBAL DATA
 C     ===========
@@ -36,7 +40,49 @@ C     ==========
       DOUBLE PRECISION FORNOW
       INTEGER IC,JC,KC
       INTEGER ISPEC
-
+C     THESE ARE INTRODUCED FOR LODATO'S BC EQN. 3.80- NC
+      DOUBLE PRECISION TT1XL(NYSIZE,NZSIZE),
+     +                 TT2XL(NYSIZE,NZSIZE),
+     +                 TT3XL(NYSIZE,NZSIZE),
+     +                 TT4XL(NYSIZE,NZSIZE),
+     +                 TT5XL(NYSIZE,NZSIZE),
+     +                 TT6XL(NYSIZE,NZSIZE,NSPEC)
+      DOUBLE PRECISION TT1XR(NYSIZE,NZSIZE),
+     +                 TT2XR(NYSIZE,NZSIZE),
+     +                 TT3XR(NYSIZE,NZSIZE),
+     +                 TT4XR(NYSIZE,NZSIZE),
+     +                 TT5XR(NYSIZE,NZSIZE),
+     +                 TT6XR(NYSIZE,NZSIZE,NSPEC)
+      !UMAIRS CORRECTION HERE
+      DOUBLE PRECISION TT1YL(NXSIZE,NZSIZE),
+     +                 TT2YL(NXSIZE,NZSIZE),
+     +                 TT3YL(NXSIZE,NZSIZE),
+     +                 TT4YL(NXSIZE,NZSIZE),
+     +                 TT5YL(NXSIZE,NZSIZE),
+     +                 TT6YL(NXSIZE,NZSIZE,NSPEC)
+      DOUBLE PRECISION TT1YR(NXSIZE,NZSIZE),
+     +                 TT2YR(NXSIZE,NZSIZE),
+     +                 TT3YR(NXSIZE,NZSIZE),
+     +                 TT4YR(NXSIZE,NZSIZE),
+     +                 TT5YR(NXSIZE,NZSIZE),
+     +                 TT6YR(NXSIZE,NZSIZE,NSPEC)
+      DOUBLE PRECISION TT1ZL(NXSIZE,NYSIZE),
+     +                 TT2ZL(NXSIZE,NYSIZE),
+     +                 TT3ZL(NXSIZE,NYSIZE),
+     +                 TT4ZL(NXSIZE,NYSIZE),
+     +                 TT5ZL(NXSIZE,NYSIZE),
+     +                 TT6ZL(NXSIZE,NYSIZE,NSPEC)
+      DOUBLE PRECISION TT1ZR(NXSIZE,NYSIZE),
+     +                 TT2ZR(NXSIZE,NYSIZE),
+     +                 TT3ZR(NXSIZE,NYSIZE),
+     +                 TT4ZR(NXSIZE,NYSIZE),
+     +                 TT5ZR(NXSIZE,NYSIZE),
+     +                 TT6ZR(NXSIZE,NYSIZE,NSPEC)
+      DOUBLE PRECISION BET
+      INTEGER FLAG_BET=1 !VM: SWITCH TO SET BET=LOCAL_MACH
+                         !FLAG_BET=0 POINTS TO GLOBAL VALUE OF BET
+                         !FLAG_BET=1 POINTS TO LOCAL VALUE OF BET
+      BET=0.050D0
 
 C     BEGIN
 C     =====
@@ -103,6 +149,8 @@ C       GAMMA-1, 1/(GAMMA-1)
             GAM1XL(JC,KC) = STRRXL(JC,KC)/GAM1XL(JC,KC)
             OVGMXL(JC,KC) = ONE/GAM1XL(JC,KC)
 
+          
+
           ENDDO
         ENDDO
 
@@ -114,6 +162,27 @@ C       --------------
             FORNOW = STRGXL(JC,KC)*GAM1XL(JC,KC)*STRTXL(JC,KC)
             ACOUXL(JC,KC) = SQRT(FORNOW)
             OVA2XL(JC,KC) = ONE/FORNOW
+
+C     THESE ARE INTRODUCED FOR LODATO'S BC- NC
+
+            TT1XL(JC,KC)=T51BXL(JC,KC)+
+     +                   T52BXL(JC,KC)*(GAM1XL(JC,KC)+1.0)-
+     +        STRDXL(JC,KC)* ACOUXL(JC,KC)*T2BXL(JC,KC)         
+
+            TT2XL(JC,KC)=ACOUXL(JC,KC)*ACOUXL(JC,KC)*
+     +      T1BXL(JC,KC)-T51BXL(JC,KC)-(GAM1XL(JC,KC)+1.0)*
+     +      T52BXL(JC,KC)
+
+            TT3XL(JC,KC)=T3BXL(JC,KC)
+            TT4XL(JC,KC)=T4BXL(JC,KC)
+            
+            TT5XL(JC,KC)=T51BXL(JC,KC)+
+     +                   T52BXL(JC,KC)*(GAM1XL(JC,KC)+1.0)+
+     +        STRDXL(JC,KC)* ACOUXL(JC,KC)*T2BXL(JC,KC)   
+
+            DO IS=1,NSPEC
+            TT6XL(JC,KC,IS)=T6BXL(JC,KC,IS)
+            END DO
 
           ENDDO
         ENDDO
@@ -168,9 +237,16 @@ C             OLD VALUE OF L5X
      +        *(BCL5XL(JC,KC)+STRDXL(JC,KC)*ACOUXL(JC,KC)*BCL1XL(JC,KC))
 
 C             SUBTRACT FROM NEW VALUE OF L5X
+C             TERM INTRODUCED FOR LODATO'S BC- NC
+              IF(FLAG_BET==1) THEN
+                BET=STRUXL(JC,KC)*STRUXL(JC,KC)+
+     +              STRVXL(JC,KC)*STRVXL(JC,KC)+
+     +              STRWXL(JC,KC)*STRWXL(JC,KC)
+                BET=SQRT(BET)/ACOUXL(JC,KC)
+              END IF
               BCL5XL(JC,KC)= HALF*SORPXL(JC,KC)
      +                     + COBCXL*ACOUXL(JC,KC)*(STRPXL(JC,KC)-PINFXL)
-     +                     - BCL5XL(JC,KC)
+     + +0.5*(1.0-BET)*TT5XL(JC,KC)- BCL5XL(JC,KC)
 
             ENDDO
           ENDDO
@@ -788,6 +864,28 @@ C       --------------
             ACOUXR(JC,KC) = SQRT(FORNOW)
             OVA2XR(JC,KC) = ONE/FORNOW
 
+C     THESE ARE INTRODUCED FOR LODATO'S BC- NC
+
+            TT1XR(JC,KC)=T51BXR(JC,KC)+
+     +                   T52BXR(JC,KC)*(GAM1XR(JC,KC)+1.0)-
+     +        STRDXR(JC,KC)* ACOUXR(JC,KC)*T2BXR(JC,KC)         
+
+            TT2XR(JC,KC)=ACOUXR(JC,KC)*ACOUXR(JC,KC)*
+     +      T1BXR(JC,KC)-T51BXR(JC,KC)-(GAM1XR(JC,KC)+1.0)*
+     +      T52BXR(JC,KC)
+
+            TT3XR(JC,KC)=T3BXR(JC,KC)
+            TT4XR(JC,KC)=T4BXR(JC,KC)
+            
+            TT5XR(JC,KC)=T51BXR(JC,KC)+
+     +                   T52BXR(JC,KC)*(GAM1XR(JC,KC)+1.0)+
+     +        STRDXR(JC,KC)* ACOUXR(JC,KC)*T2BXR(JC,KC)   
+
+            DO IS=1,NSPEC
+            TT6XR(JC,KC,IS)=T6BXR(JC,KC,IS)
+            END DO
+
+
           ENDDO
         ENDDO
 
@@ -841,9 +939,17 @@ C             OLD VALUE OF L1X
      +        *(BCL5XR(JC,KC)-STRDXR(JC,KC)*ACOUXR(JC,KC)*BCL1XR(JC,KC))
 
 C             SUBTRACT FROM NEW VALUE OF L1X
+C     TERMS INTRODUCED FOR LODATO'S BC- NC
+              IF(FLAG_BET==1) THEN
+                BET=STRUXR(JC,KC)*STRUXR(JC,KC)+
+     +              STRVXR(JC,KC)*STRVXR(JC,KC)+
+     +              STRWXR(JC,KC)*STRWXR(JC,KC)
+                BET=SQRT(BET)/ACOUXR(JC,KC)         
+              END IF
+
               BCL1XR(JC,KC)= HALF*SORPXR(JC,KC)
      +                     + COBCXR*ACOUXR(JC,KC)*(STRPXR(JC,KC)-PINFXR)
-     +                     - BCL1XR(JC,KC)
+     + +0.5*(1.0-BET)*TT1XR(JC,KC)- BCL1XR(JC,KC)
 
             ENDDO
           ENDDO
@@ -1460,6 +1566,28 @@ C       --------------
             ACOUYL(IC,KC) = SQRT(FORNOW)
             OVA2YL(IC,KC) = ONE/FORNOW
 
+C     THESE ARE INTRODUCED FOR LODATO'S BC- NC
+
+            TT1YL(IC,KC)=T51BYL(IC,KC)+
+     +                   T52BYL(IC,KC)*(GAM1YL(IC,KC)+1.0)-
+     +        STRDYL(IC,KC)* ACOUYL(IC,KC)*T2BYL(IC,KC)         
+
+            TT2YL(IC,KC)=ACOUYL(IC,KC)*ACOUYL(IC,KC)*
+     +      T1BYL(IC,KC)-T51BYL(IC,KC)-(GAM1YL(IC,KC)+1.0)*
+     +      T52BYL(IC,KC)
+
+            TT3YL(IC,KC)=T3BYL(IC,KC)
+            TT4YL(IC,KC)=T4BYL(IC,KC)
+            
+            TT5YL(IC,KC)=T51BYL(IC,KC)+
+     +                   T52BYL(IC,KC)*(GAM1YL(IC,KC)+1.0)+
+     +        STRDYL(IC,KC)* ACOUYL(IC,KC)*T2BYL(IC,KC)   
+
+            DO IS=1,NSPEC
+            TT6YL(IC,KC,IS)=T6BYL(IC,KC,IS)
+            END DO
+
+
           ENDDO
         ENDDO
 
@@ -1513,9 +1641,17 @@ C             OLD VALUE OF L5Y
      +        *(BCL5YL(IC,KC)+STRDYL(IC,KC)*ACOUYL(IC,KC)*BCL1YL(IC,KC))
 
 C             SUBTRACT FROM NEW VALUE OF L5Y
+C             TERMS INTRODUCED FOR LODATO'S BC- NC
+              IF(FLAG_BET==1) THEN
+                BET=STRUYL(IC,KC)*STRUYL(IC,KC)+
+     +              STRVYL(IC,KC)*STRVYL(IC,KC)+
+     +              STRWYL(IC,KC)*STRWYL(IC,KC)
+                BET=SQRT(BET)/ACOUYL(IC,KC)
+              END IF
+
               BCL5YL(IC,KC)= HALF*SORPYL(IC,KC)
      +                     + COBCYL*ACOUYL(IC,KC)*(STRPYL(IC,KC)-PINFYL)
-     +                     - BCL5YL(IC,KC)
+     + +0.5*(1.0-BET)*TT5YL(IC,KC)- BCL5YL(IC,KC)
 
             ENDDO
           ENDDO
@@ -2133,6 +2269,27 @@ C       --------------
             ACOUYR(IC,KC) = SQRT(FORNOW)
             OVA2YR(IC,KC) = ONE/FORNOW
 
+C     THESE ARE INTRODUCED FOR LODATO'S BC- NC
+
+            TT1YR(IC,KC)=T51BYR(IC,KC)+
+     +                   T52BYR(IC,KC)*(GAM1YR(IC,KC)+1.0)-
+     +        STRDYR(IC,KC)* ACOUYR(IC,KC)*T2BYR(IC,KC)         
+
+            TT2YR(IC,KC)=ACOUYR(IC,KC)*ACOUYR(IC,KC)*
+     +      T1BYR(IC,KC)-T51BYR(IC,KC)-(GAM1YR(IC,KC)+1.0)*
+     +      T52BYR(IC,KC)
+
+            TT3YR(IC,KC)=T3BYR(IC,KC)
+            TT4YR(IC,KC)=T4BYR(IC,KC)
+            
+            TT5YR(IC,KC)=T51BYR(IC,KC)+
+     +                   T52BYR(IC,KC)*(GAM1YR(IC,KC)+1.0)+
+     +        STRDYR(IC,KC)* ACOUYR(IC,KC)*T2BYR(IC,KC)   
+
+            DO IS=1,NSPEC
+            TT6YR(IC,KC,IS)=T6BYR(IC,KC,IS)
+            END DO
+
           ENDDO
         ENDDO
 
@@ -2186,9 +2343,17 @@ C             OLD VALUE OF L1Y
      +        *(BCL5YR(IC,KC)-STRDYR(IC,KC)*ACOUYR(IC,KC)*BCL1YR(IC,KC))
 
 C             SUBTRACT FROM NEW VALUE OF L1Y
+C     TERMS INTRODUCED FOR LODATO'S BC- NC
+              IF(FLAG_BET==1) THEN
+                BET=STRUYR(IC,KC)*STRUYR(IC,KC)+
+     +              STRVYR(IC,KC)*STRVYR(IC,KC)+
+     +              STRWYR(IC,KC)*STRWYR(IC,KC)
+                BET=SQRT(BET)/ACOUYR(IC,KC)         
+              END IF
+
               BCL1YR(IC,KC)= HALF*SORPYR(IC,KC)
      +                     + COBCYR*ACOUYR(IC,KC)*(STRPYR(IC,KC)-PINFYR)
-     +                     - BCL1YR(IC,KC)
+     ++0.5*(1.0-BET)*TT1YR(IC,KC)- BCL1YR(IC,KC)
 
             ENDDO
           ENDDO
@@ -2805,6 +2970,27 @@ C       --------------
             ACOUZL(IC,JC) = SQRT(FORNOW)
             OVA2ZL(IC,JC) = ONE/FORNOW
 
+C     THESE ARE INTRODUCED FOR LODATO'S BC- NC
+
+            TT1ZL(IC,JC)=T51BZL(IC,JC)+
+     +                   T52BZL(IC,JC)*(GAM1ZL(IC,JC)+1.0)-
+     +        STRDZL(IC,JC)* ACOUZL(IC,JC)*T2BZL(IC,JC)         
+
+            TT2ZL(IC,JC)=ACOUZL(IC,JC)*ACOUZL(IC,JC)*
+     +      T1BZL(IC,JC)-T51BZL(IC,JC)-(GAM1ZL(IC,JC)+1.0)*
+     +      T52BZL(IC,JC)
+
+            TT3ZL(IC,JC)=T3BZL(IC,JC)
+            TT4ZL(IC,JC)=T4BZL(IC,JC)
+            
+            TT5ZL(IC,JC)=T51BZL(IC,JC)+
+     +                   T52BZL(IC,JC)*(GAM1ZL(IC,JC)+1.0)+
+     +        STRDZL(IC,JC)* ACOUZL(IC,JC)*T2BZL(IC,JC)   
+
+            DO IS=1,NSPEC
+            TT6ZL(IC,JC,IS)=T6BZL(IC,JC,IS)
+            END DO
+
           ENDDO
         ENDDO
 
@@ -2858,9 +3044,17 @@ C             OLD VALUE OF L5Z
      +        *(BCL5ZL(IC,JC)+STRDZL(IC,JC)*ACOUZL(IC,JC)*BCL1ZL(IC,JC))
 
 C             SUBTRACT FROM NEW VALUE OF L5Z
+C             TERMS INTRODUCED FOR LODATO'S BC- NC
+              IF(FLAG_BET==1) THEN
+                BET=STRUZL(IC,JC)*STRUZL(IC,JC)+
+     +              STRVZL(IC,JC)*STRVZL(IC,JC)+
+     +              STRWZL(IC,JC)*STRWZL(IC,JC)
+                BET=SQRT(BET)/ACOUZL(IC,JC)
+              END IF
+
               BCL5ZL(IC,JC)= HALF*SORPZL(IC,JC)
      +                     + COBCZL*ACOUZL(IC,JC)*(STRPZL(IC,JC)-PINFZL)
-     +                     - BCL5ZL(IC,JC)
+     ++0.5*(1.0-BET)*TT5ZL(IC,JC)- BCL5ZL(IC,JC)
 
             ENDDO
           ENDDO
@@ -3477,6 +3671,27 @@ C       --------------
             ACOUZR(IC,JC) = SQRT(FORNOW)
             OVA2ZR(IC,JC) = ONE/FORNOW
 
+C     THESE ARE INTRODUCED FOR LODATO'S BC- NC
+
+            TT1ZR(IC,JC)=T51BZR(IC,JC)+
+     +                   T52BZR(IC,JC)*(GAM1ZR(IC,JC)+1.0)-
+     +        STRDZR(IC,JC)* ACOUZR(IC,JC)*T2BZR(IC,JC)         
+
+            TT2ZR(IC,JC)=ACOUZR(IC,JC)*ACOUZR(IC,JC)*
+     +      T1BZR(IC,JC)-T51BZR(IC,JC)-(GAM1ZR(IC,JC)+1.0)*
+     +      T52BZR(IC,JC)
+
+            TT3ZR(IC,JC)=T3BZR(IC,JC)
+            TT4ZR(IC,JC)=T4BZR(IC,JC)
+            
+            TT5ZR(IC,JC)=T51BZR(IC,JC)+
+     +                   T52BZR(IC,JC)*(GAM1ZR(IC,JC)+1.0)+
+     +        STRDZR(IC,JC)* ACOUZR(IC,JC)*T2BZR(IC,JC)   
+
+            DO IS=1,NSPEC
+            TT6ZR(IC,JC,IS)=T6BZR(IC,JC,IS)
+            END DO
+
           ENDDO
         ENDDO
 
@@ -3530,9 +3745,17 @@ C             OLD VALUE OF L1Z
      +        *(BCL5ZR(IC,JC)-STRDZR(IC,JC)*ACOUZR(IC,JC)*BCL1ZR(IC,JC))
 
 C             SUBTRACT FROM NEW VALUE OF L1Z
+C             TERMS INTRODUCED FOR LODATO'S BC- NC
+              IF(FLAG_BET==1) THEN
+                BET=STRUZR(IC,JC)*STRUZR(IC,JC)+
+     +              STRVZR(IC,JC)*STRVZR(IC,JC)+
+     +              STRWZR(IC,JC)*STRWZR(IC,JC)
+                BET=SQRT(BET)/ACOUZR(IC,JC)
+              END IF
+
               BCL1ZR(IC,JC)= HALF*SORPZR(IC,JC)
      +                     + COBCZR*ACOUZR(IC,JC)*(STRPZR(IC,JC)-PINFZR)
-     +                     - BCL1ZR(IC,JC)
+     + +0.5*(1.0-BET)*TT1ZR(IC,JC)- BCL1ZR(IC,JC)
 
             ENDDO
           ENDDO

@@ -19,7 +19,7 @@ C     -----------
 C     DNS CODE SENGA2
 C     SETS INITIAL THERMOCHEMICAL FIELD
 C     1D LAMINAR FLAME PROFILE (LEFT OR RIGHT FACING)
-C     SPECIAL FOR 21 STEP HYDROGEN MECHAMISM
+C     SPECIAL FOR 25_STEP MECHAMISM
 C     
 C     *************************************************************************
 
@@ -59,214 +59,350 @@ C     ==========
       DOUBLE PRECISION DELTAG,XCOORD,ARGMNT
       DOUBLE PRECISION FLXMAS
       INTEGER ICPROC
-      INTEGER IGOFST
       INTEGER IX
       INTEGER IC,JC,KC
       INTEGER ISPEC
+      !Vishnu: addition for vortex
+      DOUBLE PRECISION XC,YC,X0,Y0,CC,RC,RTIN
+      DOUBLE PRECISION PSI(NXBIGL:NXBIGR,NYBIGL:NYBIGR,NZBIGL:NZBIGR)
+      INTEGER IGOFST,JGOFST
+      !Vishnu: end
 
 
-C     BEGIN
-C     =====
+!C     BEGIN
+!C     =====
+!
+!C     =========================================================================
+!
+!C     SPECIFY INITIAL THERMOCHEMICAL FIELD HERE
+!C     =========================================
+!
+!
+!C     SET PRODUCT TEMPERATURE
+!C     -----------------------
+!C     REACTANT TEMPERATURE SET IN CONTROL FILE
+!      TRINR = TRIN
+!C      TRINP = 2330.96554
+!      TRINP = 2200.0
+!
+!
+!C     SET SPECIES MASS FRACTIONS
+!C     --------------------------
+!C     OVERRIDE MASS FRACTION VALUES SET IN CONTROL FILE
+!
+!C     REACTANTS
+!      YRINR(1) = 5.5045872D-2
+!      YRINR(2) = 2.20183486D-1
+!      DO ISPEC = 3,NSPM1
+!        YRINR(ISPEC) = ZERO
+!      ENDDO
+!
+!      YRINR(NSPEC) = ZERO
+!      DO ISPEC = 1,NSPM1
+!        YRINR(NSPEC) = YRINR(NSPEC) + YRINR(ISPEC)
+!      ENDDO
+!      YRINR(NSPEC) = ONE - YRINR(NSPEC)
+!
+!C     PRODUCTS
+!      YRINP(1) = ZERO
+!      YRINP(2) = ZERO
+!      YRINP(3) = 1.51376D-1
+!      YRINP(4) = 1.23853D-1
+!      DO ISPEC = 5,NSPM1
+!        YRINP(ISPEC) = ZERO
+!      ENDDO
+!      YRINP(NSPEC) = ZERO
+!      DO ISPEC = 1,NSPM1
+!        YRINP(NSPEC) = YRINP(NSPEC) + YRINP(ISPEC)
+!      ENDDO
+!      YRINP(NSPEC) = ONE - YRINP(NSPEC)
+!
+!C     WRITE TO REPORT FILE
+!      IF(IPROC.EQ.0)THEN
+!
+!C        OPEN(UNIT=NCREPT,FILE=FNREPT,STATUS='OLD',FORM='FORMATTED')
+!
+!CC       GO TO EOF
+!C1000    CONTINUE
+!C          READ(NCREPT,9000,END=1010)
+!C          GOTO 1000
+!C1010    BACKSPACE(NCREPT)
+!
+!        WRITE(NCREPT,*)
+!        WRITE(NCREPT,*)'FLAMIN: reactant mass fractions:'
+!        DO ISPEC = 1,NSPEC
+!          WRITE(NCREPT,'(I5,1PE15.7)')ISPEC,YRINR(ISPEC)
+!        ENDDO
+!        WRITE(NCREPT,*)
+!
+!        WRITE(NCREPT,*)'FLAMIN: product mass fractions:'
+!        DO ISPEC = 1,NSPEC
+!          WRITE(NCREPT,'(I5,1PE15.7)')ISPEC,YRINP(ISPEC)
+!        ENDDO
+!        WRITE(NCREPT,*)
+!
+!        WRITE(NCREPT,*)'FLAMIN: reactant and product temperatures:'
+!        WRITE(NCREPT,'(2(1PE15.7))')TRINR,TRINP
+!        WRITE(NCREPT,*)
+!
+!C        CLOSE(NCREPT)
+!
+!      ENDIF
+!
+!
+!C     GLOBAL INDEXING
+!C     ---------------
+!      DELTAG = XGDLEN/(REAL(NXGLBL-1))
+!
+!      IGOFST = 0
+!      DO ICPROC = 0, IXPROC-1
+!        IGOFST = IGOFST + NPMAPX(ICPROC)
+!      ENDDO
+!
+!
+!C     SET REACTION PROGRESS VARIABLE PROFILE
+!C     --------------------------------------
+!C     SIMPLE 1D LEFT-FACING ERROR FUNCTION PROFILE
+!      DO IC = ISTAL,ISTOL
+!
+!        IX = IGOFST + IC
+!        XCOORD = REAL(IX-1)*DELTAG
+!        ARGMNT = (XCOORD-CLOCAT)/CTHICK
+!        CRIN(IC) = HALF*(ONE+ERFUNC(ARGMNT))
+!
+!      ENDDO
+!
+!CC     SIMPLE 1D RIGHT-FACING ERROR FUNCTION PROFILE
+!C      DO IC = ISTAL,ISTOL
+!C
+!C        IX = IGOFST + IC
+!C        XCOORD = REAL(IX-1)*DELTAG
+!C        ARGMNT = (XCOORD-CLOCAT)/CTHICK
+!C        CRIN(IC) = HALF*(ONE+ERFUNC(-ARGMNT))
+!C
+!C      ENDDO
+!
+!
+!C     SET SPECIES MASS FRACTION PROFILES
+!C     ----------------------------------
+!      DO ISPEC = 1, NSPM1
+!
+!        DO KC = KSTAL,KSTOL
+!          DO JC = JSTAL,JSTOL
+!            DO IC = ISTAL,ISTOL
+!
+!              YRUN(IC,JC,KC,ISPEC) = YRINR(ISPEC)
+!     +                   + CRIN(IC)*(YRINP(ISPEC) - YRINR(ISPEC))
+!
+!            ENDDO
+!          ENDDO
+!        ENDDO
+!
+!      ENDDO
+!
+!CC     SG 25-STEP MECHANISM
+!CC     ADD A PINCH OF HYDROGEN ATOM
+!CC     AND HYDROGEN MOLECULE
+!C      DO KC = KSTAL,KSTOL
+!C        DO JC = JSTAL,JSTOL
+!C          DO IC = ISTAL,ISTOL
+!C
+!C            IX = IGOFST + IC
+!C            XCOORD = REAL(IX-1)*DELTAG
+!C            ARGMNT = (XCOORD-H2LOCT)/H2THCK
+!C            YRUN(IC,JC,KC,5) = H2PNCH*EXP(-ARGMNT*ARGMNT)
+!C            ARGMNT = (XCOORD-HLOCAT)/HTHICK
+!C            YRUN(IC,JC,KC,8) = HPINCH*EXP(-ARGMNT*ARGMNT)
+!C
+!C          ENDDO
+!C        ENDDO
+!C      ENDDO
+!
+!      DO KC = KSTAL,KSTOL
+!        DO JC = JSTAL,JSTOL
+!          DO IC = ISTAL,ISTOL
+!
+!            YRUN(IC,JC,KC,NSPEC) = ZERO
+!
+!          ENDDO
+!        ENDDO
+!      ENDDO
+!
+!      DO ISPEC = 1, NSPM1
+!        DO KC = KSTAL,KSTOL
+!          DO JC = JSTAL,JSTOL
+!            DO IC = ISTAL,ISTOL
+!
+!              YRUN(IC,JC,KC,NSPEC) = YRUN(IC,JC,KC,NSPEC)
+!     +                             + YRUN(IC,JC,KC,ISPEC)
+!
+!            ENDDO
+!          ENDDO
+!        ENDDO
+!      ENDDO
+!
+!      DO KC = KSTAL,KSTOL
+!        DO JC = JSTAL,JSTOL
+!          DO IC = ISTAL,ISTOL
+!
+!            YRUN(IC,JC,KC,NSPEC) = ONE - YRUN(IC,JC,KC,NSPEC)
+!
+!          ENDDO
+!        ENDDO
+!      ENDDO
+!
+!
+!C     SET TEMPERATURE PROFILE
+!C     -----------------------
+!      DO KC = KSTAL,KSTOL
+!        DO JC = JSTAL,JSTOL
+!          DO IC = ISTAL,ISTOL
+!
+!            TRUN(IC,JC,KC) = TRINR +  CRIN(IC)*(TRINP - TRINR)
+!
+!          ENDDO
+!        ENDDO
+!      ENDDO
+!
+!
+!C     SET DENSITY PROFILE ASSUMING CONSTANT PRESSURE
+!C     -------------------
+!C     PRESSURE SET IN CONTROL FILE
+!
+!      DO KC = KSTAL,KSTOL
+!        DO JC = JSTAL,JSTOL
+!          DO IC = ISTAL,ISTOL
+!
+!            STORE1(IC,JC,KC) = ZERO
+!
+!          ENDDO
+!        ENDDO
+!      ENDDO
+!
+!      DO ISPEC = 1,NSPEC
+!        DO KC = KSTAL,KSTOL
+!          DO JC = JSTAL,JSTOL
+!            DO IC = ISTAL,ISTOL
+!
+!              STORE1(IC,JC,KC) = STORE1(IC,JC,KC)
+!     +                         + RGSPEC(ISPEC)*YRUN(IC,JC,KC,ISPEC)
+!
+!            ENDDO
+!          ENDDO
+!        ENDDO
+!      ENDDO
+!
+!      DO KC = KSTAL,KSTOL
+!        DO JC = JSTAL,JSTOL
+!          DO IC = ISTAL,ISTOL
+!
+!            DRUN(IC,JC,KC) = PRIN/(STORE1(IC,JC,KC)*TRUN(IC,JC,KC))
+!
+!          ENDDO
+!        ENDDO
+!      ENDDO
+!
+!
+!C     SET VELOCITY PROFILE ASSUMING CONSTANT MASS FLUX
+!C     --------------------
+!C     INITIAL (INLET) VEOCITY SET IN CONTROL FILE
+!      FLXMAS = DRIN*URIN
+!      DO KC = KSTAL,KSTOL
+!        DO JC = JSTAL,JSTOL
+!          DO IC = ISTAL,ISTOL
+!
+!            URUN(IC,JC,KC) = FLXMAS/DRUN(IC,JC,KC)
+!
+!          ENDDO
+!        ENDDO
+!      ENDDO
+!
+!C     =========================================================================
 
-C     =========================================================================
 
-C     SPECIFY INITIAL THERMOCHEMICAL FIELD HERE
-C     =========================================
+C     PRE-INITIALISE PRESSURE AND TEMPERATURE TO DEFAULT VALUES
+C     ---------------------------------------
+C     BIGGER SIZE ARRAYS
+      X0 = 1.0D-3
+      Y0 = 1.0D-3
+      CC = -1.729730D-3
+      RC = 0.20D-3
 
-
-C     SET PRODUCT TEMPERATURE
-C     -----------------------
-C     REACTANT TEMPERATURE SET IN CONTROL FILE
-      TRINR = TRIN
-C      TRINP = 2330.96554
-      TRINP = 2200.0
-
-
-C     SET SPECIES MASS FRACTIONS
-C     --------------------------
-C     OVERRIDE MASS FRACTION VALUES SET IN CONTROL FILE
-
-C     REACTANTS
-      YRINR(1) = 1.99886D-2!2.8312571D-2
-      YRINR(2) = 2.286239D-1 !2.26500566D-1
-      DO ISPEC = 3,NSPM1
-        YRINR(ISPEC) = ZERO
-      ENDDO
-
-      YRINR(NSPEC) = ZERO
-      DO ISPEC = 1,NSPM1
-        YRINR(NSPEC) = YRINR(NSPEC) + YRINR(ISPEC)
-      ENDDO
-      YRINR(NSPEC) = ONE - YRINR(NSPEC)
-
-C     PRODUCTS
-      YRINP(1) = ZERO
-      YRINP(2) = 6.85323D-2!ZERO
-      YRINP(3) = 1.798974D-1!2.54716981D-1
-      DO ISPEC = 4,NSPM1
-        YRINP(ISPEC) = ZERO
-      ENDDO
-      YRINP(NSPEC) = ZERO
-      DO ISPEC = 1,NSPM1
-        YRINP(NSPEC) = YRINP(NSPEC) + YRINP(ISPEC)
-      ENDDO
-      YRINP(NSPEC) = ONE - YRINP(NSPEC)
-
-C     WRITE TO REPORT FILE
-      IF(IPROC.EQ.0)THEN
-
-C        OPEN(UNIT=NCREPT,FILE=FNREPT,STATUS='OLD',FORM='FORMATTED')
-
-CC       GO TO EOF
-C1000    CONTINUE
-C          READ(NCREPT,9000,END=1010)
-C          GOTO 1000
-C1010    BACKSPACE(NCREPT)
-
-        WRITE(NCREPT,*)
-        WRITE(NCREPT,*)'FLAMIN: reactant mass fractions:'
-        DO ISPEC = 1,NSPEC
-          WRITE(NCREPT,'(I5,1PE15.7)')ISPEC,YRINR(ISPEC)
-        ENDDO
-        WRITE(NCREPT,*)
-
-        WRITE(NCREPT,*)'FLAMIN: product mass fractions:'
-        DO ISPEC = 1,NSPEC
-          WRITE(NCREPT,'(I5,1PE15.7)')ISPEC,YRINP(ISPEC)
-        ENDDO
-        WRITE(NCREPT,*)
-
-        WRITE(NCREPT,*)'FLAMIN: reactant and product temperatures:'
-        WRITE(NCREPT,'(2(1PE15.7))')TRINR,TRINP
-        WRITE(NCREPT,*)
-
-C        CLOSE(NCREPT)
-
-      ENDIF
-
-
-C     GLOBAL INDEXING
+C     INITIAL DENSITY
 C     ---------------
-      DELTAG = XGDLEN/(REAL(NXGLBL-1))
+      RTIN = ZERO
+      DO ISPEC = 1,NSPEC
+        RTIN = RTIN + RGSPEC(ISPEC)*YRIN(ISPEC)
+      ENDDO
+      RTIN = RTIN*TRIN
+      DRIN = PRIN/RTIN
+!      if (ixproc==0 .and. iyproc==0) then
+!         print *,rtin, drin,prin 
+!      end if
 
       IGOFST = 0
+      JGOFST = 0
+      DELTAX = XGDLEN/REAL(NXGLBL-1)
+      DELTAY = YGDLEN/REAL(NYGLBL-1)
+      DELTAZ = ZGDLEN/REAL(NZGLBL-1)
       DO ICPROC = 0, IXPROC-1
         IGOFST = IGOFST + NPMAPX(ICPROC)
       ENDDO
-
-
-C     SET REACTION PROGRESS VARIABLE PROFILE
-C     --------------------------------------
-C     SIMPLE 1D LEFT-FACING ERROR FUNCTION PROFILE
-      DO IC = ISTAL,ISTOL
-
-        IX = IGOFST + IC
-        XCOORD = REAL(IX-1)*DELTAG
-        ARGMNT = (XCOORD-CLOCAT)/CTHICK
-        CRIN(IC) = HALF*(ONE+ERFUNC(ARGMNT))
-
+      DO ICPROC = 0, IYPROC-1
+        JGOFST = JGOFST + NPMAPY(ICPROC)
       ENDDO
 
-CC     SIMPLE 1D RIGHT-FACING ERROR FUNCTION PROFILE
-C      DO IC = ISTAL,ISTOL
-C
-C        IX = IGOFST + IC
-C        XCOORD = REAL(IX-1)*DELTAG
-C        ARGMNT = (XCOORD-CLOCAT)/CTHICK
-C        CRIN(IC) = HALF*(ONE+ERFUNC(-ARGMNT))
-C
-C      ENDDO
+      DO KC = KSTAB,KSTOB
+        DO JC = JSTAB,JSTOB
+          DO IC = ISTAB,ISTOB
 
+            XC = REAL(IGOFST+IC-1)*DELTAX
+            YC = REAL(JGOFST+JC-1)*DELTAY
+            PRUN(IC,JC,KC) = PRIN/(1.0+(CC**2*DEXP(-(((XC-X0)**2
+     +         +(YC-Y0)**2)*0.50D0)/(RC**2))/(RC**2*RTIN*TRIN)))
+            TRUN(IC,JC,KC) = TRIN
 
-C     SET SPECIES MASS FRACTION PROFILES
-C     ----------------------------------
-      DO ISPEC = 1, NSPM1
-
-        DO KC = KSTAL,KSTOL
-          DO JC = JSTAL,JSTOL
-            DO IC = ISTAL,ISTOL
-
-              YRUN(IC,JC,KC,ISPEC) = YRINR(ISPEC)
-     +                   + CRIN(IC)*(YRINP(ISPEC) - YRINR(ISPEC))
-
-            ENDDO
           ENDDO
         ENDDO
-
       ENDDO
 
-CC     SG 25-STEP MECHANISM
-CC     ADD A PINCH OF HYDROGEN ATOM
-CC     AND HYDROGEN MOLECULE
-C      DO KC = KSTAL,KSTOL
-C        DO JC = JSTAL,JSTOL
-C          DO IC = ISTAL,ISTOL
-C
-C            IX = IGOFST + IC
-C            XCOORD = REAL(IX-1)*DELTAG
-C            ARGMNT = (XCOORD-H2LOCT)/H2THCK
-C            YRUN(IC,JC,KC,5) = H2PNCH*EXP(-ARGMNT*ARGMNT)
-C            ARGMNT = (XCOORD-HLOCAT)/HTHICK
-C            YRUN(IC,JC,KC,8) = HPINCH*EXP(-ARGMNT*ARGMNT)
-C
-C          ENDDO
-C        ENDDO
-C      ENDDO
-
+      DO KC=KSTAB,KSTOB
+        DO JC=JSTAB,JSTOB
+          DO IC=ISTAB,ISTOB
+            XC = REAL(IGOFST+IC-1)*DELTAX
+            YC = REAL(JGOFST+JC-1)*DELTAY
+            PSI(IC,JC,KC) = CC*DEXP(-(((XC-X0)**2+(YC-Y0)**2)
+     +                      *0.50D0)/(RC**2))
+            !print *, CC*DEXP(-(((XC-X0)**2+(YC-Y0)**2)*0.50D0)/(RC**2))
+            !print *,psi(ic,jc,kc)
+          ENDDO
+        ENDDO
+      ENDDO
+     
+      CALL DFINIT
+      CALL DFBYDY(PSI,STORE4)
+      CALL DFBYDX(PSI,STORE5)
+      
       DO KC = KSTAL,KSTOL
         DO JC = JSTAL,JSTOL
-          DO IC = ISTAL,ISTOL
+          DO IC = ISTAL,ISTOL 
 
-            YRUN(IC,JC,KC,NSPEC) = ZERO
+            URUN(IC,JC,KC) = STORE4(IC,JC,KC)
+            VRUN(IC,JC,KC) = -STORE5(IC,JC,KC)
+            WRUN(IC,JC,KC) = ZERO
 
           ENDDO
         ENDDO
       ENDDO
+C     -------------------------------------------------------------------------
 
-      DO ISPEC = 1, NSPM1
-        DO KC = KSTAL,KSTOL
-          DO JC = JSTAL,JSTOL
-            DO IC = ISTAL,ISTOL
-
-              YRUN(IC,JC,KC,NSPEC) = YRUN(IC,JC,KC,NSPEC)
-     +                             + YRUN(IC,JC,KC,ISPEC)
-
-            ENDDO
-          ENDDO
-        ENDDO
-      ENDDO
-
+C     DENSITY FIELD
+C     -------------
+C     USE STORE1 AS AN ACCUMULATOR FOR MIXTURE GAS CONSTANT
+C     INITIALISE TO ZERO
       DO KC = KSTAL,KSTOL
         DO JC = JSTAL,JSTOL
-          DO IC = ISTAL,ISTOL
-
-            YRUN(IC,JC,KC,NSPEC) = ONE - YRUN(IC,JC,KC,NSPEC)
-
-          ENDDO
-        ENDDO
-      ENDDO
-
-
-C     SET TEMPERATURE PROFILE
-C     -----------------------
-      DO KC = KSTAL,KSTOL
-        DO JC = JSTAL,JSTOL
-          DO IC = ISTAL,ISTOL
-
-            TRUN(IC,JC,KC) = TRINR +  CRIN(IC)*(TRINP - TRINR)
-
-          ENDDO
-        ENDDO
-      ENDDO
-
-
-C     SET DENSITY PROFILE ASSUMING CONSTANT PRESSURE
-C     -------------------
-C     PRESSURE SET IN CONTROL FILE
-
-      DO KC = KSTAL,KSTOL
-        DO JC = JSTAL,JSTOL
-          DO IC = ISTAL,ISTOL
+          DO IC = ISTAL,ISTOL 
 
             STORE1(IC,JC,KC) = ZERO
 
@@ -274,45 +410,48 @@ C     PRESSURE SET IN CONTROL FILE
         ENDDO
       ENDDO
 
+C     MIXTURE GAS CONSTANT 
       DO ISPEC = 1,NSPEC
+
         DO KC = KSTAL,KSTOL
           DO JC = JSTAL,JSTOL
-            DO IC = ISTAL,ISTOL
+            DO IC = ISTAL,ISTOL 
 
-              STORE1(IC,JC,KC) = STORE1(IC,JC,KC)
-     +                         + RGSPEC(ISPEC)*YRUN(IC,JC,KC,ISPEC)
+               STORE1(IC,JC,KC) = STORE1(IC,JC,KC)
+     +                          + RGSPEC(ISPEC)*YRUN(IC,JC,KC,ISPEC)
 
             ENDDO
           ENDDO
         ENDDO
+
       ENDDO
 
+C     DENSITY
       DO KC = KSTAL,KSTOL
         DO JC = JSTAL,JSTOL
-          DO IC = ISTAL,ISTOL
+          DO IC = ISTAL,ISTOL 
 
-            DRUN(IC,JC,KC) = PRIN/(STORE1(IC,JC,KC)*TRUN(IC,JC,KC))
+            STORE1(IC,JC,KC) = STORE1(IC,JC,KC)*TRUN(IC,JC,KC)
+            DRUN(IC,JC,KC) = PRUN(IC,JC,KC)/STORE1(IC,JC,KC)
 
           ENDDO
         ENDDO
       ENDDO
+C     -------------------------------------------------------------------------
 
-
-C     SET VELOCITY PROFILE ASSUMING CONSTANT MASS FLUX
-C     --------------------
-C     INITIAL (INLET) VEOCITY SET IN CONTROL FILE
-      FLXMAS = DRIN*URIN
+C     ADD ON THE DEFAULT MEAN VELOCITY
+C     --------------------------------
       DO KC = KSTAL,KSTOL
         DO JC = JSTAL,JSTOL
           DO IC = ISTAL,ISTOL
 
-            URUN(IC,JC,KC) = FLXMAS/DRUN(IC,JC,KC)
+            URUN(IC,JC,KC) = URIN + URUN(IC,JC,KC)/DRUN(IC,JC,KC)
+            VRUN(IC,JC,KC) = VRIN + VRUN(IC,JC,KC)/DRUN(IC,JC,KC)
+            WRUN(IC,JC,KC) = WRIN + WRUN(IC,JC,KC)/DRUN(IC,JC,KC)
 
           ENDDO
         ENDDO
       ENDDO
-
-C     =========================================================================
 
 
       RETURN
