@@ -151,6 +151,78 @@ C     URHS,VRHS,WRHS CONTAIN RHO U, RHO V, RHO W
           ENDDO
         ENDDO
       ENDDO
+
+C    TRANSVERSE TERMS FOR BOUNDARIES (IMPLEMENTED BY NC)
+C     X-DIRECTION
+      IF(FXLCNV)THEN
+      DO KC = KSTAL,KSTOL
+        DO JC = JSTAL,JSTOL
+
+            T1BXL(JC,KC) = -(STORE2(ISTAL,JC,KC)
+     +                     + STORE3(ISTAL,JC,KC))
+
+       ENDDO
+      ENDDO
+      END IF
+
+      IF(FXRCNV)THEN
+      DO KC = KSTAL,KSTOL
+        DO JC = JSTAL,JSTOL
+
+            T1BXR(JC,KC) = -(STORE2(ISTOL,JC,KC)
+     +                     + STORE3(ISTOL,JC,KC))
+
+       ENDDO
+      ENDDO
+      END IF
+
+C     Y-DIRECTION
+      IF(FYLCNV)THEN
+      DO KC = KSTAL,KSTOL
+        DO IC= ISTAL,ISTOL
+
+            T1BYL(IC,KC) = -(STORE1(IC,JSTAL,KC)
+     +                     + STORE3(IC,JSTAL,KC))
+
+       ENDDO
+      ENDDO
+      END IF
+
+      IF(FYRCNV)THEN
+      DO KC = KSTAL,KSTOL
+        DO IC= ISTAL,ISTOL
+
+            T1BYR(IC,KC) = -(STORE1(IC,JSTOL,KC)
+     +                     + STORE3(IC,JSTOL,KC))
+
+       ENDDO
+      ENDDO
+      END IF
+
+C     Z-DIRECTION
+      IF(FZLCNV)THEN
+      DO JC = JSTAL,JSTOL
+        DO IC= ISTAL,ISTOL
+
+            T1BZL(IC,JC) = -(STORE1(IC,JC,KSTAL)
+     +                     + STORE2(IC,JC,KSTAL))
+
+       ENDDO
+      ENDDO
+      END IF
+
+      IF(FZRCNV)THEN
+      DO JC = JSTAL,JSTOL
+        DO IC= ISTAL,ISTOL
+
+            T1BZR(IC,JC) = -(STORE1(IC,JC,KSTOL)
+     +                     + STORE2(IC,JC,KSTOL))
+
+       ENDDO
+      ENDDO
+      END IF
+
+C=========================REFER TO EQ. 3.74 OF LODATO'S THESIS=================
 C                                                              ALL STORES CLEAR
 C     =========================================================================
 C     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -697,7 +769,7 @@ C     -----------------------------
           DO KC = KSTAL,KSTOL
             DO JC = JSTAL,JSTOL
               DO IC = ISTAL,ISTOL
-              RRTE(IC,JC,KC,ISPEC) = RATE(IC,JC,KC,ISPEC)
+                RRTE(IC,JC,KC,ISPEC) = RATE(IC,JC,KC,ISPEC)
               ENDDO
             ENDDO
           ENDDO
@@ -1013,6 +1085,13 @@ C       X-DIRECTION: DYDX
               STRYXL(JC,KC,ISPEC) = YRHS(ISTAL,JC,KC,ISPEC)
               BCLYXL(JC,KC,ISPEC) = STORE1(ISTAL,JC,KC)
 
+C             TRANSVERSE TERM FOR SPECIES TRANSPORT (see Eq. 3.74 of Lodato's thesis)
+
+              T6BXL(JC,KC,ISPEC)=-STORE2(ISTAL,JC,KC)*
+     +                  VRHS(ISTAL,JC,KC)/DRHS(ISTAL,JC,KC)
+     +                 -STORE3(ISTAL,JC,KC)*WRHS(ISTAL,JC,KC)/
+     +                 DRHS(ISTAL,JC,KC)
+
             ENDDO
           ENDDO
         ENDIF
@@ -1022,6 +1101,14 @@ C       X-DIRECTION: DYDX
 
               STRYXR(JC,KC,ISPEC) = YRHS(ISTOL,JC,KC,ISPEC)
               BCLYXR(JC,KC,ISPEC) = STORE1(ISTOL,JC,KC)
+
+C             TRANSVERSE TERM FOR SPECIES TRANSPORT (see Eq. 3.74 of Lodato's thesis)
+
+              T6BXR(JC,KC,ISPEC)=-STORE2(ISTOL,JC,KC)*
+     +                  VRHS(ISTOL,JC,KC)/DRHS(ISTOL,JC,KC)
+     +                 -STORE3(ISTOL,JC,KC)*WRHS(ISTOL,JC,KC)/
+     +                 DRHS(ISTOL,JC,KC)
+
 
             ENDDO
           ENDDO
@@ -1035,6 +1122,12 @@ C       Y-DIRECTION: DYDY
               STRYYL(IC,KC,ISPEC) = YRHS(IC,JSTAL,KC,ISPEC)
               BCLYYL(IC,KC,ISPEC) = STORE2(IC,JSTAL,KC)
 
+C             TRANSVERSE TERM FOR SPECIES TRANSPORT (see Eq. 3.74 of Lodato's thesis)
+
+              T6BYL(IC,KC,ISPEC)=-STORE1(IC,JSTAL,KC)*
+     +                  URHS(IC,JSTAL,KC)/DRHS(IC,JSTAL,KC)
+     +                 -STORE3(IC,JSTAL,KC)*WRHS(IC,JSTAL,KC)/
+     +                 DRHS(IC,JSTAL,KC)
             ENDDO
           ENDDO
         ENDIF
@@ -1045,6 +1138,12 @@ C       Y-DIRECTION: DYDY
               STRYYR(IC,KC,ISPEC) = YRHS(IC,JSTOL,KC,ISPEC)
               BCLYYR(IC,KC,ISPEC) = STORE2(IC,JSTOL,KC)
 
+C             TRANSVERSE TERM FOR SPECIES TRANSPORT (see Eq. 3.74 of Lodato's thesis)
+
+              T6BYR(IC,KC,ISPEC)=-STORE1(IC,JSTOL,KC)*
+     +                  URHS(IC,JSTOL,KC)/DRHS(IC,JSTOL,KC)
+     +                 -STORE3(IC,JSTOL,KC)*WRHS(IC,JSTOL,KC)/
+     +                 DRHS(IC,JSTOL,KC)
             ENDDO
           ENDDO
         ENDIF
@@ -1057,6 +1156,12 @@ C       Z-DIRECTION: DYDZ
               STRYZL(IC,JC,ISPEC) = YRHS(IC,JC,KSTAL,ISPEC)
               BCLYZL(IC,JC,ISPEC) = STORE3(IC,JC,KSTAL)
 
+C             TRANSVERSE TERM FOR SPECIES TRANSPORT (see Eq. 3.74 of Lodato's thesis)
+
+              T6BZL(IC,JC,ISPEC)=-STORE1(IC,JC,KSTAL)*
+     +                  URHS(IC,JC,KSTAL)/DRHS(IC,JC,KSTAL)
+     +                 -STORE2(IC,JC,KSTAL)*VRHS(IC,JC,KSTAL)/
+     +                 DRHS(IC,JC,KSTAL)
             ENDDO
           ENDDO
         ENDIF
@@ -1067,9 +1172,18 @@ C       Z-DIRECTION: DYDZ
               STRYZR(IC,JC,ISPEC) = YRHS(IC,JC,KSTOL,ISPEC)
               BCLYZR(IC,JC,ISPEC) = STORE3(IC,JC,KSTOL)
 
+C             TRANSVERSE TERM FOR SPECIES TRANSPORT (see Eq. 3.74 of Lodato's thesis)
+
+              T6BZR(IC,JC,ISPEC)=-STORE1(IC,JC,KSTOL)*
+     +                  URHS(IC,JC,KSTOL)/DRHS(IC,JC,KSTOL)
+     +                 -STORE2(IC,JC,KSTOL)*VRHS(IC,JC,KSTOL)/
+     +                 DRHS(IC,JC,KSTOL)
             ENDDO
           ENDDO
         ENDIF
+
+
+
 C                                                         STORE1,2,3 = DYDX,Y,Z
 C                                                         RATE = Y SOURCE TERMS
 C                                                           VTMP = DIV CORR VEL

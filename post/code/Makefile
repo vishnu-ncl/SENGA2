@@ -4,7 +4,6 @@ TARGET = viz.exe
 # Compiler
 F95 = h5pfc
 #F95 = ftn
-#F95 = mpif90
 
 # Include the current directory such that local header files take precedence
 INC = -I .

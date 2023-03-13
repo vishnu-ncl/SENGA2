@@ -33,13 +33,13 @@ C            DUMP INPUT FILES    - UNIT NCDMPI - UNFORMATTED  (RESTART ONLY)
 C        
 C     *************************************************************************
 
+#ifdef HDF5
+      USE HDF5IO
+#endif
 
 C     GLOBAL DATA
 C     ===========
 C     -------------------------------------------------------------------------
-#ifdef HDF5
-      USE HDF5IO
-#endif
       INCLUDE 'com_senga2.h'
       INCLUDE 'com_espect.h'
 C     -------------------------------------------------------------------------
@@ -91,17 +91,18 @@ C     RSC UPDATE NUMBER OF PROCESSORS
       CHARACTER*1 PNFLAG
       LOGICAL FXDUMP
       LOGICAL FLGREQ
+      
 
 C     BEGIN
 C     =====
 
 C     =========================================================================
-
 C     SET UP HDF5 I/O
 C     ===============
 #ifdef HDF5
       CALL HDF5_INIT
 #endif
+
 C     SET UP FILE I/O
 C     ===============
 
@@ -123,17 +124,18 @@ C     BUILD THE FILENAMES
       FNREPT = PNREPT//PNXRES
       FNSTAT = PNSTAT//PNXRES
       IDFLAG = 0
-      WRITE(PNFLAG,'(I1)')IDFLAG
-      FNDMPO(1) = PNDMPI//PNPROC//PNFLAG//PNXDAT
 #ifdef HDF5
       H5_FILENAME(1) = PNDMPI//PNFLAG//".h5"
 #endif      
+      WRITE(PNFLAG,'(I1)')IDFLAG
+      FNDMPO(1) = PNDMPI//PNPROC//PNFLAG//PNXDAT
       IDFLAG = 1
       WRITE(PNFLAG,'(I1)')IDFLAG
       FNDMPO(2) = PNDMPI//PNPROC//PNFLAG//PNXDAT
 #ifdef HDF5      
       H5_FILENAME(2) = PNDMPI//PNFLAG//".h5"
 #endif
+
 C     =========================================================================
 
 C     GET THE RUN CONTROL DATA
@@ -997,8 +999,6 @@ C     -------------------------------
       CALL CREATE_H5DUMP_FILES
 #endif
 
-
-
 C     ==========================================================================
 
 C     INITIALISE ADDITIONAL PARAMETERS
@@ -1361,6 +1361,9 @@ C       TO BLEND INITIAL VELOCITY AND SCALAR FIELDS
 C       WITH PREVIOUSLY DUMPED DATA
 C       -----------------------------------------------------------------------
 
+        !Vishnu: Prevent overwriting TSTEP
+        TSOLD=TSTEP
+
 C       RESTART FROM FULL DUMP FILES
 C       ----------------------------
 C       READ THE DATA FROM DUMP INPUT FILE 1
@@ -1370,7 +1373,7 @@ C       RSC 11-JUL-2009 ADD A DUMP FORMAT SWITCH
         IF(NDIFMT.EQ.0)THEN
 
 C         UNFORMATTED DUMP INPUT
-          OPEN(UNIT=NCDMPI,FILE=FNDMPO(2),STATUS='OLD',
+          OPEN(UNIT=NCDMPI,FILE=FNDMPO(1),STATUS='OLD',
      +         FORM='UNFORMATTED')
           READ(NCDMPI)NXDMAX,NYDMAX,NZDMAX,NDSPEC,
      +                DRUN,URUN,VRUN,WRUN,ERUN,YRUN,
@@ -1415,6 +1418,9 @@ C         SIZE ERROR CHECK
 #else
         CALL READ_H5DUMP_FILES
 #endif
+
+        !Vishnu: TSTEP not overwritten
+        if(NSTPSW==0) TSTEP=TSOLD
 
 C       =======================================================================
 C       WARM START COMPLETE

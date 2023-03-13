@@ -6,8 +6,8 @@
 #
 
 # Fortran compiler
-FC = mpif90 -g -fcheck=all -cpp
-#FC = h5pfc -g -fcheck=all -DHDF5 -cpp
+#FC = mpif90# -fallow-argument-mismatch -g -fcheck=all -cpp
+FC = h5pfc -g -fcheck=all -cpp#-DHDF5 
 
 # Quick non-optimized compile
 #FFLAGS = -g -fno-silent -ftrapping-math -ftrapv -Wimplicit -Wall

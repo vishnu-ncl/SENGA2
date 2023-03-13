@@ -5,14 +5,14 @@ implicit none
 !===========================================#
 !       Original domain configuration
 !===========================================#
-double precision, parameter :: Lx=1.0D-2
+double precision, parameter :: Lx=2.0D-3
 
-integer, parameter :: nx=2000
-integer, parameter :: ny=1
+integer, parameter :: nx=200
+integer, parameter :: ny=200
 integer, parameter :: nz=1
 
-integer, parameter :: nxproc=40
-integer, parameter :: nyproc=1
+integer, parameter :: nxproc=5
+integer, parameter :: nyproc=2
 integer, parameter :: nzproc=1
 
 !-> NOTE: The number of species (nspec) is defined in the tags module
@@ -36,7 +36,7 @@ double precision, parameter :: deltax=Lx/(dble(nx-1))
 !===========================================#
 integer, parameter :: snap_start=0
 integer, parameter :: snap_step=1
-integer, parameter :: snap_end=200
+integer, parameter :: snap_end=112
 !---0=off 1=on----
 integer, parameter :: inplane=0
 integer, parameter :: midplane=0

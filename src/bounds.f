@@ -23,6 +23,10 @@ C     COMPUTES CHARACTERISTIC BOUNDARY CONDITIONS FOR ALL PDES
 C
 C     *************************************************************************
 
+! VISHNU MOHAN (VM), KHALIL ABO AMSHA (KAA) AND NILANJAN CHAKRABORTY (NC)
+! IMPLEMENTED THE TRANSVERSE DERIVATIVE TERMS FOR BOUNDARY CONDITION AS PER METHOD
+! OF YOO AND IM
+
 
 C     GLOBAL DATA
 C     ===========
@@ -36,7 +40,56 @@ C     ==========
       DOUBLE PRECISION FORNOW
       INTEGER IC,JC,KC
       INTEGER ISPEC
+C     THESE ARE INTRODUCED FOR LODATO'S BC EQN. 3.80- NC
+      DOUBLE PRECISION TT1XL(NYSIZE,NZSIZE),
+     +                 TT2XL(NYSIZE,NZSIZE),
+     +                 TT3XL(NYSIZE,NZSIZE),
+     +                 TT4XL(NYSIZE,NZSIZE),
+     +                 TT5XL(NYSIZE,NZSIZE),
+     +                 TT6XL(NYSIZE,NZSIZE,NSPEC)
+      DOUBLE PRECISION TT1XR(NYSIZE,NZSIZE),
+     +                 TT2XR(NYSIZE,NZSIZE),
+     +                 TT3XR(NYSIZE,NZSIZE),
+     +                 TT4XR(NYSIZE,NZSIZE),
+     +                 TT5XR(NYSIZE,NZSIZE),
+     +                 TT6XR(NYSIZE,NZSIZE,NSPEC)
+      !UMAIRS CORRECTION HERE
+      DOUBLE PRECISION TT1YL(NXSIZE,NZSIZE),
+     +                 TT2YL(NXSIZE,NZSIZE),
+     +                 TT3YL(NXSIZE,NZSIZE),
+     +                 TT4YL(NXSIZE,NZSIZE),
+     +                 TT5YL(NXSIZE,NZSIZE),
+     +                 TT6YL(NXSIZE,NZSIZE,NSPEC)
+      DOUBLE PRECISION TT1YR(NXSIZE,NZSIZE),
+     +                 TT2YR(NXSIZE,NZSIZE),
+     +                 TT3YR(NXSIZE,NZSIZE),
+     +                 TT4YR(NXSIZE,NZSIZE),
+     +                 TT5YR(NXSIZE,NZSIZE),
+     +                 TT6YR(NXSIZE,NZSIZE,NSPEC)
+      DOUBLE PRECISION TT1ZL(NXSIZE,NYSIZE),
+     +                 TT2ZL(NXSIZE,NYSIZE),
+     +                 TT3ZL(NXSIZE,NYSIZE),
+     +                 TT4ZL(NXSIZE,NYSIZE),
+     +                 TT5ZL(NXSIZE,NYSIZE),
+     +                 TT6ZL(NXSIZE,NYSIZE,NSPEC)
+      DOUBLE PRECISION TT1ZR(NXSIZE,NYSIZE),
+     +                 TT2ZR(NXSIZE,NYSIZE),
+     +                 TT3ZR(NXSIZE,NYSIZE),
+     +                 TT4ZR(NXSIZE,NYSIZE),
+     +                 TT5ZR(NXSIZE,NYSIZE),
+     +                 TT6ZR(NXSIZE,NYSIZE,NSPEC)
+      DOUBLE PRECISION BET
+      INTEGER FLAG_BET_XL,FLAG_BET_XR,FLAG_BET_YL,FLAG_BET_YR,
+     +        FLAG_BET_ZL,FLAG_BET_ZR
+      !VM: SWITCH TO SET BET=LOCAL_MACH
+      !FLAG_BET=0 POINTS TO GLOBAL VALUE OF BET
+      !FLAG_BET=1 POINTS TO LOCAL VALUE OF BET
 
+      INTEGER FLAG_PIO_XL,FLAG_PIO_XR,FLAG_PIO_YL,FLAG_PIO_YR,
+     +        FLAG_PIO_ZL,FLAG_PIO_ZR
+      !VM: SWITCH TO TURN POINTWISE INFLOW-OUTFLOW ON/OFF
+      !1 IS ON, 0 IS OFF
+      BET=0.050D0
 
 C     BEGIN
 C     =====
@@ -103,6 +156,8 @@ C       GAMMA-1, 1/(GAMMA-1)
             GAM1XL(JC,KC) = STRRXL(JC,KC)/GAM1XL(JC,KC)
             OVGMXL(JC,KC) = ONE/GAM1XL(JC,KC)
 
+          
+
           ENDDO
         ENDDO
 
@@ -115,6 +170,27 @@ C       --------------
             ACOUXL(JC,KC) = SQRT(FORNOW)
             OVA2XL(JC,KC) = ONE/FORNOW
 
+C     THESE ARE INTRODUCED FOR LODATO'S BC- NC
+
+            TT1XL(JC,KC)=T51BXL(JC,KC)+
+     +                   T52BXL(JC,KC)*(GAM1XL(JC,KC)+1.0)-
+     +        STRDXL(JC,KC)* ACOUXL(JC,KC)*T2BXL(JC,KC)         
+
+            TT2XL(JC,KC)=ACOUXL(JC,KC)*ACOUXL(JC,KC)*
+     +      T1BXL(JC,KC)-T51BXL(JC,KC)-(GAM1XL(JC,KC)+1.0)*
+     +      T52BXL(JC,KC)
+
+            TT3XL(JC,KC)=T3BXL(JC,KC)
+            TT4XL(JC,KC)=T4BXL(JC,KC)
+            
+            TT5XL(JC,KC)=T51BXL(JC,KC)+
+     +                   T52BXL(JC,KC)*(GAM1XL(JC,KC)+1.0)+
+     +        STRDXL(JC,KC)* ACOUXL(JC,KC)*T2BXL(JC,KC)   
+
+            DO IS=1,NSPEC
+            TT6XL(JC,KC,IS)=T6BXL(JC,KC,IS)
+            END DO
+
           ENDDO
         ENDDO
 
@@ -124,6 +200,8 @@ C       OUTFLOW BOUNDARY CONDITIONS
 C       ---------------------------
 
         IF(NSBCXL.EQ.NSBCO1)THEN
+          FLAG_BET_XL=NXLPRM(2)!1
+          FLAG_PIO_XL=NXLPRM(1)!0
 
 C         OUTFLOW BC No 1
 C         SUBSONIC NON-REFLECTING OUTFLOW
@@ -162,15 +240,48 @@ C         PRECOMPUTE CHEMISTRY TERMS
 C         SPECIFY L5X AS REQUIRED
           DO KC = KSTAL,KSTOL
             DO JC = JSTAL,JSTOL
-
+              BCL2XL(JC,KC) = STRUXL(JC,KC)
+     +                      *(BCL2XL(JC,KC)-BCL5XL(JC,KC)*OVA2XL(JC,KC))
+              BCL3XL(JC,KC) = STRUXL(JC,KC)*BCL3XL(JC,KC)
+              BCL4XL(JC,KC) = STRUXL(JC,KC)*BCL4XL(JC,KC)
 C             OLD VALUE OF L5X
               BCL5XL(JC,KC) = HALF*(STRUXL(JC,KC)+ACOUXL(JC,KC))
      +        *(BCL5XL(JC,KC)+STRDXL(JC,KC)*ACOUXL(JC,KC)*BCL1XL(JC,KC))
 
 C             SUBTRACT FROM NEW VALUE OF L5X
+C             TERM INTRODUCED FOR LODATO'S BC- NC
+              IF(FLAG_BET_XL==1) THEN
+                BET=STRUXL(JC,KC)*STRUXL(JC,KC)+
+     +              STRVXL(JC,KC)*STRVXL(JC,KC)+
+     +              STRWXL(JC,KC)*STRWXL(JC,KC)
+                BET=SQRT(BET)/ACOUXL(JC,KC)
+              END IF
+              IF((STRUXL(JC,KC).GT.ZERO).AND.(FLAG_PIO_XL==1))THEN
+
+C             SUBTRACT FROM NEW VALUE OF L5X
+              BCL2XL(JC,KC) =
+     +                       -BCL2XL(JC,KC)
+     +                       -OVA2XL(JC,KC)*SORPXL(JC,KC)
+
+              BCL3XL(JC,KC) =
+     +                        0.1*(STRVXL(JC,KC)-0.0D0)
+     +                       -BCL3XL(JC,KC)
+
+              BCL4XL(JC,KC) =
+     +                        0.1*(STRWXL(JC,KC)-0.0D0)
+     +                       -BCL4XL(JC,KC)
               BCL5XL(JC,KC)= HALF*SORPXL(JC,KC)
      +                     + COBCXL*ACOUXL(JC,KC)*(STRPXL(JC,KC)-PINFXL)
-     +                     - BCL5XL(JC,KC)
+     +                     +0.5*(1.0-BET)*TT5XL(JC,KC)- BCL5XL(JC,KC)
+     +                     + 100.0*STRDXL(JC,KC)*(ONE/XGDLEN)
+     +               *(ACOUXL(JC,KC)**2.0-STRUXL(JC,KC)**2.0)
+     +               *(STRUXL(JC,KC)-0.0)
+              ELSE
+
+              BCL5XL(JC,KC)= HALF*SORPXL(JC,KC)
+     +                     + COBCXL*ACOUXL(JC,KC)*(STRPXL(JC,KC)-PINFXL)
+     +                     +0.5*(1.0-BET)*TT5XL(JC,KC)- BCL5XL(JC,KC)
+              ENDIF
 
             ENDDO
           ENDDO
@@ -178,7 +289,35 @@ C             SUBTRACT FROM NEW VALUE OF L5X
 C         ADD TO CONSERVATIVE SOURCE TERMS
           DO KC = KSTAL,KSTOL
             DO JC = JSTAL,JSTOL
+              IF((STRUXL(JC,KC).GT.ZERO).AND.(FLAG_PIO_XL==1))THEN
 
+              DRHS(ISTAL,JC,KC) = DRHS(ISTAL,JC,KC)
+     +                          - BCL2XL(JC,KC)
+     +                          - BCL5XL(JC,KC)*OVA2XL(JC,KC)
+
+              URHS(ISTAL,JC,KC) = URHS(ISTAL,JC,KC)
+     +                          - BCL2XL(JC,KC)*STRUXL(JC,KC)
+     +      - BCL5XL(JC,KC)*OVA2XL(JC,KC)*(STRUXL(JC,KC)+ACOUXL(JC,KC))
+
+              VRHS(ISTAL,JC,KC) = VRHS(ISTAL,JC,KC)
+     +                          - BCL2XL(JC,KC)*STRVXL(JC,KC)
+     +                          - BCL3XL(JC,KC)*STRDXL(JC,KC)
+     +                      - BCL5XL(JC,KC)*OVA2XL(JC,KC)*STRVXL(JC,KC)
+
+              WRHS(ISTAL,JC,KC) = WRHS(ISTAL,JC,KC)
+     +                          - BCL2XL(JC,KC)*STRWXL(JC,KC)
+     +                          - BCL4XL(JC,KC)*STRDXL(JC,KC)
+     +                      - BCL5XL(JC,KC)*OVA2XL(JC,KC)*STRWXL(JC,KC)
+
+              ERHS(ISTAL,JC,KC) = ERHS(ISTAL,JC,KC)
+     +                          - BCL2XL(JC,KC)*STREXL(JC,KC)
+     +                      - BCL3XL(JC,KC)*STRDXL(JC,KC)*STRVXL(JC,KC)
+     +                      - BCL4XL(JC,KC)*STRDXL(JC,KC)*STRWXL(JC,KC)
+     +                      - BCL5XL(JC,KC)*(OVA2XL(JC,KC)*STREXL(JC,KC)
+     +                                     + STRUXL(JC,KC)/ACOUXL(JC,KC)
+     +                                     + OVGMXL(JC,KC))
+
+            ELSE
               DRHS(ISTAL,JC,KC) = DRHS(ISTAL,JC,KC)
      +                          - BCL5XL(JC,KC)*OVA2XL(JC,KC)
 
@@ -195,6 +334,7 @@ C         ADD TO CONSERVATIVE SOURCE TERMS
      +               - BCL5XL(JC,KC)*(OVA2XL(JC,KC)*STREXL(JC,KC)
      +                              + STRUXL(JC,KC)/ACOUXL(JC,KC)
      +                              + OVGMXL(JC,KC))
+              ENDIF
 
             ENDDO
           ENDDO
@@ -206,8 +346,20 @@ C          DO ISPEC = 1,NSPM1
             DO KC = KSTAL,KSTOL
               DO JC = JSTAL,JSTOL
 
+              IF((STRUXL(JC,KC).GT.ZERO).AND.(FLAG_PIO_XL==1))THEN
+                FORNOW = BCLYXL(JC,KC,ISPEC)*STRDXL(JC,KC)
+
+                ERHS(ISTAL,JC,KC) = ERHS(ISTAL,JC,KC)
+     +                            - FORNOW*STRHXL(JC,KC,ISPEC)
+
+                YRHS(ISTAL,JC,KC,ISPEC) = YRHS(ISTAL,JC,KC,ISPEC)
+     + - (BCL2XL(JC,KC)+BCL5XL(JC,KC)*OVA2XL(JC,KC))*STRYXL(JC,KC,ISPEC)
+     +                                  - FORNOW
+
+                ELSE
                 YRHS(ISTAL,JC,KC,ISPEC) = YRHS(ISTAL,JC,KC,ISPEC)
      +                 - BCL5XL(JC,KC)*OVA2XL(JC,KC)*STRYXL(JC,KC,ISPEC)
+                ENDIF
 
               ENDDO
             ENDDO
@@ -788,6 +940,28 @@ C       --------------
             ACOUXR(JC,KC) = SQRT(FORNOW)
             OVA2XR(JC,KC) = ONE/FORNOW
 
+C     THESE ARE INTRODUCED FOR LODATO'S BC- NC
+
+            TT1XR(JC,KC)=T51BXR(JC,KC)+
+     +                   T52BXR(JC,KC)*(GAM1XR(JC,KC)+1.0)-
+     +        STRDXR(JC,KC)* ACOUXR(JC,KC)*T2BXR(JC,KC)         
+
+            TT2XR(JC,KC)=ACOUXR(JC,KC)*ACOUXR(JC,KC)*
+     +      T1BXR(JC,KC)-T51BXR(JC,KC)-(GAM1XR(JC,KC)+1.0)*
+     +      T52BXR(JC,KC)
+
+            TT3XR(JC,KC)=T3BXR(JC,KC)
+            TT4XR(JC,KC)=T4BXR(JC,KC)
+            
+            TT5XR(JC,KC)=T51BXR(JC,KC)+
+     +                   T52BXR(JC,KC)*(GAM1XR(JC,KC)+1.0)+
+     +        STRDXR(JC,KC)* ACOUXR(JC,KC)*T2BXR(JC,KC)   
+
+            DO IS=1,NSPEC
+            TT6XR(JC,KC,IS)=T6BXR(JC,KC,IS)
+            END DO
+
+
           ENDDO
         ENDDO
 
@@ -797,6 +971,8 @@ C       OUTFLOW BOUNDARY CONDITIONS
 C       ---------------------------
 
         IF(NSBCXR.EQ.NSBCO1)THEN
+          FLAG_BET_XR=NXRPRM(2)!1
+          FLAG_PIO_XR=NXRPRM(1)!0
 
 C         OUTFLOW BC No 1
 C         SUBSONIC NON-REFLECTING OUTFLOW
@@ -835,22 +1011,77 @@ C         PRECOMPUTE CHEMISTRY TERMS
 C         SPECIFY L1X AS REQUIRED
           DO KC = KSTAL,KSTOL
             DO JC = JSTAL,JSTOL
+              BCL2XR(JC,KC) = STRUXR(JC,KC)*(BCL2XR(JC,KC)-OVA2XR(JC,KC)
+     +                       *BCL5XR(JC,KC))
+
+              BCL3XR(JC,KC) = STRUXR(JC,KC)*BCL3XR(JC,KC)
+              BCL4XR(JC,KC) = STRUXR(JC,KC)*BCL4XR(JC,KC)
 
 C             OLD VALUE OF L1X
               BCL1XR(JC,KC) = HALF*(STRUXR(JC,KC)-ACOUXR(JC,KC))
      +        *(BCL5XR(JC,KC)-STRDXR(JC,KC)*ACOUXR(JC,KC)*BCL1XR(JC,KC))
 
 C             SUBTRACT FROM NEW VALUE OF L1X
+C     TERMS INTRODUCED FOR LODATO'S BC- NC
+              IF(FLAG_BET_XR==1) THEN
+                BET=STRUXR(JC,KC)*STRUXR(JC,KC)+
+     +              STRVXR(JC,KC)*STRVXR(JC,KC)+
+     +              STRWXR(JC,KC)*STRWXR(JC,KC)
+                BET=SQRT(BET)/ACOUXR(JC,KC)         
+              END IF
+              IF((STRUXR(JC,KC).LT.ZERO).AND.(FLAG_PIO_XR==1))THEN
+              BCL2XR(JC,KC)=-OVA2XR(JC,KC)*SORPXR(JC,KC)
+     +               -BCL2XR(JC,KC)
+
+              BCL3XR(JC,KC)=0.1*(STRVXR(JC,KC)-0.0D0)-BCL3XR(JC,KC)
+
+              BCL4XR(JC,KC)=0.1*(STRWXR(JC,KC)-0.0D0)-BCL4XR(JC,KC)
               BCL1XR(JC,KC)= HALF*SORPXR(JC,KC)
      +                     + COBCXR*ACOUXR(JC,KC)*(STRPXR(JC,KC)-PINFXR)
-     +                     - BCL1XR(JC,KC)
-
+     +                     +0.5*(1.0-BET)*TT1XR(JC,KC)- BCL1XR(JC,KC)
+     +                     -100.0*STRDXR(JC,KC)*(ONE/XGDLEN)
+     +                 *(ACOUXR(JC,KC)**2.0-STRUXR(JC,KC)**2.0)
+     +                 *(STRUXR(JC,KC)-0.0D0)
+              ELSE
+              BCL1XR(JC,KC)= HALF*SORPXR(JC,KC)
+     +                     + COBCXR*ACOUXR(JC,KC)*(STRPXR(JC,KC)-PINFXR)
+     +                     +0.5*(1.0-BET)*TT1XR(JC,KC)- BCL1XR(JC,KC)
+              ENDIF
             ENDDO
           ENDDO
 
 C         ADD TO CONSERVATIVE SOURCE TERMS
           DO KC = KSTAL,KSTOL
             DO JC = JSTAL,JSTOL
+              IF((STRUXR(JC,KC).LT.ZERO).AND.(FLAG_PIO_XR==1))THEN
+              DRHS(ISTOL,JC,KC) = DRHS(ISTOL,JC,KC)
+     +                          - BCL1XR(JC,KC)*OVA2XR(JC,KC)
+     +                          - BCL2XR(JC,KC)
+
+              URHS(ISTOL,JC,KC) = URHS(ISTOL,JC,KC)
+     +      - BCL1XR(JC,KC)*OVA2XR(JC,KC)*(STRUXR(JC,KC)-ACOUXR(JC,KC))
+     +                          - BCL2XR(JC,KC)*STRUXR(JC,KC)
+
+              VRHS(ISTOL,JC,KC) = VRHS(ISTOL,JC,KC)
+     +                      - BCL1XR(JC,KC)*OVA2XR(JC,KC)*STRVXR(JC,KC)
+     +                          - BCL2XR(JC,KC)*STRVXR(JC,KC)
+     +                          - BCL3XR(JC,KC)*STRDXR(JC,KC)
+
+              WRHS(ISTOL,JC,KC) = WRHS(ISTOL,JC,KC)
+     +                      - BCL1XR(JC,KC)*OVA2XR(JC,KC)*STRWXR(JC,KC)
+     +                          - BCL2XR(JC,KC)*STRWXR(JC,KC)
+     +                          - BCL4XR(JC,KC)*STRDXR(JC,KC)
+
+              ERHS(ISTOL,JC,KC) = ERHS(ISTOL,JC,KC)
+     +                      - BCL1XR(JC,KC)*(OVA2XR(JC,KC)*STREXR(JC,KC)
+     +                                     - STRUXR(JC,KC)/ACOUXR(JC,KC)
+     +                                     + OVGMXR(JC,KC))
+     +                      - BCL2XR(JC,KC)*STREXR(JC,KC)
+     +                      - BCL3XR(JC,KC)*STRDXR(JC,KC)*STRVXR(JC,KC)
+     +                      - BCL4XR(JC,KC)*STRDXR(JC,KC)*STRWXR(JC,KC)
+              
+
+              ELSE
 
               DRHS(ISTOL,JC,KC) = DRHS(ISTOL,JC,KC)
      +                          - BCL1XR(JC,KC)*OVA2XR(JC,KC)
@@ -868,6 +1099,7 @@ C         ADD TO CONSERVATIVE SOURCE TERMS
      +               - BCL1XR(JC,KC)*(OVA2XR(JC,KC)*STREXR(JC,KC)
      +                              - STRUXR(JC,KC)/ACOUXR(JC,KC)
      +                              + OVGMXR(JC,KC))
+              ENDIF
 
             ENDDO
           ENDDO
@@ -879,8 +1111,21 @@ C          DO ISPEC = 1,NSPM1
             DO KC = KSTAL,KSTOL
               DO JC = JSTAL,JSTOL
 
+              IF((STRUXR(JC,KC).LT.ZERO).AND.(FLAG_PIO_XR==1))THEN
+
+                FORNOW = BCLYXR(JC,KC,ISPEC)*STRDXR(JC,KC)
+
+                ERHS(ISTOL,JC,KC) = ERHS(ISTOL,JC,KC)
+     +                            - FORNOW*STRHXR(JC,KC,ISPEC)
+
+                YRHS(ISTOL,JC,KC,ISPEC) = YRHS(ISTOL,JC,KC,ISPEC)
+     + - (BCL2XR(JC,KC)+BCL1XR(JC,KC)*OVA2XR(JC,KC))*STRYXR(JC,KC,ISPEC)
+     +                                  - FORNOW
+
+              ELSE
                 YRHS(ISTOL,JC,KC,ISPEC) = YRHS(ISTOL,JC,KC,ISPEC)
      +                 - BCL1XR(JC,KC)*OVA2XR(JC,KC)*STRYXR(JC,KC,ISPEC)
+              ENDIF
 
               ENDDO
             ENDDO
@@ -1460,6 +1705,28 @@ C       --------------
             ACOUYL(IC,KC) = SQRT(FORNOW)
             OVA2YL(IC,KC) = ONE/FORNOW
 
+C     THESE ARE INTRODUCED FOR LODATO'S BC- NC
+
+            TT1YL(IC,KC)=T51BYL(IC,KC)+
+     +                   T52BYL(IC,KC)*(GAM1YL(IC,KC)+1.0)-
+     +        STRDYL(IC,KC)* ACOUYL(IC,KC)*T2BYL(IC,KC)         
+
+            TT2YL(IC,KC)=ACOUYL(IC,KC)*ACOUYL(IC,KC)*
+     +      T1BYL(IC,KC)-T51BYL(IC,KC)-(GAM1YL(IC,KC)+1.0)*
+     +      T52BYL(IC,KC)
+
+            TT3YL(IC,KC)=T3BYL(IC,KC)
+            TT4YL(IC,KC)=T4BYL(IC,KC)
+            
+            TT5YL(IC,KC)=T51BYL(IC,KC)+
+     +                   T52BYL(IC,KC)*(GAM1YL(IC,KC)+1.0)+
+     +        STRDYL(IC,KC)* ACOUYL(IC,KC)*T2BYL(IC,KC)   
+
+            DO IS=1,NSPEC
+            TT6YL(IC,KC,IS)=T6BYL(IC,KC,IS)
+            END DO
+
+
           ENDDO
         ENDDO
 
@@ -1469,6 +1736,8 @@ C       OUTFLOW BOUNDARY CONDITIONS
 C       ---------------------------
 
         IF(NSBCYL.EQ.NSBCO1)THEN
+          FLAG_PIO_YL=NYLPRM(1)!0
+          FLAG_BET_YL=NYLPRM(2)!1
 
 C         OUTFLOW BC No 1
 C         SUBSONIC NON-REFLECTING OUTFLOW
@@ -1507,23 +1776,81 @@ C         PRECOMPUTE CHEMISTRY TERMS
 C         SPECIFY L5Y AS REQUIRED
           DO KC = KSTAL,KSTOL
             DO IC = ISTAL,ISTOL
-
+              BCL2YL(IC,KC) = STRVYL(IC,KC)
+     +                      *(BCL2YL(IC,KC)-BCL5YL(IC,KC)*OVA2YL(IC,KC))
+              BCL3YL(IC,KC) = STRVYL(IC,KC)*BCL3YL(IC,KC)
+              BCL4YL(IC,KC) = STRVYL(IC,KC)*BCL4YL(IC,KC)
 C             OLD VALUE OF L5Y
               BCL5YL(IC,KC) = HALF*(STRVYL(IC,KC)+ACOUYL(IC,KC))
      +        *(BCL5YL(IC,KC)+STRDYL(IC,KC)*ACOUYL(IC,KC)*BCL1YL(IC,KC))
 
 C             SUBTRACT FROM NEW VALUE OF L5Y
+C             TERMS INTRODUCED FOR LODATO'S BC- NC
+              IF(FLAG_BET_YL==1) THEN
+                BET=STRUYL(IC,KC)*STRUYL(IC,KC)+
+     +              STRVYL(IC,KC)*STRVYL(IC,KC)+
+     +              STRWYL(IC,KC)*STRWYL(IC,KC)
+                BET=SQRT(BET)/ACOUYL(IC,KC)
+              END IF
+              IF((STRVYL(IC,KC).GT.ZERO).AND.(FLAG_PIO_YL==1))THEN
+              BCL2YL(IC,KC) =
+     +                       -BCL2YL(IC,KC)
+     +                       -OVA2YL(IC,KC)*SORPYL(IC,KC)
+
+              BCL3YL(IC,KC) =
+     +                        0.1*(STRUYL(IC,KC)-0.0D0)
+     +                       -BCL3YL(IC,KC)
+
+              BCL4YL(IC,KC) =
+     +                        0.1*(STRWYL(IC,KC)-0.0D0)
+     +                       -BCL4YL(IC,KC)
               BCL5YL(IC,KC)= HALF*SORPYL(IC,KC)
      +                     + COBCYL*ACOUYL(IC,KC)*(STRPYL(IC,KC)-PINFYL)
-     +                     - BCL5YL(IC,KC)
-
+     + +0.5*(1.0-BET)*TT5YL(IC,KC)- BCL5YL(IC,KC)
+     +                     + 100.0*STRDYL(IC,KC)*(ONE/YGDLEN)!ASK NC: CHANGED TO YGDLEN
+     +               *(ACOUYL(IC,KC)**2.0-STRVYL(IC,KC)**2.0)
+     +               *(STRVYL(IC,KC)-0.0)
+                
+              ELSE
+              BCL5YL(IC,KC)= HALF*SORPYL(IC,KC)
+     +                     + COBCYL*ACOUYL(IC,KC)*(STRPYL(IC,KC)-PINFYL)
+     + +0.5*(1.0-BET)*TT5YL(IC,KC)- BCL5YL(IC,KC)
+              ENDIF
             ENDDO
           ENDDO
 
 C         ADD TO CONSERVATIVE SOURCE TERMS
           DO KC = KSTAL,KSTOL
             DO IC = ISTAL,ISTOL
+              IF((STRVYL(IC,KC).GT.ZERO).AND.(FLAG_PIO_YL==1))THEN
 
+              DRHS(IC,JSTAL,KC) = DRHS(IC,JSTAL,KC)
+     +                          - BCL2YL(IC,KC)
+     +                          - BCL5YL(IC,KC)*OVA2YL(IC,KC)
+
+              URHS(IC,JSTAL,KC) = URHS(IC,JSTAL,KC)
+     +                          - BCL2YL(IC,KC)*STRUYL(IC,KC)
+     +                          - BCL3YL(IC,KC)*STRDYL(IC,KC)
+     +                      - BCL5YL(IC,KC)*OVA2YL(IC,KC)*STRUYL(IC,KC)
+
+              VRHS(IC,JSTAL,KC) = VRHS(IC,JSTAL,KC)
+     +                          - BCL2YL(IC,KC)*STRVYL(IC,KC)
+     +      - BCL5YL(IC,KC)*OVA2YL(IC,KC)*(STRVYL(IC,KC)+ACOUYL(IC,KC))
+
+              WRHS(IC,JSTAL,KC) = WRHS(IC,JSTAL,KC)
+     +                          - BCL2YL(IC,KC)*STRWYL(IC,KC)
+     +                          - BCL4YL(IC,KC)*STRDYL(IC,KC)
+     +                      - BCL5YL(IC,KC)*OVA2YL(IC,KC)*STRWYL(IC,KC)
+
+              ERHS(IC,JSTAL,KC) = ERHS(IC,JSTAL,KC)
+     +                          - BCL2YL(IC,KC)*STREYL(IC,KC)
+     +                      - BCL3YL(IC,KC)*STRDYL(IC,KC)*STRUYL(IC,KC)
+     +                      - BCL4YL(IC,KC)*STRDYL(IC,KC)*STRWYL(IC,KC)
+     +                      - BCL5YL(IC,KC)*(OVA2YL(IC,KC)*STREYL(IC,KC)
+     +                                     + STRVYL(IC,KC)/ACOUYL(IC,KC)
+     +                                     + OVGMYL(IC,KC))
+
+              ELSE
               DRHS(IC,JSTAL,KC) = DRHS(IC,JSTAL,KC)
      +                          - BCL5YL(IC,KC)*OVA2YL(IC,KC)
 
@@ -1540,7 +1867,7 @@ C         ADD TO CONSERVATIVE SOURCE TERMS
      +               - BCL5YL(IC,KC)*(OVA2YL(IC,KC)*STREYL(IC,KC)
      +                              + STRVYL(IC,KC)/ACOUYL(IC,KC)
      +                              + OVGMYL(IC,KC))
-
+              ENDIF
             ENDDO
           ENDDO
 
@@ -1550,10 +1877,22 @@ C          DO ISPEC = 1,NSPM1
 
             DO KC = KSTAL,KSTOL
               DO IC = ISTAL,ISTOL
+              IF((STRVYL(IC,KC).GT.ZERO).AND.(FLAG_PIO_YL==1))THEN
+
+                FORNOW = BCLYYL(IC,KC,ISPEC)*STRDYL(IC,KC)
+
+                ERHS(IC,JSTAL,KC) = ERHS(IC,JSTAL,KC)
+     +                            - FORNOW*STRHYL(IC,KC,ISPEC)
 
                 YRHS(IC,JSTAL,KC,ISPEC) = YRHS(IC,JSTAL,KC,ISPEC)
-     +                 - BCL5YL(IC,KC)*OVA2YL(IC,KC)*STRYYL(IC,KC,ISPEC)
+     + - (BCL2YL(IC,KC)+BCL5YL(IC,KC)*OVA2YL(IC,KC))*STRYYL(IC,KC,ISPEC)
+     +                                  - FORNOW
 
+
+              ELSE
+                YRHS(IC,JSTAL,KC,ISPEC) = YRHS(IC,JSTAL,KC,ISPEC)
+     +                 - BCL5YL(IC,KC)*OVA2YL(IC,KC)*STRYYL(IC,KC,ISPEC)
+              ENDIF
               ENDDO
             ENDDO
 
@@ -2133,6 +2472,27 @@ C       --------------
             ACOUYR(IC,KC) = SQRT(FORNOW)
             OVA2YR(IC,KC) = ONE/FORNOW
 
+C     THESE ARE INTRODUCED FOR LODATO'S BC- NC
+
+            TT1YR(IC,KC)=T51BYR(IC,KC)+
+     +                   T52BYR(IC,KC)*(GAM1YR(IC,KC)+1.0)-
+     +        STRDYR(IC,KC)* ACOUYR(IC,KC)*T2BYR(IC,KC)         
+
+            TT2YR(IC,KC)=ACOUYR(IC,KC)*ACOUYR(IC,KC)*
+     +      T1BYR(IC,KC)-T51BYR(IC,KC)-(GAM1YR(IC,KC)+1.0)*
+     +      T52BYR(IC,KC)
+
+            TT3YR(IC,KC)=T3BYR(IC,KC)
+            TT4YR(IC,KC)=T4BYR(IC,KC)
+            
+            TT5YR(IC,KC)=T51BYR(IC,KC)+
+     +                   T52BYR(IC,KC)*(GAM1YR(IC,KC)+1.0)+
+     +        STRDYR(IC,KC)* ACOUYR(IC,KC)*T2BYR(IC,KC)   
+
+            DO IS=1,NSPEC
+            TT6YR(IC,KC,IS)=T6BYR(IC,KC,IS)
+            END DO
+
           ENDDO
         ENDDO
 
@@ -2142,6 +2502,8 @@ C       OUTFLOW BOUNDARY CONDITIONS
 C       ---------------------------
 
         IF(NSBCYR.EQ.NSBCO1)THEN
+          FLAG_PIO_YR=NYRPRM(1)!0
+          FLAG_BET_YR=NYRPRM(2)!1
 
 C         OUTFLOW BC No 1
 C         SUBSONIC NON-REFLECTING OUTFLOW
@@ -2181,22 +2543,81 @@ C         SPECIFY L1Y AS REQUIRED
           DO KC = KSTAL,KSTOL
             DO IC = ISTAL,ISTOL
 
+              BCL2YR(IC,KC) = STRVYR(IC,KC)
+     +                      *(BCL2YR(IC,KC)-BCL5YR(IC,KC)*OVA2YR(IC,KC))
+              BCL3YR(IC,KC) = STRVYR(IC,KC)*BCL3YR(IC,KC)
+              BCL4YR(IC,KC) = STRVYR(IC,KC)*BCL4YR(IC,KC)
 C             OLD VALUE OF L1Y
               BCL1YR(IC,KC) = HALF*(STRVYR(IC,KC)-ACOUYR(IC,KC))
      +        *(BCL5YR(IC,KC)-STRDYR(IC,KC)*ACOUYR(IC,KC)*BCL1YR(IC,KC))
 
 C             SUBTRACT FROM NEW VALUE OF L1Y
+C     TERMS INTRODUCED FOR LODATO'S BC- NC
+              IF(FLAG_BET_YR==1) THEN
+                BET=STRUYR(IC,KC)*STRUYR(IC,KC)+
+     +              STRVYR(IC,KC)*STRVYR(IC,KC)+
+     +              STRWYR(IC,KC)*STRWYR(IC,KC)
+                BET=SQRT(BET)/ACOUYR(IC,KC)         
+              END IF
+
+              IF((STRVYR(IC,KC).LT.ZERO).AND.(FLAG_PIO_YR==1))THEN
+              BCL2YR(IC,KC) =
+     +                       -BCL2YR(IC,KC)
+     +                       -OVA2YR(IC,KC)*SORPYR(IC,KC)
+
+              BCL3YR(IC,KC) =
+     +                        0.1*(STRUYR(IC,KC)-0.0D0)
+     +                       -BCL3YR(IC,KC)
+
+              BCL4YR(IC,KC) =
+     +                        0.1*(STRWYR(IC,KC)-0.0D0)
+     +                       -BCL4YR(IC,KC)
               BCL1YR(IC,KC)= HALF*SORPYR(IC,KC)
      +                     + COBCYR*ACOUYR(IC,KC)*(STRPYR(IC,KC)-PINFYR)
-     +                     - BCL1YR(IC,KC)
-
+     ++0.5*(1.0-BET)*TT1YR(IC,KC)- BCL1YR(IC,KC)
+     +                     + 100.0*STRDYR(IC,KC)*(ONE/YGDLEN)!ASK NC: CHANGED TO YGDLEN
+     +               *(ACOUYR(IC,KC)**2.0-STRVYR(IC,KC)**2.0)
+     +               *(STRVYR(IC,KC)-0.0)
+              ELSE
+              BCL1YR(IC,KC)= HALF*SORPYR(IC,KC)
+     +                     + COBCYR*ACOUYR(IC,KC)*(STRPYR(IC,KC)-PINFYR)
+     ++0.5*(1.0-BET)*TT1YR(IC,KC)- BCL1YR(IC,KC)
+              ENDIF
             ENDDO
           ENDDO
 
 C         ADD TO CONSERVATIVE SOURCE TERMS
           DO KC = KSTAL,KSTOL
             DO IC = ISTAL,ISTOL
+              IF((STRVYR(IC,KC).LT.ZERO).AND.(FLAG_PIO_YR==1))THEN
 
+              DRHS(IC,JSTOL,KC) = DRHS(IC,JSTOL,KC)
+     +                          - BCL1YR(IC,KC)*OVA2YR(IC,KC)
+     +                          - BCL2YR(IC,KC)
+
+              URHS(IC,JSTOL,KC) = URHS(IC,JSTOL,KC)
+     +                      - BCL1YR(IC,KC)*OVA2YR(IC,KC)*STRUYR(IC,KC)
+     +                          - BCL2YR(IC,KC)*STRUYR(IC,KC)
+     +                          - BCL3YR(IC,KC)*STRDYR(IC,KC)
+
+              VRHS(IC,JSTOL,KC) = VRHS(IC,JSTOL,KC)
+     +      - BCL1YR(IC,KC)*OVA2YR(IC,KC)*(STRVYR(IC,KC)-ACOUYR(IC,KC))
+     +                          - BCL2YR(IC,KC)*STRVYR(IC,KC)
+
+              WRHS(IC,JSTOL,KC) = WRHS(IC,JSTOL,KC)
+     +                      - BCL1YR(IC,KC)*OVA2YR(IC,KC)*STRWYR(IC,KC)
+     +                          - BCL2YR(IC,KC)*STRWYR(IC,KC)
+     +                          - BCL4YR(IC,KC)*STRDYR(IC,KC)
+
+              ERHS(IC,JSTOL,KC) = ERHS(IC,JSTOL,KC)
+     +                      - BCL1YR(IC,KC)*(OVA2YR(IC,KC)*STREYR(IC,KC)
+     +                                     + STRVYR(IC,KC)/ACOUYR(IC,KC)
+     +                                     + OVGMYR(IC,KC))
+     +                          - BCL2YR(IC,KC)*STREYR(IC,KC)
+     +                      - BCL3YR(IC,KC)*STRDYR(IC,KC)*STRUYR(IC,KC)
+     +                      - BCL4YR(IC,KC)*STRDYR(IC,KC)*STRWYR(IC,KC)
+
+              ELSE
               DRHS(IC,JSTOL,KC) = DRHS(IC,JSTOL,KC)
      +                          - BCL1YR(IC,KC)*OVA2YR(IC,KC)
 
@@ -2213,7 +2634,7 @@ C         ADD TO CONSERVATIVE SOURCE TERMS
      +               - BCL1YR(IC,KC)*(OVA2YR(IC,KC)*STREYR(IC,KC)
      +                              - STRVYR(IC,KC)/ACOUYR(IC,KC)
      +                              + OVGMYR(IC,KC))
-
+              ENDIF
             ENDDO
           ENDDO
 
@@ -2223,9 +2644,21 @@ C          DO ISPEC = 1,NSPM1
 
             DO KC = KSTAL,KSTOL
               DO IC = ISTAL,ISTOL
+              IF((STRVYR(IC,KC).LT.ZERO).AND.(FLAG_PIO_YR==1))THEN
+
+                FORNOW = BCLYYR(IC,KC,ISPEC)*STRDYR(IC,KC)
+
+                ERHS(IC,JSTOL,KC) = ERHS(IC,JSTOL,KC)
+     +                            - FORNOW*STRHYR(IC,KC,ISPEC)
 
                 YRHS(IC,JSTOL,KC,ISPEC) = YRHS(IC,JSTOL,KC,ISPEC)
+     + - (BCL2YR(IC,KC)+BCL1YR(IC,KC)*OVA2YR(IC,KC))*STRYYR(IC,KC,ISPEC)
+     +                                  - FORNOW
+
+              ELSE
+                YRHS(IC,JSTOL,KC,ISPEC) = YRHS(IC,JSTOL,KC,ISPEC)
      +                 - BCL1YR(IC,KC)*OVA2YR(IC,KC)*STRYYR(IC,KC,ISPEC)
+              ENDIF
 
               ENDDO
             ENDDO
@@ -2805,6 +3238,27 @@ C       --------------
             ACOUZL(IC,JC) = SQRT(FORNOW)
             OVA2ZL(IC,JC) = ONE/FORNOW
 
+C     THESE ARE INTRODUCED FOR LODATO'S BC- NC
+
+            TT1ZL(IC,JC)=T51BZL(IC,JC)+
+     +                   T52BZL(IC,JC)*(GAM1ZL(IC,JC)+1.0)-
+     +        STRDZL(IC,JC)* ACOUZL(IC,JC)*T2BZL(IC,JC)         
+
+            TT2ZL(IC,JC)=ACOUZL(IC,JC)*ACOUZL(IC,JC)*
+     +      T1BZL(IC,JC)-T51BZL(IC,JC)-(GAM1ZL(IC,JC)+1.0)*
+     +      T52BZL(IC,JC)
+
+            TT3ZL(IC,JC)=T3BZL(IC,JC)
+            TT4ZL(IC,JC)=T4BZL(IC,JC)
+            
+            TT5ZL(IC,JC)=T51BZL(IC,JC)+
+     +                   T52BZL(IC,JC)*(GAM1ZL(IC,JC)+1.0)+
+     +        STRDZL(IC,JC)* ACOUZL(IC,JC)*T2BZL(IC,JC)   
+
+            DO IS=1,NSPEC
+            TT6ZL(IC,JC,IS)=T6BZL(IC,JC,IS)
+            END DO
+
           ENDDO
         ENDDO
 
@@ -2814,6 +3268,8 @@ C       OUTFLOW BOUNDARY CONDITIONS
 C       ---------------------------
 
         IF(NSBCZL.EQ.NSBCO1)THEN
+          FLAG_PIO_ZL=NZLPRM(1)!0
+          FLAG_BET_ZL=NZLPRM(2)!1
 
 C         OUTFLOW BC No 1
 C         SUBSONIC NON-REFLECTING OUTFLOW
@@ -2852,23 +3308,79 @@ C         PRECOMPUTE CHEMISTRY TERMS
 C         SPECIFY L5Z AS REQUIRED
           DO JC = JSTAL,JSTOL
             DO IC = ISTAL,ISTOL
+              BCL2ZL(IC,JC) = STRWZL(IC,JC)
+     +                      *(BCL2ZL(IC,JC)-BCL5ZL(IC,JC)*OVA2ZL(IC,JC))
+              BCL3ZL(IC,JC) = STRWZL(IC,JC)*BCL3ZL(IC,JC)
+              BCL4ZL(IC,JC) = STRWZL(IC,JC)*BCL4ZL(IC,JC)
 
 C             OLD VALUE OF L5Z
               BCL5ZL(IC,JC) = HALF*(STRWZL(IC,JC)+ACOUZL(IC,JC))
      +        *(BCL5ZL(IC,JC)+STRDZL(IC,JC)*ACOUZL(IC,JC)*BCL1ZL(IC,JC))
 
 C             SUBTRACT FROM NEW VALUE OF L5Z
+C             TERMS INTRODUCED FOR LODATO'S BC- NC
+              IF(FLAG_BET_ZL==1) THEN
+                BET=STRUZL(IC,JC)*STRUZL(IC,JC)+
+     +              STRVZL(IC,JC)*STRVZL(IC,JC)+
+     +              STRWZL(IC,JC)*STRWZL(IC,JC)
+                BET=SQRT(BET)/ACOUZL(IC,JC)
+              END IF
+              IF((STRWZL(IC,JC).GT.ZERO).AND.(FLAG_PIO_ZL==1))THEN
+              BCL2ZL(IC,JC) =
+     +                       -BCL2ZL(IC,JC)
+     +                       -OVA2ZL(IC,JC)*SORPZL(IC,JC)
+
+              BCL3ZL(IC,JC) =
+     +                        0.1*(STRUZL(IC,JC)-0.0D0)
+     +                       -BCL3ZL(IC,JC)
+
+              BCL4ZL(IC,JC) =
+     +                        0.1*(STRVZL(IC,JC)-0.0D0)
+     +                       -BCL4ZL(IC,JC)
               BCL5ZL(IC,JC)= HALF*SORPZL(IC,JC)
      +                     + COBCZL*ACOUZL(IC,JC)*(STRPZL(IC,JC)-PINFZL)
-     +                     - BCL5ZL(IC,JC)
-
+     ++0.5*(1.0-BET)*TT5ZL(IC,JC)- BCL5ZL(IC,JC)
+     +                     + 100.0*STRDZL(IC,JC)*(ONE/ZGDLEN)
+     +               *(ACOUZL(IC,JC)**2.0-STRWZL(IC,JC)**2.0)
+     +               *(STRWZL(IC,JC)-0.0)
+              ELSE
+              BCL5ZL(IC,JC)= HALF*SORPZL(IC,JC)
+     +                     + COBCZL*ACOUZL(IC,JC)*(STRPZL(IC,JC)-PINFZL)
+     ++0.5*(1.0-BET)*TT5ZL(IC,JC)- BCL5ZL(IC,JC)
+              ENDIF
             ENDDO
           ENDDO
 
 C         ADD TO CONSERVATIVE SOURCE TERMS
           DO JC = JSTAL,JSTOL
             DO IC = ISTAL,ISTOL
+              IF((STRWZL(IC,JC).GT.ZERO).AND.(FLAG_PIO_ZL==1))THEN
+              DRHS(IC,JC,KSTAL) = DRHS(IC,JC,KSTAL)
+     +                          - BCL2ZL(IC,JC)
+     +                          - BCL5ZL(IC,JC)*OVA2ZL(IC,JC)
 
+              URHS(IC,JC,KSTAL) = URHS(IC,JC,KSTAL)
+     +                          - BCL2ZL(IC,JC)*STRUZL(IC,JC)
+     +                          - BCL3ZL(IC,JC)*STRDZL(IC,JC)
+     +                      - BCL5ZL(IC,JC)*OVA2ZL(IC,JC)*STRUZL(IC,JC)
+
+              VRHS(IC,JC,KSTAL) = VRHS(IC,JC,KSTAL)
+     +                          - BCL2ZL(IC,JC)*STRVZL(IC,JC)
+     +                          - BCL4ZL(IC,JC)*STRDZL(IC,JC)
+     +                      - BCL5ZL(IC,JC)*OVA2ZL(IC,JC)*STRVZL(IC,JC)
+
+              WRHS(IC,JC,KSTAL) = WRHS(IC,JC,KSTAL)
+     +                          - BCL2ZL(IC,JC)*STRWZL(IC,JC)
+     +      - BCL5ZL(IC,JC)*OVA2ZL(IC,JC)*(STRWZL(IC,JC)+ACOUZL(IC,JC))
+
+              ERHS(IC,JC,KSTAL) = ERHS(IC,JC,KSTAL)
+     +                          - BCL2ZL(IC,JC)*STREZL(IC,JC)
+     +                      - BCL3ZL(IC,JC)*STRDZL(IC,JC)*STRUZL(IC,JC)
+     +                      - BCL4ZL(IC,JC)*STRDZL(IC,JC)*STRVZL(IC,JC)
+     +                      - BCL5ZL(IC,JC)*(OVA2ZL(IC,JC)*STREZL(IC,JC)
+     +                                     + STRWZL(IC,JC)/ACOUZL(IC,JC)
+     +                                     + OVGMZL(IC,JC))
+              ELSE
               DRHS(IC,JC,KSTAL) = DRHS(IC,JC,KSTAL)
      +                          - BCL5ZL(IC,JC)*OVA2ZL(IC,JC)
 
@@ -2885,7 +3397,7 @@ C         ADD TO CONSERVATIVE SOURCE TERMS
      +               - BCL5ZL(IC,JC)*(OVA2ZL(IC,JC)*STREZL(IC,JC)
      +                              + STRWZL(IC,JC)/ACOUZL(IC,JC)
      +                              + OVGMZL(IC,JC))
-
+              ENDIF
             ENDDO
           ENDDO
 
@@ -2895,10 +3407,19 @@ C          DO ISPEC = 1,NSPM1
 
             DO JC = JSTAL,JSTOL
               DO IC = ISTAL,ISTOL
+              IF((STRWZL(IC,JC).GT.ZERO).AND.(FLAG_PIO_ZL==1))THEN
+                FORNOW = BCLYZL(IC,JC,ISPEC)*STRDZL(IC,JC)
+
+                ERHS(IC,JC,KSTAL) = ERHS(IC,JC,KSTAL)
+     +                            - FORNOW*STRHZL(IC,JC,ISPEC)
 
                 YRHS(IC,JC,KSTAL,ISPEC) = YRHS(IC,JC,KSTAL,ISPEC)
+     + - (BCL2ZL(IC,JC)+BCL5ZL(IC,JC)*OVA2ZL(IC,JC))*STRYZL(IC,JC,ISPEC)
+     +                                  - FORNOW
+              ELSE
+                YRHS(IC,JC,KSTAL,ISPEC) = YRHS(IC,JC,KSTAL,ISPEC)
      +                 - BCL5ZL(IC,JC)*OVA2ZL(IC,JC)*STRYZL(IC,JC,ISPEC)
-
+              ENDIF
               ENDDO
             ENDDO
 
@@ -3477,6 +3998,27 @@ C       --------------
             ACOUZR(IC,JC) = SQRT(FORNOW)
             OVA2ZR(IC,JC) = ONE/FORNOW
 
+C     THESE ARE INTRODUCED FOR LODATO'S BC- NC
+
+            TT1ZR(IC,JC)=T51BZR(IC,JC)+
+     +                   T52BZR(IC,JC)*(GAM1ZR(IC,JC)+1.0)-
+     +        STRDZR(IC,JC)* ACOUZR(IC,JC)*T2BZR(IC,JC)         
+
+            TT2ZR(IC,JC)=ACOUZR(IC,JC)*ACOUZR(IC,JC)*
+     +      T1BZR(IC,JC)-T51BZR(IC,JC)-(GAM1ZR(IC,JC)+1.0)*
+     +      T52BZR(IC,JC)
+
+            TT3ZR(IC,JC)=T3BZR(IC,JC)
+            TT4ZR(IC,JC)=T4BZR(IC,JC)
+            
+            TT5ZR(IC,JC)=T51BZR(IC,JC)+
+     +                   T52BZR(IC,JC)*(GAM1ZR(IC,JC)+1.0)+
+     +        STRDZR(IC,JC)* ACOUZR(IC,JC)*T2BZR(IC,JC)   
+
+            DO IS=1,NSPEC
+            TT6ZR(IC,JC,IS)=T6BZR(IC,JC,IS)
+            END DO
+
           ENDDO
         ENDDO
 
@@ -3486,6 +4028,8 @@ C       OUTFLOW BOUNDARY CONDITIONS
 C       ---------------------------
 
         IF(NSBCZR.EQ.NSBCO1)THEN
+          FLAG_PIO_ZR=NZRPRM(1)!0
+          FLAG_BET_ZR=NZRPRM(2)!1
 
 C         OUTFLOW BC No 1
 C         SUBSONIC NON-REFLECTING OUTFLOW
@@ -3525,22 +4069,78 @@ C         SPECIFY L1Z AS REQUIRED
           DO JC = JSTAL,JSTOL
             DO IC = ISTAL,ISTOL
 
+              BCL2ZR(IC,JC) = STRWZR(IC,JC)
+     +                      *(BCL2ZR(IC,JC)-BCL5ZR(IC,JC)*OVA2ZR(IC,JC))
+              BCL3ZR(IC,JC) = STRWZR(IC,JC)*BCL3ZR(IC,JC)
+              BCL4ZR(IC,JC) = STRWZR(IC,JC)*BCL4ZR(IC,JC)
 C             OLD VALUE OF L1Z
               BCL1ZR(IC,JC) = HALF*(STRWZR(IC,JC)-ACOUZR(IC,JC))
      +        *(BCL5ZR(IC,JC)-STRDZR(IC,JC)*ACOUZR(IC,JC)*BCL1ZR(IC,JC))
 
 C             SUBTRACT FROM NEW VALUE OF L1Z
+C             TERMS INTRODUCED FOR LODATO'S BC- NC
+              IF(FLAG_BET_ZR==1) THEN
+                BET=STRUZR(IC,JC)*STRUZR(IC,JC)+
+     +              STRVZR(IC,JC)*STRVZR(IC,JC)+
+     +              STRWZR(IC,JC)*STRWZR(IC,JC)
+                BET=SQRT(BET)/ACOUZR(IC,JC)
+              END IF
+              IF((STRWZR(IC,JC).LT.ZERO).AND.(FLAG_PIO_ZR==1))THEN
+              BCL2ZR(IC,JC) =
+     +                       -BCL2ZR(IC,JC)
+     +                       -OVA2ZR(IC,JC)*SORPZR(IC,JC)
+
+              BCL3ZR(IC,JC) =
+     +                        0.1*(STRUZR(IC,JC)-0.0D0)
+     +                       -BCL3ZR(IC,JC)
+
+              BCL4ZR(IC,JC) =
+     +                        0.1*(STRVZR(IC,JC)-0.0D0)
+     +                       -BCL4ZR(IC,JC)
               BCL1ZR(IC,JC)= HALF*SORPZR(IC,JC)
      +                     + COBCZR*ACOUZR(IC,JC)*(STRPZR(IC,JC)-PINFZR)
-     +                     - BCL1ZR(IC,JC)
-
+     +                     + 0.5*(1.0-BET)*TT1ZR(IC,JC)- BCL1ZR(IC,JC)
+     +                     + 100.0*STRDZR(IC,JC)*(ONE/ZGDLEN)
+     +               *(ACOUZR(IC,JC)**2.0-STRWZR(IC,JC)**2.0)
+     +               *(STRWZR(IC,JC)-0.0)
+              ELSE
+              BCL1ZR(IC,JC)= HALF*SORPZR(IC,JC)
+     +                     + COBCZR*ACOUZR(IC,JC)*(STRPZR(IC,JC)-PINFZR)
+     +                     + 0.5*(1.0-BET)*TT1ZR(IC,JC)- BCL1ZR(IC,JC)
+              ENDIF
             ENDDO
           ENDDO
 
 C         ADD TO CONSERVATIVE SOURCE TERMS
           DO JC = JSTAL,JSTOL
             DO IC = ISTAL,ISTOL
+              IF((STRWZR(IC,JC).LT.ZERO).AND.(FLAG_PIO_ZR==1))THEN
+              DRHS(IC,JC,KSTOL) = DRHS(IC,JC,KSTOL)
+     +                          - BCL1ZR(IC,JC)*OVA2ZR(IC,JC)
+     +                          - BCL2ZR(IC,JC)
 
+              URHS(IC,JC,KSTOL) = URHS(IC,JC,KSTOL)
+     +                      - BCL1ZR(IC,JC)*OVA2ZR(IC,JC)*STRUZR(IC,JC)
+     +                          - BCL2ZR(IC,JC)*STRUZR(IC,JC)
+     +                          - BCL3ZR(IC,JC)*STRDZR(IC,JC)
+
+              VRHS(IC,JC,KSTOL) = VRHS(IC,JC,KSTOL)
+     +                      - BCL1ZR(IC,JC)*OVA2ZR(IC,JC)*STRVZR(IC,JC)
+     +                          - BCL2ZR(IC,JC)*STRVZR(IC,JC)
+     +                          - BCL4ZR(IC,JC)*STRDZR(IC,JC)
+
+              WRHS(IC,JC,KSTOL) = WRHS(IC,JC,KSTOL)
+     +      - BCL1ZR(IC,JC)*OVA2ZR(IC,JC)*(STRWZR(IC,JC)-ACOUZR(IC,JC))
+     +                          - BCL2ZR(IC,JC)*STRWZR(IC,JC)
+
+              ERHS(IC,JC,KSTOL) = ERHS(IC,JC,KSTOL)
+     +                      - BCL1ZR(IC,JC)*(OVA2ZR(IC,JC)*STREZR(IC,JC)
+     +                                     + STRWZR(IC,JC)/ACOUZR(IC,JC)
+     +                                     + OVGMZR(IC,JC))
+     +                          - BCL2ZR(IC,JC)*STREZR(IC,JC)
+     +                      - BCL3ZR(IC,JC)*STRDZR(IC,JC)*STRUZR(IC,JC)
+     +                      - BCL4ZR(IC,JC)*STRDZR(IC,JC)*STRVZR(IC,JC)
+              ELSE
               DRHS(IC,JC,KSTOL) = DRHS(IC,JC,KSTOL)
      +                          - BCL1ZR(IC,JC)*OVA2ZR(IC,JC)
 
@@ -3557,7 +4157,7 @@ C         ADD TO CONSERVATIVE SOURCE TERMS
      +               - BCL1ZR(IC,JC)*(OVA2ZR(IC,JC)*STREZR(IC,JC)
      +                              - STRWZR(IC,JC)/ACOUZR(IC,JC)
      +                              + OVGMZR(IC,JC))
-
+              ENDIF
             ENDDO
           ENDDO
 
@@ -3567,10 +4167,20 @@ C          DO ISPEC = 1,NSPM1
 
             DO JC = JSTAL,JSTOL
               DO IC = ISTAL,ISTOL
+              IF((STRWZR(IC,JC).LT.ZERO).AND.(FLAG_PIO_ZR==1))THEN
+                FORNOW = BCLYZR(IC,JC,ISPEC)*STRDZR(IC,JC)
+
+                ERHS(IC,JC,KSTOL) = ERHS(IC,JC,KSTOL)
+     +                            - FORNOW*STRHZR(IC,JC,ISPEC)
 
                 YRHS(IC,JC,KSTOL,ISPEC) = YRHS(IC,JC,KSTOL,ISPEC)
-     +                 - BCL1ZR(IC,JC)*OVA2ZR(IC,JC)*STRYZR(IC,JC,ISPEC)
+     + - (BCL2ZR(IC,JC)+BCL5ZR(IC,JC)*OVA2ZR(IC,JC))*STRYZR(IC,JC,ISPEC)
+     +                                  - FORNOW
 
+              ELSE
+                YRHS(IC,JC,KSTOL,ISPEC) = YRHS(IC,JC,KSTOL,ISPEC)
+     +                 - BCL1ZR(IC,JC)*OVA2ZR(IC,JC)*STRYZR(IC,JC,ISPEC)
+              ENDIF
               ENDDO
             ENDDO
 
