@@ -32,11 +32,6 @@ SUBROUTINE bcinit
 
 !   BEGIN
 !   =====
-    IF ((nxproc*nyproc*nzproc) /= nproc) THEN
-        print *, "Error... nxproc X nyproc X nzproc must be equal to total number of processes"
-        print *, "Please correct the input parameters..."
-        STOP
-    END IF
 
 !   =========================================================================
 
@@ -48,7 +43,6 @@ SUBROUTINE bcinit
     nendxl = nbound
     IF(nsbcxl == nsperi)THEN
         nendxl = nobc
-        IF(nxproc == 1) nendxl = nperi
     END IF
 
 !   X-RIGHT
@@ -56,7 +50,6 @@ SUBROUTINE bcinit
     nendxr = nbound
     IF(nsbcxr == nsperi)THEN
         nendxr = nobc
-        IF(nxproc == 1) nendxr = nperi
     END IF
 
 !   Y-LEFT
@@ -64,7 +57,6 @@ SUBROUTINE bcinit
     nendyl = nbound
     IF(nsbcyl == nsperi)THEN
         nendyl = nobc
-        IF(nyproc == 1) nendyl = nperi
     END IF
 
 !   Y-RIGHT
@@ -72,7 +64,6 @@ SUBROUTINE bcinit
     nendyr = nbound
     IF(nsbcyr == nsperi)THEN
         nendyr = nobc
-        IF(nyproc == 1) nendyr = nperi
     END IF
 
 !   Z-LEFT
@@ -80,7 +71,6 @@ SUBROUTINE bcinit
     nendzl = nbound
     IF(nsbczl == nsperi)THEN
         nendzl = nobc
-        IF(nzproc == 1) nendzl = nperi
     END IF
 
 !   Z-RIGHT
