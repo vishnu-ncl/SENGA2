@@ -138,15 +138,15 @@ SUBROUTINE temper_kernel_main(store7,trun,transp,prun,itndex,urhs,vrhs,wrhs,drhs
             deltmp = -tfpoly/tdpoly
 
         ELSE
-            WRITE(6,*) 'Fatal: TEMPER: T iteration failed to converge'
+            print *,'Fatal: TEMPER: T iteration failed to converge'
 !            WRITE(6,*)'processor:',iproc
-            WRITE(6,*) 'at point:',ic,jc,kc
-            WRITE(6,*) 'with values:',tempor,deltmp
-            WRITE(6,*) drhs(OPS_ACC9(0,0,0))
-            WRITE(6,*) urhs(OPS_ACC6(0,0,0))
-            WRITE(6,*) vrhs(OPS_ACC7(0,0,0))
-            WRITE(6,*) wrhs(OPS_ACC8(0,0,0))
-            WRITE(6,*) erhs(OPS_ACC10(0,0,0))
+            print *,'at point:',ic,jc,kc
+            print *,'with values:',tempor,deltmp
+            print *,drhs(OPS_ACC9(0,0,0))
+            print *,urhs(OPS_ACC6(0,0,0))
+            print *,vrhs(OPS_ACC7(0,0,0))
+            print *,wrhs(OPS_ACC8(0,0,0))
+            print *,erhs(OPS_ACC10(0,0,0))
             STOP
         END IF
     END DO

@@ -168,17 +168,17 @@ SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs
             IF(tempor < tlimhi) THEN
                 GO TO 2000
             ELSE
-                WRITE(6,*) 'Fatal: TEMPIN: T upper bracket failed to converge'
-                WRITE(6,*)'processor:',iproc
-                WRITE(6,*)'at point:',ic,jc,kc
-                WRITE(6,*)'with values:',tempor,tresid
-                WRITE(6,*)drhs(OPS_ACC9(0,0,0))
-                WRITE(6,*)urhs(OPS_ACC6(0,0,0))
-                WRITE(6,*)vrhs(OPS_ACC7(0,0,0))
-                WRITE(6,*)wrhs(OPS_ACC8(0,0,0))
-                WRITE(6,*)erhs(OPS_ACC10(0,0,0))
+                print *,'Fatal: TEMPIN: T upper bracket failed to converge'
+                print *,'processor:',iproc
+                print *,'at point:',ic,jc,kc
+                print *,'with values:',tempor,tresid
+                print *,drhs(OPS_ACC9(0,0,0))
+                print *,urhs(OPS_ACC6(0,0,0))
+                print *,vrhs(OPS_ACC7(0,0,0))
+                print *,wrhs(OPS_ACC8(0,0,0))
+                print *,erhs(OPS_ACC10(0,0,0))
                 DO ispec = 1, nspec
-                    WRITE(6,*)yrhs(OPS_ACC_MD11(ispec,0,0,0))
+                    print *,yrhs(OPS_ACC_MD11(ispec,0,0,0))
                 END DO
                 STOP
             END IF
@@ -247,17 +247,17 @@ SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs
                 IF(tempor > tlimlo) THEN
                     GO TO 3000
                 ELSE
-                    WRITE(6,*) 'Fatal: TEMPIN: T lower bracket failed to converge'
-                    WRITE(6,*)'processor:',iproc
-                    WRITE(6,*)'at point:',ic,jc,kc
-                    WRITE(6,*)'with values:',tempor,tresid
-                    WRITE(6,*)drhs(OPS_ACC9(0,0,0))
-                    WRITE(6,*)urhs(OPS_ACC6(0,0,0))
-                    WRITE(6,*)vrhs(OPS_ACC7(0,0,0))
-                    WRITE(6,*)wrhs(OPS_ACC8(0,0,0))
-                    WRITE(6,*)erhs(OPS_ACC10(0,0,0))
+                    print *,'Fatal: TEMPIN: T lower bracket failed to converge'
+                    print *,'processor:',iproc
+                    print *,'at point:',ic,jc,kc
+                    print *,'with values:',tempor,tresid
+                    print *,drhs(OPS_ACC9(0,0,0))
+                    print *,urhs(OPS_ACC6(0,0,0))
+                    print *,vrhs(OPS_ACC7(0,0,0))
+                    print *,wrhs(OPS_ACC8(0,0,0))
+                    print *,erhs(OPS_ACC10(0,0,0))
                     DO ispec = 1, nspec
-                        WRITE(6,*)yrhs(OPS_ACC_MD11(ispec,0,0,0))
+                        print *,yrhs(OPS_ACC_MD11(ispec,0,0,0))
                     END DO
                     STOP
                 END IF
