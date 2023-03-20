@@ -89,6 +89,7 @@ PROGRAM senga2
 !   ==============
 
     call ops_init(6)
+    call ops_set_soa(1)
 
     call ops_timers ( startTime )
     
