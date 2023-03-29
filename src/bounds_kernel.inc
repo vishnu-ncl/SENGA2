@@ -1,42 +1,42 @@
-SUBROUTINE bounds_kernel_reduced_enthalpy_xdir(strhx,strgx,strtx,strrx,rgspec,ispec)
+SUBROUTINE bounds_kernel_reduced_enthalpy_xdir(strhx,strgx,strtx,strrx,rgspec,nspcmx,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: strhx
     real(kind=8), dimension(1), intent(in) :: strgx,strtx,strrx
-    real(kind=8), intent(in) :: rgspec
-    integer, intent(in) :: ispec
+    integer, intent(in) :: ispec,nspcmx
+    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
     strhx(OPS_ACC_MD1(ispec,0,0,0)) = strhx(OPS_ACC_MD1(ispec,0,0,0))  &
-            - strgx(OPS_ACC2(0,0,0))*strtx(OPS_ACC3(0,0,0))*rgspec/strrx(OPS_ACC4(0,0,0))
+            - strgx(OPS_ACC2(0,0,0))*strtx(OPS_ACC3(0,0,0))*rgspec(ispec)/strrx(OPS_ACC4(0,0,0))
 
-END SUBROUTINE bounds_kernel_reduced_enthalpy_xdir
+END SUBROUTINE ispecbounds_kernel_reduced_enthalpy_xdir
 
-SUBROUTINE bounds_kernel_reduced_enthalpy_ydir(strhy,strgy,strty,strry,rgspec,ispec)
+SUBROUTINE bounds_kernel_reduced_enthalpy_ydir(strhy,strgy,strty,strry,rgspec,nspcmx,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: strhy
     real(kind=8), dimension(1), intent(in) :: strgy,strty,strry
-    real(kind=8), intent(in) :: rgspec
-    integer, intent(in) :: ispec
+    integer, intent(in) :: ispec,nspcmx
+    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
     strhy(OPS_ACC_MD1(ispec,0,0,0)) = strhy(OPS_ACC_MD1(ispec,0,0,0))  &
-            - strgy(OPS_ACC2(0,0,0))*strty(OPS_ACC3(0,0,0))*rgspec/strry(OPS_ACC4(0,0,0))
+            - strgy(OPS_ACC2(0,0,0))*strty(OPS_ACC3(0,0,0))*rgspec(ispec)/strry(OPS_ACC4(0,0,0))
 
 END SUBROUTINE bounds_kernel_reduced_enthalpy_ydir
 
-SUBROUTINE bounds_kernel_reduced_enthalpy_zdir(strhz,strgz,strtz,strrz,rgspec,ispec)
+SUBROUTINE bounds_kernel_reduced_enthalpy_zdir(strhz,strgz,strtz,strrz,rgspec,nspcmx,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: strhz
     real(kind=8), dimension(1), intent(in) :: strgz,strtz,strrz
-    real(kind=8), intent(in) :: rgspec
-    integer, intent(in) :: ispec
+    integer, intent(in) :: ispec,nspcmx
+    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
     strhz(OPS_ACC_MD1(ispec,0,0,0)) = strhz(OPS_ACC_MD1(ispec,0,0,0))  &
-            - strgz(OPS_ACC2(0,0,0))*strtz(OPS_ACC3(0,0,0))*rgspec/strrz(OPS_ACC4(0,0,0))
+            - strgz(OPS_ACC2(0,0,0))*strtz(OPS_ACC3(0,0,0))*rgspec(ispec)/strrz(OPS_ACC4(0,0,0))
 
 END SUBROUTINE bounds_kernel_reduced_enthalpy_zdir
 
@@ -167,44 +167,44 @@ SUBROUTINE bounds_kernel_eqA_zdir(sorpz,strhz,ratez,ispec)
 END SUBROUTINE bounds_kernel_eqA_zdir
 
 !A_yz = A_yz + B_mulditim_yz*val1
-SUBROUTINE bounds_kernel_eqB_xdir(sydtx,dydtx,rgspec,ispec)
+SUBROUTINE bounds_kernel_eqB_xdir(sydtx,dydtx,rgspec,nspcmx,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: sydtx
     real(kind=8), dimension(1), intent(in) :: dydtx
-    real(kind=8), intent(in) :: rgspec
-    integer, intent(in) :: ispec
+    integer, intent(in) :: ispec,nspcmx
+    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
-    sydtx(OPS_ACC1(0,0,0)) = sydtx(OPS_ACC1(0,0,0)) + dydtx(OPS_ACC_MD2(ispec,0,0,0))*rgspec
+    sydtx(OPS_ACC1(0,0,0)) = sydtx(OPS_ACC1(0,0,0)) + dydtx(OPS_ACC_MD2(ispec,0,0,0))*rgspec(ispec)
 
 END SUBROUTINE bounds_kernel_eqB_xdir
 
 !A_xz = A_xz + B_mulditim_xz*val1
-SUBROUTINE bounds_kernel_eqB_ydir(sydty,dydty,rgspec,ispec)
+SUBROUTINE bounds_kernel_eqB_ydir(sydty,dydty,rgspec,nspcmx,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: sydty
     real(kind=8), dimension(1), intent(in) :: dydty
-    real(kind=8), intent(in) :: rgspec
-    integer, intent(in) :: ispec
+    integer, intent(in) :: ispec,nspcmx
+    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
-    sydty(OPS_ACC1(0,0,0)) = sydty(OPS_ACC1(0,0,0)) + dydty(OPS_ACC_MD2(ispec,0,0,0))*rgspec
+    sydty(OPS_ACC1(0,0,0)) = sydty(OPS_ACC1(0,0,0)) + dydty(OPS_ACC_MD2(ispec,0,0,0))*rgspec(ispec)
 
 END SUBROUTINE bounds_kernel_eqB_ydir
 
 !A_xy = A_xy + B_mulditim_xy*val1
-SUBROUTINE bounds_kernel_eqB_zdir(sydtz,dydtz,rgspec,ispec)
+SUBROUTINE bounds_kernel_eqB_zdir(sydtz,dydtz,rgspec,nspcmx,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: sydtz
     real(kind=8), dimension(1), intent(in) :: dydtz
-    real(kind=8), intent(in) :: rgspec
-    integer, intent(in) :: ispec
+    integer, intent(in) :: ispec,nspcmx
+    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
-    sydtz(OPS_ACC1(0,0,0)) = sydtz(OPS_ACC1(0,0,0)) + dydtz(OPS_ACC_MD2(ispec,0,0,0))*rgspec
+    sydtz(OPS_ACC1(0,0,0)) = sydtz(OPS_ACC1(0,0,0)) + dydtz(OPS_ACC_MD2(ispec,0,0,0))*rgspec(ispec)
 
 END SUBROUTINE bounds_kernel_eqB_zdir
 
@@ -820,57 +820,57 @@ SUBROUTINE bounds_kernel_wallBC2_computeL_zl(bcl1zl,bcl2zl,bcl3zl,bcl4zl,bcl5zl,
 
 END SUBROUTINE bounds_kernel_wallBC2_computeL_zl
 
-SUBROUTINE bounds_kernel_wallBC2_LYX_xl(bclyxl,bcl2xl,ratexl,struxl,strdxl,strrxl,rgspec,ispec)
+SUBROUTINE bounds_kernel_wallBC2_LYX_xl(bclyxl,bcl2xl,ratexl,struxl,strdxl,strrxl,rgspec,nspcmx,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) ::  bclyxl,bcl2xl
     real(kind=8), dimension(1), intent(in) :: ratexl,struxl,strdxl,strrxl
-    real(kind=8), intent(in) :: rgspec
-    integer, intent(in) :: ispec
-
+    integer, intent(in) :: ispec,nspcmx
+    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
+    
 !   OLD VALUE OF LYX
     bclyxl(OPS_ACC_MD1(ispec,0,0,0)) = struxl(OPS_ACC4(0,0,0))*bclyxl(OPS_ACC_MD1(ispec,0,0,0))
 
 !   UPDATE L2X
     bcl2xl(OPS_ACC2(0,0,0)) = bcl2xl(OPS_ACC2(0,0,0)) + (ratexl(OPS_ACC_MD3(ispec,0,0,0))  &
-              - strdxl(OPS_ACC5(0,0,0))*bclyxl(OPS_ACC_MD1(ispec,0,0,0))) *rgspec/strrxl(OPS_ACC6(0,0,0))
+              - strdxl(OPS_ACC5(0,0,0))*bclyxl(OPS_ACC_MD1(ispec,0,0,0))) *rgspec(ispec)/strrxl(OPS_ACC6(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC2_LYX_xl
 
-SUBROUTINE bounds_kernel_wallBC2_LYY_yl(bclyyl,bcl2yl,rateyl,strvyl,strdyl,strryl,rgspec,ispec)
+SUBROUTINE bounds_kernel_wallBC2_LYY_yl(bclyyl,bcl2yl,rateyl,strvyl,strdyl,strryl,rgspec,nspcmx,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) ::  bclyyl,bcl2yl
     real(kind=8), dimension(1), intent(in) :: rateyl,strvyl,strdyl,strryl
-    real(kind=8), intent(in) :: rgspec
-    integer, intent(in) :: ispec
+    integer, intent(in) :: ispec,nspcmx
+    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
 !   OLD VALUE OF LYY
     bclyyl(OPS_ACC_MD1(ispec,0,0,0)) = strvyl(OPS_ACC4(0,0,0))*bclyyl(OPS_ACC_MD1(ispec,0,0,0))
 
 !   UPDATE L2Y
     bcl2yl(OPS_ACC2(0,0,0)) = bcl2yl(OPS_ACC2(0,0,0)) + (rateyl(OPS_ACC_MD3(ispec,0,0,0))  &
-              - strdyl(OPS_ACC5(0,0,0))*bclyyl(OPS_ACC_MD1(ispec,0,0,0))) *rgspec/strryl(OPS_ACC6(0,0,0))
+              - strdyl(OPS_ACC5(0,0,0))*bclyyl(OPS_ACC_MD1(ispec,0,0,0))) *rgspec(ispec)/strryl(OPS_ACC6(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC2_LYY_yl
 
-SUBROUTINE bounds_kernel_wallBC2_LYZ_zl(bclyzl,bcl2zl,ratezl,strwzl,strdzl,strrzl,rgspec,ispec)
+SUBROUTINE bounds_kernel_wallBC2_LYZ_zl(bclyzl,bcl2zl,ratezl,strwzl,strdzl,strrzl,rgspec,nspcmx,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) ::  bclyzl,bcl2zl
     real(kind=8), dimension(1), intent(in) :: ratezl,strwzl,strdzl,strrzl
-    real(kind=8), intent(in) :: rgspec
-    integer, intent(in) :: ispec
+    integer, intent(in) :: ispec,nspcmx
+    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
 !   OLD VALUE OF LYZ
     bclyzl(OPS_ACC_MD1(ispec,0,0,0)) = strwzl(OPS_ACC4(0,0,0))*bclyzl(OPS_ACC_MD1(ispec,0,0,0))
 
 !   UPDATE L2Z
     bcl2zl(OPS_ACC2(0,0,0)) = bcl2zl(OPS_ACC2(0,0,0)) + (ratezl(OPS_ACC_MD3(ispec,0,0,0))  &
-              - strdzl(OPS_ACC5(0,0,0))*bclyzl(OPS_ACC_MD1(ispec,0,0,0))) *rgspec/strrzl(OPS_ACC6(0,0,0))
+              - strdzl(OPS_ACC5(0,0,0))*bclyzl(OPS_ACC_MD1(ispec,0,0,0))) *rgspec(ispec)/strrzl(OPS_ACC6(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC2_LYZ_zl
 
@@ -1414,57 +1414,57 @@ SUBROUTINE bounds_kernel_wallBC2_computeL_zr(bcl1zr,bcl2zr,bcl3zr,bcl4zr,bcl5zr,
 
 END SUBROUTINE bounds_kernel_wallBC2_computeL_zr
 
-SUBROUTINE bounds_kernel_wallBC2_LYX_xr(bclyxr,bcl2xr,ratexr,struxr,strdxr,strrxr,rgspec,ispec)
+SUBROUTINE bounds_kernel_wallBC2_LYX_xr(bclyxr,bcl2xr,ratexr,struxr,strdxr,strrxr,rgspec,nspcmx,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: bclyxr,bcl2xr
     real(kind=8), dimension(1), intent(in) :: ratexr,struxr,strdxr,strrxr
-    real(kind=8), intent(in) :: rgspec
-    integer, intent(in) :: ispec
+    integer, intent(in) :: ispec,nspcmx
+    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
 !   OLD VALUE OF LYX
     bclyxr(OPS_ACC_MD1(ispec,0,0,0)) = struxr(OPS_ACC4(0,0,0))*bclyxr(OPS_ACC_MD1(ispec,0,0,0))
 
 !   UPDATE L2X
     bcl2xr(OPS_ACC2(0,0,0)) = bcl2xr(OPS_ACC2(0,0,0)) + (ratexr(OPS_ACC_MD3(ispec,0,0,0))  &
-              - strdxr(OPS_ACC5(0,0,0))*bclyxr(OPS_ACC_MD1(ispec,0,0,0))) *rgspec/strrxr(OPS_ACC6(0,0,0))
+              - strdxr(OPS_ACC5(0,0,0))*bclyxr(OPS_ACC_MD1(ispec,0,0,0))) *rgspec(ispec)/strrxr(OPS_ACC6(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC2_LYX_xr
 
-SUBROUTINE bounds_kernel_wallBC2_LYY_yr(bclyyr,bcl2yr,rateyr,strvyr,strdyr,strryr,rgspec,ispec)
+SUBROUTINE bounds_kernel_wallBC2_LYY_yr(bclyyr,bcl2yr,rateyr,strvyr,strdyr,strryr,rgspec,nspcmx,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: bclyyr,bcl2yr
     real(kind=8), dimension(1), intent(in) :: rateyr,strvyr,strdyr,strryr
-    real(kind=8), intent(in) :: rgspec
-    integer, intent(in) :: ispec
+    integer, intent(in) :: ispec,nspcmx
+    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
 !   OLD VALUE OF LYY
     bclyyr(OPS_ACC_MD1(ispec,0,0,0)) = strvyr(OPS_ACC4(0,0,0))*bclyyr(OPS_ACC_MD1(ispec,0,0,0))
 
 !   UPDATE L2Y
     bcl2yr(OPS_ACC2(0,0,0)) = bcl2yr(OPS_ACC2(0,0,0)) + (rateyr(OPS_ACC_MD3(ispec,0,0,0))  &
-              - strdyr(OPS_ACC5(0,0,0))*bclyyr(OPS_ACC_MD1(ispec,0,0,0))) *rgspec/strryr(OPS_ACC6(0,0,0))
+              - strdyr(OPS_ACC5(0,0,0))*bclyyr(OPS_ACC_MD1(ispec,0,0,0))) *rgspec(ispec)/strryr(OPS_ACC6(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC2_LYY_yr
 
-SUBROUTINE bounds_kernel_wallBC2_LYZ_zr(bclyzr,bcl2zr,ratezr,strwzr,strdzr,strrzr,rgspec,ispec)
+SUBROUTINE bounds_kernel_wallBC2_LYZ_zr(bclyzr,bcl2zr,ratezr,strwzr,strdzr,strrzr,rgspec,nspcmx,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: bclyzr,bcl2zr
     real(kind=8), dimension(1), intent(in) :: ratezr,strwzr,strdzr,strrzr
-    real(kind=8), intent(in) :: rgspec
-    integer, intent(in) :: ispec
+    integer, intent(in) :: ispec,nspcmx
+    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
 !   OLD VALUE OF LYZ
     bclyzr(OPS_ACC_MD1(ispec,0,0,0)) = strwzr(OPS_ACC4(0,0,0))*bclyzr(OPS_ACC_MD1(ispec,0,0,0))
 
 !   UPDATE L2Z
     bcl2zr(OPS_ACC2(0,0,0)) = bcl2zr(OPS_ACC2(0,0,0)) + (ratezr(OPS_ACC_MD3(ispec,0,0,0))  &
-              - strdzr(OPS_ACC5(0,0,0))*bclyzr(OPS_ACC_MD1(ispec,0,0,0))) *rgspec/strrzr(OPS_ACC6(0,0,0))
+              - strdzr(OPS_ACC5(0,0,0))*bclyzr(OPS_ACC_MD1(ispec,0,0,0))) *rgspec(ispec)/strrzr(OPS_ACC6(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC2_LYZ_zr
 

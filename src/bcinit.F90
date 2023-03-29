@@ -78,7 +78,6 @@ SUBROUTINE bcinit
     nendzr = nbound
     IF(nsbczr == nsperi)THEN
         nendzr = nobc
-        IF(nzproc == 1) nendzr = nperi
     END IF
 
     IF (iproc == 0) THEN

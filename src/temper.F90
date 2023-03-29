@@ -82,14 +82,14 @@ SUBROUTINE temper
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_gbl(amascp, 1, "real(8)", OPS_READ), &
-                    ops_arg_gbl(amasct, 1, "real(8)", OPS_READ), &
-                    ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
-                    ops_arg_gbl(ncpom1, 1, "integer", OPS_READ), &
-                    ops_arg_gbl(ncpoly, 1, "integer", OPS_READ), &
-                    ops_arg_gbl(tinthi, 1, "real(8)", OPS_READ), &
-                    ops_arg_gbl(rgspec, 1, "real(8)", OPS_READ), &
-                    ops_arg_gbl(ntint, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(amascp, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
+                    ops_arg_gbl(amasct, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
+                    ops_arg_gbl(ncenth, ntinmx*nspcmx, "integer", OPS_READ), &
+                    ops_arg_gbl(ncpom1, ntinmx*nspcmx, "integer", OPS_READ), &
+                    ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer", OPS_READ), &
+                    ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
+                    ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
+                    ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ), &
                     ops_arg_gbl(nctmax, 1, "integer", OPS_READ), &
                     ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
                     ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &

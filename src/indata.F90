@@ -1012,7 +1012,8 @@ SUBROUTINE indata
         rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
         call ops_par_loop(math_MD_kernel_eqT, "A_multidim = var", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_yrun, 2, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_gbl(yrin(ispec), 1, "real(8)", OPS_READ), &
+                        ops_arg_gbl(yrin, nspcmx, "real(8)", OPS_READ), &
+                        ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
     
     END DO
@@ -1087,10 +1088,11 @@ SUBROUTINE indata
 !   MIXTURE GAS CONSTANT
     DO ispec = 1,nspec
         rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-        call ops_par_loop(math_MD_kernel_eqP, "A = A + var*B_multidim", senga_grid, 3, rangexyz,  &
+        call ops_par_loop(math_MD_kernel_eqPP, "A = A + var(d)*B_multidim", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_yrun, 2, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(rgspec(ispec), 1, "real(8)", OPS_READ), &
+                        ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
+                        ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), & 
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
     END DO
@@ -1118,11 +1120,12 @@ SUBROUTINE indata
     call ops_par_loop(math_MD_kernel_eqAC, "INTERNAL ENERGY FIELD", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW), &
                     ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_gbl(tinthi, 1, "real(8)", OPS_READ), &
-                    ops_arg_gbl(ntint, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
+                    ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ), &
                     ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
                     ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
                     ops_arg_gbl(nintmx, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                     ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
 !   PRE-INITIALISE INTERNAL ENERGY TO ZERO
@@ -1146,10 +1149,10 @@ SUBROUTINE indata
                         ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_READ), &
                         ops_arg_dat(d_yrun, 2, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(amasch, 1, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ncpoly, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(ncpom1, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(amasch, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
+                        ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer", OPS_READ), &
+                        ops_arg_gbl(ncpom1, ntinmx*nspcmx, "integer", OPS_READ), &
+                        ops_arg_gbl(ncenth, ntinmx*nspcmx, "integer", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
                         ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
@@ -1157,7 +1160,7 @@ SUBROUTINE indata
                         ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(nspec, 1, "integer", OPS_READ))
+                        ops_arg_gbl(nspcmx, 1, "integer", OPS_READ))
 
     END DO
 
@@ -1325,7 +1328,8 @@ SUBROUTINE indata
         rangexyz = (/1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz/)
         call ops_par_loop(math_MD_kernel_eqT, "A_multidim = var", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_gbl(dyrin(ispec), 1, "real(8)", OPS_READ), &
+                        ops_arg_gbl(dyrin, nspcmx, "real(8)", OPS_READ), &
+                        ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
     END DO

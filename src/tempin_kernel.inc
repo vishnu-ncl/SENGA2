@@ -1,4 +1,4 @@
-SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs,erhs,yrhs,amascp,amasct,ncpoly,ncpom1,ncenth,tinthi,rgspec,trin,ntint,nctmax,ncofmx,ntinmx,nspcmx,nintmx,nspec,nspimx,ntbase,nctmm1,iproc,idx)
+SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs,erhs,yrhs,amascp,amasct,ncpoly,ncpom1,ncenth,tinthi,rgspec,ntint,trin,nctmax,ncofmx,ntinmx,nspcmx,nintmx,nspec,nspimx,ntbase,nctmm1,iproc,idx)
     use data_types
     implicit none
 
@@ -12,10 +12,10 @@ SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs
     integer, intent(in) :: nctmax,ncofmx,ntinmx,nspcmx,nintmx,nspec,nspimx,ntbase,nctmm1,iproc
     
     real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amascp,amasct
-    integer, dimension(ntinmx,nspec), intent(in) :: ncpoly,ncpom1,ncenth
-    real(kind=8), dimension(nintmx,nspec), intent(in) :: tinthi
+    integer, dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncpom1,ncenth
+    real(kind=8), dimension(nintmx,nspcmx), intent(in) :: tinthi
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
-    integer, dimension(nspec), intent(in) :: ntint
+    integer, dimension(nspcmx), intent(in) :: ntint
 
 !   PARAMETERS
 !   ==========
@@ -72,7 +72,7 @@ SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs
     END DO
 
 !   FOR EACH SPECIES LOCATE TEMPERATURE IN AN INTERVAL
-    DO ispec = 1,nspec
+    DO ispec = 1, nspec
 
         itint = 1
         DO WHILE (tempor > tinthi(itint,ispec) .and. itint < ntint(ispec))
@@ -126,7 +126,7 @@ SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs
         END DO
 
 !       FOR EACH SPECIES LOCATE TEMPERATURE IN AN INTERVAL
-        DO ispec = 1,nspec
+        DO ispec = 1, nspec
 
             itint = 1
             DO WHILE (tempor > tinthi(itint,ispec) .and. itint < ntint(ispec))
@@ -208,7 +208,7 @@ SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs
             END DO
 
 !           FOR EACH SPECIES LOCATE TEMPERATURE IN AN INTERVAL
-            DO ispec = 1,nspec
+            DO ispec = 1, nspec
 
                 itint = 1
                 DO WHILE (tempor > tinthi(itint,ispec) .and. itint < ntint(ispec))
@@ -294,7 +294,7 @@ SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs
         END DO
 
 !       FOR EACH SPECIES LOCATE TEMPERATURE IN AN INTERVAL
-        DO ispec = 1,nspec
+        DO ispec = 1, nspec
 
             itint = 1
             DO WHILE (tempor > tinthi(itint,ispec) .and. itint < ntint(ispec))
@@ -361,7 +361,7 @@ SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs
     store7(OPS_ACC2(0,0,0)) = 0.0_8
     transp(OPS_ACC3(0,0,0)) = 0.0_8
 
-    DO ispec = 1,nspec
+    DO ispec = 1, nspec
 
         itint = 1
         DO WHILE (trun(OPS_ACC1(0,0,0)) > tinthi(itint,ispec) .and. itint < ntint(ispec))

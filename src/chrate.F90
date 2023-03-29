@@ -377,7 +377,8 @@ SUBROUTINE chrate
             call ops_par_loop(math_MD_kernel_eqR, "A = A*max(B_multidim*var    zero)", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
                             ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ovwmol(ispec), 1, "real(8)", OPS_READ), &
+                            ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
+                            ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END DO
@@ -414,10 +415,11 @@ SUBROUTINE chrate
                 call ops_par_loop(math_MD_kernel_eqAA, "EVALUATE REACTANT CONCENTRATIONS", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
                             ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ovwmol(ispec), 1, "real(8)", OPS_READ), &
+                            ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
                             ops_arg_gbl(scoef, 1, "real(8)", OPS_READ), &
                             ops_arg_gbl(ysmall, 1, "real(8)", OPS_READ), &
                             ops_arg_gbl(ydenom, 1, "real(8)", OPS_READ), &
+                            ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END DO
@@ -450,12 +452,12 @@ SUBROUTINE chrate
                                 ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_READ), &
-                                ops_arg_gbl(amolgb, 1, "real(8)", OPS_READ), &
-                                ops_arg_gbl(ncpoly, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ncpom1, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ncenth, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ncenpy, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(diffmu, 1, "real(8)", OPS_READ), &
+                                ops_arg_gbl(amolgb, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
+                                ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer", OPS_READ), &
+                                ops_arg_gbl(ncpom1, ntinmx*nspcmx, "integer", OPS_READ), &
+                                ops_arg_gbl(ncenth, ntinmx*nspcmx, "integer", OPS_READ), &
+                                ops_arg_gbl(ncenpy, ntinmx*nspcmx, "integer", OPS_READ), &
+                                ops_arg_gbl(diffmu, nssmax*nstpmx, "real(8)", OPS_READ), &
                                 ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
@@ -505,7 +507,8 @@ SUBROUTINE chrate
                 call ops_par_loop(math_MD_kernel_eqR, "A = A*max(B_multidim*var    zero)", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_RW), &
                                 ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
-                                ops_arg_gbl(ovwmol(ispec), 1, "real(8)", OPS_READ), &
+                                ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
+                                ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END DO
@@ -542,10 +545,11 @@ SUBROUTINE chrate
                     call ops_par_loop(math_MD_kernel_eqAA, "EVALUATE PRODUCT CONCENTRATIONS", senga_grid, 3, rangexyz,  &
                                     ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_RW), &
                                     ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
-                                    ops_arg_gbl(ovwmol(ispec), 1, "real(8)", OPS_READ), &
+                                    ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
                                     ops_arg_gbl(scoef, 1, "real(8)", OPS_READ), &
                                     ops_arg_gbl(ysmall, 1, "real(8)", OPS_READ), &
                                     ops_arg_gbl(ydenom, 1, "real(8)", OPS_READ), &
+                                    ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                     ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
                 END DO

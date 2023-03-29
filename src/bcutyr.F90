@@ -62,7 +62,8 @@ SUBROUTINE bcutyr
                         ops_arg_dat(d_dudtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
                         ops_arg_dat(d_dvdtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE),  &
                         ops_arg_dat(d_dwdtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
-                        ops_arg_gbl(ryrprm(1), 1, "real(8)", OPS_READ))  
+                        ops_arg_gbl(ryrprm, nbcprr, "real(8)", OPS_READ), &
+                        ops_arg_gbl(nbcprr, 1, "integer", OPS_READ))
 
     END IF
 

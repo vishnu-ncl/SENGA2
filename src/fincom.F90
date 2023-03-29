@@ -75,8 +75,10 @@ SUBROUTINE fincom
                     ops_arg_dat(d_derr, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_dat(d_drun, 1, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_gbl(rkerr(nrkstp), 1, "real(8)", OPS_READ), &
-                    ops_arg_gbl(rklhs(nrkstp), 1, "real(8)", OPS_READ))
+                    ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
+                    ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
+                    ops_arg_gbl(nrkmax, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(nrkstp, 1, "integer", OPS_READ))
 
 !   -------------------------------------------------------------------------
 !   U VELOCITY
@@ -98,9 +100,10 @@ SUBROUTINE fincom
                     ops_arg_dat(d_uerr, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_gbl(rkerr(nrkstp), 1, "real(8)", OPS_READ), &
-                    ops_arg_gbl(rklhs(nrkstp), 1, "real(8)", OPS_READ))
-
+                    ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
+                    ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
+                    ops_arg_gbl(nrkmax, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(nrkstp, 1, "integer", OPS_READ))
 !   -------------------------------------------------------------------------
 !   V-VELOCITY
 !   ----------
@@ -108,8 +111,10 @@ SUBROUTINE fincom
                     ops_arg_dat(d_verr, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_dat(d_vrun, 1, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_gbl(rkerr(nrkstp), 1, "real(8)", OPS_READ), &
-                    ops_arg_gbl(rklhs(nrkstp), 1, "real(8)", OPS_READ))
+                    ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
+                    ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
+                    ops_arg_gbl(nrkmax, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(nrkstp, 1, "integer", OPS_READ))
 
 !   -------------------------------------------------------------------------
 !   W-VELOCITY
@@ -118,8 +123,10 @@ SUBROUTINE fincom
                     ops_arg_dat(d_werr, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_dat(d_wrun, 1, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_gbl(rkerr(nrkstp), 1, "real(8)", OPS_READ), &
-                    ops_arg_gbl(rklhs(nrkstp), 1, "real(8)", OPS_READ))
+                    ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
+                    ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
+                    ops_arg_gbl(nrkmax, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(nrkstp, 1, "integer", OPS_READ))
 
 !   -------------------------------------------------------------------------
 !   STAGNATION INTERNAL ENERGY
@@ -141,8 +148,10 @@ SUBROUTINE fincom
                     ops_arg_dat(d_eerr, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_gbl(rkerr(nrkstp), 1, "real(8)", OPS_READ), &
-                    ops_arg_gbl(rklhs(nrkstp), 1, "real(8)", OPS_READ))
+                    ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
+                    ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
+                    ops_arg_gbl(nrkmax, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(nrkstp, 1, "integer", OPS_READ))
 
 !   -------------------------------------------------------------------------
 !   SPECIES MASS FRACTIONS
@@ -168,8 +177,10 @@ SUBROUTINE fincom
                         ops_arg_dat(d_yerr, 2, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_yrun, 2, s3d_000, "real(8)", OPS_RW), &
                         ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_RW), &
-                        ops_arg_gbl(rkerr(irkstp), 1, "real(8)", OPS_READ), &
-                        ops_arg_gbl(rklhs(irkstp), 1, "real(8)", OPS_READ), &
+                        ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
+                        ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
+                        ops_arg_gbl(nrkmax, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(nrkstp, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
     END DO

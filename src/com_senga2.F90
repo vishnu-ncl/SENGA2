@@ -9,8 +9,8 @@ MODULE com_senga
 !     NYSIZE MUST BE >= NYGLBL/NYPROC
 !     NZSIZE MUST BE >= NZGLBL/NZPROC
 !     WITH AN EXTRA ALLOWANCE FOR ANY REMAINDER
-
-    use data_types
+    
+    use OPS_CONSTANTS
 
 !     GLOBAL GRID SIZE
 integer :: nxglbl,nyglbl,nzglbl
@@ -21,14 +21,14 @@ PARAMETER(ngzmax=nxglbl)
 
 !     NUMBER OF PROCESSORS
 integer :: nxproc,nyproc,nzproc
-PARAMETER(nxproc=2, nyproc=2, nzproc=1)
+PARAMETER(nxproc=1, nyproc=1, nzproc=1)
 integer :: nprmax
 !     SET NPRMAX=MAX(NXPROC,NYPROC,NZPROC)
 PARAMETER(nprmax=nxproc)
 
 !     LOCAL GRID SIZE
 integer :: nxsize,nysize,nzsize
-PARAMETER(nxsize=8, nysize=8, nzsize=16)
+PARAMETER(nxsize=16, nysize=16, nzsize=16)
 integer :: nszmax
 !     SET NSZMAX=MAX(NXSIZE,NYSIZE,NZSIZE)
 PARAMETER(nszmax=nxsize)

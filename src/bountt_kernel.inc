@@ -236,7 +236,7 @@ SUBROUTINE bountt_kernel_eqE_zdir(yrhs,yrun,yerr,stryzl,strdzl,ispec)
 
 END SUBROUTINE bountt_kernel_eqE_zdir
 
-SUBROUTINE bountt_kernel_eqF_xdir(erhs,yrhs,yrun,yerr,itndex,drhs,strtx,stryx,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspec)
+SUBROUTINE bountt_kernel_eqF_xdir(erhs,yrhs,yrun,yerr,itndex,drhs,strtx,stryx,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspcmx)
     use data_types
     implicit none
 
@@ -244,11 +244,11 @@ SUBROUTINE bountt_kernel_eqF_xdir(erhs,yrhs,yrun,yerr,itndex,drhs,strtx,stryx,am
     integer, dimension(1), intent(in) :: itndex
     real(kind=8), dimension(1), intent(in) :: drhs,strtx,stryx
 
-    integer, intent(in) :: ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspec
+    integer, intent(in) :: ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspcmx
 
-    real(kind=8), dimension(ncofmx,ntinmx,nspec), intent(in) :: amasch
-    real(kind=8), intent(in) :: rgspec
-    integer, dimension(ntinmx,nspec), intent(in) :: ncpoly,ncpom1,ncenth
+    real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amasch
+    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
+    integer, dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncpom1,ncenth
 
     real(kind=8) :: fornow
     integer :: itint,icp
@@ -270,11 +270,11 @@ SUBROUTINE bountt_kernel_eqF_xdir(erhs,yrhs,yrun,yerr,itndex,drhs,strtx,stryx,am
     yerr(OPS_ACC_MD4(ispec,0,0,0)) = 0.0_8
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0))  &
-                      + (fornow-rgspec*strtx(OPS_ACC7(0,0,0)))*yrhs(OPS_ACC_MD2(ispec,0,0,0))
+                      + (fornow-rgspec(ispec)*strtx(OPS_ACC7(0,0,0)))*yrhs(OPS_ACC_MD2(ispec,0,0,0))
 
 END SUBROUTINE bountt_kernel_eqF_xdir
 
-SUBROUTINE bountt_kernel_eqF_ydir(erhs,yrhs,yrun,yerr,itndex,drhs,strty,stryy,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspec)
+SUBROUTINE bountt_kernel_eqF_ydir(erhs,yrhs,yrun,yerr,itndex,drhs,strty,stryy,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspcmx)
     use data_types
     implicit none
 
@@ -282,11 +282,11 @@ SUBROUTINE bountt_kernel_eqF_ydir(erhs,yrhs,yrun,yerr,itndex,drhs,strty,stryy,am
     integer, dimension(1), intent(in) :: itndex
     real(kind=8), dimension(1), intent(in) :: drhs,strty,stryy
 
-    integer, intent(in) :: ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspec
+    integer, intent(in) :: ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspcmx
 
-    real(kind=8), dimension(ncofmx,ntinmx,nspec), intent(in) :: amasch
-    real(kind=8), intent(in) :: rgspec
-    integer, dimension(ntinmx,nspec), intent(in) :: ncpoly,ncpom1,ncenth
+    real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amasch
+    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
+    integer, dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncpom1,ncenth
 
     real(kind=8) :: fornow
     integer :: itint,icp
@@ -308,11 +308,11 @@ SUBROUTINE bountt_kernel_eqF_ydir(erhs,yrhs,yrun,yerr,itndex,drhs,strty,stryy,am
     yerr(OPS_ACC_MD4(ispec,0,0,0)) = 0.0_8
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0))  &
-                      + (fornow-rgspec*strty(OPS_ACC7(0,0,0)))*yrhs(OPS_ACC_MD2(ispec,0,0,0))
+                      + (fornow-rgspec(ispec)*strty(OPS_ACC7(0,0,0)))*yrhs(OPS_ACC_MD2(ispec,0,0,0))
 
 END SUBROUTINE bountt_kernel_eqF_ydir
 
-SUBROUTINE bountt_kernel_eqF_zdir(erhs,yrhs,yrun,yerr,itndex,drhs,strtz,stryz,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspec)
+SUBROUTINE bountt_kernel_eqF_zdir(erhs,yrhs,yrun,yerr,itndex,drhs,strtz,stryz,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspcmx)
     use data_types
     implicit none
 
@@ -320,11 +320,11 @@ SUBROUTINE bountt_kernel_eqF_zdir(erhs,yrhs,yrun,yerr,itndex,drhs,strtz,stryz,am
     integer, dimension(1), intent(in) :: itndex
     real(kind=8), dimension(1), intent(in) :: drhs,strtz,stryz
 
-    integer, intent(in) :: ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspec
+    integer, intent(in) :: ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspcmx
 
-    real(kind=8), dimension(ncofmx,ntinmx,nspec), intent(in) :: amasch
-    real(kind=8), intent(in) :: rgspec
-    integer, dimension(ntinmx,nspec), intent(in) :: ncpoly,ncpom1,ncenth
+    real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amasch
+    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
+    integer, dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncpom1,ncenth
 
     real(kind=8) :: fornow
     integer :: itint,icp
@@ -346,7 +346,7 @@ SUBROUTINE bountt_kernel_eqF_zdir(erhs,yrhs,yrun,yerr,itndex,drhs,strtz,stryz,am
     yerr(OPS_ACC_MD4(ispec,0,0,0)) = 0.0_8
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0))  &
-                      + (fornow-rgspec*strtz(OPS_ACC7(0,0,0)))*yrhs(OPS_ACC_MD2(ispec,0,0,0))
+                      + (fornow-rgspec(ispec)*strtz(OPS_ACC7(0,0,0)))*yrhs(OPS_ACC_MD2(ispec,0,0,0))
 
 END SUBROUTINE bountt_kernel_eqF_zdir
     

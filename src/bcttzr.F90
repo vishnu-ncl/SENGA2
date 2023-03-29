@@ -63,10 +63,11 @@ SUBROUTINE bcttzr
 !   ISOTHERMAL WALL
     IF(nsbczr == nsbcw2) THEN
         rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
-        call ops_par_loop(bcdt_kernel_zdir, "bcdt_kernel_zdir", senga_grid, 3, rangexyz,  &
+        call ops_par_loop(bcdt_kernel_zdir_eqA, "bcdt_kernel_zdir", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE),  &
                         ops_arg_dat(d_dtdtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
-                        ops_arg_gbl(rzrprm(1), 1, "real(8)", OPS_READ))
+                        ops_arg_gbl(rzrprm, nbcprr, "real(8)", OPS_READ), &
+                        ops_arg_gbl(nbcprr, 1, "integer", OPS_READ))
 
     END IF
 

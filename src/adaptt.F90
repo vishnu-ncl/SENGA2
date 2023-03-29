@@ -174,7 +174,8 @@ SUBROUTINE adaptt
             call ops_par_loop(adaptt_kernel_err_eval_MD, "EVALUATE ERROR NORMS - MULTIDIM", senga_grid, 3, rangexyz,  &
                         &  ops_arg_dat(d_yerr, 2, s3d_000, "real(8)", OPS_READ), &
                         &  ops_arg_dat(d_yrun, 2, s3d_000, "real(8)", OPS_READ), &
-                        &  ops_arg_gbl(erynrm(ispec), 1, "real(8)", OPS_READ), &
+                        &  ops_arg_gbl(erynrm, nspcmx, "real(8)", OPS_READ), &
+                        &  ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                         &  ops_arg_gbl(ispec, 1, "integer", OPS_READ), &  
                         &  ops_arg_reduce(h_erytot, 1, "real(8)", OPS_MAX))
             call ops_reduction_result(h_erytot, erytot(ispec))

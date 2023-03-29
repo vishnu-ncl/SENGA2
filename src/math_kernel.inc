@@ -35,15 +35,16 @@ SUBROUTINE math_kernel_eqC(out_arr, var)
 END SUBROUTINE math_kernel_eqC
 
 !A = B*var
-SUBROUTINE math_kernel_eqD(out_arr, in_arr1, var)
+SUBROUTINE math_kernel_eqD(out_arr, in_arr1, var, nspcmx, ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1
-    real(kind=8), intent(in) :: var
+    integer, intent(in) :: ispec,nspcmx
+    real(kind=8), dimension(nspcmx), intent(in) :: var
 
-    out_arr(OPS_ACC1(0,0,0)) = in_arr1(OPS_ACC2(0,0,0)) * var
+    out_arr(OPS_ACC1(0,0,0)) = in_arr1(OPS_ACC2(0,0,0)) * var(ispec)
 
 END SUBROUTINE math_kernel_eqD
 
@@ -61,15 +62,16 @@ SUBROUTINE math_kernel_eqE(out_arr, in_arr1, in_arr2, var)
 END SUBROUTINE math_kernel_eqE
 
 !A = A+var*B*C
-SUBROUTINE math_kernel_eqF(out_arr, in_arr1, in_arr2, var)
+SUBROUTINE math_kernel_eqF(out_arr, in_arr1, in_arr2, rgspec, nspcmx, ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
-    real(kind=8), intent(in) :: var
+    integer, intent(in) :: ispec, nspcmx
+    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
-    out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) + var*in_arr1(OPS_ACC2(0,0,0))*in_arr2(OPS_ACC3(0,0,0))
+    out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) + rgspec(ispec)*in_arr1(OPS_ACC2(0,0,0))*in_arr2(OPS_ACC3(0,0,0))
 
 END SUBROUTINE math_kernel_eqF
 
@@ -87,15 +89,16 @@ SUBROUTINE math_kernel_eqG(out_arr, in_arr1, var)
 END SUBROUTINE math_kernel_eqG
 
 !A = A-var*B*C
-SUBROUTINE math_kernel_eqH(out_arr, in_arr1, in_arr2, var)
+SUBROUTINE math_kernel_eqH(out_arr, in_arr1, in_arr2, rgspec, nspcmx, ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
-    real(kind=8), intent(in) :: var
+    integer, intent(in) :: ispec, nspcmx
+    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
-    out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) - var*in_arr1(OPS_ACC2(0,0,0))*in_arr2(OPS_ACC3(0,0,0))
+    out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) - rgspec(ispec)*in_arr1(OPS_ACC2(0,0,0))*in_arr2(OPS_ACC3(0,0,0))
 
 END SUBROUTINE math_kernel_eqH
 
@@ -655,7 +658,9 @@ SUBROUTINE math_kernel_print_drhs(out_arr, itime)
     real(kind=8), dimension(1), intent(in) :: out_arr
     integer, intent(in) :: itime
 
-    print *, 'test_drhs: (step=',itime,') value: ',out_arr(OPS_ACC1(0,0,0))
+    WRITE(*,'(a,I7,a,F16.8)')  &
+      'test_drhs: (step=',itime,') value: ',out_arr(OPS_ACC1(0,0,0))
+!    print *, 'test_drhs: (step=',itime,') value: ',out_arr(OPS_ACC1(0,0,0))
 
 END SUBROUTINE math_kernel_print_drhs
 
@@ -665,7 +670,9 @@ SUBROUTINE math_kernel_print_erhs(out_arr, itime)
     real(kind=8), dimension(1), intent(in) :: out_arr
     integer, intent(in) :: itime
 
-    print *, 'test_erhs: (step=',itime,') value: ',out_arr(OPS_ACC1(0,0,0))
+    WRITE(*,'(a,I7,a,F16.8)')  &
+      'test_erhs: (step=',itime,') value: ',out_arr(OPS_ACC1(0,0,0))
+!    print *, 'test_erhs: (step=',itime,') value: ',out_arr(OPS_ACC1(0,0,0))
 
 END SUBROUTINE math_kernel_print_erhs
 
@@ -675,6 +682,8 @@ SUBROUTINE math_kernel_print_urhs(out_arr, itime)
     real(kind=8), dimension(1), intent(in) :: out_arr
     integer, intent(in) :: itime
 
-    print *, 'test_urhs: (step=',itime,') value: ',out_arr(OPS_ACC1(0,0,0))
+    WRITE(*,'(a,I7,a,F16.8)')  &
+      'test_urhs: (step=',itime,') value: ',out_arr(OPS_ACC1(0,0,0))
+!    print *, 'test_urhs: (step=',itime,') value: ',out_arr(OPS_ACC1(0,0,0))
 
 END SUBROUTINE math_kernel_print_urhs
