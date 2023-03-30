@@ -1,142 +1,90 @@
 SUBROUTINE bcinit
  
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-26  Time: 15:24:34
+!   *************************************************************************
 
-!     *************************************************************************
+!   BCINIT
+!   ======
 
-!     BCINIT
-!     ======
+!   AUTHOR
+!   ------
+!   R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
 
-!     AUTHOR
-!     ------
-!     R.S.CANT  --  CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
+!   CHANGE RECORD
+!   -------------
+!   26-MAR-2003:  CREATED
+!   26-OCT-2008:  RSC/TDD BUG FIX BCTIXL
+!   23-JAN-2015:  RSC BUG FIX WALL MASS FLUX BC
+!   19-MAY-2015:  RSC UPDATE WALL DIFFUSIVE BC
 
-!     CHANGE RECORD
-!     -------------
-!     26-MAR-2003:  CREATED
-!     26-OCT-2008:  RSC/TDD BUG FIX BCTIXL
-!     23-JAN-2015:  RSC BUG FIX WALL MASS FLUX BC
-!     19-MAY-2015:  RSC UPDATE WALL DIFFUSIVE BC
+!   DESCRIPTION
+!   -----------
+!   DNS CODE SENGA2
+!   CARRIES OUT INITIALISATION OF BOUNDARY CONDITIONS
 
-!     DESCRIPTION
-!     -----------
-!     DNS CODE SENGA2
-!     CARRIES OUT INITIALISATION OF BOUNDARY CONDITIONS
+!   *************************************************************************
 
-!     *************************************************************************
+!   GLOBAL DATA
+!   ===========
+!   -------------------------------------------------------------------------
+    use data_types
+    use com_senga
+!   -------------------------------------------------------------------------
 
+!   BEGIN
+!   =====
 
-!     GLOBAL DATA
-!     ===========
-!     -------------------------------------------------------------------------
-use data_types
-use com_senga
-!     -------------------------------------------------------------------------
+!   =========================================================================
 
+!   APPLY GLOBAL BOUNDARY CONDITIONS TO LOCAL PROCESSOR
+!   ===================================================
 
-!     BEGIN
-!     =====
+!   X-LEFT
+    nsbcxl = ngbcxl
+    nendxl = nbound
+    IF(nsbcxl == nsperi)THEN
+        nendxl = nobc
+    END IF
 
-!     =========================================================================
+!   X-RIGHT
+    nsbcxr = ngbcxr
+    nendxr = nbound
+    IF(nsbcxr == nsperi)THEN
+        nendxr = nobc
+    END IF
 
-!     APPLY GLOBAL BOUNDARY CONDITIONS TO LOCAL PROCESSOR
-!     ===================================================
+!   Y-LEFT
+    nsbcyl = ngbcyl
+    nendyl = nbound
+    IF(nsbcyl == nsperi)THEN
+        nendyl = nobc
+    END IF
 
-!     X-LEFT
-IF(ixproc == 0)THEN
-  nsbcxl = ngbcxl
-  nendxl = nbound
-  IF(nsbcxl == nsperi)THEN
-    nendxl = nobc
-    IF(nxproc == 1)nendxl = nperi
-  END IF
-ELSE
-  nsbcxl = nsnull
-  nendxl = nobc
-END IF
+!   Y-RIGHT
+    nsbcyr = ngbcyr
+    nendyr = nbound
+    IF(nsbcyr == nsperi)THEN
+        nendyr = nobc
+    END IF
 
-!     X-RIGHT
-IF(ixproc == nxprm1)THEN
-  nsbcxr = ngbcxr
-  nendxr = nbound
-  IF(nsbcxr == nsperi)THEN
-    nendxr = nobc
-    IF(nxproc == 1)nendxr = nperi
-  END IF
-ELSE
-  nsbcxr = nsnull
-  nendxr = nobc
-END IF
+!   Z-LEFT
+    nsbczl = ngbczl
+    nendzl = nbound
+    IF(nsbczl == nsperi)THEN
+        nendzl = nobc
+    END IF
 
-!     Y-LEFT
-IF(iyproc == 0)THEN
-  nsbcyl = ngbcyl
-  nendyl = nbound
-  IF(nsbcyl == nsperi)THEN
-    nendyl = nobc
-    IF(nyproc == 1)nendyl = nperi
-  END IF
-ELSE
-  nsbcyl = nsnull
-  nendyl = nobc
-END IF
+!   Z-RIGHT
+    nsbczr = ngbczr
+    nendzr = nbound
+    IF(nsbczr == nsperi)THEN
+        nendzr = nobc
+    END IF
 
-!     Y-RIGHT
-IF(iyproc == nyprm1)THEN
-  nsbcyr = ngbcyr
-  nendyr = nbound
-  IF(nsbcyr == nsperi)THEN
-    nendyr = nobc
-    IF(nyproc == 1)nendyr = nperi
-  END IF
-ELSE
-  nsbcyr = nsnull
-  nendyr = nobc
-END IF
-
-!     Z-LEFT
-IF(izproc == 0)THEN
-  nsbczl = ngbczl
-  nendzl = nbound
-  IF(nsbczl == nsperi)THEN
-    nendzl = nobc
-    IF(nzproc == 1)nendzl = nperi
-  END IF
-ELSE
-  nsbczl = nsnull
-  nendzl = nobc
-END IF
-
-!     Z-RIGHT
-IF(izproc == nzprm1)THEN
-  nsbczr = ngbczr
-  nendzr = nbound
-  IF(nsbczr == nsperi)THEN
-    nendzr = nobc
-    IF(nzproc == 1)nendzr = nperi
-  END IF
-ELSE
-  nsbczr = nsnull
-  nendzr = nobc
-END IF
-
-!     =========================================================================
-
-!     INITIALISE PARALLEL TRANSFER BC FLAGS
-!     =====================================
-prgoxl = .false.
-IF(nendxl == nobc)prgoxl = .true.
-prgoxr = .false.
-IF(nendxr == nobc)prgoxr = .true.
-prgoyl = .false.
-IF(nendyl == nobc)prgoyl = .true.
-prgoyr = .false.
-IF(nendyr == nobc)prgoyr = .true.
-prgozl = .false.
-IF(nendzl == nobc)prgozl = .true.
-prgozr = .false.
-IF(nendzr == nobc)prgozr = .true.
+    IF (iproc == 0) THEN
+        print *, "nendxl:",nendxl, " nendxr:",nendxr
+        print *, "nendyl:",nendyl, " nendyr:",nendyr
+        print *, "nendzl:",nendzl, " nendzr:",nendzr
+    END IF
 
 !     =========================================================================
 
@@ -235,59 +183,6 @@ fzrtrb = .false.
 
 !     =========================================================================
 
-!     INITIALISE RK COUNTERS
-!     ======================
-istald = istal
-istold = istol
-jstald = jstal
-jstold = jstol
-kstald = kstal
-kstold = kstol
-
-istalu = istal
-istolu = istol
-jstalu = jstal
-jstolu = jstol
-kstalu = kstal
-kstolu = kstol
-
-istalv = istal
-istolv = istol
-jstalv = jstal
-jstolv = jstol
-kstalv = kstal
-kstolv = kstol
-
-istalw = istal
-istolw = istol
-jstalw = jstal
-jstolw = jstol
-kstalw = kstal
-kstolw = kstol
-
-istale = istal
-istole = istol
-jstale = jstal
-jstole = jstol
-kstale = kstal
-kstole = kstol
-
-istaly = istal
-istoly = istol
-jstaly = jstal
-jstoly = jstol
-kstaly = kstal
-kstoly = kstol
-
-istalt = istal-nhalox
-istolt = istol+nhalox
-jstalt = jstal-nhaloy
-jstolt = jstol+nhaloy
-kstalt = kstal-nhaloz
-kstolt = kstol+nhaloz
-
-!     =========================================================================
-
 !     SET BC FLAGS, RK COUNTERS AND PHYSICAL PARAMETERS
 !     =================================================
 
@@ -309,7 +204,6 @@ IF(nsbcxl == nsbco1)THEN
 !       RSC 19-MAY-2015
 !       RSC 28-JUN-2015
 !        FXLDFW = .TRUE.
-  istalt = istal
   cobcxl = rxlprm(2)*(one-rxlprm(3))/(two*xgdlen)
   pinfxl = rxlprm(1)
 END IF
@@ -324,7 +218,6 @@ IF(nsbcxr == nsbco1)THEN
 !       RSC 19-MAY-2015
 !       RSC 28-JUN-2015
 !        FXRDFW = .TRUE.
-  istolt = istol
   cobcxr = rxrprm(2)*(one-rxrprm(3))/(two*xgdlen)
   pinfxr = rxrprm(1)
 END IF
@@ -339,7 +232,6 @@ IF(nsbcyl == nsbco1)THEN
 !       RSC 19-MAY-2015
 !       RSC 28-JUN-2015
 !        FYLDFW = .TRUE.
-  jstalt = jstal
   cobcyl = rylprm(2)*(one-rylprm(3))/(two*ygdlen)
   pinfyl = rylprm(1)
 END IF
@@ -354,7 +246,6 @@ IF(nsbcyr == nsbco1)THEN
 !       RSC 19-MAY-2015
 !       RSC 28-JUN-2015
 !        FYRDFW = .TRUE.
-  jstolt = jstol
   cobcyr = ryrprm(2)*(one-ryrprm(3))/(two*ygdlen)
   pinfyr = ryrprm(1)
 END IF
@@ -369,7 +260,6 @@ IF(nsbczl == nsbco1)THEN
 !       RSC 19-MAY-2015
 !       RSC 28-JUN-2015
 !        FZLDFW = .TRUE.
-  kstalt = kstal
   cobczl = rzlprm(2)*(one-rzlprm(3))/(two*zgdlen)
   pinfzl = rzlprm(1)
 END IF
@@ -384,7 +274,6 @@ IF(nsbczr == nsbco1)THEN
 !       RSC 19-MAY-2015
 !       RSC 28-JUN-2015
 !        FZRDFW = .TRUE.
-  kstolt = kstol
   cobczr = rzrprm(2)*(one-rzrprm(3))/(two*zgdlen)
   pinfzr = rzrprm(1)
 END IF
@@ -400,42 +289,36 @@ END IF
 IF(nsbcxl == nsbci1)THEN
   fxlcnv = .true.
   fxlvsn = .true.
-  istalt = istal
 END IF
 
 !     X-RIGHT
 IF(nsbcxr == nsbci1)THEN
   fxrcnv = .true.
   fxrvsn = .true.
-  istolt = istol
 END IF
 
 !     Y-LEFT
 IF(nsbcyl == nsbci1)THEN
   fylcnv = .true.
   fylvsn = .true.
-  jstalt = jstal
 END IF
 
 !     Y-RIGHT
 IF(nsbcyr == nsbci1)THEN
   fyrcnv = .true.
   fyrvsn = .true.
-  jstolt = jstol
 END IF
 
 !     Z-LEFT
 IF(nsbczl == nsbci1)THEN
   fzlcnv = .true.
   fzlvsn = .true.
-  kstalt = kstal
 END IF
 
 !     Z-RIGHT
 IF(nsbczr == nsbci1)THEN
   fzrcnv = .true.
   fzrvsn = .true.
-  kstolt = kstol
 END IF
 
 !     =========================================================================
@@ -462,12 +345,6 @@ END IF
 IF(nsbcxl == nsbci2)THEN
   
   fxlcnv = .true.
-  istalu = istap1
-  istalv = istap1
-  istalw = istap1
-  istale = istap1
-  istaly = istap1
-  istalt = istal
   fxltrb = .false.
   
 END IF
@@ -476,12 +353,6 @@ END IF
 IF(nsbcxr == nsbci2)THEN
   
   fxrcnv = .true.
-  istolu = istom1
-  istolv = istom1
-  istolw = istom1
-  istole = istom1
-  istoly = istom1
-  istolt = istol
   
 END IF
 
@@ -489,12 +360,6 @@ END IF
 IF(nsbcyl == nsbci2)THEN
   
   fylcnv = .true.
-  jstalu = jstap1
-  jstalv = jstap1
-  jstalw = jstap1
-  jstale = jstap1
-  jstaly = jstap1
-  jstalt = jstal
   
 END IF
 
@@ -502,12 +367,6 @@ END IF
 IF(nsbcyr == nsbci2)THEN
   
   fyrcnv = .true.
-  jstolu = jstom1
-  jstolv = jstom1
-  jstolw = jstom1
-  jstole = jstom1
-  jstoly = jstom1
-  jstolt = jstol
   
 END IF
 
@@ -515,12 +374,6 @@ END IF
 IF(nsbczl == nsbci2)THEN
   
   fzlcnv = .true.
-  kstalu = kstap1
-  kstalv = kstap1
-  kstalw = kstap1
-  kstale = kstap1
-  kstaly = kstap1
-  kstalt = kstal
   
 END IF
 
@@ -528,12 +381,6 @@ END IF
 IF(nsbczr == nsbci2)THEN
   
   fzrcnv = .true.
-  kstolu = kstom1
-  kstolv = kstom1
-  kstolw = kstom1
-  kstole = kstom1
-  kstoly = kstom1
-  kstolt = kstol
   
 END IF
 
@@ -565,12 +412,6 @@ IF(nsbcxl == nsbci3)THEN
   
   fxlcnv = .true.
   fxlvsn = .true.
-  istald = istap1
-  istalu = istap1
-  istalv = istap1
-  istalw = istap1
-  istaly = istap1
-  istalt = istal
   fxltrb = .false.
   
 END IF
@@ -580,12 +421,6 @@ IF(nsbcxr == nsbci3)THEN
   
   fxrcnv = .true.
   fxrvsn = .true.
-  istold = istom1
-  istolu = istom1
-  istolv = istom1
-  istolw = istom1
-  istoly = istom1
-  istolt = istol
   
 END IF
 
@@ -594,12 +429,6 @@ IF(nsbcyl == nsbci3)THEN
   
   fylcnv = .true.
   fylvsn = .true.
-  jstald = jstap1
-  jstalu = jstap1
-  jstalv = jstap1
-  jstalw = jstap1
-  jstaly = jstap1
-  jstalt = jstal
   
 END IF
 
@@ -608,12 +437,6 @@ IF(nsbcyr == nsbci3)THEN
   
   fyrcnv = .true.
   fyrvsn = .true.
-  jstold = jstom1
-  jstolu = jstom1
-  jstolv = jstom1
-  jstolw = jstom1
-  jstoly = jstom1
-  jstolt = jstol
   
 END IF
 
@@ -622,12 +445,6 @@ IF(nsbczl == nsbci3)THEN
   
   fzlcnv = .true.
   fzlvsn = .true.
-  kstald = kstap1
-  kstalu = kstap1
-  kstalv = kstap1
-  kstalw = kstap1
-  kstaly = kstap1
-  kstalt = kstal
   
 END IF
 
@@ -636,12 +453,6 @@ IF(nsbczr == nsbci3)THEN
   
   fzrcnv = .true.
   fzrvsn = .true.
-  kstold = kstom1
-  kstolu = kstom1
-  kstolv = kstom1
-  kstolw = kstom1
-  kstoly = kstom1
-  kstolt = kstol
   
 END IF
 
@@ -662,11 +473,6 @@ IF(nsbcxl == nsbcw1)THEN
 !       RSC 19-MAY-2015
   fxlcnw = .true.
   fxldfw = .true.
-  istow  = istap4
-  istalu = istap1
-  istalv = istap1
-  istalw = istap1
-  istalt = istal
   
 END IF
 
@@ -681,11 +487,6 @@ IF(nsbcxr == nsbcw1)THEN
 !       RSC 19-MAY-2015
   fxrcnw = .true.
   fxrdfw = .true.
-  istaw  = istom4
-  istolu = istom1
-  istolv = istom1
-  istolw = istom1
-  istolt = istol
   
 END IF
 
@@ -700,11 +501,6 @@ IF(nsbcyl == nsbcw1)THEN
 !       RSC 19-MAY-2015
   fylcnw = .true.
   fyldfw = .true.
-  jstow  = jstap4
-  jstalu = jstap1
-  jstalv = jstap1
-  jstalw = jstap1
-  jstalt = jstal
   
 END IF
 
@@ -719,11 +515,6 @@ IF(nsbcyr == nsbcw1)THEN
 !       RSC 19-MAY-2015
   fyrcnw = .true.
   fyrdfw = .true.
-  jstaw  = jstom4
-  jstolu = jstom1
-  jstolv = jstom1
-  jstolw = jstom1
-  jstolt = jstol
   
 END IF
 
@@ -738,11 +529,6 @@ IF(nsbczl == nsbcw1)THEN
 !       RSC 19-MAY-2015
   fzlcnw = .true.
   fzldfw = .true.
-  kstow  = kstap4
-  kstalu = kstap1
-  kstalv = kstap1
-  kstalw = kstap1
-  kstalt = kstal
   
 END IF
 
@@ -757,11 +543,6 @@ IF(nsbczr == nsbcw1)THEN
 !       RSC 19-MAY-2015
   fzrcnw = .true.
   fzrdfw = .true.
-  kstaw  = kstom4
-  kstolu = kstom1
-  kstolv = kstom1
-  kstolw = kstom1
-  kstolt = kstol
   
 END IF
 
@@ -780,12 +561,6 @@ IF(nsbcxl == nsbcw2)THEN
 !       RSC 19-MAY-2015
   fxladw = .true.
   fxldfw = .true.
-  istow  = istap4
-  istalu = istap1
-  istalv = istap1
-  istalw = istap1
-  istale = istap1
-  istalt = istal
   
 END IF
 
@@ -798,12 +573,6 @@ IF(nsbcxr == nsbcw2)THEN
 !       RSC 19-MAY-2015
   fxradw = .true.
   fxrdfw = .true.
-  istaw  = istom4
-  istolu = istom1
-  istolv = istom1
-  istolw = istom1
-  istole = istom1
-  istolt = istol
   
 END IF
 
@@ -816,12 +585,6 @@ IF(nsbcyl == nsbcw2)THEN
 !       RSC 19-MAY-2015
   fyladw = .true.
   fyldfw = .true.
-  jstow  = jstap4
-  jstalu = jstap1
-  jstalv = jstap1
-  jstalw = jstap1
-  jstale = jstap1
-  jstalt = jstal
   
 END IF
 
@@ -834,12 +597,6 @@ IF(nsbcyr == nsbcw2)THEN
 !       RSC 19-MAY-2015
   fyradw = .true.
   fyrdfw = .true.
-  jstaw  = jstom4
-  jstolu = jstom1
-  jstolv = jstom1
-  jstolw = jstom1
-  jstole = jstom1
-  jstolt = jstol
   
 END IF
 
@@ -852,12 +609,6 @@ IF(nsbczl == nsbcw2)THEN
 !       RSC 19-MAY-2015
   fzladw = .true.
   fzldfw = .true.
-  kstow  = kstap4
-  kstalu = kstap1
-  kstalv = kstap1
-  kstalw = kstap1
-  kstale = kstap1
-  kstalt = kstal
   
 END IF
 
@@ -870,12 +621,6 @@ IF(nsbczr == nsbcw2)THEN
 !       RSC 19-MAY-2015
   fzradw = .true.
   fzrdfw = .true.
-  kstaw  = kstom4
-  kstolu = kstom1
-  kstolv = kstom1
-  kstolw = kstom1
-  kstole = kstom1
-  kstolt = kstol
   
 END IF
 

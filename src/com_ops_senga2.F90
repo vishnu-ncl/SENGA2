@@ -4,10 +4,15 @@ MODULE com_ops_senga
     
     implicit none
 
-    !Senga2 OPS vars
+!------------------------------------------------------------------------------------------------------------
+!   Senga2 OPS vars
 
+!------------------------------------------------------------------------------------------------------------
+!   OPS block
     TYPE(ops_block) :: senga_grid
 
+!------------------------------------------------------------------------------------------------------------
+!   OPS dats
     TYPE(ops_dat) :: d_store1, d_store2, d_store3, d_store4, d_store5, d_store6, d_divm
     
     TYPE(ops_dat) :: d_ucor, d_vcor, d_wcor
@@ -84,9 +89,14 @@ MODULE com_ops_senga
 
     TYPE(ops_dat) :: d_crin
 
-    TYPE(ops_reduction) :: h_erdtot, h_erutot, h_ervtot, h_erwtot, h_eretot, h_erytot, h_prefer
+!------------------------------------------------------------------------------------------------------------
+!   OPS reduction handles
+    TYPE(ops_reduction) :: h_erdtot, h_erutot, h_ervtot, h_erwtot, h_eretot, h_erytot
     TYPE(ops_reduction) :: h_tket, h_ubart, h_vbart, h_wbart, h_uvart, h_vvart, h_wvart
+    TYPE(ops_reduction) :: h_prefer
 
+!------------------------------------------------------------------------------------------------------------
+!   OPS stencils
     TYPE(ops_stencil) :: s3d_000
 
     TYPE(ops_stencil) :: s3d_000_strid3d_x, s3d_000_strid3d_y, s3d_000_strid3d_z
@@ -95,27 +105,66 @@ MODULE com_ops_senga
     TYPE(ops_stencil) :: s3d_000_to_p400_x, s3d_000_to_m400_x
     TYPE(ops_stencil) :: s3d_000_to_p500_x, s3d_000_to_m500_x
     TYPE(ops_stencil) :: s3d_p100_to_p400_x, s3d_m100_to_m400_x
-    TYPE(ops_stencil) :: s3d_p200_to_m200_x, s3d_p300_to_m300_x, s3d_p400_to_m400_x, s3d_p500_to_m500_x
+    TYPE(ops_stencil) :: s3d_p200_to_m200_x, s3d_p200_to_m200_x_no000
+    TYPE(ops_stencil) :: s3d_p300_to_m300_x, s3d_p300_to_m300_x_no000
+    TYPE(ops_stencil) :: s3d_p400_to_m400_x, s3d_p400_to_m400_x_no000
+    TYPE(ops_stencil) :: s3d_p500_to_m500_x, s3d_p500_to_m500_x_no000
     TYPE(ops_stencil) :: s3d_p300_to_m100_x, s3d_p100_to_m300_x
     TYPE(ops_stencil) :: s3d_p400_to_m100_x, s3d_p100_to_m400_x
 
     TYPE(ops_stencil) :: s3d_000_to_p040_y, s3d_000_to_m040_y
     TYPE(ops_stencil) :: s3d_000_to_p050_y, s3d_000_to_m050_y
     TYPE(ops_stencil) :: s3d_p010_to_p040_y, s3d_m010_to_m040_y
-    TYPE(ops_stencil) :: s3d_p020_to_m020_y, s3d_p030_to_m030_y, s3d_p040_to_m040_y, s3d_p050_to_m050_y
+    TYPE(ops_stencil) :: s3d_p020_to_m020_y, s3d_p020_to_m020_y_no000
+    TYPE(ops_stencil) :: s3d_p030_to_m030_y, s3d_p030_to_m030_y_no000
+    TYPE(ops_stencil) :: s3d_p040_to_m040_y, s3d_p040_to_m040_y_no000
+    TYPE(ops_stencil) :: s3d_p050_to_m050_y, s3d_p050_to_m050_y_no000
     TYPE(ops_stencil) :: s3d_p030_to_m010_y, s3d_p010_to_m030_y
     TYPE(ops_stencil) :: s3d_p040_to_m010_y, s3d_p010_to_m040_y
 
     TYPE(ops_stencil) :: s3d_000_to_p004_z, s3d_000_to_m004_z
     TYPE(ops_stencil) :: s3d_000_to_p005_z, s3d_000_to_m005_z
     TYPE(ops_stencil) :: s3d_p001_to_p004_z, s3d_m001_to_m004_z
-    TYPE(ops_stencil) :: s3d_p002_to_m002_z, s3d_p003_to_m003_z, s3d_p004_to_m004_z, s3d_p005_to_m005_z
+    TYPE(ops_stencil) :: s3d_p002_to_m002_z, s3d_p002_to_m002_z_no000
+    TYPE(ops_stencil) :: s3d_p003_to_m003_z, s3d_p003_to_m003_z_no000
+    TYPE(ops_stencil) :: s3d_p004_to_m004_z, s3d_p004_to_m004_z_no000
+    TYPE(ops_stencil) :: s3d_p005_to_m005_z, s3d_p005_to_m005_z_no000
     TYPE(ops_stencil) :: s3d_p003_to_m001_z, s3d_p001_to_m003_z
     TYPE(ops_stencil) :: s3d_p004_to_m001_z, s3d_p001_to_m004_z
 
-    TYPE(ops_stencil) :: s3d_p320_m120_mixed_xy, s3d_p120_m320_mixed_xy
-    TYPE(ops_stencil) :: s3d_p420_m020_mixed_xy, s3d_p020_m420_mixed_xy
-    TYPE(ops_stencil) :: s3d_p220_m220_mixed_xy, s3d_p330_m330_mixed_xy, s3d_p440_m440_mixed_xy
-    TYPE(ops_stencil) :: s3d_p550_to_m550_xy
+!------------------------------------------------------------------------------------------------------------
+
+    TYPE(ops_stencil) :: s3d_p000_m440_mixed_xy, s3d_p010_m430_mixed_xy, s3d_p020_m420_mixed_xy, s3d_p030_m410_mixed_xy, s3d_p040_m400_mixed_xy
+    TYPE(ops_stencil) :: s3d_p100_m300_mixed_xy, s3d_p100_m340_mixed_xy, s3d_p110_m330_mixed_xy, s3d_p120_m320_mixed_xy, s3d_p140_m300_mixed_xy
+    TYPE(ops_stencil) :: s3d_p200_m240_mixed_xy, s3d_p210_m230_mixed_xy, s3d_p220_m220_mixed_xy, s3d_p230_m210_mixed_xy, s3d_p240_m200_mixed_xy
+    TYPE(ops_stencil) :: s3d_p300_m100_mixed_xy, s3d_p300_m140_mixed_xy, s3d_p320_m120_mixed_xy, s3d_p330_m110_mixed_xy, s3d_p330_m330_mixed_small_xy, s3d_p330_m330_mixed_xy, s3d_p340_m100_mixed_xy
+    TYPE(ops_stencil) :: s3d_p400_p040_mixed_xy, s3d_p410_p030_mixed_xy, s3d_p420_m020_mixed_xy, s3d_p430_m010_mixed_xy, s3d_p440_p000_mixed_xy, s3d_p440_m440_mixed_small_xy, s3d_p440_m440_mixed_xy
+    TYPE(ops_stencil) :: s3d_p550_m550_mixed_xy
+
+!------------------------------------------------------------------------------------------------------------
+
+    TYPE(ops_stencil) :: s3d_p000_m404_mixed_xz, s3d_p001_m403_mixed_xz, s3d_p002_m402_mixed_xz, s3d_p003_m401_mixed_xz, s3d_p004_m400_mixed_xz
+    TYPE(ops_stencil) :: s3d_p100_m300_mixed_xz, s3d_p100_m304_mixed_xz, s3d_p101_m303_mixed_xz, s3d_p102_m302_mixed_xz, s3d_p104_m300_mixed_xz
+    TYPE(ops_stencil) :: s3d_p200_m204_mixed_xz, s3d_p201_m203_mixed_xz, s3d_p202_m202_mixed_xz, s3d_p203_m201_mixed_xz, s3d_p204_m200_mixed_xz
+    TYPE(ops_stencil) :: s3d_p300_m100_mixed_xz, s3d_p300_m104_mixed_xz, s3d_p302_m102_mixed_xz, s3d_p303_m101_mixed_xz, s3d_p303_m303_mixed_small_xz, s3d_p303_m303_mixed_xz, s3d_p304_m100_mixed_xz
+    TYPE(ops_stencil) :: s3d_p400_p004_mixed_xz, s3d_p401_p003_mixed_xz, s3d_p402_m002_mixed_xz, s3d_p403_m001_mixed_xz, s3d_p404_p000_mixed_xz, s3d_p404_m404_mixed_small_xz, s3d_p404_m404_mixed_xz
+    TYPE(ops_stencil) :: s3d_p505_m505_mixed_xz
+
+!------------------------------------------------------------------------------------------------------------
+
+    TYPE(ops_stencil) :: s3d_p000_m044_mixed_yz, s3d_p001_m043_mixed_yz, s3d_p002_m042_mixed_yz, s3d_p003_m041_mixed_yz, s3d_p004_m040_mixed_yz
+    TYPE(ops_stencil) :: s3d_p010_m030_mixed_yz, s3d_p010_m034_mixed_yz, s3d_p011_m033_mixed_yz, s3d_p012_m032_mixed_yz, s3d_p014_m030_mixed_yz
+    TYPE(ops_stencil) :: s3d_p020_m024_mixed_yz, s3d_p021_m023_mixed_yz, s3d_p022_m022_mixed_yz, s3d_p023_m021_mixed_yz, s3d_p024_m020_mixed_yz
+    TYPE(ops_stencil) :: s3d_p030_m010_mixed_yz, s3d_p030_m014_mixed_yz, s3d_p032_m012_mixed_yz, s3d_p033_m011_mixed_yz, s3d_p033_m033_mixed_small_yz, s3d_p033_m033_mixed_yz, s3d_p034_m010_mixed_yz
+    TYPE(ops_stencil) :: s3d_p040_p004_mixed_yz, s3d_p041_p003_mixed_yz, s3d_p042_m002_mixed_yz, s3d_p043_m001_mixed_yz, s3d_p044_p000_mixed_yz, s3d_p044_m044_mixed_small_yz, s3d_p044_m044_mixed_yz
+    TYPE(ops_stencil) :: s3d_p055_m055_mixed_yz
+
+!------------------------------------------------------------------------------------------------------------
+!   ops_halos
+    TYPE(ops_halo) :: halos_x(12), halos_y(12), halos_z(12)
+
+!------------------------------------------------------------------------------------------------------------
+!   ops_halo group
+    TYPE(ops_halo_group) :: halos_grp_x, halos_grp_y, halos_grp_z
 
 END MODULE com_ops_senga

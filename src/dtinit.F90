@@ -37,7 +37,7 @@ SUBROUTINE dtinit
 
 !   LOCAL DATA
 !   ==========
-    real(kind=dp) :: acofrk(nrkmax),bcofrk(nrkmax),bhatrk(nrkmax)
+    real(kind=8) :: acofrk(nrkmax),bcofrk(nrkmax),bhatrk(nrkmax)
     integer :: ic,jc,kc
     integer :: ispec
     integer :: rangexyz(6)
@@ -81,23 +81,23 @@ SUBROUTINE dtinit
 !   ------------------------
     nrkstp = 5
 
-    acofrk(1) = 970286171893.0_dp/4311952581923.0_dp
-    acofrk(2) = 6584761158862.0_dp/12103376702013.0_dp
-    acofrk(3) = 2251764453980.0_dp/15575788980749.0_dp
-    acofrk(4) = 26877169314380.0_dp/34165994151039.0_dp
+    acofrk(1) = 970286171893.0_8/4311952581923.0_8
+    acofrk(2) = 6584761158862.0_8/12103376702013.0_8
+    acofrk(3) = 2251764453980.0_8/15575788980749.0_8
+    acofrk(4) = 26877169314380.0_8/34165994151039.0_8
     acofrk(5) = zero
 
-    bcofrk(1) = 1153189308089.0_dp/22510343858157.0_dp
-    bcofrk(2) = 1772645290293.0_dp/4653164025191.0_dp
-    bcofrk(3) = -1672844663538.0_dp/4480602732383.0_dp
-    bcofrk(4) = 2114624349019.0_dp/3568978502595.0_dp
-    bcofrk(5) = 5198255086312.0_dp/14908931495163.0_dp
+    bcofrk(1) = 1153189308089.0_8/22510343858157.0_8
+    bcofrk(2) = 1772645290293.0_8/4653164025191.0_8
+    bcofrk(3) = -1672844663538.0_8/4480602732383.0_8
+    bcofrk(4) = 2114624349019.0_8/3568978502595.0_8
+    bcofrk(5) = 5198255086312.0_8/14908931495163.0_8
 
-    bhatrk(1) = 1016888040809.0_dp/7410784769900.0_dp
-    bhatrk(2) = 11231460423587.0_dp/58533540763752.0_dp
-    bhatrk(3) = -1563879915014.0_dp/6823010717585.0_dp
-    bhatrk(4) = 606302364029.0_dp/971179775848.0_dp
-    bhatrk(5) = 1097981568119.0_dp/3980877426909.0_dp
+    bhatrk(1) = 1016888040809.0_8/7410784769900.0_8
+    bhatrk(2) = 11231460423587.0_8/58533540763752.0_8
+    bhatrk(3) = -1563879915014.0_8/6823010717585.0_8
+    bhatrk(4) = 606302364029.0_8/971179775848.0_8
+    bhatrk(5) = 1097981568119.0_8/3980877426909.0_8
 
 !   -------------------------------------------------------------------------
 
@@ -105,16 +105,16 @@ SUBROUTINE dtinit
 !   ---------------------------------------------------------
 !   RSC 07-JUL-2009 BUG FIX ERROR NORMS
 !   ERRTOL = 1.0D-3
-    errtol = 0.00010_dp
-    errlow = 0.0000000000000000000000000000010_dp
+    errtol = 0.00010_8
+    errlow = 0.0000000000000000000000000000010_8
     IF(ncdmpi == 0) THEN
         errold = errtol
         errldr = errtol
     END IF
-    trmax = 1.01_dp
-    trmin = 0.010_dp
-    tsmax = 1.0_dp
-    tsmin = 0.0000000000000010_dp
+    trmax = 1.01_8
+    trmin = 0.010_8
+    tsmax = 1.0_8
+    tsmin = 0.0000000000000010_8
 
 !   -------------------------------------------------------------------------
 
@@ -142,12 +142,12 @@ SUBROUTINE dtinit
 
 !   RSC 23-AUG-2009 REFORMULATE ERROR NORMS
     erdnrm = zero
-    erunrm = 0.0000010_dp
-    ervnrm = 0.0000010_dp
-    erwnrm = 0.0000010_dp
-    erenrm = 0.010_dp
+    erunrm = 0.0000010_8
+    ervnrm = 0.0000010_8
+    erwnrm = 0.0000010_8
+    erenrm = 0.010_8
     DO ispec = 1,nspec
-        erynrm(ispec) = 0.00000000010_dp
+        erynrm(ispec) = 0.00000000010_8
     END DO
 
 !   -------------------------------------------------------------------------
@@ -156,24 +156,24 @@ SUBROUTINE dtinit
 !   ----------------------------------------------------
 !   I CONTROLLER
 !   CTALPH = 1.0/ORDER OF EMBEDDED SCHEME+1
-    ctmult = 0.90_dp
+    ctmult = 0.90_8
     ctalph = one/four
 
 !   PI CONTROLLER
 !   CTALPH = 0.7/ORDER OF EMBEDDED SCHEME
 !   CTBETA = 0.4/ORDER OF EMBEDDED SCHEME
-    ctmult = 0.90_dp
-    ctalph = 0.70_dp/three
-    ctbeta = 0.40_dp/three
+    ctmult = 0.90_8
+    ctalph = 0.70_8/three
+    ctbeta = 0.40_8/three
 
 !   PID CONTROLLER
 !   CTALPH = 0.49/ORDER OF EMBEDDED SCHEME
 !   CTBETA = 0.34/ORDER OF EMBEDDED SCHEME
 !   CTGAMA = 0.10/ORDER OF EMBEDDED SCHEME
-    ctmult = 0.90_dp
-    ctalph = 0.49_dp/three
-    ctbeta = 0.34_dp/three
-    ctgama = 0.10_dp/three
+    ctmult = 0.90_8
+    ctalph = 0.49_8/three
+    ctbeta = 0.34_8/three
+    ctgama = 0.10_8/three
 
 !   -------------------------------------------------------------------------
 
@@ -234,22 +234,22 @@ SUBROUTINE dtinit
 
 !   INITIALISE ERK ERROR ARRAYS
 !   ---------------------------
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
-                      ops_arg_dat(d_derr, 1, s3d_000, "real(dp)", OPS_WRITE))
+                      ops_arg_dat(d_derr, 1, s3d_000, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
-                      ops_arg_dat(d_uerr, 1, s3d_000, "real(dp)", OPS_WRITE))
+                      ops_arg_dat(d_uerr, 1, s3d_000, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
-                      ops_arg_dat(d_verr, 1, s3d_000, "real(dp)", OPS_WRITE))
+                      ops_arg_dat(d_verr, 1, s3d_000, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
-                      ops_arg_dat(d_werr, 1, s3d_000, "real(dp)", OPS_WRITE))
+                      ops_arg_dat(d_werr, 1, s3d_000, "real(8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
-                      ops_arg_dat(d_eerr, 1, s3d_000, "real(dp)", OPS_WRITE))
+                      ops_arg_dat(d_eerr, 1, s3d_000, "real(8)", OPS_WRITE))
 
     DO ispec = 1,nspec
-        rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+        rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
         call ops_par_loop(set_zero_kernel_MD, "set zero multi-dim", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_yerr, 9, s3d_000, "real(dp)", OPS_WRITE), &
+                        ops_arg_dat(d_yerr, 2, s3d_000, "real(8)", OPS_WRITE), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
     END DO

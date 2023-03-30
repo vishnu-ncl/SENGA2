@@ -58,8 +58,8 @@ INTEGER :: npencl
 ipencl = 0
 
 !     LOOP OVER X-LINES
-DO kc = kstal,kstol
-  DO jc = jstal,jstol
+DO kc = 1,nzsize
+  DO jc = 1,nysize
     
 !         PENCIL INDEXING
     ipencl = ipencl + 1
@@ -67,10 +67,15 @@ DO kc = kstal,kstol
     kpen(ipencl) = kc
     
 !         ASSEMBLE FFT DATA
-    DO ic = istal,istol
+    DO ic = 1,nxsize
       
       iic = 2*ic
       iim = iic-1
+
+        write(*, '(a)') "Using the arrays not allocated by OPS, &
+                        Please implement the function in OPS first, buftxl.F90: ID=76"
+            STOP
+
       ftpart(iim,1,ipencl) = urun(ic,jc,kc)
       ftpart(iic,1,ipencl) = utmp(ic,jc,kc)
       ftpart(iim,2,ipencl) = vrun(ic,jc,kc)
@@ -85,13 +90,17 @@ DO kc = kstal,kstol
       
 !           DO THE FFT
       npencl = ipencl
-      CALL fftixl(npencl,ixproc,nxproc,nxnode,nxglbl,nprocx)
+      CALL fftixl(npencl,ixproc,nxproc,nxsize,nxglbl,nprocx)
       
 !           RESTORE TRANSFORMED DATA
       DO ipencl = 1,npencl
         
-        DO ic = istal,istol
-          
+        DO ic = 1,nxsize
+         
+            write(*, '(a)') "Using the arrays not allocated by OPS, &
+                        Please implement the function in OPS first, buftxl.F90: ID=101"
+            STOP
+ 
           ufxl(ic,jpen(ipencl),kpen(ipencl)) = ftpart(ic,1,ipencl)
           vfxl(ic,jpen(ipencl),kpen(ipencl)) = ftpart(ic,2,ipencl)
           wfxl(ic,jpen(ipencl),kpen(ipencl)) = ftpart(ic,3,ipencl)
@@ -112,13 +121,17 @@ IF(ipencl /= 0)THEN
   
 !       DO THE FFT
   npencl = ipencl
-  CALL fftixl(npencl,ixproc,nxproc,nxnode,nxglbl,nprocx)
+  CALL fftixl(npencl,ixproc,nxproc,nxsize,nxglbl,nprocx)
   
 !       RESTORE TRANSFORMED DATA
   DO ipencl = 1,npencl
     
-    DO ic = istal,istol
-      
+    DO ic = 1,nxsize
+     
+        write(*, '(a)') "Using the arrays not allocated by OPS, &
+                        Please implement the function in OPS first, buftxl.F90: ID=132"
+        STOP
+ 
       ufxl(ic,jpen(ipencl),kpen(ipencl)) = ftpart(ic,1,ipencl)
       vfxl(ic,jpen(ipencl),kpen(ipencl)) = ftpart(ic,2,ipencl)
       wfxl(ic,jpen(ipencl),kpen(ipencl)) = ftpart(ic,3,ipencl)

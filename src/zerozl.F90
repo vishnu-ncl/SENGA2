@@ -22,9 +22,9 @@ use OPS_Fortran_Reference
 
 !   =========================================================================
 
-    rangexyz = (/istal,istol, jstal,jstol, kstal,kstal/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
     call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(farray, 1, s3d_000, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(farray, 1, s3d_000, "real(8)", OPS_WRITE))
 
 !   =========================================================================
 

@@ -2,9 +2,9 @@ SUBROUTINE radcal_kernel_addradiation(erhs,trun,store1)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: erhs
-    real(kind=dp), dimension(1), intent(in) :: trun,store1
-    real(kind=dp) :: fornow
+    real(kind=8), dimension(1) :: erhs
+    real(kind=8), dimension(1), intent(in) :: trun,store1
+    real(kind=8) :: fornow
 
     fornow = trun(OPS_ACC2(0,0,0))
     fornow = fornow*fornow*fornow*fornow
@@ -14,35 +14,35 @@ SUBROUTINE radcal_kernel_addradiation(erhs,trun,store1)
     
 END SUBROUTINE radcal_kernel_addradiation
 
-SUBROUTINE radcal_kernel_addspecies(store1,yrhs,trun,store2,rgspec,ispec)
+SUBROUTINE radcal_kernel_addspecies(store1,yrhs,trun,store2,rgspec,nspcmx,ispec)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: store1
-    real(kind=dp), dimension(1), intent(in) :: yrhs,trun,store2
-    real(kind=dp), intent(in) :: rgspec
-    integer, intent(in) :: ispec
-    real(kind=dp) :: fornow
+    real(kind=8), dimension(1) :: store1
+    real(kind=8), dimension(1), intent(in) :: yrhs,trun,store2
+    integer, intent(in) :: ispec,nspcmx
+    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
+    real(kind=8) :: fornow
     
-    fornow = yrhs(OPS_ACC_MD2(ispec,0,0,0))*rgspec*trun(OPS_ACC3(0,0,0))
+    fornow = yrhs(OPS_ACC_MD2(ispec,0,0,0))*rgspec(ispec)*trun(OPS_ACC3(0,0,0))
     
     store1(OPS_ACC1(0,0,0)) = store1(OPS_ACC1(0,0,0)) + store2(OPS_ACC4(0,0,0))*fornow
 
 END SUBROUTINE radcal_kernel_addspecies
 
-SUBROUTINE radcal_kernel_meancoef(store2,trun,akprad,nkprad,nkprm1,jspec,ncfrmx,nspec)
+SUBROUTINE radcal_kernel_meancoef(store2,trun,akprad,nkprad,nkprm1,jspec,ncfrmx,nspcmx)
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1) :: store2
-    real(kind=dp), dimension(1), intent(in) :: trun
+    real(kind=8), dimension(1) :: store2
+    real(kind=8), dimension(1), intent(in) :: trun
 
-    integer, intent(in) :: jspec, ncfrmx, nspec
+    integer, intent(in) :: jspec, ncfrmx, nspcmx
 
-    real(kind=dp), dimension(ncfrmx,nspec), intent(in) :: akprad
-    integer, dimension(nspec), intent(in) :: nkprad, nkprm1
+    real(kind=8), dimension(ncfrmx,nspcmx), intent(in) :: akprad
+    integer, dimension(nspcmx), intent(in) :: nkprad, nkprm1
 
-    real(kind=dp) :: plspec,fornow
+    real(kind=8) :: plspec,fornow
     integer :: icp
 
     fornow = trun(OPS_ACC2(0,0,0))

@@ -41,15 +41,15 @@ SUBROUTINE bcutxl
 !   LOCAL DATA
 !   ==========
 !KA   FIX INFLOW BUG, BTIME IS DEFINED IN COM_SENGA2.H
-!KA      real(kind=dp)) BTIME
-    real(kind=dp) :: fornow,argmnt,argval,realkx
-    real(kind=dp) :: cosval,sinval,costht,sintht
-    real(kind=dp) :: pcount
+!KA      real(kind=8)) BTIME
+    real(kind=8) :: fornow,argmnt,argval,realkx
+    real(kind=8) :: cosval,sinval,costht,sintht
+    real(kind=8) :: pcount
     integer :: ic,jc,kc
     integer :: iic,iim,kx,kxbase
     integer :: icproc,ncount,irproc,irtag
     integer :: rangexyz(6)
-    real(kind=dp) :: init_val1, init_val2
+    real(kind=8) :: init_val1, init_val2
 
 !   BEGIN
 !   =====
@@ -65,15 +65,16 @@ SUBROUTINE bcutxl
 !   CONSTANT U-VELOCITY
 !   PARAMETER I1=1, R1=U-VELOCITY
     IF(nxlprm(1) == 1) THEN
-        rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+        rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
         call ops_par_loop(bcut_kernel_xdir_const_uvel, "bcut_kernel_xdir_const_uvel", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
-                        ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
-                        ops_arg_dat(d_dudtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_dvdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
-                        ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                        ops_arg_gbl(rxlprm(1), 1, "real(dp)", OPS_READ))
+                        ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE),  &
+                        ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE),  &
+                        ops_arg_dat(d_dudtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_dvdtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE),  &
+                        ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                        ops_arg_gbl(rxlprm, nbcprr, "real(8)", OPS_READ), &
+                        ops_arg_gbl(nbcprr, 1, "integer", OPS_READ))
         
     END IF
 
@@ -87,16 +88,16 @@ SUBROUTINE bcutxl
         init_val1 = rxlprm(1)*SIN(argmnt)
         init_val2 = fornow*rxlprm(1)*COS(argmnt)
 
-        rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+        rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
         call ops_par_loop(bcut_kernel_xdir_sinusoidal_uvel, "bcut_kernel_xdir_sinusoidal_uvel", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
-                        ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
-                        ops_arg_dat(d_dudtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                        ops_arg_dat(d_dvdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE),  &
-                        ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                        ops_arg_gbl(init_val1, 1, "real(dp)", OPS_READ), &
-                        ops_arg_gbl(init_val2, 1, "real(dp)", OPS_READ))
+                        ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE),  &
+                        ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE),  &
+                        ops_arg_dat(d_dudtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_dvdtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE),  &
+                        ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                        ops_arg_gbl(init_val1, 1, "real(8)", OPS_READ), &
+                        ops_arg_gbl(init_val2, 1, "real(8)", OPS_READ))
 
     END IF
 
@@ -124,19 +125,19 @@ SUBROUTINE bcutxl
         kxbase = kminxl
 
 !       ZERO THE LOCAL-PROCESSOR CONTRIBUTION TO THE DFT
-        rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+        rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
         call ops_par_loop(set_zero_kernel_xdir, "set zero", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
         call ops_par_loop(set_zero_kernel_xdir, "set zero", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
         call ops_par_loop(set_zero_kernel_xdir, "set zero", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
         call ops_par_loop(set_zero_kernel_xdir, "set zero", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_dudtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_dudtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
         call ops_par_loop(set_zero_kernel_xdir, "set zero", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_dvdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_dvdtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
         call ops_par_loop(set_zero_kernel_xdir, "set zero", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE))
+                        ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
 
 !       -----------------------------------------------------------------------
 
@@ -144,41 +145,41 @@ SUBROUTINE bcutxl
         IF(fllixl) THEN
 
             kx = kxbase
-            realkx = REAL(kx,kind=dp)
+            realkx = REAL(kx,kind=8)
             argval = argmnt*realkx
             cosval = COS(argval)
             sinval = SIN(argval)
             iic = 1
 
-            rangexyz = (/iic,iic,jstal,jstol,kstal,kstol/)
+            rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
             call ops_par_loop(bcut_kernel_xdir_eqA, "A = A + B*val1", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_dat(d_ufxl, 1, s3d_000, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(sinval, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_ufxl, 1, s3d_000, "real(8)", OPS_READ), &
+                            ops_arg_gbl(sinval, 1, "real(8)", OPS_READ))
             call ops_par_loop(bcut_kernel_xdir_eqA, "A = A + B*val1", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_dat(d_vfxl, 1, s3d_000, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(sinval, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vfxl, 1, s3d_000, "real(8)", OPS_READ), &
+                            ops_arg_gbl(sinval, 1, "real(8)", OPS_READ))
             call ops_par_loop(bcut_kernel_xdir_eqA, "A = A + B*val1", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_dat(d_wfxl, 1, s3d_000, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(sinval, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_wfxl, 1, s3d_000, "real(8)", OPS_READ), &
+                            ops_arg_gbl(sinval, 1, "real(8)", OPS_READ))
 
             call ops_par_loop(bcut_kernel_xdir_eqB, "A = A - val1*B*val2", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_dudtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_dat(d_ufxl, 1, s3d_000, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(realkx, 1, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(cosval, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_dudtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_ufxl, 1, s3d_000, "real(8)", OPS_READ), &
+                            ops_arg_gbl(realkx, 1, "real(8)", OPS_READ), &
+                            ops_arg_gbl(cosval, 1, "real(8)", OPS_READ))
             call ops_par_loop(bcut_kernel_xdir_eqB, "A = A - val1*B*val2", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_dvdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_dat(d_vfxl, 1, s3d_000, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(realkx, 1, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(cosval, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_dvdtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vfxl, 1, s3d_000, "real(8)", OPS_READ), &
+                            ops_arg_gbl(realkx, 1, "real(8)", OPS_READ), &
+                            ops_arg_gbl(cosval, 1, "real(8)", OPS_READ))
             call ops_par_loop(bcut_kernel_xdir_eqB, "A = A - val1*B*val2", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_dat(d_wfxl, 1, s3d_000, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(realkx, 1, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(cosval, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_wfxl, 1, s3d_000, "real(8)", OPS_READ), &
+                            ops_arg_gbl(realkx, 1, "real(8)", OPS_READ), &
+                            ops_arg_gbl(cosval, 1, "real(8)", OPS_READ))
 
             kxbase = kxbase + 1
 
@@ -191,45 +192,47 @@ SUBROUTINE bcutxl
 !       ZEROTH WAVENUMBER
         IF(kxbase == 0) THEN
             kx = kxbase
-            realkx = REAL(kx,kind=dp)
+            realkx = REAL(kx,kind=8)
             argval = argmnt*realkx
             cosval = COS(argval)
             sinval = SIN(argval)
             iim = 1
 
-            rangexyz = (/iim,iim,jstal,jstol,kstal,kstol/)
+            rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
             call ops_par_loop(bcut_kernel_xdir_eqC, "A = A + val1*B*val2", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_dat(d_ufxl, 1, s3d_000, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(half, 1, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(cosval, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_ufxl, 1, s3d_000, "real(8)", OPS_READ), &
+                            ops_arg_gbl(half, 1, "real(8)", OPS_READ), &
+                            ops_arg_gbl(cosval, 1, "real(8)", OPS_READ))
             call ops_par_loop(bcut_kernel_xdir_eqC, "A = A + val1*B*val2", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_dat(d_vfxl, 1, s3d_000, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(half, 1, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(cosval, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vfxl, 1, s3d_000, "real(8)", OPS_READ), &
+                            ops_arg_gbl(half, 1, "real(8)", OPS_READ), &
+                            ops_arg_gbl(cosval, 1, "real(8)", OPS_READ))
             call ops_par_loop(bcut_kernel_xdir_eqC, "A = A + val1*B*val2", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_dat(d_wfxl, 1, s3d_000, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(half, 1, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(cosval, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_wfxl, 1, s3d_000, "real(8)", OPS_READ), &
+                            ops_arg_gbl(half, 1, "real(8)", OPS_READ), &
+                            ops_arg_gbl(cosval, 1, "real(8)", OPS_READ))
 
             kxbase = kxbase + 1
 
         END IF
 
 !       ALL OTHER WAVENUMBERS
-        DO kc = kstal,kstol
-            DO jc = jstal,jstol
+        DO kc = 1,nzsize
+            DO jc = 1,nysize
       
                 kx = kxbase
-                realkx = REAL(kx,kind=dp)
+                realkx = REAL(kx,kind=8)
                 argval = argmnt*realkx
                 cosval = COS(argval)
                 sinval = SIN(argval)
       
                 DO ic = istaxl,istoxl,2
-        
+                    write(*, '(a)') "Using the arrays not allocated by OPS, &
+                        Please implement the function in OPS first, bcutxl.F90: ID=233"
+                    STOP 
                     iim = ic
                     iic = ic+1
         
@@ -248,7 +251,7 @@ SUBROUTINE bcutxl
                                     - wfxl(iic,jc,kc)*cosval)
         
                     kx = kx + 1
-                    realkx = REAL(kx,kind=dp)
+                    realkx = REAL(kx,kind=8)
                     fornow = cosval
                     cosval = costht*cosval - sintht*sinval
                     sinval = sintht*fornow + costht*sinval
@@ -264,41 +267,44 @@ SUBROUTINE bcutxl
         IF(fltrxl) THEN
 
             kx = kxbase + istoxl/2
-            realkx = REAL(kx,kind=dp)
+            realkx = REAL(kx,kind=8)
             argval = argmnt*realkx
             cosval = COS(argval)
             sinval = SIN(argval)
             iim = istoxl + 1
-    
-            rangexyz = (/iim,iim,jstal,jstol,kstal,kstol/)
+
+            write(*, '(a)') "Please correct range for the OPS par loop, bcutxl.F90: ID=275"
+            STOP
+
+            rangexyz = (/iim,iim,1,nyglbl,1,nzglbl/)
             call ops_par_loop(bcut_kernel_xdir_eqA, "A = A + B*val1", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_dat(d_ufxl, 1, s3d_000, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(cosval, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_ufxl, 1, s3d_000, "real(8)", OPS_READ), &
+                            ops_arg_gbl(cosval, 1, "real(8)", OPS_READ))
             call ops_par_loop(bcut_kernel_xdir_eqA, "A = A + B*val1", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_dat(d_vfxl, 1, s3d_000, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(cosval, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vfxl, 1, s3d_000, "real(8)", OPS_READ), &
+                            ops_arg_gbl(cosval, 1, "real(8)", OPS_READ))
             call ops_par_loop(bcut_kernel_xdir_eqA, "A = A + B*val1", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_dat(d_wfxl, 1, s3d_000, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(cosval, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_wfxl, 1, s3d_000, "real(8)", OPS_READ), &
+                            ops_arg_gbl(cosval, 1, "real(8)", OPS_READ))
 
             call ops_par_loop(bcut_kernel_xdir_eqC, "A = A + val1*B*val2", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_dudtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_dat(d_ufxl, 1, s3d_000, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(realkx, 1, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(sinval, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_dudtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_ufxl, 1, s3d_000, "real(8)", OPS_READ), &
+                            ops_arg_gbl(realkx, 1, "real(8)", OPS_READ), &
+                            ops_arg_gbl(sinval, 1, "real(8)", OPS_READ))
             call ops_par_loop(bcut_kernel_xdir_eqC, "A = A + val1*B*val2", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_dvdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_dat(d_vfxl, 1, s3d_000, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(realkx, 1, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(sinval, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_dvdtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_vfxl, 1, s3d_000, "real(8)", OPS_READ), &
+                            ops_arg_gbl(realkx, 1, "real(8)", OPS_READ), &
+                            ops_arg_gbl(sinval, 1, "real(8)", OPS_READ))
             call ops_par_loop(bcut_kernel_xdir_eqC, "A = A + val1*B*val2", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_dat(d_wfxl, 1, s3d_000, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(realkx, 1, "real(dp)", OPS_READ), &
-                            ops_arg_gbl(sinval, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_wfxl, 1, s3d_000, "real(8)", OPS_READ), &
+                            ops_arg_gbl(realkx, 1, "real(8)", OPS_READ), &
+                            ops_arg_gbl(sinval, 1, "real(8)", OPS_READ))
 
         END IF
 
@@ -318,9 +324,13 @@ SUBROUTINE bcutxl
                 call p_recv(parray,nparay,irproc,irtag)
       
                 ncount = 0
-                DO kc = kstal,kstol
-                    DO jc = jstal,jstol
-          
+                DO kc = 1,nzsize
+                    DO jc = 1,nysize
+         
+                        write(*, '(a)') "Using the arrays not allocated by OPS, &
+                                         Please implement the function in OPS first, bcutxl.F90: ID=332"
+                        STOP
+ 
                         ncount = ncount + 1
                         struxl(1,jc,kc) = struxl(1,jc,kc) + parray(ncount)
                         ncount = ncount + 1
@@ -340,52 +350,56 @@ SUBROUTINE bcutxl
             END DO
 
 !           SCALING OF DFT
-            rangexyz = (/1,1,jstal,jstol,kstal,kstol/)
+            rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
 !           VELOCITIES
             call ops_par_loop(bcut_kernel_xdir_eqD, "A = A * val1", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_gbl(scauxl, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_RW), &
+                            ops_arg_gbl(scauxl, 1, "real(8)", OPS_READ))
             call ops_par_loop(bcut_kernel_xdir_eqD, "A = A * val1", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_gbl(scauxl, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_RW), &
+                            ops_arg_gbl(scauxl, 1, "real(8)", OPS_READ))
             call ops_par_loop(bcut_kernel_xdir_eqD, "A = A * val1", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_gbl(scauxl, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_RW), &
+                            ops_arg_gbl(scauxl, 1, "real(8)", OPS_READ))
 
 !           DERIVATIVES
             call ops_par_loop(bcut_kernel_xdir_eqD, "A = A * val1", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_dudtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_gbl(scduxl, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_dudtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_RW), &
+                            ops_arg_gbl(scduxl, 1, "real(8)", OPS_READ))
             call ops_par_loop(bcut_kernel_xdir_eqD, "A = A * val1", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_dvdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_gbl(scduxl, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_dvdtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_RW), &
+                            ops_arg_gbl(scduxl, 1, "real(8)", OPS_READ))
             call ops_par_loop(bcut_kernel_xdir_eqD, "A = A * val1", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_gbl(scduxl, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_RW), &
+                            ops_arg_gbl(scduxl, 1, "real(8)", OPS_READ))
 
 !           ADD MEAN VELOCITY
             call ops_par_loop(bcut_kernel_xdir_eqE, "A = A + val1", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_gbl(bvelxl, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
+                            ops_arg_gbl(bvelxl, 1, "real(8)", OPS_READ))
 
 !           CONVERT SPATIAL TO TEMPORAL DERIVATIVES
             call ops_par_loop(bcut_kernel_xdir_eqD, "A = A * val1", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_dudtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_gbl(svelxl, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_dudtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_RW), &
+                            ops_arg_gbl(svelxl, 1, "real(8)", OPS_READ))
             call ops_par_loop(bcut_kernel_xdir_eqD, "A = A * val1", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_dvdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_gbl(svelxl, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_dvdtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_RW), &
+                            ops_arg_gbl(svelxl, 1, "real(8)", OPS_READ))
             call ops_par_loop(bcut_kernel_xdir_eqD, "A = A * val1", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(dp)", OPS_WRITE), &
-                            ops_arg_gbl(svelxl, 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_RW), &
+                            ops_arg_gbl(svelxl, 1, "real(8)", OPS_READ))
 
         ELSE
 
 !           NOT THE LEFTMOST PROCESSOR IN X
 !           SEND TO LEFTMOST PROCESSOR IN X
             ncount = 0
-            DO kc = kstal,kstol
-                DO jc = jstal,jstol
+            DO kc = 1,nzsize
+                DO jc = 1,nysize
+
+                    write(*, '(a)') "Using the arrays not allocated by OPS, &
+                                    Please implement the function in OPS first, bcutxl.F90: ID=402"
+                    STOP
 
                     ncount = ncount + 1
                     parray(ncount) = struxl(1,jc,kc)
@@ -403,7 +417,7 @@ SUBROUTINE bcutxl
                 END DO
             END DO
 
-            pcount = REAL(ncount,kind=dp)
+            pcount = REAL(ncount,kind=8)
             irproc = nprocx(0)
             irtag = iproc*nproc+irproc
             call p_send(pcount,1,1,irproc,irtag)

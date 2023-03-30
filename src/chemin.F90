@@ -37,8 +37,8 @@ SUBROUTINE chemin
 
 !   LOCAL DATA
 !   ==========
-    real(kind=dp) :: pcount
-    real(kind=dp) :: giblet
+    real(kind=8) :: pcount
+    real(kind=8) :: giblet
     INTEGER :: ispec,istep,ibody,ilind,itroe,isrif
     INTEGER :: jspec,jstep,jbody,jlind,jtroe,jsrif
     INTEGER :: itint,icp
@@ -356,14 +356,14 @@ SUBROUTINE chemin
   
 !       NO OF SPECIES
         ncount = 1
-        parray(ncount) = REAL(nspec,kind=dp)
+        parray(ncount) = REAL(nspec,kind=8)
   
 !       SPECIES STRINGS
 !       RSC 29-DEC-2006 BUG FIX INDEXING
         DO ispec = 1,nspec
             DO icp = 1, nspstr
                 ncount = ncount + 1
-                parray(ncount) = REAL(ICHAR(spcsym(ispec)(icp:icp)),kind=dp)
+                parray(ncount) = REAL(ICHAR(spcsym(ispec)(icp:icp)),kind=8)
             END DO
         END DO
   
@@ -376,14 +376,14 @@ SUBROUTINE chemin
             ncount = ncount + 1
             parray(ncount) = clewis(ispec)
             ncount = ncount + 1
-            parray(ncount) = REAL(ntint(ispec),kind=dp)
+            parray(ncount) = REAL(ntint(ispec),kind=8)
             DO itint = 1,ntint(ispec)
                 ncount = ncount + 1
                 parray(ncount) = tintlo(itint,ispec)
                 ncount = ncount + 1
                 parray(ncount) = tinthi(itint,ispec)
                 ncount = ncount + 1
-                parray(ncount) = REAL(ncofcp(itint,ispec),kind=dp)
+                parray(ncount) = REAL(ncofcp(itint,ispec),kind=8)
                 DO icp = 1,ncofcp(itint,ispec)
                     ncount = ncount + 1
                     parray(ncount) = amolcp(icp,itint,ispec)
@@ -395,7 +395,7 @@ SUBROUTINE chemin
   
 !       NO OF STEPS
         ncount = ncount + 1
-        parray(ncount) = REAL(nstep,kind=dp)
+        parray(ncount) = REAL(nstep,kind=8)
   
 !       STEP RATE DATA
         DO istep = 1, nstep
@@ -408,40 +408,40 @@ SUBROUTINE chemin
 !       STEP SPECIES-LIST
         DO istep = 1,nstep
             ncount = ncount + 1
-            parray(ncount) = REAL(nsslen(istep),kind=dp)
+            parray(ncount) = REAL(nsslen(istep),kind=8)
             DO ispec = 1, nsslen(istep)
                 ncount = ncount + 1
-                parray(ncount) = REAL(nsspec(ispec,istep),kind=dp)
+                parray(ncount) = REAL(nsspec(ispec,istep),kind=8)
             END DO
         END DO
   
 !       STEP REACTANT-LIST
         DO istep = 1,nstep
             ncount = ncount + 1
-            parray(ncount) = REAL(nrslen(istep),kind=dp)
+            parray(ncount) = REAL(nrslen(istep),kind=8)
             DO ispec = 1, nrslen(istep)
                 ncount = ncount + 1
-                parray(ncount) = REAL(nrspec(ispec,istep),kind=dp)
+                parray(ncount) = REAL(nrspec(ispec,istep),kind=8)
             END DO
         END DO
   
 !       STEP PRODUCT-LIST
         DO istep = 1,nstep
             ncount = ncount + 1
-            parray(ncount) = REAL(npslen(istep),kind=dp)
+            parray(ncount) = REAL(npslen(istep),kind=8)
             DO ispec = 1, npslen(istep)
                 ncount = ncount + 1
-                parray(ncount) = REAL(npspec(ispec,istep),kind=dp)
+                parray(ncount) = REAL(npspec(ispec,istep),kind=8)
             END DO
         END DO
   
 !       STEP REACTANT COEFFICIENT-LIST
         DO istep = 1,nstep
             ncount = ncount + 1
-            parray(ncount) = REAL(nrclen(istep),kind=dp)
+            parray(ncount) = REAL(nrclen(istep),kind=8)
             DO ispec = 1, nrclen(istep)
                 ncount = ncount + 1
-                parray(ncount) = REAL(nrcpec(ispec,istep),kind=dp)
+                parray(ncount) = REAL(nrcpec(ispec,istep),kind=8)
                 ncount = ncount + 1
                 parray(ncount) = crspec(ispec,istep)
             END DO
@@ -450,10 +450,10 @@ SUBROUTINE chemin
 !       STEP PRODUCT COEFFICIENT-LIST
         DO istep = 1,nstep
             ncount = ncount + 1
-            parray(ncount) = REAL(npclen(istep),kind=dp)
+            parray(ncount) = REAL(npclen(istep),kind=8)
             DO ispec = 1, npclen(istep)
                 ncount = ncount + 1
-                parray(ncount) = REAL(npcpec(ispec,istep),kind=dp)
+                parray(ncount) = REAL(npcpec(ispec,istep),kind=8)
                 ncount = ncount + 1
                 parray(ncount) = cpspec(ispec,istep)
             END DO
@@ -471,11 +471,11 @@ SUBROUTINE chemin
   
 !       THIRD-BODY LIST
         ncount = ncount + 1
-        parray(ncount) = REAL(nbody,kind=dp)
+        parray(ncount) = REAL(nbody,kind=8)
         DO ibody = 1, nbody
             DO icp = 1, nspstr
                 ncount = ncount + 1
-                parray(ncount) = REAL(ICHAR(bdysym(ibody)(icp:icp)),kind=dp)
+                parray(ncount) = REAL(ICHAR(bdysym(ibody)(icp:icp)),kind=8)
             END DO
         END DO
   
@@ -483,7 +483,7 @@ SUBROUTINE chemin
         IF(nbody > 0)THEN
             DO istep = 1, nstep
                 ncount = ncount + 1
-                parray(ncount) = REAL(mblist(istep),kind=dp)
+                parray(ncount) = REAL(mblist(istep),kind=8)
             END DO
         END IF
   
@@ -499,11 +499,11 @@ SUBROUTINE chemin
   
 !       GIBBS STEP-LIST
         ncount = ncount + 1
-        parray(ncount) = REAL(ngibb,kind=dp)
+        parray(ncount) = REAL(ngibb,kind=8)
         IF(ngibb > 0) THEN
             DO istep = 1, nstep
                 ncount = ncount + 1
-                parray(ncount) = REAL(mglist(istep),kind=dp)
+                parray(ncount) = REAL(mglist(istep),kind=8)
             END DO
         END IF
   
@@ -511,11 +511,11 @@ SUBROUTINE chemin
   
 !       LINDEMANN STEP-LIST
         ncount = ncount + 1
-        parray(ncount) = REAL(nlind,kind=dp)
+        parray(ncount) = REAL(nlind,kind=8)
         IF(nlind > 0) THEN
             DO istep = 1, nstep
                 ncount = ncount + 1
-                parray(ncount) = REAL(mllist(istep),kind=dp)
+                parray(ncount) = REAL(mllist(istep),kind=8)
             END DO
         END IF
   
@@ -531,11 +531,11 @@ SUBROUTINE chemin
   
 !       TROE FORM STEP-LIST
         ncount = ncount + 1
-        parray(ncount) = REAL(ntroe,kind=dp)
+        parray(ncount) = REAL(ntroe,kind=8)
         IF(ntroe > 0) THEN
             DO istep = 1, nstep
                 ncount = ncount + 1
-                parray(ncount) = REAL(mtlist(istep),kind=dp)
+                parray(ncount) = REAL(mtlist(istep),kind=8)
             END DO
         END IF
   
@@ -551,11 +551,11 @@ SUBROUTINE chemin
   
 !       SRI FORM STEP-LIST
         ncount = ncount + 1
-        parray(ncount) = REAL(nsrif,kind=dp)
+        parray(ncount) = REAL(nsrif,kind=8)
         IF(nsrif > 0) THEN
             DO istep = 1, nstep
                 ncount = ncount + 1
-                parray(ncount) = REAL(mslist(istep),kind=dp)
+                parray(ncount) = REAL(mslist(istep),kind=8)
             END DO
         END IF
   
@@ -570,7 +570,7 @@ SUBROUTINE chemin
 !       -----------------------------------------------------------------------
   
 !       BROADCAST COUNTER
-        pcount = REAL(ncount,kind=dp)
+        pcount = REAL(ncount,kind=8)
   
 !       CHECK BROADCAST COUNTER AGAINST BROADCAST ARRAY SIZE
         IF(ncount > nparay) THEN
@@ -910,7 +910,7 @@ SUBROUTINE chemin
         DO itint = 1,ntint(ispec)
             amasct(1,itint,ispec) = amascp(1,itint,ispec) - rgspec(ispec)
             DO icp = 2,ncpoly(itint,ispec)
-                amasct(icp,itint,ispec) = amascp(icp,itint,ispec)/REAL(icp,kind=dp)
+                amasct(icp,itint,ispec) = amascp(icp,itint,ispec)/REAL(icp,kind=8)
             END DO
             amasct(ncenth(itint,ispec),itint,ispec) = zero
             amasct(ncenpy(itint,ispec),itint,ispec) = zero
@@ -922,7 +922,7 @@ SUBROUTINE chemin
         DO itint = 1,ntint(ispec)
             amasch(1,itint,ispec) = amascp(1,itint,ispec)
             DO icp = 2,ncpoly(itint,ispec)
-                amasch(icp,itint,ispec) = amascp(icp,itint,ispec)/REAL(icp,kind=dp)
+                amasch(icp,itint,ispec) = amascp(icp,itint,ispec)/REAL(icp,kind=8)
             END DO
             amasch(ncenth(itint,ispec),itint,ispec)  &
                 = amascp(ncenth(itint,ispec),itint,ispec)
@@ -935,7 +935,7 @@ SUBROUTINE chemin
         DO itint = 1,ntint(ispec)
             amascs(1,itint,ispec) = amascp(1,itint,ispec)
             DO icp = 2,ncpoly(itint,ispec)
-                amascs(icp,itint,ispec) = amascp(icp,itint,ispec) /REAL(icp-1,kind=dp)
+                amascs(icp,itint,ispec) = amascp(icp,itint,ispec) /REAL(icp-1,kind=8)
             END DO
             amascs(ncenth(itint,ispec),itint,ispec) = zero
             amascs(ncenpy(itint,ispec),itint,ispec)  &
@@ -951,7 +951,7 @@ SUBROUTINE chemin
             amolgb(1,itint,ispec)= amolcp(ncenpy(itint,ispec),itint,ispec)  &
                 - amolcp(1,itint,ispec) + giblet
             DO icp = 2,ncpoly(itint,ispec)
-                amolgb(icp,itint,ispec) = amolcp(icp,itint,ispec) /REAL(icp*(icp-1),kind=dp)
+                amolgb(icp,itint,ispec) = amolcp(icp,itint,ispec) /REAL(icp*(icp-1),kind=8)
             END DO
             amolgb(ncenth(itint,ispec),itint,ispec)  &
                 = amolcp(ncenth(itint,ispec),itint,ispec)
@@ -978,10 +978,10 @@ SUBROUTINE chemin
 !   -------------------------------------------------------------------------
 
 !   TRANSPORT COEFFICIENTS
-    alamdc = 0.0000258_dp
-    rlamda = 0.70_dp
-    tlamda = 298.0_dp
-    prantl = 0.70_dp
+    alamdc = 0.0000258_8
+    rlamda = 0.70_8
+    tlamda = 298.0_8
+    prantl = 0.70_8
 
 !   CONDUCTIVITY COEFFICIENT
     alamda = alamdc*EXP(-rlamda*LOG(tlamda))

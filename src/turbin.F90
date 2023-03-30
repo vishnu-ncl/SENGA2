@@ -43,28 +43,28 @@ SUBROUTINE turbin
 
 !   FUNCTIONS
 !   =========
-    real(kind=dp) :: espect,ranuni
+    real(kind=8) :: espect,ranuni
     EXTERNAL espect,ranuni
 
 !   PARAMETERS
 !   ==========
-    real(kind=dp) :: vectol,tolimg
-    PARAMETER(vectol=0.00001_dp, tolimg=1.0E-6)
+    real(kind=8) :: vectol,tolimg
+    PARAMETER(vectol=0.00001_8, tolimg=1.0E-6)
 
 !   LOCAL DATA
 !   ==========
-    real(kind=dp) :: vectk1,vectk2,vectk3,vksize,ovksiz
-    real(kind=dp) :: velmag,vfactr,plnmag
-    real(kind=dp) :: ovplmg,aziang,cosazi,sinazi
-    real(kind=dp) :: phang1,phang2,cosph1,sinph1,cosph2,sinph2
-    real(kind=dp) :: vaterm,vbterm
-    real(kind=dp) :: tklodd
-    real(kind=dp) :: twopi,ovtopi
-    real(kind=dp) :: ubart,vbart,wbart,uvart,vvart,wvart,tket
-    real(kind=dp) :: ubartt,vbartt,wbartt,uvartt,vvartt,wvartt,tketot
-    real(kind=dp) :: ubartl,vbartl,wbartl,uvartl,vvartl,wvartl,tketl
-    real(kind=dp) :: ubartg,vbartg,wbartg,uvartg,vvartg,wvartg,tketg
-    real(kind=dp) :: udev,vdev,wdev,faclav,facgav
+    real(kind=8) :: vectk1,vectk2,vectk3,vksize,ovksiz
+    real(kind=8) :: velmag,vfactr,plnmag
+    real(kind=8) :: ovplmg,aziang,cosazi,sinazi
+    real(kind=8) :: phang1,phang2,cosph1,sinph1,cosph2,sinph2
+    real(kind=8) :: vaterm,vbterm
+    real(kind=8) :: tklodd
+    real(kind=8) :: twopi,ovtopi
+    real(kind=8) :: ubart,vbart,wbart,uvart,vvart,wvart,tket
+    real(kind=8) :: ubartt,vbartt,wbartt,uvartt,vvartt,wvartt,tketot
+    real(kind=8) :: ubartl,vbartl,wbartl,uvartl,vvartl,wvartl,tketl
+    real(kind=8) :: ubartg,vbartg,wbartg,uvartg,vvartg,wvartg,tketg
+    real(kind=8) :: udev,vdev,wdev,faclav,facgav
     integer :: ic,jc,kc,ix,jx,kx,icproc
     integer :: igofst,jgofst,kgofst,igofm1,jgofm1,kgofm1
     integer :: igstal,jgstal,kgstal,igstol,jgstol,kgstol
@@ -80,6 +80,10 @@ SUBROUTINE turbin
 !   =====
 
 !   =========================================================================
+    write(*, '(a)') "Using the arrays not allocated by OPS, &
+                        Please implement the function in OPS first, turbin.F90: ID=84"
+            STOP
+
 
 !   INDEXING
 !   --------
@@ -138,18 +142,19 @@ SUBROUTINE turbin
         iseed = inseed + iproc
         call ranini(iseed)
 
+
 !       SWEEP THROUGH LOCAL PHYSICAL SPACE
-        DO kc = kstal,kstol
-            DO jc = jstal,jstol
-                DO ic = istal,istol
+        DO kc = 1,nzsize
+            DO jc = 1,nysize
+                DO ic = 1,nxsize
         
 !                   GET AND SAVE THREE RANDOM NUMBERS
                     utmp(ic,jc,kc) = ranuni(iseed)
-        vtmp(ic,jc,kc) = ranuni(iseed)
-        wtmp(ic,jc,kc) = ranuni(iseed)
+                    vtmp(ic,jc,kc) = ranuni(iseed)
+                    wtmp(ic,jc,kc) = ranuni(iseed)
         
-        END DO
-        END DO
+                END DO
+            END DO
         END DO
 
     ELSE
@@ -181,8 +186,12 @@ SUBROUTINE turbin
           ix = ic - igofst
           jx = jc - jgofst
           kx = kc - kgofst
-          
-!               SAVE THE THREE RANDOM NUMBERS
+
+          write(*, '(a)') "Using the arrays not allocated by OPS, &
+                        Please implement the function in OPS first, turbin.F90: line number 190"
+          STOP  
+
+!         SAVE THE THREE RANDOM NUMBERS
           utmp(ix,jx,kx) = aziang
           vtmp(ix,jx,kx) = phang1
           wtmp(ix,jx,kx) = phang2
@@ -208,19 +217,19 @@ SUBROUTINE turbin
 
 !   SWEEP THROUGH LOCAL PHYSICAL SPACE
 !   ----------------------------------
-    DO kc = kstal,kstol
+    DO kc = 1,nzsize
   
 !       FOURIER-SPACE GLOBAL INDEXING
     kx = kgofm1 + kc
     IF(kx > nodblz)kx = kx-nzglbl
   
-    DO jc = jstal,jstol
+    DO jc = 1,nysize
     
 !         FOURIER-SPACE GLOBAL INDEXING
     jx = jgofm1 + jc
     IF(jx > nodbly)jx = jx-nyglbl
     
-    DO ic = istal,istol
+    DO ic = 1,nxsize
       
 !           FOURIER-SPACE GLOBAL INDEXING
       ix = igofm1 + ic
@@ -236,9 +245,9 @@ SUBROUTINE turbin
 !             IN UPPER-CENTRAL HALF OF FOURIER SPACE
         
 !             EVALUATE THE WAVENUMBER VECTOR COMPONENTS
-        vectk1 = REAL(ix,kind=dp)
-        vectk2 = REAL(jx,kind=dp)
-        vectk3 = REAL(kx,kind=dp)
+        vectk1 = REAL(ix,kind=8)
+        vectk2 = REAL(jx,kind=8)
+        vectk3 = REAL(kx,kind=8)
         vksize = SQRT(vectk1*vectk1+vectk2*vectk2+vectk3*vectk3)
 !             SPECIAL CASE OF ZERO VECTOR
         ovksiz = one
@@ -334,20 +343,21 @@ SUBROUTINE turbin
 !   CHECK ENERGY CONTENT
 !   --------------------
     tket = zero
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(turbin_kernel_eqA, "CHECK ENERGY CONTENT", senga_grid, 3, rangexyz,  &
-                    &  ops_arg_dat(d_urun, 1, s3d_000, "real(dp)", OPS_READ), &
-                    &  ops_arg_dat(d_utmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    &  ops_arg_dat(d_vrun, 1, s3d_000, "real(dp)", OPS_READ), &
-                    &  ops_arg_dat(d_vtmp, 1, s3d_000, "real(dp)", OPS_READ), &
-                    &  ops_arg_dat(d_wrun, 1, s3d_000, "real(dp)", OPS_READ), &
-                    &  ops_arg_dat(d_wtmp, 1, s3d_000, "real(dp)", OPS_READ), &
+                    &  ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_READ), &
+                    &  ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    &  ops_arg_dat(d_vrun, 1, s3d_000, "real(8)", OPS_READ), &
+                    &  ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_READ), &
+                    &  ops_arg_dat(d_wrun, 1, s3d_000, "real(8)", OPS_READ), &
+                    &  ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_READ), &
                     &  ops_arg_reduce(h_tket, 1, "real(8)", OPS_INC))
 
     call ops_reduction_result(h_tket, tket)
 
 !   SUM OVER ALL PROCESSORS
-    call p_summ(tket,tketot)
+!    call p_summ(tket,tketot)
+    tketot = tket
 
 !   REPORT
     IF(iproc == 0)THEN
@@ -367,10 +377,11 @@ SUBROUTINE turbin
 !   CHECK THAT TRANSFORMED DATA IS REAL
 !   -----------------------------------
 
-    DO kc = kstal,kstol
-    DO jc = jstal,jstol
-    DO ic = istal,istol
-      
+    DO kc = 1,nzsize
+    DO jc = 1,nysize
+    DO ic = 1,nxsize
+
+
       flagim = .false.
       IF(utmp(ic,jc,kc) > tolimg)flagim = .true.
       IF(vtmp(ic,jc,kc) > tolimg)flagim = .true.
@@ -391,8 +402,8 @@ SUBROUTINE turbin
 !   ---------------------------
 
 !   AVERAGING FACTORS
-    faclav = one/REAL(nxnode,kind=dp)/REAL(nynode,kind=dp)/REAL(nznode,kind=dp)
-    facgav = one/REAL(nxglbl,kind=dp)/REAL(nyglbl,kind=dp)/REAL(nzglbl,kind=dp)
+    faclav = one/REAL(nxsize,kind=8)/REAL(nysize,kind=8)/REAL(nzsize,kind=8)
+    facgav = one/REAL(nxglbl,kind=8)/REAL(nyglbl,kind=8)/REAL(nzglbl,kind=8)
 
 !   VELOCITY MEANS
 !   --------------
@@ -401,19 +412,19 @@ SUBROUTINE turbin
     vbart = zero
     wbart = zero
     
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(turbin_kernel_eqB, "VELOCITY MEANS", senga_grid, 3, rangexyz,  &
-                    &  ops_arg_dat(d_urun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    &  ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_READ), &
                     &  ops_arg_reduce(h_ubart, 1, "real(8)", OPS_INC))
     call ops_reduction_result(h_ubart, ubart)
 
     call ops_par_loop(turbin_kernel_eqB, "VELOCITY MEANS", senga_grid, 3, rangexyz,  &
-                    &  ops_arg_dat(d_vrun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    &  ops_arg_dat(d_vrun, 1, s3d_000, "real(8)", OPS_READ), &
                     &  ops_arg_reduce(h_vbart, 1, "real(8)", OPS_INC))
     call ops_reduction_result(h_vbart, vbart)
 
     call ops_par_loop(turbin_kernel_eqB, "VELOCITY MEANS", senga_grid, 3, rangexyz,  &
-                    &  ops_arg_dat(d_wrun, 1, s3d_000, "real(dp)", OPS_READ), &
+                    &  ops_arg_dat(d_wrun, 1, s3d_000, "real(8)", OPS_READ), &
                     &  ops_arg_reduce(h_wbart, 1, "real(8)", OPS_INC))
     call ops_reduction_result(h_wbart, wbart)
 
@@ -423,9 +434,12 @@ SUBROUTINE turbin
     wbartl = wbart*faclav
 
 !   SUM OVER ALL PROCESSORS
-    call p_summ(ubart,ubartt)
-    call p_summ(vbart,vbartt)
-    call p_summ(wbart,wbartt)
+!    call p_summ(ubart,ubartt)
+    ubartt = ubart
+!    call p_summ(vbart,vbartt)
+    vbartt = vbart
+!    call p_summ(wbart,wbartt)
+    wbartt = wbart
 
 !   GLOBAL AVERAGES
     ubartg = ubartt*facgav
@@ -440,22 +454,22 @@ SUBROUTINE turbin
     vvart = zero
     wvart = zero
 
-    rangexyz = (/istal,istol,jstal,jstol,kstal,kstol/)
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     call ops_par_loop(turbin_kernel_eqC, "VELOCITY VARIANCES", senga_grid, 3, rangexyz,  &
-                    &  ops_arg_dat(d_urun, 1, s3d_000, "real(dp)", OPS_READ), &
-                    &  ops_arg_gbl(ubartg, 1, "real(dp)", OPS_READ), &
+                    &  ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_READ), &
+                    &  ops_arg_gbl(ubartg, 1, "real(8)", OPS_READ), &
                     &  ops_arg_reduce(h_uvart, 1, "real(8)", OPS_INC))
     call ops_reduction_result(h_uvart, uvart)
 
     call ops_par_loop(turbin_kernel_eqC, "VELOCITY VARIANCES", senga_grid, 3, rangexyz,  &
-                    &  ops_arg_dat(d_vrun, 1, s3d_000, "real(dp)", OPS_READ), &
-                    &  ops_arg_gbl(vbartg, 1, "real(dp)", OPS_READ), &
+                    &  ops_arg_dat(d_vrun, 1, s3d_000, "real(8)", OPS_READ), &
+                    &  ops_arg_gbl(vbartg, 1, "real(8)", OPS_READ), &
                     &  ops_arg_reduce(h_vvart, 1, "real(8)", OPS_INC))
     call ops_reduction_result(h_vvart, vvart)
 
     call ops_par_loop(turbin_kernel_eqC, "VELOCITY VARIANCES", senga_grid, 3, rangexyz,  &
-                    &  ops_arg_dat(d_wrun, 1, s3d_000, "real(dp)", OPS_READ), &
-                    &  ops_arg_gbl(wbartg, 1, "real(dp)", OPS_READ), &
+                    &  ops_arg_dat(d_wrun, 1, s3d_000, "real(8)", OPS_READ), &
+                    &  ops_arg_gbl(wbartg, 1, "real(8)", OPS_READ), &
                     &  ops_arg_reduce(h_wvart, 1, "real(8)", OPS_INC))
     call ops_reduction_result(h_wvart, wvart)
 
@@ -469,10 +483,14 @@ SUBROUTINE turbin
     tketl  = half*(uvartl+vvartl+wvartl)
 
 !   SUM OVER ALL PROCESSORS
-    call p_summ(uvart,uvartt)
-    call p_summ(vvart,vvartt)
-    call p_summ(wvart,wvartt)
-    call p_summ(tket,tketot)
+!    call p_summ(uvart,uvartt)
+    uvartt = uvart
+!    call p_summ(vvart,vvartt)
+    vvartt = vvart
+!    call p_summ(wvart,wvartt)
+    wvartt = wvart
+!    call p_summ(tket,tketot)
+    tketot = tket
 
 !   GLOBAL AVERAGES
     uvartg = uvartt*facgav

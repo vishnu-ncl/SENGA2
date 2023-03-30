@@ -2,30 +2,30 @@ SUBROUTINE temper_kernel_main(store7,trun,transp,prun,itndex,urhs,vrhs,wrhs,drhs
     use data_types
     implicit none
 
-    real(kind=dp), dimension(1), intent(in) :: urhs,vrhs,wrhs,drhs,erhs,yrhs
-    real(kind=dp), dimension(1) :: store7,trun,transp,prun
+    real(kind=8), dimension(1), intent(in) :: urhs,vrhs,wrhs,drhs,erhs,yrhs
+    real(kind=8), dimension(1) :: store7,trun,transp,prun
     integer, dimension(1) :: itndex
     integer, dimension(3), intent(in) :: idx
 
     integer, intent(in) :: nctmax,ncofmx,ntinmx,nspcmx,nintmx,nspec,nspimx,ntbase,nctmm1
 
-    real(kind=dp), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amascp,amasct 
-    integer, dimension(ntinmx,nspec), intent(in) :: ncpoly,ncpom1,ncenth
-    real(kind=dp), dimension(nintmx,nspec), intent(in) :: tinthi
-    real(kind=dp), dimension(nspcmx), intent(in) :: rgspec
-    integer, dimension(nspec), intent(in) :: ntint
+    real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amascp,amasct 
+    integer, dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncpom1,ncenth
+    real(kind=8), dimension(nintmx,nspcmx), intent(in) :: tinthi
+    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
+    integer, dimension(nspcmx), intent(in) :: ntint
 
 
 !   PARAMETERS
 !   ==========
-    real(kind=dp), parameter :: toltmp=1.0E-10
+    real(kind=8), parameter :: toltmp=1.0E-10
     integer, parameter :: ntitrs=100
 
 !   LOCAL DATA
 !   ==========
-    real(kind=dp) :: ukuk
-    real(kind=dp) :: tempor,tfpoly,tdpoly,deltmp,cpfory
-    real(kind=dp) :: tcoeff(0:nctmax),tderiv(1:nctmax)
+    real(kind=8) :: ukuk
+    real(kind=8) :: tempor,tfpoly,tdpoly,deltmp,cpfory
+    real(kind=8) :: tcoeff(0:nctmax),tderiv(1:nctmax)
 
     integer :: ic,jc,kc,ispec,itint,icp,ititrs
     integer :: iindex,ipower,icoef1,icoef2
@@ -43,22 +43,22 @@ SUBROUTINE temper_kernel_main(store7,trun,transp,prun,itndex,urhs,vrhs,wrhs,drhs
 
 !   INITIALISE COEFFICIENTS OF TEMPERATURE POLYNOMIAL
 !   AND ITS DERIVATIVE
-    tcoeff(0) = 0.5_dp*ukuk - erhs(OPS_ACC10(0,0,0))
+    tcoeff(0) = 0.5_8*ukuk - erhs(OPS_ACC10(0,0,0))
     DO icp = 1, nctmax
-        tcoeff(icp) = 0.0_dp
-        tderiv(icp) = 0.0_dp
+        tcoeff(icp) = 0.0_8
+        tderiv(icp) = 0.0_8
     END DO
 
 !   ===================================================================
 
 !   USE STORE7 TO ACCUMULATE MIXTURE SPECIFIC GAS CONSTANT
 !   INITIALISE STORE7
-    store7(OPS_ACC1(0,0,0)) = 0.0_dp
+    store7(OPS_ACC1(0,0,0)) = 0.0_8
 
 !   ===================================================================
 
 !   RUN THROUGH ALL SPECIES
-    DO ispec = 1,nspec
+    DO ispec = 1, nspec
 
 !       =================================================================
 
@@ -138,15 +138,15 @@ SUBROUTINE temper_kernel_main(store7,trun,transp,prun,itndex,urhs,vrhs,wrhs,drhs
             deltmp = -tfpoly/tdpoly
 
         ELSE
-            WRITE(6,*) 'Fatal: TEMPER: T iteration failed to converge'
+            print *,'Fatal: TEMPER: T iteration failed to converge'
 !            WRITE(6,*)'processor:',iproc
-            WRITE(6,*) 'at point:',ic,jc,kc
-            WRITE(6,*) 'with values:',tempor,deltmp
-            WRITE(6,*) drhs(OPS_ACC9(0,0,0))
-            WRITE(6,*) urhs(OPS_ACC6(0,0,0))
-            WRITE(6,*) vrhs(OPS_ACC7(0,0,0))
-            WRITE(6,*) wrhs(OPS_ACC8(0,0,0))
-            WRITE(6,*) erhs(OPS_ACC10(0,0,0))
+            print *,'at point:',ic,jc,kc
+            print *,'with values:',tempor,deltmp
+            print *,drhs(OPS_ACC9(0,0,0))
+            print *,urhs(OPS_ACC6(0,0,0))
+            print *,vrhs(OPS_ACC7(0,0,0))
+            print *,wrhs(OPS_ACC8(0,0,0))
+            print *,erhs(OPS_ACC10(0,0,0))
             STOP
         END IF
     END DO
@@ -164,9 +164,9 @@ SUBROUTINE temper_kernel_main(store7,trun,transp,prun,itndex,urhs,vrhs,wrhs,drhs
         itndex(OPS_ACC_MD5(iindex,0,0,0)) = 0
     END DO
 
-    transp(OPS_ACC3(0,0,0)) = 0.0_dp
+    transp(OPS_ACC3(0,0,0)) = 0.0_8
 
-    DO ispec = 1,nspec
+    DO ispec = 1, nspec
         itint = 1
 
         DO WHILE (trun(OPS_ACC2(0,0,0)) > tinthi(itint,ispec) .and. itint < ntint(ispec))

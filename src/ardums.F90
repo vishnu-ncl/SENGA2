@@ -25,7 +25,7 @@ SUBROUTINE ardums(array,nxphys,nyphys,nzphys,nspec,ispec)
 !   ARGUMENTS
 !   =========
 
-    real(kind=dp), intent(IN OUT)       :: array(nxphys,nyphys,nzphys,nspec)
+    real(kind=8), intent(IN OUT)       :: array(nxphys,nyphys,nzphys,nspec)
     integer, intent(IN OUT)             :: nxphys
     integer, intent(IN)                 :: nyphys
     integer, intent(IN)                 :: nzphys

@@ -53,12 +53,13 @@ SUBROUTINE bcytzr
 
 !   EVALUATE AND RETURN STRYZR,DYDTZR
     DO ispec = 1,nspec
-        rangexyz = (/istal,istol,jstal,jstol,1,1/)
+        rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
         call ops_par_loop(bcyt_kernel_zdir, "bcyt_kernel_zdir", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(d_stryzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                            ops_arg_dat(d_dydtzr, 9, s3d_000_strid3d_xy, "real(dp)", OPS_WRITE), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
-                            ops_arg_gbl(yrin(ispec), 1, "real(dp)", OPS_READ))
+                            ops_arg_dat(d_stryzr, 2, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_dydtzr, 2, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
+                            ops_arg_gbl(yrin, nspcmx, "real(8)", OPS_READ), &
+                            ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
     END DO
 

@@ -38,7 +38,7 @@ SUBROUTINE radcin
 
 !   LOCAL DATA
 !   ==========
-    real(kind=dp) :: pcount
+    real(kind=8) :: pcount
     integer :: ispec,jspec,icoeff
     integer :: nrdspc,ncount
     integer :: iroot
@@ -143,19 +143,19 @@ SUBROUTINE radcin
             ncount = 1
             DO ispec = 1,nspec
                 ncount = ncount + 1
-                parray(ncount) = REAL(nsprad,kind=dp)
+                parray(ncount) = REAL(nsprad,kind=8)
                 DO icoeff = 1, nsprad
                     ncount = ncount + 1
                     parray(ncount) = akprad(icoeff,ispec)
                 END DO
                 ncount = ncount + 1
-                parray(ncount) = REAL(nsprid(ispec),kind=dp)
+                parray(ncount) = REAL(nsprid(ispec),kind=8)
             END DO
     
 !           ---------------------------------------------------------------------
     
 !           BROADCAST COUNTER
-            pcount = REAL(ncount,kind=dp)
+            pcount = REAL(ncount,kind=8)
     
 !           CHECK BROADCAST COUNTER AGAINST BROADCAST ARRAY SIZE
             IF(ncount > nparay) THEN

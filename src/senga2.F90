@@ -1,11 +1,13 @@
 PROGRAM senga2
  
     use OPS_Fortran_Reference
+    use OPS_Fortran_hdf5_Declarations
     use OPS_CONSTANTS
 
     use, intrinsic :: ISO_C_BINDING
 
     use com_senga
+    use com_ops_senga
 
 !   *************************************************************************
 
@@ -74,6 +76,10 @@ PROGRAM senga2
 !   RSC 29-DEC-2006 UPDATED INDEXING
     INTEGER :: jtime,jrkstp
 
+!   profiling
+    real(kind=c_double) :: startTime = 0
+    real(kind=c_double) :: endTime = 0
+
 !   BEGIN
 !   =====
 
@@ -82,7 +88,10 @@ PROGRAM senga2
 !   INITIALISATION
 !   ==============
 
-    call ops_init(2)
+    call ops_init(6)
+    call ops_set_soa(0)
+
+    call ops_timers ( startTime )
     
     call ops_data_init
 
@@ -102,98 +111,90 @@ PROGRAM senga2
 
 !   RSC 29-DEC-2006 UPDATED INDEXING
     DO jtime = ntime1,ntime2
-  
+
         itime = jtime
-  
+
 !       =======================================================================
-  
+
 !       RUNGE-KUTTA SUBSTEPS
 !       ====================
-  
+
 !       STANDARD SUBSTEPS
 !       -----------------
 !       RSC 29-DEC-2006 UPDATED INDEXING
         DO jrkstp = 1,nrksm1
-    
+
             irkstp = jrkstp
-    
+
 !           APPLY BCS ON PRIMITIVE VARIABLES
             call boundt
-    
+
 !           PARALLEL DATA TRANSFER
             call parfer
-    
+
 !           EVALUATE RHS FOR SCALARS
             call rhscal
-    
+
 !           EVALUATE RHS FOR VELOCITIES
             call rhsvel
-    
+
 !           APPLY BCS ON SOURCE TERMS
             call bounds
-    
+
 !           RUNGE-KUTTA ADVANCEMENT
             call lincom
-    
+
         END DO
-  
+
 !       =======================================================================
-  
+
 !       LAST SUBSTEP IS DIFFERENT
 !       -------------------------
         irkstp = nrkstp
-  
+
 !       APPLY BCS ON PRIMITIVE VARIABLES
         call boundt
-  
+
 !       PARALLEL DATA TRANSFER
         call parfer
-  
+
 !       EVALUATE RHS FOR SCALARS
         call rhscal
-  
+
 !       EVALUATE RHS FOR VELOCITIES
         call rhsvel
-  
+
 !       APPLY BCS ON SOURCE TERMS
         call bounds
-  
+
 !       RUNGE-KUTTA ADVANCEMENT
         call fincom
-  
+
 !       =======================================================================
-  
+
 !       UPDATE THE ELAPSED TIME
 !       =======================
         etime = etime + tstep
-  
+
 !       =======================================================================
-  
+
 !       SYNCHRONISE THE TIME-DEPENDENT BCS
 !       ==================================
         call bountt
-  
+
 !       =======================================================================
-  
-!       FILTER THE SOLUTION
-!       ===================
-!       RSC 30-AUG-2009 HIGH ORDER FILTERING
-!        CALL FLTREM
-  
-!       =======================================================================
-  
+
 !       ADJUST THE TIME STEP
 !       ====================
         call adaptt
-  
+
 !       =======================================================================
-  
+
 !       PROCESS THE RESULTS
 !       ===================
         call output
-  
+
 !       =======================================================================
-  
     END DO
 !   END OF TIME STEP LOOP
 
@@ -201,6 +202,11 @@ PROGRAM senga2
 
 !   TERMINATION
 !   ===========
+    call ops_timers ( endTime )
+    call ops_timing_output( )
+    IF (ops_is_root() .eq. 1) THEN
+        write (*,'(a,f16.7,a)') 'Max total runtime =', endTime - startTime,' seconds'
+    END IF
 
 !   TERMINATE THE PROGRAM
     call finish

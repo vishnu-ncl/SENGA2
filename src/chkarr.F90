@@ -27,7 +27,7 @@ SUBROUTINE chkarr(array,  &
 !   ARGUMENTS
 !   =========
 
-    real(kind=dp), intent(IN)   :: array(nchkxl:nchkxr,nchkyl:nchkyr,nchkzl:nchkzr)
+    real(kind=8), intent(IN)   :: array(nchkxl:nchkxr,nchkyl:nchkyr,nchkzl:nchkzr)
     integer, intent(IN OUT)     :: nchkxl
     integer, intent(IN OUT)     :: nchkxr
     integer, intent(IN OUT)     :: nchkyl
@@ -43,7 +43,7 @@ SUBROUTINE chkarr(array,  &
 
 !   LOCAL DATA
 !   ==========
-    real(kind=dp) :: arrmin,arrmax
+    real(kind=8) :: arrmin,arrmax
     integer :: ic,jc,kc
     integer :: icmin,jcmin,kcmin
     integer :: icmax,jcmax,kcmax

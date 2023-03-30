@@ -45,13 +45,13 @@ SUBROUTINE dfinit
 
 !   SPATIAL STEP SIZES
 !   ==================
-    deltax = xgdlen/DBLE(nxglbl-1)
+    deltax = xgdlen/((nxglbl-1)*one)
     ovdelx = one/deltax
     ovdlx2 = ovdelx*ovdelx
-    deltay = ygdlen/DBLE(nyglbl-1)
+    deltay = ygdlen/((nyglbl-1)*one)
     ovdely = one/deltay
     ovdly2 = ovdely*ovdely
-    deltaz = zgdlen/DBLE(nzglbl-1)
+    deltaz = zgdlen/((nzglbl-1)*one)
     ovdelz = one/deltaz
     ovdlz2 = ovdelz*ovdelz
 
@@ -64,38 +64,38 @@ SUBROUTINE dfinit
 !   ---------------
 
 !   TENTH ORDER EXPLICIT CENTRED DIFFERENCES
-    acoeff = 5.0_dp/3.0_dp
-    bcoeff = -20.0_dp/21.0_dp
-    ccoeff = 5.0_dp/14.0_dp
-    dcoeff = -5.0_dp/63.0_dp
-    ecoeff = 1.0_dp/126.0_dp
+    acoeff = 5.0_8/3.0_8
+    bcoeff = -20.0_8/21.0_8
+    ccoeff = 5.0_8/14.0_8
+    dcoeff = -5.0_8/63.0_8
+    ecoeff = 1.0_8/126.0_8
 
-    acoffx = acoeff/2.0_dp
-    bcoffx = bcoeff/4.0_dp
-    ccoffx = ccoeff/6.0_dp
-    dcoffx = dcoeff/8.0_dp
-    ecoffx = ecoeff/10.0_dp
+    acoffx = acoeff/2.0_8
+    bcoffx = bcoeff/4.0_8
+    ccoffx = ccoeff/6.0_8
+    dcoffx = dcoeff/8.0_8
+    ecoffx = ecoeff/10.0_8
 
-    acoffy = acoeff/2.0_dp
-    bcoffy = bcoeff/4.0_dp
-    ccoffy = ccoeff/6.0_dp
-    dcoffy = dcoeff/8.0_dp
-    ecoffy = ecoeff/10.0_dp
+    acoffy = acoeff/2.0_8
+    bcoffy = bcoeff/4.0_8
+    ccoffy = ccoeff/6.0_8
+    dcoffy = dcoeff/8.0_8
+    ecoffy = ecoeff/10.0_8
 
-    acoffz = acoeff/2.0_dp
-    bcoffz = bcoeff/4.0_dp
-    ccoffz = ccoeff/6.0_dp
-    dcoffz = dcoeff/8.0_dp
-    ecoffz = ecoeff/10.0_dp
+    acoffz = acoeff/2.0_8
+    bcoffz = bcoeff/4.0_8
+    ccoffz = ccoeff/6.0_8
+    dcoffz = dcoeff/8.0_8
+    ecoffz = ecoeff/10.0_8
 
 !   BOUNDARY TREATMENT
 !   ------------------
 
 !   FIRST POINT SCHEME (4TH ORDER ONE SIDED)
-    acoef1 = 4.0_dp
-    bcoef1 = -3.0_dp
-    ccoef1 = 4.0_dp/3.0_dp
-    dcoef1 = -1.0_dp/4.0_dp
+    acoef1 = 4.0_8
+    bcoef1 = -3.0_8
+    ccoef1 = 4.0_8/3.0_8
+    dcoef1 = -1.0_8/4.0_8
 
     acof1x = acoef1
     bcof1x = bcoef1
@@ -113,10 +113,10 @@ SUBROUTINE dfinit
     dcof1z = dcoef1
 
 !   SECOND POINT SCHEME (4TH ORDER MIXED)
-    acoef2 = -1.0_dp/4.0_dp
-    bcoef2 = 3.0_dp/2.0_dp
-    ccoef2 = -1.0_dp/2.0_dp
-    dcoef2 = 1.0_dp/12.0_dp
+    acoef2 = -1.0_8/4.0_8
+    bcoef2 = 3.0_8/2.0_8
+    ccoef2 = -1.0_8/2.0_8
+    dcoef2 = 1.0_8/12.0_8
 
     acof2x = acoef2
     bcof2x = bcoef2
@@ -134,55 +134,55 @@ SUBROUTINE dfinit
     dcof2z = dcoef2
 
 !   3RD POINT SCHEME (4TH ORDER EXPLICIT CENTRED)
-    acoef3 = 4.0_dp/3.0_dp
-    bcoef3 = -1.0_dp/3.0_dp
+    acoef3 = 4.0_8/3.0_8
+    bcoef3 = -1.0_8/3.0_8
 
-    acof3x = acoef3/2.0_dp
-    bcof3x = bcoef3/4.0_dp
+    acof3x = acoef3/2.0_8
+    bcof3x = bcoef3/4.0_8
 
-    acof3y = acoef3/2.0_dp
-    bcof3y = bcoef3/4.0_dp
+    acof3y = acoef3/2.0_8
+    bcof3y = bcoef3/4.0_8
 
-    acof3z = acoef3/2.0_dp
-    bcof3z = bcoef3/4.0_dp
+    acof3z = acoef3/2.0_8
+    bcof3z = bcoef3/4.0_8
 
 !   4TH POINT SCHEME (6TH ORDER EXPLICIT CENTRED)
-    acoef4 = 3.0_dp/2.0_dp
-    bcoef4 = -3.0_dp/5.0_dp
-    ccoef4 = 1.0_dp/10.0_dp
+    acoef4 = 3.0_8/2.0_8
+    bcoef4 = -3.0_8/5.0_8
+    ccoef4 = 1.0_8/10.0_8
 
-    acof4x = acoef4/2.0_dp
-    bcof4x = bcoef4/4.0_dp
-    ccof4x = ccoef4/6.0_dp
+    acof4x = acoef4/2.0_8
+    bcof4x = bcoef4/4.0_8
+    ccof4x = ccoef4/6.0_8
 
-    acof4y = acoef4/2.0_dp
-    bcof4y = bcoef4/4.0_dp
-    ccof4y = ccoef4/6.0_dp
+    acof4y = acoef4/2.0_8
+    bcof4y = bcoef4/4.0_8
+    ccof4y = ccoef4/6.0_8
 
-    acof4z = acoef4/2.0_dp
-    bcof4z = bcoef4/4.0_dp
-    ccof4z = ccoef4/6.0_dp
+    acof4z = acoef4/2.0_8
+    bcof4z = bcoef4/4.0_8
+    ccof4z = ccoef4/6.0_8
 
 !   5TH POINT SCHEME (8TH ORDER EXPLICIT CENTRED)
-    acoef5 = 8.0_dp/5.0_dp
-    bcoef5 = -4.0_dp/5.0_dp
-    ccoef5 = 8.0_dp/35.0_dp
-    dcoef5 = -1.0_dp/35.0_dp
+    acoef5 = 8.0_8/5.0_8
+    bcoef5 = -4.0_8/5.0_8
+    ccoef5 = 8.0_8/35.0_8
+    dcoef5 = -1.0_8/35.0_8
 
-    acof5x = acoef5/2.0_dp
-    bcof5x = bcoef5/4.0_dp
-    ccof5x = ccoef5/6.0_dp
-    dcof5x = dcoef5/8.0_dp
+    acof5x = acoef5/2.0_8
+    bcof5x = bcoef5/4.0_8
+    ccof5x = ccoef5/6.0_8
+    dcof5x = dcoef5/8.0_8
 
-    acof5y = acoef5/2.0_dp
-    bcof5y = bcoef5/4.0_dp
-    ccof5y = ccoef5/6.0_dp
-    dcof5y = dcoef5/8.0_dp
+    acof5y = acoef5/2.0_8
+    bcof5y = bcoef5/4.0_8
+    ccof5y = ccoef5/6.0_8
+    dcof5y = dcoef5/8.0_8
 
-    acof5z = acoef5/2.0_dp
-    bcof5z = bcoef5/4.0_dp
-    ccof5z = ccoef5/6.0_dp
-    dcof5z = dcoef5/8.0_dp
+    acof5z = acoef5/2.0_8
+    bcof5z = bcoef5/4.0_8
+    ccof5z = ccoef5/6.0_8
+    dcof5z = dcoef5/8.0_8
 
 !   =========================================================================
 
@@ -200,32 +200,32 @@ SUBROUTINE dfinit
     ecoefs = ecoeff
 
     acofsx = acoefs
-    bcofsx = bcoefs/4.0_dp
-    ccofsx = ccoefs/9.0_dp
-    dcofsx = dcoefs/16.0_dp
-    ecofsx = ecoefs/25.0_dp
+    bcofsx = bcoefs/4.0_8
+    ccofsx = ccoefs/9.0_8
+    dcofsx = dcoefs/16.0_8
+    ecofsx = ecoefs/25.0_8
 
     acofsy = acoefs
-    bcofsy = bcoefs/4.0_dp
-    ccofsy = ccoefs/9.0_dp
-    dcofsy = dcoefs/16.0_dp
-    ecofsy = ecoefs/25.0_dp
+    bcofsy = bcoefs/4.0_8
+    ccofsy = ccoefs/9.0_8
+    dcofsy = dcoefs/16.0_8
+    ecofsy = ecoefs/25.0_8
 
     acofsz = acoefs
-    bcofsz = bcoefs/4.0_dp
-    ccofsz = ccoefs/9.0_dp
-    dcofsz = dcoefs/16.0_dp
-    ecofsz = ecoefs/25.0_dp
+    bcofsz = bcoefs/4.0_8
+    ccofsz = ccoefs/9.0_8
+    dcofsz = dcoefs/16.0_8
+    ecofsz = ecoefs/25.0_8
 
 !   BOUNDARY TREATMENT
 !   ------------------
 
 !   FIRST POINT SCHEME (4TH ORDER ONE SIDED)
-    acofs1 = -77.0_dp/6.0_dp
-    bcofs1 = 107.0_dp/6.0_dp
-    ccofs1 = -13.0_dp
-    dcofs1 = 61.0_dp/12.0_dp
-    ecofs1 = -5.0_dp/6.0_dp
+    acofs1 = -77.0_8/6.0_8
+    bcofs1 = 107.0_8/6.0_8
+    ccofs1 = -13.0_8
+    dcofs1 = 61.0_8/12.0_8
+    ecofs1 = -5.0_8/6.0_8
 
     acfs1x = acofs1
     bcfs1x = bcofs1
@@ -246,11 +246,11 @@ SUBROUTINE dfinit
     ecfs1z = ecofs1
 
 !   SECOND POINT SCHEME (4TH ORDER MIXED)
-    acofs2 = 5.0_dp/6.0_dp
-    bcofs2 = -1.0_dp/3.0_dp
-    ccofs2 = 7.0_dp/6.0_dp
-    dcofs2 = -1.0_dp/2.0_dp
-    ecofs2 = 1.0_dp/12.0_dp
+    acofs2 = 5.0_8/6.0_8
+    bcofs2 = -1.0_8/3.0_8
+    ccofs2 = 7.0_8/6.0_8
+    dcofs2 = -1.0_8/2.0_8
+    ecofs2 = 1.0_8/12.0_8
 
     acfs2x = acofs2
     bcfs2x = bcofs2
@@ -275,13 +275,13 @@ SUBROUTINE dfinit
     bcofs3 = bcoef3
 
     acfs3x = acofs3
-    bcfs3x = bcofs3/4.0_dp
+    bcfs3x = bcofs3/4.0_8
 
     acfs3y = acofs3
-    bcfs3y = bcofs3/4.0_dp
+    bcfs3y = bcofs3/4.0_8
 
     acfs3z = acofs3
-    bcfs3z = bcofs3/4.0_dp
+    bcfs3z = bcofs3/4.0_8
 
 !   4TH POINT SCHEME (6TH ORDER EXPLICIT CENTRED)
     acofs4 = acoef4
@@ -289,16 +289,16 @@ SUBROUTINE dfinit
     ccofs4 = ccoef4
 
     acfs4x = acofs4
-    bcfs4x = bcofs4/4.0_dp
-    ccfs4x = ccofs4/9.0_dp
+    bcfs4x = bcofs4/4.0_8
+    ccfs4x = ccofs4/9.0_8
 
     acfs4y = acofs4
-    bcfs4y = bcofs4/4.0_dp
-    ccfs4y = ccofs4/9.0_dp
+    bcfs4y = bcofs4/4.0_8
+    ccfs4y = ccofs4/9.0_8
 
     acfs4z = acofs4
-    bcfs4z = bcofs4/4.0_dp
-    ccfs4z = ccofs4/9.0_dp
+    bcfs4z = bcofs4/4.0_8
+    ccfs4z = ccofs4/9.0_8
 
 !   5TH POINT SCHEME (8TH ORDER EXPLICIT CENTRED)
     acofs5 = acoef5
@@ -307,19 +307,19 @@ SUBROUTINE dfinit
     dcofs5 = dcoef5
 
     acfs5x = acofs5
-    bcfs5x = bcofs5/4.0_dp
-    ccfs5x = ccofs5/9.0_dp
-    dcfs5x = dcofs5/16.0_dp
+    bcfs5x = bcofs5/4.0_8
+    ccfs5x = ccofs5/9.0_8
+    dcfs5x = dcofs5/16.0_8
 
     acfs5y = acofs5
-    bcfs5y = bcofs5/4.0_dp
-    ccfs5y = ccofs5/9.0_dp
-    dcfs5y = dcofs5/16.0_dp
+    bcfs5y = bcofs5/4.0_8
+    ccfs5y = ccofs5/9.0_8
+    dcfs5y = dcofs5/16.0_8
 
     acfs5z = acofs5
-    bcfs5z = bcofs5/4.0_dp
-    ccfs5z = ccofs5/9.0_dp
-    dcfs5z = dcofs5/16.0_dp
+    bcfs5z = bcofs5/4.0_8
+    ccfs5z = ccofs5/9.0_8
+    dcfs5z = dcofs5/16.0_8
 
 !   =========================================================================
 
@@ -333,35 +333,35 @@ SUBROUTINE dfinit
     dcoefx = dcoeff
     ecoefx = ecoeff
 
-    acofxy = acoefx/4.0_dp
-    bcofxy = bcoefx/4.0_dp/4.0_dp
-    ccofxy = ccoefx/4.0_dp/9.0_dp
-    dcofxy = dcoefx/4.0_dp/16.0_dp
-    ecofxy = ecoefx/4.0_dp/25.0_dp
+    acofxy = acoefx/4.0_8
+    bcofxy = bcoefx/4.0_8/4.0_8
+    ccofxy = ccoefx/4.0_8/9.0_8
+    dcofxy = dcoefx/4.0_8/16.0_8
+    ecofxy = ecoefx/4.0_8/25.0_8
 
-    acofxz = acoefx/4.0_dp
-    bcofxz = bcoefx/4.0_dp/4.0_dp
-    ccofxz = ccoefx/4.0_dp/9.0_dp
-    dcofxz = dcoefx/4.0_dp/16.0_dp
-    ecofxz = ecoefx/4.0_dp/25.0_dp
+    acofxz = acoefx/4.0_8
+    bcofxz = bcoefx/4.0_8/4.0_8
+    ccofxz = ccoefx/4.0_8/9.0_8
+    dcofxz = dcoefx/4.0_8/16.0_8
+    ecofxz = ecoefx/4.0_8/25.0_8
 
-    acofyz = acoefx/4.0_dp
-    bcofyz = bcoefx/4.0_dp/4.0_dp
-    ccofyz = ccoefx/4.0_dp/9.0_dp
-    dcofyz = dcoefx/4.0_dp/16.0_dp
-    ecofyz = ecoefx/4.0_dp/25.0_dp
+    acofyz = acoefx/4.0_8
+    bcofyz = bcoefx/4.0_8/4.0_8
+    ccofyz = ccoefx/4.0_8/9.0_8
+    dcofyz = dcoefx/4.0_8/16.0_8
+    ecofyz = ecoefx/4.0_8/25.0_8
 
 !   BOUNDARY TREATMENT
 !   ------------------
 !   FIRST/SECOND POINT SCHEME (4ND ORDER CENTRED IN TRANSVERSE DIRECTION)
-    acofx1 = acoef3/2.0_dp
-    bcofx1 = bcoef3/4.0_dp
+    acofx1 = acoef3/2.0_8
+    bcofx1 = bcoef3/4.0_8
 
-    acofy1 = acoef3/2.0_dp
-    bcofy1 = bcoef3/4.0_dp
+    acofy1 = acoef3/2.0_8
+    bcofy1 = bcoef3/4.0_8
 
-    acofz1 = acoef3/2.0_dp
-    bcofz1 = bcoef3/4.0_dp
+    acofz1 = acoef3/2.0_8
+    bcofz1 = bcoef3/4.0_8
 
 !   FIRST POINT SCHEME (4ND ORDER ONE SIDED/CENTRED)
     acf1xy = acoef1
@@ -396,85 +396,85 @@ SUBROUTINE dfinit
     dcf2yz = dcoef2
 
 !   THIRD POINT SCHEME (4TH ORDER EXPLICIT CENTRED)
-    acf3xy = acoef3/4.0_dp
-    bcf3xy = bcoef3/4.0_dp/4.0_dp
+    acf3xy = acoef3/4.0_8
+    bcf3xy = bcoef3/4.0_8/4.0_8
 
-    acf3xz = acoef3/4.0_dp
-    bcf3xz = bcoef3/4.0_dp/4.0_dp
+    acf3xz = acoef3/4.0_8
+    bcf3xz = bcoef3/4.0_8/4.0_8
 
-    acf3yz = acoef3/4.0_dp
-    bcf3yz = bcoef3/4.0_dp/4.0_dp
+    acf3yz = acoef3/4.0_8
+    bcf3yz = bcoef3/4.0_8/4.0_8
 
 !   FOURTH POINT SCHEME (6TH ORDER EXPLICIT CENTRED)
-    acf4xy = acoef4/4.0_dp
-    bcf4xy = bcoef4/4.0_dp/4.0_dp
-    ccf4xy = ccoef4/4.0_dp/9.0_dp
+    acf4xy = acoef4/4.0_8
+    bcf4xy = bcoef4/4.0_8/4.0_8
+    ccf4xy = ccoef4/4.0_8/9.0_8
 
-    acf4xz = acoef4/4.0_dp
-    bcf4xz = bcoef4/4.0_dp/4.0_dp
-    ccf4xz = ccoef4/4.0_dp/9.0_dp
+    acf4xz = acoef4/4.0_8
+    bcf4xz = bcoef4/4.0_8/4.0_8
+    ccf4xz = ccoef4/4.0_8/9.0_8
 
-    acf4yz = acoef4/4.0_dp
-    bcf4yz = bcoef4/4.0_dp/4.0_dp
-    ccf4yz = ccoef4/4.0_dp/9.0_dp
+    acf4yz = acoef4/4.0_8
+    bcf4yz = bcoef4/4.0_8/4.0_8
+    ccf4yz = ccoef4/4.0_8/9.0_8
 
 !   FIFTH POINT SCHEME (8TH ORDER EXPLICIT CENTRED)
-    acf5xy = acoef5/4.0_dp
-    bcf5xy = bcoef5/4.0_dp/4.0_dp
-    ccf5xy = ccoef5/4.0_dp/9.0_dp
-    dcf5xy = dcoef5/4.0_dp/16.0_dp
+    acf5xy = acoef5/4.0_8
+    bcf5xy = bcoef5/4.0_8/4.0_8
+    ccf5xy = ccoef5/4.0_8/9.0_8
+    dcf5xy = dcoef5/4.0_8/16.0_8
 
-    acf5xz = acoef5/4.0_dp
-    bcf5xz = bcoef5/4.0_dp/4.0_dp
-    ccf5xz = ccoef5/4.0_dp/9.0_dp
-    dcf5xz = dcoef5/4.0_dp/16.0_dp
+    acf5xz = acoef5/4.0_8
+    bcf5xz = bcoef5/4.0_8/4.0_8
+    ccf5xz = ccoef5/4.0_8/9.0_8
+    dcf5xz = dcoef5/4.0_8/16.0_8
 
-    acf5yz = acoef5/4.0_dp
-    bcf5yz = bcoef5/4.0_dp/4.0_dp
-    ccf5yz = ccoef5/4.0_dp/9.0_dp
-    dcf5yz = dcoef5/4.0_dp/16.0_dp
+    acf5yz = acoef5/4.0_8
+    bcf5yz = bcoef5/4.0_8/4.0_8
+    ccf5yz = ccoef5/4.0_8/9.0_8
+    dcf5yz = dcoef5/4.0_8/16.0_8
 
 !   CORNER POINT SCHEME (4TH ORDER ONE SIDED/ONE SIDED)
     acofc1 = acoef1
-    bcofc1 = bcoef1*2.0_dp
-    ccofc1 = ccoef1*3.0_dp
-    dcofc1 = dcoef1*4.0_dp
+    bcofc1 = bcoef1*2.0_8
+    ccofc1 = ccoef1*3.0_8
+    dcofc1 = dcoef1*4.0_8
 
     acc1xy = acofc1
-    bcc1xy = bcofc1/4.0_dp
-    ccc1xy = ccofc1/9.0_dp
-    dcc1xy = dcofc1/16.0_dp
+    bcc1xy = bcofc1/4.0_8
+    ccc1xy = ccofc1/9.0_8
+    dcc1xy = dcofc1/16.0_8
 
     acc1xz = acofc1
-    bcc1xz = bcofc1/4.0_dp
-    ccc1xz = ccofc1/9.0_dp
-    dcc1xz = dcofc1/16.0_dp
+    bcc1xz = bcofc1/4.0_8
+    ccc1xz = ccofc1/9.0_8
+    dcc1xz = dcofc1/16.0_8
 
     acc1yz = acofc1
-    bcc1yz = bcofc1/4.0_dp
-    ccc1yz = ccofc1/9.0_dp
-    dcc1yz = dcofc1/16.0_dp
+    bcc1yz = bcofc1/4.0_8
+    ccc1yz = ccofc1/9.0_8
+    dcc1yz = dcofc1/16.0_8
 
 !   SECOND CORNER POINT SCHEME (4TH ORDER MIXED)
     acofc2 = -acoef2
     bcofc2 =  bcoef2
-    ccofc2 =  ccoef2*2.0_dp
-    dcofc2 =  dcoef2*3.0_dp
+    ccofc2 =  ccoef2*2.0_8
+    dcofc2 =  dcoef2*3.0_8
 
     acc2xy = acofc2
     bcc2xy = bcofc2
-    ccc2xy = ccofc2/4.0_dp
-    dcc2xy = dcofc2/9.0_dp
+    ccc2xy = ccofc2/4.0_8
+    dcc2xy = dcofc2/9.0_8
 
     acc2xz = acofc2
     bcc2xz = bcofc2
-    ccc2xz = ccofc2/4.0_dp
-    dcc2xz = dcofc2/9.0_dp
+    ccc2xz = ccofc2/4.0_8
+    dcc2xz = dcofc2/9.0_8
 
     acc2yz = acofc2
     bcc2yz = bcofc2
-    ccc2yz = ccofc2/4.0_dp
-    dcc2yz = dcofc2/9.0_dp
+    ccc2yz = ccofc2/4.0_8
+    dcc2yz = dcofc2/9.0_8
 
 !   SECOND EDGE POINT SCHEME (4TH ORDER MIXED/CENTRED)
 !   USES FIRST AND SECOND POINT COEFFS
@@ -526,6 +526,9 @@ SUBROUTINE dfinit
 !   =========================================================================
 
 #ifdef OPS_WITH_CUDAFOR
+
+!   ======================================
+
     acoffx_opsconstant = acoffx
     bcoffx_opsconstant = bcoffx
     ccoffx_opsconstant = ccoffx
@@ -555,6 +558,8 @@ SUBROUTINE dfinit
     dcof5x_opsconstant = dcof5x
 
     ovdelx_opsconstant = ovdelx
+
+!   ======================================
 
     acofsx_opsconstant = acofsx
     bcofsx_opsconstant = bcofsx
@@ -588,6 +593,8 @@ SUBROUTINE dfinit
 
     ovdlx2_opsconstant = ovdlx2
 
+!   ======================================
+
     acoffy_opsconstant = acoffy
     bcoffy_opsconstant = bcoffy
     ccoffy_opsconstant = ccoffy
@@ -617,6 +624,8 @@ SUBROUTINE dfinit
     dcof5y_opsconstant = dcof5y
 
     ovdely_opsconstant = ovdely
+
+!   ======================================
 
     acofsy_opsconstant = acofsy
     bcofsy_opsconstant = bcofsy
@@ -649,6 +658,8 @@ SUBROUTINE dfinit
     dcfs5y_opsconstant = dcfs5y
 
     ovdly2_opsconstant = ovdly2
+
+!   ======================================
     
     acoffz_opsconstant = acoffz
     bcoffz_opsconstant = bcoffz
@@ -679,6 +690,8 @@ SUBROUTINE dfinit
     dcof5z_opsconstant = dcof5z
 
     ovdelz_opsconstant = ovdelz
+
+!   ======================================
 
     acofsz_opsconstant = acofsz
     bcofsz_opsconstant = bcofsz
@@ -712,12 +725,16 @@ SUBROUTINE dfinit
 
     ovdlz2_opsconstant = ovdlz2
 
+!   ======================================
+
     acofx1_opsconstant = acofx1
     bcofx1_opsconstant = bcofx1
     acofy1_opsconstant = acofy1
     bcofy1_opsconstant = bcofy1
     acofz1_opsconstant = acofz1
     bcofz1_opsconstant = bcofz1
+
+!   ======================================
 
     acofxy_opsconstant = acofxy
     bcofxy_opsconstant = bcofxy
@@ -757,7 +774,91 @@ SUBROUTINE dfinit
     ccc2xy_opsconstant = ccc2xy
     dcc2xy_opsconstant = dcc2xy
 
+!   ======================================
+
+    acofxz_opsconstant = acofxz
+    bcofxz_opsconstant = bcofxz
+    ccofxz_opsconstant = ccofxz
+    dcofxz_opsconstant = dcofxz
+    ecofxz_opsconstant = ecofxz
+
+    acf1xz_opsconstant = acf1xz
+    bcf1xz_opsconstant = bcf1xz
+    ccf1xz_opsconstant = ccf1xz
+    dcf1xz_opsconstant = dcf1xz
+
+    acf2xz_opsconstant = acf2xz
+    bcf2xz_opsconstant = bcf2xz
+    ccf2xz_opsconstant = ccf2xz
+    dcf2xz_opsconstant = dcf2xz
+
+    acf3xz_opsconstant = acf3xz
+    bcf3xz_opsconstant = bcf3xz
+
+    acf4xz_opsconstant = acf4xz
+    bcf4xz_opsconstant = bcf4xz
+    ccf4xz_opsconstant = ccf4xz
+
+    acf5xz_opsconstant = acf5xz
+    bcf5xz_opsconstant = bcf5xz
+    ccf5xz_opsconstant = ccf5xz
+    dcf5xz_opsconstant = dcf5xz
+
+    acc1xz_opsconstant = acc1xz
+    bcc1xz_opsconstant = bcc1xz
+    ccc1xz_opsconstant = ccc1xz
+    dcc1xz_opsconstant = dcc1xz
+
+    acc2xz_opsconstant = acc2xz
+    bcc2xz_opsconstant = bcc2xz
+    ccc2xz_opsconstant = ccc2xz
+    dcc2xz_opsconstant = dcc2xz
+
+!   ======================================
+
+    acofyz_opsconstant = acofyz
+    bcofyz_opsconstant = bcofyz
+    ccofyz_opsconstant = ccofyz
+    dcofyz_opsconstant = dcofyz
+    ecofyz_opsconstant = ecofyz
+
+    acf1yz_opsconstant = acf1yz
+    bcf1yz_opsconstant = bcf1yz
+    ccf1yz_opsconstant = ccf1yz
+    dcf1yz_opsconstant = dcf1yz
+
+    acf2yz_opsconstant = acf2yz
+    bcf2yz_opsconstant = bcf2yz
+    ccf2yz_opsconstant = ccf2yz
+    dcf2yz_opsconstant = dcf2yz
+
+    acf3yz_opsconstant = acf3yz
+    bcf3yz_opsconstant = bcf3yz
+
+    acf4yz_opsconstant = acf4yz
+    bcf4yz_opsconstant = bcf4yz
+    ccf4yz_opsconstant = ccf4yz
+
+    acf5yz_opsconstant = acf5yz
+    bcf5yz_opsconstant = bcf5yz
+    ccf5yz_opsconstant = ccf5yz
+    dcf5yz_opsconstant = dcf5yz
+
+    acc1yz_opsconstant = acc1yz
+    bcc1yz_opsconstant = bcc1yz
+    ccc1yz_opsconstant = ccc1yz
+    dcc1yz_opsconstant = dcc1yz
+
+    acc2yz_opsconstant = acc2yz
+    bcc2yz_opsconstant = bcc2yz
+    ccc2yz_opsconstant = ccc2yz
+    dcc2yz_opsconstant = dcc2yz
+
+!   ======================================
+
 #endif
+
+!   ==============================================================
 
     call ops_decl_const("acoffx", 1, "double", acoffx)
     call ops_decl_const("bcoffx", 1, "double", bcoffx)
@@ -788,6 +889,8 @@ SUBROUTINE dfinit
     call ops_decl_const("dcof5x", 1, "double", dcof5x)
 
     call ops_decl_const("ovdelx", 1, "double", ovdelx)
+
+!   ==============================================================
 
     call ops_decl_const("acofsx", 1, "double", acofsx)
     call ops_decl_const("bcofsx", 1, "double", bcofsx)
@@ -821,6 +924,8 @@ SUBROUTINE dfinit
 
     call ops_decl_const("ovdlx2", 1, "double", ovdlx2)
 
+!   ==============================================================
+
     call ops_decl_const("acoffy", 1, "double", acoffy)
     call ops_decl_const("bcoffy", 1, "double", bcoffy)
     call ops_decl_const("ccoffy", 1, "double", ccoffy)
@@ -850,6 +955,8 @@ SUBROUTINE dfinit
     call ops_decl_const("dcof5y", 1, "double", dcof5y)
 
     call ops_decl_const("ovdely", 1, "double", ovdely)
+
+!   ==============================================================
 
     call ops_decl_const("acofsy", 1, "double", acofsy)
     call ops_decl_const("bcofsy", 1, "double", bcofsy)
@@ -883,6 +990,8 @@ SUBROUTINE dfinit
 
     call ops_decl_const("ovdly2", 1, "double", ovdly2)
 
+!   ==============================================================
+
     call ops_decl_const("acoffz", 1, "double", acoffz)
     call ops_decl_const("bcoffz", 1, "double", bcoffz)
     call ops_decl_const("ccoffz", 1, "double", ccoffz)
@@ -912,6 +1021,8 @@ SUBROUTINE dfinit
     call ops_decl_const("dcof5z", 1, "double", dcof5z)
 
     call ops_decl_const("ovdelz", 1, "double", ovdelz)
+
+!   ==============================================================
 
     call ops_decl_const("acofsz", 1, "double", acofsz)
     call ops_decl_const("bcofsz", 1, "double", bcofsz)
@@ -945,12 +1056,16 @@ SUBROUTINE dfinit
 
     call ops_decl_const("ovdlz2", 1, "double", ovdlz2)
 
+!   ==============================================================
+
     call ops_decl_const("acofx1", 1, "double", acofx1)
     call ops_decl_const("bcofx1", 1, "double", bcofx1)
     call ops_decl_const("acofy1", 1, "double", acofy1)
     call ops_decl_const("bcofy1", 1, "double", bcofy1)
     call ops_decl_const("acofz1", 1, "double", acofz1)
     call ops_decl_const("bcofz1", 1, "double", bcofz1)
+
+!   ==============================================================
 
     call ops_decl_const("acofxy", 1, "double", acofxy)
     call ops_decl_const("bcofxy", 1, "double", bcofxy)
@@ -989,5 +1104,87 @@ SUBROUTINE dfinit
     call ops_decl_const("bcc2xy", 1, "double", bcc2xy)
     call ops_decl_const("ccc2xy", 1, "double", ccc2xy)
     call ops_decl_const("dcc2xy", 1, "double", dcc2xy)
+
+!   ==============================================================
+
+    call ops_decl_const("acofxz", 1, "double", acofxz)
+    call ops_decl_const("bcofxz", 1, "double", bcofxz)
+    call ops_decl_const("ccofxz", 1, "double", ccofxz)
+    call ops_decl_const("dcofxz", 1, "double", dcofxz)
+    call ops_decl_const("ecofxz", 1, "double", ecofxz)
+
+    call ops_decl_const("acf1xz", 1, "double", acf1xz)
+    call ops_decl_const("bcf1xz", 1, "double", bcf1xz)
+    call ops_decl_const("ccf1xz", 1, "double", ccf1xz)
+    call ops_decl_const("dcf1xz", 1, "double", dcf1xz)
+
+    call ops_decl_const("acf2xz", 1, "double", acf2xz)
+    call ops_decl_const("bcf2xz", 1, "double", bcf2xz)
+    call ops_decl_const("ccf2xz", 1, "double", ccf2xz)
+    call ops_decl_const("dcf2xz", 1, "double", dcf2xz)
+
+    call ops_decl_const("acf3xz", 1, "double", acf3xz)
+    call ops_decl_const("bcf3xz", 1, "double", bcf3xz)
+
+    call ops_decl_const("acf4xz", 1, "double", acf4xz)
+    call ops_decl_const("bcf4xz", 1, "double", bcf4xz)
+    call ops_decl_const("ccf4xz", 1, "double", ccf4xz)
+
+    call ops_decl_const("acf5xz", 1, "double", acf5xz)
+    call ops_decl_const("bcf5xz", 1, "double", bcf5xz)
+    call ops_decl_const("ccf5xz", 1, "double", ccf5xz)
+    call ops_decl_const("dcf5xz", 1, "double", dcf5xz)
+
+    call ops_decl_const("acc1xz", 1, "double", acc1xz)
+    call ops_decl_const("bcc1xz", 1, "double", bcc1xz)
+    call ops_decl_const("ccc1xz", 1, "double", ccc1xz)
+    call ops_decl_const("dcc1xz", 1, "double", dcc1xz)
+
+    call ops_decl_const("acc2xz", 1, "double", acc2xz)
+    call ops_decl_const("bcc2xz", 1, "double", bcc2xz)
+    call ops_decl_const("ccc2xz", 1, "double", ccc2xz)
+    call ops_decl_const("dcc2xz", 1, "double", dcc2xz)
+
+!   ==============================================================
+
+    call ops_decl_const("acofyz", 1, "double", acofyz)
+    call ops_decl_const("bcofyz", 1, "double", bcofyz)
+    call ops_decl_const("ccofyz", 1, "double", ccofyz)
+    call ops_decl_const("dcofyz", 1, "double", dcofyz)
+    call ops_decl_const("ecofyz", 1, "double", ecofyz)
+
+    call ops_decl_const("acf1yz", 1, "double", acf1yz)
+    call ops_decl_const("bcf1yz", 1, "double", bcf1yz)
+    call ops_decl_const("ccf1yz", 1, "double", ccf1yz)
+    call ops_decl_const("dcf1yz", 1, "double", dcf1yz)
+
+    call ops_decl_const("acf2yz", 1, "double", acf2yz)
+    call ops_decl_const("bcf2yz", 1, "double", bcf2yz)
+    call ops_decl_const("ccf2yz", 1, "double", ccf2yz)
+    call ops_decl_const("dcf2yz", 1, "double", dcf2yz)
+
+    call ops_decl_const("acf3yz", 1, "double", acf3yz)
+    call ops_decl_const("bcf3yz", 1, "double", bcf3yz)
+
+    call ops_decl_const("acf4yz", 1, "double", acf4yz)
+    call ops_decl_const("bcf4yz", 1, "double", bcf4yz)
+    call ops_decl_const("ccf4yz", 1, "double", ccf4yz)
+
+    call ops_decl_const("acf5yz", 1, "double", acf5yz)
+    call ops_decl_const("bcf5yz", 1, "double", bcf5yz)
+    call ops_decl_const("ccf5yz", 1, "double", ccf5yz)
+    call ops_decl_const("dcf5yz", 1, "double", dcf5yz)
+
+    call ops_decl_const("acc1yz", 1, "double", acc1yz)
+    call ops_decl_const("bcc1yz", 1, "double", bcc1yz)
+    call ops_decl_const("ccc1yz", 1, "double", ccc1yz)
+    call ops_decl_const("dcc1yz", 1, "double", dcc1yz)
+
+    call ops_decl_const("acc2yz", 1, "double", acc2yz)
+    call ops_decl_const("bcc2yz", 1, "double", bcc2yz)
+    call ops_decl_const("ccc2yz", 1, "double", ccc2yz)
+    call ops_decl_const("dcc2yz", 1, "double", dcc2yz)
+
+!   ==============================================================
 
 END SUBROUTINE dfinit

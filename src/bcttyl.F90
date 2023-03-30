@@ -52,21 +52,22 @@ SUBROUTINE bcttyl
 !   =========================================================================
 
 !   EVALUATE AND RETURN STRTYL,DTDTYL
-    rangexyz = (/istal,istol,1,1,kstal,kstol/)
+    rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
     call ops_par_loop(bcdt_kernel_ydir, "bcdt_kernel_ydir", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE),  &
-                    ops_arg_dat(d_dtdtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                    ops_arg_gbl(trin, 1, "real(dp)", OPS_READ))    
+                    ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE),  &
+                    ops_arg_dat(d_dtdtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
+                    ops_arg_gbl(trin, 1, "real(8)", OPS_READ))    
 
 !   =========================================================================
 
 !   ISOTHERMAL WALL
     IF(nsbcyl == nsbcw2) THEN
-        rangexyz = (/istal,istol,1,1,kstal,kstol/)
-        call ops_par_loop(bcdt_kernel_ydir, "bcdt_kernel_ydir", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE),  &
-                        ops_arg_dat(d_dtdtyl, 1, s3d_000_strid3d_xz, "real(dp)", OPS_WRITE), &
-                        ops_arg_gbl(rylprm(1), 1, "real(dp)", OPS_READ))
+        rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
+        call ops_par_loop(bcdt_kernel_ydir_eqA, "bcdt_kernel_ydir", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE),  &
+                        ops_arg_dat(d_dtdtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
+                        ops_arg_gbl(rylprm, nbcprr, "real(8)", OPS_READ), &
+                        ops_arg_gbl(nbcprr, 1, "integer", OPS_READ))
         
     END IF
 
