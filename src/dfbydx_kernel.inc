@@ -30,7 +30,6 @@ SUBROUTINE dfbydx_kernel_main(functn, fderiv, nxglbl, nendxl, nendxr, nbound, id
                                 + ecoffx*fdiffe
 
     ELSE IF (ic == 1) THEN
-    print *, "dfbydx......"
 !       lh point: 4th order one-sided
         fdiffa = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(0,0,0))
         fdiffb = functn(OPS_ACC1(2,0,0)) - functn(OPS_ACC1(0,0,0))
@@ -77,7 +76,6 @@ SUBROUTINE dfbydx_kernel_main(functn, fderiv, nxglbl, nendxl, nendxr, nbound, id
                                 + ccof5x*fdiffc + dcof5x*fdiffd
 
     ELSE IF (ic == nxglbl-4) THEN
-    print *, "dfbydx......"
 !       rh point minus 4: 8th order centered
         fdiffa = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(-1,0,0))
         fdiffb = functn(OPS_ACC1(2,0,0)) - functn(OPS_ACC1(-2,0,0))
