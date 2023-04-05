@@ -77,13 +77,13 @@ SUBROUTINE math_MD_kernel_eqF(out_arr,in_arr1,in_arr2,in_arr3,ispec)
 END SUBROUTINE math_MD_kernel_eqF
 
 !A = B*C_multidim*(one-val1/D)
-SUBROUTINE math_MD_kernel_eqG(out_arr,in_arr1,in_arr2,in_arr3,val1,nspcmx,ispec)
+SUBROUTINE math_MD_kernel_eqG(out_arr,in_arr1,in_arr2,in_arr3,val1,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
-    integer, intent(in) :: ispec,nspcmx
+    integer, intent(in) :: ispec
     real(kind=8), dimension(nspcmx), intent(in) :: val1
 
     out_arr(OPS_ACC1(0,0,0)) = in_arr1(OPS_ACC2(0,0,0))*in_arr2(OPS_ACC_MD3(ispec,0,0,0))*(1.0_8 - val1(ispec)/in_arr3(OPS_ACC4(0,0,0)))
@@ -203,13 +203,13 @@ SUBROUTINE math_MD_kernel_eqP(out_arr1,in_arr1,val1,ispec)
 END SUBROUTINE math_MD_kernel_eqP
 
 !A = A + var*B_multidim
-SUBROUTINE math_MD_kernel_eqPP(out_arr1,in_arr1,rgspec,nspcmx,ispec)
+SUBROUTINE math_MD_kernel_eqPP(out_arr1,in_arr1,rgspec,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: out_arr1
     real(kind=8), dimension(1), intent(in) :: in_arr1
-    integer, intent(in) :: ispec,nspcmx
+    integer, intent(in) :: ispec
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
     out_arr1(OPS_ACC1(0,0,0)) = out_arr1(OPS_ACC1(0,0,0)) + rgspec(ispec)*in_arr1(OPS_ACC_MD2(ispec,0,0,0))
@@ -217,13 +217,13 @@ SUBROUTINE math_MD_kernel_eqPP(out_arr1,in_arr1,rgspec,nspcmx,ispec)
 END SUBROUTINE math_MD_kernel_eqPP
 
 !A = A*max(B_multidim*var    zero)
-SUBROUTINE math_MD_kernel_eqR(out_arr1,in_arr1,val1,nspcmx,ispec)
+SUBROUTINE math_MD_kernel_eqR(out_arr1,in_arr1,val1,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: out_arr1
     real(kind=8), dimension(1), intent(in) :: in_arr1
-    integer, intent(in) :: ispec,nspcmx
+    integer, intent(in) :: ispec
     real(kind=8), dimension(nspcmx), intent(in) :: val1
     real(kind=8) :: fornow
 
@@ -247,12 +247,12 @@ SUBROUTINE math_MD_kernel_eqS(out_arr1,in_arr1,val1,ispec)
 END SUBROUTINE math_MD_kernel_eqS
 
 !A_multidim = var
-SUBROUTINE math_MD_kernel_eqT(out_arr1,val1,nspcmx,ispec)
+SUBROUTINE math_MD_kernel_eqT(out_arr1,val1,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: out_arr1
-    integer, intent(in) :: ispec,nspcmx
+    integer, intent(in) :: ispec
     real(kind=8), dimension(nspcmx), intent(in) :: val1
 
     out_arr1(OPS_ACC_MD1(ispec,0,0,0)) = val1(ispec)
@@ -272,14 +272,14 @@ SUBROUTINE math_MD_kernel_eqU(out_arr1,in_arr1,ispec)
 
 END SUBROUTINE math_MD_kernel_eqU
 
-SUBROUTINE math_MD_kernel_eqV(transp,store7,wmomix,trun,yrhs,drhs,condco,ovwmol,tdifgb,ncocon,ncocm1,nspcmx,nccfmx)
+SUBROUTINE math_MD_kernel_eqV(transp,store7,wmomix,trun,yrhs,drhs,condco,ovwmol,tdifgb,ncocon,ncocm1)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: transp,store7,wmomix
     real(kind=8), dimension(1), intent(in) :: trun,yrhs,drhs
     
-    integer, intent(in) :: ncocon,ncocm1,nspcmx,nccfmx
+    integer, intent(in) :: ncocon,ncocm1
     
     real(kind=8), dimension(nspcmx), intent(in) :: ovwmol
     real(kind=8), dimension(nccfmx,nspcmx), intent(in) :: condco
@@ -319,14 +319,14 @@ SUBROUTINE math_MD_kernel_eqV(transp,store7,wmomix,trun,yrhs,drhs,condco,ovwmol,
 
 END SUBROUTINE math_MD_kernel_eqV
     
-SUBROUTINE math_MD_kernel_eqW(difmix,store7,transp,prun,yrhs,wmomix,drhs,diffco,ovwmol,pdifgb,dfctol,ispec,ncodif,ncodm1,nspcmx,nspec,ndcfmx)
+SUBROUTINE math_MD_kernel_eqW(difmix,store7,transp,prun,yrhs,wmomix,drhs,diffco,ovwmol,pdifgb,dfctol,ispec,ncodif,ncodm1,nspec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: difmix,store7
     real(kind=8), dimension(1), intent(in) :: transp,prun,yrhs,wmomix,drhs
 
-    integer, intent(in) :: ispec,ncodif,ncodm1,nspcmx,nspec,ndcfmx
+    integer, intent(in) :: ispec,ncodif,ncodm1,nspec
 
     real(kind=8), dimension(nspcmx), intent(in) :: ovwmol
     real(kind=8), dimension(ndcfmx,nspcmx,nspcmx), intent(in) :: diffco
@@ -363,14 +363,14 @@ SUBROUTINE math_MD_kernel_eqW(difmix,store7,transp,prun,yrhs,wmomix,drhs,diffco,
 
 END SUBROUTINE math_MD_kernel_eqW
 
-SUBROUTINE math_MD_kernel_eqX(tdrmix,trun,yrhs,wmomix,tdrcco,ovwmol,tdifgb,ncotdr,jspec,ispec,ncotm1,nspcmx,ndcfmx)
+SUBROUTINE math_MD_kernel_eqX(tdrmix,trun,yrhs,wmomix,tdrcco,ovwmol,tdifgb,ncotdr,jspec,ispec,ncotm1)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: tdrmix
     real(kind=8), dimension(1), intent(in) :: trun,yrhs,wmomix
 
-    integer, intent(in) :: ncotdr,jspec,ispec,ncotm1,nspcmx,ndcfmx
+    integer, intent(in) :: ncotdr,jspec,ispec,ncotm1
 
     real(kind=8), dimension(nspcmx), intent(in) :: ovwmol
     real(kind=8), dimension(ndcfmx,nspcmx,nspcmx), intent(in) :: tdrcco
@@ -395,14 +395,14 @@ SUBROUTINE math_MD_kernel_eqX(tdrmix,trun,yrhs,wmomix,tdrcco,ovwmol,tdifgb,ncotd
 
 END SUBROUTINE math_MD_kernel_eqX
 
-SUBROUTINE math_MD_kernel_eqY(difmix,transp,yrhs,viscco,wilko1,wilko2,ovwmol,ncovis,ncovm1,nspcmx,nspec,nvcfmx)
+SUBROUTINE math_MD_kernel_eqY(difmix,transp,yrhs,viscco,wilko1,wilko2,ovwmol,ncovis,ncovm1,nspec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: difmix
     real(kind=8), dimension(1), intent(in) :: transp,yrhs
 
-    integer, intent(in) :: ncovis,ncovm1,nspcmx,nspec,nvcfmx
+    integer, intent(in) :: ncovis,ncovm1,nspec
 
     real(kind=8), dimension(nspcmx), intent(in) :: ovwmol
     real(kind=8), dimension(nvcfmx,nspcmx), intent(in) :: viscco
@@ -439,15 +439,15 @@ SUBROUTINE math_MD_kernel_eqY(difmix,transp,yrhs,viscco,wilko1,wilko2,ovwmol,nco
 
 END SUBROUTINE math_MD_kernel_eqY
 
-SUBROUTINE math_MD_kernel_eqZ(utmp,wtmp,trun,itndex,yrhs,amasch,ncpoly,ncpom1,ncenth,icoef1,icoef2,iindex,ispec,ncofmx,ntinmx,nspcmx)
+SUBROUTINE math_MD_kernel_eqZ(utmp,wtmp,trun,itndex,yrhs,amasch,ncpoly,ncpom1,ncenth,icoef1,icoef2,iindex,ispec)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: utmp, wtmp
-    real(kind=8), dimension(1), intent(in) :: trun, yrhs
+    real(kind=8), dimension(1) :: utmp,wtmp
+    real(kind=8), dimension(1), intent(in) :: trun,yrhs
     integer, dimension(1), intent(in) :: itndex
 
-    integer, intent(in) ::  iindex, icoef1, icoef2, ispec, ncofmx, ntinmx, nspcmx
+    integer, intent(in) ::  iindex,icoef1,icoef2,ispec
 
     real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amasch
     integer, dimension(ntinmx,nspcmx), intent(in) :: ncpoly, ncpom1, ncenth
@@ -468,13 +468,13 @@ SUBROUTINE math_MD_kernel_eqZ(utmp,wtmp,trun,itndex,yrhs,amasch,ncpoly,ncpom1,nc
 
 END SUBROUTINE math_MD_kernel_eqZ
 
-SUBROUTINE math_MD_kernel_eqAA(store1,yrhs,ovwmol,scoef,ysmall,ydenom,nspcmx,ispec)
+SUBROUTINE math_MD_kernel_eqAA(store1,yrhs,ovwmol,scoef,ysmall,ydenom,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: store1
     real(kind=8), dimension(1), intent(in) :: yrhs
-    integer, intent(in) ::  ispec,nspcmx
+    integer, intent(in) ::  ispec
     real(kind=8), intent(in) :: scoef,ysmall,ydenom
     real(kind=8), dimension(nspcmx), intent(in) :: ovwmol
     real(kind=8) :: fornow
@@ -487,14 +487,14 @@ SUBROUTINE math_MD_kernel_eqAA(store1,yrhs,ovwmol,scoef,ysmall,ydenom,nspcmx,isp
 
 END SUBROUTINE math_MD_kernel_eqAA
 
-SUBROUTINE math_MD_kernel_eqAB(store2,trun,itndex,amolgb,ncpoly,ncpom1,ncenth,ncenpy,diffmu,nspimx,ntbase,ncofmx,ntinmx,nspcmx,nssmax,nstpmx,isspec,ispec,istep)
+SUBROUTINE math_MD_kernel_eqAB(store2,trun,itndex,amolgb,ncpoly,ncpom1,ncenth,ncenpy,diffmu,isspec,ispec,istep)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: store2
     real(kind=8), dimension(1), intent(in) :: trun
     integer, dimension(1), intent(in) :: itndex
-    integer, intent(in) ::  nspimx,ntbase,ncofmx,ntinmx,nspcmx,nssmax,nstpmx,isspec,ispec,istep
+    integer, intent(in) ::  isspec,ispec,istep
 
     real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amolgb
     real(kind=8), dimension(nssmax,nstpmx), intent(in) :: diffmu
@@ -528,16 +528,16 @@ SUBROUTINE math_MD_kernel_eqAB(store2,trun,itndex,amolgb,ncpoly,ncpom1,ncenth,nc
 
 END SUBROUTINE math_MD_kernel_eqAB
 
-SUBROUTINE math_MD_kernel_eqAC(itndex,trun,tinthi,ntint,nspimx,ntbase,nintmx,nspcmx,nspec)
+SUBROUTINE math_MD_kernel_eqAC(itndex,trun,tinthi,ntint,nspec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: trun
     integer, dimension(1) :: itndex
 
-    integer, intent(in) ::  nspimx,ntbase,nintmx,nspcmx,nspec
+    integer, intent(in) ::  nspec
 
-    real(kind=8), dimension(nintmx,nspcmx), intent(in) :: tinthi
+    real(kind=8), dimension(ntinmx,nspcmx), intent(in) :: tinthi
     integer, dimension(nspcmx), intent(in) :: ntint
 
     integer :: iindex,ispec,itint,ipower
@@ -565,7 +565,7 @@ SUBROUTINE math_MD_kernel_eqAC(itndex,trun,tinthi,ntint,nspimx,ntbase,nintmx,nsp
 
 END SUBROUTINE math_MD_kernel_eqAC
 
-SUBROUTINE math_MD_kernel_eqAD(erun,trun,itndex,yrun,amasch,ncpoly,ncpom1,ncenth,ispec,iindex,ipower,icoef1,icoef2,ncofmx,ntinmx,nspcmx)
+SUBROUTINE math_MD_kernel_eqAD(erun,trun,itndex,yrun,amasch,ncpoly,ncpom1,ncenth,ispec,iindex,ipower,icoef1,icoef2)
     use data_types
     implicit none
 
@@ -573,7 +573,7 @@ SUBROUTINE math_MD_kernel_eqAD(erun,trun,itndex,yrun,amasch,ncpoly,ncpom1,ncenth
     real(kind=8), dimension(1) :: erun
     integer, dimension(1), intent(in) :: itndex
     
-    integer, intent(in) ::  ispec,iindex,ipower,icoef1,icoef2,ncofmx,ntinmx,nspcmx
+    integer, intent(in) ::  ispec,iindex,ipower,icoef1,icoef2
 
     real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amasch
     integer, dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncpom1,ncenth

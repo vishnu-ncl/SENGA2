@@ -92,15 +92,7 @@ SUBROUTINE tempin
                     ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
                     ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ), &
                     ops_arg_gbl(trin, 1, "real(8)", OPS_READ), &
-                    ops_arg_gbl(nctmax, 1, "integer", OPS_READ), &
-                    ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
-                    ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
-                    ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
-                    ops_arg_gbl(nintmx, 1, "integer", OPS_READ), &
                     ops_arg_gbl(nspec, 1, "integer", OPS_READ), &
-                    ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
-                    ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
-                    ops_arg_gbl(nctmm1, 1, "integer", OPS_READ), &
                     ops_arg_gbl(iproc, 1, "integer", OPS_READ), &
                     ops_arg_idx())
     

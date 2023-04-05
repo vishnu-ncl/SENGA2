@@ -1541,5 +1541,49 @@ SUBROUTINE ops_data_init()
     END DO
 
 !------------------------------------------------------------------------------------------------------------
+    
+#ifdef OPS_WITH_CUDAFOR
+
+    ncofmx_opsconstant = ncofmx
+    ntinmx_opsconstant = ntinmx
+    nspcmx_opsconstant = nspcmx
+    nssmax_opsconstant = nssmax
+    nstpmx_opsconstant = nstpmx
+    ndcfmx_opsconstant = ndcfmx
+    nvcfmx_opsconstant = nvcfmx
+    nccfmx_opsconstant = nccfmx 
+    nrkmax_opsconstant = nrkmax
+    ncbcsz_opsconstant = ncbcsz
+    nbcprr_opsconstant = nbcprr
+    nspimx_opsconstant = nspimx
+    ntbase_opsconstant = ntbase
+    nintmx_opsconstant = nintmx
+    nctmax_opsconstant = nctmax
+    nctmm1_opsconstant = nctmm1
+    nrsmax_opsconstant = nrsmax
+    nbcpri_opsconstant = nbcpri
+    ncfrmx_opsconstant = ncfrmx
+
+#endif
+
+    call ops_decl_const("ncofmx", 1, "integer", ncofmx)
+    call ops_decl_const("ntinmx", 1, "integer", ntinmx) 
+    call ops_decl_const("nspcmx", 1, "integer", nspcmx)
+    call ops_decl_const("nssmax", 1, "integer", nssmax)
+    call ops_decl_const("nstpmx", 1, "integer", nstpmx)
+    call ops_decl_const("ndcfmx", 1, "integer", ndcfmx)
+    call ops_decl_const("nvcfmx", 1, "integer", nvcfmx)
+    call ops_decl_const("nccfmx", 1, "integer", nccfmx)
+    call ops_decl_const("nrkmax", 1, "integer", nrkmax)
+    call ops_decl_const("ncbcsz", 1, "integer", ncbcsz)
+    call ops_decl_const("nbcprr", 1, "integer", nbcprr)
+    call ops_decl_const("nspimx", 1, "integer", nspimx)
+    call ops_decl_const("ntbase", 1, "integer", ntbase)
+    call ops_decl_const("nintmx", 1, "integer", nintmx)
+    call ops_decl_const("nctmax", 1, "integer", nctmax)
+    call ops_decl_const("nctmm1", 1, "integer", nctmm1)
+    call ops_decl_const("nrsmax", 1, "integer", nrsmax)
+    call ops_decl_const("nbcpri", 1, "integer", nbcpri)
+    call ops_decl_const("ncfrmx", 1, "integer", ncfrmx)
 
 END SUBROUTINE ops_data_init

@@ -9,7 +9,6 @@ MODULE com_senga
 !     NYSIZE MUST BE >= NYGLBL/NYPROC
 !     NZSIZE MUST BE >= NZGLBL/NZPROC
 !     WITH AN EXTRA ALLOWANCE FOR ANY REMAINDER
-    
     use OPS_CONSTANTS
 
 !     GLOBAL GRID SIZE
@@ -72,16 +71,16 @@ COMMON/ifturb/fftrow,ftpart,fftinx
 !     PARAMETERS
 !     ==========
 !     MAX NO OF SPECIES, NO OF STEPS
-integer :: nspcmx,nstpmx
-PARAMETER(nspcmx=2, nstpmx=1)
+!integer :: nspcmx,nstpmx
+!PARAMETER(nspcmx=2, nstpmx=1)
 
 !     THERMODYNAMIC DATA
 !     MAX NO OF TEMPERATURE INTERVALS, THERMO POLYNOMIAL COEFFICIENTS
-integer :: ntinmx,ncofmx
-PARAMETER(ntinmx=2, ncofmx=7)
+!integer :: ntinmx,ncofmx
+!PARAMETER(ntinmx=2, ncofmx=7)
 !     MAX NO OF TEMPERATURE COEFFICIENTS, DITTO MINUS ONE
-integer :: nctmax,nctmm1
-PARAMETER(nctmax=5, nctmm1=nctmax-1)
+!integer :: nctmax,nctmm1
+!PARAMETER(nctmax=5, nctmm1=nctmax-1)
 
 !     TEMPERATURE INTERVAL INDEXING
 !     NTBASE = NUMBER BASE FOR INDEXING:
@@ -90,16 +89,16 @@ PARAMETER(nctmax=5, nctmm1=nctmax-1)
 !     MUST BE SET EQUAL TO 31 DIV LOG2(NTBASE)
 !     NINTMX = NO OF integerS REQUIRED PER SPATIAL POINT:
 !     MUST BE SET EQUAL TO (1 + NSPCMX DIV NSPIMX)
-integer :: nspimx,ntbase,nintmx
-PARAMETER(nspimx=15, ntbase=4, nintmx=2)
+!integer :: nspimx,ntbase,nintmx
+!PARAMETER(nspimx=15, ntbase=4, nintmx=2)
 
 !     CHEMICAL RATE DATA
 !     MAX NO OF THIRD BODIES
 integer :: nbdymx
 PARAMETER(nbdymx=10)
 !     MAX SIZE OF STEP SPECIES-LIST, STEP REACTANT-LIST
-integer :: nssmax,nrsmax
-PARAMETER(nssmax=10, nrsmax=10)
+!integer :: nssmax,nrsmax
+!PARAMETER(nssmax=10, nrsmax=10)
 !     MAX NO OF LINDEMANN STEPS
 integer :: nllmax
 PARAMETER(nllmax=10)
@@ -170,8 +169,8 @@ real(kind=8) :: dfctol
 PARAMETER(dfctol = 0.0000000000010_8)
 
 !     MAX NUMBERS OF POLYNOMIAL COEFFICIENTS
-integer :: ndcfmx,nvcfmx,nccfmx
-PARAMETER(ndcfmx = 4, nvcfmx = 4, nccfmx = 4)
+!integer :: ndcfmx,nvcfmx,nccfmx
+!PARAMETER(ndcfmx = 4, nvcfmx = 4, nccfmx = 4)
 
 !     MOLECULAR TRANSPORT DATA
 real(kind=8) :: diffco(ndcfmx,nspcmx,nspcmx)
@@ -203,8 +202,8 @@ COMMON/diffus/diffco,tdrcco,wilko1,wilko2,viscco,condco,  &
 real(kind=8) :: stefbo
 PARAMETER(stefbo = 0.00000005670373210_8)
 
-integer :: ncfrmx
-PARAMETER(ncfrmx = 6)
+!integer :: ncfrmx
+!PARAMETER(ncfrmx = 6)
 
 real(kind=8) :: akprad(ncfrmx,nspcmx)
 real(kind=8) :: trefrn
@@ -317,8 +316,8 @@ COMMON/emstrt/gcmreg,gcmstr,dgdhat,dgdhsq,d2gdh2
 !     RUNKUT-------------------------------------------------------------------
 
 !     RUNGE-KUTTA PARAMETERS
-integer :: nrkmax
-PARAMETER(nrkmax=5)
+!integer :: nrkmax
+!PARAMETER(nrkmax=5)
 
 real(kind=8) :: rklhs(nrkmax),rkrhs(nrkmax)
 real(kind=8) :: rkerr(nrkmax),rktim(nrkmax)
@@ -373,8 +372,8 @@ PARAMETER(nsnull=0, nsperi=1, nsbci1=11,nsbci2=12,nsbci3=13,nsbci4=14,  &
     nsbcw1=31,nsbcw2=32,nsbcw3=33,nsbcw4=34)
 
 !     BC NUMBER OF PARAMETERS
-integer :: nbcpri,nbcprr
-PARAMETER(nbcpri=4, nbcprr=4)
+!integer :: nbcpri,nbcprr
+!PARAMETER(nbcpri=4, nbcprr=4)
 
 !     GLOBAL BC TYPE VARIABLES
 integer :: ngbcxl,ngbcxr,ngbcyl,ngbcyr,ngbczl,ngbczr
@@ -441,8 +440,8 @@ COMMON/nsbccp/rxlprm,rxrprm,rylprm,ryrprm,rzlprm,rzrprm,  &
 real(kind=8), dimension(:,:,:), allocatable :: ufxl,vfxl,wfxl
 
 !     WALL BC DIFFERENCING DATA
-integer :: ncbcsz
-PARAMETER(ncbcsz=5)
+!integer :: ncbcsz
+!PARAMETER(ncbcsz=5)
 real(kind=8) :: acbcxl(ncbcsz),acbcxr(ncbcsz),  &
     acbcyl(ncbcsz),acbcyr(ncbcsz), acbczl(ncbcsz),acbczr(ncbcsz)
 COMMON/bcdifw/acbcxl,acbcxr,acbcyl,acbcyr,acbczl,acbczr
@@ -496,5 +495,6 @@ COMMON/statis/umax,umin,vmax,vmin,wmax,wmin, ubar,vbar,wbar,uvar,vvar,wvar,  &
     itstim
 
 !     STATIS-------------------------------------------------------------------
+
 END MODULE com_senga
 

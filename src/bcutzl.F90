@@ -61,8 +61,7 @@ SUBROUTINE bcutzl
                         ops_arg_dat(d_dudtzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
                         ops_arg_dat(d_dvdtzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE),  &
                         ops_arg_dat(d_dwdtzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
-                        ops_arg_gbl(rzlprm, nbcprr, "real(8)", OPS_READ), &
-                        ops_arg_gbl(nbcprr, 1, "integer", OPS_READ))
+                        ops_arg_gbl(rzlprm, nbcprr, "real(8)", OPS_READ))
 
     END IF
 

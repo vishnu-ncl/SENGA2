@@ -68,9 +68,7 @@ SUBROUTINE radcal
                         ops_arg_gbl(akprad, ncfrmx*nspcmx, "real(8)", OPS_READ), &
                         ops_arg_gbl(nkprad, nspcmx, "integer", OPS_READ), &
                         ops_arg_gbl(nkprm1, nspcmx, "integer", OPS_READ), &
-                        ops_arg_gbl(jspec, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(ncfrmx, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(nspcmx, 1, "integer", OPS_READ))
+                        ops_arg_gbl(jspec, 1, "integer", OPS_READ))
 
 !       SPECIES ID
         ispec = nsprid(jspec)
@@ -83,7 +81,6 @@ SUBROUTINE radcal
                         ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
     END DO

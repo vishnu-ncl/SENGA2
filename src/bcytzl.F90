@@ -58,7 +58,6 @@ SUBROUTINE bcytzl
                             ops_arg_dat(d_stryzl, 2, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
                             ops_arg_dat(d_dydtzl, 2, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(yrin, nspcmx, "real(8)", OPS_READ), &
-                            ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
     END DO

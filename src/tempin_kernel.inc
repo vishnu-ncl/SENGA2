@@ -1,4 +1,4 @@
-SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs,erhs,yrhs,amascp,amasct,ncpoly,ncpom1,ncenth,tinthi,rgspec,ntint,trin,nctmax,ncofmx,ntinmx,nspcmx,nintmx,nspec,nspimx,ntbase,nctmm1,iproc,idx)
+SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs,erhs,yrhs,amascp,amasct,ncpoly,ncpom1,ncenth,tinthi,rgspec,ntint,trin,nspec,iproc,idx)
     use data_types
     implicit none
 
@@ -9,11 +9,11 @@ SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs
     real(kind=8), intent(in) :: trin
     integer, dimension(3), intent(in) :: idx    
 
-    integer, intent(in) :: nctmax,ncofmx,ntinmx,nspcmx,nintmx,nspec,nspimx,ntbase,nctmm1,iproc
+    integer, intent(in) :: nspec,iproc
     
     real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amascp,amasct
     integer, dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncpom1,ncenth
-    real(kind=8), dimension(nintmx,nspcmx), intent(in) :: tinthi
+    real(kind=8), dimension(ntinmx,nspcmx), intent(in) :: tinthi
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     integer, dimension(nspcmx), intent(in) :: ntint
 

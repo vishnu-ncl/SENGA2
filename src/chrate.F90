@@ -378,7 +378,6 @@ SUBROUTINE chrate
                             ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
                             ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
-                            ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END DO
@@ -419,7 +418,6 @@ SUBROUTINE chrate
                             ops_arg_gbl(scoef, 1, "real(8)", OPS_READ), &
                             ops_arg_gbl(ysmall, 1, "real(8)", OPS_READ), &
                             ops_arg_gbl(ydenom, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END DO
@@ -458,13 +456,6 @@ SUBROUTINE chrate
                                 ops_arg_gbl(ncenth, ntinmx*nspcmx, "integer", OPS_READ), &
                                 ops_arg_gbl(ncenpy, ntinmx*nspcmx, "integer", OPS_READ), &
                                 ops_arg_gbl(diffmu, nssmax*nstpmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspec, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nssmax, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nstpmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(isspec, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(istep, 1, "integer", OPS_READ))
@@ -508,7 +499,6 @@ SUBROUTINE chrate
                                 ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_RW), &
                                 ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END DO
@@ -549,7 +539,6 @@ SUBROUTINE chrate
                                     ops_arg_gbl(scoef, 1, "real(8)", OPS_READ), &
                                     ops_arg_gbl(ysmall, 1, "real(8)", OPS_READ), &
                                     ops_arg_gbl(ydenom, 1, "real(8)", OPS_READ), &
-                                    ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                     ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
                 END DO

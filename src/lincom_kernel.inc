@@ -1,9 +1,9 @@
-SUBROUTINE lincom_kernel_main(err_arr,run_arr,rhs_arr,rkerr,rklhs,rkrhs,nrkmax,irkstp)
+SUBROUTINE lincom_kernel_main(err_arr,run_arr,rhs_arr,rkerr,rklhs,rkrhs,irkstp)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: err_arr, run_arr, rhs_arr
-    integer, intent(in) :: nrkmax,irkstp
+    integer, intent(in) :: irkstp
     real(kind=8), dimension(nrkmax), intent(in) :: rkerr, rklhs, rkrhs
     real(kind=8) :: fornow
 
@@ -15,12 +15,12 @@ SUBROUTINE lincom_kernel_main(err_arr,run_arr,rhs_arr,rkerr,rklhs,rkrhs,nrkmax,i
 
 END SUBROUTINE lincom_kernel_main
 
-SUBROUTINE lincom_kernel_MD(err_arr,run_arr,rhs_arr,rkerr,rklhs,rkrhs,nrkmax,irkstp,ispec)
+SUBROUTINE lincom_kernel_MD(err_arr,run_arr,rhs_arr,rkerr,rklhs,rkrhs,irkstp,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: err_arr, run_arr, rhs_arr
-    integer, intent(in) :: ispec,nrkmax,irkstp
+    integer, intent(in) :: ispec,irkstp
     real(kind=8), dimension(nrkmax), intent(in) :: rkerr, rklhs, rkrhs
     real(kind=8) :: fornow
 

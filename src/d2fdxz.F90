@@ -271,7 +271,7 @@ use OPS_Fortran_Reference
             call ops_par_loop(d2fdxz_kernel_lh_zdir_corner_eqT, "d2fdxz_lh_zdir_corner_eqT", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p404_m404_mixed_xz, "real(8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_gbl(nxglblm4, 1, "integer", OPS_READ), &
+                            ops_arg_gbl(nxglbl, 1, "integer", OPS_READ), &
                             ops_arg_idx())
 
             END IF

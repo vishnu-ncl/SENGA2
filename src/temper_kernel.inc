@@ -1,4 +1,4 @@
-SUBROUTINE temper_kernel_main(store7,trun,transp,prun,itndex,urhs,vrhs,wrhs,drhs,erhs,yrhs,amascp,amasct,ncenth,ncpom1,ncpoly,tinthi,rgspec,ntint,nctmax,ncofmx,ntinmx,nspcmx,nintmx,nspec,nspimx,ntbase,nctmm1,idx)
+SUBROUTINE temper_kernel_main(store7,trun,transp,prun,itndex,urhs,vrhs,wrhs,drhs,erhs,yrhs,amascp,amasct,ncenth,ncpom1,ncpoly,tinthi,rgspec,ntint,nspec,idx)
     use data_types
     implicit none
 
@@ -7,11 +7,11 @@ SUBROUTINE temper_kernel_main(store7,trun,transp,prun,itndex,urhs,vrhs,wrhs,drhs
     integer, dimension(1) :: itndex
     integer, dimension(3), intent(in) :: idx
 
-    integer, intent(in) :: nctmax,ncofmx,ntinmx,nspcmx,nintmx,nspec,nspimx,ntbase,nctmm1
+    integer, intent(in) :: nspec
 
     real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amascp,amasct 
     integer, dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncpom1,ncenth
-    real(kind=8), dimension(nintmx,nspcmx), intent(in) :: tinthi
+    real(kind=8), dimension(ntinmx,nspcmx), intent(in) :: tinthi
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     integer, dimension(nspcmx), intent(in) :: ntint
 
