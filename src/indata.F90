@@ -1013,7 +1013,6 @@ SUBROUTINE indata
         call ops_par_loop(math_MD_kernel_eqT, "A_multidim = var", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_yrun, 2, s3d_000, "real(8)", OPS_WRITE), &
                         ops_arg_gbl(yrin, nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
     
     END DO
@@ -1092,7 +1091,6 @@ SUBROUTINE indata
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_yrun, 2, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), & 
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
     END DO
@@ -1122,10 +1120,6 @@ SUBROUTINE indata
                     ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
                     ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ), &
-                    ops_arg_gbl(nspimx, 1, "integer", OPS_READ), &
-                    ops_arg_gbl(ntbase, 1, "integer", OPS_READ), &
-                    ops_arg_gbl(nintmx, 1, "integer", OPS_READ), &
-                    ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                     ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
 !   PRE-INITIALISE INTERNAL ENERGY TO ZERO
@@ -1157,10 +1151,7 @@ SUBROUTINE indata
                         ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
                         ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(nspcmx, 1, "integer", OPS_READ))
+                        ops_arg_gbl(icoef2, 1, "integer", OPS_READ))
 
     END DO
 
@@ -1329,7 +1320,6 @@ SUBROUTINE indata
         call ops_par_loop(math_MD_kernel_eqT, "A_multidim = var", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_WRITE), &
                         ops_arg_gbl(dyrin, nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
     END DO

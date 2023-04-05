@@ -75,7 +75,6 @@ SUBROUTINE lincom
                     ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rkrhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(nrkmax, 1, "integer", OPS_READ), &
                     ops_arg_gbl(irkstp, 1, "integer", OPS_READ))
 
 !   -------------------------------------------------------------------------
@@ -101,7 +100,6 @@ SUBROUTINE lincom
                     ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rkrhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(nrkmax, 1, "integer", OPS_READ), &
                     ops_arg_gbl(irkstp, 1, "integer", OPS_READ))
 
 !   -------------------------------------------------------------------------
@@ -114,7 +112,6 @@ SUBROUTINE lincom
                     ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rkrhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(nrkmax, 1, "integer", OPS_READ), &
                     ops_arg_gbl(irkstp, 1, "integer", OPS_READ))
 
 !   -------------------------------------------------------------------------
@@ -127,7 +124,6 @@ SUBROUTINE lincom
                     ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rkrhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(nrkmax, 1, "integer", OPS_READ), &
                     ops_arg_gbl(irkstp, 1, "integer", OPS_READ))
 
 !   -------------------------------------------------------------------------
@@ -153,7 +149,6 @@ SUBROUTINE lincom
                     ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rkrhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(nrkmax, 1, "integer", OPS_READ), &
                     ops_arg_gbl(irkstp, 1, "integer", OPS_READ))
 
 !   -------------------------------------------------------------------------
@@ -183,7 +178,6 @@ SUBROUTINE lincom
                         ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
                         ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
                         ops_arg_gbl(rkrhs, nrkmax, "real(8)", OPS_READ), &
-                        ops_arg_gbl(nrkmax, 1, "integer", OPS_READ), &
                         ops_arg_gbl(irkstp, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 

@@ -212,6 +212,46 @@ use data_types
 
     real(kind=8) :: alamdc,rlamda,tlamda,prantl,alamda
 !---------------------------------------------------------------------------------------------------------------------------------
+
+    integer, constant :: ncofmx_opsconstant,ntinmx_opsconstant,nspcmx_opsconstant
+    integer, constant :: nssmax_opsconstant,nstpmx_opsconstant,ndcfmx_opsconstant,nvcfmx_opsconstant
+    integer, constant :: nccfmx_opsconstant,nrkmax_opsconstant,ncbcsz_opsconstant,nbcprr_opsconstant
+
+    integer, constant :: nspimx_opsconstant,ntbase_opsconstant,nintmx_opsconstant
+    integer, constant :: nctmax_opsconstant,nctmm1_opsconstant,nrsmax_opsconstant
+    integer, constant :: nbcpri_opsconstant,ncfrmx_opsconstant
+    
+    integer :: nspcmx,nstpmx
+    PARAMETER(nspcmx=2, nstpmx=1)
+
+    integer :: ntinmx,ncofmx
+    PARAMETER(ntinmx=2, ncofmx=7)
+    
+    integer :: nctmax,nctmm1
+    PARAMETER(nctmax=5, nctmm1=nctmax-1)
+
+    integer :: nspimx,ntbase,nintmx
+    PARAMETER(nspimx=15, ntbase=4, nintmx=2)
+
+    integer :: nssmax,nrsmax
+    PARAMETER(nssmax=10, nrsmax=10)
+
+    integer :: ndcfmx,nvcfmx,nccfmx
+    PARAMETER(ndcfmx = 4, nvcfmx = 4, nccfmx = 4)
+
+    integer :: ncfrmx
+    PARAMETER(ncfrmx = 6)  
+
+    integer :: nrkmax
+    PARAMETER(nrkmax=5)
+
+    integer :: nbcpri,nbcprr
+    PARAMETER(nbcpri=4, nbcprr=4)
+
+    integer :: ncbcsz
+    PARAMETER(ncbcsz=5)
+
+!---------------------------------------------------------------------------------------------------------------------------------
 #else
 !---------------------------------------------------------------------------------------------------------------------------------
     real(kind=8) :: acoffx, bcoffx, ccoffx, dcoffx, ecoffx
@@ -328,6 +368,38 @@ use data_types
 !-------------------------------------------------------------------
 
     real(kind=8) :: alamdc,rlamda,tlamda,prantl,alamda
+
+!-------------------------------------------------------------------
+
+    integer :: nspcmx,nstpmx
+    PARAMETER(nspcmx=2, nstpmx=1)
+
+    integer :: ntinmx,ncofmx
+    PARAMETER(ntinmx=2, ncofmx=7)
+
+    integer :: nctmax,nctmm1
+    PARAMETER(nctmax=5, nctmm1=nctmax-1)
+
+    integer :: nspimx,ntbase,nintmx
+    PARAMETER(nspimx=15, ntbase=4, nintmx=2)
+
+    integer :: nssmax,nrsmax
+    PARAMETER(nssmax=10, nrsmax=10)
+
+    integer :: ndcfmx,nvcfmx,nccfmx
+    PARAMETER(ndcfmx = 4, nvcfmx = 4, nccfmx = 4)
+
+    integer :: ncfrmx
+    PARAMETER(ncfrmx = 6)
+
+    integer :: nrkmax
+    PARAMETER(nrkmax=5)
+
+    integer :: nbcpri,nbcprr
+    PARAMETER(nbcpri=4, nbcprr=4)
+
+    integer :: ncbcsz
+    PARAMETER(ncbcsz=5)
 
 !-------------------------------------------------------------------
 

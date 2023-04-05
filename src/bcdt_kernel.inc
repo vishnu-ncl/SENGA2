@@ -34,12 +34,11 @@ SUBROUTINE bcdt_kernel_zdir(strdz, dddtz, init_val)
 
 END SUBROUTINE bcdt_kernel_zdir
 
-SUBROUTINE bcdt_kernel_xdir_eqA(strdx, dddtx, init_val, nbcprr)
+SUBROUTINE bcdt_kernel_xdir_eqA(strdx, dddtx, init_val)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: strdx, dddtx
-    integer, intent(in) :: nbcprr
     real(kind=8), dimension(nbcprr), intent(in) :: init_val
 
     strdx(OPS_ACC1(0,0,0)) = init_val(1)
@@ -47,12 +46,11 @@ SUBROUTINE bcdt_kernel_xdir_eqA(strdx, dddtx, init_val, nbcprr)
 
 END SUBROUTINE bcdt_kernel_xdir_eqA
 
-SUBROUTINE bcdt_kernel_ydir_eqA(strdy, dddty, init_val, nbcprr)
+SUBROUTINE bcdt_kernel_ydir_eqA(strdy, dddty, init_val)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: strdy, dddty
-    integer, intent(in) :: nbcprr
     real(kind=8), dimension(nbcprr), intent(in) :: init_val
 
     strdy(OPS_ACC1(0,0,0)) = init_val(1)
@@ -60,12 +58,11 @@ SUBROUTINE bcdt_kernel_ydir_eqA(strdy, dddty, init_val, nbcprr)
 
 END SUBROUTINE bcdt_kernel_ydir_eqA
 
-SUBROUTINE bcdt_kernel_zdir_eqA(strdz, dddtz, init_val, nbcprr)
+SUBROUTINE bcdt_kernel_zdir_eqA(strdz, dddtz, init_val)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: strdz, dddtz
-    integer, intent(in) :: nbcprr
     real(kind=8), dimension(nbcprr), intent(in) :: init_val
 
     strdz(OPS_ACC1(0,0,0)) = init_val(1)

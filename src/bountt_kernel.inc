@@ -236,7 +236,7 @@ SUBROUTINE bountt_kernel_eqE_zdir(yrhs,yrun,yerr,stryzl,strdzl,ispec)
 
 END SUBROUTINE bountt_kernel_eqE_zdir
 
-SUBROUTINE bountt_kernel_eqF_xdir(erhs,yrhs,yrun,yerr,itndex,drhs,strtx,stryx,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspcmx)
+SUBROUTINE bountt_kernel_eqF_xdir(erhs,yrhs,yrun,yerr,itndex,drhs,strtx,stryx,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,icoef1,icoef2)
     use data_types
     implicit none
 
@@ -244,7 +244,7 @@ SUBROUTINE bountt_kernel_eqF_xdir(erhs,yrhs,yrun,yerr,itndex,drhs,strtx,stryx,am
     integer, dimension(1), intent(in) :: itndex
     real(kind=8), dimension(1), intent(in) :: drhs,strtx,stryx
 
-    integer, intent(in) :: ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspcmx
+    integer, intent(in) :: ispec,iindex,icoef1,icoef2
 
     real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amasch
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
@@ -274,7 +274,7 @@ SUBROUTINE bountt_kernel_eqF_xdir(erhs,yrhs,yrun,yerr,itndex,drhs,strtx,stryx,am
 
 END SUBROUTINE bountt_kernel_eqF_xdir
 
-SUBROUTINE bountt_kernel_eqF_ydir(erhs,yrhs,yrun,yerr,itndex,drhs,strty,stryy,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspcmx)
+SUBROUTINE bountt_kernel_eqF_ydir(erhs,yrhs,yrun,yerr,itndex,drhs,strty,stryy,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,icoef1,icoef2)
     use data_types
     implicit none
 
@@ -282,7 +282,7 @@ SUBROUTINE bountt_kernel_eqF_ydir(erhs,yrhs,yrun,yerr,itndex,drhs,strty,stryy,am
     integer, dimension(1), intent(in) :: itndex
     real(kind=8), dimension(1), intent(in) :: drhs,strty,stryy
 
-    integer, intent(in) :: ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspcmx
+    integer, intent(in) :: ispec,iindex,icoef1,icoef2
 
     real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amasch
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
@@ -312,7 +312,7 @@ SUBROUTINE bountt_kernel_eqF_ydir(erhs,yrhs,yrun,yerr,itndex,drhs,strty,stryy,am
 
 END SUBROUTINE bountt_kernel_eqF_ydir
 
-SUBROUTINE bountt_kernel_eqF_zdir(erhs,yrhs,yrun,yerr,itndex,drhs,strtz,stryz,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspcmx)
+SUBROUTINE bountt_kernel_eqF_zdir(erhs,yrhs,yrun,yerr,itndex,drhs,strtz,stryz,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,iindex,icoef1,icoef2)
     use data_types
     implicit none
 
@@ -320,7 +320,7 @@ SUBROUTINE bountt_kernel_eqF_zdir(erhs,yrhs,yrun,yerr,itndex,drhs,strtz,stryz,am
     integer, dimension(1), intent(in) :: itndex
     real(kind=8), dimension(1), intent(in) :: drhs,strtz,stryz
 
-    integer, intent(in) :: ispec,iindex,icoef1,icoef2,ncofmx,ntinmx,nspcmx
+    integer, intent(in) :: ispec,iindex,icoef1,icoef2
 
     real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amasch
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec

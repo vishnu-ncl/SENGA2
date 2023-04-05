@@ -447,9 +447,7 @@ SUBROUTINE rhscal
                         ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
                         ops_arg_gbl(tdifgb, 1, "real(8)", OPS_READ), &
                         ops_arg_gbl(ncocon, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(ncocm1, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(nccfmx, 1, "integer", OPS_READ))
+                        ops_arg_gbl(ncocm1, 1, "integer", OPS_READ))
 
     END IF
 
@@ -495,8 +493,7 @@ SUBROUTINE rhscal
                         ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store1, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store7, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
-                        ops_arg_gbl(acbcxl, ncbcsz, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ))
+                        ops_arg_gbl(acbcxl, ncbcsz, "real(8)", OPS_READ))
 
     END IF
     IF(fxrcnw) THEN
@@ -505,8 +502,7 @@ SUBROUTINE rhscal
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_dat(d_store1, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
                     ops_arg_dat(d_store7, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
-                    ops_arg_gbl(acbcxr, ncbcsz, "real(8)", OPS_READ), &
-                    ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ))
+                    ops_arg_gbl(acbcxr, ncbcsz, "real(8)", OPS_READ))
 
     END IF
     IF(fylcnw) THEN
@@ -515,8 +511,7 @@ SUBROUTINE rhscal
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_dat(d_store2, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
                     ops_arg_dat(d_store7, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
-                    ops_arg_gbl(acbcyl, ncbcsz, "real(8)", OPS_READ), &
-                    ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ))
+                    ops_arg_gbl(acbcyl, ncbcsz, "real(8)", OPS_READ))
 
     END IF
     IF(fyrcnw) THEN
@@ -525,8 +520,7 @@ SUBROUTINE rhscal
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_dat(d_store2, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
                     ops_arg_dat(d_store7, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
-                    ops_arg_gbl(acbcyr, ncbcsz, "real(8)", OPS_READ), &
-                    ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ))
+                    ops_arg_gbl(acbcyr, ncbcsz, "real(8)", OPS_READ))
 
     END IF
     IF(fzlcnw) THEN
@@ -535,8 +529,7 @@ SUBROUTINE rhscal
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_dat(d_store3, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
                     ops_arg_dat(d_store7, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
-                    ops_arg_gbl(acbczl, ncbcsz, "real(8)", OPS_READ), &
-                    ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ))    
+                    ops_arg_gbl(acbczl, ncbcsz, "real(8)", OPS_READ))
 
     END IF
     IF(fzrcnw)THEN
@@ -545,8 +538,7 @@ SUBROUTINE rhscal
                         ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store3, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store7, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
-                        ops_arg_gbl(acbczr, ncbcsz, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ))
+                        ops_arg_gbl(acbczr, ncbcsz, "real(8)", OPS_READ))
     END IF
 
 !   =========================================================================
@@ -1018,7 +1010,6 @@ SUBROUTINE rhscal
                         ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
                         ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(olewis, nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
 !                                                         STORE1,2,3 = DYDX,Y,Z
@@ -1051,9 +1042,7 @@ SUBROUTINE rhscal
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ncodif, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ncodm1, 1, "integer", OPS_READ), &
-                            ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
-                            ops_arg_gbl(nspec, 1, "integer", OPS_READ), &
-                            ops_arg_gbl(ndcfmx, 1, "integer", OPS_READ))
+                            ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
         END IF
   
@@ -1088,9 +1077,7 @@ SUBROUTINE rhscal
                                     ops_arg_gbl(ncotdr, 1, "integer", OPS_READ), &
                                     ops_arg_gbl(jspec, 1, "integer", OPS_READ), &
                                     ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
-                                    ops_arg_gbl(ncotm1, 1, "integer", OPS_READ), &
-                                    ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
-                                    ops_arg_gbl(ndcfmx, 1, "integer", OPS_READ))
+                                    ops_arg_gbl(ncotm1, 1, "integer", OPS_READ))
 
                 END IF
 
@@ -1150,10 +1137,7 @@ SUBROUTINE rhscal
                         ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
                         ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
                         ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(ncofmx, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(ntinmx, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(nspcmx, 1, "integer", OPS_READ))
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
 !                                                         STORE1,2,3 = DYDX,Y,Z
 !                                                          STORE7 = DIFFUSIVITY
@@ -1238,7 +1222,6 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_tdrmix, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                            ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END IF
@@ -1380,7 +1363,6 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_store7, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store1, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
                             ops_arg_gbl(acbcxl, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END IF
@@ -1394,7 +1376,6 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_store7, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store1, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
                             ops_arg_gbl(acbcxr, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END IF
@@ -1408,7 +1389,6 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_store7, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store2, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
                             ops_arg_gbl(acbcyl, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END IF
@@ -1422,7 +1402,6 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_store7, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store2, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
                             ops_arg_gbl(acbcyr, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END IF
@@ -1436,7 +1415,6 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_store7, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store3, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
                             ops_arg_gbl(acbczl, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END IF
@@ -1450,7 +1428,6 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_store7, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store3, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
                             ops_arg_gbl(acbczr, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END IF
@@ -1682,7 +1659,6 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_store7, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1x, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
                             ops_arg_gbl(acbcxl, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END IF
@@ -1696,7 +1672,6 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_store7, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1x, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
                             ops_arg_gbl(acbcxr, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END IF
@@ -1710,7 +1685,6 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_store7, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1y, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
                             ops_arg_gbl(acbcyl, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END IF
@@ -1724,7 +1698,6 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_store7, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1y, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
                             ops_arg_gbl(acbcyr, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END IF
@@ -1738,7 +1711,6 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_store7, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1z, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
                             ops_arg_gbl(acbczl, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END IF
@@ -1752,7 +1724,6 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_store7, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1z, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
                             ops_arg_gbl(acbczr, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END IF
@@ -1826,7 +1797,6 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wmomix, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_gbl(wmolar, nspcmx, "real(8)", OPS_READ), &
-                            ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
 !           DIFFUSION CORRECTION VELOCITY
@@ -1965,7 +1935,6 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_store7, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1x, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
                             ops_arg_gbl(acbcxl, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END IF
@@ -1979,7 +1948,6 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_store7, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1x, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
                             ops_arg_gbl(acbcxr, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END IF
@@ -1993,7 +1961,6 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_store7, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1y, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
                             ops_arg_gbl(acbcyl, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END IF
@@ -2007,7 +1974,6 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_store7, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1y, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
                             ops_arg_gbl(acbcyr, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END IF
@@ -2021,7 +1987,6 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_store7, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1z, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
                             ops_arg_gbl(acbczl, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END IF
@@ -2035,7 +2000,6 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_store7, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1z, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
                             ops_arg_gbl(acbczr, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END IF
@@ -2172,7 +2136,6 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_tdrmix, 1, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END IF
@@ -2267,8 +2230,6 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_td1x, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
                                 ops_arg_gbl(acbcxl, ncbcsz, "real(8)", OPS_READ), &
                                 ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END IF
@@ -2285,8 +2246,6 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_td1x, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
                                 ops_arg_gbl(acbcxr, ncbcsz, "real(8)", OPS_READ), &
                                 ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END IF
@@ -2303,8 +2262,6 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_td1y, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
                                 ops_arg_gbl(acbcyl, ncbcsz, "real(8)", OPS_READ), &
                                 ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END IF
@@ -2321,8 +2278,6 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_td1y, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
                                 ops_arg_gbl(acbcyr, ncbcsz, "real(8)", OPS_READ), &
                                 ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END IF
@@ -2339,8 +2294,6 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_td1z, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
                                 ops_arg_gbl(acbczl, ncbcsz, "real(8)", OPS_READ), &
                                 ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END IF
@@ -2357,8 +2310,6 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_td1z, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
                                 ops_arg_gbl(acbczr, ncbcsz, "real(8)", OPS_READ), &
                                 ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END IF
@@ -2378,8 +2329,6 @@ SUBROUTINE rhscal
                                     ops_arg_dat(d_td1x, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
                                     ops_arg_gbl(acbcxl, ncbcsz, "real(8)", OPS_READ), &
                                     ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                    ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
-                                    ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                     ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
                 END IF
@@ -2393,8 +2342,6 @@ SUBROUTINE rhscal
                                     ops_arg_dat(d_td1x, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
                                     ops_arg_gbl(acbcxr, ncbcsz, "real(8)", OPS_READ), &
                                     ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                    ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
-                                    ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                     ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
                 END IF
@@ -2408,8 +2355,6 @@ SUBROUTINE rhscal
                                     ops_arg_dat(d_td1y, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
                                     ops_arg_gbl(acbcyl, ncbcsz, "real(8)", OPS_READ), &
                                     ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                    ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
-                                    ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                     ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
                 END IF
@@ -2423,8 +2368,6 @@ SUBROUTINE rhscal
                                     ops_arg_dat(d_td1y, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
                                     ops_arg_gbl(acbcyr, ncbcsz, "real(8)", OPS_READ), &
                                     ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                    ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
-                                    ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                     ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
                 END IF
@@ -2438,8 +2381,6 @@ SUBROUTINE rhscal
                                     ops_arg_dat(d_td1z, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
                                     ops_arg_gbl(acbczl, ncbcsz, "real(8)", OPS_READ), &
                                     ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                    ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
-                                    ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                     ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
                 END IF
@@ -2453,8 +2394,6 @@ SUBROUTINE rhscal
                                     ops_arg_dat(d_td1z, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
                                     ops_arg_gbl(acbczr, ncbcsz, "real(8)", OPS_READ), &
                                     ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                    ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
-                                    ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                     ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
                 END IF
@@ -2471,8 +2410,6 @@ SUBROUTINE rhscal
                                     ops_arg_dat(d_td1x, 1, s3d_000_to_p400_x, "real(8)", OPS_READ), &
                                     ops_arg_gbl(acbcxl, ncbcsz, "real(8)", OPS_READ), &
                                     ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                    ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
-                                    ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                     ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
                 END IF
@@ -2486,8 +2423,6 @@ SUBROUTINE rhscal
                                     ops_arg_dat(d_td1x, 1, s3d_000_to_m400_x, "real(8)", OPS_READ), &
                                     ops_arg_gbl(acbcxr, ncbcsz, "real(8)", OPS_READ), &
                                     ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                    ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
-                                    ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                     ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
                 END IF
@@ -2501,8 +2436,6 @@ SUBROUTINE rhscal
                                     ops_arg_dat(d_td1y, 1, s3d_000_to_p040_y, "real(8)", OPS_READ), &
                                     ops_arg_gbl(acbcyl, ncbcsz, "real(8)", OPS_READ), &
                                     ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                    ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
-                                    ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                     ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
                 END IF
@@ -2516,8 +2449,6 @@ SUBROUTINE rhscal
                                     ops_arg_dat(d_td1y, 1, s3d_000_to_m040_y, "real(8)", OPS_READ), &
                                     ops_arg_gbl(acbcyr, ncbcsz, "real(8)", OPS_READ), &
                                     ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                    ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
-                                    ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                     ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
                 END IF
@@ -2531,8 +2462,6 @@ SUBROUTINE rhscal
                                     ops_arg_dat(d_td1z, 1, s3d_000_to_p004_z, "real(8)", OPS_READ), &
                                     ops_arg_gbl(acbczl, ncbcsz, "real(8)", OPS_READ), &
                                     ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                    ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
-                                    ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                     ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
                 END IF
@@ -2546,8 +2475,6 @@ SUBROUTINE rhscal
                                     ops_arg_dat(d_td1z, 1, s3d_000_to_m004_z, "real(8)", OPS_READ), &
                                     ops_arg_gbl(acbczr, ncbcsz, "real(8)", OPS_READ), &
                                     ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                    ops_arg_gbl(ncbcsz, 1, "integer", OPS_READ), &
-                                    ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                     ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
                 END IF
@@ -2716,9 +2643,7 @@ SUBROUTINE rhscal
                         ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
                         ops_arg_gbl(ncovis, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ncovm1, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(nspec, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(nvcfmx, 1, "integer", OPS_READ))
+                        ops_arg_gbl(nspec, 1, "integer", OPS_READ))
 
     END IF
 

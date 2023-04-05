@@ -14,13 +14,13 @@ SUBROUTINE radcal_kernel_addradiation(erhs,trun,store1)
     
 END SUBROUTINE radcal_kernel_addradiation
 
-SUBROUTINE radcal_kernel_addspecies(store1,yrhs,trun,store2,rgspec,nspcmx,ispec)
+SUBROUTINE radcal_kernel_addspecies(store1,yrhs,trun,store2,rgspec,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: store1
     real(kind=8), dimension(1), intent(in) :: yrhs,trun,store2
-    integer, intent(in) :: ispec,nspcmx
+    integer, intent(in) :: ispec
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     real(kind=8) :: fornow
     
@@ -30,14 +30,14 @@ SUBROUTINE radcal_kernel_addspecies(store1,yrhs,trun,store2,rgspec,nspcmx,ispec)
 
 END SUBROUTINE radcal_kernel_addspecies
 
-SUBROUTINE radcal_kernel_meancoef(store2,trun,akprad,nkprad,nkprm1,jspec,ncfrmx,nspcmx)
+SUBROUTINE radcal_kernel_meancoef(store2,trun,akprad,nkprad,nkprm1,jspec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: store2
     real(kind=8), dimension(1), intent(in) :: trun
 
-    integer, intent(in) :: jspec, ncfrmx, nspcmx
+    integer, intent(in) :: jspec
 
     real(kind=8), dimension(ncfrmx,nspcmx), intent(in) :: akprad
     integer, dimension(nspcmx), intent(in) :: nkprad, nkprm1

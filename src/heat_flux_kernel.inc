@@ -1,10 +1,9 @@
-SUBROUTINE heat_flux_kernel_thermal_fxlcnw(erhs,store1,store7,acbcxl,ncbcsz)
+SUBROUTINE heat_flux_kernel_thermal_fxlcnw(erhs,store1,store7,acbcxl)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: store1, store7
-    integer, intent(in) :: ncbcsz
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcxl
     real(kind=8) :: fornow
 
@@ -17,13 +16,12 @@ SUBROUTINE heat_flux_kernel_thermal_fxlcnw(erhs,store1,store7,acbcxl,ncbcsz)
 
 END SUBROUTINE heat_flux_kernel_thermal_fxlcnw
     
-SUBROUTINE heat_flux_kernel_thermal_fxrcnw(erhs,store1,store7,acbcxr,ncbcsz)
+SUBROUTINE heat_flux_kernel_thermal_fxrcnw(erhs,store1,store7,acbcxr)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: store1, store7
-    integer, intent(in) :: ncbcsz
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcxr
     real(kind=8) :: fornow
 
@@ -36,13 +34,12 @@ SUBROUTINE heat_flux_kernel_thermal_fxrcnw(erhs,store1,store7,acbcxr,ncbcsz)
 
 END SUBROUTINE heat_flux_kernel_thermal_fxrcnw
 
-SUBROUTINE heat_flux_kernel_thermal_fylcnw(erhs,store2,store7,acbcyl,ncbcsz)
+SUBROUTINE heat_flux_kernel_thermal_fylcnw(erhs,store2,store7,acbcyl)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: store2, store7
-    integer, intent(in) :: ncbcsz
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcyl
     real(kind=8) :: fornow
 
@@ -55,13 +52,12 @@ SUBROUTINE heat_flux_kernel_thermal_fylcnw(erhs,store2,store7,acbcyl,ncbcsz)
 
 END SUBROUTINE heat_flux_kernel_thermal_fylcnw
 
-SUBROUTINE heat_flux_kernel_thermal_fyrcnw(erhs,store2,store7,acbcyr,ncbcsz)
+SUBROUTINE heat_flux_kernel_thermal_fyrcnw(erhs,store2,store7,acbcyr)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: store2, store7
-    integer, intent(in) :: ncbcsz
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcyr
     real(kind=8) :: fornow
 
@@ -74,13 +70,12 @@ SUBROUTINE heat_flux_kernel_thermal_fyrcnw(erhs,store2,store7,acbcyr,ncbcsz)
 
 END SUBROUTINE heat_flux_kernel_thermal_fyrcnw
 
-SUBROUTINE heat_flux_kernel_thermal_fzlcnw(erhs,store3,store7,acbczl,ncbcsz)
+SUBROUTINE heat_flux_kernel_thermal_fzlcnw(erhs,store3,store7,acbczl)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: store3, store7
-    integer, intent(in) :: ncbcsz
     real(kind=8), dimension(ncbcsz), intent(in) :: acbczl
     real(kind=8) :: fornow
 
@@ -93,13 +88,12 @@ SUBROUTINE heat_flux_kernel_thermal_fzlcnw(erhs,store3,store7,acbczl,ncbcsz)
 
 END SUBROUTINE heat_flux_kernel_thermal_fzlcnw
 
-SUBROUTINE heat_flux_kernel_thermal_fzrcnw(erhs,store3,store7,acbczr,ncbcsz)
+SUBROUTINE heat_flux_kernel_thermal_fzrcnw(erhs,store3,store7,acbczr)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: store3, store7
-    integer, intent(in) :: ncbcsz
     real(kind=8), dimension(ncbcsz), intent(in) :: acbczr
     real(kind=8) :: fornow
 
@@ -112,13 +106,13 @@ SUBROUTINE heat_flux_kernel_thermal_fzrcnw(erhs,store3,store7,acbczr,ncbcsz)
 
 END SUBROUTINE heat_flux_kernel_thermal_fzrcnw
 
-SUBROUTINE heat_flux_kernel_soret_fxlcnw(erhs,trun,tdrmix,store7,td1x,acbcxl,rgspec,ncbcsz,nspcmx,ispec)
+SUBROUTINE heat_flux_kernel_soret_fxlcnw(erhs,trun,tdrmix,store7,td1x,acbcxl,rgspec,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1x
-    integer, intent(in) :: ispec,ncbcsz,nspcmx
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcxl
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     real(kind=8) :: fornow
@@ -138,13 +132,13 @@ SUBROUTINE heat_flux_kernel_soret_fxlcnw(erhs,trun,tdrmix,store7,td1x,acbcxl,rgs
 
 END SUBROUTINE heat_flux_kernel_soret_fxlcnw
 
-SUBROUTINE heat_flux_kernel_soret_fxrcnw(erhs,trun,tdrmix,store7,td1x,acbcxr,rgspec,ncbcsz,nspcmx,ispec)
+SUBROUTINE heat_flux_kernel_soret_fxrcnw(erhs,trun,tdrmix,store7,td1x,acbcxr,rgspec,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1x
-    integer, intent(in) :: ispec,ncbcsz,nspcmx
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcxr
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     real(kind=8) :: fornow
@@ -164,13 +158,13 @@ SUBROUTINE heat_flux_kernel_soret_fxrcnw(erhs,trun,tdrmix,store7,td1x,acbcxr,rgs
 
 END SUBROUTINE heat_flux_kernel_soret_fxrcnw
 
-SUBROUTINE heat_flux_kernel_soret_fylcnw(erhs,trun,tdrmix,store7,td1y,acbcyl,rgspec,ncbcsz,nspcmx,ispec)
+SUBROUTINE heat_flux_kernel_soret_fylcnw(erhs,trun,tdrmix,store7,td1y,acbcyl,rgspec,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1y
-    integer, intent(in) :: ispec,ncbcsz,nspcmx
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcyl
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     real(kind=8) :: fornow
@@ -190,13 +184,13 @@ SUBROUTINE heat_flux_kernel_soret_fylcnw(erhs,trun,tdrmix,store7,td1y,acbcyl,rgs
 
 END SUBROUTINE heat_flux_kernel_soret_fylcnw
 
-SUBROUTINE heat_flux_kernel_soret_fyrcnw(erhs,trun,tdrmix,store7,td1y,acbcyr,rgspec,ncbcsz,nspcmx,ispec)
+SUBROUTINE heat_flux_kernel_soret_fyrcnw(erhs,trun,tdrmix,store7,td1y,acbcyr,rgspec,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1y
-    integer, intent(in) :: ispec,ncbcsz,nspcmx
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcyr
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     real(kind=8) :: fornow
@@ -216,13 +210,13 @@ SUBROUTINE heat_flux_kernel_soret_fyrcnw(erhs,trun,tdrmix,store7,td1y,acbcyr,rgs
 
 END SUBROUTINE heat_flux_kernel_soret_fyrcnw
 
-SUBROUTINE heat_flux_kernel_soret_fzlcnw(erhs,trun,tdrmix,store7,td1z,acbczl,rgspec,ncbcsz,nspcmx,ispec)
+SUBROUTINE heat_flux_kernel_soret_fzlcnw(erhs,trun,tdrmix,store7,td1z,acbczl,rgspec,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1z
-    integer, intent(in) :: ispec,ncbcsz,nspcmx
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbczl
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     real(kind=8) :: fornow
@@ -242,13 +236,13 @@ SUBROUTINE heat_flux_kernel_soret_fzlcnw(erhs,trun,tdrmix,store7,td1z,acbczl,rgs
 
 END SUBROUTINE heat_flux_kernel_soret_fzlcnw
 
-SUBROUTINE heat_flux_kernel_soret_fzrcnw(erhs,trun,tdrmix,store7,td1z,acbczr,rgspec,ncbcsz,nspcmx,ispec)
+SUBROUTINE heat_flux_kernel_soret_fzrcnw(erhs,trun,tdrmix,store7,td1z,acbczr,rgspec,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1z
-    integer, intent(in) :: ispec,ncbcsz,nspcmx
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbczr
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     real(kind=8) :: fornow
@@ -268,13 +262,13 @@ SUBROUTINE heat_flux_kernel_soret_fzrcnw(erhs,trun,tdrmix,store7,td1z,acbczr,rgs
 
 END SUBROUTINE heat_flux_kernel_soret_fzrcnw
 
-SUBROUTINE heat_flux_kernel_enthalpy_fxldfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1x,acbcxl,rgspec,ncbcsz,nspcmx,ispec)
+SUBROUTINE heat_flux_kernel_enthalpy_fxldfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1x,acbcxl,rgspec,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,utmp,store7,td1x
-    integer, intent(in) :: ispec,ncbcsz,nspcmx
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcxl
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     real(kind=8) :: fornow
@@ -291,13 +285,13 @@ SUBROUTINE heat_flux_kernel_enthalpy_fxldfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
 
 END SUBROUTINE heat_flux_kernel_enthalpy_fxldfw
 
-SUBROUTINE heat_flux_kernel_enthalpy_fxrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1x,acbcxr,rgspec,ncbcsz,nspcmx,ispec)
+SUBROUTINE heat_flux_kernel_enthalpy_fxrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1x,acbcxr,rgspec,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,utmp,store7,td1x
-    integer, intent(in) :: ispec,ncbcsz,nspcmx
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcxr
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     real(kind=8) :: fornow
@@ -314,13 +308,13 @@ SUBROUTINE heat_flux_kernel_enthalpy_fxrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
 
 END SUBROUTINE heat_flux_kernel_enthalpy_fxrdfw
 
-SUBROUTINE heat_flux_kernel_enthalpy_fyldfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1y,acbcyl,rgspec,ncbcsz,nspcmx,ispec)
+SUBROUTINE heat_flux_kernel_enthalpy_fyldfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1y,acbcyl,rgspec,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,utmp,store7,td1y
-    integer, intent(in) :: ispec,ncbcsz,nspcmx
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcyl
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     real(kind=8) :: fornow
@@ -337,13 +331,13 @@ SUBROUTINE heat_flux_kernel_enthalpy_fyldfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
 
 END SUBROUTINE heat_flux_kernel_enthalpy_fyldfw
 
-SUBROUTINE heat_flux_kernel_enthalpy_fyrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1y,acbcyr,rgspec,ncbcsz,nspcmx,ispec)
+SUBROUTINE heat_flux_kernel_enthalpy_fyrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1y,acbcyr,rgspec,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,utmp,store7,td1y
-    integer, intent(in) :: ispec,ncbcsz,nspcmx
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcyr
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     real(kind=8) :: fornow
@@ -360,13 +354,13 @@ SUBROUTINE heat_flux_kernel_enthalpy_fyrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
 
 END SUBROUTINE heat_flux_kernel_enthalpy_fyrdfw
 
-SUBROUTINE heat_flux_kernel_enthalpy_fzldfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1z,acbczl,rgspec,ncbcsz,nspcmx,ispec)
+SUBROUTINE heat_flux_kernel_enthalpy_fzldfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1z,acbczl,rgspec,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,utmp,store7,td1z
-    integer, intent(in) :: ispec,ncbcsz,nspcmx
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbczl
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     real(kind=8) :: fornow
@@ -383,13 +377,13 @@ SUBROUTINE heat_flux_kernel_enthalpy_fzldfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
 
 END SUBROUTINE heat_flux_kernel_enthalpy_fzldfw
 
-SUBROUTINE heat_flux_kernel_enthalpy_fzrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1z,acbczr,rgspec,ncbcsz,nspcmx,ispec)
+SUBROUTINE heat_flux_kernel_enthalpy_fzrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1z,acbczr,rgspec,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,utmp,store7,td1z
-    integer, intent(in) :: ispec,ncbcsz,nspcmx
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbczr
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     real(kind=8) :: fornow
@@ -406,13 +400,13 @@ SUBROUTINE heat_flux_kernel_enthalpy_fzrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
 
 END SUBROUTINE heat_flux_kernel_enthalpy_fzrdfw
 
-SUBROUTINE heat_flux_kernel_enthalpy2_fxldfw(rate,erhs,vtmp,utmp,store7,arr1,acbcxl,ncbcsz,ispec)
+SUBROUTINE heat_flux_kernel_enthalpy2_fxldfw(rate,erhs,vtmp,utmp,store7,arr1,acbcxl,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: utmp,store7,arr1
-    integer, intent(in) :: ispec,ncbcsz
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcxl
     real(kind=8) :: fornow
 
@@ -427,13 +421,13 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fxldfw(rate,erhs,vtmp,utmp,store7,arr1,acb
 
 END SUBROUTINE heat_flux_kernel_enthalpy2_fxldfw
 
-SUBROUTINE heat_flux_kernel_enthalpy2_fxrdfw(rate,erhs,vtmp,utmp,store7,arr1,acbcxr,ncbcsz,ispec)
+SUBROUTINE heat_flux_kernel_enthalpy2_fxrdfw(rate,erhs,vtmp,utmp,store7,arr1,acbcxr,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: utmp,store7,arr1
-    integer, intent(in) :: ispec,ncbcsz
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcxr
     real(kind=8) :: fornow
 
@@ -448,13 +442,13 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fxrdfw(rate,erhs,vtmp,utmp,store7,arr1,acb
 
 END SUBROUTINE heat_flux_kernel_enthalpy2_fxrdfw
 
-SUBROUTINE heat_flux_kernel_enthalpy2_fyldfw(rate,erhs,vtmp,utmp,store7,arr1,acbcyl,ncbcsz,ispec)
+SUBROUTINE heat_flux_kernel_enthalpy2_fyldfw(rate,erhs,vtmp,utmp,store7,arr1,acbcyl,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: utmp,store7,arr1
-    integer, intent(in) :: ispec,ncbcsz
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcyl
     real(kind=8) :: fornow
 
@@ -469,13 +463,13 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fyldfw(rate,erhs,vtmp,utmp,store7,arr1,acb
 
 END SUBROUTINE heat_flux_kernel_enthalpy2_fyldfw
 
-SUBROUTINE heat_flux_kernel_enthalpy2_fyrdfw(rate,erhs,vtmp,utmp,store7,arr1,acbcyr,ncbcsz,ispec)
+SUBROUTINE heat_flux_kernel_enthalpy2_fyrdfw(rate,erhs,vtmp,utmp,store7,arr1,acbcyr,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: utmp,store7,arr1
-    integer, intent(in) :: ispec,ncbcsz
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcyr
     real(kind=8) :: fornow
 
@@ -490,13 +484,13 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fyrdfw(rate,erhs,vtmp,utmp,store7,arr1,acb
 
 END SUBROUTINE heat_flux_kernel_enthalpy2_fyrdfw
 
-SUBROUTINE heat_flux_kernel_enthalpy2_fzldfw(rate,erhs,vtmp,utmp,store7,arr1,acbczl,ncbcsz,ispec)
+SUBROUTINE heat_flux_kernel_enthalpy2_fzldfw(rate,erhs,vtmp,utmp,store7,arr1,acbczl,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: utmp,store7,arr1
-    integer, intent(in) :: ispec,ncbcsz
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbczl
     real(kind=8) :: fornow
 
@@ -511,13 +505,13 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fzldfw(rate,erhs,vtmp,utmp,store7,arr1,acb
 
 END SUBROUTINE heat_flux_kernel_enthalpy2_fzldfw
 
-SUBROUTINE heat_flux_kernel_enthalpy2_fzrdfw(rate,erhs,vtmp,utmp,store7,arr1,acbczr,ncbcsz,ispec)
+SUBROUTINE heat_flux_kernel_enthalpy2_fzrdfw(rate,erhs,vtmp,utmp,store7,arr1,acbczr,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: utmp,store7,arr1
-    integer, intent(in) :: ispec,ncbcsz
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbczr
     real(kind=8) :: fornow
 
@@ -532,13 +526,13 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fzrdfw(rate,erhs,vtmp,utmp,store7,arr1,acb
 
 END SUBROUTINE heat_flux_kernel_enthalpy2_fzrdfw
 
-SUBROUTINE heat_flux_kernel_isothermal_fxladw(erhs,trun,tdrmix,store7,td1x,acbcxl,rgspec,ncbcsz,nspcmx,ispec)
+SUBROUTINE heat_flux_kernel_isothermal_fxladw(erhs,trun,tdrmix,store7,td1x,acbcxl,rgspec,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1x
-    integer , intent(in) :: ispec,ncbcsz,nspcmx
+    integer , intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcxl
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     real(kind=8) :: fornow, combo0, combo1, combo2, combo3, combo4
@@ -559,13 +553,13 @@ SUBROUTINE heat_flux_kernel_isothermal_fxladw(erhs,trun,tdrmix,store7,td1x,acbcx
 
 END SUBROUTINE heat_flux_kernel_isothermal_fxladw
 
-SUBROUTINE heat_flux_kernel_isothermal_fxradw(erhs,trun,tdrmix,store7,td1x,acbcxr,rgspec,ncbcsz,nspcmx,ispec)
+SUBROUTINE heat_flux_kernel_isothermal_fxradw(erhs,trun,tdrmix,store7,td1x,acbcxr,rgspec,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1x
-    integer, intent(in) :: ispec,ncbcsz,nspcmx
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcxr
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     real(kind=8) :: fornow, combo0, combo1, combo2, combo3, combo4
@@ -586,13 +580,13 @@ SUBROUTINE heat_flux_kernel_isothermal_fxradw(erhs,trun,tdrmix,store7,td1x,acbcx
 
 END SUBROUTINE heat_flux_kernel_isothermal_fxradw
 
-SUBROUTINE heat_flux_kernel_isothermal_fyladw(erhs,trun,tdrmix,store7,td1y,acbcyl,rgspec,ncbcsz,nspcmx,ispec)
+SUBROUTINE heat_flux_kernel_isothermal_fyladw(erhs,trun,tdrmix,store7,td1y,acbcyl,rgspec,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1y
-    integer, intent(in) :: ispec,ncbcsz,nspcmx
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcyl
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec    
     real(kind=8) :: fornow, combo0, combo1, combo2, combo3, combo4
@@ -613,13 +607,13 @@ SUBROUTINE heat_flux_kernel_isothermal_fyladw(erhs,trun,tdrmix,store7,td1y,acbcy
 
 END SUBROUTINE heat_flux_kernel_isothermal_fyladw
 
-SUBROUTINE heat_flux_kernel_isothermal_fyradw(erhs,trun,tdrmix,store7,td1y,acbcyr,rgspec,ncbcsz,nspcmx,ispec)
+SUBROUTINE heat_flux_kernel_isothermal_fyradw(erhs,trun,tdrmix,store7,td1y,acbcyr,rgspec,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1y
-    integer, intent(in) :: ispec,ncbcsz,nspcmx
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcyr
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     real(kind=8) :: fornow, combo0, combo1, combo2, combo3, combo4
@@ -640,13 +634,13 @@ SUBROUTINE heat_flux_kernel_isothermal_fyradw(erhs,trun,tdrmix,store7,td1y,acbcy
 
 END SUBROUTINE heat_flux_kernel_isothermal_fyradw
 
-SUBROUTINE heat_flux_kernel_isothermal_fzladw(erhs,trun,tdrmix,store7,td1z,acbczl,rgspec,ncbcsz,nspcmx,ispec)
+SUBROUTINE heat_flux_kernel_isothermal_fzladw(erhs,trun,tdrmix,store7,td1z,acbczl,rgspec,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1z
-    integer, intent(in) :: ispec,ncbcsz,nspcmx
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbczl
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     real(kind=8) :: fornow, combo0, combo1, combo2, combo3, combo4
@@ -667,13 +661,13 @@ SUBROUTINE heat_flux_kernel_isothermal_fzladw(erhs,trun,tdrmix,store7,td1z,acbcz
 
 END SUBROUTINE heat_flux_kernel_isothermal_fzladw
 
-SUBROUTINE heat_flux_kernel_isothermal_fzradw(erhs,trun,tdrmix,store7,td1z,acbczr,rgspec,ncbcsz,nspcmx,ispec)
+SUBROUTINE heat_flux_kernel_isothermal_fzradw(erhs,trun,tdrmix,store7,td1z,acbczr,rgspec,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1z
-    integer, intent(in) :: ispec,ncbcsz,nspcmx
+    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbczr
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     real(kind=8) :: fornow, combo0, combo1, combo2, combo3, combo4

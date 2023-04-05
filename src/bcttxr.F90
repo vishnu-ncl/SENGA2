@@ -66,8 +66,7 @@ SUBROUTINE bcttxr
         call ops_par_loop(bcdt_kernel_xdir_eqA, "bcdt_kernel_xdir", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE),  &
                         ops_arg_dat(d_dtdtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
-                        ops_arg_gbl(rxrprm, nbcprr, "real(8)", OPS_READ), &
-                        ops_arg_gbl(nbcprr, 1, "integer", OPS_READ))
+                        ops_arg_gbl(rxrprm, nbcprr, "real(8)", OPS_READ))
 
     END IF
 

@@ -89,7 +89,6 @@ SUBROUTINE bounds
                     ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_READ), &
                     ops_arg_dat(d_strrxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_READ), &
                     ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                    ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                     ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END DO
@@ -316,7 +315,6 @@ SUBROUTINE bounds
                                 ops_arg_dat(d_sydtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_dydtxl, 2, s3d_000_strid3d_yz, "real(8)", OPS_READ), &
                                 ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ))
                 call ops_par_loop(bounds_kernel_eqA_xdir, "A_yz = A_yz + B_mulditim_yz*C_multidim_yz", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_sorpxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
@@ -550,7 +548,6 @@ SUBROUTINE bounds
                                 ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_strrxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_READ), &
                                 ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END DO
@@ -626,7 +623,6 @@ SUBROUTINE bounds
                         ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_READ), &
                         ops_arg_dat(d_strrxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_READ), &
                         ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))    
 
         END DO
@@ -853,7 +849,6 @@ SUBROUTINE bounds
                                 ops_arg_dat(d_sydtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_dydtxr, 2, s3d_000_strid3d_yz, "real(8)", OPS_READ), &
                                 ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ))
                 call ops_par_loop(bounds_kernel_eqA_xdir, "A_yz = A_yz + B_mulditim_yz*C_multidim_yz", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_sorpxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
@@ -1087,7 +1082,6 @@ SUBROUTINE bounds
                                 ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_strrxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_READ), &
                                 ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END DO
@@ -1163,7 +1157,6 @@ SUBROUTINE bounds
                         ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_READ), &
                         ops_arg_dat(d_strryl, 1, s3d_000_strid3d_xz, "real(8)", OPS_READ), &
                         ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))    
 
         END DO
@@ -1390,7 +1383,6 @@ SUBROUTINE bounds
                                 ops_arg_dat(d_sydtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_dydtyl, 2, s3d_000_strid3d_xz, "real(8)", OPS_READ), &
                                 ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ))
                 call ops_par_loop(bounds_kernel_eqA_ydir, "A_xz = A_xz + B_mulditim_xz*C_multidim_xz", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_sorpyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_INC), &
@@ -1624,7 +1616,6 @@ SUBROUTINE bounds
                                 ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_strryl, 1, s3d_000_strid3d_xz, "real(8)", OPS_READ), &
                                 ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END DO
@@ -1700,7 +1691,6 @@ SUBROUTINE bounds
                         ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_READ), &
                         ops_arg_dat(d_strryr, 1, s3d_000_strid3d_xz, "real(8)", OPS_READ), &
                         ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END DO
@@ -1927,7 +1917,6 @@ SUBROUTINE bounds
                                 ops_arg_dat(d_sydtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_dydtyr, 2, s3d_000_strid3d_xz, "real(8)", OPS_READ), &
                                 ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ))
                 call ops_par_loop(bounds_kernel_eqA_ydir, "A_xz = A_xz + B_mulditim_xz*C_multidim_xz", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_sorpyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_INC), &
@@ -2161,7 +2150,6 @@ SUBROUTINE bounds
                                 ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_strryr, 1, s3d_000_strid3d_xz, "real(8)", OPS_READ), &
                                 ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ))                
 
             END DO
@@ -2237,7 +2225,6 @@ SUBROUTINE bounds
                         ops_arg_dat(d_strtzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
                         ops_arg_dat(d_strrzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
                         ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END DO
@@ -2464,7 +2451,6 @@ SUBROUTINE bounds
                                 ops_arg_dat(d_sydtzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_dydtzl, 2, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
                                 ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ))
                 call ops_par_loop(bounds_kernel_eqA_zdir, "A_xy = A_xy + B_mulditim_xy*C_multidim_xy", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_sorpzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_INC), &
@@ -2698,7 +2684,6 @@ SUBROUTINE bounds
                                 ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_strrzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
                                 ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END DO
@@ -2774,7 +2759,6 @@ SUBROUTINE bounds
                         ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
                         ops_arg_dat(d_strrzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
                         ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
     
         END DO
@@ -3001,7 +2985,6 @@ SUBROUTINE bounds
                                 ops_arg_dat(d_sydtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_dydtzr, 2, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
                                 ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ))
                 call ops_par_loop(bounds_kernel_eqA_zdir, "A_xy = A_xy + B_mulditim_xy*C_multidim_xy", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_sorpzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_INC), &
@@ -3235,7 +3218,6 @@ SUBROUTINE bounds
                                 ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_strrzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
                                 ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(nspcmx, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
             END DO
