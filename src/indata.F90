@@ -160,7 +160,7 @@ SUBROUTINE indata
             cldash(ic:ic) = '-'
         END DO
   
-        OPEN(UNIT=ncrept,FILE=fnrept,STATUS='NEW',FORM='FORMATTED')
+        OPEN(UNIT=ncrept,FILE=fnrept,STATUS='REPLACE',FORM='FORMATTED')
   
 !       WRITE A HEADER
         WRITE(ncrept,9000)clstar
@@ -876,7 +876,7 @@ SUBROUTINE indata
     IF(iproc == 0) THEN
   
 !       INITIALISE THE STATISTICS FILE
-        OPEN(UNIT=ncstat,FILE=fnstat,STATUS='NEW',FORM='FORMATTED')
+        OPEN(UNIT=ncstat,FILE=fnstat,STATUS='REPLACE',FORM='FORMATTED')
         ENDFILE(ncstat)
         CLOSE(ncstat)
   
@@ -893,9 +893,9 @@ SUBROUTINE indata
     INQUIRE(FILE=fndmpo(1),EXIST=fxdump)
     IF(.NOT.fxdump) THEN
         IF(ndofmt == 0) THEN
-            OPEN(UNIT=ncdmpo,FILE=fndmpo(1),STATUS='NEW',FORM='UNFORMATTED')
+            OPEN(UNIT=ncdmpo,FILE=fndmpo(1),STATUS='REPLACE',FORM='UNFORMATTED')
         ELSE
-            OPEN(UNIT=ncdmpo,FILE=fndmpo(1),STATUS='NEW',FORM='FORMATTED')
+            OPEN(UNIT=ncdmpo,FILE=fndmpo(1),STATUS='REPLACE',FORM='FORMATTED')
         END IF
         CLOSE(ncdmpo)
     END IF
@@ -904,9 +904,9 @@ SUBROUTINE indata
 
     IF(.NOT.fxdump) THEN
         IF(ndofmt == 0) THEN
-            OPEN(UNIT=ncdmpo,FILE=fndmpo(2),STATUS='NEW',FORM='UNFORMATTED')
+            OPEN(UNIT=ncdmpo,FILE=fndmpo(2),STATUS='REPLACE',FORM='UNFORMATTED')
         ELSE
-            OPEN(UNIT=ncdmpo,FILE=fndmpo(2),STATUS='NEW',FORM='FORMATTED')
+            OPEN(UNIT=ncdmpo,FILE=fndmpo(2),STATUS='REPLACE',FORM='FORMATTED')
         END IF
         CLOSE(ncdmpo)
     END IF
