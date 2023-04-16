@@ -194,6 +194,11 @@ PROGRAM senga2
 !       ===================
         call output
 
+        if(itime == 2100) then
+            call print_dats()
+            STOP
+        end if
+
 !       =======================================================================
     END DO
 !   END OF TIME STEP LOOP

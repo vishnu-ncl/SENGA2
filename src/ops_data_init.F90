@@ -294,6 +294,10 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, nintmx, d_size, d_base, d_m, d_p, temp_int_null, d_itndex, "integer", "ITNDEX")
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_yrhs, "real(8)", "YRHS")
 
+    call ops_decl_dat(senga_grid, nctmax+1, d_size, d_base, d_m, d_p, temp_real_null, d_tcoeff, "real(8)", "TCOEFF")
+    call ops_decl_dat(senga_grid, nctmax, d_size, d_base, d_m, d_p, temp_real_null, d_tderiv, "real(8)", "TDERIV")
+
+
     d_size = (/1, nyglbl, nzglbl/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)

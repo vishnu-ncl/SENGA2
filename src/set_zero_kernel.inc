@@ -20,6 +20,28 @@ SUBROUTINE set_zero_kernel_MD(farray, ispec)
 
 END SUBROUTINE set_zero_kernel_MD
 
+SUBROUTINE set_zero_kernel_MD5(farray, ispec)
+    use data_types
+    implicit none
+
+    real(kind=8), dimension(1) :: farray
+    integer :: ispec
+
+    farray(OPS_ACC_MD1(ispec,0,0,0)) = 0.0_8
+
+END SUBROUTINE set_zero_kernel_MD5
+
+SUBROUTINE set_zero_kernel_MD6(farray, ispec)
+    use data_types
+    implicit none
+
+    real(kind=8), dimension(1) :: farray
+    integer :: ispec
+
+    farray(OPS_ACC_MD1(ispec,0,0,0)) = 0.0_8
+
+END SUBROUTINE set_zero_kernel_MD6
+
 SUBROUTINE set_zero_kernel_MD_int(farray, ispec)
     use data_types
     implicit none
@@ -31,7 +53,7 @@ SUBROUTINE set_zero_kernel_MD_int(farray, ispec)
 
 END SUBROUTINE set_zero_kernel_MD_int
 
-!range x=1,1   y=1,nyglbl   z=1,nzglbl 
+!range x=1,1   y=1,nyglbl   z=1,nzglbl
 SUBROUTINE set_zero_kernel_MD_xdir(farray, ispec)
     use data_types
     implicit none
@@ -66,75 +88,6 @@ SUBROUTINE set_zero_kernel_MD_zdir(farray, ispec)
     farray(OPS_ACC_MD1(ispec,0,0,0)) = 0.0_8
 
 END SUBROUTINE set_zero_kernel_MD_zdir
-
-!range x=1,1   y=1,1   z=1,nzglbl
-SUBROUTINE set_zero_kernel_MD_xy_dim9(farray, ispec)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1) :: farray
-    integer :: ispec
-
-    farray(OPS_ACC_MD1(ispec,0,0,0)) = 0.0_8
-
-END SUBROUTINE set_zero_kernel_MD_xy_dim9
-
-SUBROUTINE set_zero_kernel_MD_xy_dim4(farray, ispec)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1) :: farray
-    integer :: ispec
-
-    farray(OPS_ACC_MD1(ispec,0,0,0)) = 0.0_8
-
-END SUBROUTINE set_zero_kernel_MD_xy_dim4
-
-!range x=1,1   y=1,nyglbl   z=1,1
-SUBROUTINE set_zero_kernel_MD_xz_dim9(farray, ispec)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1) :: farray
-    integer :: ispec
-
-    farray(OPS_ACC_MD1(ispec,0,0,0)) = 0.0_8
-
-END SUBROUTINE set_zero_kernel_MD_xz_dim9
-
-SUBROUTINE set_zero_kernel_MD_xz_dim4(farray, ispec)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1) :: farray
-    integer :: ispec
-
-    farray(OPS_ACC_MD1(ispec,0,0,0)) = 0.0_8
-
-END SUBROUTINE set_zero_kernel_MD_xz_dim4
-
-!range x=1,nxglbl   y=1,1   z=1,1
-SUBROUTINE set_zero_kernel_MD_yz_dim9(farray, ispec)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1) :: farray
-    integer :: ispec
-
-    farray(OPS_ACC_MD1(ispec,0,0,0)) = 0.0_8
-
-END SUBROUTINE set_zero_kernel_MD_yz_dim9
-
-SUBROUTINE set_zero_kernel_MD_yz_dim4(farray, ispec)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1) :: farray
-    integer :: ispec
-
-    farray(OPS_ACC_MD1(ispec,0,0,0)) = 0.0_8
-
-END SUBROUTINE set_zero_kernel_MD_yz_dim4
 
 !range x=1,1   y=1,nyglbl   z=1,nzglbl
 !set zero for y,z dimension
