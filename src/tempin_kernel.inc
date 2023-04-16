@@ -193,53 +193,53 @@ SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs
 !       END OF LOOP 2000
 
 !       -----------------------------------------------------------------
-        ELSE IF(tresid > 0.0_8)THEN
+    ELSE IF(tresid > 0.0_8)THEN
 !       -----------------------------------------------------------------
 !       INITIAL GUESS IS TOO HIGH
-            3000          CONTINUE
-!           SET INITIAL GUESS AS UPPER LIMIT AND TRY AGAIN
-            tupper = tempor
-            tempor = tempor - tininc
-!           ---------------------------------------------------------------
-!           INITIALISE COEFFICIENTS OF TEMPERATURE POLYNOMIAL
-            tcoeff(0) = tuk2me
-            DO icp = 1, nctmax
-                tcoeff(icp) = 0.0_8
+        3000          CONTINUE
+!       SET INITIAL GUESS AS UPPER LIMIT AND TRY AGAIN
+        tupper = tempor
+        tempor = tempor - tininc
+!       ---------------------------------------------------------------
+!       INITIALISE COEFFICIENTS OF TEMPERATURE POLYNOMIAL
+        tcoeff(0) = tuk2me
+        DO icp = 1, nctmax
+            tcoeff(icp) = 0.0_8
+        END DO
+
+!       FOR EACH SPECIES LOCATE TEMPERATURE IN AN INTERVAL
+        DO ispec = 1, nspec
+
+            itint = 1
+            DO WHILE (tempor > tinthi(itint,ispec) .and. itint < ntint(ispec))
+                itint = itint + 1
             END DO
 
-!           FOR EACH SPECIES LOCATE TEMPERATURE IN AN INTERVAL
-            DO ispec = 1, nspec
-
-                itint = 1
-                DO WHILE (tempor > tinthi(itint,ispec) .and. itint < ntint(ispec))
-                    itint = itint + 1
-                END DO
-
-!               CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
-                tcoeff(0) = tcoeff(0) + yrhs(OPS_ACC_MD11(ispec,0,0,0))*  &
+!           CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
+            tcoeff(0) = tcoeff(0) + yrhs(OPS_ACC_MD11(ispec,0,0,0))*  &
                                         amascp(ncenth(itint,ispec),itint,ispec)
-                tcoeff(1) = tcoeff(1) + yrhs(OPS_ACC_MD11(ispec,0,0,0))*amasct(1,itint,ispec)
-                DO icp = 2, ncpoly(itint,ispec)
-                    tcoeff(icp) = tcoeff(icp)  &
-                                + yrhs(OPS_ACC_MD11(ispec,0,0,0))*amasct(icp,itint,ispec)
-                END DO
-
+            tcoeff(1) = tcoeff(1) + yrhs(OPS_ACC_MD11(ispec,0,0,0))*amasct(1,itint,ispec)
+            DO icp = 2, ncpoly(itint,ispec)
+                tcoeff(icp) = tcoeff(icp)  &
+                            + yrhs(OPS_ACC_MD11(ispec,0,0,0))*amasct(icp,itint,ispec)
             END DO
-!           END OF RUN THROUGH ALL SPECIES
 
-!           ---------------------------------------------------------------
-!           EVALUATE TEMPERATURE RESIDUAL
-            tresid = tcoeff(nctmax)
-            DO icp = nctmm1,1,-1
-                tresid = tcoeff(icp) + tresid*tempor
-            END DO
-            tresid = tcoeff(0) + tresid*tempor
-!           ---------------------------------------------------------------
-!           CHECK NEW GUESS FOR CONVERGENCE
-            IF(ABS(tresid) < toltmp) THEN
-!           -------------------------------------------------------------
-!               NEW GUESS HAS CONVERGED
-                fnconv = .false.
+        END DO
+!       END OF RUN THROUGH ALL SPECIES
+
+!       ---------------------------------------------------------------
+!       EVALUATE TEMPERATURE RESIDUAL
+        tresid = tcoeff(nctmax)
+        DO icp = nctmm1,1,-1
+            tresid = tcoeff(icp) + tresid*tempor
+        END DO
+        tresid = tcoeff(0) + tresid*tempor
+!       ---------------------------------------------------------------
+!       CHECK NEW GUESS FOR CONVERGENCE
+        IF(ABS(tresid) < toltmp) THEN
+!       -------------------------------------------------------------
+!           NEW GUESS HAS CONVERGED
+            fnconv = .false.
 !           -------------------------------------------------------------
             ELSE IF(tresid > 0.0_8) THEN
 !           -------------------------------------------------------------

@@ -160,123 +160,69 @@ SUBROUTINE boundt_kernel_eqD_zdir(yrhs,stryz,strdz,ispec)
 
 END SUBROUTINE boundt_kernel_eqD_zdir
 
-SUBROUTINE boundt_kernel_eqE_xdir(strtx,itndex,tinthi,ntint)
+SUBROUTINE boundt_kernel_eqE_xdir(strtx,itndex,tinthi,ntint,iindex,ipower,ispec)
     use data_types
     implicit none
 
     integer, dimension(1) :: itndex
     real(kind=8), dimension(1), intent(in) :: strtx
+    integer, intent(in) :: iindex, ipower, ispec
 
     real(kind=8), dimension(ntinmx,nspcmx), intent(in) :: tinthi
     integer, dimension(nspcmx), intent(in) :: ntint
-    integer :: iindex,ispec,itint,ipower
+    integer :: itint
 
-    DO iindex = 1,nintmx
-        itndex(OPS_ACC_MD2(iindex,0,0,0)) = 0
+    itint = 1
+    DO WHILE (strtx(OPS_ACC1(0,0,0)) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+        itint = itint + 1
     END DO
 
-    DO ispec = 1,nspcmx
-        itint = 1
-!       1000            CONTINUE
-!       IF(strtx(OPS_ACC1(0,0,0)) > tinthi(itint,ispec))THEN
-!           IF(itint < ntint(ispec))THEN
-!               itint = itint + 1
-!               GO TO 1000
-!           END IF
-!       END IF
-!       END OF LOOP 1000
-        DO WHILE (strtx(OPS_ACC1(0,0,0)) > tinthi(itint,ispec) .and. itint < ntint(ispec))
-            itint = itint + 1
-        END DO
-
-!       SET THE TEMPERATURE INTERVAL INDEX
-        iindex = 1 + (ispec-1)/nspimx
-        ipower = ispec - (iindex-1)*nspimx - 1
-
-        itndex(OPS_ACC_MD2(iindex,0,0,0)) = itndex(OPS_ACC_MD2(iindex,0,0,0))  &
+    itndex(OPS_ACC_MD2(iindex,0,0,0)) = itndex(OPS_ACC_MD2(iindex,0,0,0))  &
               + (itint-1)*ntbase**ipower
-
-    END DO
 
 END SUBROUTINE boundt_kernel_eqE_xdir
 
-SUBROUTINE boundt_kernel_eqE_ydir(strty,itndex,tinthi,ntint)
+SUBROUTINE boundt_kernel_eqE_ydir(strty,itndex,tinthi,ntint,iindex,ipower,ispec)
     use data_types
     implicit none
 
     integer, dimension(1) :: itndex
     real(kind=8), dimension(1), intent(in) :: strty
+    integer, intent(in) :: iindex, ipower, ispec
 
     real(kind=8), dimension(ntinmx,nspcmx), intent(in) :: tinthi
     integer, dimension(nspcmx), intent(in) :: ntint
-    integer :: iindex,ispec,itint,ipower
+    integer :: itint
 
-    DO iindex = 1,nintmx
-        itndex(OPS_ACC_MD2(iindex,0,0,0)) = 0
+    itint = 1
+    DO WHILE (strty(OPS_ACC1(0,0,0)) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+        itint = itint + 1
     END DO
 
-    DO ispec = 1,nspcmx
-        itint = 1
-!       1000            CONTINUE
-!       IF(strty(OPS_ACC1(0,0,0)) > tinthi(itint,ispec))THEN
-!           IF(itint < ntint(ispec))THEN
-!               itint = itint + 1
-!               GO TO 1000
-!           END IF
-!       END IF
-!       END OF LOOP 1000
-        DO WHILE (strty(OPS_ACC1(0,0,0)) > tinthi(itint,ispec) .and. itint < ntint(ispec))
-            itint = itint + 1
-        END DO
-
-!       SET THE TEMPERATURE INTERVAL INDEX
-        iindex = 1 + (ispec-1)/nspimx
-        ipower = ispec - (iindex-1)*nspimx - 1
-
-        itndex(OPS_ACC_MD2(iindex,0,0,0)) = itndex(OPS_ACC_MD2(iindex,0,0,0))  &
+    itndex(OPS_ACC_MD2(iindex,0,0,0)) = itndex(OPS_ACC_MD2(iindex,0,0,0))  &
               + (itint-1)*ntbase**ipower
-
-    END DO
 
 END SUBROUTINE boundt_kernel_eqE_ydir
 
-SUBROUTINE boundt_kernel_eqE_zdir(strtz,itndex,tinthi,ntint)
+SUBROUTINE boundt_kernel_eqE_zdir(strtz,itndex,tinthi,ntint,iindex,ipower,ispec)
     use data_types
     implicit none
 
     integer, dimension(1) :: itndex
     real(kind=8), dimension(1), intent(in) :: strtz
+    integer, intent(in) :: iindex, ipower, ispec
 
     real(kind=8), dimension(ntinmx,nspcmx), intent(in) :: tinthi
     integer, dimension(nspcmx), intent(in) :: ntint
-    integer :: iindex,ispec,itint,ipower
+    integer :: itint
 
-    DO iindex = 1,nintmx
-        itndex(OPS_ACC_MD2(iindex,0,0,0)) = 0
+    itint = 1
+    DO WHILE (strtz(OPS_ACC1(0,0,0)) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+        itint = itint + 1
     END DO
 
-    DO ispec = 1,nspcmx
-        itint = 1
-!       1000            CONTINUE
-!       IF(strtz(OPS_ACC1(0,0,0)) > tinthi(itint,ispec))THEN
-!           IF(itint < ntint(ispec))THEN
-!               itint = itint + 1
-!               GO TO 1000
-!           END IF
-!       END IF
-!       END OF LOOP 1000
-        DO WHILE (strtz(OPS_ACC1(0,0,0)) > tinthi(itint,ispec) .and. itint < ntint(ispec))
-            itint = itint + 1
-        END DO
-
-!       SET THE TEMPERATURE INTERVAL INDEX
-        iindex = 1 + (ispec-1)/nspimx
-        ipower = ispec - (iindex-1)*nspimx - 1
-
-        itndex(OPS_ACC_MD2(iindex,0,0,0)) = itndex(OPS_ACC_MD2(iindex,0,0,0))  &
+    itndex(OPS_ACC_MD2(iindex,0,0,0)) = itndex(OPS_ACC_MD2(iindex,0,0,0))  &
               + (itint-1)*ntbase**ipower
-
-    END DO
 
 END SUBROUTINE boundt_kernel_eqE_zdir
 

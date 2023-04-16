@@ -35,7 +35,19 @@ SUBROUTINE tempin
 !   -------------------------------------------------------------------------
 !   -------------------------------------------------------------------------
 
+!   PARAMETERS
+!   ==========
+    real(kind=8), parameter :: toltmp=0.00010_8
+    real(kind=8), parameter :: tininc=50.0_8
+    real(kind=8), parameter :: tlimlo=200.0_8
+    real(kind=8), parameter :: tlimhi=3000.0_8
+
+!   LOCAL DATA
+!   ==========
     integer :: rangexyz(6)
+    real(kind=8) :: tempor,tupper,tlower
+    integer :: iindex,ipower
+    logical :: fnconv
 
 !   BEGIN
 !   =====
@@ -95,7 +107,7 @@ SUBROUTINE tempin
                     ops_arg_gbl(nspec, 1, "integer", OPS_READ), &
                     ops_arg_gbl(iproc, 1, "integer", OPS_READ), &
                     ops_arg_idx())
-    
-!     =========================================================================
+
+!   =========================================================================
 
 END SUBROUTINE tempin

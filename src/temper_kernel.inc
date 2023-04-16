@@ -169,7 +169,7 @@ SUBROUTINE temper_kernel_eqE(transp, itndex, yrhs, trun, amascp, ncpoly, ncpom1,
     itint = 1
 
     DO WHILE (trun(OPS_ACC4(0,0,0)) > tinthi(itint,ispec) .and. itint < ntint(ispec))
-            itint = itint + 1
+        itint = itint + 1
     END DO
 
     itndex(OPS_ACC_MD2(iindex,0,0,0)) = itndex(OPS_ACC_MD2(iindex,0,0,0))  &

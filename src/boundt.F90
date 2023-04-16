@@ -97,11 +97,26 @@ SUBROUTINE boundt
     
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(boundt_kernel_eqE_xdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
-                            ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ))
+            DO iindex = 1,nintmx
+                call ops_par_loop(set_zero_kernel_MD_int, "set zero", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
+                        ops_arg_gbl(iindex, 1, "integer", OPS_READ))
+            END DO
+
+            DO ispec = 1,nspec
+!               SET THE TEMPERATURE INTERVAL INDEX
+                iindex = 1 + (ispec-1)/nspimx
+                ipower = ispec - (iindex-1)*nspimx - 1
+
+                call ops_par_loop(boundt_kernel_eqE_xdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_READ), &
+                                ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
+                                ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
+                                ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ), &
+                                ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+            END DO
 
 !           CONSERVATIVE VARIABLES
             rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
@@ -234,11 +249,26 @@ SUBROUTINE boundt
     
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(boundt_kernel_eqE_xdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
-                            ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ))
+            DO iindex = 1,nintmx
+                call ops_par_loop(set_zero_kernel_MD_int, "set zero", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
+                        ops_arg_gbl(iindex, 1, "integer", OPS_READ))
+            END DO
+
+            DO ispec = 1,nspec
+!               SET THE TEMPERATURE INTERVAL INDEX
+                iindex = 1 + (ispec-1)/nspimx
+                ipower = ispec - (iindex-1)*nspimx - 1
+
+                call ops_par_loop(boundt_kernel_eqE_xdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_READ), &
+                                ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
+                                ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
+                                ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ), &
+                                ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+            END DO
 
 !           CONSERVATIVE VARIABLES
             rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
@@ -333,11 +363,26 @@ SUBROUTINE boundt
     
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(boundt_kernel_eqE_xdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
-                            ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ))
+            DO iindex = 1,nintmx
+                call ops_par_loop(set_zero_kernel_MD_int, "set zero", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
+                        ops_arg_gbl(iindex, 1, "integer", OPS_READ))
+            END DO
+
+            DO ispec = 1,nspec
+!               SET THE TEMPERATURE INTERVAL INDEX
+                iindex = 1 + (ispec-1)/nspimx
+                ipower = ispec - (iindex-1)*nspimx - 1
+
+                call ops_par_loop(boundt_kernel_eqE_xdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_READ), &
+                                ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
+                                ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
+                                ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ), &
+                                ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+            END DO
 
 !           CONSERVATIVE VARIABLES
             rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
@@ -470,11 +515,26 @@ SUBROUTINE boundt
     
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(boundt_kernel_eqE_xdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
-                            ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ))
+            DO iindex = 1,nintmx
+                call ops_par_loop(set_zero_kernel_MD_int, "set zero", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
+                        ops_arg_gbl(iindex, 1, "integer", OPS_READ))
+            END DO
+
+            DO ispec = 1,nspec
+!               SET THE TEMPERATURE INTERVAL INDEX
+                iindex = 1 + (ispec-1)/nspimx
+                ipower = ispec - (iindex-1)*nspimx - 1
+
+                call ops_par_loop(boundt_kernel_eqE_xdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_READ), &
+                                ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
+                                ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
+                                ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ), &
+                                ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+            END DO
 
 !           CONSERVATIVE VARIABLES
             rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
@@ -575,11 +635,26 @@ SUBROUTINE boundt
     
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
-            call ops_par_loop(boundt_kernel_eqE_ydir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
-                            ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ))
+            DO iindex = 1,nintmx
+                call ops_par_loop(set_zero_kernel_MD_int, "set zero", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
+                        ops_arg_gbl(iindex, 1, "integer", OPS_READ))
+            END DO
+
+            DO ispec = 1,nspec
+!               SET THE TEMPERATURE INTERVAL INDEX
+                iindex = 1 + (ispec-1)/nspimx
+                ipower = ispec - (iindex-1)*nspimx - 1
+
+                call ops_par_loop(boundt_kernel_eqE_ydir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_READ), &
+                                ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
+                                ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
+                                ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ), &
+                                ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+            END DO
 
 !           CONSERVATIVE VARIABLES
             rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
@@ -712,11 +787,26 @@ SUBROUTINE boundt
     
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
-            call ops_par_loop(boundt_kernel_eqE_ydir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
-                            ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ))
+            DO iindex = 1,nintmx
+                call ops_par_loop(set_zero_kernel_MD_int, "set zero", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
+                        ops_arg_gbl(iindex, 1, "integer", OPS_READ))
+            END DO
+
+            DO ispec = 1,nspec
+!               SET THE TEMPERATURE INTERVAL INDEX
+                iindex = 1 + (ispec-1)/nspimx
+                ipower = ispec - (iindex-1)*nspimx - 1
+
+                call ops_par_loop(boundt_kernel_eqE_ydir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_READ), &
+                                ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
+                                ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
+                                ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ), &
+                                ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+            END DO
 
 !           CONSERVATIVE VARIABLES
             rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
@@ -817,11 +907,26 @@ SUBROUTINE boundt
     
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
-            call ops_par_loop(boundt_kernel_eqE_ydir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
-                            ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ))
+            DO iindex = 1,nintmx
+                call ops_par_loop(set_zero_kernel_MD_int, "set zero", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
+                        ops_arg_gbl(iindex, 1, "integer", OPS_READ))
+            END DO
+
+            DO ispec = 1,nspec
+!               SET THE TEMPERATURE INTERVAL INDEX
+                iindex = 1 + (ispec-1)/nspimx
+                ipower = ispec - (iindex-1)*nspimx - 1
+
+                call ops_par_loop(boundt_kernel_eqE_ydir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_READ), &
+                                ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
+                                ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
+                                ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ), &
+                                ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+            END DO
 
 !           CONSERVATIVE VARIABLES
             rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
@@ -954,11 +1059,26 @@ SUBROUTINE boundt
     
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
-            call ops_par_loop(boundt_kernel_eqE_ydir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
-                            ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ))
+            DO iindex = 1,nintmx
+                call ops_par_loop(set_zero_kernel_MD_int, "set zero", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
+                        ops_arg_gbl(iindex, 1, "integer", OPS_READ))
+            END DO
+
+            DO ispec = 1,nspec
+!               SET THE TEMPERATURE INTERVAL INDEX
+                iindex = 1 + (ispec-1)/nspimx
+                ipower = ispec - (iindex-1)*nspimx - 1
+
+                call ops_par_loop(boundt_kernel_eqE_ydir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(8)", OPS_READ), &
+                                ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
+                                ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
+                                ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ), &
+                                ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+            END DO
 
 !           CONSERVATIVE VARIABLES
             rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
@@ -1059,11 +1179,26 @@ SUBROUTINE boundt
     
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
-            call ops_par_loop(boundt_kernel_eqE_zdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_strtzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
-                            ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ))
+            DO iindex = 1,nintmx
+                call ops_par_loop(set_zero_kernel_MD_int, "set zero", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
+                        ops_arg_gbl(iindex, 1, "integer", OPS_READ))
+            END DO
+
+            DO ispec = 1,nspec
+!               SET THE TEMPERATURE INTERVAL INDEX
+                iindex = 1 + (ispec-1)/nspimx
+                ipower = ispec - (iindex-1)*nspimx - 1
+
+                call ops_par_loop(boundt_kernel_eqE_zdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_strtzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
+                                ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
+                                ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
+                                ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ), &
+                                ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+            END DO
 
 !           CONSERVATIVE VARIABLES
             rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
@@ -1196,11 +1331,26 @@ SUBROUTINE boundt
     
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
-            call ops_par_loop(boundt_kernel_eqE_zdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_strtzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
-                            ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ))
+            DO iindex = 1,nintmx
+                call ops_par_loop(set_zero_kernel_MD_int, "set zero", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
+                        ops_arg_gbl(iindex, 1, "integer", OPS_READ))
+            END DO
+
+            DO ispec = 1,nspec
+!               SET THE TEMPERATURE INTERVAL INDEX
+                iindex = 1 + (ispec-1)/nspimx
+                ipower = ispec - (iindex-1)*nspimx - 1
+
+                call ops_par_loop(boundt_kernel_eqE_zdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_strtzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
+                                ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
+                                ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
+                                ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ), &
+                                ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+            END DO
 
 !           CONSERVATIVE VARIABLES
             rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
@@ -1301,11 +1451,26 @@ SUBROUTINE boundt
     
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
-            call ops_par_loop(boundt_kernel_eqE_zdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
-                            ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ))
+            DO iindex = 1,nintmx
+                call ops_par_loop(set_zero_kernel_MD_int, "set zero", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
+                        ops_arg_gbl(iindex, 1, "integer", OPS_READ))
+            END DO
+
+            DO ispec = 1,nspec
+!               SET THE TEMPERATURE INTERVAL INDEX
+                iindex = 1 + (ispec-1)/nspimx
+                ipower = ispec - (iindex-1)*nspimx - 1
+
+                call ops_par_loop(boundt_kernel_eqE_zdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
+                                ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
+                                ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
+                                ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ), &
+                                ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+            END DO
 
 !           CONSERVATIVE VARIABLES
             rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
@@ -1438,11 +1603,26 @@ SUBROUTINE boundt
     
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
-            call ops_par_loop(boundt_kernel_eqE_zdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
-                            ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ))
+            DO iindex = 1,nintmx
+                call ops_par_loop(set_zero_kernel_MD_int, "set zero", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
+                        ops_arg_gbl(iindex, 1, "integer", OPS_READ))
+            END DO
+
+            DO ispec = 1,nspec
+!               SET THE TEMPERATURE INTERVAL INDEX
+                iindex = 1 + (ispec-1)/nspimx
+                ipower = ispec - (iindex-1)*nspimx - 1
+
+                call ops_par_loop(boundt_kernel_eqE_zdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_READ), &
+                                ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW),  &
+                                ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
+                                ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ), &
+                                ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+            END DO
 
 !           CONSERVATIVE VARIABLES
             rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
