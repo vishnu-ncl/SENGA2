@@ -272,53 +272,64 @@ SUBROUTINE math_MD_kernel_eqU(out_arr1,in_arr1,ispec)
 
 END SUBROUTINE math_MD_kernel_eqU
 
-SUBROUTINE math_MD_kernel_eqV(transp,store7,wmomix,trun,yrhs,drhs,condco,ovwmol,tdifgb,ncocon,ncocm1)
+SUBROUTINE math_MD_kernel_eqV1(transp,trun,tdifgb)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: transp,store7,wmomix
-    real(kind=8), dimension(1), intent(in) :: trun,yrhs,drhs
-    
-    integer, intent(in) :: ncocon,ncocm1
-    
-    real(kind=8), dimension(nspcmx), intent(in) :: ovwmol
-    real(kind=8), dimension(nccfmx,nspcmx), intent(in) :: condco
-    
+    real(kind=8), dimension(1), intent(in) :: trun
+    real(kind=8), dimension(1) :: transp
+
     real(kind=8), intent(in) :: tdifgb
 
-    real(kind=8) :: fornow, combo1, combo2, combo3
-    real(kind=8), dimension(nspcmx) :: ctrans
-    integer :: ispec,icp
+    transp(OPS_ACC1(0,0,0)) = LOG(trun(OPS_ACC2(0,0,0))/tdifgb)
+
+END SUBROUTINE math_MD_kernel_eqV1
+
+SUBROUTINE math_MD_kernel_eqV2(combo1,combo2,combo3,transp,yrhs,condco,ovwmol,ncocon,ncocm1,ispec)
+    use data_types
+    implicit none
+
+    real(kind=8), dimension(1), intent(in) :: transp,yrhs
+    real(kind=8), dimension(1) :: combo1,combo2,combo3
+    integer, intent(in) :: ncocon,ncocm1,ispec
+
+    real(kind=8), dimension(nspcmx), intent(in) :: ovwmol
+    real(kind=8), dimension(nccfmx,nspcmx), intent(in) :: condco
+
+    real(kind=8) :: fornow,ctrans
+    integer :: icp
 
 !   CONDUCTIVITY FOR EACH SPECIES
-    transp(OPS_ACC1(0,0,0)) = LOG(trun(OPS_ACC4(0,0,0))/tdifgb)
-    DO ispec = 1, nspcmx
-        fornow = condco(ncocon,ispec)
-        DO icp = ncocm1,1,-1
-            fornow = fornow*transp(OPS_ACC1(0,0,0)) + condco(icp,ispec)
-        END DO
-        ctrans(ispec) = EXP(fornow)
+    fornow = condco(ncocon,ispec)
+    DO icp = ncocm1,1,-1
+        fornow = fornow*transp(OPS_ACC4(0,0,0)) + condco(icp,ispec)
     END DO
+    ctrans = EXP(fornow)
 
 !   COMBINATION RULE FOR CONDUCTIVITY
-    combo1 = 0.0_8
-    combo2 = 0.0_8
-    combo3 = 0.0_8
-    DO ispec = 1, nspcmx
-        fornow = yrhs(OPS_ACC_MD5(ispec,0,0,0))*ovwmol(ispec)
-        combo1 = combo1 + fornow*ctrans(ispec)
-        combo2 = combo2 + fornow/ctrans(ispec)
-        combo3 = combo3 + fornow
-    END DO
+    fornow = yrhs(OPS_ACC_MD5(ispec,0,0,0))*ovwmol(ispec)
+    combo1(OPS_ACC1(0,0,0)) = combo1(OPS_ACC1(0,0,0)) + fornow*ctrans
+    combo2(OPS_ACC2(0,0,0)) = combo2(OPS_ACC2(0,0,0)) + fornow/ctrans
+    combo3(OPS_ACC3(0,0,0)) = combo3(OPS_ACC3(0,0,0)) + fornow
 
-    combo3 = 1.0_8/combo3
-    combo1 = combo1*combo3
-    combo2 = combo2*combo3
-    store7(OPS_ACC2(0,0,0)) = 0.5_8*(combo1 + 1.0_8/combo2)
-    wmomix(OPS_ACC3(0,0,0)) = drhs(OPS_ACC6(0,0,0))*combo3
+END SUBROUTINE math_MD_kernel_eqV2
 
-END SUBROUTINE math_MD_kernel_eqV
-    
+SUBROUTINE math_MD_kernel_eqV3(combo1,combo2,combo3,store7,wmomix,drhs)
+    use data_types
+    implicit none
+
+    real(kind=8), dimension(1), intent(in) :: drhs
+    real(kind=8), dimension(1) :: combo1,combo2,combo3,store7,wmomix
+
+    combo3(OPS_ACC3(0,0,0)) = 1.0_8/combo3(OPS_ACC3(0,0,0))
+    combo1(OPS_ACC1(0,0,0)) = combo1(OPS_ACC1(0,0,0))*combo3(OPS_ACC3(0,0,0))
+    combo2(OPS_ACC2(0,0,0)) = combo2(OPS_ACC2(0,0,0))*combo3(OPS_ACC3(0,0,0))
+
+    store7(OPS_ACC4(0,0,0)) = 0.5_8*(combo1(OPS_ACC1(0,0,0)) + 1.0_8/combo2(OPS_ACC2(0,0,0)))
+    wmomix(OPS_ACC5(0,0,0)) = drhs(OPS_ACC6(0,0,0))*combo3(OPS_ACC3(0,0,0))
+
+END SUBROUTINE math_MD_kernel_eqV3
+
 SUBROUTINE math_MD_kernel_eqW(difmix,store7,transp,prun,yrhs,wmomix,drhs,diffco,ovwmol,pdifgb,dfctol,ispec,ncodif,ncodm1,nspec)
     use data_types
     implicit none

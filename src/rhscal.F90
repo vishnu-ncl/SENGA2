@@ -436,18 +436,40 @@ SUBROUTINE rhscal
 
     IF(flmavt) THEN
         rangexyz = (/1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz/)
-        call ops_par_loop(math_MD_kernel_eqV, "THERMAL CONDUCTIVITY", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_RW), &
+        call ops_par_loop(math_MD_kernel_eqV1, "THERMAL CONDUCTIVITY - part 1", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_gbl(tdifgb, 1, "real(8)", OPS_READ))
+
+        call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_combo1, 1, s3d_000, "real(8)", OPS_WRITE))
+        call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_combo2, 1, s3d_000, "real(8)", OPS_WRITE))
+        call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_combo3, 1, s3d_000, "real(8)", OPS_WRITE))
+
+!       CONDUCTIVITY FOR EACH SPECIES
+        DO ispec = 1, nspec
+            call ops_par_loop(math_MD_kernel_eqV2, "THERMAL CONDUCTIVITY - part 2", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_combo1, 1, s3d_000, "real(8)", OPS_RW), &
+                            ops_arg_dat(d_combo2, 1, s3d_000, "real(8)", OPS_RW), &
+                            ops_arg_dat(d_combo3, 1, s3d_000, "real(8)", OPS_RW), &
+                            ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
+                            ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
+                            ops_arg_gbl(condco, nccfmx*nspcmx, "real(8)", OPS_READ), &
+                            ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
+                            ops_arg_gbl(ncocon, 1, "integer", OPS_READ), &
+                            ops_arg_gbl(ncocm1, 1, "integer", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+        END DO
+
+        call ops_par_loop(math_MD_kernel_eqV3, "THERMAL CONDUCTIVITY - part 3", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_combo1, 1, s3d_000, "real(8)", OPS_RW), &
+                        ops_arg_dat(d_combo2, 1, s3d_000, "real(8)", OPS_RW), &
+                        ops_arg_dat(d_combo3, 1, s3d_000, "real(8)", OPS_RW), &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
                         ops_arg_dat(d_wmomix, 1, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(condco, nccfmx*nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(tdifgb, 1, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ncocon, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(ncocm1, 1, "integer", OPS_READ))
+                        ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ))
 
     END IF
 

@@ -363,6 +363,10 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_difmix, "real(8)", "DIFMIX")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tdrmix, "real(8)", "TDRMIX")
 
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_combo1, "real(8)", "COMBO1")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_combo2, "real(8)", "COMBO2")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_combo3, "real(8)", "COMBO3")
+
 !-----------------------------------------Boundary YZ--------------------------------------------------------
 
     d_size = (/1,nyglbl,nzglbl/)

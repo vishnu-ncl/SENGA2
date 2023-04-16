@@ -32,7 +32,8 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_derr, d_uerr, d_verr, d_werr, d_eerr 
     
     TYPE(ops_dat) :: d_wmomix, d_difmix, d_tdrmix
-    
+    TYPE(ops_dat) :: d_combo1, d_combo2, d_combo3
+ 
     TYPE(ops_dat) :: d_utmp, d_vtmp, d_wtmp, d_prun, d_trun, d_transp, d_store7
 
     TYPE(ops_dat) :: d_itndex
