@@ -406,49 +406,64 @@ SUBROUTINE math_MD_kernel_eqX(tdrmix,trun,yrhs,wmomix,tdrcco,ovwmol,tdifgb,ncotd
 
 END SUBROUTINE math_MD_kernel_eqX
 
-SUBROUTINE math_MD_kernel_eqY(difmix,transp,yrhs,viscco,wilko1,wilko2,ovwmol,ncovis,ncovm1,nspec)
+SUBROUTINE math_MD_kernel_eqY1(ctrans,transp,viscco,ncovis,ncovm1,ispec)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: difmix
-    real(kind=8), dimension(1), intent(in) :: transp,yrhs
+    real(kind=8), dimension(1), intent(in) :: transp
+    real(kind=8), dimension(1) :: ctrans
+    integer, intent(in) :: ncovis,ncovm1,ispec
 
-    integer, intent(in) :: ncovis,ncovm1,nspec
+    real(kind=8), dimension(nvcfmx,nspcmx), intent(in) :: viscco
+
+    real(kind=8) :: fornow
+    integer :: icp
+
+    fornow = viscco(ncovis,ispec)
+    DO icp = ncovm1,1,-1
+        fornow = fornow*transp(OPS_ACC2(0,0,0)) + viscco(icp,ispec)
+    END DO
+
+    ctrans(OPS_ACC_MD1(ispec,0,0,0)) = EXP(fornow)
+
+END SUBROUTINE math_MD_kernel_eqY1
+
+SUBROUTINE math_MD_kernel_eqY2(combo2,ctrans,yrhs,ovwmol,wilko1,wilko2,ispec,jspec)
+    use data_types
+    implicit none
+
+    real(kind=8), dimension(1), intent(in) :: ctrans,yrhs
+    real(kind=8), dimension(1) :: combo2
+    integer, intent(in) :: ispec,jspec
 
     real(kind=8), dimension(nspcmx), intent(in) :: ovwmol
-    real(kind=8), dimension(nvcfmx,nspcmx), intent(in) :: viscco
     real(kind=8), dimension(nspcmx,nspcmx), intent(in) :: wilko1,wilko2
 
-    real(kind=8) :: fornow, combo1, combo2
-    real(kind=8), dimension(nspcmx) :: ctrans
-    integer :: ispec, jspec, icp
+    real(kind=8) :: fornow
 
-!   VISCOSITY FOR EACH SPECIES
-    DO ispec = 1, nspcmx
-        fornow = viscco(ncovis,ispec)
-        DO icp = ncovm1,1,-1
-            fornow = fornow*transp(OPS_ACC2(0,0,0)) + viscco(icp,ispec)
-        END DO
-        ctrans(ispec) = EXP(fornow)
-    END DO
+    fornow = SQRT(ctrans(OPS_ACC_MD2(ispec,0,0,0))/ctrans(OPS_ACC_MD2(jspec,0,0,0)))
+    fornow = 1.0_8 + fornow*wilko2(jspec,ispec)
+    fornow = wilko1(jspec,ispec)*fornow*fornow
+    combo2(OPS_ACC1(0,0,0)) = combo2(OPS_ACC1(0,0,0)) + yrhs(OPS_ACC_MD3(jspec,0,0,0))*ovwmol(jspec)*fornow
 
-!   COMBINATION RULE FOR VISCOSITY
-    combo1 = 0.0_8
-    DO ispec = 1, nspcmx
-        combo2 = 0.0_8
-        DO jspec = 1, nspec
-            fornow = SQRT(ctrans(ispec)/ctrans(jspec))
-            fornow = 1.0_8 + fornow*wilko2(jspec,ispec)
-            fornow = wilko1(jspec,ispec)*fornow*fornow
-            combo2 = combo2 + yrhs(OPS_ACC_MD3(jspec,0,0,0))*ovwmol(jspec)*fornow
-        END DO
-        fornow = ctrans(ispec)/combo2
-        combo1 = combo1 + yrhs(OPS_ACC_MD3(ispec,0,0,0))*ovwmol(ispec)*fornow
-    END DO
+END SUBROUTINE math_MD_kernel_eqY2
 
-    difmix(OPS_ACC1(0,0,0)) = combo1
+SUBROUTINE math_MD_kernel_eqY3(combo1,ctrans,combo2,yrhs,ovwmol,ispec)
+    use data_types
+    implicit none
 
-END SUBROUTINE math_MD_kernel_eqY
+    real(kind=8), dimension(1), intent(in) :: ctrans,combo2,yrhs
+    real(kind=8), dimension(1) :: combo1
+    integer, intent(in) :: ispec
+
+    real(kind=8), dimension(nspcmx), intent(in) :: ovwmol
+
+    real(kind=8) :: fornow
+
+    fornow = ctrans(OPS_ACC_MD2(ispec,0,0,0))/combo2(OPS_ACC3(0,0,0))
+    combo1(OPS_ACC1(0,0,0)) = combo1(OPS_ACC1(0,0,0)) + yrhs(OPS_ACC_MD4(ispec,0,0,0))*ovwmol(ispec)*fornow
+
+END SUBROUTINE math_MD_kernel_eqY3
 
 SUBROUTINE math_MD_kernel_eqZ(utmp,wtmp,trun,itndex,yrhs,amasch,ncpoly,ncpom1,ncenth,icoef1,icoef2,iindex,ispec)
     use data_types

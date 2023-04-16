@@ -39,6 +39,7 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_itndex
     TYPE(ops_dat) :: d_yrhs, d_yrun, d_yerr, d_rate, d_rrte
     TYPE(ops_dat) :: d_tcoeff, d_tderiv;
+    TYPE(ops_dat) :: d_ctrans
 
     TYPE(ops_dat) :: d_bclyxl, d_stryxl, d_dydtxl, d_ratexl, d_strhxl
     TYPE(ops_dat) :: d_bclyxr, d_stryxr, d_dydtxr, d_ratexr, d_strhxr
