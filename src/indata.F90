@@ -1115,12 +1115,26 @@ SUBROUTINE indata
 !   FOR ALL SPECIES LOCATE TEMPERATURE IN AN INTERVAL
 !   BIGGER SIZE ARRAY
     rangexyz = (/1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz/)
-    call ops_par_loop(math_MD_kernel_eqAC, "INTERNAL ENERGY FIELD", senga_grid, 3, rangexyz,  &
+    DO iindex = 1,nintmx
+        call ops_par_loop(set_zero_kernel_MD_int, "set zero", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
+                        ops_arg_gbl(iindex, 1, "integer", OPS_READ))
+    END DO
+
+    DO ispec = 1, nspec
+!       SET THE TEMPERATURE INDEX
+        iindex = 1 + (ispec-1)/nspimx
+        ipower = ispec - (iindex-1)*nspimx - 1        
+
+        call ops_par_loop(math_MD_kernel_eqAC, "INTERNAL ENERGY FIELD", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW), &
                     ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
                     ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ), &
-                    ops_arg_gbl(nspec, 1, "integer", OPS_READ))
+                    ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
+                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+    END DO
 
 !   PRE-INITIALISE INTERNAL ENERGY TO ZERO
     rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)

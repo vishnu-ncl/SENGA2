@@ -330,49 +330,57 @@ SUBROUTINE math_MD_kernel_eqV3(combo1,combo2,combo3,store7,wmomix,drhs)
 
 END SUBROUTINE math_MD_kernel_eqV3
 
-SUBROUTINE math_MD_kernel_eqW(difmix,store7,transp,prun,yrhs,wmomix,drhs,diffco,ovwmol,pdifgb,dfctol,ispec,ncodif,ncodm1,nspec)
+SUBROUTINE math_MD_kernel_eqW1(ctrans,combo1,combo2,transp,prun,yrhs,diffco,ovwmol,pdifgb,dfctol,ncodif,ncodm1,jspec,ispec)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: difmix,store7
-    real(kind=8), dimension(1), intent(in) :: transp,prun,yrhs,wmomix,drhs
+    real(kind=8), dimension(1), intent(in) :: transp,prun,yrhs
+    real(kind=8), dimension(1) :: ctrans,combo1,combo2
+    integer, intent(in) :: ncodif,ncodm1,jspec,ispec
 
-    integer, intent(in) :: ispec,ncodif,ncodm1,nspec
-
-    real(kind=8), dimension(nspcmx), intent(in) :: ovwmol
     real(kind=8), dimension(ndcfmx,nspcmx,nspcmx), intent(in) :: diffco
+    real(kind=8), dimension(nspcmx), intent(in) :: ovwmol
     real(kind=8), intent(in) :: pdifgb,dfctol
 
-    real(kind=8) :: fornow, combo1, combo2
-    real(kind=8), dimension(nspcmx) :: ctrans
-    integer :: jspec,icp
+    real(kind=8) :: fornow
+    integer :: icp
 
-    DO jspec = 1, nspec
-        fornow = diffco(ncodif,jspec,ispec)
-        DO icp = ncodm1,1,-1
-            fornow = fornow*transp(OPS_ACC3(0,0,0)) + diffco(icp,jspec,ispec)
-        END DO
-        ctrans(jspec) = EXP(fornow)*pdifgb/prun(OPS_ACC4(0,0,0))
+    fornow = diffco(ncodif,jspec,ispec)
+    DO icp = ncodm1,1,-1
+        fornow = fornow*transp(OPS_ACC4(0,0,0)) + diffco(icp,jspec,ispec)
     END DO
 
-!   COMBINATION RULE FOR MASS DIFFUSIVITY
-    combo1 = 0.0_8
-    combo2 = 0.0_8
-    DO jspec = 1, nspec
-        fornow = yrhs(OPS_ACC_MD5(jspec,0,0,0)) + dfctol
-        combo1 = combo1 + fornow
-        combo2 = combo2 + fornow*ovwmol(jspec)/ctrans(jspec)
-    END DO
+    ctrans(OPS_ACC_MD1(jspec,0,0,0)) = EXP(fornow)*pdifgb/prun(OPS_ACC5(0,0,0))
 
-    fornow = yrhs(OPS_ACC_MD5(ispec,0,0,0)) + dfctol
-    combo1 = combo1 - fornow
-    combo2 = combo2 - fornow*ovwmol(ispec)/ctrans(ispec)
-    combo2 = combo2*wmomix(OPS_ACC6(0,0,0))
+    fornow = yrhs(OPS_ACC_MD6(jspec,0,0,0)) + dfctol
+    combo1(OPS_ACC2(0,0,0)) = combo1(OPS_ACC2(0,0,0)) + fornow
+    combo2(OPS_ACC3(0,0,0)) = combo2(OPS_ACC3(0,0,0)) + fornow*ovwmol(jspec)/ctrans(OPS_ACC_MD1(jspec,0,0,0))
 
-    difmix(OPS_ACC1(0,0,0)) = drhs(OPS_ACC7(0,0,0))*combo1/combo2
-    store7(OPS_ACC2(0,0,0)) = difmix(OPS_ACC1(0,0,0))
+END SUBROUTINE math_MD_kernel_eqW1
 
-END SUBROUTINE math_MD_kernel_eqW
+SUBROUTINE math_MD_kernel_eqW2(combo1,combo2,difmix,store7,ctrans,yrhs,wmomix,drhs,ovwmol,dfctol,ispec)
+    use data_types
+    implicit none
+
+    real(kind=8), dimension(1), intent(in) :: ctrans,yrhs,wmomix,drhs
+    real(kind=8), dimension(1) :: combo1,combo2,difmix,store7
+
+    integer, intent(in) :: ispec
+
+    real(kind=8), dimension(nspcmx), intent(in) :: ovwmol
+    real(kind=8), intent(in) :: dfctol
+
+    real(kind=8) :: fornow
+
+    fornow = yrhs(OPS_ACC_MD6(ispec,0,0,0)) + dfctol
+    combo1(OPS_ACC1(0,0,0)) = combo1(OPS_ACC1(0,0,0)) - fornow
+    combo2(OPS_ACC2(0,0,0)) = combo2(OPS_ACC2(0,0,0)) - fornow*ovwmol(ispec)/ctrans(OPS_ACC_MD5(ispec,0,0,0))
+    combo2(OPS_ACC2(0,0,0)) = combo2(OPS_ACC2(0,0,0))*wmomix(OPS_ACC7(0,0,0))
+
+    difmix(OPS_ACC3(0,0,0)) = drhs(OPS_ACC8(0,0,0))*combo1(OPS_ACC1(0,0,0))/combo2(OPS_ACC2(0,0,0))
+    store7(OPS_ACC4(0,0,0)) = difmix(OPS_ACC3(0,0,0))
+
+END SUBROUTINE math_MD_kernel_eqW2
 
 SUBROUTINE math_MD_kernel_eqX(tdrmix,trun,yrhs,wmomix,tdrcco,ovwmol,tdifgb,ncotdr,jspec,ispec,ncotm1)
     use data_types
@@ -554,40 +562,27 @@ SUBROUTINE math_MD_kernel_eqAB(store2,trun,itndex,amolgb,ncpoly,ncpom1,ncenth,nc
 
 END SUBROUTINE math_MD_kernel_eqAB
 
-SUBROUTINE math_MD_kernel_eqAC(itndex,trun,tinthi,ntint,nspec)
+SUBROUTINE math_MD_kernel_eqAC(itndex,trun,tinthi,ntint,iindex,ipower,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: trun
     integer, dimension(1) :: itndex
 
-    integer, intent(in) ::  nspec
+    integer, intent(in) ::  iindex,ipower,ispec
 
     real(kind=8), dimension(ntinmx,nspcmx), intent(in) :: tinthi
     integer, dimension(nspcmx), intent(in) :: ntint
 
-    integer :: iindex,ispec,itint,ipower
+    integer :: itint
 
-    DO iindex = 1,nintmx
-        itndex(OPS_ACC_MD1(iindex,0,0,0)) = 0
+    itint = 1
+    DO WHILE (trun(OPS_ACC2(0,0,0)) > tinthi(itint,ispec) .and. itint < ntint(ispec))
+        itint = itint + 1
     END DO
 
-    DO ispec = 1, nspec
-
-        itint = 1
-
-        DO WHILE (trun(OPS_ACC2(0,0,0)) > tinthi(itint,ispec) .and. itint < ntint(ispec))
-            itint = itint + 1
-        END DO
-
-!       SET THE TEMPERATURE INDEX
-        iindex = 1 + (ispec-1)/nspimx
-        ipower = ispec - (iindex-1)*nspimx - 1
-
-        itndex(OPS_ACC_MD1(iindex,0,0,0)) = itndex(OPS_ACC_MD1(iindex,0,0,0))  &
+    itndex(OPS_ACC_MD1(iindex,0,0,0)) = itndex(OPS_ACC_MD1(iindex,0,0,0))  &
             +(itint-1)*ntbase**ipower
-
-    END DO
 
 END SUBROUTINE math_MD_kernel_eqAC
 
