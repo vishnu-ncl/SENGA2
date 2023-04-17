@@ -186,7 +186,7 @@ SUBROUTINE temper
 
     END DO
 
-!   ===================================================================
+!   =========================================================================
 
     call ops_par_loop(temper_kernel_eqF, "temper eq F", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_RW), &

@@ -46,7 +46,7 @@ SUBROUTINE tempin
 !   ==========
     integer :: rangexyz(6)
     real(kind=8) :: tempor,tupper,tlower
-    integer :: iindex,ipower
+    integer :: iindex,ipower,ispec
     logical :: fnconv
 
 !   BEGIN
@@ -85,28 +85,73 @@ SUBROUTINE tempin
 
     call ops_par_loop(tempin_kernel_main, "tempin kernel", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_WRITE), &
-                    ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_gbl(amascp, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
                     ops_arg_gbl(amasct, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
                     ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer", OPS_READ), &
-                    ops_arg_gbl(ncpom1, ntinmx*nspcmx, "integer", OPS_READ), &
                     ops_arg_gbl(ncenth, ntinmx*nspcmx, "integer", OPS_READ), &
                     ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
-                    ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
                     ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ), &
                     ops_arg_gbl(trin, 1, "real(8)", OPS_READ), &
                     ops_arg_gbl(nspec, 1, "integer", OPS_READ), &
                     ops_arg_gbl(iproc, 1, "integer", OPS_READ), &
                     ops_arg_idx())
+
+!   CONSTRUCT THE TEMPERATURE INTERVAL INDEX
+!   EVALUATE PRESSURE
+!   EVALUATE MIXTURE SPECIFIC HEAT CP
+    DO iindex = 1,nintmx
+        call ops_par_loop(set_zero_kernel_MD_int, "set zero", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
+                        ops_arg_gbl(iindex, 1, "integer", OPS_READ))
+    END DO
+
+    call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE))
+    call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_WRITE))
+
+    DO ispec = 1, nspec
+!       SET THE TEMPERATURE INTERVAL INDEX
+        iindex = 1 + (ispec-1)/nspimx
+        ipower = ispec - (iindex-1)*nspimx - 1
+
+        call ops_par_loop(temper_kernel_eqE, "temper eq E", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_RW), &
+                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW), &
+                        ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_gbl(amascp, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
+                        ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer", OPS_READ), &
+                        ops_arg_gbl(ncpom1, ntinmx*nspcmx, "integer", OPS_READ), &
+                        ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
+                        ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
+                        ops_arg_gbl(ipower, 1, "integer", OPS_READ))
+
+!       EVALUATE (DENSITY TIMES) MIXTURE GAS CONSTANT FOR PRESSURE
+        call ops_par_loop(temper_kernel_eqC, "temper eq C", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_RW), &
+                        ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+
+    END DO
+
+!   =========================================================================
+
+    call ops_par_loop(temper_kernel_eqF, "temper eq F", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_RW), &
+                    ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_WRITE), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ))
 
 !   =========================================================================
 

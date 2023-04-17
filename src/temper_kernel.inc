@@ -181,7 +181,7 @@ SUBROUTINE temper_kernel_eqE(transp, itndex, yrhs, trun, amascp, ncpoly, ncpom1,
     cpfory = amascp(ncpoly(itint,ispec),itint,ispec)
 
     DO icp = ncpom1(itint,ispec),1,-1
-          cpfory = cpfory*trun(OPS_ACC4(0,0,0)) + amascp(icp,itint,ispec)
+        cpfory = cpfory*trun(OPS_ACC4(0,0,0)) + amascp(icp,itint,ispec)
     END DO
 
     transp(OPS_ACC1(0,0,0)) = transp(OPS_ACC1(0,0,0)) + yrhs(OPS_ACC_MD3(ispec,0,0,0))*cpfory

@@ -1,10 +1,9 @@
-SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs,erhs,yrhs,amascp,amasct,ncpoly,ncpom1,ncenth,tinthi,rgspec,ntint,trin,nspec,iproc,idx)
+SUBROUTINE tempin_kernel_main(trun,drhs,urhs,vrhs,wrhs,erhs,yrhs,amascp,amasct,ncpoly,ncenth,tinthi,ntint,trin,nspec,iproc,idx)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: urhs,vrhs,wrhs,drhs,erhs,yrhs
-    real(kind=8), dimension(1) :: trun,store7,transp,prun
-    integer, dimension(1) :: itndex
+    real(kind=8), dimension(1), intent(in) :: drhs,urhs,vrhs,wrhs,erhs,yrhs
+    real(kind=8), dimension(1) :: trun
 
     real(kind=8), intent(in) :: trin
     integer, dimension(3), intent(in) :: idx    
@@ -12,9 +11,8 @@ SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs
     integer, intent(in) :: nspec,iproc
     
     real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amascp,amasct
-    integer, dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncpom1,ncenth
+    integer, dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncenth
     real(kind=8), dimension(ntinmx,nspcmx), intent(in) :: tinthi
-    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     integer, dimension(nspcmx), intent(in) :: ntint
 
 !   PARAMETERS
@@ -38,11 +36,11 @@ SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs
     kc = idx(3)
 
 !   KINETIC ENERGY TERM
-    ukuk = (urhs(OPS_ACC6(0,0,0))*urhs(OPS_ACC6(0,0,0))  &
-          +  vrhs(OPS_ACC7(0,0,0))*vrhs(OPS_ACC7(0,0,0))  &
-          +  wrhs(OPS_ACC8(0,0,0))*wrhs(OPS_ACC8(0,0,0)))/drhs(OPS_ACC9(0,0,0))
+    ukuk = (urhs(OPS_ACC3(0,0,0))*urhs(OPS_ACC3(0,0,0))  &
+          + vrhs(OPS_ACC4(0,0,0))*vrhs(OPS_ACC4(0,0,0))  &
+          + wrhs(OPS_ACC5(0,0,0))*wrhs(OPS_ACC5(0,0,0)))/drhs(OPS_ACC2(0,0,0))
 
-    tuk2me = 0.5_8*ukuk - erhs(OPS_ACC10(0,0,0))
+    tuk2me = 0.5_8*ukuk - erhs(OPS_ACC6(0,0,0))
 
 !   ===================================================================
 
@@ -80,13 +78,13 @@ SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs
         END DO
 
 !       CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
-        tcoeff(0) = tcoeff(0) + yrhs(OPS_ACC_MD11(ispec,0,0,0))*  &
+        tcoeff(0) = tcoeff(0) + yrhs(OPS_ACC_MD7(ispec,0,0,0))*  &
                                 amascp(ncenth(itint,ispec),itint,ispec)
         
-        tcoeff(1) = tcoeff(1) + yrhs(OPS_ACC_MD11(ispec,0,0,0))*amasct(1,itint,ispec)
+        tcoeff(1) = tcoeff(1) + yrhs(OPS_ACC_MD7(ispec,0,0,0))*amasct(1,itint,ispec)
         DO icp = 2, ncpoly(itint,ispec)
             tcoeff(icp) = tcoeff(icp)  &
-                        + yrhs(OPS_ACC_MD11(ispec,0,0,0))*amasct(icp,itint,ispec)
+                        + yrhs(OPS_ACC_MD7(ispec,0,0,0))*amasct(icp,itint,ispec)
         END DO
 
     END DO
@@ -134,13 +132,13 @@ SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs
             END DO
 
 !           CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
-            tcoeff(0) = tcoeff(0) + yrhs(OPS_ACC_MD11(ispec,0,0,0))*  &
+            tcoeff(0) = tcoeff(0) + yrhs(OPS_ACC_MD7(ispec,0,0,0))*  &
                                     amascp(ncenth(itint,ispec),itint,ispec)
-            tcoeff(1) = tcoeff(1) + yrhs(OPS_ACC_MD11(ispec,0,0,0))*amasct(1,itint,ispec)
+            tcoeff(1) = tcoeff(1) + yrhs(OPS_ACC_MD7(ispec,0,0,0))*amasct(1,itint,ispec)
 
             DO icp = 2, ncpoly(itint,ispec)
                 tcoeff(icp) = tcoeff(icp)  &
-                            + yrhs(OPS_ACC_MD11(ispec,0,0,0))*amasct(icp,itint,ispec)
+                            + yrhs(OPS_ACC_MD7(ispec,0,0,0))*amasct(icp,itint,ispec)
             END DO
 
         END DO
@@ -172,13 +170,13 @@ SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs
                 print *,'processor:',iproc
                 print *,'at point:',ic,jc,kc
                 print *,'with values:',tempor,tresid
-                print *,drhs(OPS_ACC9(0,0,0))
-                print *,urhs(OPS_ACC6(0,0,0))
-                print *,vrhs(OPS_ACC7(0,0,0))
-                print *,wrhs(OPS_ACC8(0,0,0))
-                print *,erhs(OPS_ACC10(0,0,0))
+                print *,drhs(OPS_ACC2(0,0,0))
+                print *,urhs(OPS_ACC3(0,0,0))
+                print *,vrhs(OPS_ACC4(0,0,0))
+                print *,wrhs(OPS_ACC5(0,0,0))
+                print *,erhs(OPS_ACC6(0,0,0))
                 DO ispec = 1, nspec
-                    print *,yrhs(OPS_ACC_MD11(ispec,0,0,0))
+                    print *,yrhs(OPS_ACC_MD7(ispec,0,0,0))
                 END DO
                 STOP
             END IF
@@ -216,12 +214,12 @@ SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs
             END DO
 
 !           CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
-            tcoeff(0) = tcoeff(0) + yrhs(OPS_ACC_MD11(ispec,0,0,0))*  &
+            tcoeff(0) = tcoeff(0) + yrhs(OPS_ACC_MD7(ispec,0,0,0))*  &
                                         amascp(ncenth(itint,ispec),itint,ispec)
-            tcoeff(1) = tcoeff(1) + yrhs(OPS_ACC_MD11(ispec,0,0,0))*amasct(1,itint,ispec)
+            tcoeff(1) = tcoeff(1) + yrhs(OPS_ACC_MD7(ispec,0,0,0))*amasct(1,itint,ispec)
             DO icp = 2, ncpoly(itint,ispec)
                 tcoeff(icp) = tcoeff(icp)  &
-                            + yrhs(OPS_ACC_MD11(ispec,0,0,0))*amasct(icp,itint,ispec)
+                            + yrhs(OPS_ACC_MD7(ispec,0,0,0))*amasct(icp,itint,ispec)
             END DO
 
         END DO
@@ -251,13 +249,13 @@ SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs
                     print *,'processor:',iproc
                     print *,'at point:',ic,jc,kc
                     print *,'with values:',tempor,tresid
-                    print *,drhs(OPS_ACC9(0,0,0))
-                    print *,urhs(OPS_ACC6(0,0,0))
-                    print *,vrhs(OPS_ACC7(0,0,0))
-                    print *,wrhs(OPS_ACC8(0,0,0))
-                    print *,erhs(OPS_ACC10(0,0,0))
+                    print *,drhs(OPS_ACC2(0,0,0))
+                    print *,urhs(OPS_ACC3(0,0,0))
+                    print *,vrhs(OPS_ACC4(0,0,0))
+                    print *,wrhs(OPS_ACC5(0,0,0))
+                    print *,erhs(OPS_ACC6(0,0,0))
                     DO ispec = 1, nspec
-                        print *,yrhs(OPS_ACC_MD11(ispec,0,0,0))
+                        print *,yrhs(OPS_ACC_MD7(ispec,0,0,0))
                     END DO
                     STOP
                 END IF
@@ -302,13 +300,13 @@ SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs
             END DO
 
 !           CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
-            tcoeff(0) = tcoeff(0) + yrhs(OPS_ACC_MD11(ispec,0,0,0))*  &
+            tcoeff(0) = tcoeff(0) + yrhs(OPS_ACC_MD7(ispec,0,0,0))*  &
                                     amascp(ncenth(itint,ispec),itint,ispec)
-            tcoeff(1) = tcoeff(1) + yrhs(OPS_ACC_MD11(ispec,0,0,0))*amasct(1,itint,ispec)
+            tcoeff(1) = tcoeff(1) + yrhs(OPS_ACC_MD7(ispec,0,0,0))*amasct(1,itint,ispec)
 
             DO icp = 2, ncpoly(itint,ispec)
                 tcoeff(icp) = tcoeff(icp)  &
-                            + yrhs(OPS_ACC_MD11(ispec,0,0,0))*amasct(icp,itint,ispec)
+                            + yrhs(OPS_ACC_MD7(ispec,0,0,0))*amasct(icp,itint,ispec)
             END DO
 
         END DO
@@ -348,58 +346,6 @@ SUBROUTINE tempin_kernel_main(trun,store7,transp,prun,itndex,urhs,vrhs,wrhs,drhs
 
 !   SET THE NEW TEMPERATURE
     trun(OPS_ACC1(0,0,0)) = tempor
-
-!   ===================================================================
-
-!   CONSTRUCT THE TEMPERATURE INTERVAL INDEX
-!   EVALUATE PRESSURE
-!   EVALUATE MIXTURE SPECIFIC HEAT CP
-    DO iindex = 1,nintmx
-        itndex(OPS_ACC_MD5(iindex,0,0,0)) = 0
-    END DO
-
-    store7(OPS_ACC2(0,0,0)) = 0.0_8
-    transp(OPS_ACC3(0,0,0)) = 0.0_8
-
-    DO ispec = 1, nspec
-
-        itint = 1
-        DO WHILE (trun(OPS_ACC1(0,0,0)) > tinthi(itint,ispec) .and. itint < ntint(ispec))
-            itint = itint + 1
-        END DO
-
-!       SET THE TEMPERATURE INDEX
-        iindex = 1 + (ispec-1)/nspimx
-        ipower = ispec - (iindex-1)*nspimx - 1
-        itndex(OPS_ACC_MD5(iindex,0,0,0)) = itndex(OPS_ACC_MD5(iindex,0,0,0))  &
-                                + (itint-1)*ntbase**ipower
-
-!       =================================================================
-
-!       EVALUATE MIXTURE SPECIFIC HEAT CP
-        cpfory = amascp(ncpoly(itint,ispec),itint,ispec)
-        DO icp = ncpom1(itint,ispec),1,-1
-            cpfory = cpfory*trun(OPS_ACC1(0,0,0)) + amascp(icp,itint,ispec)
-        END DO
-
-        transp(OPS_ACC3(0,0,0)) = transp(OPS_ACC3(0,0,0)) + yrhs(OPS_ACC_MD11(ispec,0,0,0))*cpfory
-
-!       =================================================================
-
-!       EVALUATE (DENSITY TIMES) MIXTURE GAS CONSTANT FOR PRESSURE
-        store7(OPS_ACC2(0,0,0)) = store7(OPS_ACC2(0,0,0))  &
-                         + yrhs(OPS_ACC_MD11(ispec,0,0,0))*rgspec(ispec)
-
-!   ===================================================================
-
-    END DO
-
-    transp(OPS_ACC3(0,0,0)) = transp(OPS_ACC3(0,0,0))/drhs(OPS_ACC9(0,0,0))
-
-!   ===================================================================
-
-!   EVALUATE PRESSURE
-    prun(OPS_ACC4(0,0,0)) = trun(OPS_ACC1(0,0,0))*store7(OPS_ACC2(0,0,0))
 
 !   ===================================================================
 
