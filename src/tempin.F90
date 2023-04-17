@@ -106,9 +106,8 @@ SUBROUTINE tempin
 !   EVALUATE PRESSURE
 !   EVALUATE MIXTURE SPECIFIC HEAT CP
     DO iindex = 1,nintmx
-        call ops_par_loop(set_zero_kernel_MD_int, "set zero", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
-                        ops_arg_gbl(iindex, 1, "integer", OPS_READ))
+        call ops_par_loop(set_zero_kernel_int, "set zero", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_WRITE))
     END DO
 
     call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
@@ -123,7 +122,7 @@ SUBROUTINE tempin
 
         call ops_par_loop(temper_kernel_eqE, "temper eq E", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_RW), &
-                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW), &
+                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_RW), &
                         ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(amascp, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
@@ -132,7 +131,6 @@ SUBROUTINE tempin
                         ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
                         ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ipower, 1, "integer", OPS_READ))
 
 !       EVALUATE (DENSITY TIMES) MIXTURE GAS CONSTANT FOR PRESSURE

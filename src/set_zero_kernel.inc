@@ -47,11 +47,21 @@ SUBROUTINE set_zero_kernel_MD_int(farray, ispec)
     implicit none
 
     integer, dimension(1) :: farray
-    integer :: ispec
+    integer, intent(in) :: ispec
 
     farray(OPS_ACC_MD1(ispec,0,0,0)) = 0
 
 END SUBROUTINE set_zero_kernel_MD_int
+
+SUBROUTINE set_zero_kernel_int(farray)
+    use data_types
+    implicit none
+
+    integer, dimension(1) :: farray
+
+    farray(OPS_ACC1(0,0,0)) = 0
+
+END SUBROUTINE set_zero_kernel_int
 
 !range x=1,1   y=1,nyglbl   z=1,nzglbl
 SUBROUTINE set_zero_kernel_MD_xdir(farray, ispec)
@@ -59,7 +69,7 @@ SUBROUTINE set_zero_kernel_MD_xdir(farray, ispec)
     implicit none
 
     real(kind=8), dimension(1) :: farray
-    integer :: ispec
+    integer, intent(in) :: ispec
 
     farray(OPS_ACC_MD1(ispec,0,0,0)) = 0.0_8
 
@@ -71,7 +81,7 @@ SUBROUTINE set_zero_kernel_MD_ydir(farray, ispec)
     implicit none
 
     real(kind=8), dimension(1) :: farray
-    integer :: ispec
+    integer, intent(in) :: ispec
 
     farray(OPS_ACC_MD1(ispec,0,0,0)) = 0.0_8
 
@@ -83,7 +93,7 @@ SUBROUTINE set_zero_kernel_MD_zdir(farray, ispec)
     implicit none
 
     real(kind=8), dimension(1) :: farray
-    integer :: ispec
+    integer, intent(in) :: ispec
 
     farray(OPS_ACC_MD1(ispec,0,0,0)) = 0.0_8
 

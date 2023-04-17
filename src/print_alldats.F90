@@ -195,10 +195,6 @@ SUBROUTINE print_alldats()
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
     call ops_fetch_dat_hdf5_file(d_rrte, trim(fname))
 
-!    fname = 'test_dir/itndex_timestep'//citime//pnxres
-!    call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
-!    call ops_fetch_dat_hdf5_file(d_itndex, trim(fname))
-
     fname = 'test_dir/yrhs_timestep'//citime//pnxres
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
     call ops_fetch_dat_hdf5_file(d_yrhs, trim(fname))

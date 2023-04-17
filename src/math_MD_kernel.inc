@@ -473,7 +473,7 @@ SUBROUTINE math_MD_kernel_eqY3(combo1,ctrans,combo2,yrhs,ovwmol,ispec)
 
 END SUBROUTINE math_MD_kernel_eqY3
 
-SUBROUTINE math_MD_kernel_eqZ(utmp,wtmp,trun,itndex,yrhs,amasch,ncpoly,ncpom1,ncenth,icoef1,icoef2,iindex,ispec)
+SUBROUTINE math_MD_kernel_eqZ(utmp,wtmp,trun,itndex,yrhs,amasch,ncpoly,ncpom1,ncenth,icoef1,icoef2,ispec)
     use data_types
     implicit none
 
@@ -481,7 +481,7 @@ SUBROUTINE math_MD_kernel_eqZ(utmp,wtmp,trun,itndex,yrhs,amasch,ncpoly,ncpom1,nc
     real(kind=8), dimension(1), intent(in) :: trun,yrhs
     integer, dimension(1), intent(in) :: itndex
 
-    integer, intent(in) ::  iindex,icoef1,icoef2,ispec
+    integer, intent(in) ::  icoef1,icoef2,ispec
 
     real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amasch
     integer, dimension(ntinmx,nspcmx), intent(in) :: ncpoly, ncpom1, ncenth
@@ -489,11 +489,13 @@ SUBROUTINE math_MD_kernel_eqZ(utmp,wtmp,trun,itndex,yrhs,amasch,ncpoly,ncpom1,nc
     real(kind=8) :: fornow
     integer :: itint,icp
 
-    itint = 1 + MOD(itndex(OPS_ACC_MD4(iindex,0,0,0)),icoef1)/icoef2
+    itint = 1 + MOD(itndex(OPS_ACC4(0,0,0)),icoef1)/icoef2
     fornow = amasch(ncpoly(itint,ispec),itint,ispec)
+
     DO icp = ncpom1(itint,ispec),1,-1
         fornow = fornow*trun(OPS_ACC3(0,0,0)) + amasch(icp,itint,ispec)
     END DO
+
     utmp(OPS_ACC1(0,0,0)) = amasch(ncenth(itint,ispec),itint,ispec)  &
                     + fornow*trun(OPS_ACC3(0,0,0))
 
@@ -521,28 +523,24 @@ SUBROUTINE math_MD_kernel_eqAA(store1,yrhs,ovwmol,scoef,ysmall,ydenom,ispec)
 
 END SUBROUTINE math_MD_kernel_eqAA
 
-SUBROUTINE math_MD_kernel_eqAB(store2,trun,itndex,amolgb,ncpoly,ncpom1,ncenth,ncenpy,diffmu,isspec,ispec,istep)
+SUBROUTINE math_MD_kernel_eqAB(store2,trun,itndex,amolgb,ncpoly,ncpom1,ncenth,ncenpy,diffmu,isspec,ispec,istep,ipower,icoef1,icoef2)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: store2
     real(kind=8), dimension(1), intent(in) :: trun
     integer, dimension(1), intent(in) :: itndex
-    integer, intent(in) ::  isspec,ispec,istep
+    integer, intent(in) ::  isspec,ispec,istep,ipower,icoef1,icoef2
 
     real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amolgb
     real(kind=8), dimension(nssmax,nstpmx), intent(in) :: diffmu
     integer, dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncpom1,ncenth,ncenpy
 
-    integer :: iindex,ipower,icoef2,icoef1,itint,icp
+    integer :: itint,icp
     real(kind=8) :: gibbsp
 
 !   LOCATE THE TEMPERATURE IN AN INTERVAL
-    iindex = 1 + (ispec-1)/nspimx
-    ipower = ispec - (iindex-1)*nspimx - 1
-    icoef2 = ntbase**ipower
-    icoef1 = icoef2*ntbase
-    itint = 1 + MOD(itndex(OPS_ACC_MD3(iindex,0,0,0)),icoef1)/icoef2
+    itint = 1 + MOD(itndex(OPS_ACC3(0,0,0)),icoef1)/icoef2
 
 !   CONSTRUCT GIBBS FUNCTION FROM ITS POLYNOMIAL COEFFICIENTS
     gibbsp = amolgb(ncpoly(itint,ispec),itint,ispec)
@@ -562,14 +560,14 @@ SUBROUTINE math_MD_kernel_eqAB(store2,trun,itndex,amolgb,ncpoly,ncpom1,ncenth,nc
 
 END SUBROUTINE math_MD_kernel_eqAB
 
-SUBROUTINE math_MD_kernel_eqAC(itndex,trun,tinthi,ntint,iindex,ipower,ispec)
+SUBROUTINE math_MD_kernel_eqAC(itndex,trun,tinthi,ntint,ipower,ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: trun
     integer, dimension(1) :: itndex
 
-    integer, intent(in) ::  iindex,ipower,ispec
+    integer, intent(in) ::  ipower,ispec
 
     real(kind=8), dimension(ntinmx,nspcmx), intent(in) :: tinthi
     integer, dimension(nspcmx), intent(in) :: ntint
@@ -581,12 +579,11 @@ SUBROUTINE math_MD_kernel_eqAC(itndex,trun,tinthi,ntint,iindex,ipower,ispec)
         itint = itint + 1
     END DO
 
-    itndex(OPS_ACC_MD1(iindex,0,0,0)) = itndex(OPS_ACC_MD1(iindex,0,0,0))  &
-            +(itint-1)*ntbase**ipower
+    itndex(OPS_ACC1(0,0,0)) = itndex(OPS_ACC1(0,0,0)) + (itint-1)*ntbase**ipower
 
 END SUBROUTINE math_MD_kernel_eqAC
 
-SUBROUTINE math_MD_kernel_eqAD(erun,trun,itndex,yrun,amasch,ncpoly,ncpom1,ncenth,ispec,iindex,ipower,icoef1,icoef2)
+SUBROUTINE math_MD_kernel_eqAD(erun,trun,itndex,yrun,amasch,ncpoly,ncpom1,ncenth,ipower,icoef1,icoef2,ispec)
     use data_types
     implicit none
 
@@ -594,7 +591,7 @@ SUBROUTINE math_MD_kernel_eqAD(erun,trun,itndex,yrun,amasch,ncpoly,ncpom1,ncenth
     real(kind=8), dimension(1) :: erun
     integer, dimension(1), intent(in) :: itndex
     
-    integer, intent(in) ::  ispec,iindex,ipower,icoef1,icoef2
+    integer, intent(in) ::  ispec,ipower,icoef1,icoef2
 
     real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amasch
     integer, dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncpom1,ncenth
@@ -602,7 +599,7 @@ SUBROUTINE math_MD_kernel_eqAD(erun,trun,itndex,yrun,amasch,ncpoly,ncpom1,ncenth
     real(kind=8) :: fornow
     integer :: icp,itint
 
-    itint = 1 + MOD(itndex(OPS_ACC_MD3(iindex,0,0,0)),icoef1)/icoef2
+    itint = 1 + MOD(itndex(OPS_ACC3(0,0,0)),icoef1)/icoef2
     fornow = amasch(ncpoly(itint,ispec),itint,ispec)
 
     DO icp = ncpom1(itint,ispec),1,-1

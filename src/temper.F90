@@ -112,13 +112,12 @@ SUBROUTINE temper
         call ops_par_loop(temper_kernel_eqB, "temper eq B", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_tcoeff, 6, s3d_000, "real(8)", OPS_RW), &
                         ops_arg_dat(d_tderiv, 5, s3d_000, "real(8)", OPS_RW), &
-                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
+                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_WRITE), &
                         ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(amascp, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
                         ops_arg_gbl(amasct, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
                         ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer", OPS_READ), &
                         ops_arg_gbl(ncenth, ntinmx*nspcmx, "integer", OPS_READ), &
-                        ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
                         ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
                         ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
@@ -157,9 +156,8 @@ SUBROUTINE temper
 !   FOR ALL SPECIES RELOCATE TEMPERATURE IN AN INTERVAL
 !   EVALUATE MIXTURE SPECIFIC HEAT CP
     DO iindex = 1,nintmx
-        call ops_par_loop(set_zero_kernel_MD_int, "set zero", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
-                        ops_arg_gbl(iindex, 1, "integer", OPS_READ))
+        call ops_par_loop(set_zero_kernel_int, "set zero", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_WRITE))
     END DO
 
     call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
@@ -172,7 +170,7 @@ SUBROUTINE temper
 
         call ops_par_loop(temper_kernel_eqE, "temper eq E", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_RW), &
-                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW), &
+                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_RW), &
                         ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(amascp, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
@@ -181,7 +179,6 @@ SUBROUTINE temper
                         ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
                         ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ipower, 1, "integer", OPS_READ))
 
     END DO

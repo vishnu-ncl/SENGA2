@@ -1116,9 +1116,8 @@ SUBROUTINE indata
 !   BIGGER SIZE ARRAY
     rangexyz = (/1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz/)
     DO iindex = 1,nintmx
-        call ops_par_loop(set_zero_kernel_MD_int, "set zero", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
-                        ops_arg_gbl(iindex, 1, "integer", OPS_READ))
+        call ops_par_loop(set_zero_kernel_int, "set zero", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_WRITE))
     END DO
 
     DO ispec = 1, nspec
@@ -1127,11 +1126,10 @@ SUBROUTINE indata
         ipower = ispec - (iindex-1)*nspimx - 1        
 
         call ops_par_loop(math_MD_kernel_eqAC, "INTERNAL ENERGY FIELD", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_RW), &
+                    ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_RW), &
                     ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
                     ops_arg_gbl(ntint, nspcmx, "integer", OPS_READ), &
-                    ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
                     ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
                     ops_arg_gbl(ispec, 1, "integer", OPS_READ))
     END DO
@@ -1155,17 +1153,16 @@ SUBROUTINE indata
         call ops_par_loop(math_MD_kernel_eqAD, "INITIALISE INTERNAL ENERGY", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_READ), &
+                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_READ), &
                         ops_arg_dat(d_yrun, 2, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(amasch, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
                         ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer", OPS_READ), &
                         ops_arg_gbl(ncpom1, ntinmx*nspcmx, "integer", OPS_READ), &
                         ops_arg_gbl(ncenth, ntinmx*nspcmx, "integer", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
                         ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(icoef2, 1, "integer", OPS_READ))
+                        ops_arg_gbl(icoef2, 1, "integer", OPS_READ)
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
     END DO
 

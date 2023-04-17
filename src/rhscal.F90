@@ -1170,7 +1170,7 @@ SUBROUTINE rhscal
                         ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_RW), &
                         ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_READ), &
+                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_READ), &
                         ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(amasch, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
                         ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer", OPS_READ), &
@@ -1178,7 +1178,6 @@ SUBROUTINE rhscal
                         ops_arg_gbl(ncenth, ntinmx*nspcmx, "integer", OPS_READ), &
                         ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
                         ops_arg_gbl(icoef2, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(iindex, 1, "integer", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
 !                                                         STORE1,2,3 = DYDX,Y,Z

@@ -444,12 +444,18 @@ SUBROUTINE chrate
 !               GET THE SPECIES NUMBER FROM THE STEP SPECIES-LIST
                 ispec = nsspec(isspec,istep)
 
+!               LOCATE THE TEMPERATURE IN AN INTERVAL
+                iindex = 1 + (ispec-1)/nspimx
+                ipower = ispec - (iindex-1)*nspimx - 1
+                icoef2 = ntbase**ipower
+                icoef1 = icoef2*ntbase
+
 !               EVALUATE GIBBS FUNCTION FOR EACH SPECIES
                 rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
                 call ops_par_loop(math_MD_kernel_eqAB, "EVALUATE GIBBS FUNCTION FOR EACH SPECIES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
-                                ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_READ), &
+                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_READ), &
                                 ops_arg_gbl(amolgb, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
                                 ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer", OPS_READ), &
                                 ops_arg_gbl(ncpom1, ntinmx*nspcmx, "integer", OPS_READ), &
@@ -458,9 +464,13 @@ SUBROUTINE chrate
                                 ops_arg_gbl(diffmu, nssmax*nstpmx, "real(8)", OPS_READ), &
                                 ops_arg_gbl(isspec, 1, "integer", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(istep, 1, "integer", OPS_READ))
+                                ops_arg_gbl(istep, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
+                                ops_arg_gbl(icoef2, 1, "integer", OPS_READ))
 
             END DO
+
 !           STEP SPECIES-LIST
 !                                           STORE1 = FORWARD REACTION RATE
 !                                           STORE2 = LN(BACKWARD RATE CONSTANT)

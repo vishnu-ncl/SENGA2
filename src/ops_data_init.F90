@@ -13,7 +13,7 @@ SUBROUTINE ops_data_init()
     real(8), dimension(:), allocatable :: temp_real_null
     integer, dimension(:), allocatable :: temp_int_null
 
-    INTEGER :: ispec
+    INTEGER :: ispec,iindex
     INTEGER :: rangexyz(6)
 
     INTEGER :: halo_idx
@@ -291,7 +291,9 @@ SUBROUTINE ops_data_init()
     d_size = (/nxglbl, nyglbl, nzglbl/)
     d_m = (/-nhalox,-nhaloy,-nhaloz/)
     d_p = (/nhalox,nhaloy,nhaloz/)
-    call ops_decl_dat(senga_grid, nintmx, d_size, d_base, d_m, d_p, temp_int_null, d_itndex, "integer", "ITNDEX")
+    DO iindex = 1,nintmx
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_int_null, d_itndex(iindex), "integer", "ITNDEX")
+    END DO
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_yrhs, "real(8)", "YRHS")
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_ctrans, "real(8)", "CTRANS")
 
@@ -1424,10 +1426,9 @@ SUBROUTINE ops_data_init()
     END DO
 
     rangexyz=(/1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz/)
-    DO ispec = 1,nintmx
-        call ops_par_loop(set_zero_kernel_MD_int, "set_zero_multidim", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_itndex, 2, s3d_000, "integer", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+    DO iindex = 1,nintmx
+        call ops_par_loop(set_zero_kernel_int, "set_zero_multidim", senga_grid, 3, rangexyz, &
+                          ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_WRITE))
     END DO
     DO ispec = 1,nspcmx
         call ops_par_loop(set_zero_kernel_MD, "set_zero_multidim", senga_grid, 3, rangexyz, &

@@ -1,6 +1,9 @@
 MODULE com_ops_senga
 
     use OPS_Fortran_Reference
+    use OPS_CONSTANTS
+    
+    use, intrinsic :: ISO_C_BINDING
     
     implicit none
 
@@ -36,7 +39,7 @@ MODULE com_ops_senga
  
     TYPE(ops_dat) :: d_utmp, d_vtmp, d_wtmp, d_prun, d_trun, d_transp, d_store7
 
-    TYPE(ops_dat) :: d_itndex
+    TYPE(ops_dat) :: d_itndex(nintmx)
     TYPE(ops_dat) :: d_yrhs, d_yrun, d_yerr, d_rate, d_rrte
     TYPE(ops_dat) :: d_tcoeff, d_tderiv;
     TYPE(ops_dat) :: d_ctrans

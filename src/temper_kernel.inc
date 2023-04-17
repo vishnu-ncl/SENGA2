@@ -18,14 +18,14 @@ SUBROUTINE temper_kernel_eqA(tcoeff, drhs, urhs, vrhs, wrhs, erhs)
 
 END SUBROUTINE temper_kernel_eqA
 
-SUBROUTINE temper_kernel_eqB(tcoeff, tderiv, itndex, yrhs, amascp, amasct, ncpoly, ncenth, iindex, ipower, icoef1, icoef2, ispec)
+SUBROUTINE temper_kernel_eqB(tcoeff, tderiv, itndex, yrhs, amascp, amasct, ncpoly, ncenth, ipower, icoef1, icoef2, ispec)
     use data_types
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: yrhs
     real(kind=8), dimension(1) :: tcoeff, tderiv
     integer, dimension(1), intent(in) :: itndex
-    integer, intent(in) :: iindex, ipower, icoef1, icoef2, ispec
+    integer, intent(in) :: ipower, icoef1, icoef2, ispec
 
     real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amascp,amasct
     integer, dimension(ntinmx,nspcmx), intent(in) :: ncpoly, ncenth
@@ -33,7 +33,7 @@ SUBROUTINE temper_kernel_eqB(tcoeff, tderiv, itndex, yrhs, amascp, amasct, ncpol
     integer :: itint, icp
 
 !   LOCATE TEMPERATURE IN AN INTERVAL
-    itint = 1 + MOD(itndex(OPS_ACC_MD3(iindex,0,0,0)),icoef1)/icoef2
+    itint = 1 + MOD(itndex(OPS_ACC3(0,0,0)),icoef1)/icoef2
 
 !   CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
     tcoeff(OPS_ACC_MD1(1,0,0,0)) = tcoeff(OPS_ACC_MD1(1,0,0,0)) + yrhs(OPS_ACC_MD4(ispec,0,0,0))* &
@@ -147,14 +147,14 @@ SUBROUTINE temper_kernel_eqD(trun, tcoeff, tderiv, drhs, urhs, vrhs, wrhs, erhs,
 
 END SUBROUTINE temper_kernel_eqD
 
-SUBROUTINE temper_kernel_eqE(transp, itndex, yrhs, trun, amascp, ncpoly, ncpom1, tinthi, ntint, ispec, iindex, ipower)
+SUBROUTINE temper_kernel_eqE(transp, itndex, yrhs, trun, amascp, ncpoly, ncpom1, tinthi, ntint, ispec, ipower)
     use data_types
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: yrhs, trun
     real(kind=8), dimension(1) :: transp
     integer, dimension(1) :: itndex
-    integer, intent(in) :: ispec, iindex, ipower
+    integer, intent(in) :: ispec, ipower
 
     real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amascp
     integer, dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncpom1
@@ -172,7 +172,7 @@ SUBROUTINE temper_kernel_eqE(transp, itndex, yrhs, trun, amascp, ncpoly, ncpom1,
         itint = itint + 1
     END DO
 
-    itndex(OPS_ACC_MD2(iindex,0,0,0)) = itndex(OPS_ACC_MD2(iindex,0,0,0))  &
+    itndex(OPS_ACC2(0,0,0)) = itndex(OPS_ACC2(0,0,0))  &
                                     +(itint-1)*ntbase**ipower
 
 !   =================================================================
