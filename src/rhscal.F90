@@ -441,11 +441,11 @@ SUBROUTINE rhscal
                         ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(tdifgb, 1, "real(8)", OPS_READ))
 
-        call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz, &
+        call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_combo1, 1, s3d_000, "real(8)", OPS_WRITE))
-        call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz, &
+        call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_combo2, 1, s3d_000, "real(8)", OPS_WRITE))
-        call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz, &
+        call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_combo3, 1, s3d_000, "real(8)", OPS_WRITE))
 
 !       CONDUCTIVITY FOR EACH SPECIES
@@ -622,12 +622,11 @@ SUBROUTINE rhscal
 !   -----------------------------
     call chrate
 !---UA
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     DO ispec = 1,nspec
-        rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-        call ops_par_loop(math_MD_kernel_eqB, "A_multidim = B_multidim", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_rrte, 2, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+        call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_rrte(ispec), 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_READ))
 
     END DO
 !---end-UA
@@ -638,67 +637,61 @@ SUBROUTINE rhscal
 !   -----------------------------
 
 !   X-DIRECTION
-    IF(fxlcnv)THEN
+    IF(fxlcnv) THEN
+        rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
         DO ispec = 1,nspec
-            rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(boundary_kernel_reaction_xdir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_READ), &
+            call ops_par_loop(copy_kernel_xdir, "copy", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_ratexl(ispec), 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_READ))
 
         END DO
     END IF
-    IF(fxrcnv)THEN
+    IF(fxrcnv) THEN
+        rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
         DO ispec = 1,nspec
-            rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(boundary_kernel_reaction_xdir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_READ), &
+            call ops_par_loop(copy_kernel_xdir, "copy", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_ratexr(ispec), 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_READ))
 
         END DO
     END IF
 
 !   Y-DIRECTION
-    IF(fylcnv)THEN
+    IF(fylcnv) THEN
+        rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
         DO ispec = 1,nspec
-            rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
-            call ops_par_loop(boundary_kernel_reaction_ydir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_READ), &
+            call ops_par_loop(copy_kernel_ydir, "copy", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_rateyl(ispec), 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_READ))
 
         END DO
     END IF
-    IF(fyrcnv)THEN
+    IF(fyrcnv) THEN
+        rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
         DO ispec = 1,nspec
-            rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
-            call ops_par_loop(boundary_kernel_reaction_ydir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_READ), &
+            call ops_par_loop(copy_kernel_ydir, "copy", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_rateyr(ispec), 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_READ))
 
         END DO
     END IF
 
 !   Z-DIRECTION
-    IF(fzlcnv)THEN
+    IF(fzlcnv) THEN
+        rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
         DO ispec = 1,nspec
-            rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
-            call ops_par_loop(boundary_kernel_reaction_zdir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_READ), &
+            call ops_par_loop(copy_kernel_zdir, "copy", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_ratezl(ispec), 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_READ))
 
         END DO
     END IF
-    IF(fzrcnv)THEN
+    IF(fzrcnv) THEN
+        rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
         DO ispec = 1,nspec
-            rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
-            call ops_par_loop(boundary_kernel_reaction_zdir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_READ), &
+            call ops_par_loop(copy_kernel_zdir, "copy", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_ratezr(ispec), 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_READ))
 
         END DO
     END IF
@@ -835,8 +828,8 @@ SUBROUTINE rhscal
   
 !       COLLECT Y SOURCE TERMS IN RATE FOR NOW
         rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-        call ops_par_loop(math_MD_kernel_eqI, "A_multidim = A_multidim - half*B_multidim*C", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+        call ops_par_loop(math_MD_kernel_eqI, "A = A - half*B_multidim*C", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_divm, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
@@ -885,12 +878,11 @@ SUBROUTINE rhscal
   
 !       COLLECT DIV RHO U Y IN RATE FOR NOW
         rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-        call ops_par_loop(math_MD_kernel_eqH, "A_multidim = A_multidim - half*(B+C+D)", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+        call ops_par_loop(math_MD_kernel_eqH, "A = A - half*(B+C+D)", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
 !                                                  RATE = Y SOURCE TERMS
 !                                                           VTMP = DIV CORR VEL
@@ -998,14 +990,13 @@ SUBROUTINE rhscal
 !       COLLECT HALF RHO U.DEL Y IN RATE FOR NOW
         rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
         call ops_par_loop(math_MD_kernel_eqJ, "A_multidim = A_multidim - half*(B*C+D*E+F*G)", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                        ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                        ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_READ))
 
 !       -------------------------------------
 !       Y-EQUATION: CONVECTIVE TERMS COMPLETE
@@ -1049,9 +1040,9 @@ SUBROUTINE rhscal
 !           MASS DIFFUSIVITY FOR EACH SPECIES
 !           RELATIVE TO CURRENT SPECIES
             rangexyz = (/1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz/)
-            call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz, &
+            call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_combo1, 1, s3d_000, "real(8)", OPS_WRITE))
-            call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz, &
+            call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_combo2, 1, s3d_000, "real(8)", OPS_WRITE))
 
             DO jspec = 1, nspec
@@ -1286,15 +1277,14 @@ SUBROUTINE rhscal
  
         rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
         call ops_par_loop(math_MD_kernel_eqL, "multiple math equations", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                        ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
@@ -1391,79 +1381,73 @@ SUBROUTINE rhscal
         IF(fxldfw) THEN
             rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fxldfw, "HEAT FLUX: Enthalpy fxldfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store1, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
-                            ops_arg_gbl(acbcxl, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_gbl(acbcxl, ncbcsz, "real(8)", OPS_READ))
 
         END IF
         IF(fxrdfw) THEN
             rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fxrdfw, "HEAT FLUX: Enthalpy fxrdfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store1, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
-                            ops_arg_gbl(acbcxr, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_gbl(acbcxr, ncbcsz, "real(8)", OPS_READ))
 
         END IF
         IF(fyldfw) THEN
             rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fyldfw, "HEAT FLUX: Enthalpy fyldfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store2, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
-                            ops_arg_gbl(acbcyl, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_gbl(acbcyl, ncbcsz, "real(8)", OPS_READ))
 
         END IF
         IF(fyrdfw) THEN
             rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fyrdfw, "HEAT FLUX: Enthalpy fyrdfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store2, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
-                            ops_arg_gbl(acbcyr, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_gbl(acbcyr, ncbcsz, "real(8)", OPS_READ))
 
         END IF
         IF(fzldfw) THEN
             rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fzldfw, "HEAT FLUX: Enthalpy fzldfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store3, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
-                            ops_arg_gbl(acbczl, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_gbl(acbczl, ncbcsz, "real(8)", OPS_READ))
 
         END IF
         IF(fzrdfw) THEN
             rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fzrdfw, "HEAT FLUX: Enthalpy fzrdfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store3, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
-                            ops_arg_gbl(acbczr, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_gbl(acbczr, ncbcsz, "real(8)", OPS_READ))
 
         END IF
   
@@ -1507,13 +1491,12 @@ SUBROUTINE rhscal
  
         rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
         call ops_par_loop(math_MD_kernel_eqM, "multiple math equations", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                        ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ))
 
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
@@ -1600,15 +1583,14 @@ SUBROUTINE rhscal
 
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
             call ops_par_loop(math_MD_kernel_eqL, "multiple math equations", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                        ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_wd1x, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_wd1y, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_dat(d_wd1z, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))            
+                        ops_arg_dat(d_wd1z, 1, s3d_000, "real(8)", OPS_READ))
  
 !           BOUNDARY CONDITIONS
 !           BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
@@ -1687,79 +1669,73 @@ SUBROUTINE rhscal
             IF(fxldfw) THEN
                 rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fxldfw, "HEAT FLUX: Enthalpy fxldfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1x, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
-                            ops_arg_gbl(acbcxl, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_gbl(acbcxl, ncbcsz, "real(8)", OPS_READ))
 
             END IF
             IF(fxrdfw) THEN
                 rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fxrdfw, "HEAT FLUX: Enthalpy fxrdfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1x, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
-                            ops_arg_gbl(acbcxr, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_gbl(acbcxr, ncbcsz, "real(8)", OPS_READ))
 
             END IF
             IF(fyldfw) THEN
                 rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fyldfw, "HEAT FLUX: Enthalpy fyldfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1y, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
-                            ops_arg_gbl(acbcyl, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_gbl(acbcyl, ncbcsz, "real(8)", OPS_READ))
 
             END IF
             IF(fyrdfw) THEN
                 rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fyrdfw, "HEAT FLUX: Enthalpy fyrdfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1y, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
-                            ops_arg_gbl(acbcyr, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_gbl(acbcyr, ncbcsz, "real(8)", OPS_READ))
 
             END IF
             IF(fzldfw) THEN
                 rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fzldfw, "HEAT FLUX: Enthalpy fzldfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1z, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
-                            ops_arg_gbl(acbczl, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_gbl(acbczl, ncbcsz, "real(8)", OPS_READ))
 
             END IF
             IF(fzrdfw) THEN
                 rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fzrdfw, "HEAT FLUX: Enthalpy fzrdfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1z, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
-                            ops_arg_gbl(acbczr, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_gbl(acbczr, ncbcsz, "real(8)", OPS_READ))
 
             END IF
     
@@ -1785,13 +1761,12 @@ SUBROUTINE rhscal
 
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
             call ops_par_loop(math_MD_kernel_eqM, "multiple math equations", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                        ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_wd2x, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_wd2y, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_wd2z, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))            
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ))
 
 !           BOUNDARY CONDITIONS
 !           BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
@@ -1877,15 +1852,14 @@ SUBROUTINE rhscal
 
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
             call ops_par_loop(math_MD_kernel_eqL, "multiple math equations", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                        ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_pd1x, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_pd1y, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_dat(d_pd1z, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                        ops_arg_dat(d_pd1z, 1, s3d_000, "real(8)", OPS_READ))
 
 !           BOUNDARY CONDITIONS
 !           BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
@@ -1963,79 +1937,73 @@ SUBROUTINE rhscal
             IF(fxldfw) THEN
                 rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fxldfw, "HEAT FLUX: Enthalpy fxldfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1x, 1, s3d_p100_to_p400_x, "real(8)", OPS_READ), &
-                            ops_arg_gbl(acbcxl, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_gbl(acbcxl, ncbcsz, "real(8)", OPS_READ))
 
             END IF
             IF(fxrdfw) THEN
                 rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fxrdfw, "HEAT FLUX: Enthalpy fxrdfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1x, 1, s3d_m100_to_m400_x, "real(8)", OPS_READ), &
-                            ops_arg_gbl(acbcxr, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_gbl(acbcxr, ncbcsz, "real(8)", OPS_READ))
 
             END IF
             IF(fyldfw) THEN
                 rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fyldfw, "HEAT FLUX: Enthalpy fyldfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1y, 1, s3d_p010_to_p040_y, "real(8)", OPS_READ), &
-                            ops_arg_gbl(acbcyl, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_gbl(acbcyl, ncbcsz, "real(8)", OPS_READ))
 
             END IF
             IF(fyrdfw) THEN
                 rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fyrdfw, "HEAT FLUX: Enthalpy fyrdfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1y, 1, s3d_m010_to_m040_y, "real(8)", OPS_READ), &
-                            ops_arg_gbl(acbcyr, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_gbl(acbcyr, ncbcsz, "real(8)", OPS_READ))
 
             END IF
             IF(fzldfw) THEN
                 rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fzldfw, "HEAT FLUX: Enthalpy fzldfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1z, 1, s3d_p001_to_p004_z, "real(8)", OPS_READ), &
-                            ops_arg_gbl(acbczl, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_gbl(acbczl, ncbcsz, "real(8)", OPS_READ))
 
             END IF
             IF(fzrdfw) THEN
                 rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
             call ops_par_loop(heat_flux_kernel_enthalpy2_fzrdfw, "HEAT FLUX: Enthalpy fzrdfw", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store7, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1z, 1, s3d_m001_to_m004_z, "real(8)", OPS_READ), &
-                            ops_arg_gbl(acbczr, ncbcsz, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_gbl(acbczr, ncbcsz, "real(8)", OPS_READ))
 
             END IF
     
@@ -2061,13 +2029,12 @@ SUBROUTINE rhscal
 
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
             call ops_par_loop(math_MD_kernel_eqM, "multiple math equations", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                        ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_pd2x, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_pd2y, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_pd2z, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ))
  
 !           BOUNDARY CONDITIONS
 !           BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
@@ -2152,15 +2119,14 @@ SUBROUTINE rhscal
 
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
             call ops_par_loop(math_MD_kernel_eqL, "multiple math equations", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                        ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_td1x, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_td1y, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_dat(d_td1z, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                        ops_arg_dat(d_td1z, 1, s3d_000, "real(8)", OPS_READ))
 
 !           SUBTRACT DUFOUR EFFECT TERMS TO RESTORE SPECIES ENTHALPY
 !           RSC 08-JUN-2015 BUG FIX
@@ -2255,7 +2221,7 @@ SUBROUTINE rhscal
             IF(fxldfw) THEN
                 rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
                 call ops_par_loop(heat_flux_kernel_enthalpy_fxldfw, "HEAT FLUX: Enthalpy fxldfw", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                                ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2271,7 +2237,7 @@ SUBROUTINE rhscal
             IF(fxrdfw) THEN
                 rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
                 call ops_par_loop(heat_flux_kernel_enthalpy_fxrdfw, "HEAT FLUX: Enthalpy fxrdfw", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                                ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2287,7 +2253,7 @@ SUBROUTINE rhscal
             IF(fyldfw) THEN
                 rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
                 call ops_par_loop(heat_flux_kernel_enthalpy_fyldfw, "HEAT FLUX: Enthalpy fyldfw", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                                ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2303,7 +2269,7 @@ SUBROUTINE rhscal
             IF(fyrdfw) THEN
                 rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
                 call ops_par_loop(heat_flux_kernel_enthalpy_fyrdfw, "HEAT FLUX: Enthalpy fyrdfw", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                                ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2319,7 +2285,7 @@ SUBROUTINE rhscal
             IF(fzldfw) THEN
                 rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
                 call ops_par_loop(heat_flux_kernel_enthalpy_fzldfw, "HEAT FLUX: Enthalpy fzldfw", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                                ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2335,7 +2301,7 @@ SUBROUTINE rhscal
             IF(fzrdfw) THEN
                 rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
                 call ops_par_loop(heat_flux_kernel_enthalpy_fzrdfw, "HEAT FLUX: Enthalpy fzrdfw", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                                ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2538,13 +2504,12 @@ SUBROUTINE rhscal
 
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
             call ops_par_loop(math_MD_kernel_eqM, "multiple math equations", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                        ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_td2x, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_td2y, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_td2z, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ))
  
 !           BOUNDARY CONDITIONS
 !           BC IN X: DIFFUSIVE TERMS (HEAT FLUX) ZERO ON END POINTS
@@ -2679,11 +2644,11 @@ SUBROUTINE rhscal
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
         END DO
 
-        call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz, &
+        call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_combo1, 1, s3d_000, "real(8)", OPS_WRITE))
 
         DO ispec = 1, nspec
-            call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz, &
+            call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_combo2, 1, s3d_000, "real(8)", OPS_WRITE))
 
             DO jspec = 1, nspec
@@ -2751,9 +2716,9 @@ SUBROUTINE rhscal
 !       DIV RHO VCORR Y
 !       STORE Y SOURCE TERMS IN YRHS
         rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-        call ops_par_loop(math_MD_kernel_eqK, "A_multidim = B_multidim - A_multidim*C - D*E - F*G - H*I", senga_grid, 3, rangexyz, &
+        call ops_par_loop(math_MD_kernel_eqK, "A_multidim = B - A_multidim*C - D*E - F*G - H*I", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_RW), &
-                        ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_ucor, 1, s3d_000, "real(8)", OPS_READ), &

@@ -40,7 +40,7 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_utmp, d_vtmp, d_wtmp, d_prun, d_trun, d_transp, d_store7
 
     TYPE(ops_dat) :: d_itndex(nintmx)
-    TYPE(ops_dat) :: d_yrhs, d_yrun, d_yerr, d_rate, d_rrte
+    TYPE(ops_dat) :: d_yrhs, d_yrun(nspcmx), d_yerr(nspcmx), d_rate(nspcmx), d_rrte(nspcmx)
     TYPE(ops_dat) :: d_ctrans(nspcmx)
     TYPE(ops_dat) :: d_tcoeff, d_tderiv;
 

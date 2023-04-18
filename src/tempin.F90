@@ -106,13 +106,13 @@ SUBROUTINE tempin
 !   EVALUATE PRESSURE
 !   EVALUATE MIXTURE SPECIFIC HEAT CP
     DO iindex = 1,nintmx
-        call ops_par_loop(set_zero_kernel_int, "set zero", senga_grid, 3, rangexyz,  &
+        call ops_par_loop(set_zero_kernel_int, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_WRITE))
     END DO
 
-    call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_WRITE))
 
     DO ispec = 1, nspec

@@ -16,6 +16,8 @@ SUBROUTINE ops_data_init()
     INTEGER :: ispec,iindex
     INTEGER :: rangexyz(6)
 
+    character(len=20) buf
+
     INTEGER :: halo_idx
     INTEGER :: iter_size(3), base_from(3), base_to(3), dir_from(3), dir_to(3)
 
@@ -283,73 +285,110 @@ SUBROUTINE ops_data_init()
     d_size = (/nxglbl, nyglbl, nzglbl/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
-    call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_yrun, "real(8)", "YRUN")
-    call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_yerr, "real(8)", "YERR")
-    call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_rate, "real(8)", "RATE")
-    call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_rrte, "real(8)", "RRTE")
+    DO ispec = 1,nspcmx
+        write(buf,"(A4,I2)") "YRUN",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_yrun(ispec), "real(8)", buf)
+        write(buf,"(A4,I2)") "YERR",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_yerr(ispec), "real(8)", buf)
+        write(buf,"(A4,I2)") "RATE",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_rate(ispec), "real(8)", buf)
+        write(buf,"(A4,I2)") "RRTE",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_rrte(ispec), "real(8)", buf)
+    END DO
 
     d_size = (/nxglbl, nyglbl, nzglbl/)
     d_m = (/-nhalox,-nhaloy,-nhaloz/)
     d_p = (/nhalox,nhaloy,nhaloz/)
     DO iindex = 1,nintmx
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_int_null, d_itndex(iindex), "integer", "ITNDEX")
+        write(buf,"(A6,I2)") "ITNDEX",iindex
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_int_null, d_itndex(iindex), "integer", buf)
     END DO
     call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_yrhs, "real(8)", "YRHS")
 
     DO ispec = 1,nspcmx
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_ctrans(ispec), "real(8)", "CTRANS")
+        write(buf,"(A6,I2)") "CTRANS",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_ctrans(ispec), "real(8)", buf)
     END DO
 
     call ops_decl_dat(senga_grid, nctmax+1, d_size, d_base, d_m, d_p, temp_real_null, d_tcoeff, "real(8)", "TCOEFF")
     call ops_decl_dat(senga_grid, nctmax, d_size, d_base, d_m, d_p, temp_real_null, d_tderiv, "real(8)", "TDERIV")
 
-
     d_size = (/1, nyglbl, nzglbl/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
     DO ispec = 1,nspcmx
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_bclyxl(ispec), "real(8)", "BCLYXL")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_bclyxr(ispec), "real(8)", "BCLYXR")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_stryxl(ispec), "real(8)", "STRYXL")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_stryxr(ispec), "real(8)", "STRYXR")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_dydtxl(ispec), "real(8)", "DYDTXL")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_dydtxr(ispec), "real(8)", "DYDTXR")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_ratexl(ispec), "real(8)", "RATEXL")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_ratexr(ispec), "real(8)", "RATEXR")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_strhxl(ispec), "real(8)", "STRHXL")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_strhxr(ispec), "real(8)", "STRHXR")
+        write(buf,"(A6,I2)") "BCLYXL",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_bclyxl(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "BCLYXR",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_bclyxr(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "STRYXL",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_stryxl(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "STRYXR",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_stryxr(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "DYDTXL",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_dydtxl(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "DYDTXR",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_dydtxr(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "RATEXL",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_ratexl(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "RATEXR",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_ratexr(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "STRHXL",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_strhxl(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "STRHXR",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_strhxr(ispec), "real(8)", buf)
     END DO
 
     d_size = (/nxglbl, 1, nzglbl/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
     DO ispec = 1,nspcmx
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_bclyyl(ispec), "real(8)", "BCLYYL")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_bclyyr(ispec), "real(8)", "BCLYYR")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_stryyl(ispec), "real(8)", "STRYYL")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_stryyr(ispec), "real(8)", "STRYYR")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_dydtyl(ispec), "real(8)", "DYDTYL")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_dydtyr(ispec), "real(8)", "DYDTYR")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_rateyl(ispec), "real(8)", "RATEYL")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_rateyr(ispec), "real(8)", "RATEYR")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_strhyl(ispec), "real(8)", "STRHYL")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_strhyr(ispec), "real(8)", "STRHYR")
+        write(buf,"(A6,I2)") "BCLYYL",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_bclyyl(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "BCLYYR",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_bclyyr(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "STRYYL",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_stryyl(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "STRYYR",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_stryyr(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "DYDTYL",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_dydtyl(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "DYDTYR",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_dydtyr(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "RATEYL",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_rateyl(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "RATEYR",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_rateyr(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "STRHYL",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_strhyl(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "STRHYR",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_strhyr(ispec), "real(8)", buf)
     END DO
 
     d_size = (/nxglbl, nyglbl, 1/)
     d_m = (/0,0,0/)
     d_p = (/0,0,0/)
     DO ispec = 1,nspcmx
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_bclyzl(ispec), "real(8)", "BCLYZL")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_bclyzr(ispec), "real(8)", "BCLYZR")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_stryzl(ispec), "real(8)", "STRYZL")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_stryzr(ispec), "real(8)", "STRYZR")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_dydtzl(ispec), "real(8)", "DYDTZL")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_dydtzr(ispec), "real(8)", "DYDTZR")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_ratezl(ispec), "real(8)", "RATEZL")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_ratezr(ispec), "real(8)", "RATEZR")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_strhzl(ispec), "real(8)", "STRHZL")
-        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_strhzr(ispec), "real(8)", "STRHZR")
+        write(buf,"(A6,I2)") "BCLYZL",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_bclyzl(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "BCLYZR",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_bclyzr(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "STRYZL",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_stryzl(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "STRYZR",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_stryzr(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "DYDTZL",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_dydtzl(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "DYDTZR",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_dydtzr(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "RATEZL",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_ratezl(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "RATEZR",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_ratezr(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "STRHZL",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_strhzl(ispec), "real(8)", buf)
+        write(buf,"(A6,I2)") "STRHZR",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_strhzr(ispec), "real(8)", buf)
     END DO
 
 !---------------------------------------WITH HALOS-----------------------------------------------------------
@@ -1419,18 +1458,14 @@ SUBROUTINE ops_data_init()
 !--------------------------------First touch - MULTI-DIM DAT-------------------------------------------------
     rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     DO ispec = 1,nspcmx
-        call ops_par_loop(set_zero_kernel_MD, "set_zero", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_yrun, 2, s3d_000, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-        call ops_par_loop(set_zero_kernel_MD, "set_zero", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_yerr, 2, s3d_000, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-        call ops_par_loop(set_zero_kernel_MD, "set_zero", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-        call ops_par_loop(set_zero_kernel_MD, "set_zero", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_rrte, 2, s3d_000, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+        call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
+                          ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(8)", OPS_WRITE))
+        call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
+                          ops_arg_dat(d_yerr(ispec), 1, s3d_000, "real(8)", OPS_WRITE))
+        call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
+                          ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_WRITE))
+        call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
+                          ops_arg_dat(d_rrte(ispec), 1, s3d_000, "real(8)", OPS_WRITE))
 
     END DO
 

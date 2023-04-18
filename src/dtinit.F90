@@ -235,22 +235,21 @@ SUBROUTINE dtinit
 !   INITIALISE ERK ERROR ARRAYS
 !   ---------------------------
     rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-    call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
                       ops_arg_dat(d_derr, 1, s3d_000, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
                       ops_arg_dat(d_uerr, 1, s3d_000, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
                       ops_arg_dat(d_verr, 1, s3d_000, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
                       ops_arg_dat(d_werr, 1, s3d_000, "real(8)", OPS_WRITE))
-    call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
                       ops_arg_dat(d_eerr, 1, s3d_000, "real(8)", OPS_WRITE))
 
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     DO ispec = 1,nspec
-        rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-        call ops_par_loop(set_zero_kernel_MD, "set zero multi-dim", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_yerr, 2, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+        call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_yerr(ispec), 1, s3d_000, "real(8)", OPS_WRITE))
 
     END DO
 

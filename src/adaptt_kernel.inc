@@ -22,7 +22,7 @@ SUBROUTINE adaptt_kernel_err_eval_MD(err_arr, run_arr, ernrm, ispec, ertot)
     real(kind=8), dimension(nspcmx), intent(in) :: ernrm
     real(kind=8) :: fornow
 
-    fornow = abs(err_arr(OPS_ACC_MD1(ispec,0,0,0)))/(abs(run_arr(OPS_ACC_MD2(ispec,0,0,0)))+ernrm(ispec))
+    fornow = abs(err_arr(OPS_ACC1(0,0,0)))/(abs(run_arr(OPS_ACC2(0,0,0)))+ernrm(ispec))
     ertot = max( ertot, fornow )
 
 END SUBROUTINE adaptt_kernel_err_eval_MD

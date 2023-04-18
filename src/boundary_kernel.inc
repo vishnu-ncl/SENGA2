@@ -247,42 +247,6 @@ SUBROUTINE boundary_kernel_velderiv_zdir(store,bclz)
 
 END SUBROUTINE boundary_kernel_velderiv_zdir
 
-SUBROUTINE boundary_kernel_reaction_xdir(rate, ratex, ispec)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1) :: ratex
-    real(kind=8), dimension(1), intent(in) :: rate
-    integer, intent(in) :: ispec
-
-    ratex(OPS_ACC2(0,0,0)) = rate(OPS_ACC_MD1(ispec,0,0,0))
-
-END SUBROUTINE boundary_kernel_reaction_xdir
-
-SUBROUTINE boundary_kernel_reaction_ydir(rate, ratey, ispec)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1) :: ratey
-    real(kind=8), dimension(1), intent(in) :: rate
-    integer, intent(in) :: ispec
-
-    ratey(OPS_ACC2(0,0,0)) = rate(OPS_ACC_MD1(ispec,0,0,0))
-
-END SUBROUTINE boundary_kernel_reaction_ydir
-
-SUBROUTINE boundary_kernel_reaction_zdir(rate, ratez, ispec)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1) :: ratez
-    real(kind=8), dimension(1), intent(in) :: rate
-    integer, intent(in) :: ispec
-
-    ratez(OPS_ACC2(0,0,0)) = rate(OPS_ACC_MD1(ispec,0,0,0))
-
-END SUBROUTINE boundary_kernel_reaction_zdir
-
 SUBROUTINE boundary_kernel_mass_xdir(yrhs, store1, stryx, bclyx, ispec)
     use data_types
     implicit none

@@ -24,10 +24,10 @@ SUBROUTINE lincom_kernel_MD(err_arr,run_arr,rhs_arr,rkerr,rklhs,rkrhs,irkstp,isp
     real(kind=8), dimension(nrkmax), intent(in) :: rkerr, rklhs, rkrhs
     real(kind=8) :: fornow
 
-    err_arr(OPS_ACC_MD1(ispec,0,0,0)) = err_arr(OPS_ACC_MD1(ispec,0,0,0)) + rkerr(irkstp) * rhs_arr(OPS_ACC_MD3(ispec,0,0,0))
+    err_arr(OPS_ACC1(0,0,0)) = err_arr(OPS_ACC1(0,0,0)) + rkerr(irkstp) * rhs_arr(OPS_ACC_MD3(ispec,0,0,0))
 
-    fornow = run_arr(OPS_ACC_MD2(ispec,0,0,0))
-    run_arr(OPS_ACC_MD2(ispec,0,0,0)) = fornow + rklhs(irkstp) * rhs_arr(OPS_ACC_MD3(ispec,0,0,0))
+    fornow = run_arr(OPS_ACC2(0,0,0))
+    run_arr(OPS_ACC2(0,0,0)) = fornow + rklhs(irkstp) * rhs_arr(OPS_ACC_MD3(ispec,0,0,0))
     rhs_arr(OPS_ACC_MD3(ispec,0,0,0)) = fornow + rkrhs(irkstp) * rhs_arr(OPS_ACC_MD3(ispec,0,0,0))
 
 END SUBROUTINE lincom_kernel_MD

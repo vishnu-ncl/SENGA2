@@ -125,17 +125,17 @@ SUBROUTINE bcutxl
 
 !       ZERO THE LOCAL-PROCESSOR CONTRIBUTION TO THE DFT
         rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
-        call ops_par_loop(set_zero_kernel_xdir, "set zero", senga_grid, 3, rangexyz,  &
+        call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-        call ops_par_loop(set_zero_kernel_xdir, "set zero", senga_grid, 3, rangexyz,  &
+        call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-        call ops_par_loop(set_zero_kernel_xdir, "set zero", senga_grid, 3, rangexyz,  &
+        call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-        call ops_par_loop(set_zero_kernel_xdir, "set zero", senga_grid, 3, rangexyz,  &
+        call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_dudtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-        call ops_par_loop(set_zero_kernel_xdir, "set zero", senga_grid, 3, rangexyz,  &
+        call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_dvdtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
-        call ops_par_loop(set_zero_kernel_xdir, "set zero", senga_grid, 3, rangexyz,  &
+        call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
 
 !       -----------------------------------------------------------------------

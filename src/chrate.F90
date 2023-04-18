@@ -143,11 +143,10 @@ SUBROUTINE chrate
 !   =========================================================================
 
 !   ZERO THE REACTION RATE ACCUMULATOR ARRAYS
+    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     DO ispec = 1,nspec
-        rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-        call ops_par_loop(set_zero_kernel_MD, "set zero multi-dim", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+        call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_WRITE))
 
     END DO
 
@@ -175,7 +174,7 @@ SUBROUTINE chrate
 
 !           ZERO THE THIRD-BODY CONCENTRATION ACCUMULATOR
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE))
 
 !           USE THE THIRD-BODY SPECIES-LIST
@@ -605,17 +604,16 @@ SUBROUTINE chrate
 !       (ACTUALLY DELTA-MU TIMES WMOLAR)
 !       ADD STEP CONTRIBUTION TO TOTAL RATE FOR EACH SPECIES INVOLVED
 
+        rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
         DO isspec = 1, nsslen(istep)
 
 !           GET THE SPECIES NUMBER FROM THE STEP SPECIES-LIST
             ispec = nsspec(isspec,istep)
             fornow = diffmw(isspec,istep)
-            rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
             call ops_par_loop(math_MD_kernel_eqS, "A_multidim = A_multidim + B*var", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_INC), &
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_gbl(fornow, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_gbl(fornow, 1, "real(8)", OPS_READ))
 
         END DO
 !       STEP SPECIES-LIST

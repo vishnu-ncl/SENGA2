@@ -82,18 +82,18 @@ SUBROUTINE temper
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_READ))
 
     DO icp = 1, nctmax
-        call ops_par_loop(set_zero_kernel_MD6, "set zero", senga_grid, 3, rangexyz,  &
+        call ops_par_loop(set_zero_kernel_MD6, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_tcoeff, 6, s3d_000, "real(8)", OPS_WRITE), &
                         ops_arg_gbl(icp+1, 1, "integer", OPS_READ))
 
-        call ops_par_loop(set_zero_kernel_MD5, "set zero", senga_grid, 3, rangexyz,  &
+        call ops_par_loop(set_zero_kernel_MD5, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_tderiv, 5, s3d_000, "real(8)", OPS_WRITE), &
                         ops_arg_gbl(icp, 1, "integer", OPS_READ))
     END DO
 
 !   USE STORE7 TO ACCUMULATE MIXTURE SPECIFIC GAS CONSTANT
 !   INITIALISE STORE7
-    call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE))
 
 !   ===================================================================
@@ -156,11 +156,11 @@ SUBROUTINE temper
 !   FOR ALL SPECIES RELOCATE TEMPERATURE IN AN INTERVAL
 !   EVALUATE MIXTURE SPECIFIC HEAT CP
     DO iindex = 1,nintmx
-        call ops_par_loop(set_zero_kernel_int, "set zero", senga_grid, 3, rangexyz,  &
+        call ops_par_loop(set_zero_kernel_int, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_WRITE))
     END DO
 
-    call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_WRITE))
 
     DO ispec = 1, nspec

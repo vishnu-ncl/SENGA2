@@ -278,7 +278,7 @@ SUBROUTINE heat_flux_kernel_enthalpy_fxldfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
            + acbcxl(3)*store7(OPS_ACC7(3,0,0))*td1x(OPS_ACC8(3,0,0)) &
            + acbcxl(4)*store7(OPS_ACC7(4,0,0))*td1x(OPS_ACC8(4,0,0))
 
-    rate(OPS_ACC_MD1(ispec,0,0,0)) = rate(OPS_ACC_MD1(ispec,0,0,0)) + fornow
+    rate(OPS_ACC1(0,0,0)) = rate(OPS_ACC1(0,0,0)) + fornow
     vtmp(OPS_ACC3(0,0,0)) = vtmp(OPS_ACC3(0,0,0)) + fornow
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*(utmp(OPS_ACC6(0,0,0))  &
                          + rgspec(ispec)*trun(OPS_ACC4(0,0,0))*tdrmix(OPS_ACC5(0,0,0)))
@@ -301,7 +301,7 @@ SUBROUTINE heat_flux_kernel_enthalpy_fxrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
            + acbcxr(2)*store7(OPS_ACC7(-2,0,0))*td1x(OPS_ACC8(-2,0,0)) &
            + acbcxr(1)*store7(OPS_ACC7(-1,0,0))*td1x(OPS_ACC8(-1,0,0))
 
-    rate(OPS_ACC_MD1(ispec,0,0,0)) = rate(OPS_ACC_MD1(ispec,0,0,0)) + fornow
+    rate(OPS_ACC1(0,0,0)) = rate(OPS_ACC1(0,0,0)) + fornow
     vtmp(OPS_ACC3(0,0,0)) = vtmp(OPS_ACC3(0,0,0)) + fornow
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*(utmp(OPS_ACC6(0,0,0))  &
                          + rgspec(ispec)*trun(OPS_ACC4(0,0,0))*tdrmix(OPS_ACC5(0,0,0)))
@@ -324,7 +324,7 @@ SUBROUTINE heat_flux_kernel_enthalpy_fyldfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
            + acbcyl(3)*store7(OPS_ACC7(0,3,0))*td1y(OPS_ACC8(0,3,0)) &
            + acbcyl(4)*store7(OPS_ACC7(0,4,0))*td1y(OPS_ACC8(0,4,0))
 
-    rate(OPS_ACC_MD1(ispec,0,0,0)) = rate(OPS_ACC_MD1(ispec,0,0,0)) + fornow
+    rate(OPS_ACC1(0,0,0)) = rate(OPS_ACC1(0,0,0)) + fornow
     vtmp(OPS_ACC3(0,0,0)) = vtmp(OPS_ACC3(0,0,0)) + fornow
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*(utmp(OPS_ACC6(0,0,0))  &
                          + rgspec(ispec)*trun(OPS_ACC4(0,0,0))*tdrmix(OPS_ACC5(0,0,0)))
@@ -347,7 +347,7 @@ SUBROUTINE heat_flux_kernel_enthalpy_fyrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
            + acbcyr(2)*store7(OPS_ACC7(0,-2,0))*td1y(OPS_ACC8(0,-2,0)) &
            + acbcyr(1)*store7(OPS_ACC7(0,-1,0))*td1y(OPS_ACC8(0,-1,0))
 
-    rate(OPS_ACC_MD1(ispec,0,0,0)) = rate(OPS_ACC_MD1(ispec,0,0,0)) + fornow
+    rate(OPS_ACC1(0,0,0)) = rate(OPS_ACC1(0,0,0)) + fornow
     vtmp(OPS_ACC3(0,0,0)) = vtmp(OPS_ACC3(0,0,0)) + fornow
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*(utmp(OPS_ACC6(0,0,0))  &
                          + rgspec(ispec)*trun(OPS_ACC4(0,0,0))*tdrmix(OPS_ACC5(0,0,0)))
@@ -370,7 +370,7 @@ SUBROUTINE heat_flux_kernel_enthalpy_fzldfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
            + acbczl(3)*store7(OPS_ACC7(0,0,3))*td1z(OPS_ACC8(0,0,3)) &
            + acbczl(4)*store7(OPS_ACC7(0,0,4))*td1z(OPS_ACC8(0,0,4))
 
-    rate(OPS_ACC_MD1(ispec,0,0,0)) = rate(OPS_ACC_MD1(ispec,0,0,0)) + fornow
+    rate(OPS_ACC1(0,0,0)) = rate(OPS_ACC1(0,0,0)) + fornow
     vtmp(OPS_ACC3(0,0,0)) = vtmp(OPS_ACC3(0,0,0)) + fornow
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*(utmp(OPS_ACC6(0,0,0))  &
                          + rgspec(ispec)*trun(OPS_ACC4(0,0,0))*tdrmix(OPS_ACC5(0,0,0)))
@@ -393,20 +393,19 @@ SUBROUTINE heat_flux_kernel_enthalpy_fzrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
            + acbczr(2)*store7(OPS_ACC7(0,0,-2))*td1z(OPS_ACC8(0,0,-2)) &
            + acbczr(1)*store7(OPS_ACC7(0,0,-1))*td1z(OPS_ACC8(0,0,-1))
 
-    rate(OPS_ACC_MD1(ispec,0,0,0)) = rate(OPS_ACC_MD1(ispec,0,0,0)) + fornow
+    rate(OPS_ACC1(0,0,0)) = rate(OPS_ACC1(0,0,0)) + fornow
     vtmp(OPS_ACC3(0,0,0)) = vtmp(OPS_ACC3(0,0,0)) + fornow
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*(utmp(OPS_ACC6(0,0,0))  &
                          + rgspec(ispec)*trun(OPS_ACC4(0,0,0))*tdrmix(OPS_ACC5(0,0,0)))
 
 END SUBROUTINE heat_flux_kernel_enthalpy_fzrdfw
 
-SUBROUTINE heat_flux_kernel_enthalpy2_fxldfw(rate,erhs,vtmp,utmp,store7,arr1,acbcxl,ispec)
+SUBROUTINE heat_flux_kernel_enthalpy2_fxldfw(rate,erhs,vtmp,utmp,store7,arr1,acbcxl)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: utmp,store7,arr1
-    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcxl
     real(kind=8) :: fornow
 
@@ -415,19 +414,18 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fxldfw(rate,erhs,vtmp,utmp,store7,arr1,acb
            + acbcxl(3)*store7(OPS_ACC5(3,0,0))*arr1(OPS_ACC6(3,0,0)) &
            + acbcxl(4)*store7(OPS_ACC5(4,0,0))*arr1(OPS_ACC6(4,0,0))
 
-    rate(OPS_ACC_MD1(ispec,0,0,0)) = rate(OPS_ACC_MD1(ispec,0,0,0)) + fornow
+    rate(OPS_ACC1(0,0,0)) = rate(OPS_ACC1(0,0,0)) + fornow
     vtmp(OPS_ACC3(0,0,0)) = vtmp(OPS_ACC3(0,0,0)) + fornow
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*utmp(OPS_ACC4(0,0,0))
 
 END SUBROUTINE heat_flux_kernel_enthalpy2_fxldfw
 
-SUBROUTINE heat_flux_kernel_enthalpy2_fxrdfw(rate,erhs,vtmp,utmp,store7,arr1,acbcxr,ispec)
+SUBROUTINE heat_flux_kernel_enthalpy2_fxrdfw(rate,erhs,vtmp,utmp,store7,arr1,acbcxr)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: utmp,store7,arr1
-    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcxr
     real(kind=8) :: fornow
 
@@ -436,19 +434,18 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fxrdfw(rate,erhs,vtmp,utmp,store7,arr1,acb
            + acbcxr(2)*store7(OPS_ACC5(-2,0,0))*arr1(OPS_ACC6(-2,0,0)) &
            + acbcxr(1)*store7(OPS_ACC5(-1,0,0))*arr1(OPS_ACC6(-1,0,0))
 
-    rate(OPS_ACC_MD1(ispec,0,0,0)) = rate(OPS_ACC_MD1(ispec,0,0,0)) + fornow
+    rate(OPS_ACC1(0,0,0)) = rate(OPS_ACC1(0,0,0)) + fornow
     vtmp(OPS_ACC3(0,0,0)) = vtmp(OPS_ACC3(0,0,0)) + fornow
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*utmp(OPS_ACC4(0,0,0))
 
 END SUBROUTINE heat_flux_kernel_enthalpy2_fxrdfw
 
-SUBROUTINE heat_flux_kernel_enthalpy2_fyldfw(rate,erhs,vtmp,utmp,store7,arr1,acbcyl,ispec)
+SUBROUTINE heat_flux_kernel_enthalpy2_fyldfw(rate,erhs,vtmp,utmp,store7,arr1,acbcyl)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: utmp,store7,arr1
-    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcyl
     real(kind=8) :: fornow
 
@@ -457,19 +454,18 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fyldfw(rate,erhs,vtmp,utmp,store7,arr1,acb
            + acbcyl(3)*store7(OPS_ACC5(0,3,0))*arr1(OPS_ACC6(0,3,0)) &
            + acbcyl(4)*store7(OPS_ACC5(0,4,0))*arr1(OPS_ACC6(0,4,0))
 
-    rate(OPS_ACC_MD1(ispec,0,0,0)) = rate(OPS_ACC_MD1(ispec,0,0,0)) + fornow
+    rate(OPS_ACC1(0,0,0)) = rate(OPS_ACC1(0,0,0)) + fornow
     vtmp(OPS_ACC3(0,0,0)) = vtmp(OPS_ACC3(0,0,0)) + fornow
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*utmp(OPS_ACC4(0,0,0))
 
 END SUBROUTINE heat_flux_kernel_enthalpy2_fyldfw
 
-SUBROUTINE heat_flux_kernel_enthalpy2_fyrdfw(rate,erhs,vtmp,utmp,store7,arr1,acbcyr,ispec)
+SUBROUTINE heat_flux_kernel_enthalpy2_fyrdfw(rate,erhs,vtmp,utmp,store7,arr1,acbcyr)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: utmp,store7,arr1
-    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbcyr
     real(kind=8) :: fornow
 
@@ -478,19 +474,18 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fyrdfw(rate,erhs,vtmp,utmp,store7,arr1,acb
            + acbcyr(2)*store7(OPS_ACC5(0,-2,0))*arr1(OPS_ACC6(0,-2,0)) &
            + acbcyr(1)*store7(OPS_ACC5(0,-1,0))*arr1(OPS_ACC6(0,-1,0))
 
-    rate(OPS_ACC_MD1(ispec,0,0,0)) = rate(OPS_ACC_MD1(ispec,0,0,0)) + fornow
+    rate(OPS_ACC1(0,0,0)) = rate(OPS_ACC1(0,0,0)) + fornow
     vtmp(OPS_ACC3(0,0,0)) = vtmp(OPS_ACC3(0,0,0)) + fornow
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*utmp(OPS_ACC4(0,0,0))
 
 END SUBROUTINE heat_flux_kernel_enthalpy2_fyrdfw
 
-SUBROUTINE heat_flux_kernel_enthalpy2_fzldfw(rate,erhs,vtmp,utmp,store7,arr1,acbczl,ispec)
+SUBROUTINE heat_flux_kernel_enthalpy2_fzldfw(rate,erhs,vtmp,utmp,store7,arr1,acbczl)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: utmp,store7,arr1
-    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbczl
     real(kind=8) :: fornow
 
@@ -499,19 +494,18 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fzldfw(rate,erhs,vtmp,utmp,store7,arr1,acb
            + acbczl(3)*store7(OPS_ACC5(0,0,3))*arr1(OPS_ACC6(0,0,3)) &
            + acbczl(4)*store7(OPS_ACC5(0,0,4))*arr1(OPS_ACC6(0,0,4))
 
-    rate(OPS_ACC_MD1(ispec,0,0,0)) = rate(OPS_ACC_MD1(ispec,0,0,0)) + fornow
+    rate(OPS_ACC1(0,0,0)) = rate(OPS_ACC1(0,0,0)) + fornow
     vtmp(OPS_ACC3(0,0,0)) = vtmp(OPS_ACC3(0,0,0)) + fornow
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*utmp(OPS_ACC4(0,0,0))
 
 END SUBROUTINE heat_flux_kernel_enthalpy2_fzldfw
 
-SUBROUTINE heat_flux_kernel_enthalpy2_fzrdfw(rate,erhs,vtmp,utmp,store7,arr1,acbczr,ispec)
+SUBROUTINE heat_flux_kernel_enthalpy2_fzrdfw(rate,erhs,vtmp,utmp,store7,arr1,acbczr)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: utmp,store7,arr1
-    integer, intent(in) :: ispec
     real(kind=8), dimension(ncbcsz), intent(in) :: acbczr
     real(kind=8) :: fornow
 
@@ -520,7 +514,7 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fzrdfw(rate,erhs,vtmp,utmp,store7,arr1,acb
            + acbczr(2)*store7(OPS_ACC5(0,0,-2))*arr1(OPS_ACC6(0,0,-2)) &
            + acbczr(1)*store7(OPS_ACC5(0,0,-1))*arr1(OPS_ACC6(0,0,-1))
 
-    rate(OPS_ACC_MD1(ispec,0,0,0)) = rate(OPS_ACC_MD1(ispec,0,0,0)) + fornow
+    rate(OPS_ACC1(0,0,0)) = rate(OPS_ACC1(0,0,0)) + fornow
     vtmp(OPS_ACC3(0,0,0)) = vtmp(OPS_ACC3(0,0,0)) + fornow
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*utmp(OPS_ACC4(0,0,0))
 

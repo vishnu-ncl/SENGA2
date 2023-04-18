@@ -98,7 +98,7 @@ SUBROUTINE boundt
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
             DO iindex = 1,nintmx
-                call ops_par_loop(set_zero_kernel_int, "set zero", senga_grid, 3, rangexyz,  &
+                call ops_par_loop(set_zero_kernel_int, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_WRITE))
             END DO
 
@@ -247,7 +247,7 @@ SUBROUTINE boundt
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
             DO iindex = 1,nintmx
-                call ops_par_loop(set_zero_kernel_int, "set zero", senga_grid, 3, rangexyz,  &
+                call ops_par_loop(set_zero_kernel_int, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_WRITE))
             END DO
 
@@ -358,7 +358,7 @@ SUBROUTINE boundt
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
             DO iindex = 1,nintmx
-                call ops_par_loop(set_zero_kernel_int, "set zero", senga_grid, 3, rangexyz,  &
+                call ops_par_loop(set_zero_kernel_int, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_WRITE))
             END DO
 
@@ -507,7 +507,7 @@ SUBROUTINE boundt
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
             DO iindex = 1,nintmx
-                call ops_par_loop(set_zero_kernel_int, "set zero", senga_grid, 3, rangexyz,  &
+                call ops_par_loop(set_zero_kernel_int, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_WRITE))
             END DO
 
@@ -624,7 +624,7 @@ SUBROUTINE boundt
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
             DO iindex = 1,nintmx
-                call ops_par_loop(set_zero_kernel_int, "set zero", senga_grid, 3, rangexyz,  &
+                call ops_par_loop(set_zero_kernel_int, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_WRITE))
             END DO
 
@@ -773,7 +773,7 @@ SUBROUTINE boundt
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
             DO iindex = 1,nintmx
-                call ops_par_loop(set_zero_kernel_int, "set zero", senga_grid, 3, rangexyz,  &
+                call ops_par_loop(set_zero_kernel_int, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_WRITE))
             END DO
 
@@ -890,7 +890,7 @@ SUBROUTINE boundt
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
             DO iindex = 1,nintmx
-                call ops_par_loop(set_zero_kernel_int, "set zero", senga_grid, 3, rangexyz,  &
+                call ops_par_loop(set_zero_kernel_int, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_WRITE))
             END DO
 
@@ -1039,7 +1039,7 @@ SUBROUTINE boundt
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
             DO iindex = 1,nintmx
-                call ops_par_loop(set_zero_kernel_int, "set zero", senga_grid, 3, rangexyz,  &
+                call ops_par_loop(set_zero_kernel_int, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_WRITE))
             END DO
 
@@ -1156,7 +1156,7 @@ SUBROUTINE boundt
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
             DO iindex = 1,nintmx
-                call ops_par_loop(set_zero_kernel_int, "set zero", senga_grid, 3, rangexyz,  &
+                call ops_par_loop(set_zero_kernel_int, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_WRITE))
             END DO
 
@@ -1305,7 +1305,7 @@ SUBROUTINE boundt
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
             DO iindex = 1,nintmx
-                call ops_par_loop(set_zero_kernel_int, "set zero", senga_grid, 3, rangexyz,  &
+                call ops_par_loop(set_zero_kernel_int, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_WRITE))
             END DO
 
@@ -1422,7 +1422,7 @@ SUBROUTINE boundt
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
             DO iindex = 1,nintmx
-                call ops_par_loop(set_zero_kernel_int, "set zero", senga_grid, 3, rangexyz,  &
+                call ops_par_loop(set_zero_kernel_int, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_WRITE))
             END DO
 
@@ -1571,7 +1571,7 @@ SUBROUTINE boundt
 !           SET TEMPERATURE INTERVAL INDEX
             rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
             DO iindex = 1,nintmx
-                call ops_par_loop(set_zero_kernel_int, "set zero", senga_grid, 3, rangexyz,  &
+                call ops_par_loop(set_zero_kernel_int, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_WRITE))
             END DO
 
