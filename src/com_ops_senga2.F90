@@ -41,15 +41,15 @@ MODULE com_ops_senga
 
     TYPE(ops_dat) :: d_itndex(nintmx)
     TYPE(ops_dat) :: d_yrhs, d_yrun, d_yerr, d_rate, d_rrte
+    TYPE(ops_dat) :: d_ctrans(nspcmx)
     TYPE(ops_dat) :: d_tcoeff, d_tderiv;
-    TYPE(ops_dat) :: d_ctrans
 
-    TYPE(ops_dat) :: d_bclyxl, d_stryxl, d_dydtxl, d_ratexl, d_strhxl
-    TYPE(ops_dat) :: d_bclyxr, d_stryxr, d_dydtxr, d_ratexr, d_strhxr
-    TYPE(ops_dat) :: d_bclyyl, d_stryyl, d_dydtyl, d_rateyl, d_strhyl
-    TYPE(ops_dat) :: d_bclyyr, d_stryyr, d_dydtyr, d_rateyr, d_strhyr
-    TYPE(ops_dat) :: d_bclyzl, d_stryzl, d_dydtzl, d_ratezl, d_strhzl
-    TYPE(ops_dat) :: d_bclyzr, d_stryzr, d_dydtzr, d_ratezr, d_strhzr
+    TYPE(ops_dat) :: d_bclyxl(nspcmx), d_stryxl(nspcmx), d_dydtxl(nspcmx), d_ratexl(nspcmx), d_strhxl(nspcmx)
+    TYPE(ops_dat) :: d_bclyxr(nspcmx), d_stryxr(nspcmx), d_dydtxr(nspcmx), d_ratexr(nspcmx), d_strhxr(nspcmx)
+    TYPE(ops_dat) :: d_bclyyl(nspcmx), d_stryyl(nspcmx), d_dydtyl(nspcmx), d_rateyl(nspcmx), d_strhyl(nspcmx)
+    TYPE(ops_dat) :: d_bclyyr(nspcmx), d_stryyr(nspcmx), d_dydtyr(nspcmx), d_rateyr(nspcmx), d_strhyr(nspcmx)
+    TYPE(ops_dat) :: d_bclyzl(nspcmx), d_stryzl(nspcmx), d_dydtzl(nspcmx), d_ratezl(nspcmx), d_strhzl(nspcmx)
+    TYPE(ops_dat) :: d_bclyzr(nspcmx), d_stryzr(nspcmx), d_dydtzr(nspcmx), d_ratezr(nspcmx), d_strhzr(nspcmx)
 
     TYPE(ops_dat) :: d_bcl1xl, d_bcl2xl, d_bcl3xl, d_bcl4xl, d_bcl5xl, d_bcltxl
     TYPE(ops_dat) :: d_bcl1xr, d_bcl2xr, d_bcl3xr, d_bcl4xr, d_bcl5xr, d_bcltxr

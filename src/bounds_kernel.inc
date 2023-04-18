@@ -7,10 +7,10 @@ SUBROUTINE bounds_kernel_reduced_enthalpy_xdir(strhx,strgx,strtx,strrx,rgspec,is
     integer, intent(in) :: ispec
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
-    strhx(OPS_ACC_MD1(ispec,0,0,0)) = strhx(OPS_ACC_MD1(ispec,0,0,0))  &
+    strhx(OPS_ACC1(0,0,0)) = strhx(OPS_ACC1(0,0,0))  &
             - strgx(OPS_ACC2(0,0,0))*strtx(OPS_ACC3(0,0,0))*rgspec(ispec)/strrx(OPS_ACC4(0,0,0))
 
-END SUBROUTINE ispecbounds_kernel_reduced_enthalpy_xdir
+END SUBROUTINE bounds_kernel_reduced_enthalpy_xdir
 
 SUBROUTINE bounds_kernel_reduced_enthalpy_ydir(strhy,strgy,strty,strry,rgspec,ispec)
     use data_types
@@ -21,7 +21,7 @@ SUBROUTINE bounds_kernel_reduced_enthalpy_ydir(strhy,strgy,strty,strry,rgspec,is
     integer, intent(in) :: ispec
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
-    strhy(OPS_ACC_MD1(ispec,0,0,0)) = strhy(OPS_ACC_MD1(ispec,0,0,0))  &
+    strhy(OPS_ACC1(0,0,0)) = strhy(OPS_ACC1(0,0,0))  &
             - strgy(OPS_ACC2(0,0,0))*strty(OPS_ACC3(0,0,0))*rgspec(ispec)/strry(OPS_ACC4(0,0,0))
 
 END SUBROUTINE bounds_kernel_reduced_enthalpy_ydir
@@ -35,7 +35,7 @@ SUBROUTINE bounds_kernel_reduced_enthalpy_zdir(strhz,strgz,strtz,strrz,rgspec,is
     integer, intent(in) :: ispec
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
-    strhz(OPS_ACC_MD1(ispec,0,0,0)) = strhz(OPS_ACC_MD1(ispec,0,0,0))  &
+    strhz(OPS_ACC1(0,0,0)) = strhz(OPS_ACC1(0,0,0))  &
             - strgz(OPS_ACC2(0,0,0))*strtz(OPS_ACC3(0,0,0))*rgspec(ispec)/strrz(OPS_ACC4(0,0,0))
 
 END SUBROUTINE bounds_kernel_reduced_enthalpy_zdir
@@ -128,41 +128,38 @@ SUBROUTINE bounds_kernel_sound_speed_zdir(acouz,ova2z,strgz,gam1z,strtz)
 END SUBROUTINE bounds_kernel_sound_speed_zdir
 
 !A_yz = A_yz + B_mulditim_yz*C_multidim_yz
-SUBROUTINE bounds_kernel_eqA_xdir(sorpx,strhx,ratex,ispec)
+SUBROUTINE bounds_kernel_eqA_xdir(sorpx,strhx,ratex)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: sorpx
     real(kind=8), dimension(1), intent(in) :: strhx,ratex
-    integer, intent(in) :: ispec
 
-    sorpx(OPS_ACC1(0,0,0)) = sorpx(OPS_ACC1(0,0,0)) + strhx(OPS_ACC_MD2(ispec,0,0,0))*ratex(OPS_ACC_MD3(ispec,0,0,0))
+    sorpx(OPS_ACC1(0,0,0)) = sorpx(OPS_ACC1(0,0,0)) + strhx(OPS_ACC2(0,0,0))*ratex(OPS_ACC3(0,0,0))
 
 END SUBROUTINE bounds_kernel_eqA_xdir
 
 !A_xz = A_xz + B_mulditim_xz*C_multidim_xz
-SUBROUTINE bounds_kernel_eqA_ydir(sorpy,strhy,ratey,ispec)
+SUBROUTINE bounds_kernel_eqA_ydir(sorpy,strhy,ratey)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: sorpy
     real(kind=8), dimension(1), intent(in) :: strhy,ratey
-    integer, intent(in) :: ispec
 
-    sorpy(OPS_ACC1(0,0,0)) = sorpy(OPS_ACC1(0,0,0)) + strhy(OPS_ACC_MD2(ispec,0,0,0))*ratey(OPS_ACC_MD3(ispec,0,0,0))
+    sorpy(OPS_ACC1(0,0,0)) = sorpy(OPS_ACC1(0,0,0)) + strhy(OPS_ACC2(0,0,0))*ratey(OPS_ACC3(0,0,0))
 
 END SUBROUTINE bounds_kernel_eqA_ydir
 
 !A_xy = A_xy + B_mulditim_xy*C_multidim_xy
-SUBROUTINE bounds_kernel_eqA_zdir(sorpz,strhz,ratez,ispec)
+SUBROUTINE bounds_kernel_eqA_zdir(sorpz,strhz,ratez)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: sorpz
     real(kind=8), dimension(1), intent(in) :: strhz,ratez
-    integer, intent(in) :: ispec
 
-    sorpz(OPS_ACC1(0,0,0)) = sorpz(OPS_ACC1(0,0,0)) + strhz(OPS_ACC_MD2(ispec,0,0,0))*ratez(OPS_ACC_MD3(ispec,0,0,0))
+    sorpz(OPS_ACC1(0,0,0)) = sorpz(OPS_ACC1(0,0,0)) + strhz(OPS_ACC2(0,0,0))*ratez(OPS_ACC3(0,0,0))
 
 END SUBROUTINE bounds_kernel_eqA_zdir
 
@@ -176,7 +173,7 @@ SUBROUTINE bounds_kernel_eqB_xdir(sydtx,dydtx,rgspec,ispec)
     integer, intent(in) :: ispec
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
-    sydtx(OPS_ACC1(0,0,0)) = sydtx(OPS_ACC1(0,0,0)) + dydtx(OPS_ACC_MD2(ispec,0,0,0))*rgspec(ispec)
+    sydtx(OPS_ACC1(0,0,0)) = sydtx(OPS_ACC1(0,0,0)) + dydtx(OPS_ACC2(0,0,0))*rgspec(ispec)
 
 END SUBROUTINE bounds_kernel_eqB_xdir
 
@@ -190,7 +187,7 @@ SUBROUTINE bounds_kernel_eqB_ydir(sydty,dydty,rgspec,ispec)
     integer, intent(in) :: ispec
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
-    sydty(OPS_ACC1(0,0,0)) = sydty(OPS_ACC1(0,0,0)) + dydty(OPS_ACC_MD2(ispec,0,0,0))*rgspec(ispec)
+    sydty(OPS_ACC1(0,0,0)) = sydty(OPS_ACC1(0,0,0)) + dydty(OPS_ACC2(0,0,0))*rgspec(ispec)
 
 END SUBROUTINE bounds_kernel_eqB_ydir
 
@@ -204,7 +201,7 @@ SUBROUTINE bounds_kernel_eqB_zdir(sydtz,dydtz,rgspec,ispec)
     integer, intent(in) :: ispec
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
-    sydtz(OPS_ACC1(0,0,0)) = sydtz(OPS_ACC1(0,0,0)) + dydtz(OPS_ACC_MD2(ispec,0,0,0))*rgspec(ispec)
+    sydtz(OPS_ACC1(0,0,0)) = sydtz(OPS_ACC1(0,0,0)) + dydtz(OPS_ACC2(0,0,0))*rgspec(ispec)
 
 END SUBROUTINE bounds_kernel_eqB_zdir
 
@@ -418,54 +415,51 @@ SUBROUTINE bounds_kernel_inflowBC1_computeL_zl(bcl2zl,bcl3zl,bcl4zl,bcl5zl,strdz
 
 END SUBROUTINE bounds_kernel_inflowBC1_computeL_zl
 
-SUBROUTINE bounds_kernel_inflowBC1_LYX_xl(bclyxl,ratexl,struxl,strdxl,ispec)
+SUBROUTINE bounds_kernel_inflowBC1_LYX_xl(bclyxl,ratexl,struxl,strdxl)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: bclyxl
     real(kind=8), dimension(1), intent(in) :: ratexl,struxl,strdxl
-    integer, intent(in) :: ispec    
 
 !   OLD VALUE OF L's
-    bclyxl(OPS_ACC_MD1(ispec,0,0,0)) = struxl(OPS_ACC3(0,0,0))*bclyxl(OPS_ACC_MD1(ispec,0,0,0))
+    bclyxl(OPS_ACC1(0,0,0)) = struxl(OPS_ACC3(0,0,0))*bclyxl(OPS_ACC1(0,0,0))
 
 !   SUBTRACT FROM NEW VALUE OF L's (=0 FOR LYX)
-    bclyxl(OPS_ACC_MD1(ispec,0,0,0)) = ratexl(OPS_ACC_MD2(ispec,0,0,0))/strdxl(OPS_ACC4(0,0,0))  &
-              - bclyxl(OPS_ACC_MD1(ispec,0,0,0))
+    bclyxl(OPS_ACC1(0,0,0)) = ratexl(OPS_ACC2(0,0,0))/strdxl(OPS_ACC4(0,0,0))  &
+              - bclyxl(OPS_ACC1(0,0,0))
 
 END SUBROUTINE bounds_kernel_inflowBC1_LYX_xl
 
-SUBROUTINE bounds_kernel_inflowBC1_LYY_yl(bclyyl,rateyl,strvyl,strdyl,ispec)
+SUBROUTINE bounds_kernel_inflowBC1_LYY_yl(bclyyl,rateyl,strvyl,strdyl)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: bclyyl
     real(kind=8), dimension(1), intent(in) :: rateyl,strvyl,strdyl
-    integer, intent(in) :: ispec
 
 !   OLD VALUE OF L's
-    bclyyl(OPS_ACC_MD1(ispec,0,0,0)) = strvyl(OPS_ACC3(0,0,0))*bclyyl(OPS_ACC_MD1(ispec,0,0,0))
+    bclyyl(OPS_ACC1(0,0,0)) = strvyl(OPS_ACC3(0,0,0))*bclyyl(OPS_ACC1(0,0,0))
 
 !   SUBTRACT FROM NEW VALUE OF L's (=0 FOR LYY)
-    bclyyl(OPS_ACC_MD1(ispec,0,0,0)) = rateyl(OPS_ACC_MD2(ispec,0,0,0))/strdyl(OPS_ACC4(0,0,0))  &
-              - bclyyl(OPS_ACC_MD1(ispec,0,0,0))
+    bclyyl(OPS_ACC1(0,0,0)) = rateyl(OPS_ACC2(0,0,0))/strdyl(OPS_ACC4(0,0,0))  &
+              - bclyyl(OPS_ACC1(0,0,0))
 
 END SUBROUTINE bounds_kernel_inflowBC1_LYY_yl
 
-SUBROUTINE bounds_kernel_inflowBC1_LYZ_zl(bclyzl,ratezl,strwzl,strdzl,ispec)
+SUBROUTINE bounds_kernel_inflowBC1_LYZ_zl(bclyzl,ratezl,strwzl,strdzl)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: bclyzl
     real(kind=8), dimension(1), intent(in) :: ratezl,strwzl,strdzl
-    integer, intent(in) :: ispec
 
 !   OLD VALUE OF L's
-    bclyzl(OPS_ACC_MD1(ispec,0,0,0)) = strwzl(OPS_ACC3(0,0,0))*bclyzl(OPS_ACC_MD1(ispec,0,0,0))
+    bclyzl(OPS_ACC1(0,0,0)) = strwzl(OPS_ACC3(0,0,0))*bclyzl(OPS_ACC1(0,0,0))
 
 !   SUBTRACT FROM NEW VALUE OF L's (=0 FOR LYZ)
-    bclyzl(OPS_ACC_MD1(ispec,0,0,0)) = ratezl(OPS_ACC_MD2(ispec,0,0,0))/strdzl(OPS_ACC4(0,0,0))  &
-              - bclyzl(OPS_ACC_MD1(ispec,0,0,0))
+    bclyzl(OPS_ACC1(0,0,0)) = ratezl(OPS_ACC2(0,0,0))/strdzl(OPS_ACC4(0,0,0))  &
+              - bclyzl(OPS_ACC1(0,0,0))
 
 END SUBROUTINE bounds_kernel_inflowBC1_LYZ_zl
 
@@ -830,11 +824,11 @@ SUBROUTINE bounds_kernel_wallBC2_LYX_xl(bclyxl,bcl2xl,ratexl,struxl,strdxl,strrx
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     
 !   OLD VALUE OF LYX
-    bclyxl(OPS_ACC_MD1(ispec,0,0,0)) = struxl(OPS_ACC4(0,0,0))*bclyxl(OPS_ACC_MD1(ispec,0,0,0))
+    bclyxl(OPS_ACC1(0,0,0)) = struxl(OPS_ACC4(0,0,0))*bclyxl(OPS_ACC1(0,0,0))
 
 !   UPDATE L2X
-    bcl2xl(OPS_ACC2(0,0,0)) = bcl2xl(OPS_ACC2(0,0,0)) + (ratexl(OPS_ACC_MD3(ispec,0,0,0))  &
-              - strdxl(OPS_ACC5(0,0,0))*bclyxl(OPS_ACC_MD1(ispec,0,0,0))) *rgspec(ispec)/strrxl(OPS_ACC6(0,0,0))
+    bcl2xl(OPS_ACC2(0,0,0)) = bcl2xl(OPS_ACC2(0,0,0)) + (ratexl(OPS_ACC3(0,0,0))  &
+              - strdxl(OPS_ACC5(0,0,0))*bclyxl(OPS_ACC1(0,0,0))) *rgspec(ispec)/strrxl(OPS_ACC6(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC2_LYX_xl
 
@@ -848,11 +842,11 @@ SUBROUTINE bounds_kernel_wallBC2_LYY_yl(bclyyl,bcl2yl,rateyl,strvyl,strdyl,strry
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
 !   OLD VALUE OF LYY
-    bclyyl(OPS_ACC_MD1(ispec,0,0,0)) = strvyl(OPS_ACC4(0,0,0))*bclyyl(OPS_ACC_MD1(ispec,0,0,0))
+    bclyyl(OPS_ACC1(0,0,0)) = strvyl(OPS_ACC4(0,0,0))*bclyyl(OPS_ACC1(0,0,0))
 
 !   UPDATE L2Y
-    bcl2yl(OPS_ACC2(0,0,0)) = bcl2yl(OPS_ACC2(0,0,0)) + (rateyl(OPS_ACC_MD3(ispec,0,0,0))  &
-              - strdyl(OPS_ACC5(0,0,0))*bclyyl(OPS_ACC_MD1(ispec,0,0,0))) *rgspec(ispec)/strryl(OPS_ACC6(0,0,0))
+    bcl2yl(OPS_ACC2(0,0,0)) = bcl2yl(OPS_ACC2(0,0,0)) + (rateyl(OPS_ACC3(0,0,0))  &
+              - strdyl(OPS_ACC5(0,0,0))*bclyyl(OPS_ACC1(0,0,0))) *rgspec(ispec)/strryl(OPS_ACC6(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC2_LYY_yl
 
@@ -866,11 +860,11 @@ SUBROUTINE bounds_kernel_wallBC2_LYZ_zl(bclyzl,bcl2zl,ratezl,strwzl,strdzl,strrz
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
 !   OLD VALUE OF LYZ
-    bclyzl(OPS_ACC_MD1(ispec,0,0,0)) = strwzl(OPS_ACC4(0,0,0))*bclyzl(OPS_ACC_MD1(ispec,0,0,0))
+    bclyzl(OPS_ACC1(0,0,0)) = strwzl(OPS_ACC4(0,0,0))*bclyzl(OPS_ACC1(0,0,0))
 
 !   UPDATE L2Z
-    bcl2zl(OPS_ACC2(0,0,0)) = bcl2zl(OPS_ACC2(0,0,0)) + (ratezl(OPS_ACC_MD3(ispec,0,0,0))  &
-              - strdzl(OPS_ACC5(0,0,0))*bclyzl(OPS_ACC_MD1(ispec,0,0,0))) *rgspec(ispec)/strrzl(OPS_ACC6(0,0,0))
+    bcl2zl(OPS_ACC2(0,0,0)) = bcl2zl(OPS_ACC2(0,0,0)) + (ratezl(OPS_ACC3(0,0,0))  &
+              - strdzl(OPS_ACC5(0,0,0))*bclyzl(OPS_ACC1(0,0,0))) *rgspec(ispec)/strrzl(OPS_ACC6(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC2_LYZ_zl
 
@@ -1012,54 +1006,51 @@ SUBROUTINE bounds_kernel_inflowBC1_computeL_zr(bcl1zr,bcl2zr,bcl3zr,bcl4zr,strdz
 
 END SUBROUTINE bounds_kernel_inflowBC1_computeL_zr
 
-SUBROUTINE bounds_kernel_inflowBC1_LYX_xr(bclyxr,ratexr,struxr,strdxr,ispec)
+SUBROUTINE bounds_kernel_inflowBC1_LYX_xr(bclyxr,ratexr,struxr,strdxr)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: bclyxr
     real(kind=8), dimension(1), intent(in) :: ratexr,struxr,strdxr
-    integer, intent(in) :: ispec
 
 !   OLD VALUE OF L's
-    bclyxr(OPS_ACC_MD1(ispec,0,0,0)) = struxr(OPS_ACC3(0,0,0))*bclyxr(OPS_ACC_MD1(ispec,0,0,0))
+    bclyxr(OPS_ACC1(0,0,0)) = struxr(OPS_ACC3(0,0,0))*bclyxr(OPS_ACC1(0,0,0))
 
 !   SUBTRACT FROM NEW VALUE OF L's (=0 FOR LYX)
-    bclyxr(OPS_ACC_MD1(ispec,0,0,0)) = ratexr(OPS_ACC_MD2(ispec,0,0,0))/strdxr(OPS_ACC4(0,0,0))  &
-              - bclyxr(OPS_ACC_MD1(ispec,0,0,0))
+    bclyxr(OPS_ACC1(0,0,0)) = ratexr(OPS_ACC2(0,0,0))/strdxr(OPS_ACC4(0,0,0))  &
+              - bclyxr(OPS_ACC1(0,0,0))
 
 END SUBROUTINE bounds_kernel_inflowBC1_LYX_xr
 
-SUBROUTINE bounds_kernel_inflowBC1_LYY_yr(bclyyr,rateyr,strvyr,strdyr,ispec)
+SUBROUTINE bounds_kernel_inflowBC1_LYY_yr(bclyyr,rateyr,strvyr,strdyr)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: bclyyr
     real(kind=8), dimension(1), intent(in) :: rateyr,strvyr,strdyr
-    integer, intent(in) :: ispec
 
 !   OLD VALUE OF L's
-    bclyyr(OPS_ACC_MD1(ispec,0,0,0)) = strvyr(OPS_ACC3(0,0,0))*bclyyr(OPS_ACC_MD1(ispec,0,0,0))
+    bclyyr(OPS_ACC1(0,0,0)) = strvyr(OPS_ACC3(0,0,0))*bclyyr(OPS_ACC1(0,0,0))
 
 !   SUBTRACT FROM NEW VALUE OF L's (=0 FOR LYY)
-    bclyyr(OPS_ACC_MD1(ispec,0,0,0)) = rateyr(OPS_ACC_MD2(ispec,0,0,0))/strdyr(OPS_ACC4(0,0,0))  &
-              - bclyyr(OPS_ACC_MD1(ispec,0,0,0))
+    bclyyr(OPS_ACC1(0,0,0)) = rateyr(OPS_ACC2(0,0,0))/strdyr(OPS_ACC4(0,0,0))  &
+              - bclyyr(OPS_ACC1(0,0,0))
 
 END SUBROUTINE bounds_kernel_inflowBC1_LYY_yr
 
-SUBROUTINE bounds_kernel_inflowBC1_LYZ_zr(bclyzr,ratezr,strwzr,strdzr,ispec)
+SUBROUTINE bounds_kernel_inflowBC1_LYZ_zr(bclyzr,ratezr,strwzr,strdzr)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: bclyzr
     real(kind=8), dimension(1), intent(in) :: ratezr,strwzr,strdzr
-    integer, intent(in) :: ispec
 
 !   OLD VALUE OF L's
-    bclyzr(OPS_ACC_MD1(ispec,0,0,0)) = strwzr(OPS_ACC3(0,0,0))*bclyzr(OPS_ACC_MD1(ispec,0,0,0))
+    bclyzr(OPS_ACC1(0,0,0)) = strwzr(OPS_ACC3(0,0,0))*bclyzr(OPS_ACC1(0,0,0))
 
 !   SUBTRACT FROM NEW VALUE OF L's (=0 FOR LYZ)
-    bclyzr(OPS_ACC_MD1(ispec,0,0,0)) = ratezr(OPS_ACC_MD2(ispec,0,0,0))/strdzr(OPS_ACC4(0,0,0))  &
-              - bclyzr(OPS_ACC_MD1(ispec,0,0,0))
+    bclyzr(OPS_ACC1(0,0,0)) = ratezr(OPS_ACC2(0,0,0))/strdzr(OPS_ACC4(0,0,0))  &
+              - bclyzr(OPS_ACC1(0,0,0))
 
 END SUBROUTINE bounds_kernel_inflowBC1_LYZ_zr
 
@@ -1424,11 +1415,11 @@ SUBROUTINE bounds_kernel_wallBC2_LYX_xr(bclyxr,bcl2xr,ratexr,struxr,strdxr,strrx
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
 !   OLD VALUE OF LYX
-    bclyxr(OPS_ACC_MD1(ispec,0,0,0)) = struxr(OPS_ACC4(0,0,0))*bclyxr(OPS_ACC_MD1(ispec,0,0,0))
+    bclyxr(OPS_ACC1(0,0,0)) = struxr(OPS_ACC4(0,0,0))*bclyxr(OPS_ACC1(0,0,0))
 
 !   UPDATE L2X
-    bcl2xr(OPS_ACC2(0,0,0)) = bcl2xr(OPS_ACC2(0,0,0)) + (ratexr(OPS_ACC_MD3(ispec,0,0,0))  &
-              - strdxr(OPS_ACC5(0,0,0))*bclyxr(OPS_ACC_MD1(ispec,0,0,0))) *rgspec(ispec)/strrxr(OPS_ACC6(0,0,0))
+    bcl2xr(OPS_ACC2(0,0,0)) = bcl2xr(OPS_ACC2(0,0,0)) + (ratexr(OPS_ACC3(0,0,0))  &
+              - strdxr(OPS_ACC5(0,0,0))*bclyxr(OPS_ACC1(0,0,0))) *rgspec(ispec)/strrxr(OPS_ACC6(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC2_LYX_xr
 
@@ -1442,11 +1433,11 @@ SUBROUTINE bounds_kernel_wallBC2_LYY_yr(bclyyr,bcl2yr,rateyr,strvyr,strdyr,strry
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
 !   OLD VALUE OF LYY
-    bclyyr(OPS_ACC_MD1(ispec,0,0,0)) = strvyr(OPS_ACC4(0,0,0))*bclyyr(OPS_ACC_MD1(ispec,0,0,0))
+    bclyyr(OPS_ACC1(0,0,0)) = strvyr(OPS_ACC4(0,0,0))*bclyyr(OPS_ACC1(0,0,0))
 
 !   UPDATE L2Y
-    bcl2yr(OPS_ACC2(0,0,0)) = bcl2yr(OPS_ACC2(0,0,0)) + (rateyr(OPS_ACC_MD3(ispec,0,0,0))  &
-              - strdyr(OPS_ACC5(0,0,0))*bclyyr(OPS_ACC_MD1(ispec,0,0,0))) *rgspec(ispec)/strryr(OPS_ACC6(0,0,0))
+    bcl2yr(OPS_ACC2(0,0,0)) = bcl2yr(OPS_ACC2(0,0,0)) + (rateyr(OPS_ACC3(0,0,0))  &
+              - strdyr(OPS_ACC5(0,0,0))*bclyyr(OPS_ACC1(0,0,0))) *rgspec(ispec)/strryr(OPS_ACC6(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC2_LYY_yr
 
@@ -1460,11 +1451,11 @@ SUBROUTINE bounds_kernel_wallBC2_LYZ_zr(bclyzr,bcl2zr,ratezr,strwzr,strdzr,strrz
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
 !   OLD VALUE OF LYZ
-    bclyzr(OPS_ACC_MD1(ispec,0,0,0)) = strwzr(OPS_ACC4(0,0,0))*bclyzr(OPS_ACC_MD1(ispec,0,0,0))
+    bclyzr(OPS_ACC1(0,0,0)) = strwzr(OPS_ACC4(0,0,0))*bclyzr(OPS_ACC1(0,0,0))
 
 !   UPDATE L2Z
-    bcl2zr(OPS_ACC2(0,0,0)) = bcl2zr(OPS_ACC2(0,0,0)) + (ratezr(OPS_ACC_MD3(ispec,0,0,0))  &
-              - strdzr(OPS_ACC5(0,0,0))*bclyzr(OPS_ACC_MD1(ispec,0,0,0))) *rgspec(ispec)/strrzr(OPS_ACC6(0,0,0))
+    bcl2zr(OPS_ACC2(0,0,0)) = bcl2zr(OPS_ACC2(0,0,0)) + (ratezr(OPS_ACC3(0,0,0))  &
+              - strdzr(OPS_ACC5(0,0,0))*bclyzr(OPS_ACC1(0,0,0))) *rgspec(ispec)/strrzr(OPS_ACC6(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC2_LYZ_zr
 
@@ -1549,7 +1540,7 @@ SUBROUTINE bounds_kernel_outflowBC1_eval_xl(yrhs,stryxl,bcl5xl,ova2xl,ispec)
     integer, intent(in) :: ispec
 
     yrhs(OPS_ACC_MD1(ispec,0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))  &
-              - bcl5xl(OPS_ACC3(0,0,0))*ova2xl(OPS_ACC4(0,0,0))*stryxl(OPS_ACC_MD2(ispec,0,0,0))
+              - bcl5xl(OPS_ACC3(0,0,0))*ova2xl(OPS_ACC4(0,0,0))*stryxl(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_outflowBC1_eval_xl
 
@@ -1562,7 +1553,7 @@ SUBROUTINE bounds_kernel_outflowBC1_eval_yl(yrhs,stryyl,bcl5yl,ova2yl,ispec)
     integer, intent(in) :: ispec
 
     yrhs(OPS_ACC_MD1(ispec,0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))  &
-              - bcl5yl(OPS_ACC3(0,0,0))*ova2yl(OPS_ACC4(0,0,0))*stryyl(OPS_ACC_MD2(ispec,0,0,0))
+              - bcl5yl(OPS_ACC3(0,0,0))*ova2yl(OPS_ACC4(0,0,0))*stryyl(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_outflowBC1_eval_yl
 
@@ -1575,7 +1566,7 @@ SUBROUTINE bounds_kernel_outflowBC1_eval_zl(yrhs,stryzl,bcl5zl,ova2zl,ispec)
     integer, intent(in) :: ispec
 
     yrhs(OPS_ACC_MD1(ispec,0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))  &
-              - bcl5zl(OPS_ACC3(0,0,0))*ova2zl(OPS_ACC4(0,0,0))*stryzl(OPS_ACC_MD2(ispec,0,0,0))
+              - bcl5zl(OPS_ACC3(0,0,0))*ova2zl(OPS_ACC4(0,0,0))*stryzl(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_outflowBC1_eval_zl
 
@@ -1675,12 +1666,12 @@ SUBROUTINE bounds_kernel_inflowBC1_eval_xl(erhs,yrhs,bclyxl,strhxl,stryxl,strdxl
     integer, intent(in) :: ispec
     real(kind=8) :: fornow
 
-    fornow = bclyxl(OPS_ACC_MD3(ispec,0,0,0))*strdxl(OPS_ACC6(0,0,0))
+    fornow = bclyxl(OPS_ACC3(0,0,0))*strdxl(OPS_ACC6(0,0,0))
 
-    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) - fornow*strhxl(OPS_ACC_MD4(ispec,0,0,0))
+    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) - fornow*strhxl(OPS_ACC4(0,0,0))
 
     yrhs(OPS_ACC_MD2(ispec,0,0,0)) = yrhs(OPS_ACC_MD2(ispec,0,0,0))  &
-              - (bcl2xl(OPS_ACC7(0,0,0))+bcl5xl(OPS_ACC8(0,0,0))*ova2xl(OPS_ACC9(0,0,0)))*stryxl(OPS_ACC_MD5(ispec,0,0,0))  &
+              - (bcl2xl(OPS_ACC7(0,0,0))+bcl5xl(OPS_ACC8(0,0,0))*ova2xl(OPS_ACC9(0,0,0)))*stryxl(OPS_ACC5(0,0,0))  &
               - fornow
 
 END SUBROUTINE bounds_kernel_inflowBC1_eval_xl
@@ -1694,12 +1685,12 @@ SUBROUTINE bounds_kernel_inflowBC1_eval_yl(erhs,yrhs,bclyyl,strhyl,stryyl,strdyl
     integer, intent(in) :: ispec
     real(kind=8) :: fornow
 
-    fornow = bclyyl(OPS_ACC_MD3(ispec,0,0,0))*strdyl(OPS_ACC6(0,0,0))
+    fornow = bclyyl(OPS_ACC3(0,0,0))*strdyl(OPS_ACC6(0,0,0))
 
-    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) - fornow*strhyl(OPS_ACC_MD4(ispec,0,0,0))
+    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) - fornow*strhyl(OPS_ACC4(0,0,0))
 
     yrhs(OPS_ACC_MD2(ispec,0,0,0)) = yrhs(OPS_ACC_MD2(ispec,0,0,0))  &
-              - (bcl2yl(OPS_ACC7(0,0,0))+bcl5yl(OPS_ACC8(0,0,0))*ova2yl(OPS_ACC9(0,0,0)))*stryyl(OPS_ACC_MD5(ispec,0,0,0))  &
+              - (bcl2yl(OPS_ACC7(0,0,0))+bcl5yl(OPS_ACC8(0,0,0))*ova2yl(OPS_ACC9(0,0,0)))*stryyl(OPS_ACC5(0,0,0))  &
               - fornow
 
 END SUBROUTINE bounds_kernel_inflowBC1_eval_yl
@@ -1713,12 +1704,12 @@ SUBROUTINE bounds_kernel_inflowBC1_eval_zl(erhs,yrhs,bclyzl,strhzl,stryzl,strdzl
     integer, intent(in) :: ispec
     real(kind=8) :: fornow
 
-    fornow = bclyzl(OPS_ACC_MD3(ispec,0,0,0))*strdzl(OPS_ACC6(0,0,0))
+    fornow = bclyzl(OPS_ACC3(0,0,0))*strdzl(OPS_ACC6(0,0,0))
 
-    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) - fornow*strhzl(OPS_ACC_MD4(ispec,0,0,0))
+    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) - fornow*strhzl(OPS_ACC4(0,0,0))
 
     yrhs(OPS_ACC_MD2(ispec,0,0,0)) = yrhs(OPS_ACC_MD2(ispec,0,0,0))  &
-              - (bcl2zl(OPS_ACC7(0,0,0))+bcl5zl(OPS_ACC8(0,0,0))*ova2zl(OPS_ACC9(0,0,0)))*stryzl(OPS_ACC_MD5(ispec,0,0,0))  &
+              - (bcl2zl(OPS_ACC7(0,0,0))+bcl5zl(OPS_ACC8(0,0,0))*ova2zl(OPS_ACC9(0,0,0)))*stryzl(OPS_ACC5(0,0,0))  &
               - fornow
 
 END SUBROUTINE bounds_kernel_inflowBC1_eval_zl
@@ -1804,51 +1795,48 @@ SUBROUTINE bounds_kernel_inflowBC3_addsource_zl(erhs,bcl2zl,bcl3zl,bcl4zl,bcl5zl
 
 END SUBROUTINE bounds_kernel_inflowBC3_addsource_zl
 
-SUBROUTINE bounds_kernel_inflowBC3_eval_xl(erhs,bclyxl,ratexl,dydtxl,strhxl,strdxl,struxl,ispec)
+SUBROUTINE bounds_kernel_inflowBC3_eval_xl(erhs,bclyxl,ratexl,dydtxl,strhxl,strdxl,struxl)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs,bclyxl
     real(kind=8), dimension(1), intent(in) :: ratexl,dydtxl,strhxl,strdxl,struxl
-    integer, intent(in) :: ispec
 
-    bclyxl(OPS_ACC_MD2(ispec,0,0,0)) = ratexl(OPS_ACC_MD3(ispec,0,0,0))/strdxl(OPS_ACC6(0,0,0))  &
-              - dydtxl(OPS_ACC_MD4(ispec,0,0,0)) - struxl(OPS_ACC7(0,0,0))*bclyxl(OPS_ACC_MD2(ispec,0,0,0))
+    bclyxl(OPS_ACC2(0,0,0)) = ratexl(OPS_ACC3(0,0,0))/strdxl(OPS_ACC6(0,0,0))  &
+              - dydtxl(OPS_ACC4(0,0,0)) - struxl(OPS_ACC7(0,0,0))*bclyxl(OPS_ACC2(0,0,0))
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0))  &
-              - bclyxl(OPS_ACC_MD2(ispec,0,0,0))*strdxl(OPS_ACC6(0,0,0))*strhxl(OPS_ACC_MD5(ispec,0,0,0))
+              - bclyxl(OPS_ACC2(0,0,0))*strdxl(OPS_ACC6(0,0,0))*strhxl(OPS_ACC5(0,0,0))
 
 END SUBROUTINE bounds_kernel_inflowBC3_eval_xl
 
-SUBROUTINE bounds_kernel_inflowBC3_eval_yl(erhs,bclyyl,rateyl,dydtyl,strhyl,strdyl,strvyl,ispec)
+SUBROUTINE bounds_kernel_inflowBC3_eval_yl(erhs,bclyyl,rateyl,dydtyl,strhyl,strdyl,strvyl)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs,bclyyl
     real(kind=8), dimension(1), intent(in) :: rateyl,dydtyl,strhyl,strdyl,strvyl
-    integer, intent(in) :: ispec
 
-    bclyyl(OPS_ACC_MD2(ispec,0,0,0)) = rateyl(OPS_ACC_MD3(ispec,0,0,0))/strdyl(OPS_ACC6(0,0,0))  &
-              - dydtyl(OPS_ACC_MD4(ispec,0,0,0)) - strvyl(OPS_ACC7(0,0,0))*bclyyl(OPS_ACC_MD2(ispec,0,0,0))
+    bclyyl(OPS_ACC2(0,0,0)) = rateyl(OPS_ACC3(0,0,0))/strdyl(OPS_ACC6(0,0,0))  &
+              - dydtyl(OPS_ACC4(0,0,0)) - strvyl(OPS_ACC7(0,0,0))*bclyyl(OPS_ACC2(0,0,0))
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0))  &
-              - bclyyl(OPS_ACC_MD2(ispec,0,0,0))*strdyl(OPS_ACC6(0,0,0))*strhyl(OPS_ACC_MD5(ispec,0,0,0))
+              - bclyyl(OPS_ACC2(0,0,0))*strdyl(OPS_ACC6(0,0,0))*strhyl(OPS_ACC5(0,0,0))
 
 END SUBROUTINE bounds_kernel_inflowBC3_eval_yl
 
-SUBROUTINE bounds_kernel_inflowBC3_eval_zl(erhs,bclyzl,ratezl,dydtzl,strhzl,strdzl,strwzl,ispec)
+SUBROUTINE bounds_kernel_inflowBC3_eval_zl(erhs,bclyzl,ratezl,dydtzl,strhzl,strdzl,strwzl)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs,bclyzl
     real(kind=8), dimension(1), intent(in) :: ratezl,dydtzl,strhzl,strdzl,strwzl
-    integer, intent(in) :: ispec
 
-    bclyzl(OPS_ACC_MD2(ispec,0,0,0)) = ratezl(OPS_ACC_MD3(ispec,0,0,0))/strdzl(OPS_ACC6(0,0,0))  &
-              - dydtzl(OPS_ACC_MD4(ispec,0,0,0)) - strwzl(OPS_ACC7(0,0,0))*bclyzl(OPS_ACC_MD2(ispec,0,0,0))
+    bclyzl(OPS_ACC2(0,0,0)) = ratezl(OPS_ACC3(0,0,0))/strdzl(OPS_ACC6(0,0,0))  &
+              - dydtzl(OPS_ACC4(0,0,0)) - strwzl(OPS_ACC7(0,0,0))*bclyzl(OPS_ACC2(0,0,0))
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0))  &
-              - bclyzl(OPS_ACC_MD2(ispec,0,0,0))*strdzl(OPS_ACC6(0,0,0))*strhzl(OPS_ACC_MD5(ispec,0,0,0))
+              - bclyzl(OPS_ACC2(0,0,0))*strdzl(OPS_ACC6(0,0,0))*strhzl(OPS_ACC5(0,0,0))
 
 END SUBROUTINE bounds_kernel_inflowBC3_eval_zl
 
@@ -1912,7 +1900,7 @@ SUBROUTINE bounds_kernel_wallBC1_eval_xl(yrhs,stryxl,bcl5xl,ova2xl,ispec)
     integer, intent(in) :: ispec
 
     yrhs(OPS_ACC_MD1(ispec,0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))  &
-              - bcl5xl(OPS_ACC3(0,0,0))*ova2xl(OPS_ACC4(0,0,0))*stryxl(OPS_ACC_MD2(ispec,0,0,0))
+              - bcl5xl(OPS_ACC3(0,0,0))*ova2xl(OPS_ACC4(0,0,0))*stryxl(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC1_eval_xl
 
@@ -1925,7 +1913,7 @@ SUBROUTINE bounds_kernel_wallBC1_eval_yl(yrhs,stryyl,bcl5yl,ova2yl,ispec)
     integer, intent(in) :: ispec
 
     yrhs(OPS_ACC_MD1(ispec,0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))  &
-              - bcl5yl(OPS_ACC3(0,0,0))*ova2yl(OPS_ACC4(0,0,0))*stryyl(OPS_ACC_MD2(ispec,0,0,0))
+              - bcl5yl(OPS_ACC3(0,0,0))*ova2yl(OPS_ACC4(0,0,0))*stryyl(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC1_eval_yl
 
@@ -1938,7 +1926,7 @@ SUBROUTINE bounds_kernel_wallBC1_eval_zl(yrhs,stryzl,bcl5zl,ova2zl,ispec)
     integer, intent(in) :: ispec
 
     yrhs(OPS_ACC_MD1(ispec,0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))  &
-              - bcl5zl(OPS_ACC3(0,0,0))*ova2zl(OPS_ACC4(0,0,0))*stryzl(OPS_ACC_MD2(ispec,0,0,0))
+              - bcl5zl(OPS_ACC3(0,0,0))*ova2zl(OPS_ACC4(0,0,0))*stryzl(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC1_eval_zl
 
@@ -1987,7 +1975,7 @@ SUBROUTINE bounds_kernel_wallBC2_eval_xl(yrhs,stryxl,bcl2xl,bcl5xl,ova2xl,ispec)
     integer, intent(in) :: ispec
 
     yrhs(OPS_ACC_MD1(ispec,0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))  &
-              - (bcl2xl(OPS_ACC3(0,0,0))+bcl5xl(OPS_ACC4(0,0,0))*ova2xl(OPS_ACC5(0,0,0)))*stryxl(OPS_ACC_MD2(ispec,0,0,0))
+              - (bcl2xl(OPS_ACC3(0,0,0))+bcl5xl(OPS_ACC4(0,0,0))*ova2xl(OPS_ACC5(0,0,0)))*stryxl(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC2_eval_xl
 
@@ -2000,7 +1988,7 @@ SUBROUTINE bounds_kernel_wallBC2_eval_yl(yrhs,stryyl,bcl2yl,bcl5yl,ova2yl,ispec)
     integer, intent(in) :: ispec
 
     yrhs(OPS_ACC_MD1(ispec,0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))  &
-              - (bcl2yl(OPS_ACC3(0,0,0))+bcl5yl(OPS_ACC4(0,0,0))*ova2yl(OPS_ACC5(0,0,0)))*stryyl(OPS_ACC_MD2(ispec,0,0,0))
+              - (bcl2yl(OPS_ACC3(0,0,0))+bcl5yl(OPS_ACC4(0,0,0))*ova2yl(OPS_ACC5(0,0,0)))*stryyl(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC2_eval_yl
 
@@ -2013,7 +2001,7 @@ SUBROUTINE bounds_kernel_wallBC2_eval_zl(yrhs,stryzl,bcl2zl,bcl5zl,ova2zl,ispec)
     integer, intent(in) :: ispec
 
     yrhs(OPS_ACC_MD1(ispec,0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))  &
-              - (bcl2zl(OPS_ACC3(0,0,0))+bcl5zl(OPS_ACC4(0,0,0))*ova2zl(OPS_ACC5(0,0,0)))*stryzl(OPS_ACC_MD2(ispec,0,0,0))
+              - (bcl2zl(OPS_ACC3(0,0,0))+bcl5zl(OPS_ACC4(0,0,0))*ova2zl(OPS_ACC5(0,0,0)))*stryzl(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC2_eval_zl
 
@@ -2098,7 +2086,7 @@ SUBROUTINE bounds_kernel_outflowBC1_eval_xr(yrhs,stryxr,bcl1xr,ova2xr,ispec)
     integer, intent(in) :: ispec
 
     yrhs(OPS_ACC_MD1(ispec,0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))  &
-              - bcl1xr(OPS_ACC3(0,0,0))*ova2xr(OPS_ACC4(0,0,0))*stryxr(OPS_ACC_MD2(ispec,0,0,0))
+              - bcl1xr(OPS_ACC3(0,0,0))*ova2xr(OPS_ACC4(0,0,0))*stryxr(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_outflowBC1_eval_xr
 
@@ -2111,7 +2099,7 @@ SUBROUTINE bounds_kernel_outflowBC1_eval_yr(yrhs,stryyr,bcl1yr,ova2yr,ispec)
     integer, intent(in) :: ispec
 
     yrhs(OPS_ACC_MD1(ispec,0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))  &
-              - bcl1yr(OPS_ACC3(0,0,0))*ova2yr(OPS_ACC4(0,0,0))*stryyr(OPS_ACC_MD2(ispec,0,0,0))
+              - bcl1yr(OPS_ACC3(0,0,0))*ova2yr(OPS_ACC4(0,0,0))*stryyr(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_outflowBC1_eval_yr
 
@@ -2124,7 +2112,7 @@ SUBROUTINE bounds_kernel_outflowBC1_eval_zr(yrhs,stryzr,bcl1zr,ova2zr,ispec)
     integer, intent(in) :: ispec
 
     yrhs(OPS_ACC_MD1(ispec,0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))  &
-              - bcl1zr(OPS_ACC3(0,0,0))*ova2zr(OPS_ACC4(0,0,0))*stryzr(OPS_ACC_MD2(ispec,0,0,0))
+              - bcl1zr(OPS_ACC3(0,0,0))*ova2zr(OPS_ACC4(0,0,0))*stryzr(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_outflowBC1_eval_zr
 
@@ -2230,12 +2218,12 @@ SUBROUTINE bounds_kernel_inflowBC1_eval_xr(erhs,yrhs,bclyxr,strhxr,stryxr,strdxr
     integer, intent(in) :: ispec
     real(kind=8) :: fornow
 
-    fornow = bclyxr(OPS_ACC_MD3(ispec,0,0,0))*strdxr(OPS_ACC6(0,0,0))
+    fornow = bclyxr(OPS_ACC3(0,0,0))*strdxr(OPS_ACC6(0,0,0))
 
-    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) - fornow*strhxr(OPS_ACC_MD4(ispec,0,0,0))
+    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) - fornow*strhxr(OPS_ACC4(0,0,0))
 
     yrhs(OPS_ACC_MD2(ispec,0,0,0)) = yrhs(OPS_ACC_MD2(ispec,0,0,0))  &
-              - (bcl2xr(OPS_ACC7(0,0,0))+bcl1xr(OPS_ACC8(0,0,0))*ova2xr(OPS_ACC9(0,0,0)))*stryxr(OPS_ACC_MD5(ispec,0,0,0))  &
+              - (bcl2xr(OPS_ACC7(0,0,0))+bcl1xr(OPS_ACC8(0,0,0))*ova2xr(OPS_ACC9(0,0,0)))*stryxr(OPS_ACC5(0,0,0))  &
               - fornow
 
 END SUBROUTINE bounds_kernel_inflowBC1_eval_xr
@@ -2249,12 +2237,12 @@ SUBROUTINE bounds_kernel_inflowBC1_eval_yr(erhs,yrhs,bclyyr,strhyr,stryyr,strdyr
     integer, intent(in) :: ispec
     real(kind=8) :: fornow
 
-    fornow = bclyyr(OPS_ACC_MD3(ispec,0,0,0))*strdyr(OPS_ACC6(0,0,0))
+    fornow = bclyyr(OPS_ACC3(0,0,0))*strdyr(OPS_ACC6(0,0,0))
 
-    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) - fornow*strhyr(OPS_ACC_MD4(ispec,0,0,0))
+    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) - fornow*strhyr(OPS_ACC4(0,0,0))
 
     yrhs(OPS_ACC_MD2(ispec,0,0,0)) = yrhs(OPS_ACC_MD2(ispec,0,0,0))  &
-              - (bcl2yr(OPS_ACC7(0,0,0))+bcl1yr(OPS_ACC8(0,0,0))*ova2yr(OPS_ACC9(0,0,0)))*stryyr(OPS_ACC_MD5(ispec,0,0,0))  &
+              - (bcl2yr(OPS_ACC7(0,0,0))+bcl1yr(OPS_ACC8(0,0,0))*ova2yr(OPS_ACC9(0,0,0)))*stryyr(OPS_ACC5(0,0,0))  &
               - fornow
 
 END SUBROUTINE bounds_kernel_inflowBC1_eval_yr
@@ -2268,12 +2256,12 @@ SUBROUTINE bounds_kernel_inflowBC1_eval_zr(erhs,yrhs,bclyzr,strhzr,stryzr,strdzr
     integer, intent(in) :: ispec
     real(kind=8) :: fornow
 
-    fornow = bclyzr(OPS_ACC_MD3(ispec,0,0,0))*strdzr(OPS_ACC6(0,0,0))
+    fornow = bclyzr(OPS_ACC3(0,0,0))*strdzr(OPS_ACC6(0,0,0))
 
-    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) - fornow*strhzr(OPS_ACC_MD4(ispec,0,0,0))
+    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) - fornow*strhzr(OPS_ACC4(0,0,0))
 
     yrhs(OPS_ACC_MD2(ispec,0,0,0)) = yrhs(OPS_ACC_MD2(ispec,0,0,0))  &
-              - (bcl2zr(OPS_ACC7(0,0,0))+bcl5zr(OPS_ACC8(0,0,0))*ova2zr(OPS_ACC9(0,0,0)))*stryzr(OPS_ACC_MD5(ispec,0,0,0))  &
+              - (bcl2zr(OPS_ACC7(0,0,0))+bcl5zr(OPS_ACC8(0,0,0))*ova2zr(OPS_ACC9(0,0,0)))*stryzr(OPS_ACC5(0,0,0))  &
               - fornow
 
 END SUBROUTINE bounds_kernel_inflowBC1_eval_zr
@@ -2362,51 +2350,48 @@ SUBROUTINE bounds_kernel_inflowBC3_addsource_zr(erhs,bcl1zr,bcl2zr,bcl3zr,bcl4zr
 
 END SUBROUTINE bounds_kernel_inflowBC3_addsource_zr
 
-SUBROUTINE bounds_kernel_inflowBC3_eval_xr(erhs,bclyxr,ratexr,dydtxr,strhxr,strdxr,struxr,ispec)
+SUBROUTINE bounds_kernel_inflowBC3_eval_xr(erhs,bclyxr,ratexr,dydtxr,strhxr,strdxr,struxr)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs,bclyxr
     real(kind=8), dimension(1), intent(in) :: ratexr,dydtxr,strhxr,strdxr,struxr
-    integer, intent(in) :: ispec
 
-    bclyxr(OPS_ACC_MD2(ispec,0,0,0)) = ratexr(OPS_ACC_MD3(ispec,0,0,0))/strdxr(OPS_ACC6(0,0,0))  &
-              - dydtxr(OPS_ACC_MD4(ispec,0,0,0)) - struxr(OPS_ACC7(0,0,0))*bclyxr(OPS_ACC_MD2(ispec,0,0,0))
+    bclyxr(OPS_ACC2(0,0,0)) = ratexr(OPS_ACC3(0,0,0))/strdxr(OPS_ACC6(0,0,0))  &
+              - dydtxr(OPS_ACC4(0,0,0)) - struxr(OPS_ACC7(0,0,0))*bclyxr(OPS_ACC2(0,0,0))
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0))  &
-              - bclyxr(OPS_ACC_MD2(ispec,0,0,0))*strdxr(OPS_ACC6(0,0,0))*strhxr(OPS_ACC_MD5(ispec,0,0,0))
+              - bclyxr(OPS_ACC2(0,0,0))*strdxr(OPS_ACC6(0,0,0))*strhxr(OPS_ACC5(0,0,0))
 
 END SUBROUTINE bounds_kernel_inflowBC3_eval_xr
 
-SUBROUTINE bounds_kernel_inflowBC3_eval_yr(erhs,bclyyr,rateyr,dydtyr,strhyr,strdyr,strvyr,ispec)
+SUBROUTINE bounds_kernel_inflowBC3_eval_yr(erhs,bclyyr,rateyr,dydtyr,strhyr,strdyr,strvyr)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs,bclyyr
     real(kind=8), dimension(1), intent(in) :: rateyr,dydtyr,strhyr,strdyr,strvyr
-    integer, intent(in) :: ispec
 
-    bclyyr(OPS_ACC_MD2(ispec,0,0,0)) = rateyr(OPS_ACC_MD3(ispec,0,0,0))/strdyr(OPS_ACC6(0,0,0))  &
-              - dydtyr(OPS_ACC_MD4(ispec,0,0,0)) - strvyr(OPS_ACC7(0,0,0))*bclyyr(OPS_ACC_MD2(ispec,0,0,0))
+    bclyyr(OPS_ACC2(0,0,0)) = rateyr(OPS_ACC3(0,0,0))/strdyr(OPS_ACC6(0,0,0))  &
+              - dydtyr(OPS_ACC4(0,0,0)) - strvyr(OPS_ACC7(0,0,0))*bclyyr(OPS_ACC2(0,0,0))
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0))  &
-              - bclyyr(OPS_ACC_MD2(ispec,0,0,0))*strdyr(OPS_ACC6(0,0,0))*strhyr(OPS_ACC_MD5(ispec,0,0,0))
+              - bclyyr(OPS_ACC2(0,0,0))*strdyr(OPS_ACC6(0,0,0))*strhyr(OPS_ACC5(0,0,0))
 
 END SUBROUTINE bounds_kernel_inflowBC3_eval_yr
 
-SUBROUTINE bounds_kernel_inflowBC3_eval_zr(erhs,bclyzr,ratezr,dydtzr,strhzr,strdzr,strwzr,ispec)
+SUBROUTINE bounds_kernel_inflowBC3_eval_zr(erhs,bclyzr,ratezr,dydtzr,strhzr,strdzr,strwzr)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: erhs,bclyzr
     real(kind=8), dimension(1), intent(in) :: ratezr,dydtzr,strhzr,strdzr,strwzr
-    integer, intent(in) :: ispec
 
-    bclyzr(OPS_ACC_MD2(ispec,0,0,0)) = ratezr(OPS_ACC_MD3(ispec,0,0,0))/strdzr(OPS_ACC6(0,0,0))  &
-              - dydtzr(OPS_ACC_MD4(ispec,0,0,0)) - strwzr(OPS_ACC7(0,0,0))*bclyzr(OPS_ACC_MD2(ispec,0,0,0))
+    bclyzr(OPS_ACC2(0,0,0)) = ratezr(OPS_ACC3(0,0,0))/strdzr(OPS_ACC6(0,0,0))  &
+              - dydtzr(OPS_ACC4(0,0,0)) - strwzr(OPS_ACC7(0,0,0))*bclyzr(OPS_ACC2(0,0,0))
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0))  &
-              - bclyzr(OPS_ACC_MD2(ispec,0,0,0))*strdzr(OPS_ACC6(0,0,0))*strhzr(OPS_ACC_MD5(ispec,0,0,0))
+              - bclyzr(OPS_ACC2(0,0,0))*strdzr(OPS_ACC6(0,0,0))*strhzr(OPS_ACC5(0,0,0))
 
 END SUBROUTINE bounds_kernel_inflowBC3_eval_zr
 
@@ -2470,7 +2455,7 @@ SUBROUTINE bounds_kernel_wallBC1_eval_xr(yrhs,stryxr,bcl1xr,ova2xr,ispec)
     integer, intent(in) :: ispec
 
     yrhs(OPS_ACC_MD1(ispec,0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))  &
-              - bcl1xr(OPS_ACC3(0,0,0))*ova2xr(OPS_ACC4(0,0,0))*stryxr(OPS_ACC_MD2(ispec,0,0,0))
+              - bcl1xr(OPS_ACC3(0,0,0))*ova2xr(OPS_ACC4(0,0,0))*stryxr(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC1_eval_xr
 
@@ -2483,7 +2468,7 @@ SUBROUTINE bounds_kernel_wallBC1_eval_yr(yrhs,stryyr,bcl1yr,ova2yr,ispec)
     integer, intent(in) :: ispec
 
     yrhs(OPS_ACC_MD1(ispec,0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))  &
-              - bcl1yr(OPS_ACC3(0,0,0))*ova2yr(OPS_ACC4(0,0,0))*stryyr(OPS_ACC_MD2(ispec,0,0,0))
+              - bcl1yr(OPS_ACC3(0,0,0))*ova2yr(OPS_ACC4(0,0,0))*stryyr(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC1_eval_yr
 
@@ -2496,7 +2481,7 @@ SUBROUTINE bounds_kernel_wallBC1_eval_zr(yrhs,stryzr,bcl1zr,ova2zr,ispec)
     integer, intent(in) :: ispec
 
     yrhs(OPS_ACC_MD1(ispec,0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))  &
-              - bcl1zr(OPS_ACC3(0,0,0))*ova2zr(OPS_ACC4(0,0,0))*stryzr(OPS_ACC_MD2(ispec,0,0,0))
+              - bcl1zr(OPS_ACC3(0,0,0))*ova2zr(OPS_ACC4(0,0,0))*stryzr(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC1_eval_zr
 
@@ -2545,7 +2530,7 @@ SUBROUTINE bounds_kernel_wallBC2_eval_xr(yrhs,stryxr,bcl1xr,bcl2xr,ova2xr,ispec)
     integer, intent(in) :: ispec
 
     yrhs(OPS_ACC_MD1(ispec,0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))  &
-              - (bcl2xr(OPS_ACC4(0,0,0))+bcl1xr(OPS_ACC3(0,0,0))*ova2xr(OPS_ACC5(0,0,0)))*stryxr(OPS_ACC_MD1(ispec,0,0,0))
+              - (bcl2xr(OPS_ACC4(0,0,0))+bcl1xr(OPS_ACC3(0,0,0))*ova2xr(OPS_ACC5(0,0,0)))*stryxr(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC2_eval_xr
 
@@ -2558,7 +2543,7 @@ SUBROUTINE bounds_kernel_wallBC2_eval_yr(yrhs,stryyr,bcl1yr,bcl2yr,ova2yr,ispec)
     integer, intent(in) :: ispec
 
     yrhs(OPS_ACC_MD1(ispec,0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))  &
-              - (bcl2yr(OPS_ACC4(0,0,0))+bcl1yr(OPS_ACC3(0,0,0))*ova2yr(OPS_ACC5(0,0,0)))*stryyr(OPS_ACC_MD1(ispec,0,0,0))
+              - (bcl2yr(OPS_ACC4(0,0,0))+bcl1yr(OPS_ACC3(0,0,0))*ova2yr(OPS_ACC5(0,0,0)))*stryyr(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC2_eval_yr
 
@@ -2571,10 +2556,6 @@ SUBROUTINE bounds_kernel_wallBC2_eval_zr(yrhs,stryzr,bcl1zr,bcl2zr,ova2zr,ispec)
     integer, intent(in) :: ispec
 
     yrhs(OPS_ACC_MD1(ispec,0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))  &
-              - (bcl2zr(OPS_ACC4(0,0,0))+bcl1zr(OPS_ACC3(0,0,0))*ova2zr(OPS_ACC5(0,0,0)))*stryzr(OPS_ACC_MD1(ispec,0,0,0))
+              - (bcl2zr(OPS_ACC4(0,0,0))+bcl1zr(OPS_ACC3(0,0,0))*ova2zr(OPS_ACC5(0,0,0)))*stryzr(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_wallBC2_eval_zr
-
-
-
-

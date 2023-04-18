@@ -55,8 +55,8 @@ SUBROUTINE bcytzl
     DO ispec = 1,nspec
         rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
         call ops_par_loop(bcyt_kernel_zdir, "bcyt_kernel_zdir", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(d_stryzl, 2, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_dydtzl, 2, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_stryzl(ispec), 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_dydtzl(ispec), 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(yrin, nspcmx, "real(8)", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 

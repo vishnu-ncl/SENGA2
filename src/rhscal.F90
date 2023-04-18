@@ -643,7 +643,7 @@ SUBROUTINE rhscal
             rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
             call ops_par_loop(boundary_kernel_reaction_xdir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_ratexl, 2, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_ratexl(ispec), 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END DO
@@ -653,7 +653,7 @@ SUBROUTINE rhscal
             rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
             call ops_par_loop(boundary_kernel_reaction_xdir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_ratexr, 2, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_ratexr(ispec), 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END DO
@@ -665,7 +665,7 @@ SUBROUTINE rhscal
             rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
             call ops_par_loop(boundary_kernel_reaction_ydir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_rateyl, 2, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_rateyl(ispec), 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END DO
@@ -675,7 +675,7 @@ SUBROUTINE rhscal
             rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
             call ops_par_loop(boundary_kernel_reaction_ydir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_rateyr, 2, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_rateyr(ispec), 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END DO
@@ -687,7 +687,7 @@ SUBROUTINE rhscal
             rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
             call ops_par_loop(boundary_kernel_reaction_zdir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_ratezl, 2, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_ratezl(ispec), 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END DO
@@ -697,7 +697,7 @@ SUBROUTINE rhscal
             rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
             call ops_par_loop(boundary_kernel_reaction_zdir, "COLLECT REACTION RATE FOR BCs", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_rate, 2, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_ratezr, 2, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_ratezr(ispec), 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END DO
@@ -926,8 +926,8 @@ SUBROUTINE rhscal
             call ops_par_loop(boundary_kernel_mass_xdir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_stryxl, 2, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_bclyxl, 2, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_stryxl(ispec), 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_bclyxl(ispec), 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END IF
@@ -936,8 +936,8 @@ SUBROUTINE rhscal
             call ops_par_loop(boundary_kernel_mass_xdir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_stryxr, 2, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_bclyxr, 2, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_stryxr(ispec), 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_bclyxr(ispec), 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END IF
@@ -948,8 +948,8 @@ SUBROUTINE rhscal
             call ops_par_loop(boundary_kernel_mass_ydir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_stryyl, 2, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_bclyyl, 2, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_stryyl(ispec), 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_bclyyl(ispec), 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END IF
@@ -958,8 +958,8 @@ SUBROUTINE rhscal
             call ops_par_loop(boundary_kernel_mass_ydir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_stryyr, 2, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_bclyyr, 2, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_stryyr(ispec), 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_bclyyr(ispec), 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END IF
@@ -970,8 +970,8 @@ SUBROUTINE rhscal
             call ops_par_loop(boundary_kernel_mass_zdir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_stryzl, 2, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_bclyzl, 2, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_stryzl(ispec), 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_bclyzl(ispec), 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END IF
@@ -980,8 +980,8 @@ SUBROUTINE rhscal
             call ops_par_loop(boundary_kernel_mass_zdir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_stryzr, 2, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_bclyzr, 2, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_stryzr(ispec), 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_bclyzr(ispec), 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
         END IF
@@ -1057,7 +1057,7 @@ SUBROUTINE rhscal
             DO jspec = 1, nspec
 !               COMBINATION RULE FOR MASS DIFFUSIVITY
                 call ops_par_loop(math_MD_kernel_eqW1, "MASS DIFFUSIVITY FOR EACH SPECIES - part 1", senga_grid, 3, rangexyz, &
-                                ops_arg_dat(d_ctrans, 2, s3d_000, "real(8)", OPS_RW), &
+                                ops_arg_dat(d_ctrans(jspec), 1, s3d_000, "real(8)", OPS_RW), &
                                 ops_arg_dat(d_combo1, 1, s3d_000, "real(8)", OPS_RW), &
                                 ops_arg_dat(d_combo2, 1, s3d_000, "real(8)", OPS_RW), &
                                 ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1078,7 +1078,7 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_combo2, 1, s3d_000, "real(8)", OPS_RW), &
                             ops_arg_dat(d_difmix, 1, s3d_000, "real(8)", OPS_RW), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_ctrans, 2, s3d_000, "real(8)", OPS_READ), &
+                            ops_arg_dat(d_ctrans(ispec), 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wmomix, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1196,16 +1196,14 @@ SUBROUTINE rhscal
             rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
             call ops_par_loop(boundary_kernel_speciesH_xdir, "COLLECT SPECIES H FOR BCs", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_strhxl, 2, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_strhxl(ispec), 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
 
         END IF
         IF(fxrcnv) THEN
             rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
             call ops_par_loop(boundary_kernel_speciesH_xdir, "COLLECT SPECIES H FOR BCs", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_strhxr, 2, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_strhxr(ispec), 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
 
         END IF
   
@@ -1214,16 +1212,14 @@ SUBROUTINE rhscal
             rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
             call ops_par_loop(boundary_kernel_speciesH_ydir, "COLLECT SPECIES H FOR BCs", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_strhyl, 2, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_strhyl(ispec), 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
 
         END IF
         IF(fyrcnv) THEN
             rangexyz = (/1,nxglbl,nyglbl,nyglbl,1,nzglbl/)
             call ops_par_loop(boundary_kernel_speciesH_ydir, "COLLECT SPECIES H FOR BCs", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_strhyr, 2, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_strhyr(ispec), 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE))
 
         END IF
   
@@ -1232,16 +1228,14 @@ SUBROUTINE rhscal
             rangexyz = (/1,nxglbl,1,nyglbl,1,1/)
             call ops_par_loop(boundary_kernel_speciesH_zdir, "COLLECT SPECIES H FOR BCs", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_strhzl, 2, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_strhzl(ispec), 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
 
         END IF
         IF(fzrcnv) THEN
             rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
             call ops_par_loop(boundary_kernel_speciesH_zdir, "COLLECT SPECIES H FOR BCs", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_strhzr, 2, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_dat(d_strhzr(ispec), 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE))
 
         END IF
 
@@ -2674,25 +2668,29 @@ SUBROUTINE rhscal
     IF(flmavt)THEN
 
         rangexyz = (/1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz/)
-        call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_combo1, 1, s3d_000, "real(8)", OPS_WRITE))
 
         DO ispec = 1, nspec
             call ops_par_loop(math_MD_kernel_eqY1, "STORE VISCOSITY IN DIFMIX - part 1", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(d_ctrans, 2, s3d_000, "real(8)", OPS_WRITE), &
+                            ops_arg_dat(d_ctrans(ispec), 1, s3d_000, "real(8)", OPS_WRITE), &
                             ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_gbl(viscco, nvcfmx*nspcmx, "real(8)", OPS_READ), &
                             ops_arg_gbl(ncovis, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ncovm1, 1, "integer", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+        END DO
 
+        call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_combo1, 1, s3d_000, "real(8)", OPS_WRITE))
+
+        DO ispec = 1, nspec
             call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_combo2, 1, s3d_000, "real(8)", OPS_WRITE))
 
             DO jspec = 1, nspec
                 call ops_par_loop(math_MD_kernel_eqY2, "STORE VISCOSITY IN DIFMIX - part 2", senga_grid, 3, rangexyz, &
                                 ops_arg_dat(d_combo2, 1, s3d_000, "real(8)", OPS_RW), &
-                                ops_arg_dat(d_ctrans, 2, s3d_000, "real(8)", OPS_READ), &
+                                ops_arg_dat(d_ctrans(ispec), 1, s3d_000, "real(8)", OPS_READ), &
+                                ops_arg_dat(d_ctrans(jspec), 1, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
                                 ops_arg_gbl(wilko1, nspcmx*nspcmx, "real(8)", OPS_READ), &
@@ -2703,7 +2701,7 @@ SUBROUTINE rhscal
 
             call ops_par_loop(math_MD_kernel_eqY3, "STORE VISCOSITY IN DIFMIX - part 2", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_combo1, 1, s3d_000, "real(8)", OPS_RW), &
-                            ops_arg_dat(d_ctrans, 2, s3d_000, "real(8)", OPS_READ), &
+                            ops_arg_dat(d_ctrans(ispec), 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_combo2, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &

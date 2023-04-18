@@ -350,11 +350,11 @@ SUBROUTINE math_MD_kernel_eqW1(ctrans,combo1,combo2,transp,prun,yrhs,diffco,ovwm
         fornow = fornow*transp(OPS_ACC4(0,0,0)) + diffco(icp,jspec,ispec)
     END DO
 
-    ctrans(OPS_ACC_MD1(jspec,0,0,0)) = EXP(fornow)*pdifgb/prun(OPS_ACC5(0,0,0))
+    ctrans(OPS_ACC1(0,0,0)) = EXP(fornow)*pdifgb/prun(OPS_ACC5(0,0,0))
 
     fornow = yrhs(OPS_ACC_MD6(jspec,0,0,0)) + dfctol
     combo1(OPS_ACC2(0,0,0)) = combo1(OPS_ACC2(0,0,0)) + fornow
-    combo2(OPS_ACC3(0,0,0)) = combo2(OPS_ACC3(0,0,0)) + fornow*ovwmol(jspec)/ctrans(OPS_ACC_MD1(jspec,0,0,0))
+    combo2(OPS_ACC3(0,0,0)) = combo2(OPS_ACC3(0,0,0)) + fornow*ovwmol(jspec)/ctrans(OPS_ACC1(0,0,0))
 
 END SUBROUTINE math_MD_kernel_eqW1
 
@@ -374,7 +374,7 @@ SUBROUTINE math_MD_kernel_eqW2(combo1,combo2,difmix,store7,ctrans,yrhs,wmomix,dr
 
     fornow = yrhs(OPS_ACC_MD6(ispec,0,0,0)) + dfctol
     combo1(OPS_ACC1(0,0,0)) = combo1(OPS_ACC1(0,0,0)) - fornow
-    combo2(OPS_ACC2(0,0,0)) = combo2(OPS_ACC2(0,0,0)) - fornow*ovwmol(ispec)/ctrans(OPS_ACC_MD5(ispec,0,0,0))
+    combo2(OPS_ACC2(0,0,0)) = combo2(OPS_ACC2(0,0,0)) - fornow*ovwmol(ispec)/ctrans(OPS_ACC5(0,0,0))
     combo2(OPS_ACC2(0,0,0)) = combo2(OPS_ACC2(0,0,0))*wmomix(OPS_ACC7(0,0,0))
 
     difmix(OPS_ACC3(0,0,0)) = drhs(OPS_ACC8(0,0,0))*combo1(OPS_ACC1(0,0,0))/combo2(OPS_ACC2(0,0,0))
@@ -432,15 +432,15 @@ SUBROUTINE math_MD_kernel_eqY1(ctrans,transp,viscco,ncovis,ncovm1,ispec)
         fornow = fornow*transp(OPS_ACC2(0,0,0)) + viscco(icp,ispec)
     END DO
 
-    ctrans(OPS_ACC_MD1(ispec,0,0,0)) = EXP(fornow)
+    ctrans(OPS_ACC1(0,0,0)) = EXP(fornow)
 
 END SUBROUTINE math_MD_kernel_eqY1
 
-SUBROUTINE math_MD_kernel_eqY2(combo2,ctrans,yrhs,ovwmol,wilko1,wilko2,ispec,jspec)
+SUBROUTINE math_MD_kernel_eqY2(combo2,ctrans_ispec,ctrans_jspec,yrhs,ovwmol,wilko1,wilko2,ispec,jspec)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: ctrans,yrhs
+    real(kind=8), dimension(1), intent(in) :: ctrans_ispec,ctrans_jspec,yrhs
     real(kind=8), dimension(1) :: combo2
     integer, intent(in) :: ispec,jspec
 
@@ -449,10 +449,10 @@ SUBROUTINE math_MD_kernel_eqY2(combo2,ctrans,yrhs,ovwmol,wilko1,wilko2,ispec,jsp
 
     real(kind=8) :: fornow
 
-    fornow = SQRT(ctrans(OPS_ACC_MD2(ispec,0,0,0))/ctrans(OPS_ACC_MD2(jspec,0,0,0)))
+    fornow = SQRT(ctrans_ispec(OPS_ACC2(0,0,0))/ctrans_jspec(OPS_ACC3(0,0,0)))
     fornow = 1.0_8 + fornow*wilko2(jspec,ispec)
     fornow = wilko1(jspec,ispec)*fornow*fornow
-    combo2(OPS_ACC1(0,0,0)) = combo2(OPS_ACC1(0,0,0)) + yrhs(OPS_ACC_MD3(jspec,0,0,0))*ovwmol(jspec)*fornow
+    combo2(OPS_ACC1(0,0,0)) = combo2(OPS_ACC1(0,0,0)) + yrhs(OPS_ACC_MD4(jspec,0,0,0))*ovwmol(jspec)*fornow
 
 END SUBROUTINE math_MD_kernel_eqY2
 
@@ -468,7 +468,7 @@ SUBROUTINE math_MD_kernel_eqY3(combo1,ctrans,combo2,yrhs,ovwmol,ispec)
 
     real(kind=8) :: fornow
 
-    fornow = ctrans(OPS_ACC_MD2(ispec,0,0,0))/combo2(OPS_ACC3(0,0,0))
+    fornow = ctrans(OPS_ACC2(0,0,0))/combo2(OPS_ACC3(0,0,0))
     combo1(OPS_ACC1(0,0,0)) = combo1(OPS_ACC1(0,0,0)) + yrhs(OPS_ACC_MD4(ispec,0,0,0))*ovwmol(ispec)*fornow
 
 END SUBROUTINE math_MD_kernel_eqY3
