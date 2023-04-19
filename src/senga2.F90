@@ -196,7 +196,6 @@ PROGRAM senga2
 
         if(itime == 2100) then
             call print_dats()
-            STOP
         end if
 
 !       =======================================================================

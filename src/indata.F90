@@ -1379,9 +1379,9 @@ SUBROUTINE indata
 !   ================================
     call tempin
 
-#ifdef OPS_LAZY
-    call ops_execute()
-#endif
+!#ifdef OPS_LAZY
+!    call ops_execute()
+!#endif
 
 !   =========================================================================
 
@@ -1390,7 +1390,7 @@ SUBROUTINE indata
     call dtinit
 
 !   ==========================================================================
-
+!
 !   INITIALISE SPATIAL DIFFERENTIATORS
 !   ==================================
     call dfinit
