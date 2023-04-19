@@ -36,17 +36,17 @@ SUBROUTINE temper_kernel_eqB(tcoeff, tderiv, itndex, yrhs, amascp, amasct, ncpol
     itint = 1 + MOD(itndex(OPS_ACC3(0,0,0)),icoef1)/icoef2
 
 !   CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
-    tcoeff(OPS_ACC_MD1(1,0,0,0)) = tcoeff(OPS_ACC_MD1(1,0,0,0)) + yrhs(OPS_ACC_MD4(ispec,0,0,0))* &
+    tcoeff(OPS_ACC_MD1(1,0,0,0)) = tcoeff(OPS_ACC_MD1(1,0,0,0)) + yrhs(OPS_ACC4(0,0,0))* &
                                     amascp(ncenth(itint,ispec),itint,ispec)
 
-    tcoeff(OPS_ACC_MD1(2,0,0,0)) = tcoeff(OPS_ACC_MD1(2,0,0,0)) + yrhs(OPS_ACC_MD4(ispec,0,0,0))*amasct(1,itint,ispec)
+    tcoeff(OPS_ACC_MD1(2,0,0,0)) = tcoeff(OPS_ACC_MD1(2,0,0,0)) + yrhs(OPS_ACC4(0,0,0))*amasct(1,itint,ispec)
 
     tderiv(OPS_ACC_MD2(1,0,0,0)) = tcoeff(OPS_ACC_MD1(2,0,0,0))
 
     DO icp = 2, ncpoly(itint,ispec)
-        tcoeff(OPS_ACC_MD1(icp+1,0,0,0)) = tcoeff(OPS_ACC_MD1(icp+1,0,0,0)) + yrhs(OPS_ACC_MD4(ispec,0,0,0))*  &
+        tcoeff(OPS_ACC_MD1(icp+1,0,0,0)) = tcoeff(OPS_ACC_MD1(icp+1,0,0,0)) + yrhs(OPS_ACC4(0,0,0))*  &
                                                                                 amasct(icp,itint,ispec)
-        tderiv(OPS_ACC_MD2(icp,0,0,0))    = tderiv(OPS_ACC_MD2(icp,0,0,0)) + yrhs(OPS_ACC_MD4(ispec,0,0,0))*  &
+        tderiv(OPS_ACC_MD2(icp,0,0,0))    = tderiv(OPS_ACC_MD2(icp,0,0,0)) + yrhs(OPS_ACC4(0,0,0))*  &
                                                                              amascp(icp,itint,ispec)
     END DO
 
@@ -62,7 +62,7 @@ SUBROUTINE temper_kernel_eqC(store7, yrhs, rgspec, ispec)
     integer, intent(in) :: ispec
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
 
-    store7(OPS_ACC1(0,0,0)) = store7(OPS_ACC1(0,0,0)) + yrhs(OPS_ACC_MD2(ispec,0,0,0))*rgspec(ispec)
+    store7(OPS_ACC1(0,0,0)) = store7(OPS_ACC1(0,0,0)) + yrhs(OPS_ACC2(0,0,0))*rgspec(ispec)
 
 END SUBROUTINE temper_kernel_eqC
 
@@ -184,7 +184,7 @@ SUBROUTINE temper_kernel_eqE(transp, itndex, yrhs, trun, amascp, ncpoly, ncpom1,
         cpfory = cpfory*trun(OPS_ACC4(0,0,0)) + amascp(icp,itint,ispec)
     END DO
 
-    transp(OPS_ACC1(0,0,0)) = transp(OPS_ACC1(0,0,0)) + yrhs(OPS_ACC_MD3(ispec,0,0,0))*cpfory
+    transp(OPS_ACC1(0,0,0)) = transp(OPS_ACC1(0,0,0)) + yrhs(OPS_ACC3(0,0,0))*cpfory
 
 END SUBROUTINE temper_kernel_eqE
 

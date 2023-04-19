@@ -83,6 +83,16 @@ SUBROUTINE tempin
     IF (nsbczr == nsbco1 .or. nsbczr == nsbci1 .or. nsbczr == nsbci2 .or. &
         nsbczr == nsbci3 .or. nsbczr == nsbcw1 .or. nsbczr == nsbcw2) rangexyz(6) = nzglbl
 
+    DO ispec = 1,nspcmx
+        call ops_par_loop(copy_kernel_sdim_to_mdim, "A_multidim(ispec) = B", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_yrhs_mdim, 2, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+#ifdef OPS_LAZY
+    call ops_execute()
+#endif
+    END DO
+
     call ops_par_loop(tempin_kernel_main, "tempin kernel", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
@@ -90,7 +100,7 @@ SUBROUTINE tempin
                     ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_yrhs_mdim, 2, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_gbl(amascp, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
                     ops_arg_gbl(amasct, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
                     ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer", OPS_READ), &
@@ -101,6 +111,22 @@ SUBROUTINE tempin
                     ops_arg_gbl(nspec, 1, "integer", OPS_READ), &
                     ops_arg_gbl(iproc, 1, "integer", OPS_READ), &
                     ops_arg_idx())
+
+#ifdef OPS_LAZY
+    call ops_execute()
+#endif
+
+    DO ispec = 1,nspcmx
+        call ops_par_loop(copy_kernel_mdim_to_sdim, "A = B_multidim(ispec)", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_yrhs_mdim, 2, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+#ifdef OPS_LAZY
+    call ops_execute()
+#endif
+    END DO
+
+!    call ops_free_dat(d_yrhs_mdim)
 
 !   CONSTRUCT THE TEMPERATURE INTERVAL INDEX
 !   EVALUATE PRESSURE
@@ -123,7 +149,7 @@ SUBROUTINE tempin
         call ops_par_loop(temper_kernel_eqE, "temper eq E", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_RW), &
                         ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_RW), &
-                        ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(amascp, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
                         ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer", OPS_READ), &
@@ -136,7 +162,7 @@ SUBROUTINE tempin
 !       EVALUATE (DENSITY TIMES) MIXTURE GAS CONSTANT FOR PRESSURE
         call ops_par_loop(temper_kernel_eqC, "temper eq C", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_RW), &
-                        ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 

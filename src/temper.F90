@@ -113,7 +113,7 @@ SUBROUTINE temper
                         ops_arg_dat(d_tcoeff, 6, s3d_000, "real(8)", OPS_RW), &
                         ops_arg_dat(d_tderiv, 5, s3d_000, "real(8)", OPS_RW), &
                         ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_WRITE), &
-                        ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(amascp, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
                         ops_arg_gbl(amasct, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
                         ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer", OPS_READ), &
@@ -129,7 +129,7 @@ SUBROUTINE temper
 !       TO ACCUMULATE (DENSITY TIMES) MIXTURE SPECIFIC GAS CONSTANT
         call ops_par_loop(temper_kernel_eqC, "temper eq C", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_RW), &
-                        ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
@@ -171,7 +171,7 @@ SUBROUTINE temper
         call ops_par_loop(temper_kernel_eqE, "temper eq E", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_RW), &
                         ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_RW), &
-                        ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(amascp, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
                         ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer", OPS_READ), &

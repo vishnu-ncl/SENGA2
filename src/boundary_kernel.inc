@@ -247,41 +247,38 @@ SUBROUTINE boundary_kernel_velderiv_zdir(store,bclz)
 
 END SUBROUTINE boundary_kernel_velderiv_zdir
 
-SUBROUTINE boundary_kernel_mass_xdir(yrhs, store1, stryx, bclyx, ispec)
+SUBROUTINE boundary_kernel_mass_xdir(yrhs, store1, stryx, bclyx)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: stryx, bclyx
     real(kind=8), dimension(1), intent(in) :: yrhs, store1
-    integer, intent(in) :: ispec
 
-    stryx(OPS_ACC3(0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))
+    stryx(OPS_ACC3(0,0,0)) = yrhs(OPS_ACC1(0,0,0))
     bclyx(OPS_ACC4(0,0,0)) = store1(OPS_ACC2(0,0,0))
 
 END SUBROUTINE boundary_kernel_mass_xdir
 
-SUBROUTINE boundary_kernel_mass_ydir(yrhs, store2, stryy, bclyy, ispec)
+SUBROUTINE boundary_kernel_mass_ydir(yrhs, store2, stryy, bclyy)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: stryy, bclyy
     real(kind=8), dimension(1), intent(in) :: yrhs, store2
-    integer, intent(in) :: ispec
 
-    stryy(OPS_ACC3(0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))
+    stryy(OPS_ACC3(0,0,0)) = yrhs(OPS_ACC1(0,0,0))
     bclyy(OPS_ACC4(0,0,0)) = store2(OPS_ACC2(0,0,0))
 
 END SUBROUTINE boundary_kernel_mass_ydir
 
-SUBROUTINE boundary_kernel_mass_zdir(yrhs, store3, stryz, bclyz, ispec)
+SUBROUTINE boundary_kernel_mass_zdir(yrhs, store3, stryz, bclyz)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: stryz, bclyz
     real(kind=8), dimension(1), intent(in) :: yrhs, store3
-    integer, intent(in) :: ispec
 
-    stryz(OPS_ACC3(0,0,0)) = yrhs(OPS_ACC_MD1(ispec,0,0,0))
+    stryz(OPS_ACC3(0,0,0)) = yrhs(OPS_ACC1(0,0,0))
     bclyz(OPS_ACC4(0,0,0)) = store3(OPS_ACC2(0,0,0))
 
 END SUBROUTINE boundary_kernel_mass_zdir

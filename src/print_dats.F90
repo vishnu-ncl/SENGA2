@@ -38,7 +38,9 @@ SUBROUTINE print_dats()
 
     fname = 'test_dir/yrhs_timestep'//citime//pnxres
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
-    call ops_fetch_dat_hdf5_file(d_yrhs, trim(fname))
+    DO ispec = 1,nspcmx
+        call ops_fetch_dat_hdf5_file(d_yrhs(ispec), trim(fname))
+    END DO
 
     fname = 'test_dir/drun_timestep'//citime//pnxres
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))

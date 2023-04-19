@@ -1325,10 +1325,10 @@ SUBROUTINE indata
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
                     ops_arg_gbl(derin, 1, "real(8)", OPS_READ))
 
+    rangexyz = (/1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz/)
     DO ispec = 1,nspec
-        rangexyz = (/1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz/)
-        call ops_par_loop(math_MD_kernel_eqT2, "A_multidim = var", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_WRITE), &
+        call ops_par_loop(math_MD_kernel_eqT, "A = var(indx)", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_WRITE), &
                         ops_arg_gbl(dyrin, nspcmx, "real(8)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
@@ -1360,10 +1360,9 @@ SUBROUTINE indata
 
     rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
     DO ispec = 1,nspec
-        call ops_par_loop(math_MD_kernel_eqB, "A_multidim = B_multidim", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+        call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_WRITE), &
+                        ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(8)", OPS_READ))
 
     END DO
 

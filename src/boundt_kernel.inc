@@ -124,39 +124,36 @@ SUBROUTINE boundt_kernel_eqC_zdir(drhs,urhs,vrhs,wrhs,strdz,struz,strvz,strwz)
 
 END SUBROUTINE boundt_kernel_eqC_zdir
 
-SUBROUTINE boundt_kernel_eqD_xdir(yrhs,stryx,strdx,ispec)
+SUBROUTINE boundt_kernel_eqD_xdir(yrhs,stryx,strdx)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryx,strdx
-    integer, intent(in) :: ispec
 
-    yrhs(OPS_ACC_MD1(ispec,0,0,0)) = strdx(OPS_ACC3(0,0,0))*stryx(OPS_ACC2(0,0,0))
+    yrhs(OPS_ACC1(0,0,0)) = strdx(OPS_ACC3(0,0,0))*stryx(OPS_ACC2(0,0,0))
 
 END SUBROUTINE boundt_kernel_eqD_xdir
 
-SUBROUTINE boundt_kernel_eqD_ydir(yrhs,stryy,strdy,ispec)
+SUBROUTINE boundt_kernel_eqD_ydir(yrhs,stryy,strdy)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryy,strdy
-    integer, intent(in) :: ispec
 
-    yrhs(OPS_ACC_MD1(ispec,0,0,0)) = strdy(OPS_ACC3(0,0,0))*stryy(OPS_ACC2(0,0,0))
+    yrhs(OPS_ACC1(0,0,0)) = strdy(OPS_ACC3(0,0,0))*stryy(OPS_ACC2(0,0,0))
 
 END SUBROUTINE boundt_kernel_eqD_ydir
 
-SUBROUTINE boundt_kernel_eqD_zdir(yrhs,stryz,strdz,ispec)
+SUBROUTINE boundt_kernel_eqD_zdir(yrhs,stryz,strdz)
     use data_types
     implicit none
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryz,strdz
-    integer, intent(in) :: ispec
 
-    yrhs(OPS_ACC_MD1(ispec,0,0,0)) = strdz(OPS_ACC3(0,0,0))*stryz(OPS_ACC2(0,0,0))
+    yrhs(OPS_ACC1(0,0,0)) = strdz(OPS_ACC3(0,0,0))*stryz(OPS_ACC2(0,0,0))
 
 END SUBROUTINE boundt_kernel_eqD_zdir
 
@@ -250,10 +247,10 @@ SUBROUTINE boundt_kernel_eqF_xdir(erhs,yrhs,itndex,drhs,strtx,stryx,amasch,rgspe
     fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
               + fornow*strtx(OPS_ACC5(0,0,0))
 
-    yrhs(OPS_ACC_MD2(ispec,0,0,0)) = drhs(OPS_ACC4(0,0,0))*stryx(OPS_ACC6(0,0,0))
+    yrhs(OPS_ACC2(0,0,0)) = drhs(OPS_ACC4(0,0,0))*stryx(OPS_ACC6(0,0,0))
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0))  &
-                      + (fornow-rgspec(ispec)*strtx(OPS_ACC5(0,0,0)))*yrhs(OPS_ACC_MD2(ispec,0,0,0))
+                      + (fornow-rgspec(ispec)*strtx(OPS_ACC5(0,0,0)))*yrhs(OPS_ACC2(0,0,0))
 
 END SUBROUTINE boundt_kernel_eqF_xdir
 
@@ -284,10 +281,10 @@ SUBROUTINE boundt_kernel_eqF_ydir(erhs,yrhs,itndex,drhs,strty,stryy,amasch,rgspe
     fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
               + fornow*strty(OPS_ACC5(0,0,0))
 
-    yrhs(OPS_ACC_MD2(ispec,0,0,0)) = drhs(OPS_ACC4(0,0,0))*stryy(OPS_ACC6(0,0,0))
+    yrhs(OPS_ACC2(0,0,0)) = drhs(OPS_ACC4(0,0,0))*stryy(OPS_ACC6(0,0,0))
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0))  &
-                      + (fornow-rgspec(ispec)*strty(OPS_ACC5(0,0,0)))*yrhs(OPS_ACC_MD2(ispec,0,0,0))
+                      + (fornow-rgspec(ispec)*strty(OPS_ACC5(0,0,0)))*yrhs(OPS_ACC2(0,0,0))
 
 END SUBROUTINE boundt_kernel_eqF_ydir
 
@@ -318,10 +315,10 @@ SUBROUTINE boundt_kernel_eqF_zdir(erhs,yrhs,itndex,drhs,strtz,stryz,amasch,rgspe
     fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
               + fornow*strtz(OPS_ACC5(0,0,0))
 
-    yrhs(OPS_ACC_MD2(ispec,0,0,0)) = drhs(OPS_ACC4(0,0,0))*stryz(OPS_ACC6(0,0,0))
+    yrhs(OPS_ACC2(0,0,0)) = drhs(OPS_ACC4(0,0,0))*stryz(OPS_ACC6(0,0,0))
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0))  &
-                      + (fornow-rgspec(ispec)*strtz(OPS_ACC5(0,0,0)))*yrhs(OPS_ACC_MD2(ispec,0,0,0))
+                      + (fornow-rgspec(ispec)*strtz(OPS_ACC5(0,0,0)))*yrhs(OPS_ACC2(0,0,0))
 
 END SUBROUTINE boundt_kernel_eqF_zdir
 
@@ -353,7 +350,7 @@ SUBROUTINE boundt_kernel_eqG_xdir(erhs,yrhs,itndex,strtx,amasch,rgspec,ncpoly,nc
               + fornow*strtx(OPS_ACC4(0,0,0))
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0))  &
-                      + (fornow-rgspec(ispec)*strtx(OPS_ACC4(0,0,0)))*yrhs(OPS_ACC_MD2(ispec,0,0,0))
+                      + (fornow-rgspec(ispec)*strtx(OPS_ACC4(0,0,0)))*yrhs(OPS_ACC2(0,0,0))
 
 END SUBROUTINE boundt_kernel_eqG_xdir
 
@@ -385,7 +382,7 @@ SUBROUTINE boundt_kernel_eqG_ydir(erhs,yrhs,itndex,strty,amasch,rgspec,ncpoly,nc
               + fornow*strty(OPS_ACC4(0,0,0))
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0))  &
-                      + (fornow-rgspec(ispec)*strty(OPS_ACC4(0,0,0)))*yrhs(OPS_ACC_MD2(ispec,0,0,0))
+                      + (fornow-rgspec(ispec)*strty(OPS_ACC4(0,0,0)))*yrhs(OPS_ACC2(0,0,0))
 
 END SUBROUTINE boundt_kernel_eqG_ydir
 
@@ -417,7 +414,7 @@ SUBROUTINE boundt_kernel_eqG_zdir(erhs,yrhs,itndex,strtz,amasch,rgspec,ncpoly,nc
               + fornow*strtz(OPS_ACC4(0,0,0))
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0))  &
-                      + (fornow-rgspec(ispec)*strtz(OPS_ACC4(0,0,0)))*yrhs(OPS_ACC_MD2(ispec,0,0,0))
+                      + (fornow-rgspec(ispec)*strtz(OPS_ACC4(0,0,0)))*yrhs(OPS_ACC2(0,0,0))
 
 END SUBROUTINE boundt_kernel_eqG_zdir
 

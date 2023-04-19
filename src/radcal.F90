@@ -77,7 +77,7 @@ SUBROUTINE radcal
         rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
         call ops_par_loop(radcal_kernel_addspecies, "ADD THE SPECIES CONTRIBUTION", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
-                        ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
+                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &

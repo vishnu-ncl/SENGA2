@@ -191,9 +191,8 @@ SUBROUTINE chrate
                 rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
                 call ops_par_loop(math_MD_kernel_eqP, "EVALUATE THE THIRD BODY CONCENTRATION", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_INC), &
-                                ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
-                                ops_arg_gbl(ovwmas, 1, "real(8)", OPS_READ), &
-                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
+                                ops_arg_gbl(ovwmas, 1, "real(8)", OPS_READ))
 
             END DO
 !           THIRD-BODY SPECIES-LIST
@@ -375,7 +374,7 @@ SUBROUTINE chrate
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
             call ops_par_loop(math_MD_kernel_eqR, "A = A*max(B_multidim*var    zero)", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
-                            ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
+                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
@@ -412,7 +411,7 @@ SUBROUTINE chrate
                 rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
                 call ops_par_loop(math_MD_kernel_eqAA, "EVALUATE REACTANT CONCENTRATIONS", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
-                            ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
+                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
                             ops_arg_gbl(scoef, 1, "real(8)", OPS_READ), &
                             ops_arg_gbl(ysmall, 1, "real(8)", OPS_READ), &
@@ -506,7 +505,7 @@ SUBROUTINE chrate
                 rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
                 call ops_par_loop(math_MD_kernel_eqR, "A = A*max(B_multidim*var    zero)", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_RW), &
-                                ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
+                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
                                 ops_arg_gbl(ispec, 1, "integer", OPS_READ))
 
@@ -543,7 +542,7 @@ SUBROUTINE chrate
                     rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
                     call ops_par_loop(math_MD_kernel_eqAA, "EVALUATE PRODUCT CONCENTRATIONS", senga_grid, 3, rangexyz,  &
                                     ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_RW), &
-                                    ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_READ), &
+                                    ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
                                     ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
                                     ops_arg_gbl(scoef, 1, "real(8)", OPS_READ), &
                                     ops_arg_gbl(ysmall, 1, "real(8)", OPS_READ), &

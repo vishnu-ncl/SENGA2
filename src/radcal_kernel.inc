@@ -24,7 +24,7 @@ SUBROUTINE radcal_kernel_addspecies(store1,yrhs,trun,store2,rgspec,ispec)
     real(kind=8), dimension(nspcmx), intent(in) :: rgspec
     real(kind=8) :: fornow
     
-    fornow = yrhs(OPS_ACC_MD2(ispec,0,0,0))*rgspec(ispec)*trun(OPS_ACC3(0,0,0))
+    fornow = yrhs(OPS_ACC2(0,0,0))*rgspec(ispec)*trun(OPS_ACC3(0,0,0))
     
     store1(OPS_ACC1(0,0,0)) = store1(OPS_ACC1(0,0,0)) + store2(OPS_ACC4(0,0,0))*fornow
 

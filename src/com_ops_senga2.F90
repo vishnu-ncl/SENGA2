@@ -40,7 +40,8 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_utmp, d_vtmp, d_wtmp, d_prun, d_trun, d_transp, d_store7
 
     TYPE(ops_dat) :: d_itndex(nintmx)
-    TYPE(ops_dat) :: d_yrhs, d_yrun(nspcmx), d_yerr(nspcmx), d_rate(nspcmx), d_rrte(nspcmx)
+    TYPE(ops_dat) :: d_yrhs_mdim
+    TYPE(ops_dat) :: d_yrhs(nspcmx), d_yrun(nspcmx), d_yerr(nspcmx), d_rate(nspcmx), d_rrte(nspcmx)
     TYPE(ops_dat) :: d_ctrans(nspcmx)
     TYPE(ops_dat) :: d_tcoeff, d_tderiv;
 
@@ -167,7 +168,7 @@ MODULE com_ops_senga
 
 !------------------------------------------------------------------------------------------------------------
 !   ops_halos
-    TYPE(ops_halo) :: halos_x(12), halos_y(12), halos_z(12)
+    TYPE(ops_halo) :: halos_x(10+2*nspcmx), halos_y(10+2*nspcmx), halos_z(10+2*nspcmx)
 
 !------------------------------------------------------------------------------------------------------------
 !   ops_halo group

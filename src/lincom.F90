@@ -171,15 +171,14 @@ SUBROUTINE lincom
 
     DO ispec = 1,nspec
 
-        call ops_par_loop(lincom_kernel_MD, "lincom mulit-dim", senga_grid, 3, rangexyz, &
+        call ops_par_loop(lincom_kernel_main, "lincom_main", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_yerr(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(8)", OPS_RW), &
-                        ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_RW), &
+                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_RW), &
                         ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
                         ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
                         ops_arg_gbl(rkrhs, nrkmax, "real(8)", OPS_READ), &
-                        ops_arg_gbl(irkstp, 1, "integer", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                        ops_arg_gbl(irkstp, 1, "integer", OPS_READ))
 
     END DO
 

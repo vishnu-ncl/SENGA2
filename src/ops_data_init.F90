@@ -303,9 +303,11 @@ SUBROUTINE ops_data_init()
         write(buf,"(A6,I2)") "ITNDEX",iindex
         call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_int_null, d_itndex(iindex), "integer", buf)
     END DO
-    call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_yrhs, "real(8)", "YRHS")
+    call ops_decl_dat(senga_grid, nspcmx, d_size, d_base, d_m, d_p, temp_real_null, d_yrhs_mdim, "real(8)", "YRHS-MDIM")
 
     DO ispec = 1,nspcmx
+        write(buf,"(A4,I2)") "YRHS",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_yrhs(ispec), "real(8)", buf)
         write(buf,"(A6,I2)") "CTRANS",ispec
         call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_ctrans(ispec), "real(8)", buf)
     END DO
@@ -848,8 +850,10 @@ SUBROUTINE ops_data_init()
     halo_idx = halo_idx+1
     call ops_decl_halo(d_erhs, d_erhs, iter_size, base_from, base_to, dir_from, dir_to, halos_x(halo_idx))
 
-    halo_idx = halo_idx+1
-    call ops_decl_halo(d_yrhs, d_yrhs, iter_size, base_from, base_to, dir_from, dir_to, halos_x(halo_idx))
+    DO ispec = 1,nspcmx
+        halo_idx = halo_idx+1
+        call ops_decl_halo(d_yrhs(ispec), d_yrhs(ispec), iter_size, base_from, base_to, dir_from, dir_to, halos_x(halo_idx))
+    END DO
 
 !   X-DIRECTION : LEFT OUTER HALO SET EQUAL TO RIGHT INNER HALO
     iter_size = (/nhalox,nyglbl,nzglbl/)
@@ -871,11 +875,12 @@ SUBROUTINE ops_data_init()
     halo_idx = halo_idx+1
     call ops_decl_halo(d_erhs, d_erhs, iter_size, base_from, base_to, dir_from, dir_to, halos_x(halo_idx))
 
-    halo_idx = halo_idx+1
-    call ops_decl_halo(d_yrhs, d_yrhs, iter_size, base_from, base_to, dir_from, dir_to, halos_x(halo_idx))
+    DO ispec = 1,nspcmx
+        halo_idx = halo_idx+1
+        call ops_decl_halo(d_yrhs(ispec), d_yrhs(ispec), iter_size, base_from, base_to, dir_from, dir_to, halos_x(halo_idx))
+    END DO
 
-
-    call ops_decl_halo_group(12, halos_x, halos_grp_x)
+    call ops_decl_halo_group(halo_idx, halos_x, halos_grp_x)
 
 !------------------------------------------------------------------------------------------------------------
 
@@ -901,8 +906,10 @@ SUBROUTINE ops_data_init()
     halo_idx = halo_idx+1
     call ops_decl_halo(d_erhs, d_erhs, iter_size, base_from, base_to, dir_from, dir_to, halos_y(halo_idx))
 
-    halo_idx = halo_idx+1
-    call ops_decl_halo(d_yrhs, d_yrhs, iter_size, base_from, base_to, dir_from, dir_to, halos_y(halo_idx))
+    DO ispec = 1,nspcmx
+        halo_idx = halo_idx+1
+        call ops_decl_halo(d_yrhs(ispec), d_yrhs(ispec), iter_size, base_from, base_to, dir_from, dir_to, halos_y(halo_idx))
+    END DO
 
 !   Y-DIRECTION : LEFT OUTER HALO SET EQUAL TO RIGHT INNER HALO
     iter_size = (/nxglbl+2*nhalox,nhaloy,nzglbl/)
@@ -924,11 +931,12 @@ SUBROUTINE ops_data_init()
     halo_idx = halo_idx+1
     call ops_decl_halo(d_erhs, d_erhs, iter_size, base_from, base_to, dir_from, dir_to, halos_y(halo_idx))
 
-    halo_idx = halo_idx+1
-    call ops_decl_halo(d_yrhs, d_yrhs, iter_size, base_from, base_to, dir_from, dir_to, halos_y(halo_idx))
+    DO ispec = 1,nspcmx
+        halo_idx = halo_idx+1
+        call ops_decl_halo(d_yrhs(ispec), d_yrhs(ispec), iter_size, base_from, base_to, dir_from, dir_to, halos_y(halo_idx))
+    END DO
 
-
-    call ops_decl_halo_group(12, halos_y, halos_grp_y)
+    call ops_decl_halo_group(halo_idx, halos_y, halos_grp_y)
 
 !------------------------------------------------------------------------------------------------------------
 
@@ -954,8 +962,10 @@ SUBROUTINE ops_data_init()
     halo_idx = halo_idx+1
     call ops_decl_halo(d_erhs, d_erhs, iter_size, base_from, base_to, dir_from, dir_to, halos_z(halo_idx))
 
-    halo_idx = halo_idx+1
-    call ops_decl_halo(d_yrhs, d_yrhs, iter_size, base_from, base_to, dir_from, dir_to, halos_z(halo_idx))
+    DO ispec = 1,nspcmx
+        halo_idx = halo_idx+1
+        call ops_decl_halo(d_yrhs(ispec), d_yrhs(ispec), iter_size, base_from, base_to, dir_from, dir_to, halos_z(halo_idx))
+    END DO
 
 !   Z-DIRECTION : LEFT OUTER HALO SET EQUAL TO RIGHT INNER HALO
     iter_size = (/nxglbl+2*nhalox,nyglbl+2*nhaloy,nhaloz/)
@@ -977,11 +987,12 @@ SUBROUTINE ops_data_init()
     halo_idx = halo_idx+1
     call ops_decl_halo(d_erhs, d_erhs, iter_size, base_from, base_to, dir_from, dir_to, halos_z(halo_idx))
 
-    halo_idx = halo_idx+1
-    call ops_decl_halo(d_yrhs, d_yrhs, iter_size, base_from, base_to, dir_from, dir_to, halos_z(halo_idx))
+    DO ispec = 1,nspcmx
+        halo_idx = halo_idx+1
+        call ops_decl_halo(d_yrhs(ispec), d_yrhs(ispec), iter_size, base_from, base_to, dir_from, dir_to, halos_z(halo_idx))
+    END DO
 
-
-    call ops_decl_halo_group(12, halos_z, halos_grp_z)
+    call ops_decl_halo_group(halo_idx, halos_z, halos_grp_z)
 
 !------------------------------------------------------------------------------------------------------------
 
@@ -1476,9 +1487,8 @@ SUBROUTINE ops_data_init()
     END DO
 
     DO ispec = 1,nspcmx
-        call ops_par_loop(set_zero_kernel_MD, "set_zero", senga_grid, 3, rangexyz, &
-                          ops_arg_dat(d_yrhs, 2, s3d_000, "real(8)", OPS_WRITE), &
-                          ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+        call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
+                          ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_WRITE))
         call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
                           ops_arg_dat(d_ctrans(ispec), 1, s3d_000, "real(8)", OPS_WRITE))
     END DO
