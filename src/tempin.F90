@@ -88,9 +88,6 @@ SUBROUTINE tempin
                         ops_arg_dat(d_yrhs_mdim, 2, s3d_000, "real(8)", OPS_WRITE), &
                         ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-#ifdef OPS_LAZY
-    call ops_execute()
-#endif
     END DO
 
     call ops_par_loop(tempin_kernel_main, "tempin kernel", senga_grid, 3, rangexyz,  &
@@ -112,21 +109,14 @@ SUBROUTINE tempin
                     ops_arg_gbl(iproc, 1, "integer", OPS_READ), &
                     ops_arg_idx())
 
-#ifdef OPS_LAZY
-    call ops_execute()
-#endif
-
     DO ispec = 1,nspcmx
         call ops_par_loop(copy_kernel_mdim_to_sdim, "A = B_multidim(ispec)", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_WRITE), &
                         ops_arg_dat(d_yrhs_mdim, 2, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
-#ifdef OPS_LAZY
-    call ops_execute()
-#endif
     END DO
 
-!    call ops_free_dat(d_yrhs_mdim)
+    call ops_free_dat(d_yrhs_mdim)
 
 !   CONSTRUCT THE TEMPERATURE INTERVAL INDEX
 !   EVALUATE PRESSURE
