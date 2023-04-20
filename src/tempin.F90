@@ -116,8 +116,6 @@ SUBROUTINE tempin
                         ops_arg_gbl(ispec, 1, "integer", OPS_READ))
     END DO
 
-    call ops_free_dat(d_yrhs_mdim)
-
 !   CONSTRUCT THE TEMPERATURE INTERVAL INDEX
 !   EVALUATE PRESSURE
 !   EVALUATE MIXTURE SPECIFIC HEAT CP
@@ -168,5 +166,7 @@ SUBROUTINE tempin
                     ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ))
 
 !   =========================================================================
+
+    call ops_free_dat(d_yrhs_mdim)
 
 END SUBROUTINE tempin

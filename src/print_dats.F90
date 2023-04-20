@@ -120,4 +120,8 @@ SUBROUTINE print_dats()
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
     call ops_fetch_dat_hdf5_file(d_transp, trim(fname))
 
+    fname = 'test_dir/divm_timestep'//citime//pnxres
+    call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
+    call ops_fetch_dat_hdf5_file(d_divm, trim(fname))
+
 END SUBROUTINE print_dats

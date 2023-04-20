@@ -134,10 +134,14 @@ PROGRAM senga2
 
 !           EVALUATE RHS FOR SCALARS
             call rhscal
-
+#ifdef OPS_LAZY
+    call ops_execute()
+#endif
 !           EVALUATE RHS FOR VELOCITIES
             call rhsvel
-
+#ifdef OPS_LAZY
+    call ops_execute()
+#endif
 !           APPLY BCS ON SOURCE TERMS
             call bounds
 
@@ -160,10 +164,14 @@ PROGRAM senga2
 
 !       EVALUATE RHS FOR SCALARS
         call rhscal
-
+#ifdef OPS_LAZY
+    call ops_execute()
+#endif
 !       EVALUATE RHS FOR VELOCITIES
         call rhsvel
-
+#ifdef OPS_LAZY
+    call ops_execute()
+#endif
 !       APPLY BCS ON SOURCE TERMS
         call bounds
 
@@ -193,10 +201,6 @@ PROGRAM senga2
 !       PROCESS THE RESULTS
 !       ===================
         call output
-
-        if(itime == 2100) then
-            call print_dats()
-        end if
 
 !       =======================================================================
     END DO
