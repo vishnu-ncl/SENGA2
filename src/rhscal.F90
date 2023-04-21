@@ -61,13 +61,7 @@ SUBROUTINE rhscal
 !   EVALUATE THE TEMPERATURE
 !   ------------------------
 !   ALSO PRESSURE, MIXTURE CP AND MIXTURE GAS CONSTANT
-#ifdef OPS_LAZY
-call ops_execute()
-#endif
     call temper
-#ifdef OPS_LAZY
-call ops_execute()
-#endif
 
 !                                                             PRUN,TRUN = P,T
 !                                                         STORE7 = RHO*MIX RG
