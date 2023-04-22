@@ -75,19 +75,6 @@ SUBROUTINE math_kernel_eqF(out_arr, in_arr1, in_arr2, rgspec, ispec)
 
 END SUBROUTINE math_kernel_eqF
 
-!A = B-var
-SUBROUTINE math_kernel_eqG(out_arr, in_arr1, var)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1) :: out_arr
-    real(kind=8), dimension(1), intent(in) :: in_arr1
-    real(kind=8), intent(in) :: var
-
-    out_arr(OPS_ACC1(0,0,0)) = in_arr1(OPS_ACC2(0,0,0)) - var
-
-END SUBROUTINE math_kernel_eqG
-
 !A = A-var*B*C
 SUBROUTINE math_kernel_eqH(out_arr, in_arr1, in_arr2, rgspec, ispec)
     use data_types
@@ -640,17 +627,6 @@ SUBROUTINE math_kernel_eqtau(out_arr1,out_arr2,in_arr1,in_arr2,in_arr3,var)
     out_arr2(OPS_ACC2(0,0,0)) = out_arr2(OPS_ACC2(0,0,0)) + fornow*in_arr3(OPS_ACC5(0,0,0))
 
 END SUBROUTINE math_kernel_eqtau
-
-SUBROUTINE math_kernel_getval(prun,prefer)
-    use data_types
-    implicit none
-
-    real(kind=8), dimension(1), intent(in) :: prun
-    real(kind=8) :: prefer
-
-    prefer = prun(OPS_ACC1(0,0,0))
-
-END SUBROUTINE math_kernel_getval
 
 SUBROUTINE math_kernel_print_drhs(out_arr, itime)
     implicit none

@@ -42,7 +42,6 @@ SUBROUTINE rhsvel
 
 !   LOCAL DATA
 !   ==========
-    real(kind=8) :: prefer
     integer :: rangexyz(6)
 
 !   BEGIN
@@ -451,22 +450,10 @@ SUBROUTINE rhsvel
 !   PRESSURE GRADIENTS
 !   ------------------
 
-    rangexyz = (/1,1,1,1,1,1/)
-    call ops_par_loop(math_kernel_getval, "Get value", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_reduce(h_prefer, 1, "real(8)", OPS_INC))
-    call ops_reduction_result(h_prefer, prefer)
-
-    rangexyz = (/1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz/)
-    call ops_par_loop(math_kernel_eqG, "A = B-var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
-                    ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_gbl(prefer, 1, "real(8)", OPS_READ))
-
 !   8DX,8DY,8DZ
-    call dfbydx(d_store7,d_store4)
-    call dfbydy(d_store7,d_store5)
-    call dfbydz(d_store7,d_store6)
+    call dfbydx(d_prun,d_store4)
+    call dfbydy(d_prun,d_store5)
+    call dfbydz(d_prun,d_store6)
 
 !                                              STORE1,2,3 = DUDX,DVDY,DWDZ
 !                                                 STORE4,5,6 = 8DX,8DY,8DZ

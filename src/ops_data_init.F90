@@ -618,7 +618,6 @@ SUBROUTINE ops_data_init()
     call ops_decl_reduction_handle(8, h_uvart, "real(8)", "uvart")
     call ops_decl_reduction_handle(8, h_vvart, "real(8)", "vvart")
     call ops_decl_reduction_handle(8, h_wvart, "real(8)", "wvart")
-    call ops_decl_reduction_handle(8, h_prefer, "real(8)", "prefer")
 
 !------------------------------------OPS Stencil-------------------------------------------------------------
 
