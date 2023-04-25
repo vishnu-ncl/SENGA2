@@ -1502,7 +1502,7 @@ SUBROUTINE rhscal
         IF(flmixw) THEN
 !           FIRST AND SECOND DERIVATIVES OF LN(MIXTURE MOLAR MASS) ALREADY STORED
             rangexyz = (/1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz/)
-            call ops_par_loop(math_MD_kernel_eqC, "A = B*C line:1524", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_MD_kernel_eqC, "A = B*C line:1505", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
                             ops_arg_dat(d_difmix, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ))
@@ -1510,17 +1510,17 @@ SUBROUTINE rhscal
 !           DIFFUSION CORRECTION VELOCITY
 !           FIRST DERIVATIVES OF LN(MIXTURE MOLAR MASS) ALREADY STORED
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_kernel_eqN, "A=A+B*C line:1532", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_kernel_eqN, "A=A+B*C line:1513", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_ucor, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1x, 1, s3d_000, "real(8)", OPS_READ))
 
-            call ops_par_loop(math_kernel_eqN, "A=A+B*C line:1537", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_kernel_eqN, "A=A+B*C line:1518", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_vcor, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1y, 1, s3d_000, "real(8)", OPS_READ))
 
-            call ops_par_loop(math_kernel_eqN, "A=A+B*C line:1542", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_kernel_eqN, "A=A+B*C line:1523", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_wcor, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1z, 1, s3d_000, "real(8)", OPS_READ)) 
@@ -1549,7 +1549,7 @@ SUBROUTINE rhscal
             IF(fzrdif) call zerozr(d_store3)
 
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_MD_kernel_eqL, "multiple math equations: line1571", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_MD_kernel_eqL, "multiple math equations: line1552", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1574,7 +1574,7 @@ SUBROUTINE rhscal
 
 !           E EQUATION
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H line:1596", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H line:1577", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1x, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1606,7 +1606,7 @@ SUBROUTINE rhscal
             IF(fzrdif .or. fzradb) call zerozr(d_store6)
 
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H line:1638", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H line:1609", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd1x, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1717,7 +1717,7 @@ SUBROUTINE rhscal
             IF(fzrdif) call zerozr(d_wd2z)
 
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_MD_kernel_eqM, "multiple math equations line:1749", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_MD_kernel_eqM, "multiple math equations line:1720", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_wd2x, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1740,7 +1740,7 @@ SUBROUTINE rhscal
     
 !           E EQUATION
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_kernel_eqZ, "A=A+(B+C+D)*E*F line:1772", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_kernel_eqZ, "A=A+(B+C+D)*E*F line:1743", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_wd2x, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_wd2y, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1769,17 +1769,17 @@ SUBROUTINE rhscal
 !           DIFFUSION CORRECTION VELOCITY
 !           FIRST DERIVATIVES OF LN(PRESSURE) ALREADY STORED
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_kernel_eqN, "A=A+B*C line:1801", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_kernel_eqN, "A=A+B*C line:1772", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_ucor, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1x, 1, s3d_000, "real(8)", OPS_READ))
 
-            call ops_par_loop(math_kernel_eqN, "A=A+B*C line:1806", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_kernel_eqN, "A=A+B*C line:1777", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_vcor, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1y, 1, s3d_000, "real(8)", OPS_READ))
 
-            call ops_par_loop(math_kernel_eqN, "A=A+B*C line:1811", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_kernel_eqN, "A=A+B*C line:1782", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_wcor, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1z, 1, s3d_000, "real(8)", OPS_READ))
@@ -1808,7 +1808,7 @@ SUBROUTINE rhscal
             IF(fzrdif) call zerozr(d_store3)
 
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_MD_kernel_eqL, "multiple math equations line:1840", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_MD_kernel_eqL, "multiple math equations line:1811", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1832,7 +1832,7 @@ SUBROUTINE rhscal
             IF(fzradb) call zerozr(d_store3)
 
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H line:1864", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H line:1835", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1x, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1864,7 +1864,7 @@ SUBROUTINE rhscal
             IF(fzrdif .or. fzradb) call zerozr(d_store6)
     
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H line:1906", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H line:1867", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd1x, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1975,7 +1975,7 @@ SUBROUTINE rhscal
             IF(fzrdif) call zerozr(d_pd2z)
 
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_MD_kernel_eqM, "multiple math equations line:2017", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_MD_kernel_eqM, "multiple math equations line:1978", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_pd2x, 1, s3d_000, "real(8)", OPS_READ), &
@@ -1998,7 +1998,7 @@ SUBROUTINE rhscal
 
 !           E EQUATION
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_kernel_eqZ, "A=A+(B+C+D)*E*F line:2040", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_kernel_eqZ, "A=A+(B+C+D)*E*F line:2001", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_pd2x, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_pd2y, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2016,7 +2016,7 @@ SUBROUTINE rhscal
 !           FIRST AND SECOND DERIVATIVES OF LN(TEMPERATURE) ALREADY STORED
 
             rangexyz = (/1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz/)
-            call ops_par_loop(math_MD_kernel_eqF, "A = B*C*D line:2058", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_MD_kernel_eqF, "A = B*C*D line:2019", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE), &
                             ops_arg_dat(d_difmix, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
@@ -2025,17 +2025,17 @@ SUBROUTINE rhscal
 !           DIFFUSION CORRECTION VELOCITY
 !           FIRST DERIVATIVES OF LN(TEMPERATURE) ALREADY STORED
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_kernel_eqN, "A=A+B*C line:2067", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_kernel_eqN, "A=A+B*C line:2028", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_ucor, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_td1x, 1, s3d_000, "real(8)", OPS_READ))
 
-            call ops_par_loop(math_kernel_eqN, "A=A+B*C line:2072", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_kernel_eqN, "A=A+B*C line:2033", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_vcor, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_td1y, 1, s3d_000, "real(8)", OPS_READ))
 
-            call ops_par_loop(math_kernel_eqN, "A=A+B*C line:2077", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_kernel_eqN, "A=A+B*C line:2038", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_wcor, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_td1z, 1, s3d_000, "real(8)", OPS_READ))
@@ -2064,7 +2064,7 @@ SUBROUTINE rhscal
             IF(fzrdif) call zerozr(d_store3)
 
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_MD_kernel_eqL, "multiple math equations line:2106", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_MD_kernel_eqL, "multiple math equations line:2067", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2078,7 +2078,7 @@ SUBROUTINE rhscal
 !           RSC 08-JUN-2015 BUG FIX
             IF(flmduf(ispec))THEN
                 rangexyz = (/1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz/)
-                call ops_par_loop(math_kernel_eqH, "A = A-var*B*C line:2120", senga_grid, 3, rangexyz,  &
+                call ops_par_loop(math_kernel_eqH, "A = A-var*B*C line:2081", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_dat(d_tdrmix, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2102,7 +2102,7 @@ SUBROUTINE rhscal
 
 !           E EQUATION
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H line:2144", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H line:2105", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_td1x, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2137,7 +2137,7 @@ SUBROUTINE rhscal
             IF(fzrdif .or. fzradb) call zerozr(d_store6)
 
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H line:2189", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_kernel_eqAB, "A = A+(B*C+D*E+F*G)*H line:2140", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_td1x, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2439,7 +2439,7 @@ SUBROUTINE rhscal
             IF(fzrdif) call zerozr(d_td2z)
 
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_MD_kernel_eqM, "multiple math equations line:2491", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_MD_kernel_eqM, "multiple math equations line:2442", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_INC), &
                         ops_arg_dat(d_td2x, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2462,7 +2462,7 @@ SUBROUTINE rhscal
 
 !           E EQUATION
             rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_kernel_eqZ, "A=A+(B+C+D)*E*F line:2514", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(math_kernel_eqZ, "A=A+(B+C+D)*E*F line:2465", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_td2x, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_dat(d_td2y, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2545,7 +2545,7 @@ SUBROUTINE rhscal
 
 !   DIV RHO VCORR HMIX
     rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-    call ops_par_loop(math_kernel_eqAH, "A = A-B*C-D*E-F*G-H*I line:2597", senga_grid, 3, rangexyz, &
+    call ops_par_loop(math_kernel_eqAH, "A = A-B*C-D*E-F*G-H*I line:2548", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_INC), &
                     ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_READ), &
                     ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ), &
@@ -2646,7 +2646,7 @@ SUBROUTINE rhscal
 !       DIV RHO VCORR Y
 !       STORE Y SOURCE TERMS IN YRHS
         rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-        call ops_par_loop(math_MD_kernel_eqK, "A = B - A*C - D*E - F*G - H*I line:2703", senga_grid, 3, rangexyz, &
+        call ops_par_loop(math_MD_kernel_eqK, "A = B - A*C - D*E - F*G - H*I line:2649", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_RW), &
                         ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_READ), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_READ), &
