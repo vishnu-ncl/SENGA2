@@ -1379,6 +1379,10 @@ SUBROUTINE indata
 !   ================================
     call tempin
 
+!#ifdef OPS_LAZY
+!    call ops_execute()
+!#endif
+
 !   =========================================================================
 
 !   INITIALISE TIME STEPPING
