@@ -40,11 +40,11 @@ SUBROUTINE bcutxr
 !   LOCAL DATA
 !   ==========
 !KA   FIX INFLOW BC
-!KA      real(kind=8) BTIME
-    real(kind=8) :: fornow,argmnt
-    integer :: jc,kc
-    integer :: rangexyz(6)
-    real(kind=8) :: init_val1, init_val2
+!KA      real(8) BTIME
+    real(8) :: fornow,argmnt
+    integer(4) :: jc,kc
+    integer(4) :: rangexyz(6)
+    real(8) :: init_val1, init_val2
 
 !   BEGIN
 !   =====
@@ -60,7 +60,7 @@ SUBROUTINE bcutxr
 !   CONSTANT U-VELOCITY
 !   PARAMETER I1=1, R1=U-VELOCITY
     IF(nxrprm(1) == 1) THEN
-        rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
+        rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(bcut_kernel_xdir_const_uvel, "bcut_kernel_xdir_const_uvel", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE),  &
                         ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
@@ -82,7 +82,7 @@ SUBROUTINE bcutxr
         init_val1 = rxrprm(1)*SIN(argmnt)
         init_val2 = fornow*rxrprm(1)*COS(argmnt)  
 
-        rangexyz = (/nxglbl,nxglbl,1,nyglbl,1,nzglbl/)
+        rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(bcut_kernel_xdir_sinusoidal_uvel, "bcut_kernel_xdir_sinusoidal_uvel", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE),  &
                         ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &

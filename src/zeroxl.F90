@@ -16,14 +16,14 @@ use OPS_Fortran_Reference
 
 !   LOCAL DATA
 !   ==========
-    integer :: rangexyz(6)
+    integer(4) :: rangexyz(6)
 
 !   BEGIN
 !   =====
 
 !   =========================================================================
 
-    rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
+    rangexyz = [1,1,1,nyglbl,1,nzglbl]
     call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
                         ops_arg_dat(farray, 1, s3d_000, "real(8)", OPS_WRITE))
 

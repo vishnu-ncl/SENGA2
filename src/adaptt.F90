@@ -40,13 +40,13 @@ SUBROUTINE adaptt
 
 !   LOCAL DATA
 !   ==========
-    real(kind=8) :: erytot(nspcmx)
-    real(kind=8) :: erdtot,erutot,ervtot,erwtot,eretot
-    real(kind=8) :: errmax,tratio,tstold
+    real(8) :: erytot(nspcmx)
+    real(8) :: erdtot,erutot,ervtot,erwtot,eretot
+    real(8) :: errmax,tratio,tstold
 !   RSC/RACG 09-AUG-2012 USE GLOBAL ERROR
-!   real(kind=8) TSTLOC
-    integer :: ispec
-    integer :: rangexyz(6)
+!   real(8) TSTLOC
+    integer(4) :: ispec
+    integer(4) :: rangexyz(6)
 
 !   BEGIN
 !   =====
@@ -175,7 +175,7 @@ SUBROUTINE adaptt
                         &  ops_arg_dat(d_yerr(ispec), 1, s3d_000, "real(8)", OPS_READ), &
                         &  ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(8)", OPS_READ), &
                         &  ops_arg_gbl(erynrm, nspcmx, "real(8)", OPS_READ), &
-                        &  ops_arg_gbl(ispec, 1, "integer", OPS_READ), &  
+                        &  ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ), &
                         &  ops_arg_reduce(h_erytot, 1, "real(8)", OPS_MAX))
             call ops_reduction_result(h_erytot, erytot(ispec))
 
@@ -286,7 +286,7 @@ SUBROUTINE adaptt
   
 !       (RE)INITIALISE ERK ERROR ARRAYS
 !       -------------------------------
-        rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
+        rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_derr, 1, s3d_000, "real(8)", OPS_WRITE))
 
@@ -303,7 +303,7 @@ SUBROUTINE adaptt
                         ops_arg_dat(d_eerr, 1, s3d_000, "real(8)", OPS_WRITE))
 
 !       RSC 08-AUG-2012 EVALUATE ALL SPECIES
-        rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
+        rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
         DO ispec = 1,nspec
             call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_yerr(ispec), 1, s3d_000, "real(8)", OPS_WRITE))

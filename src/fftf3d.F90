@@ -31,8 +31,8 @@ use data_types
 !     PARAMETERS
 !     ==========
 
-real(kind=8), INTENT(IN OUT)         :: carrre(nxphys,nyphys,nzphys)
-real(kind=8), INTENT(IN OUT)         :: carrim(nxphys,nyphys,nzphys)
+real(8), INTENT(IN OUT)         :: carrre(nxphys,nyphys,nzphys)
+real(8), INTENT(IN OUT)         :: carrim(nxphys,nyphys,nzphys)
 INTEGER, INTENT(IN OUT)                  :: nxphys
 INTEGER, INTENT(IN OUT)                  :: nyphys
 INTEGER, INTENT(IN OUT)                  :: nzphys
@@ -53,7 +53,7 @@ INTEGER, PARAMETER :: nftmax=1024
 
 !     LOCAL DATA
 !     ==========
-real(kind=8) :: tarray(nftmax)
+real(8) :: tarray(nftmax)
 INTEGER :: ix,jx,kx
 
 

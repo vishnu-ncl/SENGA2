@@ -2,8 +2,8 @@ SUBROUTINE bountt_kernel_eqA_xdir(urhs,vrhs,wrhs,urun,vrun,wrun,uerr,verr,werr,d
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: urhs,vrhs,wrhs,urun,vrun,wrun,uerr,verr,werr
-    real(kind=8), dimension(1), intent(in) :: drhs,strux,strvx,strwx
+    real(8), dimension(1) :: urhs,vrhs,wrhs,urun,vrun,wrun,uerr,verr,werr
+    real(8), dimension(1), intent(in) :: drhs,strux,strvx,strwx
 
     urhs(OPS_ACC1(0,0,0)) = drhs(OPS_ACC10(0,0,0))*strux(OPS_ACC11(0,0,0))
     vrhs(OPS_ACC2(0,0,0)) = drhs(OPS_ACC10(0,0,0))*strvx(OPS_ACC12(0,0,0))
@@ -23,8 +23,8 @@ SUBROUTINE bountt_kernel_eqA_ydir(urhs,vrhs,wrhs,urun,vrun,wrun,uerr,verr,werr,d
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: urhs,vrhs,wrhs,urun,vrun,wrun,uerr,verr,werr
-    real(kind=8), dimension(1), intent(in) :: drhs,struy,strvy,strwy
+    real(8), dimension(1) :: urhs,vrhs,wrhs,urun,vrun,wrun,uerr,verr,werr
+    real(8), dimension(1), intent(in) :: drhs,struy,strvy,strwy
 
     urhs(OPS_ACC1(0,0,0)) = drhs(OPS_ACC10(0,0,0))*struy(OPS_ACC11(0,0,0))
     vrhs(OPS_ACC2(0,0,0)) = drhs(OPS_ACC10(0,0,0))*strvy(OPS_ACC12(0,0,0))
@@ -44,8 +44,8 @@ SUBROUTINE bountt_kernel_eqA_zdir(urhs,vrhs,wrhs,urun,vrun,wrun,uerr,verr,werr,d
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: urhs,vrhs,wrhs,urun,vrun,wrun,uerr,verr,werr
-    real(kind=8), dimension(1), intent(in) :: drhs,struz,strvz,strwz
+    real(8), dimension(1) :: urhs,vrhs,wrhs,urun,vrun,wrun,uerr,verr,werr
+    real(8), dimension(1), intent(in) :: drhs,struz,strvz,strwz
 
     urhs(OPS_ACC1(0,0,0)) = drhs(OPS_ACC10(0,0,0))*struz(OPS_ACC11(0,0,0))
     vrhs(OPS_ACC2(0,0,0)) = drhs(OPS_ACC10(0,0,0))*strvz(OPS_ACC12(0,0,0))
@@ -65,8 +65,8 @@ SUBROUTINE bountt_kernel_eqB_xdir(erhs,drhs,strux,strvx,strwx)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: erhs
-    real(kind=8), dimension(1), intent(in) :: drhs,strux,strvx,strwx
+    real(8), dimension(1) :: erhs
+    real(8), dimension(1), intent(in) :: drhs,strux,strvx,strwx
 
     erhs(OPS_ACC1(0,0,0)) = 0.5_8*(strux(OPS_ACC3(0,0,0))*strux(OPS_ACC3(0,0,0))  &
             + strvx(OPS_ACC4(0,0,0))*strvx(OPS_ACC4(0,0,0)) + strwx(OPS_ACC5(0,0,0))*strwx(OPS_ACC5(0,0,0)))
@@ -79,8 +79,8 @@ SUBROUTINE bountt_kernel_eqB_ydir(erhs,drhs,struy,strvy,strwy)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: erhs
-    real(kind=8), dimension(1), intent(in) :: drhs,struy,strvy,strwy
+    real(8), dimension(1) :: erhs
+    real(8), dimension(1), intent(in) :: drhs,struy,strvy,strwy
 
     erhs(OPS_ACC1(0,0,0)) = 0.5_8*(struy(OPS_ACC3(0,0,0))*struy(OPS_ACC3(0,0,0))  &
             + strvy(OPS_ACC4(0,0,0))*strvy(OPS_ACC4(0,0,0)) + strwy(OPS_ACC5(0,0,0))*strwy(OPS_ACC5(0,0,0)))
@@ -93,8 +93,8 @@ SUBROUTINE bountt_kernel_eqB_zdir(erhs,drhs,struz,strvz,strwz)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: erhs
-    real(kind=8), dimension(1), intent(in) :: drhs,struz,strvz,strwz
+    real(8), dimension(1) :: erhs
+    real(8), dimension(1), intent(in) :: drhs,struz,strvz,strwz
 
     erhs(OPS_ACC1(0,0,0)) = 0.5_8*(struz(OPS_ACC3(0,0,0))*struz(OPS_ACC3(0,0,0))  &
             + strvz(OPS_ACC4(0,0,0))*strvz(OPS_ACC4(0,0,0)) + strwz(OPS_ACC5(0,0,0))*strwz(OPS_ACC5(0,0,0)))
@@ -107,8 +107,8 @@ SUBROUTINE bountt_kernel_eqC_xdir(drhs,urhs,vrhs,wrhs,drun,urun,vrun,wrun,derr,u
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,drun,urun,vrun,wrun,derr,uerr,verr,werr
-    real(kind=8), dimension(1), intent(in) :: strdx,strux,strvx,strwx
+    real(8), dimension(1) :: drhs,urhs,vrhs,wrhs,drun,urun,vrun,wrun,derr,uerr,verr,werr
+    real(8), dimension(1), intent(in) :: strdx,strux,strvx,strwx
 
     drhs(OPS_ACC1(0,0,0)) = strdx(OPS_ACC13(0,0,0))
     urhs(OPS_ACC2(0,0,0)) = strdx(OPS_ACC13(0,0,0))*strux(OPS_ACC14(0,0,0))
@@ -131,8 +131,8 @@ SUBROUTINE bountt_kernel_eqC_ydir(drhs,urhs,vrhs,wrhs,drun,urun,vrun,wrun,derr,u
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,drun,urun,vrun,wrun,derr,uerr,verr,werr
-    real(kind=8), dimension(1), intent(in) :: strdy,struy,strvy,strwy
+    real(8), dimension(1) :: drhs,urhs,vrhs,wrhs,drun,urun,vrun,wrun,derr,uerr,verr,werr
+    real(8), dimension(1), intent(in) :: strdy,struy,strvy,strwy
 
     drhs(OPS_ACC1(0,0,0)) = strdy(OPS_ACC13(0,0,0))
     urhs(OPS_ACC2(0,0,0)) = strdy(OPS_ACC13(0,0,0))*struy(OPS_ACC14(0,0,0))
@@ -155,8 +155,8 @@ SUBROUTINE bountt_kernel_eqC_zdir(drhs,urhs,vrhs,wrhs,drun,urun,vrun,wrun,derr,u
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,drun,urun,vrun,wrun,derr,uerr,verr,werr
-    real(kind=8), dimension(1), intent(in) :: strdz,struz,strvz,strwz
+    real(8), dimension(1) :: drhs,urhs,vrhs,wrhs,drun,urun,vrun,wrun,derr,uerr,verr,werr
+    real(8), dimension(1), intent(in) :: strdz,struz,strvz,strwz
 
     drhs(OPS_ACC1(0,0,0)) = strdz(OPS_ACC13(0,0,0))
     urhs(OPS_ACC2(0,0,0)) = strdz(OPS_ACC13(0,0,0))*struz(OPS_ACC14(0,0,0))
@@ -179,8 +179,8 @@ SUBROUTINE bountt_kernel_eqD(erun,eerr,erhs)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: erun,eerr
-    real(kind=8), dimension(1), intent(in) :: erhs
+    real(8), dimension(1) :: erun,eerr
+    real(8), dimension(1), intent(in) :: erhs
 
     erun(OPS_ACC1(0,0,0)) = erhs(OPS_ACC3(0,0,0))
 
@@ -192,8 +192,8 @@ SUBROUTINE bountt_kernel_eqE_xdir(yrhs,yrun,yerr,stryxl,strdxl)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: yrhs,yrun,yerr
-    real(kind=8), dimension(1), intent(in) :: stryxl,strdxl
+    real(8), dimension(1) :: yrhs,yrun,yerr
+    real(8), dimension(1), intent(in) :: stryxl,strdxl
 
     yrhs(OPS_ACC1(0,0,0)) = strdxl(OPS_ACC5(0,0,0))*stryxl(OPS_ACC4(0,0,0))
 
@@ -207,8 +207,8 @@ SUBROUTINE bountt_kernel_eqE_ydir(yrhs,yrun,yerr,stryyl,strdyl)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: yrhs,yrun,yerr
-    real(kind=8), dimension(1), intent(in) :: stryyl,strdyl
+    real(8), dimension(1) :: yrhs,yrun,yerr
+    real(8), dimension(1), intent(in) :: stryyl,strdyl
 
     yrhs(OPS_ACC1(0,0,0)) = strdyl(OPS_ACC5(0,0,0))*stryyl(OPS_ACC4(0,0,0))
 
@@ -222,8 +222,8 @@ SUBROUTINE bountt_kernel_eqE_zdir(yrhs,yrun,yerr,stryzl,strdzl)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: yrhs,yrun,yerr
-    real(kind=8), dimension(1), intent(in) :: stryzl,strdzl
+    real(8), dimension(1) :: yrhs,yrun,yerr
+    real(8), dimension(1), intent(in) :: stryzl,strdzl
 
     yrhs(OPS_ACC1(0,0,0)) = strdzl(OPS_ACC5(0,0,0))*stryzl(OPS_ACC4(0,0,0))
 
@@ -237,18 +237,18 @@ SUBROUTINE bountt_kernel_eqF_xdir(erhs,yrhs,yrun,yerr,itndex,drhs,strtx,stryx,am
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: erhs,yrhs,yrun,yerr
-    integer, dimension(1), intent(in) :: itndex
-    real(kind=8), dimension(1), intent(in) :: drhs,strtx,stryx
+    real(8), dimension(1) :: erhs,yrhs,yrun,yerr
+    integer(4), dimension(1), intent(in) :: itndex
+    real(8), dimension(1), intent(in) :: drhs,strtx,stryx
 
-    integer, intent(in) :: ispec,icoef1,icoef2
+    integer(4), intent(in) :: ispec,icoef1,icoef2
 
-    real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amasch
-    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
-    integer, dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncpom1,ncenth
+    real(8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amasch
+    real(8), dimension(nspcmx), intent(in) :: rgspec
+    integer(4), dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncpom1,ncenth
 
-    real(kind=8) :: fornow
-    integer :: itint,icp
+    real(8) :: fornow
+    integer(4) :: itint,icp
 
     itint = 1 +MOD(itndex(OPS_ACC5(0,0,0)),icoef1)/icoef2
     fornow = amasch(ncpoly(itint,ispec),itint,ispec)
@@ -275,18 +275,18 @@ SUBROUTINE bountt_kernel_eqF_ydir(erhs,yrhs,yrun,yerr,itndex,drhs,strty,stryy,am
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: erhs,yrhs,yrun,yerr
-    integer, dimension(1), intent(in) :: itndex
-    real(kind=8), dimension(1), intent(in) :: drhs,strty,stryy
+    real(8), dimension(1) :: erhs,yrhs,yrun,yerr
+    integer(4), dimension(1), intent(in) :: itndex
+    real(8), dimension(1), intent(in) :: drhs,strty,stryy
 
-    integer, intent(in) :: ispec,icoef1,icoef2
+    integer(4), intent(in) :: ispec,icoef1,icoef2
 
-    real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amasch
-    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
-    integer, dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncpom1,ncenth
+    real(8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amasch
+    real(8), dimension(nspcmx), intent(in) :: rgspec
+    integer(4), dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncpom1,ncenth
 
-    real(kind=8) :: fornow
-    integer :: itint,icp
+    real(8) :: fornow
+    integer(4) :: itint,icp
 
     itint = 1 +MOD(itndex(OPS_ACC5(0,0,0)),icoef1)/icoef2
     fornow = amasch(ncpoly(itint,ispec),itint,ispec)
@@ -313,18 +313,18 @@ SUBROUTINE bountt_kernel_eqF_zdir(erhs,yrhs,yrun,yerr,itndex,drhs,strtz,stryz,am
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: erhs,yrhs,yrun,yerr
-    integer, dimension(1), intent(in) :: itndex
-    real(kind=8), dimension(1), intent(in) :: drhs,strtz,stryz
+    real(8), dimension(1) :: erhs,yrhs,yrun,yerr
+    integer(4), dimension(1), intent(in) :: itndex
+    real(8), dimension(1), intent(in) :: drhs,strtz,stryz
 
-    integer, intent(in) :: ispec,icoef1,icoef2
+    integer(4), intent(in) :: ispec,icoef1,icoef2
 
-    real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amasch
-    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
-    integer, dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncpom1,ncenth
+    real(8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amasch
+    real(8), dimension(nspcmx), intent(in) :: rgspec
+    integer(4), dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncpom1,ncenth
 
-    real(kind=8) :: fornow
-    integer :: itint,icp
+    real(8) :: fornow
+    integer(4) :: itint,icp
 
     itint = 1 +MOD(itndex(OPS_ACC5(0,0,0)),icoef1)/icoef2
     fornow = amasch(ncpoly(itint,ispec),itint,ispec)

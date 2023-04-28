@@ -24,13 +24,13 @@ FUNCTION espksq(waveno)
 
 !   EXTERNAL FUNCTION
 !   =================
-    real(kind=8), intent(IN)             :: waveno
-    real(kind=8) :: espect
+    real(8), intent(IN)             :: waveno
+    real(8) :: espect
     EXTERNAL espect
 
 !   FUNCTION
 !   ========
-    real(kind=8) :: espksq
+    real(8) :: espksq
 
 !   ARGUMENT
 !   ========

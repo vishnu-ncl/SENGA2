@@ -43,7 +43,7 @@ SUBROUTINE espini
 !   PARAMETERS
 !   ==========
 !   RSC 09-JUN-2008 ENHANCEMENTS
-    real(kind=8) :: ten
+    real(8) :: ten
     PARAMETER(ten = 10.0_8)
 
 !   FUNCTIONS
@@ -52,14 +52,14 @@ SUBROUTINE espini
 
 !   LOCAL DATA
 !   ==========
-    real(kind=8) :: tenrgy,tinscl,tdisip
-    real(kind=8) :: speclo,spechi
-    real(kind=8) :: argmnt
+    real(8) :: tenrgy,tinscl,tdisip
+    real(8) :: speclo,spechi
+    real(8) :: argmnt
 !   RSC 09-JUN-2008 ENHANCEMENTS
-    real(kind=8) :: viscos,viskin,tkolmo,taylor,rtin,dvrin
-    integer :: imodes,nmodes
+    real(8) :: viscos,viskin,tkolmo,taylor,rtin,dvrin
+    integer(4) :: imodes,nmodes
 !   RSC 09-JUN-2008 ENHANCEMENTS
-    integer :: ispec
+    integer(4) :: ispec
 
 !   BEGIN
 !   =====

@@ -3,7 +3,7 @@ SUBROUTINE set_zero_kernel(farray)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: farray
+    real(8), dimension(1) :: farray
 
     farray(OPS_ACC1(0,0,0)) = 0.0_8
 
@@ -13,8 +13,8 @@ SUBROUTINE set_zero_kernel_MD5(farray, ispec)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: farray
-    integer :: ispec
+    real(8), dimension(1) :: farray
+    integer(4) :: ispec
 
     farray(OPS_ACC_MD1(ispec,0,0,0)) = 0.0_8
 
@@ -24,8 +24,8 @@ SUBROUTINE set_zero_kernel_MD6(farray, ispec)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: farray
-    integer :: ispec
+    real(8), dimension(1) :: farray
+    integer(4) :: ispec
 
     farray(OPS_ACC_MD1(ispec,0,0,0)) = 0.0_8
 
@@ -35,7 +35,7 @@ SUBROUTINE set_zero_kernel_int(farray)
     use data_types
     implicit none
 
-    integer, dimension(1) :: farray
+    integer(4), dimension(1) :: farray
 
     farray(OPS_ACC1(0,0,0)) = 0
 
@@ -47,7 +47,7 @@ SUBROUTINE set_zero_kernel_xdir(farray)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: farray
+    real(8), dimension(1) :: farray
 
     farray(OPS_ACC1(0,0,0)) = 0.0_8
 
@@ -59,7 +59,7 @@ SUBROUTINE set_zero_kernel_ydir(farray)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: farray
+    real(8), dimension(1) :: farray
 
     farray(OPS_ACC1(0,0,0)) = 0.0_8
 
@@ -71,7 +71,7 @@ SUBROUTINE set_zero_kernel_zdir(farray)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: farray
+    real(8), dimension(1) :: farray
 
     farray(OPS_ACC1(0,0,0)) = 0.0_8
 

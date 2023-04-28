@@ -35,19 +35,19 @@ FUNCTION espect(waveno)
 
 !   PARAMETERS
 !   ==========
-    real(kind=8), intent(IN)             :: waveno
-    real(kind=8), parameter :: two = 2.0_8
+    real(8), intent(IN)             :: waveno
+    real(8), parameter :: two = 2.0_8
 
 !   FUNCTION
 !   ========
-    real(kind=8) :: espect
+    real(8) :: espect
 
 !   ARGUMENT
 !   ========
 
 !   LOCAL DATA
 !   ==========
-    real(kind=8) :: wavrat
+    real(8) :: wavrat
 
 !   BEGIN
 !   =====

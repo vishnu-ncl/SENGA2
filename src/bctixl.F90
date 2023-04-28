@@ -44,12 +44,12 @@ SUBROUTINE bctixl
 
 !   LOCAL DATA
 !   ==========
-    integer :: icproc
-    integer :: kxmodd,ixmodd
-    integer :: itotxl
+    integer(4) :: icproc
+    integer(4) :: kxmodd,ixmodd
+    integer(4) :: itotxl
     CHARACTER (LEN=6) :: pnproc
     LOGICAL :: fxdump
-    integer :: rangexyz(6)
+    integer(4) :: rangexyz(6)
 
 !   BEGIN
 !   =====
@@ -89,7 +89,7 @@ SUBROUTINE bctixl
         CLOSE(nctixl)
   
 !       SET THE REAL PARTS
-        rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
+        rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_WRITE), &
                         ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ))
@@ -104,7 +104,7 @@ SUBROUTINE bctixl
 
 
 !       ZERO THE IMAGINARY PARTS
-        rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
+        rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_WRITE))
 

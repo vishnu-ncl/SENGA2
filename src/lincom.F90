@@ -38,8 +38,8 @@ SUBROUTINE lincom
 
 !   LOCAL DATA
 !   ==========
-    integer :: ispec
-    integer :: rangexyz(6)
+    integer(4) :: ispec
+    integer(4) :: rangexyz(6)
 
 !   BEGIN
 !   =====
@@ -75,7 +75,7 @@ SUBROUTINE lincom
                     ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rkrhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(irkstp, 1, "integer", OPS_READ))
+                    ops_arg_gbl(irkstp, 1, "integer(4)", OPS_READ))
 
 !   -------------------------------------------------------------------------
 !   U-VELOCITY
@@ -100,7 +100,7 @@ SUBROUTINE lincom
                     ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rkrhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(irkstp, 1, "integer", OPS_READ))
+                    ops_arg_gbl(irkstp, 1, "integer(4)", OPS_READ))
 
 !   -------------------------------------------------------------------------
 !   V-VELOCITY
@@ -112,7 +112,7 @@ SUBROUTINE lincom
                     ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rkrhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(irkstp, 1, "integer", OPS_READ))
+                    ops_arg_gbl(irkstp, 1, "integer(4)", OPS_READ))
 
 !   -------------------------------------------------------------------------
 !   W-VELOCITY
@@ -124,7 +124,7 @@ SUBROUTINE lincom
                     ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rkrhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(irkstp, 1, "integer", OPS_READ))
+                    ops_arg_gbl(irkstp, 1, "integer(4)", OPS_READ))
 
 !   -------------------------------------------------------------------------
 !   STAGNATION INTERNAL ENERGY
@@ -149,7 +149,7 @@ SUBROUTINE lincom
                     ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rkrhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(irkstp, 1, "integer", OPS_READ))
+                    ops_arg_gbl(irkstp, 1, "integer(4)", OPS_READ))
 
 !   -------------------------------------------------------------------------
 !   SPECIES MASS FRACTIONS
@@ -178,7 +178,7 @@ SUBROUTINE lincom
                         ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
                         ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
                         ops_arg_gbl(rkrhs, nrkmax, "real(8)", OPS_READ), &
-                        ops_arg_gbl(irkstp, 1, "integer", OPS_READ))
+                        ops_arg_gbl(irkstp, 1, "integer(4)", OPS_READ))
 
     END DO
 

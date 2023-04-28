@@ -860,330 +860,330 @@ SUBROUTINE dfinit
 
 !   ==============================================================
 
-    call ops_decl_const("acoffx", 1, "double", acoffx)
-    call ops_decl_const("bcoffx", 1, "double", bcoffx)
-    call ops_decl_const("ccoffx", 1, "double", ccoffx)
-    call ops_decl_const("dcoffx", 1, "double", dcoffx)
-    call ops_decl_const("ecoffx", 1, "double", ecoffx)
+    call ops_decl_const("acoffx", 1, "real(8)", acoffx)
+    call ops_decl_const("bcoffx", 1, "real(8)", bcoffx)
+    call ops_decl_const("ccoffx", 1, "real(8)", ccoffx)
+    call ops_decl_const("dcoffx", 1, "real(8)", dcoffx)
+    call ops_decl_const("ecoffx", 1, "real(8)", ecoffx)
 
-    call ops_decl_const("acof1x", 1, "double", acof1x)
-    call ops_decl_const("bcof1x", 1, "double", bcof1x)
-    call ops_decl_const("ccof1x", 1, "double", ccof1x)
-    call ops_decl_const("dcof1x", 1, "double", dcof1x)
+    call ops_decl_const("acof1x", 1, "real(8)", acof1x)
+    call ops_decl_const("bcof1x", 1, "real(8)", bcof1x)
+    call ops_decl_const("ccof1x", 1, "real(8)", ccof1x)
+    call ops_decl_const("dcof1x", 1, "real(8)", dcof1x)
 
-    call ops_decl_const("acof2x", 1, "double", acof2x)
-    call ops_decl_const("bcof2x", 1, "double", bcof2x)
-    call ops_decl_const("ccof2x", 1, "double", ccof2x)
-    call ops_decl_const("dcof2x", 1, "double", dcof2x)
+    call ops_decl_const("acof2x", 1, "real(8)", acof2x)
+    call ops_decl_const("bcof2x", 1, "real(8)", bcof2x)
+    call ops_decl_const("ccof2x", 1, "real(8)", ccof2x)
+    call ops_decl_const("dcof2x", 1, "real(8)", dcof2x)
 
-    call ops_decl_const("acof3x", 1, "double", acof3x)
-    call ops_decl_const("bcof3x", 1, "double", bcof3x)
+    call ops_decl_const("acof3x", 1, "real(8)", acof3x)
+    call ops_decl_const("bcof3x", 1, "real(8)", bcof3x)
 
-    call ops_decl_const("acof4x", 1, "double", acof4x)
-    call ops_decl_const("bcof4x", 1, "double", bcof4x)
-    call ops_decl_const("ccof4x", 1, "double", ccof4x)
+    call ops_decl_const("acof4x", 1, "real(8)", acof4x)
+    call ops_decl_const("bcof4x", 1, "real(8)", bcof4x)
+    call ops_decl_const("ccof4x", 1, "real(8)", ccof4x)
 
-    call ops_decl_const("acof5x", 1, "double", acof5x)
-    call ops_decl_const("bcof5x", 1, "double", bcof5x)
-    call ops_decl_const("ccof5x", 1, "double", ccof5x)
-    call ops_decl_const("dcof5x", 1, "double", dcof5x)
+    call ops_decl_const("acof5x", 1, "real(8)", acof5x)
+    call ops_decl_const("bcof5x", 1, "real(8)", bcof5x)
+    call ops_decl_const("ccof5x", 1, "real(8)", ccof5x)
+    call ops_decl_const("dcof5x", 1, "real(8)", dcof5x)
 
-    call ops_decl_const("ovdelx", 1, "double", ovdelx)
-
-!   ==============================================================
-
-    call ops_decl_const("acofsx", 1, "double", acofsx)
-    call ops_decl_const("bcofsx", 1, "double", bcofsx)
-    call ops_decl_const("ccofsx", 1, "double", ccofsx)
-    call ops_decl_const("dcofsx", 1, "double", dcofsx)
-    call ops_decl_const("ecofsx", 1, "double", ecofsx)
-
-    call ops_decl_const("acfs1x", 1, "double", acfs1x)
-    call ops_decl_const("bcfs1x", 1, "double", bcfs1x)
-    call ops_decl_const("ccfs1x", 1, "double", ccfs1x)
-    call ops_decl_const("dcfs1x", 1, "double", dcfs1x)
-    call ops_decl_const("ecfs1x", 1, "double", ecfs1x)
-
-    call ops_decl_const("acfs2x", 1, "double", acfs2x)
-    call ops_decl_const("bcfs2x", 1, "double", bcfs2x)
-    call ops_decl_const("ccfs2x", 1, "double", ccfs2x)
-    call ops_decl_const("dcfs2x", 1, "double", dcfs2x)
-    call ops_decl_const("ecfs2x", 1, "double", ecfs2x)
-
-    call ops_decl_const("acfs3x", 1, "double", acfs3x)
-    call ops_decl_const("bcfs3x", 1, "double", bcfs3x)
-
-    call ops_decl_const("acfs4x", 1, "double", acfs4x)
-    call ops_decl_const("bcfs4x", 1, "double", bcfs4x)
-    call ops_decl_const("ccfs4x", 1, "double", ccfs4x)
-
-    call ops_decl_const("acfs5x", 1, "double", acfs5x)
-    call ops_decl_const("bcfs5x", 1, "double", bcfs5x)
-    call ops_decl_const("ccfs5x", 1, "double", ccfs5x)
-    call ops_decl_const("dcfs5x", 1, "double", dcfs5x)
-
-    call ops_decl_const("ovdlx2", 1, "double", ovdlx2)
+    call ops_decl_const("ovdelx", 1, "real(8)", ovdelx)
 
 !   ==============================================================
 
-    call ops_decl_const("acoffy", 1, "double", acoffy)
-    call ops_decl_const("bcoffy", 1, "double", bcoffy)
-    call ops_decl_const("ccoffy", 1, "double", ccoffy)
-    call ops_decl_const("dcoffy", 1, "double", dcoffy)
-    call ops_decl_const("ecoffy", 1, "double", ecoffy)
+    call ops_decl_const("acofsx", 1, "real(8)", acofsx)
+    call ops_decl_const("bcofsx", 1, "real(8)", bcofsx)
+    call ops_decl_const("ccofsx", 1, "real(8)", ccofsx)
+    call ops_decl_const("dcofsx", 1, "real(8)", dcofsx)
+    call ops_decl_const("ecofsx", 1, "real(8)", ecofsx)
 
-    call ops_decl_const("acof1y", 1, "double", acof1y)
-    call ops_decl_const("bcof1y", 1, "double", bcof1y)
-    call ops_decl_const("ccof1y", 1, "double", ccof1y)
-    call ops_decl_const("dcof1y", 1, "double", dcof1y)
+    call ops_decl_const("acfs1x", 1, "real(8)", acfs1x)
+    call ops_decl_const("bcfs1x", 1, "real(8)", bcfs1x)
+    call ops_decl_const("ccfs1x", 1, "real(8)", ccfs1x)
+    call ops_decl_const("dcfs1x", 1, "real(8)", dcfs1x)
+    call ops_decl_const("ecfs1x", 1, "real(8)", ecfs1x)
 
-    call ops_decl_const("acof2y", 1, "double", acof2y)
-    call ops_decl_const("bcof2y", 1, "double", bcof2y)
-    call ops_decl_const("ccof2y", 1, "double", ccof2y)
-    call ops_decl_const("dcof2y", 1, "double", dcof2y)
+    call ops_decl_const("acfs2x", 1, "real(8)", acfs2x)
+    call ops_decl_const("bcfs2x", 1, "real(8)", bcfs2x)
+    call ops_decl_const("ccfs2x", 1, "real(8)", ccfs2x)
+    call ops_decl_const("dcfs2x", 1, "real(8)", dcfs2x)
+    call ops_decl_const("ecfs2x", 1, "real(8)", ecfs2x)
 
-    call ops_decl_const("acof3y", 1, "double", acof3y)
-    call ops_decl_const("bcof3y", 1, "double", bcof3y)
+    call ops_decl_const("acfs3x", 1, "real(8)", acfs3x)
+    call ops_decl_const("bcfs3x", 1, "real(8)", bcfs3x)
 
-    call ops_decl_const("acof4y", 1, "double", acof4y)
-    call ops_decl_const("bcof4y", 1, "double", bcof4y)
-    call ops_decl_const("ccof4y", 1, "double", ccof4y)
+    call ops_decl_const("acfs4x", 1, "real(8)", acfs4x)
+    call ops_decl_const("bcfs4x", 1, "real(8)", bcfs4x)
+    call ops_decl_const("ccfs4x", 1, "real(8)", ccfs4x)
 
-    call ops_decl_const("acof5y", 1, "double", acof5y)
-    call ops_decl_const("bcof5y", 1, "double", bcof5y)
-    call ops_decl_const("ccof5y", 1, "double", ccof5y)
-    call ops_decl_const("dcof5y", 1, "double", dcof5y)
+    call ops_decl_const("acfs5x", 1, "real(8)", acfs5x)
+    call ops_decl_const("bcfs5x", 1, "real(8)", bcfs5x)
+    call ops_decl_const("ccfs5x", 1, "real(8)", ccfs5x)
+    call ops_decl_const("dcfs5x", 1, "real(8)", dcfs5x)
 
-    call ops_decl_const("ovdely", 1, "double", ovdely)
-
-!   ==============================================================
-
-    call ops_decl_const("acofsy", 1, "double", acofsy)
-    call ops_decl_const("bcofsy", 1, "double", bcofsy)
-    call ops_decl_const("ccofsy", 1, "double", ccofsy)
-    call ops_decl_const("dcofsy", 1, "double", dcofsy)
-    call ops_decl_const("ecofsy", 1, "double", ecofsy)
-
-    call ops_decl_const("acfs1y", 1, "double", acfs1y)
-    call ops_decl_const("bcfs1y", 1, "double", bcfs1y)
-    call ops_decl_const("ccfs1y", 1, "double", ccfs1y)
-    call ops_decl_const("dcfs1y", 1, "double", dcfs1y)
-    call ops_decl_const("ecfs1y", 1, "double", ecfs1y)
-
-    call ops_decl_const("acfs2y", 1, "double", acfs2y)
-    call ops_decl_const("bcfs2y", 1, "double", bcfs2y)
-    call ops_decl_const("ccfs2y", 1, "double", ccfs2y)
-    call ops_decl_const("dcfs2y", 1, "double", dcfs2y)
-    call ops_decl_const("ecfs2y", 1, "double", ecfs2y)
-
-    call ops_decl_const("acfs3y", 1, "double", acfs3y)
-    call ops_decl_const("bcfs3y", 1, "double", bcfs3y)
-
-    call ops_decl_const("acfs4y", 1, "double", acfs4y)
-    call ops_decl_const("bcfs4y", 1, "double", bcfs4y)
-    call ops_decl_const("ccfs4y", 1, "double", ccfs4y)
-
-    call ops_decl_const("acfs5y", 1, "double", acfs5y)
-    call ops_decl_const("bcfs5y", 1, "double", bcfs5y)
-    call ops_decl_const("ccfs5y", 1, "double", ccfs5y)
-    call ops_decl_const("dcfs5y", 1, "double", dcfs5y)
-
-    call ops_decl_const("ovdly2", 1, "double", ovdly2)
+    call ops_decl_const("ovdlx2", 1, "real(8)", ovdlx2)
 
 !   ==============================================================
 
-    call ops_decl_const("acoffz", 1, "double", acoffz)
-    call ops_decl_const("bcoffz", 1, "double", bcoffz)
-    call ops_decl_const("ccoffz", 1, "double", ccoffz)
-    call ops_decl_const("dcoffz", 1, "double", dcoffz)
-    call ops_decl_const("ecoffz", 1, "double", ecoffz)
+    call ops_decl_const("acoffy", 1, "real(8)", acoffy)
+    call ops_decl_const("bcoffy", 1, "real(8)", bcoffy)
+    call ops_decl_const("ccoffy", 1, "real(8)", ccoffy)
+    call ops_decl_const("dcoffy", 1, "real(8)", dcoffy)
+    call ops_decl_const("ecoffy", 1, "real(8)", ecoffy)
 
-    call ops_decl_const("acof1z", 1, "double", acof1z)
-    call ops_decl_const("bcof1z", 1, "double", bcof1z)
-    call ops_decl_const("ccof1z", 1, "double", ccof1z)
-    call ops_decl_const("dcof1z", 1, "double", dcof1z)
+    call ops_decl_const("acof1y", 1, "real(8)", acof1y)
+    call ops_decl_const("bcof1y", 1, "real(8)", bcof1y)
+    call ops_decl_const("ccof1y", 1, "real(8)", ccof1y)
+    call ops_decl_const("dcof1y", 1, "real(8)", dcof1y)
 
-    call ops_decl_const("acof2z", 1, "double", acof2z)
-    call ops_decl_const("bcof2z", 1, "double", bcof2z)
-    call ops_decl_const("ccof2z", 1, "double", ccof2z)
-    call ops_decl_const("dcof2z", 1, "double", dcof2z)
+    call ops_decl_const("acof2y", 1, "real(8)", acof2y)
+    call ops_decl_const("bcof2y", 1, "real(8)", bcof2y)
+    call ops_decl_const("ccof2y", 1, "real(8)", ccof2y)
+    call ops_decl_const("dcof2y", 1, "real(8)", dcof2y)
 
-    call ops_decl_const("acof3z", 1, "double", acof3z)
-    call ops_decl_const("bcof3z", 1, "double", bcof3z)
+    call ops_decl_const("acof3y", 1, "real(8)", acof3y)
+    call ops_decl_const("bcof3y", 1, "real(8)", bcof3y)
 
-    call ops_decl_const("acof4z", 1, "double", acof4z)
-    call ops_decl_const("bcof4z", 1, "double", bcof4z)
-    call ops_decl_const("ccof4z", 1, "double", ccof4z)
+    call ops_decl_const("acof4y", 1, "real(8)", acof4y)
+    call ops_decl_const("bcof4y", 1, "real(8)", bcof4y)
+    call ops_decl_const("ccof4y", 1, "real(8)", ccof4y)
 
-    call ops_decl_const("acof5z", 1, "double", acof5z)
-    call ops_decl_const("bcof5z", 1, "double", bcof5z)
-    call ops_decl_const("ccof5z", 1, "double", ccof5z)
-    call ops_decl_const("dcof5z", 1, "double", dcof5z)
+    call ops_decl_const("acof5y", 1, "real(8)", acof5y)
+    call ops_decl_const("bcof5y", 1, "real(8)", bcof5y)
+    call ops_decl_const("ccof5y", 1, "real(8)", ccof5y)
+    call ops_decl_const("dcof5y", 1, "real(8)", dcof5y)
 
-    call ops_decl_const("ovdelz", 1, "double", ovdelz)
-
-!   ==============================================================
-
-    call ops_decl_const("acofsz", 1, "double", acofsz)
-    call ops_decl_const("bcofsz", 1, "double", bcofsz)
-    call ops_decl_const("ccofsz", 1, "double", ccofsz)
-    call ops_decl_const("dcofsz", 1, "double", dcofsz)
-    call ops_decl_const("ecofsz", 1, "double", ecofsz)
-
-    call ops_decl_const("acfs1z", 1, "double", acfs1z)
-    call ops_decl_const("bcfs1z", 1, "double", bcfs1z)
-    call ops_decl_const("ccfs1z", 1, "double", ccfs1z)
-    call ops_decl_const("dcfs1z", 1, "double", dcfs1z)
-    call ops_decl_const("ecfs1z", 1, "double", ecfs1z)
-
-    call ops_decl_const("acfs2z", 1, "double", acfs2z)
-    call ops_decl_const("bcfs2z", 1, "double", bcfs2z)
-    call ops_decl_const("ccfs2z", 1, "double", ccfs2z)
-    call ops_decl_const("dcfs2z", 1, "double", dcfs2z)
-    call ops_decl_const("ecfs2z", 1, "double", ecfs2z)
-
-    call ops_decl_const("acfs3z", 1, "double", acfs3z)
-    call ops_decl_const("bcfs3z", 1, "double", bcfs3z)
-
-    call ops_decl_const("acfs4z", 1, "double", acfs4z)
-    call ops_decl_const("bcfs4z", 1, "double", bcfs4z)
-    call ops_decl_const("ccfs4z", 1, "double", ccfs4z)
-
-    call ops_decl_const("acfs5z", 1, "double", acfs5z)
-    call ops_decl_const("bcfs5z", 1, "double", bcfs5z)
-    call ops_decl_const("ccfs5z", 1, "double", ccfs5z)
-    call ops_decl_const("dcfs5z", 1, "double", dcfs5z)
-
-    call ops_decl_const("ovdlz2", 1, "double", ovdlz2)
+    call ops_decl_const("ovdely", 1, "real(8)", ovdely)
 
 !   ==============================================================
 
-    call ops_decl_const("acofx1", 1, "double", acofx1)
-    call ops_decl_const("bcofx1", 1, "double", bcofx1)
-    call ops_decl_const("acofy1", 1, "double", acofy1)
-    call ops_decl_const("bcofy1", 1, "double", bcofy1)
-    call ops_decl_const("acofz1", 1, "double", acofz1)
-    call ops_decl_const("bcofz1", 1, "double", bcofz1)
+    call ops_decl_const("acofsy", 1, "real(8)", acofsy)
+    call ops_decl_const("bcofsy", 1, "real(8)", bcofsy)
+    call ops_decl_const("ccofsy", 1, "real(8)", ccofsy)
+    call ops_decl_const("dcofsy", 1, "real(8)", dcofsy)
+    call ops_decl_const("ecofsy", 1, "real(8)", ecofsy)
+
+    call ops_decl_const("acfs1y", 1, "real(8)", acfs1y)
+    call ops_decl_const("bcfs1y", 1, "real(8)", bcfs1y)
+    call ops_decl_const("ccfs1y", 1, "real(8)", ccfs1y)
+    call ops_decl_const("dcfs1y", 1, "real(8)", dcfs1y)
+    call ops_decl_const("ecfs1y", 1, "real(8)", ecfs1y)
+
+    call ops_decl_const("acfs2y", 1, "real(8)", acfs2y)
+    call ops_decl_const("bcfs2y", 1, "real(8)", bcfs2y)
+    call ops_decl_const("ccfs2y", 1, "real(8)", ccfs2y)
+    call ops_decl_const("dcfs2y", 1, "real(8)", dcfs2y)
+    call ops_decl_const("ecfs2y", 1, "real(8)", ecfs2y)
+
+    call ops_decl_const("acfs3y", 1, "real(8)", acfs3y)
+    call ops_decl_const("bcfs3y", 1, "real(8)", bcfs3y)
+
+    call ops_decl_const("acfs4y", 1, "real(8)", acfs4y)
+    call ops_decl_const("bcfs4y", 1, "real(8)", bcfs4y)
+    call ops_decl_const("ccfs4y", 1, "real(8)", ccfs4y)
+
+    call ops_decl_const("acfs5y", 1, "real(8)", acfs5y)
+    call ops_decl_const("bcfs5y", 1, "real(8)", bcfs5y)
+    call ops_decl_const("ccfs5y", 1, "real(8)", ccfs5y)
+    call ops_decl_const("dcfs5y", 1, "real(8)", dcfs5y)
+
+    call ops_decl_const("ovdly2", 1, "real(8)", ovdly2)
 
 !   ==============================================================
 
-    call ops_decl_const("acofxy", 1, "double", acofxy)
-    call ops_decl_const("bcofxy", 1, "double", bcofxy)
-    call ops_decl_const("ccofxy", 1, "double", ccofxy)
-    call ops_decl_const("dcofxy", 1, "double", dcofxy)
-    call ops_decl_const("ecofxy", 1, "double", ecofxy)
+    call ops_decl_const("acoffz", 1, "real(8)", acoffz)
+    call ops_decl_const("bcoffz", 1, "real(8)", bcoffz)
+    call ops_decl_const("ccoffz", 1, "real(8)", ccoffz)
+    call ops_decl_const("dcoffz", 1, "real(8)", dcoffz)
+    call ops_decl_const("ecoffz", 1, "real(8)", ecoffz)
 
-    call ops_decl_const("acf1xy", 1, "double", acf1xy)
-    call ops_decl_const("bcf1xy", 1, "double", bcf1xy)
-    call ops_decl_const("ccf1xy", 1, "double", ccf1xy)
-    call ops_decl_const("dcf1xy", 1, "double", dcf1xy)
+    call ops_decl_const("acof1z", 1, "real(8)", acof1z)
+    call ops_decl_const("bcof1z", 1, "real(8)", bcof1z)
+    call ops_decl_const("ccof1z", 1, "real(8)", ccof1z)
+    call ops_decl_const("dcof1z", 1, "real(8)", dcof1z)
 
-    call ops_decl_const("acf2xy", 1, "double", acf2xy)
-    call ops_decl_const("bcf2xy", 1, "double", bcf2xy)
-    call ops_decl_const("ccf2xy", 1, "double", ccf2xy)
-    call ops_decl_const("dcf2xy", 1, "double", dcf2xy)
+    call ops_decl_const("acof2z", 1, "real(8)", acof2z)
+    call ops_decl_const("bcof2z", 1, "real(8)", bcof2z)
+    call ops_decl_const("ccof2z", 1, "real(8)", ccof2z)
+    call ops_decl_const("dcof2z", 1, "real(8)", dcof2z)
 
-    call ops_decl_const("acf3xy", 1, "double", acf3xy)
-    call ops_decl_const("bcf3xy", 1, "double", bcf3xy)
+    call ops_decl_const("acof3z", 1, "real(8)", acof3z)
+    call ops_decl_const("bcof3z", 1, "real(8)", bcof3z)
 
-    call ops_decl_const("acf4xy", 1, "double", acf4xy)
-    call ops_decl_const("bcf4xy", 1, "double", bcf4xy)
-    call ops_decl_const("ccf4xy", 1, "double", ccf4xy)
+    call ops_decl_const("acof4z", 1, "real(8)", acof4z)
+    call ops_decl_const("bcof4z", 1, "real(8)", bcof4z)
+    call ops_decl_const("ccof4z", 1, "real(8)", ccof4z)
 
-    call ops_decl_const("acf5xy", 1, "double", acf5xy)
-    call ops_decl_const("bcf5xy", 1, "double", bcf5xy)
-    call ops_decl_const("ccf5xy", 1, "double", ccf5xy)
-    call ops_decl_const("dcf5xy", 1, "double", dcf5xy)
+    call ops_decl_const("acof5z", 1, "real(8)", acof5z)
+    call ops_decl_const("bcof5z", 1, "real(8)", bcof5z)
+    call ops_decl_const("ccof5z", 1, "real(8)", ccof5z)
+    call ops_decl_const("dcof5z", 1, "real(8)", dcof5z)
 
-    call ops_decl_const("acc1xy", 1, "double", acc1xy)
-    call ops_decl_const("bcc1xy", 1, "double", bcc1xy)
-    call ops_decl_const("ccc1xy", 1, "double", ccc1xy)
-    call ops_decl_const("dcc1xy", 1, "double", dcc1xy)
-
-    call ops_decl_const("acc2xy", 1, "double", acc2xy)
-    call ops_decl_const("bcc2xy", 1, "double", bcc2xy)
-    call ops_decl_const("ccc2xy", 1, "double", ccc2xy)
-    call ops_decl_const("dcc2xy", 1, "double", dcc2xy)
+    call ops_decl_const("ovdelz", 1, "real(8)", ovdelz)
 
 !   ==============================================================
 
-    call ops_decl_const("acofxz", 1, "double", acofxz)
-    call ops_decl_const("bcofxz", 1, "double", bcofxz)
-    call ops_decl_const("ccofxz", 1, "double", ccofxz)
-    call ops_decl_const("dcofxz", 1, "double", dcofxz)
-    call ops_decl_const("ecofxz", 1, "double", ecofxz)
+    call ops_decl_const("acofsz", 1, "real(8)", acofsz)
+    call ops_decl_const("bcofsz", 1, "real(8)", bcofsz)
+    call ops_decl_const("ccofsz", 1, "real(8)", ccofsz)
+    call ops_decl_const("dcofsz", 1, "real(8)", dcofsz)
+    call ops_decl_const("ecofsz", 1, "real(8)", ecofsz)
 
-    call ops_decl_const("acf1xz", 1, "double", acf1xz)
-    call ops_decl_const("bcf1xz", 1, "double", bcf1xz)
-    call ops_decl_const("ccf1xz", 1, "double", ccf1xz)
-    call ops_decl_const("dcf1xz", 1, "double", dcf1xz)
+    call ops_decl_const("acfs1z", 1, "real(8)", acfs1z)
+    call ops_decl_const("bcfs1z", 1, "real(8)", bcfs1z)
+    call ops_decl_const("ccfs1z", 1, "real(8)", ccfs1z)
+    call ops_decl_const("dcfs1z", 1, "real(8)", dcfs1z)
+    call ops_decl_const("ecfs1z", 1, "real(8)", ecfs1z)
 
-    call ops_decl_const("acf2xz", 1, "double", acf2xz)
-    call ops_decl_const("bcf2xz", 1, "double", bcf2xz)
-    call ops_decl_const("ccf2xz", 1, "double", ccf2xz)
-    call ops_decl_const("dcf2xz", 1, "double", dcf2xz)
+    call ops_decl_const("acfs2z", 1, "real(8)", acfs2z)
+    call ops_decl_const("bcfs2z", 1, "real(8)", bcfs2z)
+    call ops_decl_const("ccfs2z", 1, "real(8)", ccfs2z)
+    call ops_decl_const("dcfs2z", 1, "real(8)", dcfs2z)
+    call ops_decl_const("ecfs2z", 1, "real(8)", ecfs2z)
 
-    call ops_decl_const("acf3xz", 1, "double", acf3xz)
-    call ops_decl_const("bcf3xz", 1, "double", bcf3xz)
+    call ops_decl_const("acfs3z", 1, "real(8)", acfs3z)
+    call ops_decl_const("bcfs3z", 1, "real(8)", bcfs3z)
 
-    call ops_decl_const("acf4xz", 1, "double", acf4xz)
-    call ops_decl_const("bcf4xz", 1, "double", bcf4xz)
-    call ops_decl_const("ccf4xz", 1, "double", ccf4xz)
+    call ops_decl_const("acfs4z", 1, "real(8)", acfs4z)
+    call ops_decl_const("bcfs4z", 1, "real(8)", bcfs4z)
+    call ops_decl_const("ccfs4z", 1, "real(8)", ccfs4z)
 
-    call ops_decl_const("acf5xz", 1, "double", acf5xz)
-    call ops_decl_const("bcf5xz", 1, "double", bcf5xz)
-    call ops_decl_const("ccf5xz", 1, "double", ccf5xz)
-    call ops_decl_const("dcf5xz", 1, "double", dcf5xz)
+    call ops_decl_const("acfs5z", 1, "real(8)", acfs5z)
+    call ops_decl_const("bcfs5z", 1, "real(8)", bcfs5z)
+    call ops_decl_const("ccfs5z", 1, "real(8)", ccfs5z)
+    call ops_decl_const("dcfs5z", 1, "real(8)", dcfs5z)
 
-    call ops_decl_const("acc1xz", 1, "double", acc1xz)
-    call ops_decl_const("bcc1xz", 1, "double", bcc1xz)
-    call ops_decl_const("ccc1xz", 1, "double", ccc1xz)
-    call ops_decl_const("dcc1xz", 1, "double", dcc1xz)
-
-    call ops_decl_const("acc2xz", 1, "double", acc2xz)
-    call ops_decl_const("bcc2xz", 1, "double", bcc2xz)
-    call ops_decl_const("ccc2xz", 1, "double", ccc2xz)
-    call ops_decl_const("dcc2xz", 1, "double", dcc2xz)
+    call ops_decl_const("ovdlz2", 1, "real(8)", ovdlz2)
 
 !   ==============================================================
 
-    call ops_decl_const("acofyz", 1, "double", acofyz)
-    call ops_decl_const("bcofyz", 1, "double", bcofyz)
-    call ops_decl_const("ccofyz", 1, "double", ccofyz)
-    call ops_decl_const("dcofyz", 1, "double", dcofyz)
-    call ops_decl_const("ecofyz", 1, "double", ecofyz)
+    call ops_decl_const("acofx1", 1, "real(8)", acofx1)
+    call ops_decl_const("bcofx1", 1, "real(8)", bcofx1)
+    call ops_decl_const("acofy1", 1, "real(8)", acofy1)
+    call ops_decl_const("bcofy1", 1, "real(8)", bcofy1)
+    call ops_decl_const("acofz1", 1, "real(8)", acofz1)
+    call ops_decl_const("bcofz1", 1, "real(8)", bcofz1)
 
-    call ops_decl_const("acf1yz", 1, "double", acf1yz)
-    call ops_decl_const("bcf1yz", 1, "double", bcf1yz)
-    call ops_decl_const("ccf1yz", 1, "double", ccf1yz)
-    call ops_decl_const("dcf1yz", 1, "double", dcf1yz)
+!   ==============================================================
 
-    call ops_decl_const("acf2yz", 1, "double", acf2yz)
-    call ops_decl_const("bcf2yz", 1, "double", bcf2yz)
-    call ops_decl_const("ccf2yz", 1, "double", ccf2yz)
-    call ops_decl_const("dcf2yz", 1, "double", dcf2yz)
+    call ops_decl_const("acofxy", 1, "real(8)", acofxy)
+    call ops_decl_const("bcofxy", 1, "real(8)", bcofxy)
+    call ops_decl_const("ccofxy", 1, "real(8)", ccofxy)
+    call ops_decl_const("dcofxy", 1, "real(8)", dcofxy)
+    call ops_decl_const("ecofxy", 1, "real(8)", ecofxy)
 
-    call ops_decl_const("acf3yz", 1, "double", acf3yz)
-    call ops_decl_const("bcf3yz", 1, "double", bcf3yz)
+    call ops_decl_const("acf1xy", 1, "real(8)", acf1xy)
+    call ops_decl_const("bcf1xy", 1, "real(8)", bcf1xy)
+    call ops_decl_const("ccf1xy", 1, "real(8)", ccf1xy)
+    call ops_decl_const("dcf1xy", 1, "real(8)", dcf1xy)
 
-    call ops_decl_const("acf4yz", 1, "double", acf4yz)
-    call ops_decl_const("bcf4yz", 1, "double", bcf4yz)
-    call ops_decl_const("ccf4yz", 1, "double", ccf4yz)
+    call ops_decl_const("acf2xy", 1, "real(8)", acf2xy)
+    call ops_decl_const("bcf2xy", 1, "real(8)", bcf2xy)
+    call ops_decl_const("ccf2xy", 1, "real(8)", ccf2xy)
+    call ops_decl_const("dcf2xy", 1, "real(8)", dcf2xy)
 
-    call ops_decl_const("acf5yz", 1, "double", acf5yz)
-    call ops_decl_const("bcf5yz", 1, "double", bcf5yz)
-    call ops_decl_const("ccf5yz", 1, "double", ccf5yz)
-    call ops_decl_const("dcf5yz", 1, "double", dcf5yz)
+    call ops_decl_const("acf3xy", 1, "real(8)", acf3xy)
+    call ops_decl_const("bcf3xy", 1, "real(8)", bcf3xy)
 
-    call ops_decl_const("acc1yz", 1, "double", acc1yz)
-    call ops_decl_const("bcc1yz", 1, "double", bcc1yz)
-    call ops_decl_const("ccc1yz", 1, "double", ccc1yz)
-    call ops_decl_const("dcc1yz", 1, "double", dcc1yz)
+    call ops_decl_const("acf4xy", 1, "real(8)", acf4xy)
+    call ops_decl_const("bcf4xy", 1, "real(8)", bcf4xy)
+    call ops_decl_const("ccf4xy", 1, "real(8)", ccf4xy)
 
-    call ops_decl_const("acc2yz", 1, "double", acc2yz)
-    call ops_decl_const("bcc2yz", 1, "double", bcc2yz)
-    call ops_decl_const("ccc2yz", 1, "double", ccc2yz)
-    call ops_decl_const("dcc2yz", 1, "double", dcc2yz)
+    call ops_decl_const("acf5xy", 1, "real(8)", acf5xy)
+    call ops_decl_const("bcf5xy", 1, "real(8)", bcf5xy)
+    call ops_decl_const("ccf5xy", 1, "real(8)", ccf5xy)
+    call ops_decl_const("dcf5xy", 1, "real(8)", dcf5xy)
+
+    call ops_decl_const("acc1xy", 1, "real(8)", acc1xy)
+    call ops_decl_const("bcc1xy", 1, "real(8)", bcc1xy)
+    call ops_decl_const("ccc1xy", 1, "real(8)", ccc1xy)
+    call ops_decl_const("dcc1xy", 1, "real(8)", dcc1xy)
+
+    call ops_decl_const("acc2xy", 1, "real(8)", acc2xy)
+    call ops_decl_const("bcc2xy", 1, "real(8)", bcc2xy)
+    call ops_decl_const("ccc2xy", 1, "real(8)", ccc2xy)
+    call ops_decl_const("dcc2xy", 1, "real(8)", dcc2xy)
+
+!   ==============================================================
+
+    call ops_decl_const("acofxz", 1, "real(8)", acofxz)
+    call ops_decl_const("bcofxz", 1, "real(8)", bcofxz)
+    call ops_decl_const("ccofxz", 1, "real(8)", ccofxz)
+    call ops_decl_const("dcofxz", 1, "real(8)", dcofxz)
+    call ops_decl_const("ecofxz", 1, "real(8)", ecofxz)
+
+    call ops_decl_const("acf1xz", 1, "real(8)", acf1xz)
+    call ops_decl_const("bcf1xz", 1, "real(8)", bcf1xz)
+    call ops_decl_const("ccf1xz", 1, "real(8)", ccf1xz)
+    call ops_decl_const("dcf1xz", 1, "real(8)", dcf1xz)
+
+    call ops_decl_const("acf2xz", 1, "real(8)", acf2xz)
+    call ops_decl_const("bcf2xz", 1, "real(8)", bcf2xz)
+    call ops_decl_const("ccf2xz", 1, "real(8)", ccf2xz)
+    call ops_decl_const("dcf2xz", 1, "real(8)", dcf2xz)
+
+    call ops_decl_const("acf3xz", 1, "real(8)", acf3xz)
+    call ops_decl_const("bcf3xz", 1, "real(8)", bcf3xz)
+
+    call ops_decl_const("acf4xz", 1, "real(8)", acf4xz)
+    call ops_decl_const("bcf4xz", 1, "real(8)", bcf4xz)
+    call ops_decl_const("ccf4xz", 1, "real(8)", ccf4xz)
+
+    call ops_decl_const("acf5xz", 1, "real(8)", acf5xz)
+    call ops_decl_const("bcf5xz", 1, "real(8)", bcf5xz)
+    call ops_decl_const("ccf5xz", 1, "real(8)", ccf5xz)
+    call ops_decl_const("dcf5xz", 1, "real(8)", dcf5xz)
+
+    call ops_decl_const("acc1xz", 1, "real(8)", acc1xz)
+    call ops_decl_const("bcc1xz", 1, "real(8)", bcc1xz)
+    call ops_decl_const("ccc1xz", 1, "real(8)", ccc1xz)
+    call ops_decl_const("dcc1xz", 1, "real(8)", dcc1xz)
+
+    call ops_decl_const("acc2xz", 1, "real(8)", acc2xz)
+    call ops_decl_const("bcc2xz", 1, "real(8)", bcc2xz)
+    call ops_decl_const("ccc2xz", 1, "real(8)", ccc2xz)
+    call ops_decl_const("dcc2xz", 1, "real(8)", dcc2xz)
+
+!   ==============================================================
+
+    call ops_decl_const("acofyz", 1, "real(8)", acofyz)
+    call ops_decl_const("bcofyz", 1, "real(8)", bcofyz)
+    call ops_decl_const("ccofyz", 1, "real(8)", ccofyz)
+    call ops_decl_const("dcofyz", 1, "real(8)", dcofyz)
+    call ops_decl_const("ecofyz", 1, "real(8)", ecofyz)
+
+    call ops_decl_const("acf1yz", 1, "real(8)", acf1yz)
+    call ops_decl_const("bcf1yz", 1, "real(8)", bcf1yz)
+    call ops_decl_const("ccf1yz", 1, "real(8)", ccf1yz)
+    call ops_decl_const("dcf1yz", 1, "real(8)", dcf1yz)
+
+    call ops_decl_const("acf2yz", 1, "real(8)", acf2yz)
+    call ops_decl_const("bcf2yz", 1, "real(8)", bcf2yz)
+    call ops_decl_const("ccf2yz", 1, "real(8)", ccf2yz)
+    call ops_decl_const("dcf2yz", 1, "real(8)", dcf2yz)
+
+    call ops_decl_const("acf3yz", 1, "real(8)", acf3yz)
+    call ops_decl_const("bcf3yz", 1, "real(8)", bcf3yz)
+
+    call ops_decl_const("acf4yz", 1, "real(8)", acf4yz)
+    call ops_decl_const("bcf4yz", 1, "real(8)", bcf4yz)
+    call ops_decl_const("ccf4yz", 1, "real(8)", ccf4yz)
+
+    call ops_decl_const("acf5yz", 1, "real(8)", acf5yz)
+    call ops_decl_const("bcf5yz", 1, "real(8)", bcf5yz)
+    call ops_decl_const("ccf5yz", 1, "real(8)", ccf5yz)
+    call ops_decl_const("dcf5yz", 1, "real(8)", dcf5yz)
+
+    call ops_decl_const("acc1yz", 1, "real(8)", acc1yz)
+    call ops_decl_const("bcc1yz", 1, "real(8)", bcc1yz)
+    call ops_decl_const("ccc1yz", 1, "real(8)", ccc1yz)
+    call ops_decl_const("dcc1yz", 1, "real(8)", dcc1yz)
+
+    call ops_decl_const("acc2yz", 1, "real(8)", acc2yz)
+    call ops_decl_const("bcc2yz", 1, "real(8)", bcc2yz)
+    call ops_decl_const("ccc2yz", 1, "real(8)", ccc2yz)
+    call ops_decl_const("dcc2yz", 1, "real(8)", dcc2yz)
 
 !   ==============================================================
 

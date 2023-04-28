@@ -33,18 +33,18 @@ use data_types
 !     PARAMETERS
 !     ==========
 
-real(kind=8), INTENT(IN)             :: argmin
-real(kind=8), INTENT(IN OUT)         :: argmax
-real(kind=8), INTENT(OUT)            :: answer
+real(8), INTENT(IN)             :: argmin
+real(8), INTENT(IN OUT)         :: argmax
+real(8), INTENT(OUT)            :: answer
 
 
-real(kind=8), PARAMETER :: tolint=0.000001_8
+real(8), PARAMETER :: tolint=0.000001_8
 INTEGER, PARAMETER :: intmax=20
-real(kind=8), PARAMETER :: vsmall = 0.000000000000000000000000000001_8
-real(kind=8), PARAMETER :: zero=0.0_8
-real(kind=8), PARAMETER :: half=0.5_8
-real(kind=8), PARAMETER :: three=3.0_8
-real(kind=8), PARAMETER :: four=4.0_8
+real(8), PARAMETER :: vsmall = 0.000000000000000000000000000001_8
+real(8), PARAMETER :: zero=0.0_8
+real(8), PARAMETER :: half=0.5_8
+real(8), PARAMETER :: three=3.0_8
+real(8), PARAMETER :: four=4.0_8
 
 
 !     ARGUMENTS
@@ -55,7 +55,7 @@ EXTERNAL functn
 
 !     LOCAL DATA
 !     ==========
-real(kind=8) :: oldtmp,oldans,tmpans,argtmp,deltrg,addpts
+real(8) :: oldtmp,oldans,tmpans,argtmp,deltrg,addpts
 INTEGER :: icount,ic,interv
 
 

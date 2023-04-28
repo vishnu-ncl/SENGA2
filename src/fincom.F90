@@ -39,8 +39,8 @@ SUBROUTINE fincom
 
 !   LOCAL DATA
 !   ==========
-    integer :: ispec
-    integer :: rangexyz(6)
+    integer(4) :: ispec
+    integer(4) :: rangexyz(6)
 
 !   -------------------------------------------------------------------------
 
@@ -77,7 +77,7 @@ SUBROUTINE fincom
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(nrkstp, 1, "integer", OPS_READ))
+                    ops_arg_gbl(nrkstp, 1, "integer(4)", OPS_READ))
 
 !   -------------------------------------------------------------------------
 !   U VELOCITY
@@ -101,7 +101,7 @@ SUBROUTINE fincom
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(nrkstp, 1, "integer", OPS_READ))
+                    ops_arg_gbl(nrkstp, 1, "integer(4)", OPS_READ))
 !   -------------------------------------------------------------------------
 !   V-VELOCITY
 !   ----------
@@ -111,7 +111,7 @@ SUBROUTINE fincom
                     ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(nrkstp, 1, "integer", OPS_READ))
+                    ops_arg_gbl(nrkstp, 1, "integer(4)", OPS_READ))
 
 !   -------------------------------------------------------------------------
 !   W-VELOCITY
@@ -122,7 +122,7 @@ SUBROUTINE fincom
                     ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(nrkstp, 1, "integer", OPS_READ))
+                    ops_arg_gbl(nrkstp, 1, "integer(4)", OPS_READ))
 
 !   -------------------------------------------------------------------------
 !   STAGNATION INTERNAL ENERGY
@@ -146,7 +146,7 @@ SUBROUTINE fincom
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_RW), &
                     ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
                     ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(nrkstp, 1, "integer", OPS_READ))
+                    ops_arg_gbl(nrkstp, 1, "integer(4)", OPS_READ))
 
 !   -------------------------------------------------------------------------
 !   SPECIES MASS FRACTIONS
@@ -174,7 +174,7 @@ SUBROUTINE fincom
                         ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_RW), &
                         ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
                         ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
-                        ops_arg_gbl(nrkstp, 1, "integer", OPS_READ))
+                        ops_arg_gbl(nrkstp, 1, "integer(4)", OPS_READ))
 
     END DO
 

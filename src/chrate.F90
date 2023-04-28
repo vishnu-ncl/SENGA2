@@ -42,24 +42,24 @@ SUBROUTINE chrate
 
 !   PARAMETERS
 !   ==========
-    real(kind=8) :: ysmall,ydenom
+    real(8) :: ysmall,ydenom
     PARAMETER(ysmall = 0.000000000000000000000000000001_8,ydenom = 0.000000000000001_8)
 
 
 !   LOCAL DATA
 !   ==========
-    real(kind=8) :: racnst,rncnst,reovrr
-    real(kind=8) :: ovwmas,gibbsp,scoef,preduc
-    real(kind=8) :: ovtst1,tstar2,ovtst3,omalph
-    real(kind=8) :: fbroad,ftcent,trats1,trats2,trats3,cfactr,enfact
-    real(kind=8) :: acfsri,bcfsrm,ovcsrm,dcfsri,ecfsri
-    real(kind=8) :: fornow
-    real(kind=8) :: talpha,flcnst,cfcst1,cfcst2,encst1,encst2,dtcnst
-    integer :: ispec,isspec
-    integer :: istep,ibody
-    integer :: iindex,ipower,icoef1,icoef2,itint,icp
+    real(8) :: racnst,rncnst,reovrr
+    real(8) :: ovwmas,gibbsp,scoef,preduc
+    real(8) :: ovtst1,tstar2,ovtst3,omalph
+    real(8) :: fbroad,ftcent,trats1,trats2,trats3,cfactr,enfact
+    real(8) :: acfsri,bcfsrm,ovcsrm,dcfsri,ecfsri
+    real(8) :: fornow
+    real(8) :: talpha,flcnst,cfcst1,cfcst2,encst1,encst2,dtcnst
+    integer(4) :: ispec,isspec
+    integer(4) :: istep,ibody
+    integer(4) :: iindex,ipower,icoef1,icoef2,itint,icp
     LOGICAL :: flthrd
-    integer :: rangexyz(6)
+    integer(4) :: rangexyz(6)
 
 !   BEGIN
 !   =====
@@ -143,7 +143,7 @@ SUBROUTINE chrate
 !   =========================================================================
 
 !   ZERO THE REACTION RATE ACCUMULATOR ARRAYS
-    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
+    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     DO ispec = 1,nspec
         call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_WRITE))
@@ -173,7 +173,7 @@ SUBROUTINE chrate
             ibody = mblist(istep)
 
 !           ZERO THE THIRD-BODY CONCENTRATION ACCUMULATOR
-            rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
+            rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
             call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE))
 
@@ -188,8 +188,8 @@ SUBROUTINE chrate
 
 !               EVALUATE THE THIRD BODY CONCENTRATION
 !               AND STORE IN TEMPORARY ARRAY
-                rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-                call ops_par_loop(math_MD_kernel_eqP, "EVALUATE THE THIRD BODY CONCENTRATION", senga_grid, 3, rangexyz,  &
+                rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+                call ops_par_loop(maths_kernel_eqJ, "EVALUATE THE THIRD BODY CONCENTRATION", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_gbl(ovwmas, 1, "real(8)", OPS_READ))
@@ -210,8 +210,8 @@ SUBROUTINE chrate
         rncnst = rparam(2,istep)
         reovrr = rparam(3,istep)
 
-        rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-        call ops_par_loop(math_kernel_eqAQ, "EVALUATE THE SPECIFIC REACTION RATE CONSTANT", senga_grid, 3, rangexyz,  &
+        rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+        call ops_par_loop(maths_kernel_eqAW, "EVALUATE THE SPECIFIC REACTION RATE CONSTANT", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_WRITE), &
                         ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_RW), &
                         ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
@@ -238,8 +238,8 @@ SUBROUTINE chrate
             reovrr = rclind(3,mllist(istep))
             flcnst = rclind(4,mllist(istep))
 
-            rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_kernel_eqAR, "REFORMULATE FOR LINDEMANN RATE EXPRESSIONS", senga_grid, 3, rangexyz,  &
+            rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+            call ops_par_loop(maths_kernel_eqAX, "REFORMULATE FOR LINDEMANN RATE EXPRESSIONS", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
                             ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_WRITE), &
                             ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_RW), &
@@ -281,8 +281,8 @@ SUBROUTINE chrate
 
             omalph = one - talpha
 
-            rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_kernel_eqAS, "INCLUDE TROE FORM RATE EVALUATION", senga_grid, 3, rangexyz,  &
+            rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+            call ops_par_loop(maths_kernel_eqAY, "INCLUDE TROE FORM RATE EVALUATION", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
                             ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_WRITE), &
                             ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_RW), &
@@ -328,8 +328,8 @@ SUBROUTINE chrate
             dcfsri = rcsrif(7,mslist(istep))
             ecfsri = rcsrif(8,mslist(istep))
 
-            rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_kernel_eqAT, "INCLUDE SRI FORM RATE EVALUATION", senga_grid, 3, rangexyz,  &
+            rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+            call ops_par_loop(maths_kernel_eqAZ, "INCLUDE SRI FORM RATE EVALUATION", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
                             ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_WRITE), &
                             ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_RW), &
@@ -371,12 +371,12 @@ SUBROUTINE chrate
 !           EVALUATE REACTANT CONCENTRATIONS AND MULTIPLY UP
 !           CONCENTRATION IS RHO*Y/WMOLAR
 !           YRHS CONTAINS RHO*Y
-            rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_MD_kernel_eqR, "A = A*max(B_multidim*var    zero)", senga_grid, 3, rangexyz,  &
+            rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+            call ops_par_loop(maths_kernel_eqP, "A = A*max(B*var    zero)", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
                             ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ))
 
         END DO
 !       END OF STEP REACTANT-LIST
@@ -408,15 +408,15 @@ SUBROUTINE chrate
 !               EVALUATE REACTANT CONCENTRATIONS AND MULTIPLY UP
 !               CONCENTRATION IS RHO*Y/WMOLAR
 !               YRHS CONTAINS RHO*Y
-                rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-                call ops_par_loop(math_MD_kernel_eqAA, "EVALUATE REACTANT CONCENTRATIONS", senga_grid, 3, rangexyz,  &
+                rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+                call ops_par_loop(maths_kernel_eqBM, "EVALUATE REACTANT CONCENTRATIONS", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
                             ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
                             ops_arg_gbl(scoef, 1, "real(8)", OPS_READ), &
                             ops_arg_gbl(ysmall, 1, "real(8)", OPS_READ), &
                             ops_arg_gbl(ydenom, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ))
 
             END DO
 
@@ -449,23 +449,23 @@ SUBROUTINE chrate
                 icoef1 = icoef2*ntbase
 
 !               EVALUATE GIBBS FUNCTION FOR EACH SPECIES
-                rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-                call ops_par_loop(math_MD_kernel_eqAB, "EVALUATE GIBBS FUNCTION FOR EACH SPECIES", senga_grid, 3, rangexyz,  &
+                rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+                call ops_par_loop(maths_kernel_eqBN, "EVALUATE GIBBS FUNCTION FOR EACH SPECIES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_INC), &
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
-                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer", OPS_READ), &
+                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(4)", OPS_READ), &
                                 ops_arg_gbl(amolgb, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer", OPS_READ), &
-                                ops_arg_gbl(ncpom1, ntinmx*nspcmx, "integer", OPS_READ), &
-                                ops_arg_gbl(ncenth, ntinmx*nspcmx, "integer", OPS_READ), &
-                                ops_arg_gbl(ncenpy, ntinmx*nspcmx, "integer", OPS_READ), &
+                                ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer(4)", OPS_READ), &
+                                ops_arg_gbl(ncpom1, ntinmx*nspcmx, "integer(4)", OPS_READ), &
+                                ops_arg_gbl(ncenth, ntinmx*nspcmx, "integer(4)", OPS_READ), &
+                                ops_arg_gbl(ncenpy, ntinmx*nspcmx, "integer(4)", OPS_READ), &
                                 ops_arg_gbl(diffmu, nssmax*nstpmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(isspec, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ispec, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(istep, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(ipower, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(icoef1, 1, "integer", OPS_READ), &
-                                ops_arg_gbl(icoef2, 1, "integer", OPS_READ))
+                                ops_arg_gbl(isspec, 1, "integer(4)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ), &
+                                ops_arg_gbl(istep, 1, "integer(4)", OPS_READ), &
+                                ops_arg_gbl(ipower, 1, "integer(4)", OPS_READ), &
+                                ops_arg_gbl(icoef1, 1, "integer(4)", OPS_READ), &
+                                ops_arg_gbl(icoef2, 1, "integer(4)", OPS_READ))
 
             END DO
 
@@ -477,8 +477,8 @@ SUBROUTINE chrate
 
 !           FINALISE BACKWARD RATE COEFFICIENT
 !           ----------------------------------
-            rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_kernel_eqAL, "A = exp(A)", senga_grid, 3, rangexyz,  &
+            rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+            call ops_par_loop(maths_kernel_eqB, "A = exp(A)", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_RW))
 
 !                                               STORE1 = FORWARD REACTION RATE
@@ -502,12 +502,12 @@ SUBROUTINE chrate
 !               EVALUATE PRODUCT CONCENTRATIONS AND MULTIPLY UP
 !               CONCENTRATION IS RHO*Y/WMOLAR
 !               YRHS CONTAINS RHO*Y
-                rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-                call ops_par_loop(math_MD_kernel_eqR, "A = A*max(B_multidim*var    zero)", senga_grid, 3, rangexyz,  &
+                rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+                call ops_par_loop(maths_kernel_eqP, "A = A*max(B*var    zero)", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_RW), &
                                 ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
                                 ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                                ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ))
 
             END DO
 !           END OF STEP PRODUCT-LIST
@@ -539,15 +539,15 @@ SUBROUTINE chrate
 !                   EVALUATE PRODUCT CONCENTRATIONS AND MULTIPLY UP
 !                   CONCENTRATION IS RHO*Y/WMOLAR
 !                   YRHS CONTAINS RHO*Y
-                    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-                    call ops_par_loop(math_MD_kernel_eqAA, "EVALUATE PRODUCT CONCENTRATIONS", senga_grid, 3, rangexyz,  &
+                    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+                    call ops_par_loop(maths_kernel_eqBM, "EVALUATE PRODUCT CONCENTRATIONS", senga_grid, 3, rangexyz,  &
                                     ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_RW), &
                                     ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
                                     ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
                                     ops_arg_gbl(scoef, 1, "real(8)", OPS_READ), &
                                     ops_arg_gbl(ysmall, 1, "real(8)", OPS_READ), &
                                     ops_arg_gbl(ydenom, 1, "real(8)", OPS_READ), &
-                                    ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                                    ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ))
 
                 END DO
 
@@ -560,8 +560,8 @@ SUBROUTINE chrate
 
 !           EVALUATE NET FORWARD REACTION RATE
 !           ----------------------------------
-            rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-            call ops_par_loop(math_kernel_eqW, "A = A-B", senga_grid, 3, rangexyz,  &
+            rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+            call ops_par_loop(maths_kernel_eqS, "A = A-B", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ))            
 
@@ -584,8 +584,8 @@ SUBROUTINE chrate
             IF(flthrd) THEN
 
 !               INCLUDE THIRD BODY CONCENTRATION IN REACTION RATE FOR THE STEP
-                rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
-                call ops_par_loop(math_kernel_eqU, "A = A*B", senga_grid, 3, rangexyz,  &
+                rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+                call ops_par_loop(maths_kernel_eqV, "A = A*B", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
                                 ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
 
@@ -603,13 +603,13 @@ SUBROUTINE chrate
 !       (ACTUALLY DELTA-MU TIMES WMOLAR)
 !       ADD STEP CONTRIBUTION TO TOTAL RATE FOR EACH SPECIES INVOLVED
 
-        rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
+        rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
         DO isspec = 1, nsslen(istep)
 
 !           GET THE SPECIES NUMBER FROM THE STEP SPECIES-LIST
             ispec = nsspec(isspec,istep)
             fornow = diffmw(isspec,istep)
-            call ops_par_loop(math_MD_kernel_eqS, "A_multidim = A_multidim + B*var", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(maths_kernel_eqJ, "A = A + var*B", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
                             ops_arg_gbl(fornow, 1, "real(8)", OPS_READ))

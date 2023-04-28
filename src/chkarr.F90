@@ -27,26 +27,26 @@ SUBROUTINE chkarr(array,  &
 !   ARGUMENTS
 !   =========
 
-    real(kind=8), intent(IN)   :: array(nchkxl:nchkxr,nchkyl:nchkyr,nchkzl:nchkzr)
-    integer, intent(IN OUT)     :: nchkxl
-    integer, intent(IN OUT)     :: nchkxr
-    integer, intent(IN OUT)     :: nchkyl
-    integer, intent(IN OUT)     :: nchkyr
-    integer, intent(IN OUT)     :: nchkzl
-    integer, intent(IN OUT)     :: nchkzr
-    integer, intent(IN)         :: istac
-    integer, intent(IN)         :: istoc
-    integer, intent(IN)         :: jstac
-    integer, intent(IN)         :: jstoc
-    integer, intent(IN)         :: kstac
-    integer, intent(IN)         :: kstoc
+    real(8), intent(IN)   :: array(nchkxl:nchkxr,nchkyl:nchkyr,nchkzl:nchkzr)
+    integer(4), intent(IN OUT)     :: nchkxl
+    integer(4), intent(IN OUT)     :: nchkxr
+    integer(4), intent(IN OUT)     :: nchkyl
+    integer(4), intent(IN OUT)     :: nchkyr
+    integer(4), intent(IN OUT)     :: nchkzl
+    integer(4), intent(IN OUT)     :: nchkzr
+    integer(4), intent(IN)         :: istac
+    integer(4), intent(IN)         :: istoc
+    integer(4), intent(IN)         :: jstac
+    integer(4), intent(IN)         :: jstoc
+    integer(4), intent(IN)         :: kstac
+    integer(4), intent(IN)         :: kstoc
 
 !   LOCAL DATA
 !   ==========
-    real(kind=8) :: arrmin,arrmax
-    integer :: ic,jc,kc
-    integer :: icmin,jcmin,kcmin
-    integer :: icmax,jcmax,kcmax
+    real(8) :: arrmin,arrmax
+    integer(4) :: ic,jc,kc
+    integer(4) :: icmin,jcmin,kcmin
+    integer(4) :: icmax,jcmax,kcmax
 
 !   BEGIN
 !   =====

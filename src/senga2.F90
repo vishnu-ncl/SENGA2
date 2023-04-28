@@ -198,9 +198,9 @@ PROGRAM senga2
 !       ===================
         call output
 
-!        IF (itime == 2100) THEN
-!            call print_dats()
-!        END IF
+        IF (itime == 2100) THEN
+            call print_dats()
+        END IF
 
 !       =======================================================================
     END DO

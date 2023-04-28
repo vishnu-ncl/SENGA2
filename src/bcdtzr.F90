@@ -39,7 +39,7 @@ SUBROUTINE bcdtzr
 
 !   LOCAL DATA
 !   ==========
-    integer :: rangexyz(6)
+    integer(4) :: rangexyz(6)
 
 !   BEGIN
 !   =====
@@ -51,7 +51,7 @@ SUBROUTINE bcdtzr
 !   =========================================================================
 
 !   EVALUATE AND RETURN STRDZR,DDDTZR
-    rangexyz = (/1,nxglbl,1,nyglbl,nzglbl,nzglbl/)
+    rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
     call ops_par_loop(bcdt_kernel_zdir, "bcdt_kernel_zdir", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE),  &
                     ops_arg_dat(d_dddtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &

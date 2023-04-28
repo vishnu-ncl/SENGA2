@@ -41,15 +41,15 @@ SUBROUTINE bcutxl
 !   LOCAL DATA
 !   ==========
 !KA   FIX INFLOW BUG, BTIME IS DEFINED IN COM_SENGA2.H
-!KA      real(kind=8)) BTIME
-    real(kind=8) :: fornow,argmnt,argval,realkx
-    real(kind=8) :: cosval,sinval,costht,sintht
-    real(kind=8) :: pcount
-    integer :: ic,jc,kc
-    integer :: iic,iim,kx,kxbase
-    integer :: icproc,ncount,irproc,irtag
-    integer :: rangexyz(6)
-    real(kind=8) :: init_val1, init_val2
+!KA      real(8)) BTIME
+    real(8) :: fornow,argmnt,argval,realkx
+    real(8) :: cosval,sinval,costht,sintht
+    real(8) :: pcount
+    integer(4) :: ic,jc,kc
+    integer(4) :: iic,iim,kx,kxbase
+    integer(4) :: icproc,ncount,irproc,irtag
+    integer(4) :: rangexyz(6)
+    real(8) :: init_val1, init_val2
 
 !   BEGIN
 !   =====
@@ -65,7 +65,7 @@ SUBROUTINE bcutxl
 !   CONSTANT U-VELOCITY
 !   PARAMETER I1=1, R1=U-VELOCITY
     IF(nxlprm(1) == 1) THEN
-        rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
+        rangexyz = [1,1,1,nyglbl,1,nzglbl]
         call ops_par_loop(bcut_kernel_xdir_const_uvel, "bcut_kernel_xdir_const_uvel", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE),  &
                         ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
@@ -87,7 +87,7 @@ SUBROUTINE bcutxl
         init_val1 = rxlprm(1)*SIN(argmnt)
         init_val2 = fornow*rxlprm(1)*COS(argmnt)
 
-        rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
+        rangexyz = [1,1,1,nyglbl,1,nzglbl]
         call ops_par_loop(bcut_kernel_xdir_sinusoidal_uvel, "bcut_kernel_xdir_sinusoidal_uvel", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE),  &
                         ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
@@ -124,7 +124,7 @@ SUBROUTINE bcutxl
         kxbase = kminxl
 
 !       ZERO THE LOCAL-PROCESSOR CONTRIBUTION TO THE DFT
-        rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
+        rangexyz = [1,1,1,nyglbl,1,nzglbl]
         call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE))
         call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
@@ -150,7 +150,7 @@ SUBROUTINE bcutxl
             sinval = SIN(argval)
             iic = 1
 
-            rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
+            rangexyz = [1,1,1,nyglbl,1,nzglbl]
             call ops_par_loop(bcut_kernel_xdir_eqA, "A = A + B*val1", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
                             ops_arg_dat(d_ufxl, 1, s3d_000, "real(8)", OPS_READ), &
@@ -197,7 +197,7 @@ SUBROUTINE bcutxl
             sinval = SIN(argval)
             iim = 1
 
-            rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
+            rangexyz = [1,1,1,nyglbl,1,nzglbl]
             call ops_par_loop(bcut_kernel_xdir_eqC, "A = A + val1*B*val2", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
                             ops_arg_dat(d_ufxl, 1, s3d_000, "real(8)", OPS_READ), &
@@ -275,7 +275,7 @@ SUBROUTINE bcutxl
             write(*, '(a)') "Please correct range for the OPS par loop, bcutxl.F90: ID=275"
             STOP
 
-            rangexyz = (/iim,iim,1,nyglbl,1,nzglbl/)
+            rangexyz = [iim,iim,1,nyglbl,1,nzglbl]
             call ops_par_loop(bcut_kernel_xdir_eqA, "A = A + B*val1", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_INC), &
                             ops_arg_dat(d_ufxl, 1, s3d_000, "real(8)", OPS_READ), &
@@ -349,7 +349,7 @@ SUBROUTINE bcutxl
             END DO
 
 !           SCALING OF DFT
-            rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
+            rangexyz = [1,1,1,nyglbl,1,nzglbl]
 !           VELOCITIES
             call ops_par_loop(bcut_kernel_xdir_eqD, "A = A * val1", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(8)", OPS_RW), &

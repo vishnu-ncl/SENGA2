@@ -57,7 +57,7 @@ INTEGER, PARAMETER :: invrs=-1
 
 !     LOCAL DATA
 !     ==========
-real(kind=8) :: pcount
+real(8) :: pcount
 INTEGER :: nstotl(0:nprmax)
 INTEGER :: nsize2,iofset
 INTEGER :: nlprm1,nlsiz2,ngsiz2,ncount

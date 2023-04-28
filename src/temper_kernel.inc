@@ -2,12 +2,12 @@ SUBROUTINE temper_kernel_eqA(tcoeff, drhs, urhs, vrhs, wrhs, erhs)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: drhs, urhs, vrhs, wrhs, erhs
-    real(kind=8), dimension(1) :: tcoeff
+    real(8), dimension(1), intent(in) :: drhs, urhs, vrhs, wrhs, erhs
+    real(8), dimension(1) :: tcoeff
 
 !   LOCAL DATA
 !   ==========
-    real(kind=8) :: ukuk
+    real(8) :: ukuk
 
 !   KINETIC ENERGY TERM
     ukuk = (urhs(OPS_ACC3(0,0,0))*urhs(OPS_ACC3(0,0,0))  &
@@ -22,15 +22,15 @@ SUBROUTINE temper_kernel_eqB(tcoeff, tderiv, itndex, yrhs, amascp, amasct, ncpol
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: yrhs
-    real(kind=8), dimension(1) :: tcoeff, tderiv
-    integer, dimension(1), intent(in) :: itndex
-    integer, intent(in) :: ipower, icoef1, icoef2, ispec
+    real(8), dimension(1), intent(in) :: yrhs
+    real(8), dimension(1) :: tcoeff, tderiv
+    integer(4), dimension(1), intent(in) :: itndex
+    integer(4), intent(in) :: ipower, icoef1, icoef2, ispec
 
-    real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amascp,amasct
-    integer, dimension(ntinmx,nspcmx), intent(in) :: ncpoly, ncenth
+    real(8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amascp,amasct
+    integer(4), dimension(ntinmx,nspcmx), intent(in) :: ncpoly, ncenth
 
-    integer :: itint, icp
+    integer(4) :: itint, icp
 
 !   LOCATE TEMPERATURE IN AN INTERVAL
     itint = 1 + MOD(itndex(OPS_ACC3(0,0,0)),icoef1)/icoef2
@@ -56,11 +56,11 @@ SUBROUTINE temper_kernel_eqC(store7, yrhs, rgspec, ispec)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: yrhs
-    real(kind=8), dimension(1) :: store7
+    real(8), dimension(1), intent(in) :: yrhs
+    real(8), dimension(1) :: store7
 
-    integer, intent(in) :: ispec
-    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
+    integer(4), intent(in) :: ispec
+    real(8), dimension(nspcmx), intent(in) :: rgspec
 
     store7(OPS_ACC1(0,0,0)) = store7(OPS_ACC1(0,0,0)) + yrhs(OPS_ACC2(0,0,0))*rgspec(ispec)
 
@@ -70,19 +70,19 @@ SUBROUTINE temper_kernel_eqD(trun, tcoeff, tderiv, drhs, urhs, vrhs, wrhs, erhs,
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: tcoeff, tderiv, drhs, urhs, vrhs, wrhs, erhs
-    real(kind=8), dimension(1) :: trun
-    integer, dimension(3), intent(in) :: idx
+    real(8), dimension(1), intent(in) :: tcoeff, tderiv, drhs, urhs, vrhs, wrhs, erhs
+    real(8), dimension(1) :: trun
+    integer(4), dimension(3), intent(in) :: idx
 
 !   PARAMETERS
 !   ==========
-    real(kind=8), parameter :: toltmp=1.0E-10
-    integer, parameter :: ntitrs=100
+    real(8), parameter :: toltmp=1.0E-10
+    integer(4), parameter :: ntitrs=100
 
 !   LOCAL DATA
 !   ==========
-    real(kind=8) :: tempor,tfpoly,tdpoly,deltmp
-    integer :: ititrs,icp, ic,jc,kc
+    real(8) :: tempor,tfpoly,tdpoly,deltmp
+    integer(4) :: ititrs,icp, ic,jc,kc
 
     ic = idx(1)
     jc = idx(2)
@@ -151,20 +151,20 @@ SUBROUTINE temper_kernel_eqE(transp, itndex, yrhs, trun, amascp, ncpoly, ncpom1,
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: yrhs, trun
-    real(kind=8), dimension(1) :: transp
-    integer, dimension(1) :: itndex
-    integer, intent(in) :: ispec, ipower
+    real(8), dimension(1), intent(in) :: yrhs, trun
+    real(8), dimension(1) :: transp
+    integer(4), dimension(1) :: itndex
+    integer(4), intent(in) :: ispec, ipower
 
-    real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amascp
-    integer, dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncpom1
-    real(kind=8), dimension(ntinmx,nspcmx), intent(in) :: tinthi
-    integer, dimension(nspcmx), intent(in) :: ntint
+    real(8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amascp
+    integer(4), dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncpom1
+    real(8), dimension(ntinmx,nspcmx), intent(in) :: tinthi
+    integer(4), dimension(nspcmx), intent(in) :: ntint
 
 !   LOCAL DATA
 !   ==========
-    real(kind=8) :: cpfory
-    integer :: itint,icp
+    real(8) :: cpfory
+    integer(4) :: itint,icp
 
     itint = 1
 
@@ -192,8 +192,8 @@ SUBROUTINE temper_kernel_eqF(transp, prun, drhs, trun, store7)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: drhs, trun, store7
-    real(kind=8), dimension(1) :: transp, prun
+    real(8), dimension(1), intent(in) :: drhs, trun, store7
+    real(8), dimension(1) :: transp, prun
 
     transp(OPS_ACC1(0,0,0)) = transp(OPS_ACC1(0,0,0))/drhs(OPS_ACC3(0,0,0))
 

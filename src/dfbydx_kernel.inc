@@ -2,13 +2,13 @@ SUBROUTINE dfbydx_kernel_main(functn, fderiv, nxglbl, nendxl, nendxr, nbound, id
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
-    real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd, fdiffe
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
+    real(8) :: fdiffa, fdiffb, fdiffc, fdiffd, fdiffe
 
-    integer, intent(in) :: nxglbl, nendxl, nendxr, nbound
-    integer, dimension(3), intent(in) :: idx
-    integer :: ic, istart, ifinis
+    integer(4), intent(in) :: nxglbl, nendxl, nendxr, nbound
+    integer(4), dimension(3), intent(in) :: idx
+    integer(4) :: ic, istart, ifinis
 
     istart = 1
     ifinis = nxglbl

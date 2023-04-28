@@ -39,8 +39,8 @@ SUBROUTINE bcytxl
 
 !   LOCAL DATA
 !   ==========
-    integer :: ispec
-    integer :: rangexyz(6)
+    integer(4) :: ispec
+    integer(4) :: rangexyz(6)
 
 !   BEGIN
 !   =====
@@ -53,12 +53,12 @@ SUBROUTINE bcytxl
 
 !   EVALUATE AND RETURN STRYXL,DYDTXL
     DO ispec = 1,nspec
-        rangexyz = (/1,1,1,nyglbl,1,nzglbl/)
+        rangexyz = [1,1,1,nyglbl,1,nzglbl]
         call ops_par_loop(bcyt_kernel_xdir, "bcyt_kernel_xdir", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_stryxl(ispec), 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
                             ops_arg_dat(d_dydtxl(ispec), 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
                             ops_arg_gbl(yrin, nspcmx, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer", OPS_READ))
+                            ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ))
 
     END DO
 

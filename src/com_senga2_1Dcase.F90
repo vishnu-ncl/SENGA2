@@ -342,16 +342,16 @@ REAL(KIND=8) :: eryrhs(nspcmx,nrkmax)
 COMMON/rknorm/erdrhs,erurhs,ervrhs,erwrhs,ererhs,eryrhs
 
 !     PRINCIPAL VARIABLES (ALL STANDARD SIZE ARRAYS)
-real(kind=8), dimension(:,:,:), allocatable :: drun,urun,vrun,wrun,erun
-real(kind=8), dimension(:,:,:,:), allocatable :: yrun
+real(8), dimension(:,:,:), allocatable :: drun,urun,vrun,wrun,erun
+real(8), dimension(:,:,:,:), allocatable :: yrun
 
 !     WORKSPACE (STANDARD SIZE ARRAYS)
-real(kind=8), dimension(:,:,:,:), allocatable :: rrte
+real(8), dimension(:,:,:,:), allocatable :: rrte
 
 !     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 !     WORKSPACE (BIGGER SIZE ARRAYS)
-real(kind=8), dimension(:,:,:), allocatable :: utmp,vtmp,wtmp,prun,trun
+real(8), dimension(:,:,:), allocatable :: utmp,vtmp,wtmp,prun,trun
 
 !     WORKSPACE (PARALLEL TRANSFER ARRAY)
 REAL(KIND=8) :: parray(nparay)
@@ -434,7 +434,7 @@ COMMON/nsbccp/rxlprm,rxrprm,rylprm,ryrprm,rzlprm,rzrprm,  &
 
 !     INFLOW VELOCITY FIELD DATA
 !     REQUIRED ONLY FOR TURBULENT INFLOW
-real(kind=8), dimension(:,:,:), allocatable :: ufxl,vfxl,wfxl
+real(8), dimension(:,:,:), allocatable :: ufxl,vfxl,wfxl
 
 !     WALL BC DIFFERENCING DATA
 INTEGER :: ncbcsz
@@ -444,7 +444,7 @@ REAL(KIND=8) :: acbcxl(ncbcsz),acbcxr(ncbcsz),  &
 COMMON/bcdifw/acbcxl,acbcxr,acbcyl,acbcyr,acbczl,acbczr
 
 !     X-DIRECTION LEFT-HAND END
-real(kind=8), dimension(:,:,:), allocatable :: struxl,strvxl,strwxl,dudtxl,dvdtxl,dwdtxl
+real(8), dimension(:,:,:), allocatable :: struxl,strvxl,strwxl,dudtxl,dvdtxl,dwdtxl
 
 !     NSBCCL-------------------------------------------------------------------
 !     DOMDEC-------------------------------------------------------------------

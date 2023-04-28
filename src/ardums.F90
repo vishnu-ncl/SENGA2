@@ -25,16 +25,16 @@ SUBROUTINE ardums(array,nxphys,nyphys,nzphys,nspec,ispec)
 !   ARGUMENTS
 !   =========
 
-    real(kind=8), intent(IN OUT)       :: array(nxphys,nyphys,nzphys,nspec)
-    integer, intent(IN OUT)             :: nxphys
-    integer, intent(IN)                 :: nyphys
-    integer, intent(IN)                 :: nzphys
-    integer, intent(IN OUT)             :: nspec
-    integer, intent(IN OUT)             :: ispec
+    real(8), intent(IN OUT)       :: array(nxphys,nyphys,nzphys,nspec)
+    integer(4), intent(IN OUT)             :: nxphys
+    integer(4), intent(IN)                 :: nyphys
+    integer(4), intent(IN)                 :: nzphys
+    integer(4), intent(IN OUT)             :: nspec
+    integer(4), intent(IN OUT)             :: ispec
 
 !   LOCAL DATA
 !   ==========
-    integer :: ic,jc,kc
+    integer(4) :: ic,jc,kc
 
 !   BEGIN
 !   =====

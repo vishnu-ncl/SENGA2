@@ -43,38 +43,38 @@ SUBROUTINE turbin
 
 !   FUNCTIONS
 !   =========
-    real(kind=8) :: espect,ranuni
+    real(8) :: espect,ranuni
     EXTERNAL espect,ranuni
 
 !   PARAMETERS
 !   ==========
-    real(kind=8) :: vectol,tolimg
+    real(8) :: vectol,tolimg
     PARAMETER(vectol=0.00001_8, tolimg=1.0E-6)
 
 !   LOCAL DATA
 !   ==========
-    real(kind=8) :: vectk1,vectk2,vectk3,vksize,ovksiz
-    real(kind=8) :: velmag,vfactr,plnmag
-    real(kind=8) :: ovplmg,aziang,cosazi,sinazi
-    real(kind=8) :: phang1,phang2,cosph1,sinph1,cosph2,sinph2
-    real(kind=8) :: vaterm,vbterm
-    real(kind=8) :: tklodd
-    real(kind=8) :: twopi,ovtopi
-    real(kind=8) :: ubart,vbart,wbart,uvart,vvart,wvart,tket
-    real(kind=8) :: ubartt,vbartt,wbartt,uvartt,vvartt,wvartt,tketot
-    real(kind=8) :: ubartl,vbartl,wbartl,uvartl,vvartl,wvartl,tketl
-    real(kind=8) :: ubartg,vbartg,wbartg,uvartg,vvartg,wvartg,tketg
-    real(kind=8) :: udev,vdev,wdev,faclav,facgav
-    integer :: ic,jc,kc,ix,jx,kx,icproc
-    integer :: igofst,jgofst,kgofst,igofm1,jgofm1,kgofm1
-    integer :: igstal,jgstal,kgstal,igstol,jgstol,kgstol
-    integer :: nodblx,nodbly,nodblz
-    integer :: ngoddx,ngoddy,ngoddz
-    integer :: iseed
+    real(8) :: vectk1,vectk2,vectk3,vksize,ovksiz
+    real(8) :: velmag,vfactr,plnmag
+    real(8) :: ovplmg,aziang,cosazi,sinazi
+    real(8) :: phang1,phang2,cosph1,sinph1,cosph2,sinph2
+    real(8) :: vaterm,vbterm
+    real(8) :: tklodd
+    real(8) :: twopi,ovtopi
+    real(8) :: ubart,vbart,wbart,uvart,vvart,wvart,tket
+    real(8) :: ubartt,vbartt,wbartt,uvartt,vvartt,wvartt,tketot
+    real(8) :: ubartl,vbartl,wbartl,uvartl,vvartl,wvartl,tketl
+    real(8) :: ubartg,vbartg,wbartg,uvartg,vvartg,wvartg,tketg
+    real(8) :: udev,vdev,wdev,faclav,facgav
+    integer(4) :: ic,jc,kc,ix,jx,kx,icproc
+    integer(4) :: igofst,jgofst,kgofst,igofm1,jgofm1,kgofm1
+    integer(4) :: igstal,jgstal,kgstal,igstol,jgstol,kgstol
+    integer(4) :: nodblx,nodbly,nodblz
+    integer(4) :: ngoddx,ngoddy,ngoddz
+    integer(4) :: iseed
     LOGICAL :: flagim
     LOGICAL :: flrani,flranj,flrank
 
-    integer :: rangexyz(6)
+    integer(4) :: rangexyz(6)
 
 !   BEGIN
 !   =====
@@ -343,7 +343,7 @@ SUBROUTINE turbin
 !   CHECK ENERGY CONTENT
 !   --------------------
     tket = zero
-    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
+    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     call ops_par_loop(turbin_kernel_eqA, "CHECK ENERGY CONTENT", senga_grid, 3, rangexyz,  &
                     &  ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_READ), &
                     &  ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_READ), &
@@ -412,7 +412,7 @@ SUBROUTINE turbin
     vbart = zero
     wbart = zero
     
-    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
+    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     call ops_par_loop(turbin_kernel_eqB, "VELOCITY MEANS", senga_grid, 3, rangexyz,  &
                     &  ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_READ), &
                     &  ops_arg_reduce(h_ubart, 1, "real(8)", OPS_INC))
@@ -454,7 +454,7 @@ SUBROUTINE turbin
     vvart = zero
     wvart = zero
 
-    rangexyz = (/1,nxglbl,1,nyglbl,1,nzglbl/)
+    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     call ops_par_loop(turbin_kernel_eqC, "VELOCITY VARIANCES", senga_grid, 3, rangexyz,  &
                     &  ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_READ), &
                     &  ops_arg_gbl(ubartg, 1, "real(8)", OPS_READ), &

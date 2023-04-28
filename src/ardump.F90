@@ -26,14 +26,14 @@ SUBROUTINE ardump(array,nxphys,nyphys,nzphys)
 !   ARGUMENTS
 !   =========
 
-    real(kind=8), intent(IN OUT)       :: array(nxphys,nyphys,nzphys)
-    integer, intent(IN OUT)             :: nxphys
-    integer, intent(IN)                 :: nyphys
-    integer, intent(IN)                 :: nzphys
+    real(8), intent(IN OUT)       :: array(nxphys,nyphys,nzphys)
+    integer(4), intent(IN OUT)             :: nxphys
+    integer(4), intent(IN)                 :: nyphys
+    integer(4), intent(IN)                 :: nzphys
 
 !   LOCAL DATA
 !   ==========
-    integer :: ic,jc,kc
+    integer(4) :: ic,jc,kc
 
 !   BEGIN
 !   =====

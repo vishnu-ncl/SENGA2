@@ -2,14 +2,14 @@ SUBROUTINE flamin_kernel_set_velocity_tgv(urun, vrun, wrun, prun, prin, drin, u0
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: urun, vrun, wrun, prun
-    real(kind=8), intent(in) :: prin,drin,u0, deltagx, deltagy, deltagz
-    real(kind=8), intent(in) :: angfrx, angfry, angfrz
-    integer, dimension(3), intent(in) :: idx
+    real(8), dimension(1) :: urun, vrun, wrun, prun
+    real(8), intent(in) :: prin,drin,u0, deltagx, deltagy, deltagz
+    real(8), intent(in) :: angfrx, angfry, angfrz
+    integer(4), dimension(3), intent(in) :: idx
 
-    real(kind=8) :: xcoord,ycoord,zcoord
-    real(kind=8) :: xrgmnt,yrgmnt,zrgmnt
-    integer :: ix, iy, iz
+    real(8) :: xcoord,ycoord,zcoord
+    real(8) :: xrgmnt,yrgmnt,zrgmnt
+    integer(4) :: ix, iy, iz
 
     ix = idx(1)
     iy = idx(2)
@@ -42,9 +42,9 @@ SUBROUTINE flamin_kernel_eqA(trun, prun, rglocl)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: trun
-    real(kind=8), dimension(1), intent(in) :: prun
-    real(kind=8), intent(in) :: rglocl
+    real(8), dimension(1) :: trun
+    real(8), dimension(1), intent(in) :: prun
+    real(8), intent(in) :: rglocl
 
     trun(OPS_ACC1(0,0,0)) = prun(OPS_ACC2(0,0,0))/rglocl
 

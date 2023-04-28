@@ -37,8 +37,8 @@ SUBROUTINE chemin
 
 !   LOCAL DATA
 !   ==========
-    real(kind=8) :: pcount
-    real(kind=8) :: giblet
+    real(8) :: pcount
+    real(8) :: giblet
     INTEGER :: ispec,istep,ibody,ilind,itroe,isrif
     INTEGER :: jspec,jstep,jbody,jlind,jtroe,jsrif
     INTEGER :: itint,icp
@@ -997,11 +997,11 @@ SUBROUTINE chemin
     alamda_opsconstant = alamda
 #endif
 
-    call ops_decl_const("alamdc", 1, "double", alamdc)
-    call ops_decl_const("rlamda", 1, "double", rlamda)
-    call ops_decl_const("tlamda", 1, "double", tlamda)
-    call ops_decl_const("prantl", 1, "double", prantl)
+    call ops_decl_const("alamdc", 1, "real(8)", alamdc)
+    call ops_decl_const("rlamda", 1, "real(8)", rlamda)
+    call ops_decl_const("tlamda", 1, "real(8)", tlamda)
+    call ops_decl_const("prantl", 1, "real(8)", prantl)
 
-    call ops_decl_const("alamda", 1, "double", alamda)
+    call ops_decl_const("alamda", 1, "real(8)", alamda)
 
 END SUBROUTINE chemin

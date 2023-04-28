@@ -2,8 +2,8 @@ SUBROUTINE turbin_kernel_eqA(urun, utmp, vrun, vtmp, wrun, wtmp, tket)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: urun, utmp, vrun, vtmp, wrun, wtmp
-    real(kind=8) :: tket
+    real(8), dimension(1), intent(in) :: urun, utmp, vrun, vtmp, wrun, wtmp
+    real(8) :: tket
 
     tket = tket + urun(OPS_ACC1(0,0,0))*urun(OPS_ACC1(0,0,0))  &
           + utmp(OPS_ACC2(0,0,0))*utmp(OPS_ACC2(0,0,0)) + vrun(OPS_ACC3(0,0,0))*vrun(OPS_ACC3(0,0,0))  &
@@ -16,8 +16,8 @@ SUBROUTINE turbin_kernel_eqB(in_arr, reduction_var)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: in_arr
-    real(kind=8) :: reduction_var
+    real(8), dimension(1), intent(in) :: in_arr
+    real(8) :: reduction_var
 
     reduction_var = reduction_var + in_arr(OPS_ACC1(0,0,0))
 
@@ -27,10 +27,10 @@ SUBROUTINE turbin_kernel_eqC(in_arr, val1, reduction_var)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: in_arr
-    real(kind=8), intent(in) :: val1
-    real(kind=8) :: reduction_var
-    real(kind=8) :: fornow
+    real(8), dimension(1), intent(in) :: in_arr
+    real(8), intent(in) :: val1
+    real(8) :: reduction_var
+    real(8) :: fornow
 
     fornow = in_arr(OPS_ACC1(0,0,0)) - val1
 

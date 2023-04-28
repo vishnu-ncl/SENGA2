@@ -45,7 +45,7 @@ PARAMETER(strmol = 'Molecular transport control data')
 
 !     LOCAL DATA
 !     ==========
-real(kind=8) :: pcount
+real(8) :: pcount
 INTEGER :: ncount
 INTEGER :: ispec,jspec
 INTEGER :: ic

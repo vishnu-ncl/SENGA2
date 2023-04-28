@@ -29,15 +29,15 @@ SUBROUTINE diffin
 
 !   PARAMETER
 !   =========
-    real(kind=8) :: wmltol
+    real(8) :: wmltol
     PARAMETER(wmltol = 0.001_8)
 
 !   LOCAL DATA
 !   ==========
-    real(kind=8) :: pcount,fornow
-    integer :: ispec,jspec,kspec,icoeff
-    integer :: ncount
-    integer :: iroot
+    real(8) :: pcount,fornow
+    integer(4) :: ispec,jspec,kspec,icoeff
+    integer(4) :: ncount
+    integer(4) :: iroot
     CHARACTER (LEN=10) :: spcdif(nspcmx)
 
 !   BEGIN

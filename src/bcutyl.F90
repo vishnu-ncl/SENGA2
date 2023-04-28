@@ -39,7 +39,7 @@ SUBROUTINE bcutyl
 
 !   LOCAL DATA
 !   ==========
-    integer :: rangexyz(6)
+    integer(4) :: rangexyz(6)
 
 !   BEGIN
 !   =====
@@ -53,7 +53,7 @@ SUBROUTINE bcutyl
 !   CONSTANT V-VELOCITY
 !   PARAMETER I1=1, R1=V-VELOCITY
     IF(nylprm(1) == 1) THEN
-        rangexyz = (/1,nxglbl,1,1,1,nzglbl/)
+        rangexyz = [1,nxglbl,1,1,1,nzglbl]
         call ops_par_loop(bcut_kernel_ydir, "bcut_kernel_ydir", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_struyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE),  &
                         ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &

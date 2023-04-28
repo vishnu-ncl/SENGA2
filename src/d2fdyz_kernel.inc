@@ -2,7 +2,7 @@ SUBROUTINE d2fdyz_kernel_null(fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1) :: fderiv
 
     fderiv(OPS_ACC1(0,0,0)) = 0.0_8
 
@@ -13,10 +13,10 @@ SUBROUTINE d2fdyz_kernel_interior(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd,fdiffe
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd,fdiffe
 
     fdiffa = functn(OPS_ACC1(0,1,1)) - functn(OPS_ACC1(0,1,-1))  &
            - functn(OPS_ACC1(0,-1,1)) + functn(OPS_ACC1(0,-1,-1))
@@ -40,10 +40,10 @@ SUBROUTINE d2fdyz_kernel_lh_ydir_4th_onesided(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofz1*(functn(OPS_ACC1(0,1,1)) - functn(OPS_ACC1(0,1,-1))  &
            - functn(OPS_ACC1(0,0,1))  + functn(OPS_ACC1(0,0,-1)))  &
@@ -73,10 +73,10 @@ SUBROUTINE d2fdyz_kernel_lh_ydir_4th_mixed(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofz1*(functn(OPS_ACC1(0,-1,1))  - functn(OPS_ACC1(0,-1,-1))  &
            - functn(OPS_ACC1(0,0,1)) + functn(OPS_ACC1(0,0,-1)))  &
@@ -105,10 +105,10 @@ SUBROUTINE d2fdyz_kernel_lh_ydir_4th_centred(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb
+    real(8) :: fdiffa,fdiffb
 
     fdiffa = functn(OPS_ACC1(0,1,1)) - functn(OPS_ACC1(0,1,-1))  &
            - functn(OPS_ACC1(0,-1,1)) + functn(OPS_ACC1(0,-1,-1))
@@ -124,10 +124,10 @@ SUBROUTINE d2fdyz_kernel_lh_ydir_6th_centred(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc
+    real(8) :: fdiffa,fdiffb,fdiffc
 
     fdiffa = functn(OPS_ACC1(0,1,1)) - functn(OPS_ACC1(0,1,-1))  &
            - functn(OPS_ACC1(0,-1,1)) + functn(OPS_ACC1(0,-1,-1))
@@ -146,10 +146,10 @@ SUBROUTINE d2fdyz_kernel_lh_ydir_8th_centred(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = functn(OPS_ACC1(0,1,1)) - functn(OPS_ACC1(0,1,-1))  &
            - functn(OPS_ACC1(0,-1,1)) + functn(OPS_ACC1(0,-1,-1))
@@ -170,10 +170,10 @@ SUBROUTINE d2fdyz_kernel_rh_ydir_8th_centred(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = functn(OPS_ACC1(0,1,1)) - functn(OPS_ACC1(0,1,-1))  &
            - functn(OPS_ACC1(0,-1,1)) + functn(OPS_ACC1(0,-1,-1))
@@ -194,10 +194,10 @@ SUBROUTINE d2fdyz_kernel_rh_ydir_6th_centred(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc
+    real(8) :: fdiffa,fdiffb,fdiffc
 
     fdiffa = functn(OPS_ACC1(0,1,1)) - functn(OPS_ACC1(0,1,-1))  &
            - functn(OPS_ACC1(0,-1,1)) + functn(OPS_ACC1(0,-1,-1))
@@ -216,10 +216,10 @@ SUBROUTINE d2fdyz_kernel_rh_ydir_4th_centred(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb
+    real(8) :: fdiffa,fdiffb
 
     fdiffa = functn(OPS_ACC1(0,1,1)) - functn(OPS_ACC1(0,1,-1))  &
            - functn(OPS_ACC1(0,-1,1)) + functn(OPS_ACC1(0,-1,-1))
@@ -235,10 +235,10 @@ SUBROUTINE d2fdyz_kernel_rh_ydir_4th_mixed(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofz1*(functn(OPS_ACC1(0,0,1)) - functn(OPS_ACC1(0,0,-1))  &
            - functn(OPS_ACC1(0,1,1))  + functn(OPS_ACC1(0,1,-1)))  &
@@ -267,10 +267,10 @@ SUBROUTINE d2fdyz_kernel_rh_ydir_4th_onesided(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofz1*(functn(OPS_ACC1(0,0,1))  - functn(OPS_ACC1(0,0,-1))  &
            - functn(OPS_ACC1(0,-1,1)) + functn(OPS_ACC1(0,-1,-1)))  &
@@ -299,10 +299,10 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_4th_onesided(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofy1*(functn(OPS_ACC1(0,1,1)) - functn(OPS_ACC1(0,-1,1))  &
            - functn(OPS_ACC1(0,1,0))  + functn(OPS_ACC1(0,-1,0)))  &
@@ -331,10 +331,10 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_4th_mixed(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofy1*(functn(OPS_ACC1(0,1,-1))  - functn(OPS_ACC1(0,-1,-1))  &
            - functn(OPS_ACC1(0,1,0)) + functn(OPS_ACC1(0,-1,0)))  &
@@ -363,10 +363,10 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_4th_centred(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb
+    real(8) :: fdiffa,fdiffb
 
     fdiffa = functn(OPS_ACC1(0,1,1)) - functn(OPS_ACC1(0,-1,1))  &
            - functn(OPS_ACC1(0,1,-1)) + functn(OPS_ACC1(0,-1,-1))
@@ -382,10 +382,10 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_6th_centred(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc
+    real(8) :: fdiffa,fdiffb,fdiffc
 
     fdiffa = functn(OPS_ACC1(0,1,1)) - functn(OPS_ACC1(0,-1,1))  &
            - functn(OPS_ACC1(0,1,-1)) + functn(OPS_ACC1(0,-1,-1))
@@ -404,10 +404,10 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_8th_centred(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = functn(OPS_ACC1(0,1,1)) - functn(OPS_ACC1(0,-1,1))  &
            - functn(OPS_ACC1(0,1,-1)) + functn(OPS_ACC1(0,-1,-1))
@@ -428,10 +428,10 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqA(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = functn(OPS_ACC1(0,1,1)) - functn(OPS_ACC1(0,1,0))  &
            - functn(OPS_ACC1(0,0,1))  + functn(OPS_ACC1(0,0,0))
@@ -452,10 +452,10 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqB(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = functn(OPS_ACC1(0,-1,-1)) - functn(OPS_ACC1(0,-1,0))  &
            - functn(OPS_ACC1(0,0,-1)) + functn(OPS_ACC1(0,0,0))
@@ -476,10 +476,10 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqC(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acf2yz*(functn(OPS_ACC1(0,1,-1))  - functn(OPS_ACC1(0,1,0))  &
                     - functn(OPS_ACC1(0,0,-1))   + functn(OPS_ACC1(0,0,0)))  &
@@ -524,10 +524,10 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqD(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acf2yz*(functn(OPS_ACC1(0,-1,1))  - functn(OPS_ACC1(0,0,1))  &
           - functn(OPS_ACC1(0,-1,0))   + functn(OPS_ACC1(0,0,0)))  &
@@ -572,10 +572,10 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqE(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofy1*(functn(OPS_ACC1(0,1,1)) - functn(OPS_ACC1(0,-1,1))  &
             - functn(OPS_ACC1(0,1,0))  + functn(OPS_ACC1(0,-1,0)))  &
@@ -604,10 +604,10 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqF(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofy1*(functn(OPS_ACC1(0,1,-1))  - functn(OPS_ACC1(0,-1,-1))  &
             - functn(OPS_ACC1(0,1,0)) + functn(OPS_ACC1(0,-1,0)))  &
@@ -636,10 +636,10 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqG(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofz1*(functn(OPS_ACC1(0,1,1)) - functn(OPS_ACC1(0,1,-1))  &
             - functn(OPS_ACC1(0,0,1))  + functn(OPS_ACC1(0,0,-1)))  &
@@ -668,10 +668,10 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqH(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofz1*(functn(OPS_ACC1(0,-1,1))  - functn(OPS_ACC1(0,-1,-1))  &
             - functn(OPS_ACC1(0,0,1)) + functn(OPS_ACC1(0,0,-1)))  &
@@ -699,14 +699,14 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqI(functn, fderiv, idx)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    integer, dimension(3), intent(in) :: idx
+    integer(4), dimension(3), intent(in) :: idx
 
-    real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd
-    real(kind=8) :: fstora, fstorb, fstorc
-    integer :: jc, kc
+    real(8) :: fdiffa, fdiffb, fdiffc, fdiffd
+    real(8) :: fstora, fstorb, fstorc
+    integer(4) :: jc, kc
 
     jc = idx(2)
     kc = idx(3)
@@ -747,10 +747,10 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqL(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = functn(OPS_ACC1(0,0,1))  - functn(OPS_ACC1(0,0,0))  &
           - functn(OPS_ACC1(0,-1,1)) + functn(OPS_ACC1(0,-1,0))
@@ -771,10 +771,10 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqM(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = functn(OPS_ACC1(0,0,-1))  - functn(OPS_ACC1(0,0,0))  &
           - functn(OPS_ACC1(0,1,-1))   + functn(OPS_ACC1(0,1,0))
@@ -795,10 +795,10 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqN(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acf2yz*(functn(OPS_ACC1(0,0,-1))   - functn(OPS_ACC1(0,0,0))  &
           - functn(OPS_ACC1(0,-1,-1))  + functn(OPS_ACC1(0,-1,0)))  &
@@ -843,10 +843,10 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqO(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acf2yz*(functn(OPS_ACC1(0,0,1)) - functn(OPS_ACC1(0,1,1))  &
           - functn(OPS_ACC1(0,0,0))  + functn(OPS_ACC1(0,1,0)))  &
@@ -891,10 +891,10 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqP(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofy1*(functn(OPS_ACC1(0,1,1)) - functn(OPS_ACC1(0,-1,1))  &
             - functn(OPS_ACC1(0,1,0))  + functn(OPS_ACC1(0,-1,0)))  &
@@ -923,10 +923,10 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqQ(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofy1*(functn(OPS_ACC1(0,1,-1))  - functn(OPS_ACC1(0,-1,-1))  &
             - functn(OPS_ACC1(0,1,0)) + functn(OPS_ACC1(0,-1,0)))  &
@@ -955,10 +955,10 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqR(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofz1*(functn(OPS_ACC1(0,0,1))  - functn(OPS_ACC1(0,0,-1))  &
             - functn(OPS_ACC1(0,-1,1)) + functn(OPS_ACC1(0,-1,-1)))  &
@@ -987,10 +987,10 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqS(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofz1*(functn(OPS_ACC1(0,0,1)) - functn(OPS_ACC1(0,0,-1))  &
             - functn(OPS_ACC1(0,1,1))  + functn(OPS_ACC1(0,1,-1)))  &
@@ -1018,15 +1018,15 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqT(functn, fderiv, nyglbl, idx)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    integer, dimension(3), intent(in) :: idx
-    integer, intent(in) :: nyglbl
+    integer(4), dimension(3), intent(in) :: idx
+    integer(4), intent(in) :: nyglbl
     
-    real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd
-    real(kind=8) :: fstora, fstorb, fstorc
-    integer :: jc, kc
+    real(8) :: fdiffa, fdiffb, fdiffc, fdiffd
+    real(8) :: fstora, fstorb, fstorc
+    integer(4) :: jc, kc
 
     jc = idx(2)
     kc = idx(3)
@@ -1067,10 +1067,10 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_8th_centred(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = functn(OPS_ACC1(0,1,1)) - functn(OPS_ACC1(0,-1,1))  &
           - functn(OPS_ACC1(0,1,-1)) + functn(OPS_ACC1(0,-1,-1))
@@ -1091,10 +1091,10 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_6th_centred(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc
+    real(8) :: fdiffa,fdiffb,fdiffc
 
     fdiffa = functn(OPS_ACC1(0,1,1)) - functn(OPS_ACC1(0,-1,1))  &
           - functn(OPS_ACC1(0,1,-1)) + functn(OPS_ACC1(0,-1,-1))
@@ -1113,10 +1113,10 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_4th_centred(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb
+    real(8) :: fdiffa,fdiffb
 
     fdiffa = functn(OPS_ACC1(0,1,1)) - functn(OPS_ACC1(0,-1,1))  &
           - functn(OPS_ACC1(0,1,-1)) + functn(OPS_ACC1(0,-1,-1))
@@ -1132,10 +1132,10 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_4th_mixed(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofy1*(functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,-1,0))  &
           - functn(OPS_ACC1(0,1,1))  + functn(OPS_ACC1(0,-1,1)))  &
@@ -1164,10 +1164,10 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_4th_onesided(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofy1*(functn(OPS_ACC1(0,1,0))  - functn(OPS_ACC1(0,-1,0))  &
           - functn(OPS_ACC1(0,1,-1)) + functn(OPS_ACC1(0,-1,-1)))  &
@@ -1196,10 +1196,10 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqA(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,1,-1))  &
           - functn(OPS_ACC1(0,0,0))  + functn(OPS_ACC1(0,0,-1))
@@ -1220,10 +1220,10 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqB(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = functn(OPS_ACC1(0,-1,0))  - functn(OPS_ACC1(0,-1,1))  &
           - functn(OPS_ACC1(0,0,0)) + functn(OPS_ACC1(0,0,1))
@@ -1244,10 +1244,10 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqC(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acf2yz*(functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,1,1))  &
           - functn(OPS_ACC1(0,0,0))  + functn(OPS_ACC1(0,0,1)))  &
@@ -1292,10 +1292,10 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqD(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acf2yz*(functn(OPS_ACC1(0,-1,0))   - functn(OPS_ACC1(0,0,0))  &
           - functn(OPS_ACC1(0,-1,-1))  + functn(OPS_ACC1(0,0,-1)))  &
@@ -1340,10 +1340,10 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqE(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofy1*(functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,-1,0))  &
             - functn(OPS_ACC1(0,1,1))  + functn(OPS_ACC1(0,-1,1)))  &
@@ -1372,10 +1372,10 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqF(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofy1*(functn(OPS_ACC1(0,1,0))  - functn(OPS_ACC1(0,-1,0))  &
             - functn(OPS_ACC1(0,1,-1)) + functn(OPS_ACC1(0,-1,-1)))  &
@@ -1404,10 +1404,10 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqG(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofz1*(functn(OPS_ACC1(0,1,1)) - functn(OPS_ACC1(0,1,-1))  &
             - functn(OPS_ACC1(0,0,1))  + functn(OPS_ACC1(0,0,-1)))  &
@@ -1436,10 +1436,10 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqH(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofz1*(functn(OPS_ACC1(0,-1,1))  - functn(OPS_ACC1(0,-1,-1))  &
             - functn(OPS_ACC1(0,0,1)) + functn(OPS_ACC1(0,0,-1)))  &
@@ -1467,15 +1467,15 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqI(functn, fderiv, nzglbl, idx)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    integer, dimension(3), intent(in) :: idx
-    integer, intent(in) :: nzglbl
+    integer(4), dimension(3), intent(in) :: idx
+    integer(4), intent(in) :: nzglbl
 
-    real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd
-    real(kind=8) :: fstora, fstorb, fstorc
-    integer :: jc, kc
+    real(8) :: fdiffa, fdiffb, fdiffc, fdiffd
+    real(8) :: fstora, fstorb, fstorc
+    integer(4) :: jc, kc
 
     jc = idx(2)
     kc = idx(3)
@@ -1516,10 +1516,10 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqL(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = functn(OPS_ACC1(0,-1,-1)) - functn(OPS_ACC1(0,-1,0))  &
           - functn(OPS_ACC1(0,0,-1))  + functn(OPS_ACC1(0,0,0))
@@ -1540,10 +1540,10 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqM(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = functn(OPS_ACC1(0,1,1))   - functn(OPS_ACC1(0,1,0))  &
           - functn(OPS_ACC1(0,0,1))  + functn(OPS_ACC1(0,0,0))
@@ -1564,10 +1564,10 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqN(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acf2yz*(functn(OPS_ACC1(0,-1,1))  - functn(OPS_ACC1(0,-1,0))  &
           - functn(OPS_ACC1(0,0,1))   + functn(OPS_ACC1(0,0,0)))  &
@@ -1612,10 +1612,10 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqO(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acf2yz*(functn(OPS_ACC1(0,1,-1))  - functn(OPS_ACC1(0,0,-1))  &
           - functn(OPS_ACC1(0,1,0))   + functn(OPS_ACC1(0,0,0)))  &
@@ -1660,10 +1660,10 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqP(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofy1*(functn(OPS_ACC1(0,1,0)) - functn(OPS_ACC1(0,-1,0))  &
             - functn(OPS_ACC1(0,1,1))  + functn(OPS_ACC1(0,-1,1)))  &
@@ -1692,10 +1692,10 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqQ(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofy1*(functn(OPS_ACC1(0,1,0))  - functn(OPS_ACC1(0,-1,0))  &
             - functn(OPS_ACC1(0,1,-1)) + functn(OPS_ACC1(0,-1,-1)))  &
@@ -1724,10 +1724,10 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqR(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofz1*(functn(OPS_ACC1(0,0,1))  - functn(OPS_ACC1(0,0,-1))  &
             - functn(OPS_ACC1(0,-1,1)) + functn(OPS_ACC1(0,-1,-1)))  &
@@ -1756,10 +1756,10 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqS(functn, fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    real(kind=8) :: fdiffa,fdiffb,fdiffc,fdiffd
+    real(8) :: fdiffa,fdiffb,fdiffc,fdiffd
 
     fdiffa = acofz1*(functn(OPS_ACC1(0,0,1)) - functn(OPS_ACC1(0,0,-1))  &
             - functn(OPS_ACC1(0,1,1))  + functn(OPS_ACC1(0,1,-1)))  &
@@ -1787,15 +1787,15 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqT(functn, fderiv, nyglbl, nzglbl, idx)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
 
-    integer, dimension(3), intent(in) :: idx
-    integer, intent(in) :: nyglbl, nzglbl
+    integer(4), dimension(3), intent(in) :: idx
+    integer(4), intent(in) :: nyglbl, nzglbl
 
-    real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd
-    real(kind=8) :: fstora, fstorb, fstorc
-    integer :: jc, kc
+    real(8) :: fdiffa, fdiffb, fdiffc, fdiffd
+    real(8) :: fstora, fstorb, fstorc
+    integer(4) :: jc, kc
 
     jc = idx(2)
     kc = idx(3)
@@ -1835,7 +1835,7 @@ SUBROUTINE d2fdyz_kernel_scaling(fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1) :: fderiv
 
     fderiv(OPS_ACC1(0,0,0)) = fderiv(OPS_ACC1(0,0,0))*ovdely*ovdelz
 

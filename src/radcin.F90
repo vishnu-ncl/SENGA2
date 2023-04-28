@@ -38,10 +38,10 @@ SUBROUTINE radcin
 
 !   LOCAL DATA
 !   ==========
-    real(kind=8) :: pcount
-    integer :: ispec,jspec,icoeff
-    integer :: nrdspc,ncount
-    integer :: iroot
+    real(8) :: pcount
+    integer(4) :: ispec,jspec,icoeff
+    integer(4) :: nrdspc,ncount
+    integer(4) :: iroot
     CHARACTER (LEN=10) :: spcrad(nspcmx)
 
 
@@ -228,8 +228,8 @@ SUBROUTINE radcin
         trfrth_opsconstant = trfrth
 #endif
         
-        call ops_decl_const("foursb", 1, "double", foursb)
-        call ops_decl_const("trfrth", 1, "double", trfrth)        
+        call ops_decl_const("foursb", 1, "real(8)", foursb)
+        call ops_decl_const("trfrth", 1, "real(8)", trfrth)        
  
 !       =======================================================================
   

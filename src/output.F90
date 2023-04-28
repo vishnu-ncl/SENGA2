@@ -358,22 +358,20 @@ SUBROUTINE output
         WRITE(*,'(I7,1PE12.4,I5)')itime,tstep,inderr
     END IF
 
-!    IF(iproc == 0) THEN
-        rangexyz = (/3,3,11,11,7,7/)
-        call ops_par_loop(math_kernel_print_drhs, "print single value", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(itime, 1, "integer", OPS_READ))
+    rangexyz = [3,3,11,11,7,7]
+    call ops_par_loop(maths_kernel_print_drhs, "print single value", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_gbl(itime, 1, "integer(4)", OPS_READ))
 
-        rangexyz = (/4,4,12,12,8,8/)
-        call ops_par_loop(math_kernel_print_erhs, "print single value", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(itime, 1, "integer", OPS_READ))
+    rangexyz = [4,4,12,12,8,8]
+    call ops_par_loop(maths_kernel_print_erhs, "print single value", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_gbl(itime, 1, "integer(4)", OPS_READ))
 
-        rangexyz = (/5,5,13,13,9,9/)
-        call ops_par_loop(math_kernel_print_urhs, "print single value", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(itime, 1, "integer", OPS_READ))
-!    END IF
+    rangexyz = [5,5,13,13,9,9]
+    call ops_par_loop(maths_kernel_print_urhs, "print single value", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_gbl(itime, 1, "integer(4)", OPS_READ))
 
 !   =========================================================================
 

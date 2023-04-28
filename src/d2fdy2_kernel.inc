@@ -2,7 +2,7 @@ SUBROUTINE d2fdy2_kernel_null(fderiv)
     use data_types
     implicit none
 
-    real(kind=8), dimension(1) :: fderiv
+    real(8), dimension(1) :: fderiv
 
     fderiv(OPS_ACC1(0,0,0)) = 0.0_8
 
@@ -12,14 +12,14 @@ SUBROUTINE d2fdy2_kernel_main(functn, fderiv, nyglbl, nendyl, nendyr, nbound, id
     use data_types
     implicit none
 
-    real(kind=8), dimension(1), intent(in) :: functn
-    real(kind=8), dimension(1) :: fderiv
-    real(kind=8) :: fdifap,fdifbp,fdifcp,fdifdp,fdifep
-    real(kind=8) :: fdifam,fdifbm,fdifcm,fdifdm,fdifem
+    real(8), dimension(1), intent(in) :: functn
+    real(8), dimension(1) :: fderiv
+    real(8) :: fdifap,fdifbp,fdifcp,fdifdp,fdifep
+    real(8) :: fdifam,fdifbm,fdifcm,fdifdm,fdifem
 
-    integer, intent(in) :: nyglbl, nendyl, nendyr, nbound
-    integer, dimension(3), intent(in) :: idx
-    integer :: jc, jstart, jfinis
+    integer(4), intent(in) :: nyglbl, nendyl, nendyr, nbound
+    integer(4), dimension(3), intent(in) :: idx
+    integer(4) :: jc, jstart, jfinis
 
     jstart = 1
     jfinis = nyglbl
