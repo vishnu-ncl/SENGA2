@@ -1,5 +1,5 @@
 SUBROUTINE ardump(array,nxphys,nyphys,nzphys)
- 
+
 !   *************************************************************************
 
 !   ARDUMP
@@ -26,14 +26,14 @@ SUBROUTINE ardump(array,nxphys,nyphys,nzphys)
 !   ARGUMENTS
 !   =========
 
-    real(8), intent(IN OUT)       :: array(nxphys,nyphys,nzphys)
-    integer(4), intent(IN OUT)             :: nxphys
-    integer(4), intent(IN)                 :: nyphys
-    integer(4), intent(IN)                 :: nzphys
+    real(kind=8), intent(IN OUT)       :: array(nxphys,nyphys,nzphys)
+    integer(kind=4), intent(IN OUT)             :: nxphys
+    integer(kind=4), intent(IN)                 :: nyphys
+    integer(kind=4), intent(IN)                 :: nzphys
 
 !   LOCAL DATA
 !   ==========
-    integer(4) :: ic,jc,kc
+    integer(kind=4) :: ic,jc,kc
 
 !   BEGIN
 !   =====

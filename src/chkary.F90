@@ -1,7 +1,7 @@
 SUBROUTINE chkary(array,  &
         nchkxl,nchkxr,nchkyl,nchkyr,nchkzl,nchkzr,ncpcmx,  &
         istac,istoc,jstac,jstoc,kstac,kstoc,icpec)
- 
+
 !   *************************************************************************
 
 !   CHKARY
@@ -28,28 +28,28 @@ SUBROUTINE chkary(array,  &
 !   ARGUMENTS
 !   =========
 
-    real(8), intent(IN)       :: array(nchkxl:nchkxr,nchkyl:nchkyr,nchkzl:nchkzr,ncpcmx)
-    integer(4), intent(IN OUT)         :: nchkxl
-    integer(4), intent(IN OUT)         :: nchkxr
-    integer(4), intent(IN OUT)         :: nchkyl
-    integer(4), intent(IN OUT)         :: nchkyr
-    integer(4), intent(IN OUT)         :: nchkzl
-    integer(4), intent(IN OUT)         :: nchkzr
-    integer(4), intent(IN OUT)         :: ncpcmx
-    integer(4), intent(IN)             :: istac
-    integer(4), intent(IN)             :: istoc
-    integer(4), intent(IN)             :: jstac
-    integer(4), intent(IN)             :: jstoc
-    integer(4), intent(IN)             :: kstac
-    integer(4), intent(IN)             :: kstoc
-    integer(4), intent(IN OUT)         :: icpec
+    real(kind=8), intent(IN)       :: array(nchkxl:nchkxr,nchkyl:nchkyr,nchkzl:nchkzr,ncpcmx)
+    integer(kind=4), intent(IN OUT)         :: nchkxl
+    integer(kind=4), intent(IN OUT)         :: nchkxr
+    integer(kind=4), intent(IN OUT)         :: nchkyl
+    integer(kind=4), intent(IN OUT)         :: nchkyr
+    integer(kind=4), intent(IN OUT)         :: nchkzl
+    integer(kind=4), intent(IN OUT)         :: nchkzr
+    integer(kind=4), intent(IN OUT)         :: ncpcmx
+    integer(kind=4), intent(IN)             :: istac
+    integer(kind=4), intent(IN)             :: istoc
+    integer(kind=4), intent(IN)             :: jstac
+    integer(kind=4), intent(IN)             :: jstoc
+    integer(kind=4), intent(IN)             :: kstac
+    integer(kind=4), intent(IN)             :: kstoc
+    integer(kind=4), intent(IN OUT)         :: icpec
 
 !   LOCAL DATA
 !   ==========
-    real(8) :: arrmin,arrmax
-    integer(4) :: ic,jc,kc
-    integer(4) :: icmin,jcmin,kcmin
-    integer(4) :: icmax,jcmax,kcmax
+    real(kind=8) :: arrmin,arrmax
+    integer(kind=4) :: ic,jc,kc
+    integer(kind=4) :: icmin,jcmin,kcmin
+    integer(kind=4) :: icmax,jcmax,kcmax
 
 !   BEGIN
 !   =====
@@ -71,7 +71,7 @@ SUBROUTINE chkary(array,  &
     DO kc = kstac,kstoc
         DO jc = jstac,jstoc
             DO ic = istac,istoc
-      
+
                 IF(array(ic,jc,kc,icpec) < arrmin) THEN
                     arrmin = array(ic,jc,kc,icpec)
                     icmin = ic
@@ -84,7 +84,7 @@ SUBROUTINE chkary(array,  &
                     jcmax = jc
                     kcmax = kc
                 END IF
-      
+
             END DO
         END DO
     END DO

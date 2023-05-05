@@ -1,5 +1,5 @@
 SUBROUTINE bcdtzl
- 
+
     use OPS_Fortran_Reference
 
     use OPS_CONSTANTS
@@ -39,7 +39,7 @@ SUBROUTINE bcdtzl
 
 !   LOCAL DATA
 !   ==========
-    integer(4) :: rangexyz(6)
+    integer(kind=4) :: rangexyz(6)
 
 !   BEGIN
 !   =====
@@ -53,9 +53,9 @@ SUBROUTINE bcdtzl
 !   EVALUATE AND RETURN STRDZL,DDDTZL
     rangexyz = [1,nxglbl,1,nyglbl,1,1]
     call ops_par_loop(bcdt_kernel_zdir, "bcdt_kernel_zdir", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE),  &
-                    ops_arg_dat(d_dddtzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
-                    ops_arg_gbl(drin, 1, "real(8)", OPS_READ))
+                    ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE),  &
+                    ops_arg_dat(d_dddtzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_gbl(drin, 1, "real(kind=8)", OPS_READ))
 
 !   =========================================================================
 

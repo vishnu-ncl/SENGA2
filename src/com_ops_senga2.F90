@@ -2,9 +2,9 @@ MODULE com_ops_senga
 
     use OPS_Fortran_Reference
     use OPS_CONSTANTS
-    
+
     use, intrinsic :: ISO_C_BINDING
-    
+
     implicit none
 
 !------------------------------------------------------------------------------------------------------------
@@ -17,9 +17,9 @@ MODULE com_ops_senga
 !------------------------------------------------------------------------------------------------------------
 !   OPS dats
     TYPE(ops_dat) :: d_store1, d_store2, d_store3, d_store4, d_store5, d_store6, d_divm
-    
+
     TYPE(ops_dat) :: d_ucor, d_vcor, d_wcor
-    
+
     TYPE(ops_dat) :: d_wd1x, d_pd1x, d_td1x
     TYPE(ops_dat) :: d_wd1y, d_pd1y, d_td1y
     TYPE(ops_dat) :: d_wd1z, d_pd1z, d_td1z
@@ -32,11 +32,11 @@ MODULE com_ops_senga
 
     TYPE(ops_dat) :: d_drun, d_urun, d_vrun, d_wrun, d_erun
     TYPE(ops_dat) :: d_drhs, d_urhs, d_vrhs, d_wrhs, d_erhs
-    TYPE(ops_dat) :: d_derr, d_uerr, d_verr, d_werr, d_eerr 
-    
+    TYPE(ops_dat) :: d_derr, d_uerr, d_verr, d_werr, d_eerr
+
     TYPE(ops_dat) :: d_wmomix, d_difmix, d_tdrmix
     TYPE(ops_dat) :: d_combo1, d_combo2, d_combo3
- 
+
     TYPE(ops_dat) :: d_utmp, d_vtmp, d_wtmp, d_prun, d_trun, d_transp, d_store7
 
     TYPE(ops_dat) :: d_itndex(nintmx)
@@ -61,7 +61,7 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_strexr, d_strgxr, d_strrxr
 
     TYPE(ops_dat) :: d_dudtxl, d_dvdtxl, d_dwdtxl, d_dtdtxl, d_dddtxl
-    TYPE(ops_dat) :: d_dudtxr, d_dvdtxr, d_dwdtxr, d_dtdtxr, d_dddtxr    
+    TYPE(ops_dat) :: d_dudtxr, d_dvdtxr, d_dwdtxr, d_dtdtxr, d_dddtxr
 
     TYPE(ops_dat) :: d_acouxl, d_ova2xl, d_gam1xl, d_ovgmxl, d_sydtxl, d_sorpxl
     TYPE(ops_dat) :: d_acouxr, d_ova2xr, d_gam1xr, d_ovgmxr, d_sydtxr, d_sorpxr

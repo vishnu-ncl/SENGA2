@@ -8,7 +8,7 @@ SUBROUTINE bcutxr
     use data_types
     use com_senga
     use com_ops_senga
- 
+
 !   *************************************************************************
 
 !   BCUTXR
@@ -40,11 +40,11 @@ SUBROUTINE bcutxr
 !   LOCAL DATA
 !   ==========
 !KA   FIX INFLOW BC
-!KA      real(8) BTIME
-    real(8) :: fornow,argmnt
-    integer(4) :: jc,kc
-    integer(4) :: rangexyz(6)
-    real(8) :: init_val1, init_val2
+!KA      real(kind=8) BTIME
+    real(kind=8) :: fornow,argmnt
+    integer(kind=4) :: jc,kc
+    integer(kind=4) :: rangexyz(6)
+    real(kind=8) :: init_val1, init_val2
 
 !   BEGIN
 !   =====
@@ -62,13 +62,13 @@ SUBROUTINE bcutxr
     IF(nxrprm(1) == 1) THEN
         rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(bcut_kernel_xdir_const_uvel, "bcut_kernel_xdir_const_uvel", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE),  &
-                        ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE),  &
-                        ops_arg_dat(d_dudtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_dvdtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE),  &
-                        ops_arg_dat(d_dwdtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
-                        ops_arg_gbl(rxrprm, nbcprr, "real(8)", OPS_READ))
+                        ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE),  &
+                        ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE),  &
+                        ops_arg_dat(d_dudtxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_dvdtxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE),  &
+                        ops_arg_dat(d_dwdtxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_gbl(rxrprm, nbcprr, "real(kind=8)", OPS_READ))
 
     END IF
 
@@ -80,18 +80,18 @@ SUBROUTINE bcutxr
         fornow = two*pi/rxrprm(2)
         argmnt = fornow*btime
         init_val1 = rxrprm(1)*SIN(argmnt)
-        init_val2 = fornow*rxrprm(1)*COS(argmnt)  
+        init_val2 = fornow*rxrprm(1)*COS(argmnt)
 
         rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(bcut_kernel_xdir_sinusoidal_uvel, "bcut_kernel_xdir_sinusoidal_uvel", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE),  &
-                        ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE),  &
-                        ops_arg_dat(d_dudtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_dvdtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE),  &
-                        ops_arg_dat(d_dwdtxr, 1, s3d_000_strid3d_yz, "real(8)", OPS_WRITE), &
-                        ops_arg_gbl(init_val1, 1, "real(8)", OPS_READ), &
-                        ops_arg_gbl(init_val2, 1, "real(8)", OPS_READ))
+                        ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE),  &
+                        ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE),  &
+                        ops_arg_dat(d_dudtxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_dvdtxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE),  &
+                        ops_arg_dat(d_dwdtxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_gbl(init_val1, 1, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(init_val2, 1, "real(kind=8)", OPS_READ))
 
     END IF
 

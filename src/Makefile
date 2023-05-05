@@ -5,7 +5,7 @@ include $(OPS_INSTALL_PATH)/../makefiles/Makefile.cuda
 USE_HDF5=1
 include $(OPS_INSTALL_PATH)/../makefiles/Makefile.hdf5
 
-OTHER_FILES = data_type.F90 constants.F90 com_espect.F90 com_senga2.F90 \
+OTHER_FILES = data_type.F90 constants.F90 cuda_constant.F90 com_espect.F90 com_senga2.F90 \
     dfmstr.F90 ardums.F90 ardump.F90 buftxl.F90 \
     chkarr.F90 chkary.F90 erfunc.F90 espect.F90 espksq.F90 espovk.F90 \
     finish.F90 diffin.F90 hdf5io.F90 contin.F90 bcinit.F90 turbft.F90 \

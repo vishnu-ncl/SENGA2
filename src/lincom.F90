@@ -38,8 +38,8 @@ SUBROUTINE lincom
 
 !   LOCAL DATA
 !   ==========
-    integer(4) :: ispec
-    integer(4) :: rangexyz(6)
+    integer(kind=4) :: ispec
+    integer(kind=4) :: rangexyz(6)
 
 !   BEGIN
 !   =====
@@ -69,13 +69,13 @@ SUBROUTINE lincom
     IF (nsbczr == nsbci3) rangexyz(6) = nzglbl-1
 
     call ops_par_loop(lincom_kernel_main, "lincom_main", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_derr, 1, s3d_000, "real(8)", OPS_INC), &
-                    ops_arg_dat(d_drun, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(rkrhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(irkstp, 1, "integer(4)", OPS_READ))
+                    ops_arg_dat(d_derr, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_gbl(rkerr, nrkmax, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(rklhs, nrkmax, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(rkrhs, nrkmax, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(irkstp, 1, "integer(kind=4)", OPS_READ))
 
 !   -------------------------------------------------------------------------
 !   U-VELOCITY
@@ -94,37 +94,37 @@ SUBROUTINE lincom
     IF (nsbczr == nsbci2 .or. nsbczr == nsbci3 .or. nsbczr == nsbcw1 .or. nsbczr == nsbcw2) rangexyz(6) = nzglbl-1
 
     call ops_par_loop(lincom_kernel_main, "lincom_main", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_uerr, 1, s3d_000, "real(8)", OPS_INC), &
-                    ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(rkrhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(irkstp, 1, "integer(4)", OPS_READ))
+                    ops_arg_dat(d_uerr, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                    ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_gbl(rkerr, nrkmax, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(rklhs, nrkmax, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(rkrhs, nrkmax, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(irkstp, 1, "integer(kind=4)", OPS_READ))
 
 !   -------------------------------------------------------------------------
 !   V-VELOCITY
 !   ----------
     call ops_par_loop(lincom_kernel_main, "lincom_main", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_verr, 1, s3d_000, "real(8)", OPS_INC), &
-                    ops_arg_dat(d_vrun, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(rkrhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(irkstp, 1, "integer(4)", OPS_READ))
+                    ops_arg_dat(d_verr, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                    ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_gbl(rkerr, nrkmax, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(rklhs, nrkmax, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(rkrhs, nrkmax, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(irkstp, 1, "integer(kind=4)", OPS_READ))
 
 !   -------------------------------------------------------------------------
 !   W-VELOCITY
 !   ----------
     call ops_par_loop(lincom_kernel_main, "lincom_main", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_werr, 1, s3d_000, "real(8)", OPS_INC), &
-                    ops_arg_dat(d_wrun, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(rkrhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(irkstp, 1, "integer(4)", OPS_READ))
+                    ops_arg_dat(d_werr, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                    ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_gbl(rkerr, nrkmax, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(rklhs, nrkmax, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(rkrhs, nrkmax, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(irkstp, 1, "integer(kind=4)", OPS_READ))
 
 !   -------------------------------------------------------------------------
 !   STAGNATION INTERNAL ENERGY
@@ -141,15 +141,15 @@ SUBROUTINE lincom
     IF (nsbczl == nsbci2 .or. nsbczl == nsbcw2) rangexyz(5) = 2
     rangexyz(6) = nzglbl
     IF (nsbczr == nsbci2 .or. nsbczr == nsbcw2) rangexyz(6) = nzglbl-1
-    
+
     call ops_par_loop(lincom_kernel_main, "lincom_main", senga_grid, 3, rangexyz, &
-                    ops_arg_dat(d_eerr, 1, s3d_000, "real(8)", OPS_INC), &
-                    ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(rkrhs, nrkmax, "real(8)", OPS_READ), &
-                    ops_arg_gbl(irkstp, 1, "integer(4)", OPS_READ))
+                    ops_arg_dat(d_eerr, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                    ops_arg_dat(d_erun, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_gbl(rkerr, nrkmax, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(rklhs, nrkmax, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(rkrhs, nrkmax, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(irkstp, 1, "integer(kind=4)", OPS_READ))
 
 !   -------------------------------------------------------------------------
 !   SPECIES MASS FRACTIONS
@@ -172,13 +172,13 @@ SUBROUTINE lincom
     DO ispec = 1,nspec
 
         call ops_par_loop(lincom_kernel_main, "lincom_main", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_yerr(ispec), 1, s3d_000, "real(8)", OPS_INC), &
-                        ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(8)", OPS_RW), &
-                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_RW), &
-                        ops_arg_gbl(rkerr, nrkmax, "real(8)", OPS_READ), &
-                        ops_arg_gbl(rklhs, nrkmax, "real(8)", OPS_READ), &
-                        ops_arg_gbl(rkrhs, nrkmax, "real(8)", OPS_READ), &
-                        ops_arg_gbl(irkstp, 1, "integer(4)", OPS_READ))
+                        ops_arg_dat(d_yerr(ispec), 1, s3d_000, "real(kind=8)", OPS_INC), &
+                        ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_RW), &
+                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_RW), &
+                        ops_arg_gbl(rkerr, nrkmax, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(rklhs, nrkmax, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(rkrhs, nrkmax, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(irkstp, 1, "integer(kind=4)", OPS_READ))
 
     END DO
 

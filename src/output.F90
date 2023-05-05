@@ -51,22 +51,22 @@ SUBROUTINE output
     PARAMETER(pnxres = '.res')
     CHARACTER (LEN=2) :: pnxryf
     PARAMETER(pnxryf = 'yf')
-    INTEGER :: ncdiag
+    integer(kind=4) :: ncdiag
     PARAMETER(ncdiag = 11)
-    INTEGER :: iddump
+    integer(kind=4) :: iddump
 
 !   LOCAL DATA
 !   ==========
 !   DIAGNOSTICS
-    REAL(KIND=8) :: deltag,fornow
-    REAL(KIND=8) :: ttemp(nxsize,nysize,nzsize)
-    REAL(KIND=8) :: ptemp(nxsize,nysize,nzsize)
-    REAL(KIND=8) :: ytemp(nspec,nxsize,nysize,nzsize)
+    real(kind=8) :: deltag,fornow
+    real(kind=8) :: ttemp(nxsize,nysize,nzsize)
+    real(kind=8) :: ptemp(nxsize,nysize,nzsize)
+    real(kind=8) :: ytemp(nspec,nxsize,nysize,nzsize)
 
-    INTEGER :: ispec
-    INTEGER :: ic,jc,kc
-    INTEGER :: ix
-    INTEGER :: rangexyz(6)
+    integer(kind=4) :: ispec
+    integer(kind=4) :: ic,jc,kc
+    integer(kind=4) :: ix
+    integer(kind=4) :: rangexyz(6)
     CHARACTER (LEN=21) :: fndiag
 
 !   RSC UPDATE NUMBER OF PROCESSORS
@@ -87,36 +87,36 @@ SUBROUTINE output
 !   REPORT OUTPUT
 !   =============
 !ops    IF(MOD(itime,ntrept) == 0) THEN
-  
+
 !       REPORT ON PROCESSOR NO.1 ONLY
 !       ------
 !ops        IF(iproc == 0) THEN
-    
+
 !ops            OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
-    
+
 !           GO TO EOF
 !ops            1000      CONTINUE
 !ops            READ(ncrept,9000,END=1010)
 !ops            GO TO 1000
 !ops            1010      BACKSPACE(ncrept)
-    
+
 !ops            WRITE(ncrept,9100)itime
 !ops            WRITE(ncrept,9110)etime,tstep
 !ops            CLOSE(ncrept)
-    
+
 !ops        END IF
-  
+
 !       =======================================================================
-  
+
 !       DIAGNOSTICS
 !ops        jc = MAX(nyglbl/2,1)
 !ops        kc = MAX(nzglbl/2,1)
-  
+
 !ops        WRITE(pnproc,'(I6.6)')iproc
-  
+
 !       GLOBAL INDEXING
 !ops        deltag = xgdlen/(REAL(nxglbl-1))
-  
+
 !        STRQTY = 'output/pres'
 !        FNDIAG = STRQTY//PNPROC//PNXRES
 !        OPEN(UNIT=NCDIAG,FILE=FNDIAG,FORM='FORMATTED')
@@ -131,7 +131,7 @@ SUBROUTINE output
 !        ENDDO
 !        WRITE(NCDIAG,*)
 !        CLOSE(NCDIAG)
-  
+
 !        STRQTY = 'output/uvel'
 !        FNDIAG = STRQTY//PNPROC//PNXRES
 !        OPEN(UNIT=NCDIAG,FILE=FNDIAG,FORM='FORMATTED')
@@ -147,7 +147,7 @@ SUBROUTINE output
 !        ENDDO
 !        WRITE(NCDIAG,*)
 !        CLOSE(NCDIAG)
-  
+
 !        STRQTY = 'output/temp'
 !        FNDIAG = STRQTY//PNPROC//PNXRES
 !        OPEN(UNIT=NCDIAG,FILE=FNDIAG,FORM='FORMATTED')
@@ -162,7 +162,7 @@ SUBROUTINE output
 !        ENDDO
 !        WRITE(NCDIAG,*)
 !        CLOSE(NCDIAG)
-  
+
 !        STRQTY = 'output/dens'
 !        FNDIAG = STRQTY//PNPROC//PNXRES
 !        OPEN(UNIT=NCDIAG,FILE=FNDIAG,FORM='FORMATTED')
@@ -177,7 +177,7 @@ SUBROUTINE output
 !        ENDDO
 !        WRITE(NCDIAG,*)
 !        CLOSE(NCDIAG)
-  
+
 !        STRQTY = 'output/ener'
 !        FNDIAG = STRQTY//PNPROC//PNXRES
 !        OPEN(UNIT=NCDIAG,FILE=FNDIAG,FORM='FORMATTED')
@@ -193,9 +193,9 @@ SUBROUTINE output
 !        ENDDO
 !        WRITE(NCDIAG,*)
 !        CLOSE(NCDIAG)
-  
+
 !        DO ISPEC = 1, NSPEC
-  
+
 !          WRITE(STRSPC,'(I2.2)')ISPEC
 !          STRQTY = 'output/'//PNXRYF//STRSPC
 !          FNDIAG = STRQTY//PNPROC//PNXRES
@@ -214,9 +214,9 @@ SUBROUTINE output
 !          ENDDO
 !          WRITE(NCDIAG,*)
 !          CLOSE(NCDIAG)
-  
+
 !        ENDDO
-  
+
 !C        ISPEC = NSPEC
 !C        WRITE(STRSPC,'(I2.2)')ISPEC
 !C        STRQTY = PNXRYF//STRSPC
@@ -234,7 +234,7 @@ SUBROUTINE output
 !C        ENDDO
 !C        WRITE(NCDIAG,*)
 !C        CLOSE(NCDIAG)
-  
+
 !ops    END IF
 
 !   =========================================================================
@@ -272,23 +272,23 @@ SUBROUTINE output
 !   FULL DUMP OUTPUT
 !   ================
 !ops    IF(MOD(itime,ntdump) == 0) THEN
-  
+
 !       CARRY OUT A FULL DUMP
 !       ---------------------
 !       USE THE DUMP FILE INDICATED BY IDFLAG
 !       RSC 11-JUL-2009 ADD A DUMP FORMAT SWITCH
 !ops#ifndef HDF5
 !ops        IF(ndofmt == 0) THEN
-    
+
 !           UNFORMATTED DUMP OUTPUT
 !ops            OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag+1),STATUS='OLD', FORM='UNFORMATTED')
 !ops            REWIND(ncdmpo)
 !ops            WRITE(ncdmpo)nxsize,nysize,nzsize,nspec, drun,urun,vrun,wrun,erun,yrun,  &
 !ops                         etime,tstep,errold,errldr
 !ops            CLOSE(ncdmpo)
-    
+
 !ops        ELSE
-    
+
 !           FORMATTED DUMP OUTPUT
 !ops            OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag+1),STATUS='OLD', FORM='FORMATTED')
 !ops            REWIND(ncdmpo)
@@ -304,9 +304,9 @@ SUBROUTINE output
 !ops            END DO
 !ops            WRITE(ncdmpo,*)etime,tstep,errold,errldr
 !ops            CLOSE(ncdmpo)
-    
+
 !ops        END IF
-  
+
 !ops#else
 !ops    CALL write_h5_dumpfile
 !ops#endif
@@ -314,7 +314,7 @@ SUBROUTINE output
 !       REPORT THE DUMP
 !       RSC 11-JUL-2009
 !ops        IF(iproc == 0) THEN
-  
+
 !ops            OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
 !ops            3000      CONTINUE
 !ops            READ(ncrept,9000,END=3010)
@@ -335,20 +335,20 @@ SUBROUTINE output
 !   DUMP BC INFORMATION AS REQUIRED
 !   ===============================
 !ops    IF(MOD(itime,ntdump) == 0) THEN
-  
+
 !ops        bcflag = (nsbcxl == nsbci2).OR.(nsbcxl == nsbci3)
 !ops        bcflag = bcflag.AND.(nxlprm(1) == 3)
-  
+
 !ops        IF(bcflag) THEN
-    
+
 !           DUMP THE INLET TURBULENT VELOCITY FIELD
 !ops            OPEN(UNIT=nctixl,FILE=fntixl,STATUS='OLD', FORM='UNFORMATTED')
 !ops            REWIND(nctixl)
 !ops            WRITE(nctixl)ufxl,vfxl,wfxl,slocxl,svelxl,bvelxl
 !ops            CLOSE(nctixl)
-    
+
 !ops        END IF
-  
+
 !ops    END IF
 
 !   =========================================================================
@@ -360,18 +360,18 @@ SUBROUTINE output
 
     rangexyz = [3,3,11,11,7,7]
     call ops_par_loop(maths_kernel_print_drhs, "print single value", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_gbl(itime, 1, "integer(4)", OPS_READ))
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(itime, 1, "integer(kind=4)", OPS_READ))
 
     rangexyz = [4,4,12,12,8,8]
     call ops_par_loop(maths_kernel_print_erhs, "print single value", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_gbl(itime, 1, "integer(4)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(itime, 1, "integer(kind=4)", OPS_READ))
 
     rangexyz = [5,5,13,13,9,9]
     call ops_par_loop(maths_kernel_print_urhs, "print single value", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_gbl(itime, 1, "integer(4)", OPS_READ))
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(itime, 1, "integer(kind=4)", OPS_READ))
 
 !   =========================================================================
 
@@ -381,39 +381,39 @@ SUBROUTINE output
 !   STATISTICS MASTER SWITCH
 !   ------------------------
 !ops    IF(ntstat >= 0) THEN
-  
+
 !       =========================================================================
-  
+
 !       OUTPUT STATISTICS
 !       =================
-  
+
 !       STATISTICS ON ONE PROCESSOR ONLY
 !       ----------
 !ops        IF(iproc == 0) THEN
-    
+
 !ops            IF(MOD(itime,ntstat) == 0) THEN
-      
+
 !ops                OPEN(UNIT=ncstat,FILE=fnstat,STATUS='OLD',FORM='FORMATTED')
-      
+
 !               GO TO EOF
 !ops                2000        CONTINUE
 !ops                READ(ncstat,9200,END=2010)
 !ops                GO TO 2000
 !ops                2010        BACKSPACE(ncstat)
-      
+
 !ops                WRITE(ncstat,9100)itime
-      
+
 !ops                CLOSE(ncstat)
-      
+
 !ops            END IF
-    
+
 !ops        END IF
-  
+
 !       RESET STORAGE INDEX
 !ops        itstat = 0
-  
+
 !       =========================================================================
-  
+
 !   STATISTICS MASTER SWITCH
 !ops    END IF
 

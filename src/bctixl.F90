@@ -8,7 +8,7 @@ SUBROUTINE bctixl
     use data_types
     use com_senga
     use com_ops_senga
- 
+
 !   *************************************************************************
 
 !   BCTIXL
@@ -44,12 +44,12 @@ SUBROUTINE bctixl
 
 !   LOCAL DATA
 !   ==========
-    integer(4) :: icproc
-    integer(4) :: kxmodd,ixmodd
-    integer(4) :: itotxl
+    integer(kind=4) :: icproc
+    integer(kind=4) :: kxmodd,ixmodd
+    integer(kind=4) :: itotxl
     CHARACTER (LEN=6) :: pnproc
     LOGICAL :: fxdump
-    integer(4) :: rangexyz(6)
+    integer(kind=4) :: rangexyz(6)
 
 !   BEGIN
 !   =====
@@ -70,66 +70,66 @@ SUBROUTINE bctixl
 !   INLET COLD START SWITCH
 !   PARAMETER I2=0
     IF(nxlprm(2) == 0) THEN
-  
+
 !       =======================================================================
-  
+
 !       INLET COLD START
 !       ----------------
-  
+
 !       CHECK AND INITIALISE RESTART FILE
         INQUIRE(FILE=fntixl,EXIST=fxdump)
         IF(.NOT.fxdump) THEN
             OPEN(UNIT=nctixl,FILE=fntixl,STATUS='NEW',FORM='UNFORMATTED')
             CLOSE(nctixl)
         END IF
-  
+
 !       READ THE COLD START INLET TURBULENT VELOCITY FIELD
         OPEN(UNIT=nctixl,FILE=fntcxl,STATUS='OLD',FORM='UNFORMATTED')
             READ(nctixl)store1,store4,store5,store6
         CLOSE(nctixl)
-  
+
 !       SET THE REAL PARTS
         rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ))
+                        ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(kind=8)", OPS_READ))
 
         call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_vrun, 1, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_READ))
+                        ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_store5, 1, s3d_000, "real(kind=8)", OPS_READ))
 
         call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_wrun, 1, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_READ))
+                        ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_store6, 1, s3d_000, "real(kind=8)", OPS_READ))
 
 
 !       ZERO THE IMAGINARY PARTS
         rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_utmp, 1, s3d_000, "real(8)", OPS_WRITE))
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_WRITE))
 
         call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(8)", OPS_WRITE))
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_WRITE))
 
         call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(8)", OPS_WRITE))
-  
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_WRITE))
+
 !       PARTIAL (X-WISE) FOURIER TRANSFORM
         call buftxl
-  
+
 !       MEAN INLET VELOCITY
 !       SCANNING PLANE LOCATION AND VELOCITY
 !       PARAMETER R1=MEAN VEL, R2=EXTRA SCAN VEL, R3=INITIAL LOCATION
         bvelxl = rxlprm(1)
         svelxl = bvelxl + rxlprm(2)
         elocxl = xgdlen - rxlprm(3)
-  
+
 !       =======================================================================
-  
+
     ELSE
-  
+
 !       =======================================================================
-  
+
 !       INLET RESTART
 !       -------------
 !       READ THE RESTART INLET TURBULENT VELOCITY FIELD
@@ -139,9 +139,9 @@ SUBROUTINE bctixl
         OPEN(UNIT=nctixl,FILE=fntixl,STATUS='OLD',FORM='UNFORMATTED')
             READ(nctixl)ufxl,vfxl,wfxl,elocxl,svelxl,bvelxl
         CLOSE(nctixl)
-  
+
 !       =======================================================================
-  
+
     END IF
 
 !   =========================================================================
@@ -170,7 +170,7 @@ SUBROUTINE bctixl
     ixmodd = MOD(istoxl,2)
 
     IF(kxmodd == 0) THEN
-  
+
 !       EVEN NUMBER OF POINTS TO LH SIDE OF THIS PROCESSOR
 !       LH PROCESSOR HAS TRAILING REAL VALUE
 !       LOCAL PROCESSOR MUST HAVE LEADING IMAGINARY VALUE
@@ -193,9 +193,9 @@ SUBROUTINE bctixl
 !           LOCAL PROCESSOR HAS NO TRAILING REAL VALUE
             fltrxl = .false.
         END IF
-  
+
     ELSE
-  
+
 !       ODD NUMBER OF POINTS TO LH SIDE OF THIS PROCESSOR
 !       LH PROCESSOR HAS NO TRAILING REAL VALUE
 !       LOCAL PROCESSOR MUST HAVE NO LEADING IMAGINARY VALUE
@@ -217,7 +217,7 @@ SUBROUTINE bctixl
                 fltrxl = .true.
             END IF
         END IF
-  
+
     END IF
 
 !   =========================================================================

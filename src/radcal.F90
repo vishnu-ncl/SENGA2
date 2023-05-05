@@ -38,9 +38,9 @@ SUBROUTINE radcal
 
 !   LOCAL DATA
 !   ==========
-    real(8) :: plspec,fornow
-    integer(4) :: ispec,jspec,icp
-    integer(4) :: rangexyz(6)
+    real(kind=8) :: plspec,fornow
+    integer(kind=4) :: ispec,jspec,icp
+    integer(kind=4) :: rangexyz(6)
 
 !   BEGIN
 !   =====
@@ -53,7 +53,7 @@ SUBROUTINE radcal
 !   INITIALISE THE ACCUMULATOR
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_WRITE))
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_WRITE))
 
 !   -------------------------------------------------------------------------
 
@@ -63,12 +63,12 @@ SUBROUTINE radcal
 !       PLANCK MEAN ABSORPTION COEFFICIENT OF EACH SPECIES
         rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(radcal_kernel_meancoef, "PLANCK MEAN ABSORPTION COEF", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(akprad, ncfrmx*nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(nkprad, nspcmx, "integer(4)", OPS_READ), &
-                        ops_arg_gbl(nkprm1, nspcmx, "integer(4)", OPS_READ), &
-                        ops_arg_gbl(jspec, 1, "integer(4)", OPS_READ))
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(akprad, ncfrmx*nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(nkprad, nspcmx, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(nkprm1, nspcmx, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(jspec, 1, "integer(kind=4)", OPS_READ))
 
 !       SPECIES ID
         ispec = nsprid(jspec)
@@ -76,12 +76,12 @@ SUBROUTINE radcal
 !       ADD THE SPECIES CONTRIBUTION
         rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(radcal_kernel_addspecies, "ADD THE SPECIES CONTRIBUTION", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
-                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ))
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(rgspec, nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
 
     END DO
 
@@ -90,9 +90,9 @@ SUBROUTINE radcal
 !   INCLUDE THE RADIATION TERM IN THE ENERGY EQUATION
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     call ops_par_loop(radcal_kernel_addradiation, "INCLUDE THE RADIATION TERM IN THE ENERGY EQUATION", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ))
 
 !   =========================================================================
 

@@ -1,5 +1,5 @@
 SUBROUTINE turbft
- 
+
 !   *************************************************************************
 
 !   TURBFT
@@ -33,13 +33,13 @@ SUBROUTINE turbft
 
 !   LOCAL DATA
 !   ==========
-    real(8) :: scalex,scaley,scalez
-    integer(4) :: ipen(npenmx),jpen(npenmx),kpen(npenmx)
-    integer(4) :: ic,jc,kc,ix,jx,kx,ipencl,icproc
-    integer(4) :: iim,iic,jjm,jjc,kkm,kkc
-    integer(4) :: igofst,jgofst,kgofst,igofm1,jgofm1,kgofm1
-    integer(4) :: nodblx,nodbly,nodblz
-    integer(4) :: ndosym,npencl,ncount
+    real(kind=8) :: scalex,scaley,scalez
+    integer(kind=4) :: ipen(npenmx),jpen(npenmx),kpen(npenmx)
+    integer(kind=4) :: ic,jc,kc,ix,jx,kx,ipencl,icproc
+    integer(kind=4) :: iim,iic,jjm,jjc,kkm,kkc
+    integer(kind=4) :: igofst,jgofst,kgofst,igofm1,jgofm1,kgofm1
+    integer(kind=4) :: nodblx,nodbly,nodblz
+    integer(kind=4) :: ndosym,npencl,ncount
 
 !   BEGIN
 !   =====
@@ -160,7 +160,7 @@ SUBROUTINE turbft
                     END DO
 
                     ipencl = 0
-        
+
                 END IF
 
             ELSE IF(kx == 0) THEN
@@ -188,7 +188,7 @@ SUBROUTINE turbft
 !                       DO THE FFT (NO SYMMETRY IMPOSED)
                         ndosym = 0
                         npencl = ipencl
-          
+
                         CALL fftsym(ndosym,npencl,ixproc,nxproc,nxsize,nxglbl,nprocx)
 
 !                       RESTORE TRANSFORMED DATA
@@ -234,7 +234,7 @@ SUBROUTINE turbft
                         END DO
 
                     END IF
-        
+
 !                   ASSEMBLE FFT DATA FOR KY=KZ=0
                     ipencl = 1
                     DO ic = 1,nxsize
@@ -290,9 +290,9 @@ SUBROUTINE turbft
 !       DO THE FFT (NO SYMMETRY IMPOSED)
         ndosym = 0
         npencl = ipencl
-  
+
         CALL fftsym(ndosym,npencl,ixproc,nxproc,nxsize,nxglbl,nprocx)
-  
+
 !       RESTORE TRANSFORMED DATA
         DO ipencl = 1,npencl
             DO ic = 1,nxsize
@@ -352,9 +352,9 @@ SUBROUTINE turbft
 !                   DO THE FFT (NO SYMMETRY IMPOSED)
                     ndosym = 0
                     npencl = ipencl
-        
+
                     CALL fftsym(ndosym,npencl,iyproc,nyproc,nysize,nyglbl,nprocy)
-        
+
 !                   RESTORE TRANSFORMED DATA
                     DO ipencl = 1,npencl
                         DO jc = 1,nysize
@@ -483,7 +483,7 @@ SUBROUTINE turbft
                 wtmp(ipen(ipencl),jc,kpen(ipencl)) = ftpart(jjc,3,ipencl)*scaley
             END DO
         END DO
-  
+
     END IF
 
 !     =========================================================================
@@ -498,7 +498,7 @@ SUBROUTINE turbft
 !       FOURIER-SPACE GLOBAL INDEXING
         jx = jgofm1 + jc
         IF(jx > nodbly) jx = jx-nyglbl
-  
+
         DO ic = 1,nxsize
 
 !           FOURIER-SPACE GLOBAL INDEXING
@@ -557,9 +557,9 @@ SUBROUTINE turbft
 !       DO THE FFT (SYMMETRY IMPOSED)
         ndosym = 1
         npencl = ipencl
-  
+
         CALL fftsym(ndosym,npencl,izproc,nzproc,nzsize,nzglbl,nprocz)
-  
+
 !       RESTORE TRANSFORMED DATA
         DO ipencl = 1,npencl
             DO kc = 1,nzsize

@@ -1,8 +1,8 @@
 module hdf5io
- 
+
 ! Code converted using TO_F90 by Alan Miller
 ! Date: 2022-09-26  Time: 15:25:50
- 
+
 #ifdef hdf5
 use hdf5
 INCLUDE 'mpif.h'
@@ -34,7 +34,7 @@ SUBROUTINE hdf5_init()
 !     INITIALISE THE HDF5 LIBRARY.
 !     IT IS MANDATORY TO CALL IT BEFORE CALLING ANY HDF5 SUBROUTINES.
 #ifdef hdf5
-INTEGER :: ERR
+integer(kind=4) :: ERR
 CALL h5open_f(ERR)
 IF(ERR/=0)THEN
   WRITE(*,*)"ERROR WHEN INITIALIZING HDF5 LIBRARY"
@@ -47,7 +47,7 @@ SUBROUTINE hdf5_close()
 !       CLOSE THE HDF5 LIBRARY, TO CALL BEFORE THE END OF THE PROGRAM
 !       NO CALL TO HDF5 SUBROUTINES CAN BE MADE AFTER.
 #ifdef hdf5
-INTEGER :: ERR
+integer(kind=4) :: ERR
 CALL h5close_f(ERR)
 IF(ERR/=0)THEN
   WRITE(*,*)"ERROR WHEN CLOSING HDF5 LIBRARY"
@@ -59,7 +59,7 @@ END SUBROUTINE
 SUBROUTINE create_h5dump_files()
 #ifdef hdf5
 use com_senga
-INTEGER :: ERR, i
+integer(kind=4) :: ERR, i
 LOGICAL :: exists
 INTEGER(:: hid_t) space_id, dset_id,plist_id
 INTEGER(:: hsize_t) dims(5)
@@ -79,7 +79,7 @@ DO i=1,2
       WRITE(*,*)"ERROR WHEN CALLING H5FCREATE_F INSIDE CREATE_H5DUMP_FILES"
       CALL mpi_abort(mpi_comm_world,-1,ERR)
     END IF
-    
+
     dims(1)=nproc
     dims(2)=4
     CALL h5screate_simple_f(2, dims, space_id, ERR)
@@ -87,7 +87,7 @@ DO i=1,2
         h5t_native_integer,space_id,dset_id,ERR)
     CALL h5dclose_f(dset_id,ERR)
     CALL h5sclose_f(space_id,ERR)
-    
+
 !IN ORDER TO SIMPLIFY THE HDF5 CODE, EACH RANK WILL USE
 !AN ARRAY OF THE SAME SIZE, SO WE USE THE BIGGEST VALUE OF
 !NXNODE, NYNODE AND NZNODE
@@ -98,7 +98,7 @@ DO i=1,2
     dims(5)=nspec
     CALL mpi_allreduce(mpi_in_place, dims, 5, mpi_integer,  &
         mpi_max, mpi_comm_world, ERR)
-    
+
     CALL h5screate_simple_f(4, dims, space_id, ERR)
     dset_name = "/DRUN"
     CALL h5dcreate_f(dumpfile_id(i),dset_name,  &
@@ -121,7 +121,7 @@ DO i=1,2
         h5t_native_double,space_id,dset_id,ERR)
     CALL h5dclose_f(dset_id,ERR)
     CALL h5sclose_f(space_id,ERR)
-    
+
     CALL h5screate_simple_f(5,dims,space_id,ERR)
     dset_name = "/YRUN"
     CALL h5dcreate_f(dumpfile_id(i),dset_name,  &
@@ -139,7 +139,7 @@ END SUBROUTINE
 SUBROUTINE create_h5data_files()
 #ifdef hdf5
 use com_senga
-INTEGER :: ERR, i
+integer(kind=4) :: ERR, i
 LOGICAL :: exists
 INTEGER(:: hid_t) space_id, dset_id,plist_id
 INTEGER(:: hsize_t) dims(5)
@@ -159,7 +159,7 @@ DO i=1,2
       WRITE(*,*)"ERROR WHEN CALLING H5FCREATE_F INSIDE CREATE_H5DATA_FILE"
       CALL mpi_abort(mpi_comm_world,-1,ERR)
     END IF
-    
+
     dims(1)=nproc
     dims(2)=4
     CALL h5screate_simple_f(2, dims, space_id, ERR)
@@ -167,7 +167,7 @@ DO i=1,2
         h5t_native_integer,space_id,dset_id,ERR)
     CALL h5dclose_f(dset_id,ERR)
     CALL h5sclose_f(space_id,ERR)
-    
+
 !IN ORDER TO SIMPLIFY THE HDF5 CODE, EACH RANK WILL USE
 !AN ARRAY OF THE SAME SIZE, SO WE USE THE BIGGEST VALUE OF
 !NXNODE, NYNODE AND NZNODE
@@ -178,7 +178,7 @@ DO i=1,2
     dims(5)=nspec
     CALL mpi_allreduce(mpi_in_place, dims, 5, mpi_integer,  &
         mpi_max, mpi_comm_world, ERR)
-    
+
     CALL h5screate_simple_f(4, dims, space_id, ERR)
     dset_name = "/DRUN"
     CALL h5dcreate_f(dumpfile_id(i),dset_name,  &
@@ -201,7 +201,7 @@ DO i=1,2
         h5t_native_double,space_id,dset_id,ERR)
     CALL h5dclose_f(dset_id,ERR)
     CALL h5sclose_f(space_id,ERR)
-    
+
     CALL h5screate_simple_f(5,dims,space_id,ERR)
     dset_name = "/YRUN"
     CALL h5dcreate_f(dumpfile_id(i),dset_name,  &
@@ -219,7 +219,7 @@ END SUBROUTINE
 SUBROUTINE read_h5dump_files()
 #ifdef hdf5
 use com_senga
-INTEGER :: ERR, consts(4)
+integer(kind=4) :: ERR, consts(4)
 INTEGER(:: hid_t) dset_id,file_id,plist_id,space_id,memspace_id
 INTEGER(:: hsize_t) count(5), dims1(1), dims3(3), dims4(4)
 INTEGER(:: hsize_t) offset(5)
@@ -351,7 +351,7 @@ END SUBROUTINE
 SUBROUTINE write_h5_dumpfile()
 #ifdef hdf5
 use com_senga
-INTEGER :: ERR, consts(4)
+integer(kind=4) :: ERR, consts(4)
 INTEGER(:: hid_t) dset_id,file_id,plist_id,space_id,memspace_id
 INTEGER(:: hsize_t) count(5), dims1(1), dims3(3), dims4(4)
 INTEGER(:: hsize_t) offset(5)
@@ -485,7 +485,7 @@ CALL h5fclose_f(file_id,ERR)
 END SUBROUTINE
 
 SUBROUTINE check_err(ERR, line)
-INTEGER :: ERR, line
+integer(kind=4) :: ERR, line
 IF (ERR /=0)THEN
   WRITE(*,*)"ERROR ON LINE", line
   CALL mpi_abort(mpi_comm_world, -1, ERR)

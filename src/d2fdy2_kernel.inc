@@ -2,7 +2,7 @@ SUBROUTINE d2fdy2_kernel_null(fderiv)
     use data_types
     implicit none
 
-    real(8), dimension(1) :: fderiv
+    real(kind=8), dimension(1) :: fderiv
 
     fderiv(OPS_ACC1(0,0,0)) = 0.0_8
 
@@ -12,14 +12,14 @@ SUBROUTINE d2fdy2_kernel_main(functn, fderiv, nyglbl, nendyl, nendyr, nbound, id
     use data_types
     implicit none
 
-    real(8), dimension(1), intent(in) :: functn
-    real(8), dimension(1) :: fderiv
-    real(8) :: fdifap,fdifbp,fdifcp,fdifdp,fdifep
-    real(8) :: fdifam,fdifbm,fdifcm,fdifdm,fdifem
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdifap,fdifbp,fdifcp,fdifdp,fdifep
+    real(kind=8) :: fdifam,fdifbm,fdifcm,fdifdm,fdifem
 
-    integer(4), intent(in) :: nyglbl, nendyl, nendyr, nbound
-    integer(4), dimension(3), intent(in) :: idx
-    integer(4) :: jc, jstart, jfinis
+    integer(kind=4), intent(in) :: nyglbl, nendyl, nendyr, nbound
+    integer(kind=4), dimension(3), intent(in) :: idx
+    integer(kind=4) :: jc, jstart, jfinis
 
     jstart = 1
     jfinis = nyglbl
@@ -52,7 +52,7 @@ SUBROUTINE d2fdy2_kernel_main(functn, fderiv, nyglbl, nendyl, nendyr, nbound, id
         fdifcp = functn(OPS_ACC1(0,3,0)) - functn(OPS_ACC1(0,0,0))
         fdifdp = functn(OPS_ACC1(0,4,0)) - functn(OPS_ACC1(0,0,0))
         fdifep = functn(OPS_ACC1(0,5,0)) - functn(OPS_ACC1(0,0,0))
-    
+
         fderiv(OPS_ACC2(0,0,0)) = acfs1y*fdifap + bcfs1y*fdifbp  &
                                 + ccfs1y*fdifcp + dcfs1y*fdifdp  &
                                 + ecfs1y*fdifep
@@ -75,7 +75,7 @@ SUBROUTINE d2fdy2_kernel_main(functn, fderiv, nyglbl, nendyl, nendyr, nbound, id
         fdifam = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,-1,0))
         fdifbp = functn(OPS_ACC1(0,2,0)) - functn(OPS_ACC1(0,0,0))
         fdifbm = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,-2,0))
-    
+
         fderiv(OPS_ACC2(0,0,0)) = acfs3y*(fdifap-fdifam) + bcfs3y*(fdifbp-fdifbm)
 
     ELSE IF (jc == 4) THEN
@@ -86,7 +86,7 @@ SUBROUTINE d2fdy2_kernel_main(functn, fderiv, nyglbl, nendyl, nendyr, nbound, id
         fdifbm = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,-2,0))
         fdifcp = functn(OPS_ACC1(0,3,0)) - functn(OPS_ACC1(0,0,0))
         fdifcm = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,-3,0))
-    
+
         fderiv(OPS_ACC2(0,0,0)) = acfs4y*(fdifap-fdifam)  &
                                 + bcfs4y*(fdifbp-fdifbm) + ccfs4y*(fdifcp-fdifcm)
 
@@ -100,7 +100,7 @@ SUBROUTINE d2fdy2_kernel_main(functn, fderiv, nyglbl, nendyl, nendyr, nbound, id
         fdifcm = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,-3,0))
         fdifdp = functn(OPS_ACC1(0,4,0)) - functn(OPS_ACC1(0,0,0))
         fdifdm = functn(OPS_ACC1(0,0,0)) - functn(OPS_ACC1(0,-4,0))
-    
+
         fderiv(OPS_ACC2(0,0,0)) = acfs5y*(fdifap-fdifam)  &
                                 + bcfs5y*(fdifbp-fdifbm) + ccfs5y*(fdifcp-fdifcm)  &
                                 + dcfs5y*(fdifdp-fdifdm)
@@ -160,7 +160,7 @@ SUBROUTINE d2fdy2_kernel_main(functn, fderiv, nyglbl, nendyl, nendyr, nbound, id
         fdifcp = functn(OPS_ACC1(0,-3,0)) - functn(OPS_ACC1(0,0,0))
         fdifdp = functn(OPS_ACC1(0,-4,0)) - functn(OPS_ACC1(0,0,0))
         fdifep = functn(OPS_ACC1(0,-5,0)) - functn(OPS_ACC1(0,0,0))
-    
+
         fderiv(OPS_ACC2(0,0,0)) = acfs1y*fdifap + bcfs1y*fdifbp  &
                                 + ccfs1y*fdifcp + dcfs1y*fdifdp  &
                                 + ecfs1y*fdifep

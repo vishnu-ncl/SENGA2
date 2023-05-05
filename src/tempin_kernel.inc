@@ -2,34 +2,34 @@ SUBROUTINE tempin_kernel_main(trun,drhs,urhs,vrhs,wrhs,erhs,yrhs,amascp,amasct,n
     use data_types
     implicit none
 
-    real(8), dimension(1), intent(in) :: drhs,urhs,vrhs,wrhs,erhs,yrhs
-    real(8), dimension(1) :: trun
+    real(kind=8), dimension(1), intent(in) :: drhs,urhs,vrhs,wrhs,erhs,yrhs
+    real(kind=8), dimension(1) :: trun
 
-    real(8), intent(in) :: trin
-    integer(4), dimension(3), intent(in) :: idx
+    real(kind=8), intent(in) :: trin
+    integer(kind=4), dimension(3), intent(in) :: idx
 
-    integer(4), intent(in) :: nspec,iproc
-    
-    real(8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amascp,amasct
-    integer(4), dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncenth
-    real(8), dimension(ntinmx,nspcmx), intent(in) :: tinthi
-    integer(4), dimension(nspcmx), intent(in) :: ntint
+    integer(kind=4), intent(in) :: nspec,iproc
+
+    real(kind=8), dimension(ncofmx,ntinmx,nspcmx), intent(in) :: amascp,amasct
+    integer(kind=4), dimension(ntinmx,nspcmx), intent(in) :: ncpoly,ncenth
+    real(kind=8), dimension(ntinmx,nspcmx), intent(in) :: tinthi
+    integer(kind=4), dimension(nspcmx), intent(in) :: ntint
 
 !   PARAMETERS
 !   ==========
-    real(8), parameter :: toltmp=0.00010_8
-    real(8), parameter :: tininc=50.0_8
-    real(8), parameter :: tlimlo=200.0_8
-    real(8), parameter :: tlimhi=3000.0_8
+    real(kind=8), parameter :: toltmp=0.00010_8
+    real(kind=8), parameter :: tininc=50.0_8
+    real(kind=8), parameter :: tlimlo=200.0_8
+    real(kind=8), parameter :: tlimhi=3000.0_8
 
 !   LOCAL DATA
 !   ==========
-    real(8) :: tcoeff(0:nctmax)
-    real(8) :: ukuk
-    real(8) :: tempor,tupper,tlower,tresid,tuk2me,cpfory
-    integer(4) :: ic,jc,kc,ispec,itint,icp
-    integer(4) :: iindex,ipower
-    logical :: fnconv    
+    real(kind=8) :: tcoeff(0:nctmax)
+    real(kind=8) :: ukuk
+    real(kind=8) :: tempor,tupper,tlower,tresid,tuk2me,cpfory
+    integer(kind=4) :: ic,jc,kc,ispec,itint,icp
+    integer(kind=4) :: iindex,ipower
+    logical :: fnconv
 
     ic = idx(1)
     jc = idx(2)
@@ -80,7 +80,7 @@ SUBROUTINE tempin_kernel_main(trun,drhs,urhs,vrhs,wrhs,erhs,yrhs,amascp,amasct,n
 !       CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
         tcoeff(0) = tcoeff(0) + yrhs(OPS_ACC_MD7(ispec,0,0,0))*  &
                                 amascp(ncenth(itint,ispec),itint,ispec)
-        
+
         tcoeff(1) = tcoeff(1) + yrhs(OPS_ACC_MD7(ispec,0,0,0))*amasct(1,itint,ispec)
         DO icp = 2, ncpoly(itint,ispec)
             tcoeff(icp) = tcoeff(icp)  &

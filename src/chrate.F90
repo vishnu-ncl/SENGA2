@@ -1,5 +1,5 @@
 SUBROUTINE chrate
- 
+
     use OPS_Fortran_Reference
 
     use OPS_CONSTANTS
@@ -42,24 +42,22 @@ SUBROUTINE chrate
 
 !   PARAMETERS
 !   ==========
-    real(8) :: ysmall,ydenom
-    PARAMETER(ysmall = 0.000000000000000000000000000001_8,ydenom = 0.000000000000001_8)
-
+    real(kind=8), parameter :: ysmall = 0.000000000000000000000000000001_8,ydenom = 0.000000000000001_8
 
 !   LOCAL DATA
 !   ==========
-    real(8) :: racnst,rncnst,reovrr
-    real(8) :: ovwmas,gibbsp,scoef,preduc
-    real(8) :: ovtst1,tstar2,ovtst3,omalph
-    real(8) :: fbroad,ftcent,trats1,trats2,trats3,cfactr,enfact
-    real(8) :: acfsri,bcfsrm,ovcsrm,dcfsri,ecfsri
-    real(8) :: fornow
-    real(8) :: talpha,flcnst,cfcst1,cfcst2,encst1,encst2,dtcnst
-    integer(4) :: ispec,isspec
-    integer(4) :: istep,ibody
-    integer(4) :: iindex,ipower,icoef1,icoef2,itint,icp
+    real(kind=8) :: racnst,rncnst,reovrr
+    real(kind=8) :: ovwmas,gibbsp,scoef,preduc
+    real(kind=8) :: ovtst1,tstar2,ovtst3,omalph
+    real(kind=8) :: fbroad,ftcent,trats1,trats2,trats3,cfactr,enfact
+    real(kind=8) :: acfsri,bcfsrm,ovcsrm,dcfsri,ecfsri
+    real(kind=8) :: fornow
+    real(kind=8) :: talpha,flcnst,cfcst1,cfcst2,encst1,encst2,dtcnst
+    integer(kind=4) :: ispec,isspec
+    integer(kind=4) :: istep,ibody
+    integer(kind=4) :: iindex,ipower,icoef1,icoef2,itint,icp
     LOGICAL :: flthrd
-    integer(4) :: rangexyz(6)
+    integer(kind=4) :: rangexyz(6)
 
 !   BEGIN
 !   =====
@@ -146,7 +144,7 @@ SUBROUTINE chrate
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     DO ispec = 1,nspec
         call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_WRITE))
+                        ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE))
 
     END DO
 
@@ -175,7 +173,7 @@ SUBROUTINE chrate
 !           ZERO THE THIRD-BODY CONCENTRATION ACCUMULATOR
             rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
             call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_WRITE))
+                            ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_WRITE))
 
 !           USE THE THIRD-BODY SPECIES-LIST
 !           AND THE THIRD-BODY EFFICIENCY LIST
@@ -190,9 +188,9 @@ SUBROUTINE chrate
 !               AND STORE IN TEMPORARY ARRAY
                 rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
                 call ops_par_loop(maths_kernel_eqJ, "EVALUATE THE THIRD BODY CONCENTRATION", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_INC), &
-                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
-                                ops_arg_gbl(ovwmas, 1, "real(8)", OPS_READ))
+                                ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_gbl(ovwmas, 1, "real(kind=8)", OPS_READ))
 
             END DO
 !           THIRD-BODY SPECIES-LIST
@@ -212,12 +210,12 @@ SUBROUTINE chrate
 
         rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(maths_kernel_eqAW, "EVALUATE THE SPECIFIC REACTION RATE CONSTANT", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_RW), &
-                        ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(racnst, 1, "real(8)", OPS_READ), &
-                        ops_arg_gbl(rncnst, 1, "real(8)", OPS_READ), &
-                        ops_arg_gbl(reovrr, 1, "real(8)", OPS_READ))
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(racnst, 1, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(rncnst, 1, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(reovrr, 1, "real(kind=8)", OPS_READ))
 
 !       DIAGNOSTICS
 !       WRITE(6,'("kf",I5,5(1PE12.4))') &
@@ -240,15 +238,15 @@ SUBROUTINE chrate
 
             rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
             call ops_par_loop(maths_kernel_eqAX, "REFORMULATE FOR LINDEMANN RATE EXPRESSIONS", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
-                            ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_RW), &
-                            ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_gbl(racnst, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(rncnst, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(reovrr, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(flcnst, 1, "real(8)", OPS_READ))
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_store4, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(racnst, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(rncnst, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(reovrr, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(flcnst, 1, "real(kind=8)", OPS_READ))
 
 !           RSC/ZN 08-AUG-2012 BUG FIX PRESSURE-DEPENDENT RATES
 !           RESET THIRD BODY EVALUATION FLAG
@@ -283,25 +281,25 @@ SUBROUTINE chrate
 
             rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
             call ops_par_loop(maths_kernel_eqAY, "INCLUDE TROE FORM RATE EVALUATION", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
-                            ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_RW), &
-                            ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_gbl(racnst, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(rncnst, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(reovrr, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(talpha, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ovtst1, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(tstar2, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ovtst3, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(cfcst1, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(cfcst2, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(encst1, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(encst2, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(dtcnst, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(omalph, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(clnten, 1, "real(8)", OPS_READ))
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_store4, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(racnst, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(rncnst, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(reovrr, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(talpha, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ovtst1, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(tstar2, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ovtst3, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(cfcst1, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(cfcst2, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(encst1, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(encst2, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(dtcnst, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(omalph, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(clnten, 1, "real(kind=8)", OPS_READ))
 
 !           RSC/ZN 08-AUG-2012 BUG FIX PRESSURE-DEPENDENT RATES
 !           RESET THIRD BODY EVALUATION FLAG
@@ -330,19 +328,19 @@ SUBROUTINE chrate
 
             rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
             call ops_par_loop(maths_kernel_eqAZ, "INCLUDE SRI FORM RATE EVALUATION", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
-                            ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_RW), &
-                            ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_gbl(racnst, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(rncnst, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(reovrr, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(acfsri, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(bcfsrm, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ovcsrm, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(dcfsri, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ecfsri, 1, "real(8)", OPS_READ))
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_store4, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(racnst, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(rncnst, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(reovrr, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(acfsri, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(bcfsrm, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ovcsrm, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(dcfsri, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ecfsri, 1, "real(kind=8)", OPS_READ))
 
 !           RSC/ZN 08-AUG-2012 BUG FIX PRESSURE-DEPENDENT RATES
 !           RESET THIRD BODY EVALUATION FLAG
@@ -359,24 +357,24 @@ SUBROUTINE chrate
 !       ----------------------
 !       TO FIND REACTANT SPECIES FOR THIS STEP
 !       HAVING POSITIVE integer STOICHIOMETRIC COEFFICIENTS
-  
+
 !       NOTE: THIRD BODIES ARE NOT INCLUDED IN THE STEP REACTANT-LIST
 !       AND ARE TREATED SEPARATELY (SEE BELOW)
-  
+
         DO isspec = 1, nrslen(istep)
-    
+
 !           GET THE SPECIES NUMBER FROM THE REACTANT-LIST
             ispec = nrspec(isspec,istep)
-    
+
 !           EVALUATE REACTANT CONCENTRATIONS AND MULTIPLY UP
 !           CONCENTRATION IS RHO*Y/WMOLAR
 !           YRHS CONTAINS RHO*Y
             rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
             call ops_par_loop(maths_kernel_eqP, "A = A*max(B*var    zero)", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
-                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ))
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
 
         END DO
 !       END OF STEP REACTANT-LIST
@@ -410,13 +408,13 @@ SUBROUTINE chrate
 !               YRHS CONTAINS RHO*Y
                 rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
                 call ops_par_loop(maths_kernel_eqBM, "EVALUATE REACTANT CONCENTRATIONS", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
-                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
-                            ops_arg_gbl(scoef, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ysmall, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ydenom, 1, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ))
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(scoef, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ysmall, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ydenom, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
 
             END DO
 
@@ -451,21 +449,21 @@ SUBROUTINE chrate
 !               EVALUATE GIBBS FUNCTION FOR EACH SPECIES
                 rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
                 call ops_par_loop(maths_kernel_eqBN, "EVALUATE GIBBS FUNCTION FOR EACH SPECIES", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_INC), &
-                                ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
-                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(4)", OPS_READ), &
-                                ops_arg_gbl(amolgb, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer(4)", OPS_READ), &
-                                ops_arg_gbl(ncpom1, ntinmx*nspcmx, "integer(4)", OPS_READ), &
-                                ops_arg_gbl(ncenth, ntinmx*nspcmx, "integer(4)", OPS_READ), &
-                                ops_arg_gbl(ncenpy, ntinmx*nspcmx, "integer(4)", OPS_READ), &
-                                ops_arg_gbl(diffmu, nssmax*nstpmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(isspec, 1, "integer(4)", OPS_READ), &
-                                ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ), &
-                                ops_arg_gbl(istep, 1, "integer(4)", OPS_READ), &
-                                ops_arg_gbl(ipower, 1, "integer(4)", OPS_READ), &
-                                ops_arg_gbl(icoef1, 1, "integer(4)", OPS_READ), &
-                                ops_arg_gbl(icoef2, 1, "integer(4)", OPS_READ))
+                                ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                                ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_READ), &
+                                ops_arg_gbl(amolgb, ncofmx*ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
+                                ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer(kind=4)", OPS_READ), &
+                                ops_arg_gbl(ncpom1, ntinmx*nspcmx, "integer(kind=4)", OPS_READ), &
+                                ops_arg_gbl(ncenth, ntinmx*nspcmx, "integer(kind=4)", OPS_READ), &
+                                ops_arg_gbl(ncenpy, ntinmx*nspcmx, "integer(kind=4)", OPS_READ), &
+                                ops_arg_gbl(diffmu, nssmax*nstpmx, "real(kind=8)", OPS_READ), &
+                                ops_arg_gbl(isspec, 1, "integer(kind=4)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ), &
+                                ops_arg_gbl(istep, 1, "integer(kind=4)", OPS_READ), &
+                                ops_arg_gbl(ipower, 1, "integer(kind=4)", OPS_READ), &
+                                ops_arg_gbl(icoef1, 1, "integer(kind=4)", OPS_READ), &
+                                ops_arg_gbl(icoef2, 1, "integer(kind=4)", OPS_READ))
 
             END DO
 
@@ -479,7 +477,7 @@ SUBROUTINE chrate
 !           ----------------------------------
             rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
             call ops_par_loop(maths_kernel_eqB, "A = exp(A)", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_RW))
+                            ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_RW))
 
 !                                               STORE1 = FORWARD REACTION RATE
 !                                               STORE2 = BACKWARD RATE CONSTANT
@@ -504,10 +502,10 @@ SUBROUTINE chrate
 !               YRHS CONTAINS RHO*Y
                 rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
                 call ops_par_loop(maths_kernel_eqP, "A = A*max(B*var    zero)", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_RW), &
-                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
-                                ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
-                                ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ))
+                                ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
 
             END DO
 !           END OF STEP PRODUCT-LIST
@@ -541,13 +539,13 @@ SUBROUTINE chrate
 !                   YRHS CONTAINS RHO*Y
                     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
                     call ops_par_loop(maths_kernel_eqBM, "EVALUATE PRODUCT CONCENTRATIONS", senga_grid, 3, rangexyz,  &
-                                    ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_RW), &
-                                    ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
-                                    ops_arg_gbl(ovwmol, nspcmx, "real(8)", OPS_READ), &
-                                    ops_arg_gbl(scoef, 1, "real(8)", OPS_READ), &
-                                    ops_arg_gbl(ysmall, 1, "real(8)", OPS_READ), &
-                                    ops_arg_gbl(ydenom, 1, "real(8)", OPS_READ), &
-                                    ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ))
+                                    ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                                    ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
+                                    ops_arg_gbl(scoef, 1, "real(kind=8)", OPS_READ), &
+                                    ops_arg_gbl(ysmall, 1, "real(kind=8)", OPS_READ), &
+                                    ops_arg_gbl(ydenom, 1, "real(kind=8)", OPS_READ), &
+                                    ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
 
                 END DO
 
@@ -562,11 +560,11 @@ SUBROUTINE chrate
 !           ----------------------------------
             rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
             call ops_par_loop(maths_kernel_eqS, "A = A-B", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_INC), &
-                            ops_arg_dat(d_store2, 1, s3d_000, "real(8)", OPS_READ))            
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                            ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
 
 !           =====================================================================
-    
+
         END IF
 !       END OF BACKWARD RATE EVALUATION
 !                                            STORE1 = NET FORWARD REACTION RATE
@@ -586,8 +584,8 @@ SUBROUTINE chrate
 !               INCLUDE THIRD BODY CONCENTRATION IN REACTION RATE FOR THE STEP
                 rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
                 call ops_par_loop(maths_kernel_eqV, "A = A*B", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
-                                ops_arg_dat(d_store3, 1, s3d_000, "real(8)", OPS_READ))
+                                ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                                ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ))
 
             END IF
 !           END OF THIRD BODY EVALUATION FLAG
@@ -610,9 +608,9 @@ SUBROUTINE chrate
             ispec = nsspec(isspec,istep)
             fornow = diffmw(isspec,istep)
             call ops_par_loop(maths_kernel_eqJ, "A = A + var*B", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(8)", OPS_INC), &
-                            ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
-                            ops_arg_gbl(fornow, 1, "real(8)", OPS_READ))
+                            ops_arg_dat(d_rate(ispec), 1, s3d_000, "real(kind=8)", OPS_INC), &
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(fornow, 1, "real(kind=8)", OPS_READ))
 
         END DO
 !       STEP SPECIES-LIST

@@ -1,29 +1,25 @@
 MODULE com_espect
-!     ESPCOM-------------------------------------------------------------------
- 
 
-!     COMMON DATA FOR ENERGY SPECTRUM FUNCTION
-!     ----------------------------------------
+!   ESPCOM-------------------------------------------------------------------
 
-!     GENERAL SPECTRUM PARAMETERS
-!     ---------------------------
-!     NUMBER OF SPECTRUM PARAMETERS
-use data_types
+!   COMMON DATA FOR ENERGY SPECTRUM FUNCTION
+!   ----------------------------------------
 
-INTEGER :: nsparm
-PARAMETER(nsparm = 4)
+!   GENERAL SPECTRUM PARAMETERS
+!   ---------------------------
+!   NUMBER OF SPECTRUM PARAMETERS
+    use data_types
 
-!     SPECTRUM PARAMETERS
-REAL(KIND=8) :: sparam(nsparm)
+    integer(kind=4), parameter :: nsparm = 4
 
+!   SPECTRUM PARAMETERS
+    real(kind=8) :: sparam(nsparm)
 
-!     DATA SPECIFIC TO THE SPECTRUM FUNCTION
-!     --------------------------------------
-!     BATCHELOR-TOWNSEND SPECTRUM
-REAL(KIND=8) :: const0,ck0,ovk0,covk0
+!   DATA SPECIFIC TO THE SPECTRUM FUNCTION
+!   --------------------------------------
+!   BATCHELOR-TOWNSEND SPECTRUM
+    real(kind=8) :: const0,ck0,ovk0,covk0
 
+!   ESPCOM-------------------------------------------------------------------
 
-COMMON/espcom/sparam, const0,ck0,ovk0,covk0
-
-!     ESPCOM-------------------------------------------------------------------
 END MODULE com_espect

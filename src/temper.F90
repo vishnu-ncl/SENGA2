@@ -1,5 +1,5 @@
 SUBROUTINE temper
- 
+
     use OPS_Fortran_Reference
 
     use OPS_CONSTANTS
@@ -34,8 +34,8 @@ SUBROUTINE temper
 !   -------------------------------------------------------------------------
 !   -------------------------------------------------------------------------
 
-    integer(4) :: icp, ispec, rangexyz(6)
-    integer(4) :: iindex,ipower,icoef1,icoef2
+    integer(kind=4) :: icp, ispec, rangexyz(6)
+    integer(kind=4) :: iindex,ipower,icoef1,icoef2
 
 !   BEGIN
 !   =====
@@ -74,27 +74,27 @@ SUBROUTINE temper
 !   INITIALISE COEFFICIENTS OF TEMPERATURE POLYNOMIAL
 !   AND ITS DERIVATIVE
     call ops_par_loop(temper_kernel_eqA, "temper eq A", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_tcoeff, 6, s3d_000, "real(8)", OPS_WRITE), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_READ))
+                    ops_arg_dat(d_tcoeff, 6, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_READ))
 
     DO icp = 1, nctmax
         call ops_par_loop(set_zero_kernel_MD6, "set_zero", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_tcoeff, 6, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_gbl(icp+1, 1, "integer(4)", OPS_READ))
+                        ops_arg_dat(d_tcoeff, 6, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_gbl(icp+1, 1, "integer(kind=4)", OPS_READ))
 
         call ops_par_loop(set_zero_kernel_MD5, "set_zero", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_tderiv, 5, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_gbl(icp, 1, "integer(4)", OPS_READ))
+                        ops_arg_dat(d_tderiv, 5, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_gbl(icp, 1, "integer(kind=4)", OPS_READ))
     END DO
 
 !   USE STORE7 TO ACCUMULATE MIXTURE SPECIFIC GAS CONSTANT
 !   INITIALISE STORE7
     call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE))
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_WRITE))
 
 !   ===================================================================
 
@@ -110,28 +110,28 @@ SUBROUTINE temper
 
 !       CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
         call ops_par_loop(temper_kernel_eqB, "temper eq B", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_tcoeff, 6, s3d_000, "real(8)", OPS_RW), &
-                        ops_arg_dat(d_tderiv, 5, s3d_000, "real(8)", OPS_RW), &
-                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(4)", OPS_WRITE), &
-                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(amascp, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(amasct, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer(4)", OPS_READ), &
-                        ops_arg_gbl(ncenth, ntinmx*nspcmx, "integer(4)", OPS_READ), &
-                        ops_arg_gbl(ipower, 1, "integer(4)", OPS_READ), &
-                        ops_arg_gbl(icoef1, 1, "integer(4)", OPS_READ), &
-                        ops_arg_gbl(icoef2, 1, "integer(4)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ))
+                        ops_arg_dat(d_tcoeff, 6, s3d_000, "real(kind=8)", OPS_RW), &
+                        ops_arg_dat(d_tderiv, 5, s3d_000, "real(kind=8)", OPS_RW), &
+                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_WRITE), &
+                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(amascp, ncofmx*ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(amasct, ncofmx*ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(ncenth, ntinmx*nspcmx, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(ipower, 1, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(icoef1, 1, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(icoef2, 1, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
 
 !       =================================================================
 
 !       USE STORE7
 !       TO ACCUMULATE (DENSITY TIMES) MIXTURE SPECIFIC GAS CONSTANT
         call ops_par_loop(temper_kernel_eqC, "temper eq C", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_RW), &
-                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ))
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(rgspec, nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
 
 !       =================================================================
 
@@ -143,25 +143,25 @@ SUBROUTINE temper
 
 !   SOLVE FOR TEMPERATURE
     call ops_par_loop(temper_kernel_eqD, "temper eq D", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_dat(d_tcoeff, 6, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_tderiv, 5, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_READ), &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_dat(d_tcoeff, 6, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_tderiv, 5, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_idx())
 
 !   FOR ALL SPECIES RELOCATE TEMPERATURE IN AN INTERVAL
 !   EVALUATE MIXTURE SPECIFIC HEAT CP
     DO iindex = 1,nintmx
         call ops_par_loop(set_zero_kernel_int, "set_zero", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(4)", OPS_WRITE))
+                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_WRITE))
     END DO
 
     call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_WRITE))
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_WRITE))
 
     DO ispec = 1, nspec
 !       SET THE TEMPERATURE INTERVAL INDEX
@@ -169,28 +169,28 @@ SUBROUTINE temper
         ipower = ispec - (iindex-1)*nspimx - 1
 
         call ops_par_loop(temper_kernel_eqE, "temper eq E", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_RW), &
-                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(4)", OPS_RW), &
-                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(amascp, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer(4)", OPS_READ), &
-                        ops_arg_gbl(ncpom1, ntinmx*nspcmx, "integer(4)", OPS_READ), &
-                        ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ntint, nspcmx, "integer(4)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ), &
-                        ops_arg_gbl(ipower, 1, "integer(4)", OPS_READ))
+                        ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_RW), &
+                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(amascp, ncofmx*ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(ncpom1, ntinmx*nspcmx, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(ntint, nspcmx, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(ipower, 1, "integer(kind=4)", OPS_READ))
 
     END DO
 
 !   =========================================================================
 
     call ops_par_loop(temper_kernel_eqF, "temper eq F", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_WRITE), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ))
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ))
 
 !   =========================================================================
 

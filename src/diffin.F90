@@ -1,5 +1,5 @@
 SUBROUTINE diffin
- 
+
 !   *************************************************************************
 
 !   DIFFIN
@@ -29,15 +29,14 @@ SUBROUTINE diffin
 
 !   PARAMETER
 !   =========
-    real(8) :: wmltol
-    PARAMETER(wmltol = 0.001_8)
+    real(kind=8), parameter :: wmltol = 0.001_8
 
 !   LOCAL DATA
 !   ==========
-    real(8) :: pcount,fornow
-    integer(4) :: ispec,jspec,kspec,icoeff
-    integer(4) :: ncount
-    integer(4) :: iroot
+    real(kind=8) :: pcount,fornow
+    integer(kind=4) :: ispec,jspec,kspec,icoeff
+    integer(kind=4) :: ncount
+    integer(kind=4) :: iroot
     CHARACTER (LEN=10) :: spcdif(nspcmx)
 
 !   BEGIN
@@ -61,47 +60,47 @@ SUBROUTINE diffin
 
 !   CHECK SWITCH FOR MIXTURE AVERAGED TRANSPORT
     IF(nfmavt == 1) THEN
-  
+
 !       =======================================================================
-  
+
 !       DATA IS READ BY THE LOWEST-RANKED PROCESSOR AND BROADCAST TO THE OTHERS
 !       -----------------------------------------------------------------------
-  
+
 !       SET ID OF ROOT (BROADCASTING) PROCESSOR
         iroot = 0
-  
+
 !       INITIALISE THE BROADCAST COUNTER
         pcount = zero
-  
+
 !       INITIALISE THE BROADCAST ARRAY
         DO ncount = 1, nparay
             parray(ncount) = zero
         END DO
-  
+
 !       =======================================================================
-  
+
 !       LOWEST-RANKED PROCESSOR
         IF(iproc == 0) THEN
-    
+
 !           =======================================================================
-    
+
 !           READ THE MOLECULAR TRANSPORT DATA FILE
 !           --------------------------------------
 !           ---------------------------------------------------------------------
-    
+
             OPEN(UNIT=ncdiff,FILE=fndiff,STATUS='OLD',FORM='FORMATTED')
-    
+
 !           ---------------------------------------------------------------------
-    
+
 !           READ AND IGNORE THE HEADER
             READ(ncdiff,*)
             READ(ncdiff,*)
             READ(ncdiff,*)
             READ(ncdiff,*)
             READ(ncdiff,*)
-    
+
 !           ---------------------------------------------------------------------
-    
+
 !           READ SPECIES LIST AND CHECK AGAINST CHEMICAL DATA
             READ(ncdiff,*)
             READ(ncdiff,'(I5)')ndspec
@@ -111,7 +110,7 @@ SUBROUTINE diffin
                 WRITE(ncrept,*)'CHEMIN: ',nspec,'; DIFFIN: ',ndspec
                 WRITE(ncrept,*)
             END IF
-    
+
             DO jspec = 1, nspec
                 READ(ncdiff,'(I5,3X,A)')ispec,spcdif(ispec)
                 IF(spcsym(ispec) /= spcdif(ispec)) THEN
@@ -121,11 +120,11 @@ SUBROUTINE diffin
                     WRITE(ncrept,*)
                 END IF
             END DO
-    
+
 !           MOLECULAR TRANSPORT DATA
             READ(ncdiff,*)
             READ(ncdiff,*)pdifgb,tdifgb
-    
+
             READ(ncdiff,*)
             DO ispec = 1,nspec
                 READ(ncdiff,*)jspec,ncovis
@@ -137,7 +136,7 @@ SUBROUTINE diffin
                 END IF
                 READ(ncdiff,*) (viscco(icoeff,ispec),icoeff=1,ncovis)
             END DO
-    
+
             READ(ncdiff,*)
             DO ispec = 1,nspec
                 READ(ncdiff,*)jspec,ncocon
@@ -149,7 +148,7 @@ SUBROUTINE diffin
                 END IF
                 READ(ncdiff,*) (condco(icoeff,ispec),icoeff=1,ncocon)
             END DO
-    
+
             READ(ncdiff,*)
             DO ispec = 1,nspec
                 READ(ncdiff,*)jspec,ncodif
@@ -169,7 +168,7 @@ SUBROUTINE diffin
                     END IF
                 END DO
             END DO
-    
+
             READ(ncdiff,*)
             DO ispec = 1,nspec
                 READ(ncdiff,*)jspec,ncotdr
@@ -189,18 +188,18 @@ SUBROUTINE diffin
                     END IF
                 END DO
             END DO
-    
+
 !           ---------------------------------------------------------------------
-    
+
 !           READ END-OF-FILE LINE
             READ(ncdiff,*)
             CLOSE(ncdiff)
-    
+
 !           =====================================================================
-    
+
 !           COMPRESS THE DATA
 !           -----------------
-    
+
 !           MOLECULAR TRANSPORT DATA
             ncount = 1
             parray(ncount) = pdifgb
@@ -236,12 +235,12 @@ SUBROUTINE diffin
                     END DO
                 END DO
             END DO
-    
+
 !           ---------------------------------------------------------------------
-    
+
 !           BROADCAST COUNTER
             pcount = REAL(ncount,kind=8)
-    
+
 !           CHECK BROADCAST COUNTER AGAINST BROADCAST ARRAY SIZE
             IF(ncount > nparay) THEN
                 WRITE(ncrept,*)
@@ -249,32 +248,32 @@ SUBROUTINE diffin
                 WRITE(ncrept,*)'Actual: ',ncount,'; Available: ',nparay
                 WRITE(ncrept,*)
             END IF
-    
+
 !           =====================================================================
-    
+
         END IF
-  
+
 !       =======================================================================
-  
+
 !       BROADCAST (OR RECEIVE) THE COUNTER
 !       ----------------------------------
         call p_bcst(pcount,1,1,iroot)
         ncount = nint(pcount)
-  
+
 !       BROADCAST (OR RECEIVE) THE DATA
 !       -------------------------------
         call p_bcst(parray,nparay,ncount,iroot)
-  
+
 !       =======================================================================
-  
+
 !       NOT THE LOWEST-RANKED PROCESSOR
         IF(iproc /= 0) THEN
-    
+
 !           =====================================================================
-    
+
 !           UNCOMPRESS THE DATA
 !           -------------------
-    
+
 !           MOLECULAR TRANSPORT DATA
             ncount = 1
             pdifgb = parray(ncount)
@@ -310,22 +309,22 @@ SUBROUTINE diffin
                     END DO
                 END DO
             END DO
-    
+
 !           =====================================================================
-    
+
         END IF
-  
+
 !       =======================================================================
-  
+
 !       EVALUATE DERIVED QUANTITIES
 !       ===========================
-  
+
 !       COEFFICIENT COUNTERS
         ncovm1 = ncovis - 1
         ncocm1 = ncocon - 1
         ncodm1 = ncodif - 1
         ncotm1 = ncotdr - 1
-  
+
 !       FILL OUT THE DIFFUSION COEFFICIENT MATRIX
 !       MATRIX IS SYMMETRIC
         DO ispec = 1, nspec
@@ -336,7 +335,7 @@ SUBROUTINE diffin
                 END DO
             END DO
         END DO
-  
+
 !       FILL OUT THE THERMAL DIFFUSION COEFFICIENT MATRIX
 !       MATRIX IS SYMMETRIC
         DO ispec = 1, nspec
@@ -350,7 +349,7 @@ SUBROUTINE diffin
                 END DO
             END DO
         END DO
-  
+
 !       PRECOMPUTE ELEMENTS OF WILKES COMBINATION RULE FOR VISCOSITY
 !       NOTE THAT THE WILKES MATRIX IS NOT SYMMETRIC
 !       ELEMENTS OF THE MATRIX TRANSPOSE ARE STORED
@@ -362,14 +361,14 @@ SUBROUTINE diffin
                 wilko1(jspec,ispec) = one/SQRT(fornow)
             END DO
         END DO
-  
+
 !       =======================================================================
-  
+
 !       CONTROL FLAGS
         flmavt = .true.
         IF(nfmixw == 1) flmixw = .true.
         IF(nfmixp == 1) flmixp = .true.
-  
+
         IF(nfmsor == 1) THEN
             flmixt = .true.
             DO ispec = 1, nspec
@@ -379,7 +378,7 @@ SUBROUTINE diffin
                 END IF
             END DO
         END IF
-  
+
         IF(nfmduf == 1) THEN
             flmixt = .true.
             DO ispec = 1, nspec
@@ -389,9 +388,9 @@ SUBROUTINE diffin
                 END IF
             END DO
         END IF
-  
+
 !       =======================================================================
-  
+
     END IF
 
 !   =========================================================================

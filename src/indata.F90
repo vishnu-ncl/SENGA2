@@ -8,7 +8,7 @@ SUBROUTINE indata
     use data_types
     use com_senga
     use com_ops_senga
- 
+
 !   *************************************************************************
 
 !   INDATA
@@ -65,28 +65,26 @@ SUBROUTINE indata
               pnxdat = '.dat', pnxres = '.res')
 
 !   REPORT FILE LINE LENGTH
-    integer(4) :: lenlin
-    PARAMETER(lenlin = 79)
+    integer(kind=4), parameter :: lenlin = 79
 
 !   THERMO DATA INTERVAL-MATCHING TOLERANCE
-    real(8) :: tttol
-    PARAMETER(tttol = 0.0010_8)
+    real(kind=8), parameter :: tttol = 0.0010_8
 
 
 !   LOCAL DATA
 !   ==========
-    real(8) :: dyrin(nspcmx)
-    real(8) :: ctrans(nspcmx,4)
-    real(8) :: dtrans(nspcmx)
-    real(8) :: rtin,durin,dvrin,dwrin,derin
-    real(8) :: ttemp(5),ttold(5)
-    real(8) :: fornow,tmplog
-    real(8) :: combo1,combo2,combo3
-    integer(4) :: iindex,ipower,icoef1,icoef2
-    integer(4) :: ic,jc,kc,ispec,istep,itint,icp
-    integer(4) :: jspec,ncount
-    integer(4) :: nxdmax,nydmax,nzdmax,ndspec
-    integer(4) :: rangexyz(6)
+    real(kind=8) :: dyrin(nspcmx)
+    real(kind=8) :: ctrans(nspcmx,4)
+    real(kind=8) :: dtrans(nspcmx)
+    real(kind=8) :: rtin,durin,dvrin,dwrin,derin
+    real(kind=8) :: ttemp(5),ttold(5)
+    real(kind=8) :: fornow,tmplog
+    real(kind=8) :: combo1,combo2,combo3
+    integer(kind=4) :: iindex,ipower,icoef1,icoef2
+    integer(kind=4) :: ic,jc,kc,ispec,istep,itint,icp
+    integer(kind=4) :: jspec,ncount
+    integer(kind=4) :: nxdmax,nydmax,nzdmax,ndspec
+    integer(kind=4) :: rangexyz(6)
     CHARACTER (LEN=132) :: strout
     CHARACTER (LEN=79) :: clstar,cldash
     CHARACTER (LEN=10) :: streac
@@ -153,15 +151,15 @@ SUBROUTINE indata
 !   ========================
 
     IF(iproc == 0)THEN
-  
+
 !       SET UP SEPARATOR LINES
         DO ic = 1,lenlin
             clstar(ic:ic) = '*'
             cldash(ic:ic) = '-'
         END DO
-  
+
         OPEN(UNIT=ncrept,FILE=fnrept,STATUS='REPLACE',FORM='FORMATTED')
-  
+
 !       WRITE A HEADER
         WRITE(ncrept,9000)clstar
         WRITE(ncrept,9010)
@@ -173,25 +171,25 @@ SUBROUTINE indata
         WRITE(ncrept,9010)
         WRITE(ncrept,9000)clstar
         WRITE(ncrept,*)
-  
+
         WRITE(ncrept,*)'==========='
         WRITE(ncrept,*)'REPORT FILE'
         WRITE(ncrept,*)'==========='
         WRITE(ncrept,*)
-  
+
         WRITE(ncrept,9000)cldash
-  
+
 !       DOMAIN DECOMPOSITION DATA AND CHECKING
         WRITE(ncrept,*)
         WRITE(ncrept,*)'Domain decomposition data:'
         WRITE(ncrept,*)'-------------------------'
         WRITE(ncrept,*)
-  
+
 !       GLOBAL GRID SIZES
         WRITE(ncrept,*)'NXGLBL,NYGLBL,NZGLBL'
         WRITE(ncrept,9200)nxglbl,nyglbl,nzglbl
         WRITE(ncrept,*)
-  
+
 !       CHECK GLOBAL GRID SIZE
         flgreq = (nxgreq == nxglbl) .AND.(nygreq == nyglbl) .AND.(nzgreq == nzglbl)
         IF(.NOT.flgreq) THEN
@@ -201,7 +199,7 @@ SUBROUTINE indata
             WRITE(ncrept,*)'Global values take precedence'
             WRITE(ncrept,*)
         END IF
-  
+
 !       NUMBERS OF PROCESSORS
         WRITE(ncrept,*)'NXPROC,NYPROC,NZPROC,NPROC'
         WRITE(ncrept,9200)nxproc,nyproc,nzproc,nproc
@@ -210,7 +208,7 @@ SUBROUTINE indata
             WRITE(ncrept,*) 'Warning: INDATA: mismatched total no. of processors'
             WRITE(ncrept,*)
         END IF
-  
+
 !       CHECK NUMBER OF PROCESSORS
         flgreq = (nxpreq == nxproc) .AND.(nypreq == nyproc) .AND.(nzpreq == nzproc)
         IF(.NOT.flgreq) THEN
@@ -220,12 +218,12 @@ SUBROUTINE indata
             WRITE(ncrept,*)'Global values take precedence'
             WRITE(ncrept,*)
         END IF
-  
+
 !       LOCAL ARRAY SIZES
         WRITE(ncrept,*)'NXSIZE,NYSIZE,NZSIZE'
         WRITE(ncrept,9200)nxsize,nysize,nzsize
         WRITE(ncrept,*)
-  
+
 !       LOCAL GRID SIZES
         WRITE(ncrept,*)'NPMAPX'
         WRITE(ncrept,9200)(npmapx(ic),ic=0,nxprm1)
@@ -233,41 +231,41 @@ SUBROUTINE indata
         WRITE(ncrept,9200)(npmapy(ic),ic=0,nyprm1)
         WRITE(ncrept,*)'NPMAPZ'
         WRITE(ncrept,9200)(npmapz(ic),ic=0,nzprm1)
-  
+
         WRITE(ncrept,*)'--------------------------------'
         WRITE(ncrept,*)
         WRITE(ncrept,9000)cldash
-  
+
 !       =======================================================================
-  
+
 !       INITIAL DATA
         WRITE(ncrept,*)
         WRITE(ncrept,*)'Initial data:'
         WRITE(ncrept,*)'------------'
         WRITE(ncrept,*)
-  
+
 !       GLOBAL DOMAIN SIZE (x,y,z)
         WRITE(ncrept,*)'XGDLEN,YGDLEN,ZGDLEN'
         WRITE(ncrept,9400)xgdlen,ygdlen,zgdlen
         WRITE(ncrept,*)
-  
+
 !       NUMERICAL CONTROL
         WRITE(ncrept,*)'TSTEP,NTIME1,NTIME,NSTPSW,NTDUMP,NTREPT,NTSTAT'
         WRITE(ncrept,9300)tstep,ntime1,ntime,nstpsw,ntdump,ntrept,ntstat
         WRITE(ncrept,*)
-  
+
 !       COLD START SWITCH
         WRITE(ncrept,*)'NCDMPI'
         WRITE(ncrept,9200)ncdmpi
-  
+
 !       INITIAL TURBULENCE GENERATOR
         WRITE(ncrept,*)'INTURB, INSEED, SPARAM'
         WRITE(ncrept,9270)inturb,inseed,(sparam(ic),ic=1,nsparm)
-  
+
 !       FLAME START OPTION
         WRITE(ncrept,*)'INFLAM'
         WRITE(ncrept,9200)inflam
-  
+
 !       DEFAULT INITIAL DATA
         WRITE(ncrept,*)
         WRITE(ncrept,*)'PRIN,TRIN,URIN,VRIN,WRIN'
@@ -300,18 +298,18 @@ SUBROUTINE indata
                         'Warning: INDATA: initial mass fractions do not sum to unity'
             WRITE(ncrept,*)
         END IF
-  
+
 !       GLOBAL BOUNDARY CONDITION TYPES
         WRITE(ncrept,*)
         WRITE(ncrept,*)'NGBCXL,NGBCXR,NGBCYL,NGBCYR,NGBCZL,NGBCZR'
         WRITE(ncrept,9250)ngbcxl,ngbcxr,ngbcyl,ngbcyr,ngbczl,ngbczr
-  
+
         WRITE(ncrept,*)
         WRITE(ncrept,*)'End of initial data'
         WRITE(ncrept,*)'-------------------'
         WRITE(ncrept,*)
         WRITE(ncrept,9000)cldash
-  
+
     END IF
 
 !   =========================================================================
@@ -323,15 +321,15 @@ SUBROUTINE indata
 !   =========================================================================
 
     IF(iproc == 0) THEN
-  
+
 !       REPORT THE CHEMICAL DATA
 !       ========================
-  
+
         WRITE(ncrept,*)
         WRITE(ncrept,*)'Chemical data:'
         WRITE(ncrept,*)'-------------'
         WRITE(ncrept,*)
-  
+
 !       SPECIES LIST
         WRITE(ncrept,*)'Number of species:'
         WRITE(ncrept,'(I5)')nspec
@@ -352,7 +350,7 @@ SUBROUTINE indata
             WRITE(ncrept,'(I5,3X,A10,3X,1PE12.4)') ispec,spcsym(ispec),wmolar(ispec)
         END DO
         WRITE(ncrept,*)
-  
+
 !       THERMODYNAMIC DATA
         WRITE(ncrept,*)'Species thermodynamic data:'
         WRITE(ncrept,'("  Reference pressure: ",1PE12.4)')prefgb
@@ -365,7 +363,7 @@ SUBROUTINE indata
             DO ic = 2,ntint(ispec)
                 WRITE(ncrept,'(25X,I5,8X,2(1PE12.4),I8)')  &
                                 ic,tintlo(ic,ispec),tinthi(ic,ispec),ncofcp(ic,ispec)
-      
+
             END DO
         END DO
         WRITE(ncrept,*)'Cp coeffs by mass'
@@ -380,7 +378,7 @@ SUBROUTINE indata
                 END DO
             END DO
         END DO
-  
+
         WRITE(ncrept,*)
         WRITE(ncrept,*)'Mass-specific Cp, Enthalpy, Entropy;', '  Molar Gibbs fn.:'
         WRITE(ncrept,*)' Spec.  T int.  Temp.       Cp',  &
@@ -388,18 +386,18 @@ SUBROUTINE indata
         DO ispec = 1,nspec
             DO ic = 1,ntint(ispec)
                 DO icp = 1,2
-        
+
 !                   TEMPERATURE
                     IF(icp == 1) ttemp(1) = tintlo(ic,ispec)
                     IF(icp == 2) ttemp(1) = tinthi(ic,ispec)
-        
+
 !                   MASS-SPECIFIC CP
                     fornow = amascp(ncpoly(ic,ispec),ic,ispec)
                     DO jc = ncpom1(ic,ispec),1,-1
                         fornow = fornow*ttemp(1) + amascp(jc,ic,ispec)
                     END DO
                     ttemp(2) = fornow
-        
+
 !                   MASS-SPECIFIC ENTHALPY
                     fornow = amasch(ncpoly(ic,ispec),ic,ispec)
                     DO jc = ncpom1(ic,ispec),1,-1
@@ -407,7 +405,7 @@ SUBROUTINE indata
                     END DO
                     fornow = amasch(ncenth(ic,ispec),ic,ispec) + fornow*ttemp(1)
                     ttemp(3) = fornow
-        
+
 !                   MASS-SPECIFIC ENTROPY
                     fornow = amascs(ncpoly(ic,ispec),ic,ispec)
                     DO jc = ncpom1(ic,ispec),2,-1
@@ -416,7 +414,7 @@ SUBROUTINE indata
                     fornow = amascs(ncenpy(ic,ispec),ic,ispec) + fornow*ttemp(1)  &
                            + amascs(1,ic,ispec)*LOG(ttemp(1))
                     ttemp(4) = fornow
-        
+
 !                   MOLAR GIBBS FUNCTION
 !                   ACTUALLY GIBBS/(R^0 T) WITH PRESSURE TERM
                     fornow = amolgb(ncpoly(ic,ispec),ic,ispec)
@@ -427,7 +425,7 @@ SUBROUTINE indata
                            - amolgb(ncenpy(ic,ispec),ic,ispec) *LOG(ttemp(1))  &
                            - fornow
                     ttemp(5) = fornow
-        
+
                     IF(icp == 1) THEN
                         IF(ic == 1) THEN
                             WRITE(ncrept,'(I5,2X,I5,X,"l",X,5(1PE12.4))')  &
@@ -444,7 +442,7 @@ SUBROUTINE indata
                     ELSE
                         WRITE(ncrept,'(7X,I5,X,"h",X,5(1PE12.4))') ic,(ttemp(jc),jc=1,5)
                     END IF
-        
+
                     IF(icp == 2) THEN
                         DO jc = 1,5
                             ttold(jc) = ttemp(jc)
@@ -455,7 +453,7 @@ SUBROUTINE indata
             END DO
         END DO
         WRITE(ncrept,*)
-  
+
 !       REACTION MECHANISM
 !       STEP LIST
         WRITE(ncrept,*)'Reaction mechanism:'
@@ -466,7 +464,7 @@ SUBROUTINE indata
             WRITE(ncrept,9600)nstep,nstpmx
         END IF
         DO istep = 1,nstep
-    
+
             WRITE(strstp,'(I5)')istep
             icoef1 = 1
             icoef2 = LEN(strstp) + 3
@@ -527,17 +525,17 @@ SUBROUTINE indata
             ELSE
                 icoef2 = icoef2 - 1
             END IF
-    
+
             WRITE(ncrept,'(A)')strout(1:icoef2)
-    
+
         END DO
-  
+
         WRITE(ncrept,*)
         WRITE(ncrept,*)'Reaction parameters A,n,E:'
         DO istep = 1,nstep
             WRITE(ncrept,'(I5,3(2X,1PE12.4))') istep,(rparam(icp,istep),icp=1,3)
         END DO
-  
+
         IF(nlind > 0) THEN
             WRITE(ncrept,*)
             WRITE(ncrept,*)'Lindemann parameters:'
@@ -548,7 +546,7 @@ SUBROUTINE indata
                 END IF
             END DO
         END IF
-  
+
         WRITE(ncrept,*)
         WRITE(ncrept,*)'Third body efficiencies:'
         DO jspec = 1,nbody
@@ -558,15 +556,15 @@ SUBROUTINE indata
                                 ispec,spcsym(ispec),effy3b(ispec,jspec)
             END DO
         END DO
-  
+
         WRITE(ncrept,*)
         WRITE(ncrept,*)'End of chemical data'
         WRITE(ncrept,*)'--------------------'
         WRITE(ncrept,*)
         WRITE(ncrept,9000)cldash
-  
+
 !       =======================================================================
-  
+
     END IF
 
 !   =========================================================================
@@ -577,19 +575,19 @@ SUBROUTINE indata
     call diffin
 
     IF(flmavt) THEN
-  
+
 !       =======================================================================
-  
+
         IF(iproc == 0) THEN
-    
+
 !           REPORT THE TRANSPORT DATA
 !           =========================
-    
+
             WRITE(ncrept,*)
             WRITE(ncrept,*)'Transport data: mixture averaged transport'
             WRITE(ncrept,*)'--------------'
             WRITE(ncrept,*)
-    
+
             WRITE(ncrept,'(2(1PE12.4))')pdifgb,tdifgb
             WRITE(ncrept,*)
             WRITE(ncrept,*)'Viscosity'
@@ -621,10 +619,10 @@ SUBROUTINE indata
                                 (tdrcco(icoeff,jspec,ispec),icoeff=1,ncotdr)
                 END DO
             END DO
-    
+
 !           EVALUATE TRANSPORT COEFFICIENTS FOR THE DEFAULT INITIAL STATE
             tmplog = LOG(trin/tdifgb)
-    
+
 !           INITIAL DENSITY
             rtin = zero
             DO ispec = 1,nspec
@@ -632,7 +630,7 @@ SUBROUTINE indata
             END DO
             rtin = rtin*trin
             drin = prin/rtin
-    
+
 !           VISCOSITY FOR EACH SPECIES
             DO ispec = 1, nspec
                 fornow = viscco(ncovis,ispec)
@@ -641,7 +639,7 @@ SUBROUTINE indata
                 END DO
                 ctrans(ispec,1) = EXP(fornow)
             END DO
-    
+
 !           COMBINATION RULE FOR VISCOSITY
             combo1 = zero
             DO ispec = 1, nspec
@@ -657,7 +655,7 @@ SUBROUTINE indata
 
             END DO
             ttemp(1) = combo1
-    
+
 !           THERMAL CONDUCTIVITY FOR EACH SPECIES
             DO ispec = 1, nspec
                 fornow = condco(ncocon,ispec)
@@ -666,7 +664,7 @@ SUBROUTINE indata
                 END DO
                 ctrans(ispec,2) = EXP(fornow)
             END DO
-    
+
 !           COMBINATION RULE FOR CONDUCTIVITY
             combo1 = zero
             combo2 = zero
@@ -681,7 +679,7 @@ SUBROUTINE indata
             combo1 = combo1*combo3
             combo2 = combo2*combo3
             ttemp(2) = half*(combo1 + one/combo2)
-    
+
 !           MASS-SPECIFIC CP
             combo2 = zero
             ic = 1
@@ -694,7 +692,7 @@ SUBROUTINE indata
                 combo2 = combo2 + yrin(ispec)*combo1
             END DO
             ttemp(3) = combo2
-    
+
             WRITE(ncrept,*)
             WRITE(ncrept,*)'         Viscosity         Conductivity'
             DO ispec = 1, nspec
@@ -703,10 +701,10 @@ SUBROUTINE indata
             WRITE(ncrept,*)
             WRITE(ncrept,*) '         Mix viscosity     Conductivity      Prandtl no'
             WRITE(ncrept,'(5X,3(1PE18.7))')ttemp(1),ttemp(2), ttemp(1)*combo2/ttemp(2)
-       
+
 !           MASS DIFFUSIVITY FOR EACH SPECIES
             DO ispec = 1, nspec
-      
+
                 DO jspec = 1, nspec
                     fornow = diffco(ncocon,jspec,ispec)
                     DO icp = ncodm1,1,-1
@@ -714,7 +712,7 @@ SUBROUTINE indata
                     END DO
                     dtrans(jspec) = EXP(fornow)*pdifgb/prin
                 END DO
-      
+
 !               COMBINATION RULE FOR MASS DIFFUSIVITY
                 combo1 = zero
                 combo2 = zero
@@ -732,11 +730,11 @@ SUBROUTINE indata
                 ctrans(ispec,3) = drin*combo1/combo2
 
             END DO
-    
+
 !           THERMAL DIFFUSION RATIO FOR EACH SPECIES
             tmplog = trin/tdifgb
             DO ispec = 1, nspec
-      
+
                 DO jspec = 1, nspec
                     fornow = tdrcco(ncocon,jspec,ispec)
                     DO icp = ncotm1,1,-1
@@ -744,7 +742,7 @@ SUBROUTINE indata
                     END DO
                     dtrans(jspec) = fornow
                 END DO
-      
+
 !               COMBINATION RULE FOR THERMAL DIFFUSION RATIO
                 combo1 = zero
                 combo2 = zero
@@ -754,9 +752,9 @@ SUBROUTINE indata
                     combo2 = combo2 + fornow
                 END DO
                 ctrans(ispec,4) = combo1/combo2
-      
+
             END DO
-    
+
             WRITE(ncrept,*)
             WRITE(ncrept,*)'         Diffusivity       Schmidt No',  &
                            '        Lewis No          Thermal diff'
@@ -765,47 +763,47 @@ SUBROUTINE indata
                                 ttemp(1)/ctrans(ispec,3), ttemp(2)/(ctrans(ispec,3)*ttemp(3)),  &
                                 ctrans(ispec,4)
             END DO
-    
+
             WRITE(ncrept,*)
             WRITE(ncrept,*)'End of transport data'
             WRITE(ncrept,*)'---------------------'
             WRITE(ncrept,*)
             WRITE(ncrept,9000)cldash
-    
+
         END IF
-  
+
 !       =======================================================================
-  
+
     ELSE
-  
+
 !       =======================================================================
-  
+
         IF(iproc == 0) THEN
-    
+
             WRITE(ncrept,*)
             WRITE(ncrept,*)'Transport data: constant Lewis numbers'
             WRITE(ncrept,*)'--------------'
             WRITE(ncrept,*)
-    
+
             WRITE(ncrept,*)' constants A,r; ref T; Prandtl no.:'
             WRITE(ncrept,'(4(1PE12.4))')alamdc,rlamda,tlamda,prantl
             WRITE(ncrept,*)
-    
+
             WRITE(ncrept,*)'Spec.No.  Symbol         Lewis no.'
             DO ispec = 1,nspec
                 WRITE(ncrept,'(I8,3X,A10,3X,1PE12.4)') ispec,spcsym(ispec),clewis(ispec)
             END DO
-    
+
             WRITE(ncrept,*)
             WRITE(ncrept,*)'End of transport data'
             WRITE(ncrept,*)'---------------------'
             WRITE(ncrept,*)
             WRITE(ncrept,9000)cldash
-    
+
         END IF
-  
+
 !       =======================================================================
-  
+
     END IF
 !   MIXTURE AVERAGED TRANSPORT
 
@@ -815,11 +813,11 @@ SUBROUTINE indata
     call radcin
 
     IF(flradn) THEN
-  
+
 !       =======================================================================
-  
+
         IF(iproc == 0) THEN
-    
+
 !           REPORT THE RADIATION DATA
 !           =========================
             WRITE(ncrept,*)
@@ -832,11 +830,11 @@ SUBROUTINE indata
                 WRITE(ncrept,'(5(1PE15.7))')(akprad(icp,ispec),icp=1,5)
                 WRITE(ncrept,'(5(1PE15.7))')(akprad(icp,ispec), icp=6,nkprad(ispec))
             END DO
-    
+
             WRITE(ncrept,*)
             WRITE(ncrept,*)'Reference ambient temperature:'
             WRITE(ncrept,'(1PE15.7)')trefrn
-    
+
             WRITE(ncrept,*)
             WRITE(ncrept,*)'Planck mean absorption coefficients:'
             DO ispec = 1, nsprad
@@ -847,17 +845,17 @@ SUBROUTINE indata
                 jspec = nsprid(ispec)
                 WRITE(ncrept,'(I6,5X,A10,1PE15.7)')jspec,spcsym(jspec),fornow
             END DO
-    
+
             WRITE(ncrept,*)
             WRITE(ncrept,*)'End of radiation data'
             WRITE(ncrept,*)'---------------------'
             WRITE(ncrept,*)
             WRITE(ncrept,9000)cldash
-    
+
         END IF
-  
+
 !       =======================================================================
-  
+
     END IF
 
 !   =========================================================================
@@ -874,12 +872,12 @@ SUBROUTINE indata
 
 !   STATISTICS ON ONE PROCESSOR ONLY
     IF(iproc == 0) THEN
-  
+
 !       INITIALISE THE STATISTICS FILE
         OPEN(UNIT=ncstat,FILE=fnstat,STATUS='REPLACE',FORM='FORMATTED')
         ENDFILE(ncstat)
         CLOSE(ncstat)
-  
+
     END IF
 
 !   ZERO THE STATISTICS STORAGE COUNTER
@@ -950,14 +948,14 @@ SUBROUTINE indata
 !   ---------------------------------
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_WRITE))
+                    ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE))
 
     call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_vrun, 1, s3d_000, "real(8)", OPS_WRITE))
+                    ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE))
 
     call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_wrun, 1, s3d_000, "real(8)", OPS_WRITE))
- 
+                    ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE))
+
 !   -------------------------------------------------------------------------
 
 !   INITIAL TURBULENCE GENERATOR
@@ -970,16 +968,16 @@ SUBROUTINE indata
     IF(inturb == 2) THEN
         rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_store4, 1, s3d_000, "real(8)", OPS_READ))
+                        ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(kind=8)", OPS_READ))
 
         call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_vrun, 1, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_store5, 1, s3d_000, "real(8)", OPS_READ))
+                        ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_store5, 1, s3d_000, "real(kind=8)", OPS_READ))
 
         call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_wrun, 1, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_store6, 1, s3d_000, "real(8)", OPS_READ))
+                        ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_store6, 1, s3d_000, "real(kind=8)", OPS_READ))
 
     END IF
 
@@ -989,16 +987,16 @@ SUBROUTINE indata
 !   --------------------------------
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     call ops_par_loop(maths_kernel_eqF, "A = A + var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_INC), &
-                    ops_arg_gbl(urin, 1, "real(8)", OPS_READ))
+                    ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                    ops_arg_gbl(urin, 1, "real(kind=8)", OPS_READ))
 
     call ops_par_loop(maths_kernel_eqF, "A = A + var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_vrun, 1, s3d_000, "real(8)", OPS_INC), &
-                    ops_arg_gbl(vrin, 1, "real(8)", OPS_READ))
+                    ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                    ops_arg_gbl(vrin, 1, "real(kind=8)", OPS_READ))
 
     call ops_par_loop(maths_kernel_eqF, "A = A + var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_wrun, 1, s3d_000, "real(8)", OPS_INC), &
-                    ops_arg_gbl(wrin, 1, "real(8)", OPS_READ))
+                    ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                    ops_arg_gbl(wrin, 1, "real(kind=8)", OPS_READ))
 
 !   =========================================================================
 
@@ -1011,10 +1009,10 @@ SUBROUTINE indata
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     DO ispec = 1,nspec
         call ops_par_loop(maths_kernel_eqE, "A = var(indx)", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_gbl(yrin, nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ))
-    
+                        ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_gbl(yrin, nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+
     END DO
 
 !   PRE-INITIALISE PRESSURE AND TEMPERATURE TO DEFAULT VALUES
@@ -1022,12 +1020,12 @@ SUBROUTINE indata
 !   BIGGER SIZE ARRAYS
     rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
     call ops_par_loop(maths_kernel_eqD, "A = var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_WRITE), &
-                    ops_arg_gbl(prin, 1, "real(8)", OPS_READ))
+                    ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_gbl(prin, 1, "real(kind=8)", OPS_READ))
 
     call ops_par_loop(maths_kernel_eqD, "A = var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_WRITE), &
-                    ops_arg_gbl(trin, 1, "real(8)", OPS_READ))
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_gbl(trin, 1, "real(kind=8)", OPS_READ))
 
 !   INITIAL DENSITY
 !   ---------------
@@ -1042,20 +1040,20 @@ SUBROUTINE indata
 !   -----------------------
     erin = zero
     DO ispec = 1,nspec
-  
+
 !       TEMPERATURE INTERVAL INDEX
         itint = 1
         DO WHILE (trin > tinthi(itint,ispec) .and. itint < ntint(ispec))
             itint = itint + 1
         END DO
- 
+
         fornow = amasch(ncpoly(itint,ispec),itint,ispec)
         DO icp = ncpom1(itint,ispec),1,-1
             fornow = fornow*trin + amasch(icp,itint,ispec)
         END DO
         fornow = amasch(ncenth(itint,ispec),itint,ispec) + fornow*trin
         erin = erin + fornow*yrin(ispec)
-  
+
     END DO
     fornow = urin*urin + vrin*vrin + wrin*wrin
     erin = erin - rtin + half*fornow
@@ -1065,12 +1063,12 @@ SUBROUTINE indata
 !   INITIAL FLAME GENERATOR
 !   -----------------------
     IF(inflam == 1) THEN
-  
+
 !       GENERATE AN INITIAL THERMOCHEMICAL FIELD
 !       TEMPERATURE, PRESSURE AND MASS FRACTIONS
 !       MODIFY VELOCITIES AS REQUIRED
         call flamin
-  
+
     END IF
 
 !   -------------------------------------------------------------------------
@@ -1081,30 +1079,30 @@ SUBROUTINE indata
 !   INITIALISE TO ZERO
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_WRITE))
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_WRITE))
 
 
 !   MIXTURE GAS CONSTANT
     DO ispec = 1,nspec
         rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(maths_kernel_eqK, "A = A + var(indx)*B", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_INC), &
-                        ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ))
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                        ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(rgspec, nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
 
     END DO
 
 !   DENSITY
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     call ops_par_loop(maths_kernel_eqV, "A = A*B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ))
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ))
 
     call ops_par_loop(maths_kernel_eqU, "A = B/C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_drun, 1, s3d_000, "real(8)", OPS_WRITE), &
-                    ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ))
+                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ))
 
 !                                                           STORE1 = T*MIX RG
 !   -------------------------------------------------------------------------
@@ -1117,63 +1115,63 @@ SUBROUTINE indata
     rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
     DO iindex = 1,nintmx
         call ops_par_loop(set_zero_kernel_int, "set_zero", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(4)", OPS_WRITE))
+                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_WRITE))
     END DO
 
     DO ispec = 1, nspec
 !       SET THE TEMPERATURE INDEX
         iindex = 1 + (ispec-1)/nspimx
-        ipower = ispec - (iindex-1)*nspimx - 1        
+        ipower = ispec - (iindex-1)*nspimx - 1
 
         call ops_par_loop(maths_kernel_eqBO, "INTERNAL ENERGY FIELD", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(4)", OPS_RW), &
-                    ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
-                    ops_arg_gbl(ntint, nspcmx, "integer(4)", OPS_READ), &
-                    ops_arg_gbl(ipower, 1, "integer(4)", OPS_READ), &
-                    ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ))
+                    ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_RW), &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(ntint, nspcmx, "integer(kind=4)", OPS_READ), &
+                    ops_arg_gbl(ipower, 1, "integer(kind=4)", OPS_READ), &
+                    ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
     END DO
 
 !   PRE-INITIALISE INTERNAL ENERGY TO ZERO
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_WRITE))
+                    ops_arg_dat(d_erun, 1, s3d_000, "real(kind=8)", OPS_WRITE))
 
 !   INITIALISE INTERNAL ENERGY
     DO ispec = 1,nspec
-  
+
 !       TEMPERATURE INTERVAL INDEXING
         iindex = 1 + (ispec-1)/nspimx
         ipower = ispec - (iindex-1)*nspimx - 1
         icoef2 = ntbase**ipower
         icoef1 = icoef2*ntbase
-  
+
 !       USE THERMOCHEMICAL DATA
         rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(maths_kernel_eqBP, "INITIALISE INTERNAL ENERGY", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_INC), &
-                        ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(4)", OPS_READ), &
-                        ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(amasch, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer(4)", OPS_READ), &
-                        ops_arg_gbl(ncpom1, ntinmx*nspcmx, "integer(4)", OPS_READ), &
-                        ops_arg_gbl(ncenth, ntinmx*nspcmx, "integer(4)", OPS_READ), &
-                        ops_arg_gbl(ipower, 1, "integer(4)", OPS_READ), &
-                        ops_arg_gbl(icoef1, 1, "integer(4)", OPS_READ), &
-                        ops_arg_gbl(icoef2, 1, "integer(4)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ))
+                        ops_arg_dat(d_erun, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_READ), &
+                        ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(amasch, ncofmx*ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(ncpom1, ntinmx*nspcmx, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(ncenth, ntinmx*nspcmx, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(ipower, 1, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(icoef1, 1, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(icoef2, 1, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
 
     END DO
 
 !   FINALISE INTERNAL ENERGY
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     call ops_par_loop(maths_kernel_eqAU, "A = A - B + half*(C*C+D*D+E*E)", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_INC), &
-                    ops_arg_dat(d_store1, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_vrun, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_wrun, 1, s3d_000, "real(8)", OPS_READ))
+                    ops_arg_dat(d_erun, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_READ))
 
 !                                                            ALL STORES CLEAR
 !   =========================================================================
@@ -1182,26 +1180,26 @@ SUBROUTINE indata
 !   ======================================
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     call ops_par_loop(maths_kernel_eqV, "A = A*B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_dat(d_drun, 1, s3d_000, "real(8)", OPS_READ))
+                    ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ))
 
     call ops_par_loop(maths_kernel_eqV, "A = A*B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_vrun, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_dat(d_drun, 1, s3d_000, "real(8)", OPS_READ))
+                    ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ))
 
     call ops_par_loop(maths_kernel_eqV, "A = A*B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_wrun, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_dat(d_drun, 1, s3d_000, "real(8)", OPS_READ))
+                    ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ))
 
     call ops_par_loop(maths_kernel_eqV, "A = A*B", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_dat(d_drun, 1, s3d_000, "real(8)", OPS_READ))
+                    ops_arg_dat(d_erun, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ))
 
     DO ispec = 1,nspec
         rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(maths_kernel_eqV, "A = B*A", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(8)", OPS_RW), &
-                        ops_arg_dat(d_drun, 1, s3d_000, "real(8)", OPS_READ))
+                        ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_RW), &
+                        ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ))
 
     END DO
 
@@ -1213,17 +1211,17 @@ SUBROUTINE indata
 !   COLD START SWITCH
 !   -----------------
     IF(ncdmpi == 1) THEN
-  
+
 !       =======================================================================
 !       WARM START
 !       =======================================================================
-  
+
 !       -----------------------------------------------------------------------
 !       THIS BLOCK MAY BE MODIFIED AS REQUIRED
 !       TO BLEND INITIAL VELOCITY AND SCALAR FIELDS
 !       WITH PREVIOUSLY DUMPED DATA
 !       -----------------------------------------------------------------------
-  
+
 !       RESTART FROM FULL DUMP FILES
 !       ----------------------------
 !       READ THE DATA FROM DUMP INPUT FILE 1
@@ -1240,20 +1238,20 @@ SUBROUTINE indata
             OPEN(UNIT=ncdmpi,FILE=fndmpo(2),STATUS='OLD', FORM='UNFORMATTED')
             READ(ncdmpi)nxdmax,nydmax,nzdmax,ndspec, drun,urun,vrun,wrun,erun,yrun,  &
                 etime,tstep,errold,errldr
-    
+
 !           SIZE ERROR CHECK
             IF(nxdmax /= nxsize)WRITE(6,*)'Dump input size error: x'
             IF(nydmax /= nysize)WRITE(6,*)'Dump input size error: y'
             IF(nzdmax /= nzsize)WRITE(6,*)'Dump input size error: z'
             IF(ndspec /= nspec)WRITE(6,*)'Dump input size error: species'
-    
+
             CLOSE(ncdmpi)
         ELSE
-    
+
 !           FORMATTED DUMP INPUT
             OPEN(UNIT=ncdmpi,FILE=fndmpo(1),STATUS='OLD',FORM='FORMATTED')
             READ(ncdmpi,*)nxdmax,nydmax,nzdmax,ndspec
-    
+
 !           SIZE ERROR CHECK
             IF(nxdmax /= nxsize)WRITE(6,*)'Dump input size error: x'
             IF(nydmax /= nysize)WRITE(6,*)'Dump input size error: y'
@@ -1273,9 +1271,9 @@ SUBROUTINE indata
                     END DO
                 END DO
             END DO
-    
+
             READ(ncdmpi,*)etime,tstep,errold,errldr
-    
+
             CLOSE(ncdmpi)
         END IF
 #else
@@ -1306,31 +1304,31 @@ SUBROUTINE indata
 
     rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
     call ops_par_loop(maths_kernel_eqD, "A = var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                    ops_arg_gbl(drin, 1, "real(8)", OPS_READ))
-    
-    call ops_par_loop(maths_kernel_eqD, "A = var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                    ops_arg_gbl(durin, 1, "real(8)", OPS_READ))
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_gbl(drin, 1, "real(kind=8)", OPS_READ))
 
     call ops_par_loop(maths_kernel_eqD, "A = var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                    ops_arg_gbl(dvrin, 1, "real(8)", OPS_READ))
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_gbl(durin, 1, "real(kind=8)", OPS_READ))
 
     call ops_par_loop(maths_kernel_eqD, "A = var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                    ops_arg_gbl(dwrin, 1, "real(8)", OPS_READ))
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_gbl(dvrin, 1, "real(kind=8)", OPS_READ))
 
     call ops_par_loop(maths_kernel_eqD, "A = var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                    ops_arg_gbl(derin, 1, "real(8)", OPS_READ))
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_gbl(dwrin, 1, "real(kind=8)", OPS_READ))
+
+    call ops_par_loop(maths_kernel_eqD, "A = var", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_gbl(derin, 1, "real(kind=8)", OPS_READ))
 
     rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
     DO ispec = 1,nspec
         call ops_par_loop(maths_kernel_eqE, "A = var(indx)", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_gbl(dyrin, nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ))
+                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_gbl(dyrin, nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
 
     END DO
 
@@ -1339,30 +1337,30 @@ SUBROUTINE indata
 !   THEREFORE ONLY THE STANDARD DOMAIN SIZE IS INITIALISED
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                    ops_arg_dat(d_drun, 1, s3d_000, "real(8)", OPS_READ))
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ))
 
     call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                    ops_arg_dat(d_urun, 1, s3d_000, "real(8)", OPS_READ))
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_READ))
 
     call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                    ops_arg_dat(d_vrun, 1, s3d_000, "real(8)", OPS_READ))
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_READ))
 
     call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                    ops_arg_dat(d_wrun, 1, s3d_000, "real(8)", OPS_READ))
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_READ))
 
     call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_WRITE), &
-                    ops_arg_dat(d_erun, 1, s3d_000, "real(8)", OPS_READ))
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_erun, 1, s3d_000, "real(kind=8)", OPS_READ))
 
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     DO ispec = 1,nspec
         call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(8)", OPS_READ))
+                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_READ))
 
     END DO
 
@@ -1406,12 +1404,12 @@ SUBROUTINE indata
 !   CLOSE THE REPORT FILE
 !   =====================
     IF(iproc == 0) THEN
-  
+
         WRITE(ncrept,9000)cldash
         WRITE(ncrept,*)
-  
+
         CLOSE(ncrept)
-  
+
     END IF
 
 !   ==========================================================================

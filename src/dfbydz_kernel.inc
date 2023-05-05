@@ -2,7 +2,7 @@ SUBROUTINE dfbydz_kernel_null(fderiv)
     use data_types
     implicit none
 
-    real(8), dimension(1) :: fderiv
+    real(kind=8), dimension(1) :: fderiv
 
     fderiv(OPS_ACC1(0,0,0)) = 0.0_8
 
@@ -12,13 +12,13 @@ SUBROUTINE dfbydz_kernel_main(functn, fderiv, nzglbl, nendzl, nendzr, nbound, id
     use data_types
     implicit none
 
-    real(8), dimension(1), intent(in) :: functn
-    real(8), dimension(1) :: fderiv
-    real(8) :: fdiffa, fdiffb, fdiffc, fdiffd, fdiffe
+    real(kind=8), dimension(1), intent(in) :: functn
+    real(kind=8), dimension(1) :: fderiv
+    real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd, fdiffe
 
-    integer(4), intent(in) :: nzglbl, nendzl, nendzr, nbound
-    integer(4), dimension(3), intent(in) :: idx
-    integer(4) :: kc, kstart, kfinis
+    integer(kind=4), intent(in) :: nzglbl, nendzl, nendzr, nbound
+    integer(kind=4), dimension(3), intent(in) :: idx
+    integer(kind=4) :: kc, kstart, kfinis
 
     kstart = 1
     kfinis = nzglbl

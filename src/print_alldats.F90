@@ -38,7 +38,7 @@ SUBROUTINE print_alldats()
     fname = 'test_dir/store6_timestep'//citime//pnxres
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
     call ops_fetch_dat_hdf5_file(d_store6, trim(fname))
-    
+
     fname = 'test_dir/divm_timestep'//citime//pnxres
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
     call ops_fetch_dat_hdf5_file(d_divm, trim(fname))
@@ -58,7 +58,7 @@ SUBROUTINE print_alldats()
     fname = 'test_dir/wd1x_timestep'//citime//pnxres
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
     call ops_fetch_dat_hdf5_file(d_wd1x, trim(fname))
-    
+
     fname = 'test_dir/pd1x_timestep'//citime//pnxres
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
     call ops_fetch_dat_hdf5_file(d_pd1x, trim(fname))
@@ -216,7 +216,7 @@ SUBROUTINE print_alldats()
     fname = 'test_dir/urhs_timestep'//citime//pnxres
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
     call ops_fetch_dat_hdf5_file(d_urhs, trim(fname))
-    
+
     fname = 'test_dir/vrhs_timestep'//citime//pnxres
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
     call ops_fetch_dat_hdf5_file(d_vrhs, trim(fname))
@@ -255,7 +255,7 @@ SUBROUTINE print_alldats()
 
     fname = 'test_dir/store7_timestep'//citime//pnxres
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
-    call ops_fetch_dat_hdf5_file(d_store7, trim(fname))    
+    call ops_fetch_dat_hdf5_file(d_store7, trim(fname))
 
     fname = 'test_dir/wmomix_timestep'//citime//pnxres
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
@@ -467,7 +467,7 @@ SUBROUTINE print_alldats()
 
     fname = 'test_dir/sydtxr_timestep'//citime//pnxres
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
-    call ops_fetch_dat_hdf5_file(d_sydtxr, trim(fname))    
+    call ops_fetch_dat_hdf5_file(d_sydtxr, trim(fname))
 
     fname = 'test_dir/sorpxl_timestep'//citime//pnxres
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
@@ -476,7 +476,7 @@ SUBROUTINE print_alldats()
     fname = 'test_dir/sorpxr_timestep'//citime//pnxres
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
     call ops_fetch_dat_hdf5_file(d_sorpxr, trim(fname))
-    
+
     fname = 'test_dir/bcl1yl_timestep'//citime//pnxres
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
     call ops_fetch_dat_hdf5_file(d_bcl1yl, trim(fname))

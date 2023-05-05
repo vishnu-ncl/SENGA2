@@ -1,5 +1,5 @@
 PROGRAM senga2
- 
+
     use OPS_Fortran_Reference
     use OPS_Fortran_hdf5_Declarations
     use OPS_CONSTANTS
@@ -74,7 +74,7 @@ PROGRAM senga2
 !   LOCAL DATA
 !   ==========
 !   RSC 29-DEC-2006 UPDATED INDEXING
-    INTEGER :: jtime,jrkstp
+    integer(kind=4) :: jtime,jrkstp
 
 !   profiling
     real(kind=c_double) :: startTime = 0
@@ -92,7 +92,7 @@ PROGRAM senga2
     call ops_set_soa(0)
 
     call ops_timers ( startTime )
-    
+
     call ops_data_init
 
 !   PARALLEL DOMAIN DECOMPOSITION
@@ -103,6 +103,9 @@ PROGRAM senga2
 
 !   RECORD INITIAL CONDITIONS
     call output
+
+!   INITIALISE CONSTANT USED IN KERNEL FUNCTIONS FOR CUDA
+    call cuda_const_init
 
 !   =========================================================================
 
@@ -137,6 +140,7 @@ PROGRAM senga2
 #ifdef OPS_LAZY
     call ops_execute()
 #endif
+
 !           EVALUATE RHS FOR VELOCITIES
             call rhsvel
 
@@ -198,9 +202,9 @@ PROGRAM senga2
 !       ===================
         call output
 
-        IF (itime == 2100) THEN
-            call print_dats()
-        END IF
+!        IF (itime == 2100) THEN
+!            call print_dats()
+!        END IF
 
 !       =======================================================================
     END DO

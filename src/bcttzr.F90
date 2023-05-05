@@ -1,5 +1,5 @@
 SUBROUTINE bcttzr
- 
+
     use OPS_Fortran_Reference
 
     use OPS_CONSTANTS
@@ -40,7 +40,7 @@ SUBROUTINE bcttzr
 
 !   LOCAL DATA
 !   ==========
-    integer(4) :: rangexyz(6)
+    integer(kind=4) :: rangexyz(6)
 
 !   BEGIN
 !   =====
@@ -54,9 +54,9 @@ SUBROUTINE bcttzr
 !   EVALUATE AND RETURN STRTZR,DTDTZR
     rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
     call ops_par_loop(bcdt_kernel_zdir, "bcdt_kernel_zdir", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE),  &
-                    ops_arg_dat(d_dtdtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
-                    ops_arg_gbl(trin, 1, "real(8)", OPS_READ))
+                    ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE),  &
+                    ops_arg_dat(d_dtdtzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_gbl(trin, 1, "real(kind=8)", OPS_READ))
 
 !   =========================================================================
 
@@ -64,9 +64,9 @@ SUBROUTINE bcttzr
     IF(nsbczr == nsbcw2) THEN
         rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
         call ops_par_loop(bcdt_kernel_zdir_eqA, "bcdt_kernel_zdir", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE),  &
-                        ops_arg_dat(d_dtdtzr, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
-                        ops_arg_gbl(rzrprm, nbcprr, "real(8)", OPS_READ))
+                        ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE),  &
+                        ops_arg_dat(d_dtdtzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_gbl(rzrprm, nbcprr, "real(kind=8)", OPS_READ))
 
     END IF
 

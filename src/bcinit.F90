@@ -1,5 +1,5 @@
 SUBROUTINE bcinit
- 
+
 !   *************************************************************************
 
 !   BCINIT
@@ -343,45 +343,45 @@ END IF
 
 !     LOCAL BC SUPPORT
 IF(nsbcxl == nsbci2)THEN
-  
+
   fxlcnv = .true.
   fxltrb = .false.
-  
+
 END IF
 
 !     X-RIGHT
 IF(nsbcxr == nsbci2)THEN
-  
+
   fxrcnv = .true.
-  
+
 END IF
 
 !     Y-LEFT
 IF(nsbcyl == nsbci2)THEN
-  
+
   fylcnv = .true.
-  
+
 END IF
 
 !     Y-RIGHT
 IF(nsbcyr == nsbci2)THEN
-  
+
   fyrcnv = .true.
-  
+
 END IF
 
 !     Z-LEFT
 IF(nsbczl == nsbci2)THEN
-  
+
   fzlcnv = .true.
-  
+
 END IF
 
 !     Z-RIGHT
 IF(nsbczr == nsbci2)THEN
-  
+
   fzrcnv = .true.
-  
+
 END IF
 
 !     RSC/TDD BUG FIX BCTIXL
@@ -409,51 +409,51 @@ END IF
 
 !     LOCAL BC SUPPORT
 IF(nsbcxl == nsbci3)THEN
-  
+
   fxlcnv = .true.
   fxlvsn = .true.
   fxltrb = .false.
-  
+
 END IF
 
 !     X-RIGHT
 IF(nsbcxr == nsbci3)THEN
-  
+
   fxrcnv = .true.
   fxrvsn = .true.
-  
+
 END IF
 
 !     Y-LEFT
 IF(nsbcyl == nsbci3)THEN
-  
+
   fylcnv = .true.
   fylvsn = .true.
-  
+
 END IF
 
 !     Y-RIGHT
 IF(nsbcyr == nsbci3)THEN
-  
+
   fyrcnv = .true.
   fyrvsn = .true.
-  
+
 END IF
 
 !     Z-LEFT
 IF(nsbczl == nsbci3)THEN
-  
+
   fzlcnv = .true.
   fzlvsn = .true.
-  
+
 END IF
 
 !     Z-RIGHT
 IF(nsbczr == nsbci3)THEN
-  
+
   fzrcnv = .true.
   fzrvsn = .true.
-  
+
 END IF
 
 !     =========================================================================
@@ -464,7 +464,7 @@ END IF
 
 !     X-LEFT
 IF(nsbcxl == nsbcw1)THEN
-  
+
   fxlcnv = .true.
   fxlcon = .true.
   fxladb = .true.
@@ -473,12 +473,12 @@ IF(nsbcxl == nsbcw1)THEN
 !       RSC 19-MAY-2015
   fxlcnw = .true.
   fxldfw = .true.
-  
+
 END IF
 
 !     X-RIGHT
 IF(nsbcxr == nsbcw1)THEN
-  
+
   fxrcnv = .true.
   fxrcon = .true.
   fxradb = .true.
@@ -487,12 +487,12 @@ IF(nsbcxr == nsbcw1)THEN
 !       RSC 19-MAY-2015
   fxrcnw = .true.
   fxrdfw = .true.
-  
+
 END IF
 
 !     Y-LEFT
 IF(nsbcyl == nsbcw1)THEN
-  
+
   fylcnv = .true.
   fylcon = .true.
   fyladb = .true.
@@ -501,12 +501,12 @@ IF(nsbcyl == nsbcw1)THEN
 !       RSC 19-MAY-2015
   fylcnw = .true.
   fyldfw = .true.
-  
+
 END IF
 
 !     Y-RIGHT
 IF(nsbcyr == nsbcw1)THEN
-  
+
   fyrcnv = .true.
   fyrcon = .true.
   fyradb = .true.
@@ -515,12 +515,12 @@ IF(nsbcyr == nsbcw1)THEN
 !       RSC 19-MAY-2015
   fyrcnw = .true.
   fyrdfw = .true.
-  
+
 END IF
 
 !     Z-LEFT
 IF(nsbczl == nsbcw1)THEN
-  
+
   fzlcnv = .true.
   fzlcon = .true.
   fzladb = .true.
@@ -529,12 +529,12 @@ IF(nsbczl == nsbcw1)THEN
 !       RSC 19-MAY-2015
   fzlcnw = .true.
   fzldfw = .true.
-  
+
 END IF
 
 !     Z-RIGHT
 IF(nsbczr == nsbcw1)THEN
-  
+
   fzrcnv = .true.
   fzrcon = .true.
   fzradb = .true.
@@ -543,7 +543,7 @@ IF(nsbczr == nsbcw1)THEN
 !       RSC 19-MAY-2015
   fzrcnw = .true.
   fzrdfw = .true.
-  
+
 END IF
 
 !     =========================================================================
@@ -554,74 +554,74 @@ END IF
 
 !     X-LEFT
 IF(nsbcxl == nsbcw2)THEN
-  
+
   fxlcnv = .true.
 !       RSC 23-JAN-2015
   fxldif = .true.
 !       RSC 19-MAY-2015
   fxladw = .true.
   fxldfw = .true.
-  
+
 END IF
 
 !     X-RIGHT
 IF(nsbcxr == nsbcw2)THEN
-  
+
   fxrcnv = .true.
 !       RSC 23-JAN-2015
   fxrdif = .true.
 !       RSC 19-MAY-2015
   fxradw = .true.
   fxrdfw = .true.
-  
+
 END IF
 
 !     Y-LEFT
 IF(nsbcyl == nsbcw2)THEN
-  
+
   fylcnv = .true.
 !       RSC 23-JAN-2015
   fyrdif = .true.
 !       RSC 19-MAY-2015
   fyladw = .true.
   fyldfw = .true.
-  
+
 END IF
 
 !     Y-RIGHT
 IF(nsbcyr == nsbcw2)THEN
-  
+
   fyrcnv = .true.
 !       RSC 23-JAN-2015
   fyrdif = .true.
 !       RSC 19-MAY-2015
   fyradw = .true.
   fyrdfw = .true.
-  
+
 END IF
 
 !     Z-LEFT
 IF(nsbczl == nsbcw2)THEN
-  
+
   fzlcnv = .true.
 !       RSC 23-JAN-2015
   fzldif = .true.
 !       RSC 19-MAY-2015
   fzladw = .true.
   fzldfw = .true.
-  
+
 END IF
 
 !     Z-RIGHT
 IF(nsbczr == nsbcw2)THEN
-  
+
   fzrcnv = .true.
 !       RSC 23-JAN-2015
   fzrdif = .true.
 !       RSC 19-MAY-2015
   fzradw = .true.
   fzrdfw = .true.
-  
+
 END IF
 
 !     =========================================================================

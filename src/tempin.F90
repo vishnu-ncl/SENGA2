@@ -1,5 +1,5 @@
 SUBROUTINE tempin
- 
+
     use OPS_Fortran_Reference
 
     use OPS_CONSTANTS
@@ -37,16 +37,16 @@ SUBROUTINE tempin
 
 !   PARAMETERS
 !   ==========
-    real(8), parameter :: toltmp=0.00010_8
-    real(8), parameter :: tininc=50.0_8
-    real(8), parameter :: tlimlo=200.0_8
-    real(8), parameter :: tlimhi=3000.0_8
+    real(kind=8), parameter :: toltmp=0.00010_8
+    real(kind=8), parameter :: tininc=50.0_8
+    real(kind=8), parameter :: tlimlo=200.0_8
+    real(kind=8), parameter :: tlimhi=3000.0_8
 
 !   LOCAL DATA
 !   ==========
-    integer(4) :: rangexyz(6)
-    real(8) :: tempor,tupper,tlower
-    integer(4) :: iindex,ipower,ispec
+    integer(kind=4) :: rangexyz(6)
+    real(kind=8) :: tempor,tupper,tlower
+    integer(kind=4) :: iindex,ipower,ispec
     logical :: fnconv
 
 !   BEGIN
@@ -85,35 +85,35 @@ SUBROUTINE tempin
 
     DO ispec = 1,nspcmx
         call ops_par_loop(copy_kernel_sdim_to_mdim, "A_multidim(ispec) = B", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_yrhs_mdim, 2, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ))
+                        ops_arg_dat(d_yrhs_mdim, 2, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
     END DO
 
     call ops_par_loop(tempin_kernel_main, "tempin kernel", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_yrhs_mdim, 2, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_gbl(amascp, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
-                    ops_arg_gbl(amasct, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
-                    ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer(4)", OPS_READ), &
-                    ops_arg_gbl(ncenth, ntinmx*nspcmx, "integer(4)", OPS_READ), &
-                    ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
-                    ops_arg_gbl(ntint, nspcmx, "integer(4)", OPS_READ), &
-                    ops_arg_gbl(trin, 1, "real(8)", OPS_READ), &
-                    ops_arg_gbl(nspec, 1, "integer(4)", OPS_READ), &
-                    ops_arg_gbl(iproc, 1, "integer(4)", OPS_READ), &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_yrhs_mdim, 2, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(amascp, ncofmx*ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(amasct, ncofmx*ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer(kind=4)", OPS_READ), &
+                    ops_arg_gbl(ncenth, ntinmx*nspcmx, "integer(kind=4)", OPS_READ), &
+                    ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(ntint, nspcmx, "integer(kind=4)", OPS_READ), &
+                    ops_arg_gbl(trin, 1, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(nspec, 1, "integer(kind=4)", OPS_READ), &
+                    ops_arg_gbl(iproc, 1, "integer(kind=4)", OPS_READ), &
                     ops_arg_idx())
 
     DO ispec = 1,nspcmx
         call ops_par_loop(copy_kernel_mdim_to_sdim, "A = B_multidim(ispec)", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_yrhs_mdim, 2, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ))
+                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_yrhs_mdim, 2, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
     END DO
 
 !   CONSTRUCT THE TEMPERATURE INTERVAL INDEX
@@ -121,13 +121,13 @@ SUBROUTINE tempin
 !   EVALUATE MIXTURE SPECIFIC HEAT CP
     DO iindex = 1,nintmx
         call ops_par_loop(set_zero_kernel_int, "set_zero", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(4)", OPS_WRITE))
+                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_WRITE))
     END DO
 
     call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_WRITE))
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_WRITE))
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_WRITE))
 
     DO ispec = 1, nspec
 !       SET THE TEMPERATURE INTERVAL INDEX
@@ -135,35 +135,35 @@ SUBROUTINE tempin
         ipower = ispec - (iindex-1)*nspimx - 1
 
         call ops_par_loop(temper_kernel_eqE, "temper eq E", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_RW), &
-                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(4)", OPS_RW), &
-                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(amascp, ncofmx*ntinmx*nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer(4)", OPS_READ), &
-                        ops_arg_gbl(ncpom1, ntinmx*nspcmx, "integer(4)", OPS_READ), &
-                        ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ntint, nspcmx, "integer(4)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ), &
-                        ops_arg_gbl(ipower, 1, "integer(4)", OPS_READ))
+                        ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_RW), &
+                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(amascp, ncofmx*ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(ncpoly, ntinmx*nspcmx, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(ncpom1, ntinmx*nspcmx, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(ntint, nspcmx, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(ipower, 1, "integer(kind=4)", OPS_READ))
 
 !       EVALUATE (DENSITY TIMES) MIXTURE GAS CONSTANT FOR PRESSURE
         call ops_par_loop(temper_kernel_eqC, "temper eq C", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_RW), &
-                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(8)", OPS_READ), &
-                        ops_arg_gbl(rgspec, nspcmx, "real(8)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ))
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(rgspec, nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
 
     END DO
 
 !   =========================================================================
 
     call ops_par_loop(temper_kernel_eqF, "temper eq F", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_transp, 1, s3d_000, "real(8)", OPS_RW), &
-                    ops_arg_dat(d_prun, 1, s3d_000, "real(8)", OPS_WRITE), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000, "real(8)", OPS_READ))
+                    ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ))
 
 !   =========================================================================
 

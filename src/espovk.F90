@@ -1,5 +1,5 @@
 FUNCTION espovk(waveno)
- 
+
 !   *************************************************************************
 
 !   ESPOVK
@@ -24,17 +24,17 @@ FUNCTION espovk(waveno)
 
 !   EXTERNAL FUNCTION
 !   =================
-    real(8), intent(IN)             :: waveno
-    real(8) :: espect
+    real(kind=8), intent(IN)             :: waveno
+    real(kind=8) :: espect
     EXTERNAL espect
 
 !   PARAMETER
 !   =========
-    real(8), parameter :: zero = 0.0_8
+    real(kind=8), parameter :: zero = 0.0_8
 
 !   FUNCTION
 !   ========
-    real(8) :: espovk
+    real(kind=8) :: espovk
 
 !   ARGUMENT
 !   ========

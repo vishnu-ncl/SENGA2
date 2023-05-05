@@ -1,5 +1,5 @@
 SUBROUTINE bcytyr
- 
+
     use OPS_Fortran_Reference
 
     use OPS_CONSTANTS
@@ -39,8 +39,8 @@ SUBROUTINE bcytyr
 
 !   LOCAL DATA
 !   ==========
-    integer(4) :: ispec
-    integer(4) :: rangexyz(6)    
+    integer(kind=4) :: ispec
+    integer(kind=4) :: rangexyz(6)
 
 !   BEGIN
 !   =====
@@ -55,10 +55,10 @@ SUBROUTINE bcytyr
     DO ispec = 1,nspec
         rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
         call ops_par_loop(bcyt_kernel_ydir, "bcyt_kernel_ydir", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(d_stryyr(ispec), 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
-                            ops_arg_dat(d_dydtyr(ispec), 1, s3d_000_strid3d_xz, "real(8)", OPS_WRITE), &
-                            ops_arg_gbl(yrin, nspcmx, "real(8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer(4)", OPS_READ))
+                            ops_arg_dat(d_stryyr(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_dydtyr(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_gbl(yrin, nspcmx, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
     END DO
 
 !   =========================================================================

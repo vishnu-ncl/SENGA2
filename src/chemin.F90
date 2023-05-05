@@ -8,7 +8,7 @@ SUBROUTINE chemin
     use data_types
     use com_senga
     use com_ops_senga
- 
+
 !   *************************************************************************
 
 !   CHEMIN
@@ -37,13 +37,13 @@ SUBROUTINE chemin
 
 !   LOCAL DATA
 !   ==========
-    real(8) :: pcount
-    real(8) :: giblet
-    INTEGER :: ispec,istep,ibody,ilind,itroe,isrif
-    INTEGER :: jspec,jstep,jbody,jlind,jtroe,jsrif
-    INTEGER :: itint,icp
-    INTEGER :: ncount
-    INTEGER :: iroot
+    real(kind=8) :: pcount
+    real(kind=8) :: giblet
+    integer(kind=4) :: ispec,istep,ibody,ilind,itroe,isrif
+    integer(kind=4) :: jspec,jstep,jbody,jlind,jtroe,jsrif
+    integer(kind=4) :: itint,icp
+    integer(kind=4) :: ncount
+    integer(kind=4) :: iroot
 
 
 !   BEGIN
@@ -145,33 +145,33 @@ SUBROUTINE chemin
 
 !   LOWEST-RANKED PROCESSOR
     IF(iproc == 0)THEN
-  
+
 !       =======================================================================
-  
+
 !       READ THE CHEMICAL DATA FILE
 !       ---------------------------
 !       -----------------------------------------------------------------------
-  
+
         OPEN(UNIT=ncchem,FILE=fnchem,STATUS='OLD',FORM='FORMATTED')
-  
+
 !           -----------------------------------------------------------------------
-  
+
 !           READ AND IGNORE THE HEADER
             READ(ncchem,*)
             READ(ncchem,*)
             READ(ncchem,*)
             READ(ncchem,*)
             READ(ncchem,*)
-  
+
 !           -----------------------------------------------------------------------
-  
+
 !           SPECIES LIST
             READ(ncchem,*)
             READ(ncchem,'(I5)')nspec
             DO jspec = 1, nspec
                 READ(ncchem,'(I5,3X,A)')ispec,spcsym(ispec)
             END DO
-  
+
 !           SPECIES DATA
             READ(ncchem,*)
             READ(ncchem,*)prefgb
@@ -187,18 +187,18 @@ SUBROUTINE chemin
                     END DO
                 END DO
             END DO
-  
+
 !           -----------------------------------------------------------------------
-  
+
 !           STEP RATE DATA
             READ(ncchem,*)
             READ(ncchem,'(I5)')nstep
             DO jstep = 1, nstep
                 READ(ncchem,'(I5,3(1PE12.4))')istep,(rparam(icp,istep),icp=1,3)
             END DO
-  
+
 !           -----------------------------------------------------------------------
-  
+
 !           STEP SPECIES-LIST
             READ(ncchem,*)
             DO jstep = 1,nstep
@@ -207,7 +207,7 @@ SUBROUTINE chemin
                     READ(ncchem,'(2I5,I8)')istep,ispec,nsspec(ispec,istep)
                 END DO
             END DO
-  
+
 !           STEP REACTANT-LIST
             READ(ncchem,*)
             DO jstep = 1,nstep
@@ -216,7 +216,7 @@ SUBROUTINE chemin
                     READ(ncchem,'(2I5,I8)')istep,ispec,nrspec(ispec,istep)
                 END DO
             END DO
-  
+
 !           STEP PRODUCT-LIST
             READ(ncchem,*)
             DO jstep = 1,nstep
@@ -225,7 +225,7 @@ SUBROUTINE chemin
                     READ(ncchem,'(2I5,I8)')istep,ispec,npspec(ispec,istep)
                 END DO
             END DO
-  
+
 !           STEP REACTANT COEFFICIENT-LIST
             READ(ncchem,*)
             DO jstep = 1,nstep
@@ -235,7 +235,7 @@ SUBROUTINE chemin
                                 nrcpec(ispec,istep),crspec(ispec,istep)
                 END DO
             END DO
-  
+
 !           STEP PRODUCT COEFFICIENT-LIST
             READ(ncchem,*)
             DO jstep = 1,nstep
@@ -245,7 +245,7 @@ SUBROUTINE chemin
                                 npcpec(ispec,istep),cpspec(ispec,istep)
                 END DO
             END DO
-  
+
 !           SPECIES DELTA-LIST
             READ(ncchem,*)
             DO jstep = 1,nstep
@@ -253,16 +253,16 @@ SUBROUTINE chemin
                     READ(ncchem,'(2I5,F5.1)')istep,ispec,diffmu(ispec,istep)
                 END DO
             END DO
-  
+
 !           -----------------------------------------------------------------------
-  
+
 !           THIRD-BODY LIST
             READ(ncchem,*)
             READ(ncchem,'(I5)')nbody
             DO jbody = 1, nbody
                 READ(ncchem,'(I5,3X,A)')ibody,bdysym(ibody)
             END DO
-  
+
 !           THIRD-BODY STEP-LIST
             READ(ncchem,*)
             IF(nbody > 0) THEN
@@ -270,7 +270,7 @@ SUBROUTINE chemin
                     READ(ncchem,'(I5,I8)')istep,mblist(istep)
                 END DO
             END IF
-  
+
 !           THIRD-BODY EFFICIENCIES
             READ(ncchem,*)
             DO jbody = 1,nbody
@@ -278,9 +278,9 @@ SUBROUTINE chemin
                     READ(ncchem,'(2I5,1PE12.4)')ibody,ispec,effy3b(ispec,ibody)
                 END DO
             END DO
-  
+
 !           -----------------------------------------------------------------------
-  
+
 !           GIBBS STEP-LIST
             READ(ncchem,*)
             READ(ncchem,'(I5)')ngibb
@@ -289,9 +289,9 @@ SUBROUTINE chemin
                     READ(ncchem,'(I5,I8)')istep,mglist(istep)
                 END DO
             END IF
-  
+
 !           -----------------------------------------------------------------------
-  
+
 !           LINDEMANN STEP-LIST
             READ(ncchem,*)
             READ(ncchem,'(I5)')nlind
@@ -300,15 +300,15 @@ SUBROUTINE chemin
                     READ(ncchem,'(I5,I8)')istep,mllist(istep)
                 END DO
             END IF
-  
+
 !           LINDEMANN STEP RATE DATA
             READ(ncchem,*)
             DO jlind = 1, nlind
                 READ(ncchem,'(I5,4(1PE12.4))')ilind,(rclind(icp,ilind),icp=1,4)
             END DO
-  
+
 !           -----------------------------------------------------------------------
-  
+
 !           TROE FORM STEP-LIST
             READ(ncchem,*)
             READ(ncchem,'(I5)')ntroe
@@ -317,16 +317,16 @@ SUBROUTINE chemin
                     READ(ncchem,'(I5,I8)')istep,mtlist(istep)
                 END DO
             END IF
-  
+
 !           TROE FORM STEP RATE DATA
             READ(ncchem,*)
             DO jtroe = 1, ntroe
                 READ(ncchem,'(I5,6(1PE12.4))')itroe,(rctroe(icp,itroe),icp=1,6)
                 READ(ncchem,'(I5,6(1PE12.4))')itroe,(rctroe(icp,itroe),icp=7,12)
             END DO
-  
+
 !           -----------------------------------------------------------------------
-  
+
 !           SRI FORM STEP-LIST
             READ(ncchem,*)
             READ(ncchem,'(I5)')nsrif
@@ -335,29 +335,29 @@ SUBROUTINE chemin
                     READ(ncchem,'(I5,I8)')istep,mslist(istep)
                 END DO
             END IF
-  
+
 !           SRI FORM STEP RATE DATA
             READ(ncchem,*)
             DO jsrif = 1, nsrif
                 READ(ncchem,'(I5,3(1PE12.4))')isrif,(rcsrif(icp,isrif),icp=1,3)
                 READ(ncchem,'(I5,5(1PE12.4))')isrif,(rcsrif(icp,isrif),icp=4,8)
             END DO
-  
+
 !           -----------------------------------------------------------------------
-  
+
 !           READ END-OF-FILE LINE
             READ(ncchem,*)
         CLOSE(ncchem)
-  
+
 !       =======================================================================
-  
+
 !       COMPRESS THE DATA
 !       -----------------
-  
+
 !       NO OF SPECIES
         ncount = 1
         parray(ncount) = REAL(nspec,kind=8)
-  
+
 !       SPECIES STRINGS
 !       RSC 29-DEC-2006 BUG FIX INDEXING
         DO ispec = 1,nspec
@@ -366,7 +366,7 @@ SUBROUTINE chemin
                 parray(ncount) = REAL(ICHAR(spcsym(ispec)(icp:icp)),kind=8)
             END DO
         END DO
-  
+
 !       SPECIES DATA
         ncount = ncount + 1
         parray(ncount) = prefgb
@@ -390,13 +390,13 @@ SUBROUTINE chemin
                 END DO
             END DO
         END DO
-  
+
 !       -----------------------------------------------------------------------
-  
+
 !       NO OF STEPS
         ncount = ncount + 1
         parray(ncount) = REAL(nstep,kind=8)
-  
+
 !       STEP RATE DATA
         DO istep = 1, nstep
             DO icp = 1,3
@@ -404,7 +404,7 @@ SUBROUTINE chemin
                 parray(ncount) = rparam(icp,istep)
             END DO
         END DO
-  
+
 !       STEP SPECIES-LIST
         DO istep = 1,nstep
             ncount = ncount + 1
@@ -414,7 +414,7 @@ SUBROUTINE chemin
                 parray(ncount) = REAL(nsspec(ispec,istep),kind=8)
             END DO
         END DO
-  
+
 !       STEP REACTANT-LIST
         DO istep = 1,nstep
             ncount = ncount + 1
@@ -424,7 +424,7 @@ SUBROUTINE chemin
                 parray(ncount) = REAL(nrspec(ispec,istep),kind=8)
             END DO
         END DO
-  
+
 !       STEP PRODUCT-LIST
         DO istep = 1,nstep
             ncount = ncount + 1
@@ -434,7 +434,7 @@ SUBROUTINE chemin
                 parray(ncount) = REAL(npspec(ispec,istep),kind=8)
             END DO
         END DO
-  
+
 !       STEP REACTANT COEFFICIENT-LIST
         DO istep = 1,nstep
             ncount = ncount + 1
@@ -446,7 +446,7 @@ SUBROUTINE chemin
                 parray(ncount) = crspec(ispec,istep)
             END DO
         END DO
-  
+
 !       STEP PRODUCT COEFFICIENT-LIST
         DO istep = 1,nstep
             ncount = ncount + 1
@@ -458,7 +458,7 @@ SUBROUTINE chemin
                 parray(ncount) = cpspec(ispec,istep)
             END DO
         END DO
-  
+
 !       SPECIES DELTA-LIST
         DO istep = 1,nstep
             DO ispec = 1, nsslen(istep)
@@ -466,9 +466,9 @@ SUBROUTINE chemin
                 parray(ncount) = diffmu(ispec,istep)
             END DO
         END DO
-  
+
 !       -----------------------------------------------------------------------
-  
+
 !       THIRD-BODY LIST
         ncount = ncount + 1
         parray(ncount) = REAL(nbody,kind=8)
@@ -478,7 +478,7 @@ SUBROUTINE chemin
                 parray(ncount) = REAL(ICHAR(bdysym(ibody)(icp:icp)),kind=8)
             END DO
         END DO
-  
+
 !       THIRD-BODY STEP-LIST
         IF(nbody > 0)THEN
             DO istep = 1, nstep
@@ -486,7 +486,7 @@ SUBROUTINE chemin
                 parray(ncount) = REAL(mblist(istep),kind=8)
             END DO
         END IF
-  
+
 !       THIRD-BODY EFFICIENCIES
         DO ibody = 1, nbody
             DO ispec = 1,nspec
@@ -494,9 +494,9 @@ SUBROUTINE chemin
                 parray(ncount) = effy3b(ispec,ibody)
             END DO
         END DO
-  
+
 !       -----------------------------------------------------------------------
-  
+
 !       GIBBS STEP-LIST
         ncount = ncount + 1
         parray(ncount) = REAL(ngibb,kind=8)
@@ -506,9 +506,9 @@ SUBROUTINE chemin
                 parray(ncount) = REAL(mglist(istep),kind=8)
             END DO
         END IF
-  
+
 !       -----------------------------------------------------------------------
-  
+
 !       LINDEMANN STEP-LIST
         ncount = ncount + 1
         parray(ncount) = REAL(nlind,kind=8)
@@ -518,7 +518,7 @@ SUBROUTINE chemin
                 parray(ncount) = REAL(mllist(istep),kind=8)
             END DO
         END IF
-  
+
 !       LINDEMANN STEP RATE DATA
         DO ilind = 1, nlind
             DO icp = 1,4
@@ -526,9 +526,9 @@ SUBROUTINE chemin
                 parray(ncount) = rclind(icp,ilind)
             END DO
         END DO
-  
+
 !       -----------------------------------------------------------------------
-  
+
 !       TROE FORM STEP-LIST
         ncount = ncount + 1
         parray(ncount) = REAL(ntroe,kind=8)
@@ -538,7 +538,7 @@ SUBROUTINE chemin
                 parray(ncount) = REAL(mtlist(istep),kind=8)
             END DO
         END IF
-  
+
 !       TROE FORM STEP RATE DATA
         DO itroe = 1, ntroe
             DO icp = 1,12
@@ -546,9 +546,9 @@ SUBROUTINE chemin
                 parray(ncount) = rctroe(icp,itroe)
             END DO
         END DO
-  
+
 !       -----------------------------------------------------------------------
-  
+
 !       SRI FORM STEP-LIST
         ncount = ncount + 1
         parray(ncount) = REAL(nsrif,kind=8)
@@ -558,7 +558,7 @@ SUBROUTINE chemin
                 parray(ncount) = REAL(mslist(istep),kind=8)
             END DO
         END IF
-  
+
 !       SRI FORM STEP RATE DATA
         DO isrif = 1, nsrif
             DO icp = 1,8
@@ -566,12 +566,12 @@ SUBROUTINE chemin
                 parray(ncount) = rcsrif(icp,isrif)
             END DO
         END DO
-  
+
 !       -----------------------------------------------------------------------
-  
+
 !       BROADCAST COUNTER
         pcount = REAL(ncount,kind=8)
-  
+
 !       CHECK BROADCAST COUNTER AGAINST BROADCAST ARRAY SIZE
         IF(ncount > nparay) THEN
             WRITE(ncrept,*)
@@ -579,9 +579,9 @@ SUBROUTINE chemin
             WRITE(ncrept,*)'Actual: ',ncount,'; Available: ',nparay
             WRITE(ncrept,*)
         END IF
-  
+
 !       =======================================================================
-  
+
     END IF
 
 !   =========================================================================
@@ -599,16 +599,16 @@ SUBROUTINE chemin
 
 !   NOT THE LOWEST-RANKED PROCESSOR
     IF(iproc /= 0) THEN
-  
+
 !       =======================================================================
-  
+
 !       UNCOMPRESS THE DATA
 !       -------------------
-  
+
 !       NO OF SPECIES
         ncount = 1
         nspec = nint(parray(ncount))
-  
+
 !       SPECIES STRINGS
 !       RSC 29-DEC-2006 BUG FIX INDEXING
         DO ispec = 1,nspec
@@ -617,7 +617,7 @@ SUBROUTINE chemin
                 spcsym(ispec)(icp:icp) = CHAR(nint(parray(ncount)))
             END DO
         END DO
-  
+
 !       SPECIES DATA
         ncount = ncount + 1
         prefgb = parray(ncount)
@@ -641,13 +641,13 @@ SUBROUTINE chemin
                 END DO
             END DO
         END DO
-  
+
 !       -----------------------------------------------------------------------
-  
+
 !       NO OF STEPS
         ncount = ncount + 1
         nstep = nint(parray(ncount))
-  
+
 !       STEP RATE DATA
         DO istep = 1, nstep
             DO icp = 1,3
@@ -655,7 +655,7 @@ SUBROUTINE chemin
                 rparam(icp,istep) = parray(ncount)
             END DO
         END DO
-  
+
 !       STEP SPECIES-LIST
         DO istep = 1,nstep
             ncount = ncount + 1
@@ -665,7 +665,7 @@ SUBROUTINE chemin
                 nsspec(ispec,istep) = nint(parray(ncount))
             END DO
         END DO
-  
+
 !       STEP REACTANT-LIST
         DO istep = 1,nstep
             ncount = ncount + 1
@@ -675,7 +675,7 @@ SUBROUTINE chemin
                 nrspec(ispec,istep) = nint(parray(ncount))
             END DO
         END DO
-  
+
 !       STEP PRODUCT-LIST
         DO istep = 1,nstep
             ncount = ncount + 1
@@ -685,7 +685,7 @@ SUBROUTINE chemin
                 npspec(ispec,istep) = nint(parray(ncount))
             END DO
         END DO
-  
+
 !       STEP REACTANT COEFFICIENT-LIST
         DO istep = 1,nstep
             ncount = ncount + 1
@@ -697,7 +697,7 @@ SUBROUTINE chemin
                 crspec(ispec,istep) = parray(ncount)
             END DO
         END DO
-  
+
 !       STEP PRODUCT COEFFICIENT-LIST
         DO istep = 1,nstep
             ncount = ncount + 1
@@ -709,7 +709,7 @@ SUBROUTINE chemin
                 cpspec(ispec,istep) = parray(ncount)
             END DO
         END DO
-  
+
 !       SPECIES DELTA-LIST
         DO istep = 1,nstep
             DO ispec = 1, nsslen(istep)
@@ -717,9 +717,9 @@ SUBROUTINE chemin
                 diffmu(ispec,istep) = parray(ncount)
             END DO
         END DO
-  
+
 !       -----------------------------------------------------------------------
-  
+
 !       THIRD-BODY LIST
         ncount = ncount + 1
         nbody = nint(parray(ncount))
@@ -729,7 +729,7 @@ SUBROUTINE chemin
                 bdysym(ibody)(icp:icp) = CHAR(nint(parray(ncount)))
             END DO
         END DO
-  
+
 !       THIRD-BODY STEP-LIST
         IF(nbody > 0) THEN
             DO istep = 1, nstep
@@ -737,7 +737,7 @@ SUBROUTINE chemin
                 mblist(istep) = nint(parray(ncount))
             END DO
         END IF
-  
+
 !       THIRD-BODY EFFICIENCIES
         DO ibody = 1, nbody
             DO ispec = 1,nspec
@@ -745,9 +745,9 @@ SUBROUTINE chemin
                 effy3b(ispec,ibody) = parray(ncount)
             END DO
         END DO
-  
+
 !       -----------------------------------------------------------------------
-  
+
 !       GIBBS STEP-LIST
         ncount = ncount + 1
         ngibb = nint(parray(ncount))
@@ -757,9 +757,9 @@ SUBROUTINE chemin
                 mglist(istep) = nint(parray(ncount))
             END DO
         END IF
-  
+
 !       -----------------------------------------------------------------------
-  
+
 !       LINDEMANN STEP-LIST
         ncount = ncount + 1
         nlind = nint(parray(ncount))
@@ -769,7 +769,7 @@ SUBROUTINE chemin
                 mllist(istep) = nint(parray(ncount))
             END DO
         END IF
-  
+
 !       LINDEMANN STEP RATE DATA
         DO ilind = 1, nlind
             DO icp = 1,4
@@ -777,9 +777,9 @@ SUBROUTINE chemin
                 rclind(icp,ilind) = parray(ncount)
             END DO
         END DO
-  
+
 !       -----------------------------------------------------------------------
-  
+
 !       TROE FORM STEP-LIST
         ncount = ncount + 1
         ntroe = nint(parray(ncount))
@@ -789,7 +789,7 @@ SUBROUTINE chemin
                 mtlist(istep) = nint(parray(ncount))
             END DO
         END IF
-  
+
 !       TROE FORM STEP RATE DATA
         DO itroe = 1, ntroe
             DO icp = 1,12
@@ -797,9 +797,9 @@ SUBROUTINE chemin
                 rctroe(icp,itroe) = parray(ncount)
             END DO
         END DO
-  
+
 !       -----------------------------------------------------------------------
-  
+
 !       SRI FORM STEP-LIST
         ncount = ncount + 1
         nsrif = nint(parray(ncount))
@@ -809,7 +809,7 @@ SUBROUTINE chemin
                 mslist(istep) = nint(parray(ncount))
             END DO
         END IF
-  
+
 !       SRI FORM STEP RATE DATA
         DO isrif = 1, nsrif
             DO icp = 1,8
@@ -817,9 +817,9 @@ SUBROUTINE chemin
                 rcsrif(icp,isrif) = parray(ncount)
             END DO
         END DO
-  
+
 !       =======================================================================
-  
+
     END IF
 
 !   =========================================================================
@@ -978,30 +978,20 @@ SUBROUTINE chemin
 !   -------------------------------------------------------------------------
 
 !   TRANSPORT COEFFICIENTS
-    alamdc = 0.0000258_8
     rlamda = 0.70_8
-    tlamda = 298.0_8
-    prantl = 0.70_8
 
 !   CONDUCTIVITY COEFFICIENT
     alamda = alamdc*EXP(-rlamda*LOG(tlamda))
 
 !   =========================================================================
 
-#ifdef OPS_WITH_CUDAFOR
-    alamdc_opsconstant = alamdc
-    rlamda_opsconstant = rlamda
-    tlamda_opsconstant = tlamda
-    prantl_opsconstant = prantl
+    call ops_decl_const("alamdc", 1, "real(kind=8)", alamdc)
+    call ops_decl_const("rlamda", 1, "real(kind=8)", rlamda)
+    call ops_decl_const("tlamda", 1, "real(kind=8)", tlamda)
+    call ops_decl_const("prantl", 1, "real(kind=8)", prantl)
 
-    alamda_opsconstant = alamda
-#endif
+    call ops_decl_const("alamda", 1, "real(kind=8)", alamda)
 
-    call ops_decl_const("alamdc", 1, "real(8)", alamdc)
-    call ops_decl_const("rlamda", 1, "real(8)", rlamda)
-    call ops_decl_const("tlamda", 1, "real(8)", tlamda)
-    call ops_decl_const("prantl", 1, "real(8)", prantl)
-
-    call ops_decl_const("alamda", 1, "real(8)", alamda)
+!   =========================================================================
 
 END SUBROUTINE chemin

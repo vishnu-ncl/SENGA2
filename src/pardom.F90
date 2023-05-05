@@ -1,5 +1,5 @@
 SUBROUTINE pardom
- 
+
     use OPS_Fortran_Reference
 
     use OPS_CONSTANTS
@@ -38,8 +38,8 @@ SUBROUTINE pardom
 
 !   LOCAL DATA
 !   ===========
-    INTEGER :: nextra
-    INTEGER :: icproc
+    integer(kind=4) :: nextra
+    integer(kind=4) :: icproc
 
 !   BEGIN
 !   =====

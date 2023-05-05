@@ -8,7 +8,7 @@ SUBROUTINE bcutzl
     use data_types
     use com_senga
     use com_ops_senga
- 
+
 !   *************************************************************************
 
 !   BCUTZL
@@ -39,7 +39,7 @@ SUBROUTINE bcutzl
 
 !   LOCAL DATA
 !   ==========
-    integer(4) :: rangexyz(6)
+    integer(kind=4) :: rangexyz(6)
 
 !   BEGIN
 !   =====
@@ -53,15 +53,15 @@ SUBROUTINE bcutzl
 !   CONSTANT W-VELOCITY
 !   PARAMETER I1=1, R1=W-VELOCITY
     IF(nzlprm(1) == 1) THEN
-        rangexyz = [1,nxglbl,1,nyglbl,1,1]  
+        rangexyz = [1,nxglbl,1,nyglbl,1,1]
         call ops_par_loop(bcut_kernel_zdir, "bcut_kernel_zdir", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE),  &
-                        ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE),  &
-                        ops_arg_dat(d_dudtzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
-                        ops_arg_dat(d_dvdtzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE),  &
-                        ops_arg_dat(d_dwdtzl, 1, s3d_000_strid3d_xy, "real(8)", OPS_WRITE), &
-                        ops_arg_gbl(rzlprm, nbcprr, "real(8)", OPS_READ))
+                        ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE),  &
+                        ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE),  &
+                        ops_arg_dat(d_dudtzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_dvdtzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE),  &
+                        ops_arg_dat(d_dwdtzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_gbl(rzlprm, nbcprr, "real(kind=8)", OPS_READ))
 
     END IF
 

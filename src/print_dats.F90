@@ -8,7 +8,7 @@ SUBROUTINE print_dats()
     use com_senga
     use com_ops_senga
 
-    integer(4) :: ispec
+    integer(kind=4) :: ispec
     CHARACTER (LEN=60) :: fname
     CHARACTER (LEN=3) :: pnxres
     PARAMETER(pnxres = '.h5')
@@ -23,7 +23,7 @@ SUBROUTINE print_dats()
     fname = 'test_dir/urhs_timestep'//citime//pnxres
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
     call ops_fetch_dat_hdf5_file(d_urhs, trim(fname))
-    
+
     fname = 'test_dir/vrhs_timestep'//citime//pnxres
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
     call ops_fetch_dat_hdf5_file(d_vrhs, trim(fname))
