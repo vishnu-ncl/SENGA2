@@ -100,7 +100,6 @@ PROGRAM senga2
 
 !   INITIALISE THE DATA
     call indata
-    print *, "Processor number: ", iproc
 
 !   RECORD INITIAL CONDITIONS
     call output
