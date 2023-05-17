@@ -3,25 +3,25 @@
 #  Makes a library of the FFT routines
 #
 #
-h5pfc -O3 -Wall -c fftgen.f
-h5pfc -O3 -Wall -c fftgin.f
-#
-h5pfc -O3 -Wall -c fftfr2.f
-h5pfc -O3 -Wall -c fftfr3.f
-h5pfc -O3 -Wall -c fftfr5.f
-h5pfc -O3 -Wall -c fftfr7.f
-h5pfc -O3 -Wall -c fftfra.f
-#
-h5pfc -O3 -Wall -c fftnr2.f
-h5pfc -O3 -Wall -c fftnr3.f
-h5pfc -O3 -Wall -c fftnr5.f
-h5pfc -O3 -Wall -c fftnr7.f
-h5pfc -O3 -Wall -c fftnra.f
-#
-h5pfc -O3 -Wall -c fftp1d.f
-h5pfc -O3 -Wall -c fftpin.f
-h5pfc -O3 -Wall -c fftf1d.f
-#
+mpif90 -O3 -Wall -c fftgen.f
+mpif90 -O3 -Wall -c fftgin.f
+
+mpif90 -O3 -Wall -c fftfr2.f
+mpif90 -O3 -Wall -c fftfr3.f
+mpif90 -O3 -Wall -c fftfr5.f
+mpif90 -O3 -Wall -c fftfr7.f
+mpif90 -O3 -Wall -c fftfra.f
+
+mpif90 -O3 -Wall -c fftnr2.f
+mpif90 -O3 -Wall -c fftnr3.f
+mpif90 -O3 -Wall -c fftnr5.f
+mpif90 -O3 -Wall -c fftnr7.f
+mpif90 -O3 -Wall -c fftnra.f
+
+mpif90 -O3 -Wall -c fftp1d.f
+mpif90 -O3 -Wall -c fftpin.f
+mpif90 -O3 -Wall -c fftf1d.f
+
 ar rcsv fftlib.a \
         fftgen.o fftgin.o \
         fftfr2.o fftfr3.o fftfr5.o fftfr7.o fftfra.o \
