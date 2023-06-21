@@ -811,6 +811,7 @@ SUBROUTINE indata
 
 !   =========================================================================
 
+    print *, "Indata 1: Processor number : ",iproc
 !   RADIATION TREATMENT
     call radcin
 
@@ -859,6 +860,7 @@ SUBROUTINE indata
 !       =======================================================================
   
     END IF
+    print *, "Indata 2: Processor number : ",iproc
 
 !   =========================================================================
 
@@ -885,6 +887,7 @@ SUBROUTINE indata
 !   ZERO THE STATISTICS STORAGE COUNTER
     itstat = 0
 
+    print *, "Indata 3: Processor number : ",iproc
 !   =========================================================================
 
 !   CHECK AND INITIALISE DUMP FILES
@@ -914,6 +917,7 @@ SUBROUTINE indata
     call create_h5dump_files
 #endif
 
+    print *, "Indata 4: Processor number : ",iproc
 
 !   ==========================================================================
 
@@ -940,6 +944,7 @@ SUBROUTINE indata
 !   =====================
     call bcinit
 
+    print *, "Indata 5: Processor number : ",iproc
 
 !   =========================================================================
 
@@ -1030,6 +1035,7 @@ SUBROUTINE indata
                     ops_arg_dat(d_trun, 1, s3d_000, "real(8)", OPS_WRITE), &
                     ops_arg_gbl(trin, 1, "real(8)", OPS_READ))
 
+    print *, "Indata 6: Processor number : ",iproc
 
 !   INITIAL DENSITY
 !   ---------------
@@ -1197,6 +1203,7 @@ SUBROUTINE indata
 
     END DO
 
+    print *, "Indata 7: Processor number : ",iproc
 
 !   =========================================================================
 
@@ -1360,6 +1367,7 @@ SUBROUTINE indata
 
     END DO
 
+    print *, "Indata 8: Processor number : ",iproc
 
 !   =========================================================================
 
@@ -1368,6 +1376,7 @@ SUBROUTINE indata
 !   INITIALISES TIME-STEPPING RHS TERMS TO BIGGER DOMAIN SIZE
     call parfer
 
+    print *, "Indata 9: Processor number : ",iproc
 
 !   =========================================================================
 
@@ -1375,6 +1384,7 @@ SUBROUTINE indata
 !   ================================
     call tempin
 
+    print *, "Indata 10: Processor number : ",iproc
 
 !   =========================================================================
 
@@ -1382,6 +1392,7 @@ SUBROUTINE indata
 !   ========================
     call dtinit
 
+    print *, "Indata 11: Processor number : ",iproc
 
 !   ==========================================================================
 
@@ -1389,6 +1400,7 @@ SUBROUTINE indata
 !   ==================================
     call dfinit
 
+    print *, "Indata 12: Processor number : ",iproc
 
 !   ==========================================================================
 
