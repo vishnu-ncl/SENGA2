@@ -1,5 +1,4 @@
 MODULE OPS_CONSTANTS
-use data_types
 #ifdef OPS_WITH_CUDAFOR
     use cudafor
 

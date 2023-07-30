@@ -20,7 +20,6 @@ FUNCTION espovk(waveno)
 !   AT THE GIVEN WAVENUMBER MAGNITUDE
 
 !   *************************************************************************
-    use data_types
 
 !   EXTERNAL FUNCTION
 !   =================

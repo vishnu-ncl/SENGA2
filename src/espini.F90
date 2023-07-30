@@ -5,7 +5,6 @@ SUBROUTINE espini
     use OPS_CONSTANTS
     use, intrinsic :: ISO_C_BINDING
 
-    use data_types
     use com_espect
     use com_senga
     use com_ops_senga

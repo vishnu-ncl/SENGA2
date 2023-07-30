@@ -22,7 +22,6 @@ SUBROUTINE chkarr(array,  &
 !   CHECKS UNIFORMITY OF THE SPECIFIED ARRAY
 
 !   *************************************************************************
-    use data_types
 
 !   ARGUMENTS
 !   =========

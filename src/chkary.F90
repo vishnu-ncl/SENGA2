@@ -23,7 +23,6 @@ SUBROUTINE chkary(array,  &
 !   VARIANT FOR SPECIES ARRAYS
 
 !   *************************************************************************
-    use data_types
 
 !   ARGUMENTS
 !   =========

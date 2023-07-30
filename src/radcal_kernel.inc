@@ -1,5 +1,5 @@
 SUBROUTINE radcal_kernel_addradiation(erhs,trun,store1)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -15,7 +15,7 @@ SUBROUTINE radcal_kernel_addradiation(erhs,trun,store1)
 END SUBROUTINE radcal_kernel_addradiation
 
 SUBROUTINE radcal_kernel_addspecies(store1,yrhs,trun,store2,rgspec,ispec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: store1
@@ -31,7 +31,7 @@ SUBROUTINE radcal_kernel_addspecies(store1,yrhs,trun,store2,rgspec,ispec)
 END SUBROUTINE radcal_kernel_addspecies
 
 SUBROUTINE radcal_kernel_meancoef(store2,trun,akprad,nkprad,nkprm1,jspec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: store2

@@ -1,5 +1,5 @@
 SUBROUTINE d2fdx2_kernel_main(functn, fderiv, nxglbl, nendxl, nendxr, nbound, idx)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn

@@ -1,5 +1,5 @@
 SUBROUTINE adaptt_kernel_err_eval(err_arr, run_arr, ernrm, ertot)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: err_arr, run_arr
@@ -13,7 +13,7 @@ SUBROUTINE adaptt_kernel_err_eval(err_arr, run_arr, ernrm, ertot)
 END SUBROUTINE adaptt_kernel_err_eval
 
 SUBROUTINE adaptt_kernel_err_eval_MD(err_arr, run_arr, ernrm, ispec, ertot)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: err_arr, run_arr

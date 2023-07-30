@@ -10,8 +10,6 @@ MODULE com_senga
 !     NZSIZE MUST BE >= NZGLBL/NZPROC
 !     WITH AN EXTRA ALLOWANCE FOR ANY REMAINDER
 
-    use data_types
-
 !     GLOBAL GRID SIZE
 integer(kind=4) :: nxglbl,nyglbl,nzglbl
 PARAMETER(nxglbl=2000, nyglbl=1, nzglbl=1)

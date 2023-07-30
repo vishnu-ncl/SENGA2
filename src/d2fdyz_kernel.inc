@@ -1,5 +1,5 @@
 SUBROUTINE d2fdyz_kernel_null(fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: fderiv
@@ -10,7 +10,7 @@ END SUBROUTINE d2fdyz_kernel_null
 
 !a3d_p055_m055_mixed_yz
 SUBROUTINE d2fdyz_kernel_interior(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -37,7 +37,7 @@ END SUBROUTINE d2fdyz_kernel_interior
 
 !a3d_p042_m002_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_ydir_4th_onesided(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -70,7 +70,7 @@ END SUBROUTINE d2fdyz_kernel_lh_ydir_4th_onesided
 
 !a3d_p032_m012_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_ydir_4th_mixed(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -102,7 +102,7 @@ END SUBROUTINE d2fdyz_kernel_lh_ydir_4th_mixed
 
 !a3d_p022_m022_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_ydir_4th_centred(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -121,7 +121,7 @@ END SUBROUTINE d2fdyz_kernel_lh_ydir_4th_centred
 
 !a3d_p033_m033_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_ydir_6th_centred(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -143,7 +143,7 @@ END SUBROUTINE d2fdyz_kernel_lh_ydir_6th_centred
 
 !a3d_p044_m044_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_ydir_8th_centred(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -167,7 +167,7 @@ END SUBROUTINE d2fdyz_kernel_lh_ydir_8th_centred
 
 !a3d_p044_m044_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_ydir_8th_centred(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -191,7 +191,7 @@ END SUBROUTINE d2fdyz_kernel_rh_ydir_8th_centred
 
 !a3d_p033_m033_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_ydir_6th_centred(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -213,7 +213,7 @@ END SUBROUTINE d2fdyz_kernel_rh_ydir_6th_centred
 
 !a3d_p022_m022_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_ydir_4th_centred(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -232,7 +232,7 @@ END SUBROUTINE d2fdyz_kernel_rh_ydir_4th_centred
 
 !a3d_p012_m032_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_ydir_4th_mixed(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -264,7 +264,7 @@ END SUBROUTINE d2fdyz_kernel_rh_ydir_4th_mixed
 
 !a3d_p002_m042_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_ydir_4th_onesided(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -296,7 +296,7 @@ END SUBROUTINE d2fdyz_kernel_rh_ydir_4th_onesided
 
 !a3d_p024_m020_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_zdir_4th_onesided(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -328,7 +328,7 @@ END SUBROUTINE d2fdyz_kernel_lh_zdir_4th_onesided
 
 !a3d_p023_m021_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_zdir_4th_mixed(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -360,7 +360,7 @@ END SUBROUTINE d2fdyz_kernel_lh_zdir_4th_mixed
 
 !a3d_p022_m022_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_zdir_4th_centred(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -379,7 +379,7 @@ END SUBROUTINE d2fdyz_kernel_lh_zdir_4th_centred
 
 !a3d_p033_m033_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_zdir_6th_centred(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -401,7 +401,7 @@ END SUBROUTINE d2fdyz_kernel_lh_zdir_6th_centred
 
 !a3d_p044_m044_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_zdir_8th_centred(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -425,7 +425,7 @@ END SUBROUTINE d2fdyz_kernel_lh_zdir_8th_centred
 
 !a3d_p044_p000_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqA(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -449,7 +449,7 @@ END SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqA
 
 !a3d_p033_m011_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqB(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -473,7 +473,7 @@ END SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqB
 
 !a3d_p043_m001_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqC(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -521,7 +521,7 @@ END SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqC
 
 !a3d_p034_m010_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqD(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -569,7 +569,7 @@ END SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqD
 
 !a3d_p024_m020_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqE(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -601,7 +601,7 @@ END SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqE
 
 !a3d_p023_m021_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqF(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -633,7 +633,7 @@ END SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqF
 
 !a3d_p042_m002_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqG(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -665,7 +665,7 @@ END SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqG
 
 !a3d_p032_m012_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqH(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -696,7 +696,7 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqH(functn, fderiv)
 END SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqH
 
 SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqI(functn, fderiv, idx)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -744,7 +744,7 @@ END SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqI
 
 !a3d_p004_m040_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqL(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -768,7 +768,7 @@ END SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqL
 
 !a3d_p010_m030_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqM(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -792,7 +792,7 @@ END SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqM
 
 !a3d_p003_m041_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqN(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -840,7 +840,7 @@ END SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqN
 
 !a3d_p014_m030_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqO(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -888,7 +888,7 @@ END SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqO
 
 !a3d_p024_m020_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqP(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -920,7 +920,7 @@ END SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqP
 
 !a3d_p023_m021_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqQ(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -952,7 +952,7 @@ END SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqQ
 
 !a3d_p002_m042_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqR(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -984,7 +984,7 @@ END SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqR
 
 !a3d_p012_m032_mixed_yz
 SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqS(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1015,7 +1015,7 @@ SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqS(functn, fderiv)
 END SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqS
 
 SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqT(functn, fderiv, nyglbl, idx)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1064,7 +1064,7 @@ END SUBROUTINE d2fdyz_kernel_lh_zdir_corner_eqT
 
 !a3d_p044_m044_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_zdir_8th_centred(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1088,7 +1088,7 @@ END SUBROUTINE d2fdyz_kernel_rh_zdir_8th_centred
 
 !a3d_p033_m033_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_zdir_6th_centred(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1110,7 +1110,7 @@ END SUBROUTINE d2fdyz_kernel_rh_zdir_6th_centred
 
 !a3d_p022_m022_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_zdir_4th_centred(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1129,7 +1129,7 @@ END SUBROUTINE d2fdyz_kernel_rh_zdir_4th_centred
 
 !a3d_p021_m023_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_zdir_4th_mixed(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1161,7 +1161,7 @@ END SUBROUTINE d2fdyz_kernel_rh_zdir_4th_mixed
 
 !a3d_p020_m024_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_zdir_4th_onesided(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1193,7 +1193,7 @@ END SUBROUTINE d2fdyz_kernel_rh_zdir_4th_onesided
 
 !a3d_p040_p004_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqA(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1217,7 +1217,7 @@ END SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqA
 
 !a3d_p030_m010_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqB(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1241,7 +1241,7 @@ END SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqB
 
 !a3d_p041_p003_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqC(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1289,7 +1289,7 @@ END SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqC
 
 !a3d_p030_m014_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqD(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1337,7 +1337,7 @@ END SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqD
 
 !a3d_p021_m023_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqE(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1369,7 +1369,7 @@ END SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqE
 
 !a3d_p020_m024_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqF(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1401,7 +1401,7 @@ END SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqF
 
 !a3d_p042_m002_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqG(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1433,7 +1433,7 @@ END SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqG
 
 !a3d_p032_m012_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqH(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1464,7 +1464,7 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqH(functn, fderiv)
 END SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqH
 
 SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqI(functn, fderiv, nzglbl, idx)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1513,7 +1513,7 @@ END SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqI
 
 !a3d_p000_m044_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqL(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1537,7 +1537,7 @@ END SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqL
 
 !a3d_p011_m033_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqM(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1561,7 +1561,7 @@ END SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqM
 
 !a3d_p001_m043_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqN(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1609,7 +1609,7 @@ END SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqN
 
 !a3d_p010_m034_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqO(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1657,7 +1657,7 @@ END SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqO
 
 !a3d_p021_m023_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqP(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1689,7 +1689,7 @@ END SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqP
 
 !a3d_p020_m024_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqQ(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1721,7 +1721,7 @@ END SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqQ
 
 !a3d_p002_m042_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqR(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1753,7 +1753,7 @@ END SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqR
 
 !a3d_p012_m032_mixed_yz
 SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqS(functn, fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1784,7 +1784,7 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqS(functn, fderiv)
 END SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqS
 
 SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqT(functn, fderiv, nyglbl, nzglbl, idx)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn
@@ -1832,7 +1832,7 @@ SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqT(functn, fderiv, nyglbl, nzglbl, idx)
 END SUBROUTINE d2fdyz_kernel_rh_zdir_corner_eqT
 
 SUBROUTINE d2fdyz_kernel_scaling(fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: fderiv

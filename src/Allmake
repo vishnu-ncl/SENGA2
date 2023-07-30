@@ -26,6 +26,6 @@ cd rndlib
 cd ..
 #
 rm senga2
-make
+#make
 #
 exit

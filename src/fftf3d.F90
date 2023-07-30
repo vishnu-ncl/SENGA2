@@ -23,7 +23,6 @@ SUBROUTINE fftf3d(carrre,carrim,nxphys,nyphys,nzphys,  &
 !   1) NUMERICAL RECIPES pp451-453
 
 !   *************************************************************************
-    use data_types
 
 !   PARAMETERS
 !   ==========

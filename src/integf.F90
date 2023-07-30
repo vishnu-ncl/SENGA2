@@ -25,7 +25,6 @@ SUBROUTINE integf(functn,argmin,argmax,answer)
 !   NUMERICAL RECIPES 1st Ed, CUP (1986), pp110-113
 
 !   *************************************************************************
-    use data_types
 
 !   PARAMETERS
 !   ==========

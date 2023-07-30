@@ -21,8 +21,6 @@ SUBROUTINE ardump(array,nxphys,nyphys,nzphys)
 
 !   *************************************************************************
 
-    use data_types
-
 !   ARGUMENTS
 !   =========
 

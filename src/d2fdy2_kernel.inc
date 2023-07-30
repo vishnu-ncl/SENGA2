@@ -1,5 +1,5 @@
 SUBROUTINE d2fdy2_kernel_null(fderiv)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: fderiv
@@ -9,7 +9,7 @@ SUBROUTINE d2fdy2_kernel_null(fderiv)
 END SUBROUTINE d2fdy2_kernel_null
 
 SUBROUTINE d2fdy2_kernel_main(functn, fderiv, nyglbl, nendyl, nendyr, nbound, idx)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1), intent(in) :: functn

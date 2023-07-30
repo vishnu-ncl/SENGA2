@@ -1,5 +1,5 @@
 SUBROUTINE heat_flux_kernel_thermal_fxlcnw(erhs,store1,store7,acbcxl)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -17,7 +17,7 @@ SUBROUTINE heat_flux_kernel_thermal_fxlcnw(erhs,store1,store7,acbcxl)
 END SUBROUTINE heat_flux_kernel_thermal_fxlcnw
 
 SUBROUTINE heat_flux_kernel_thermal_fxrcnw(erhs,store1,store7,acbcxr)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -35,7 +35,7 @@ SUBROUTINE heat_flux_kernel_thermal_fxrcnw(erhs,store1,store7,acbcxr)
 END SUBROUTINE heat_flux_kernel_thermal_fxrcnw
 
 SUBROUTINE heat_flux_kernel_thermal_fylcnw(erhs,store2,store7,acbcyl)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -53,7 +53,7 @@ SUBROUTINE heat_flux_kernel_thermal_fylcnw(erhs,store2,store7,acbcyl)
 END SUBROUTINE heat_flux_kernel_thermal_fylcnw
 
 SUBROUTINE heat_flux_kernel_thermal_fyrcnw(erhs,store2,store7,acbcyr)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -71,7 +71,7 @@ SUBROUTINE heat_flux_kernel_thermal_fyrcnw(erhs,store2,store7,acbcyr)
 END SUBROUTINE heat_flux_kernel_thermal_fyrcnw
 
 SUBROUTINE heat_flux_kernel_thermal_fzlcnw(erhs,store3,store7,acbczl)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -89,7 +89,7 @@ SUBROUTINE heat_flux_kernel_thermal_fzlcnw(erhs,store3,store7,acbczl)
 END SUBROUTINE heat_flux_kernel_thermal_fzlcnw
 
 SUBROUTINE heat_flux_kernel_thermal_fzrcnw(erhs,store3,store7,acbczr)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -107,7 +107,7 @@ SUBROUTINE heat_flux_kernel_thermal_fzrcnw(erhs,store3,store7,acbczr)
 END SUBROUTINE heat_flux_kernel_thermal_fzrcnw
 
 SUBROUTINE heat_flux_kernel_soret_fxlcnw(erhs,trun,tdrmix,store7,td1x,acbcxl,rgspec,ispec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -133,7 +133,7 @@ SUBROUTINE heat_flux_kernel_soret_fxlcnw(erhs,trun,tdrmix,store7,td1x,acbcxl,rgs
 END SUBROUTINE heat_flux_kernel_soret_fxlcnw
 
 SUBROUTINE heat_flux_kernel_soret_fxrcnw(erhs,trun,tdrmix,store7,td1x,acbcxr,rgspec,ispec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -159,7 +159,7 @@ SUBROUTINE heat_flux_kernel_soret_fxrcnw(erhs,trun,tdrmix,store7,td1x,acbcxr,rgs
 END SUBROUTINE heat_flux_kernel_soret_fxrcnw
 
 SUBROUTINE heat_flux_kernel_soret_fylcnw(erhs,trun,tdrmix,store7,td1y,acbcyl,rgspec,ispec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -185,7 +185,7 @@ SUBROUTINE heat_flux_kernel_soret_fylcnw(erhs,trun,tdrmix,store7,td1y,acbcyl,rgs
 END SUBROUTINE heat_flux_kernel_soret_fylcnw
 
 SUBROUTINE heat_flux_kernel_soret_fyrcnw(erhs,trun,tdrmix,store7,td1y,acbcyr,rgspec,ispec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -211,7 +211,7 @@ SUBROUTINE heat_flux_kernel_soret_fyrcnw(erhs,trun,tdrmix,store7,td1y,acbcyr,rgs
 END SUBROUTINE heat_flux_kernel_soret_fyrcnw
 
 SUBROUTINE heat_flux_kernel_soret_fzlcnw(erhs,trun,tdrmix,store7,td1z,acbczl,rgspec,ispec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -237,7 +237,7 @@ SUBROUTINE heat_flux_kernel_soret_fzlcnw(erhs,trun,tdrmix,store7,td1z,acbczl,rgs
 END SUBROUTINE heat_flux_kernel_soret_fzlcnw
 
 SUBROUTINE heat_flux_kernel_soret_fzrcnw(erhs,trun,tdrmix,store7,td1z,acbczr,rgspec,ispec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -263,7 +263,7 @@ SUBROUTINE heat_flux_kernel_soret_fzrcnw(erhs,trun,tdrmix,store7,td1z,acbczr,rgs
 END SUBROUTINE heat_flux_kernel_soret_fzrcnw
 
 SUBROUTINE heat_flux_kernel_enthalpy_fxldfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1x,acbcxl,rgspec,ispec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
@@ -286,7 +286,7 @@ SUBROUTINE heat_flux_kernel_enthalpy_fxldfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
 END SUBROUTINE heat_flux_kernel_enthalpy_fxldfw
 
 SUBROUTINE heat_flux_kernel_enthalpy_fxrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1x,acbcxr,rgspec,ispec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
@@ -309,7 +309,7 @@ SUBROUTINE heat_flux_kernel_enthalpy_fxrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
 END SUBROUTINE heat_flux_kernel_enthalpy_fxrdfw
 
 SUBROUTINE heat_flux_kernel_enthalpy_fyldfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1y,acbcyl,rgspec,ispec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
@@ -332,7 +332,7 @@ SUBROUTINE heat_flux_kernel_enthalpy_fyldfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
 END SUBROUTINE heat_flux_kernel_enthalpy_fyldfw
 
 SUBROUTINE heat_flux_kernel_enthalpy_fyrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1y,acbcyr,rgspec,ispec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
@@ -355,7 +355,7 @@ SUBROUTINE heat_flux_kernel_enthalpy_fyrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
 END SUBROUTINE heat_flux_kernel_enthalpy_fyrdfw
 
 SUBROUTINE heat_flux_kernel_enthalpy_fzldfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1z,acbczl,rgspec,ispec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
@@ -378,7 +378,7 @@ SUBROUTINE heat_flux_kernel_enthalpy_fzldfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
 END SUBROUTINE heat_flux_kernel_enthalpy_fzldfw
 
 SUBROUTINE heat_flux_kernel_enthalpy_fzrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1z,acbczr,rgspec,ispec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
@@ -401,7 +401,7 @@ SUBROUTINE heat_flux_kernel_enthalpy_fzrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
 END SUBROUTINE heat_flux_kernel_enthalpy_fzrdfw
 
 SUBROUTINE heat_flux_kernel_enthalpy2_fxldfw(rate,erhs,vtmp,utmp,store7,arr1,acbcxl)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
@@ -421,7 +421,7 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fxldfw(rate,erhs,vtmp,utmp,store7,arr1,acb
 END SUBROUTINE heat_flux_kernel_enthalpy2_fxldfw
 
 SUBROUTINE heat_flux_kernel_enthalpy2_fxrdfw(rate,erhs,vtmp,utmp,store7,arr1,acbcxr)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
@@ -441,7 +441,7 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fxrdfw(rate,erhs,vtmp,utmp,store7,arr1,acb
 END SUBROUTINE heat_flux_kernel_enthalpy2_fxrdfw
 
 SUBROUTINE heat_flux_kernel_enthalpy2_fyldfw(rate,erhs,vtmp,utmp,store7,arr1,acbcyl)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
@@ -461,7 +461,7 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fyldfw(rate,erhs,vtmp,utmp,store7,arr1,acb
 END SUBROUTINE heat_flux_kernel_enthalpy2_fyldfw
 
 SUBROUTINE heat_flux_kernel_enthalpy2_fyrdfw(rate,erhs,vtmp,utmp,store7,arr1,acbcyr)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
@@ -481,7 +481,7 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fyrdfw(rate,erhs,vtmp,utmp,store7,arr1,acb
 END SUBROUTINE heat_flux_kernel_enthalpy2_fyrdfw
 
 SUBROUTINE heat_flux_kernel_enthalpy2_fzldfw(rate,erhs,vtmp,utmp,store7,arr1,acbczl)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
@@ -501,7 +501,7 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fzldfw(rate,erhs,vtmp,utmp,store7,arr1,acb
 END SUBROUTINE heat_flux_kernel_enthalpy2_fzldfw
 
 SUBROUTINE heat_flux_kernel_enthalpy2_fzrdfw(rate,erhs,vtmp,utmp,store7,arr1,acbczr)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
@@ -521,7 +521,7 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fzrdfw(rate,erhs,vtmp,utmp,store7,arr1,acb
 END SUBROUTINE heat_flux_kernel_enthalpy2_fzrdfw
 
 SUBROUTINE heat_flux_kernel_isothermal_fxladw(erhs,trun,tdrmix,store7,td1x,acbcxl,rgspec,ispec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -548,7 +548,7 @@ SUBROUTINE heat_flux_kernel_isothermal_fxladw(erhs,trun,tdrmix,store7,td1x,acbcx
 END SUBROUTINE heat_flux_kernel_isothermal_fxladw
 
 SUBROUTINE heat_flux_kernel_isothermal_fxradw(erhs,trun,tdrmix,store7,td1x,acbcxr,rgspec,ispec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -575,7 +575,7 @@ SUBROUTINE heat_flux_kernel_isothermal_fxradw(erhs,trun,tdrmix,store7,td1x,acbcx
 END SUBROUTINE heat_flux_kernel_isothermal_fxradw
 
 SUBROUTINE heat_flux_kernel_isothermal_fyladw(erhs,trun,tdrmix,store7,td1y,acbcyl,rgspec,ispec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -602,7 +602,7 @@ SUBROUTINE heat_flux_kernel_isothermal_fyladw(erhs,trun,tdrmix,store7,td1y,acbcy
 END SUBROUTINE heat_flux_kernel_isothermal_fyladw
 
 SUBROUTINE heat_flux_kernel_isothermal_fyradw(erhs,trun,tdrmix,store7,td1y,acbcyr,rgspec,ispec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -629,7 +629,7 @@ SUBROUTINE heat_flux_kernel_isothermal_fyradw(erhs,trun,tdrmix,store7,td1y,acbcy
 END SUBROUTINE heat_flux_kernel_isothermal_fyradw
 
 SUBROUTINE heat_flux_kernel_isothermal_fzladw(erhs,trun,tdrmix,store7,td1z,acbczl,rgspec,ispec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -656,7 +656,7 @@ SUBROUTINE heat_flux_kernel_isothermal_fzladw(erhs,trun,tdrmix,store7,td1z,acbcz
 END SUBROUTINE heat_flux_kernel_isothermal_fzladw
 
 SUBROUTINE heat_flux_kernel_isothermal_fzradw(erhs,trun,tdrmix,store7,td1z,acbczr,rgspec,ispec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs

@@ -8,7 +8,6 @@ MODULE com_espect
 !   GENERAL SPECTRUM PARAMETERS
 !   ---------------------------
 !   NUMBER OF SPECTRUM PARAMETERS
-    use data_types
 
     integer(kind=4), parameter :: nsparm = 4
 

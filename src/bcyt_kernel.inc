@@ -1,5 +1,5 @@
 SUBROUTINE bcyt_kernel_xdir(stryx,dydtx,yrin,ispec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: stryx,dydtx
@@ -12,7 +12,7 @@ SUBROUTINE bcyt_kernel_xdir(stryx,dydtx,yrin,ispec)
 END SUBROUTINE bcyt_kernel_xdir
 
 SUBROUTINE bcyt_kernel_ydir(stryy,dydty,yrin,ispec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: stryy,dydty
@@ -25,7 +25,7 @@ SUBROUTINE bcyt_kernel_ydir(stryy,dydty,yrin,ispec)
 END SUBROUTINE bcyt_kernel_ydir
 
 SUBROUTINE bcyt_kernel_zdir(stryz,dydtz,yrin,ispec)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: stryz,dydtz

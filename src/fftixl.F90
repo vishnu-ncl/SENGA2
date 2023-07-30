@@ -25,7 +25,6 @@ SUBROUTINE fftixl(npencl,ilproc,nlproc,nlsize,ngsize,nprocs)
 !   GLOBAL DATA
 !   ===========
 !   -------------------------------------------------------------------------
-    use data_types
     use com_senga
 !   -------------------------------------------------------------------------
 

@@ -19,7 +19,6 @@ FUNCTION erfunc(argmnt)
 !   REF: ABRAMOWITZ AND STEGUN p299 sec 7.1.26
 
 !   *************************************************************************
-    use data_types
 
 !   PARAMETERS
 !   ==========

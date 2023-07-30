@@ -1,5 +1,5 @@
 SUBROUTINE boundt_kernel_eqA_xdir(urhs,vrhs,wrhs,drhs,strux,strvx,strwx)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: urhs,vrhs,wrhs
@@ -12,7 +12,7 @@ SUBROUTINE boundt_kernel_eqA_xdir(urhs,vrhs,wrhs,drhs,strux,strvx,strwx)
 END SUBROUTINE boundt_kernel_eqA_xdir
 
 SUBROUTINE boundt_kernel_eqA_ydir(urhs,vrhs,wrhs,drhs,struy,strvy,strwy)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: urhs,vrhs,wrhs
@@ -25,7 +25,7 @@ SUBROUTINE boundt_kernel_eqA_ydir(urhs,vrhs,wrhs,drhs,struy,strvy,strwy)
 END SUBROUTINE boundt_kernel_eqA_ydir
 
 SUBROUTINE boundt_kernel_eqA_zdir(urhs,vrhs,wrhs,drhs,struz,strvz,strwz)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: urhs,vrhs,wrhs
@@ -38,7 +38,7 @@ SUBROUTINE boundt_kernel_eqA_zdir(urhs,vrhs,wrhs,drhs,struz,strvz,strwz)
 END SUBROUTINE boundt_kernel_eqA_zdir
 
 SUBROUTINE boundt_kernel_eqB_xdir(erhs,drhs,strux,strvx,strwx)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -52,7 +52,7 @@ SUBROUTINE boundt_kernel_eqB_xdir(erhs,drhs,strux,strvx,strwx)
 END SUBROUTINE boundt_kernel_eqB_xdir
 
 SUBROUTINE boundt_kernel_eqB_ydir(erhs,drhs,struy,strvy,strwy)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -66,7 +66,7 @@ SUBROUTINE boundt_kernel_eqB_ydir(erhs,drhs,struy,strvy,strwy)
 END SUBROUTINE boundt_kernel_eqB_ydir
 
 SUBROUTINE boundt_kernel_eqB_zdir(erhs,drhs,struz,strvz,strwz)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -80,7 +80,7 @@ SUBROUTINE boundt_kernel_eqB_zdir(erhs,drhs,struz,strvz,strwz)
 END SUBROUTINE boundt_kernel_eqB_zdir
 
 SUBROUTINE boundt_kernel_eqC_xdir(drhs,urhs,vrhs,wrhs,strdx,strux,strvx,strwx)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs
@@ -95,7 +95,7 @@ SUBROUTINE boundt_kernel_eqC_xdir(drhs,urhs,vrhs,wrhs,strdx,strux,strvx,strwx)
 END SUBROUTINE boundt_kernel_eqC_xdir
 
 SUBROUTINE boundt_kernel_eqC_ydir(drhs,urhs,vrhs,wrhs,strdy,struy,strvy,strwy)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs
@@ -110,7 +110,7 @@ SUBROUTINE boundt_kernel_eqC_ydir(drhs,urhs,vrhs,wrhs,strdy,struy,strvy,strwy)
 END SUBROUTINE boundt_kernel_eqC_ydir
 
 SUBROUTINE boundt_kernel_eqC_zdir(drhs,urhs,vrhs,wrhs,strdz,struz,strvz,strwz)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs
@@ -125,7 +125,7 @@ SUBROUTINE boundt_kernel_eqC_zdir(drhs,urhs,vrhs,wrhs,strdz,struz,strvz,strwz)
 END SUBROUTINE boundt_kernel_eqC_zdir
 
 SUBROUTINE boundt_kernel_eqD_xdir(yrhs,stryx,strdx)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: yrhs
@@ -136,7 +136,7 @@ SUBROUTINE boundt_kernel_eqD_xdir(yrhs,stryx,strdx)
 END SUBROUTINE boundt_kernel_eqD_xdir
 
 SUBROUTINE boundt_kernel_eqD_ydir(yrhs,stryy,strdy)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: yrhs
@@ -147,7 +147,7 @@ SUBROUTINE boundt_kernel_eqD_ydir(yrhs,stryy,strdy)
 END SUBROUTINE boundt_kernel_eqD_ydir
 
 SUBROUTINE boundt_kernel_eqD_zdir(yrhs,stryz,strdz)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: yrhs
@@ -158,7 +158,7 @@ SUBROUTINE boundt_kernel_eqD_zdir(yrhs,stryz,strdz)
 END SUBROUTINE boundt_kernel_eqD_zdir
 
 SUBROUTINE boundt_kernel_eqE_xdir(strtx,itndex,tinthi,ntint,ipower,ispec)
-    use data_types
+    
     implicit none
 
     integer(kind=4), dimension(1) :: itndex
@@ -179,7 +179,7 @@ SUBROUTINE boundt_kernel_eqE_xdir(strtx,itndex,tinthi,ntint,ipower,ispec)
 END SUBROUTINE boundt_kernel_eqE_xdir
 
 SUBROUTINE boundt_kernel_eqE_ydir(strty,itndex,tinthi,ntint,ipower,ispec)
-    use data_types
+    
     implicit none
 
     integer(kind=4), dimension(1) :: itndex
@@ -200,7 +200,7 @@ SUBROUTINE boundt_kernel_eqE_ydir(strty,itndex,tinthi,ntint,ipower,ispec)
 END SUBROUTINE boundt_kernel_eqE_ydir
 
 SUBROUTINE boundt_kernel_eqE_zdir(strtz,itndex,tinthi,ntint,ipower,ispec)
-    use data_types
+    
     implicit none
 
     integer(kind=4), dimension(1) :: itndex
@@ -221,7 +221,7 @@ SUBROUTINE boundt_kernel_eqE_zdir(strtz,itndex,tinthi,ntint,ipower,ispec)
 END SUBROUTINE boundt_kernel_eqE_zdir
 
 SUBROUTINE boundt_kernel_eqF_xdir(erhs,yrhs,itndex,drhs,strtx,stryx,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,icoef1,icoef2)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs,yrhs
@@ -255,7 +255,7 @@ SUBROUTINE boundt_kernel_eqF_xdir(erhs,yrhs,itndex,drhs,strtx,stryx,amasch,rgspe
 END SUBROUTINE boundt_kernel_eqF_xdir
 
 SUBROUTINE boundt_kernel_eqF_ydir(erhs,yrhs,itndex,drhs,strty,stryy,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,icoef1,icoef2)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs,yrhs
@@ -289,7 +289,7 @@ SUBROUTINE boundt_kernel_eqF_ydir(erhs,yrhs,itndex,drhs,strty,stryy,amasch,rgspe
 END SUBROUTINE boundt_kernel_eqF_ydir
 
 SUBROUTINE boundt_kernel_eqF_zdir(erhs,yrhs,itndex,drhs,strtz,stryz,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,icoef1,icoef2)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs,yrhs
@@ -323,7 +323,7 @@ SUBROUTINE boundt_kernel_eqF_zdir(erhs,yrhs,itndex,drhs,strtz,stryz,amasch,rgspe
 END SUBROUTINE boundt_kernel_eqF_zdir
 
 SUBROUTINE boundt_kernel_eqG_xdir(erhs,yrhs,itndex,strtx,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,icoef1,icoef2)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -355,7 +355,7 @@ SUBROUTINE boundt_kernel_eqG_xdir(erhs,yrhs,itndex,strtx,amasch,rgspec,ncpoly,nc
 END SUBROUTINE boundt_kernel_eqG_xdir
 
 SUBROUTINE boundt_kernel_eqG_ydir(erhs,yrhs,itndex,strty,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,icoef1,icoef2)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -387,7 +387,7 @@ SUBROUTINE boundt_kernel_eqG_ydir(erhs,yrhs,itndex,strty,amasch,rgspec,ncpoly,nc
 END SUBROUTINE boundt_kernel_eqG_ydir
 
 SUBROUTINE boundt_kernel_eqG_zdir(erhs,yrhs,itndex,strtz,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,icoef1,icoef2)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs

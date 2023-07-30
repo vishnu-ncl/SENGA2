@@ -26,7 +26,6 @@ SUBROUTINE fftsym(ndosym,npencl,ilproc,nlproc,nlsize,ngsize,  &
 !   GLOBAL DATA
 !   ===========
 !   -------------------------------------------------------------------------
-    use data_types
     use com_senga
 
 !   -------------------------------------------------------------------------

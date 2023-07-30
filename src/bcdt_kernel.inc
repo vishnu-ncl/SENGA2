@@ -1,5 +1,5 @@
 SUBROUTINE bcdt_kernel_xdir(strdx, dddtx, init_val)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: strdx, dddtx
@@ -11,7 +11,7 @@ SUBROUTINE bcdt_kernel_xdir(strdx, dddtx, init_val)
 END SUBROUTINE bcdt_kernel_xdir
 
 SUBROUTINE bcdt_kernel_ydir(strdy, dddty, init_val)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: strdy, dddty
@@ -23,7 +23,7 @@ SUBROUTINE bcdt_kernel_ydir(strdy, dddty, init_val)
 END SUBROUTINE bcdt_kernel_ydir
 
 SUBROUTINE bcdt_kernel_zdir(strdz, dddtz, init_val)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: strdz, dddtz
@@ -35,7 +35,7 @@ SUBROUTINE bcdt_kernel_zdir(strdz, dddtz, init_val)
 END SUBROUTINE bcdt_kernel_zdir
 
 SUBROUTINE bcdt_kernel_xdir_eqA(strdx, dddtx, init_val)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: strdx, dddtx
@@ -47,7 +47,7 @@ SUBROUTINE bcdt_kernel_xdir_eqA(strdx, dddtx, init_val)
 END SUBROUTINE bcdt_kernel_xdir_eqA
 
 SUBROUTINE bcdt_kernel_ydir_eqA(strdy, dddty, init_val)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: strdy, dddty
@@ -59,7 +59,7 @@ SUBROUTINE bcdt_kernel_ydir_eqA(strdy, dddty, init_val)
 END SUBROUTINE bcdt_kernel_ydir_eqA
 
 SUBROUTINE bcdt_kernel_zdir_eqA(strdz, dddtz, init_val)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: strdz, dddtz

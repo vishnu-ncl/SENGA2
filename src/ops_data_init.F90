@@ -1,7 +1,6 @@
 SUBROUTINE ops_data_init()
     use OPS_Fortran_Reference
 
-    use data_types
     use com_senga
     use com_ops_senga
 

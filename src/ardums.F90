@@ -20,7 +20,6 @@ SUBROUTINE ardums(array,nxphys,nyphys,nzphys,nspec,ispec)
 !   PRINTS THE CONTENTS OF THE SPECIFIED SPECIES ARRAY
 
 !   *************************************************************************
-    use data_types
 
 !   ARGUMENTS
 !   =========

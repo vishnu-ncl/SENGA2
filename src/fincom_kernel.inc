@@ -1,5 +1,5 @@
 SUBROUTINE fincom_kernel_main(err_arr,run_arr,rhs_arr,rkerr,rklhs,nrkstp)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: err_arr, run_arr, rhs_arr

@@ -1,5 +1,5 @@
 SUBROUTINE bountt_kernel_eqA_xdir(urhs,vrhs,wrhs,urun,vrun,wrun,uerr,verr,werr,drhs,strux,strvx,strwx)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: urhs,vrhs,wrhs,urun,vrun,wrun,uerr,verr,werr
@@ -20,7 +20,7 @@ SUBROUTINE bountt_kernel_eqA_xdir(urhs,vrhs,wrhs,urun,vrun,wrun,uerr,verr,werr,d
 END SUBROUTINE bountt_kernel_eqA_xdir
 
 SUBROUTINE bountt_kernel_eqA_ydir(urhs,vrhs,wrhs,urun,vrun,wrun,uerr,verr,werr,drhs,struy,strvy,strwy)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: urhs,vrhs,wrhs,urun,vrun,wrun,uerr,verr,werr
@@ -41,7 +41,7 @@ SUBROUTINE bountt_kernel_eqA_ydir(urhs,vrhs,wrhs,urun,vrun,wrun,uerr,verr,werr,d
 END SUBROUTINE bountt_kernel_eqA_ydir
 
 SUBROUTINE bountt_kernel_eqA_zdir(urhs,vrhs,wrhs,urun,vrun,wrun,uerr,verr,werr,drhs,struz,strvz,strwz)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: urhs,vrhs,wrhs,urun,vrun,wrun,uerr,verr,werr
@@ -62,7 +62,7 @@ SUBROUTINE bountt_kernel_eqA_zdir(urhs,vrhs,wrhs,urun,vrun,wrun,uerr,verr,werr,d
 END SUBROUTINE bountt_kernel_eqA_zdir
 
 SUBROUTINE bountt_kernel_eqB_xdir(erhs,drhs,strux,strvx,strwx)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -76,7 +76,7 @@ SUBROUTINE bountt_kernel_eqB_xdir(erhs,drhs,strux,strvx,strwx)
 END SUBROUTINE bountt_kernel_eqB_xdir
 
 SUBROUTINE bountt_kernel_eqB_ydir(erhs,drhs,struy,strvy,strwy)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -90,7 +90,7 @@ SUBROUTINE bountt_kernel_eqB_ydir(erhs,drhs,struy,strvy,strwy)
 END SUBROUTINE bountt_kernel_eqB_ydir
 
 SUBROUTINE bountt_kernel_eqB_zdir(erhs,drhs,struz,strvz,strwz)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs
@@ -104,7 +104,7 @@ SUBROUTINE bountt_kernel_eqB_zdir(erhs,drhs,struz,strvz,strwz)
 END SUBROUTINE bountt_kernel_eqB_zdir
 
 SUBROUTINE bountt_kernel_eqC_xdir(drhs,urhs,vrhs,wrhs,drun,urun,vrun,wrun,derr,uerr,verr,werr,strdx,strux,strvx,strwx)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,drun,urun,vrun,wrun,derr,uerr,verr,werr
@@ -128,7 +128,7 @@ SUBROUTINE bountt_kernel_eqC_xdir(drhs,urhs,vrhs,wrhs,drun,urun,vrun,wrun,derr,u
 END SUBROUTINE bountt_kernel_eqC_xdir
 
 SUBROUTINE bountt_kernel_eqC_ydir(drhs,urhs,vrhs,wrhs,drun,urun,vrun,wrun,derr,uerr,verr,werr,strdy,struy,strvy,strwy)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,drun,urun,vrun,wrun,derr,uerr,verr,werr
@@ -152,7 +152,7 @@ SUBROUTINE bountt_kernel_eqC_ydir(drhs,urhs,vrhs,wrhs,drun,urun,vrun,wrun,derr,u
 END SUBROUTINE bountt_kernel_eqC_ydir
 
 SUBROUTINE bountt_kernel_eqC_zdir(drhs,urhs,vrhs,wrhs,drun,urun,vrun,wrun,derr,uerr,verr,werr,strdz,struz,strvz,strwz)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,drun,urun,vrun,wrun,derr,uerr,verr,werr
@@ -176,7 +176,7 @@ SUBROUTINE bountt_kernel_eqC_zdir(drhs,urhs,vrhs,wrhs,drun,urun,vrun,wrun,derr,u
 END SUBROUTINE bountt_kernel_eqC_zdir
 
 SUBROUTINE bountt_kernel_eqD(erun,eerr,erhs)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erun,eerr
@@ -189,7 +189,7 @@ SUBROUTINE bountt_kernel_eqD(erun,eerr,erhs)
 END SUBROUTINE bountt_kernel_eqD
 
 SUBROUTINE bountt_kernel_eqE_xdir(yrhs,yrun,yerr,stryxl,strdxl)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: yrhs,yrun,yerr
@@ -204,7 +204,7 @@ SUBROUTINE bountt_kernel_eqE_xdir(yrhs,yrun,yerr,stryxl,strdxl)
 END SUBROUTINE bountt_kernel_eqE_xdir
 
 SUBROUTINE bountt_kernel_eqE_ydir(yrhs,yrun,yerr,stryyl,strdyl)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: yrhs,yrun,yerr
@@ -219,7 +219,7 @@ SUBROUTINE bountt_kernel_eqE_ydir(yrhs,yrun,yerr,stryyl,strdyl)
 END SUBROUTINE bountt_kernel_eqE_ydir
 
 SUBROUTINE bountt_kernel_eqE_zdir(yrhs,yrun,yerr,stryzl,strdzl)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: yrhs,yrun,yerr
@@ -234,7 +234,7 @@ SUBROUTINE bountt_kernel_eqE_zdir(yrhs,yrun,yerr,stryzl,strdzl)
 END SUBROUTINE bountt_kernel_eqE_zdir
 
 SUBROUTINE bountt_kernel_eqF_xdir(erhs,yrhs,yrun,yerr,itndex,drhs,strtx,stryx,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,icoef1,icoef2)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs,yrhs,yrun,yerr
@@ -272,7 +272,7 @@ SUBROUTINE bountt_kernel_eqF_xdir(erhs,yrhs,yrun,yerr,itndex,drhs,strtx,stryx,am
 END SUBROUTINE bountt_kernel_eqF_xdir
 
 SUBROUTINE bountt_kernel_eqF_ydir(erhs,yrhs,yrun,yerr,itndex,drhs,strty,stryy,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,icoef1,icoef2)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs,yrhs,yrun,yerr
@@ -310,7 +310,7 @@ SUBROUTINE bountt_kernel_eqF_ydir(erhs,yrhs,yrun,yerr,itndex,drhs,strty,stryy,am
 END SUBROUTINE bountt_kernel_eqF_ydir
 
 SUBROUTINE bountt_kernel_eqF_zdir(erhs,yrhs,yrun,yerr,itndex,drhs,strtz,stryz,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,icoef1,icoef2)
-    use data_types
+    
     implicit none
 
     real(kind=8), dimension(1) :: erhs,yrhs,yrun,yerr
