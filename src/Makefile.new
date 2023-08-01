@@ -23,11 +23,12 @@ OPS_FILES = com_ops_senga2.F90 senga2.F90 ops_data_init.F90 dfinit.F90 dfbydx.F9
     tempin.F90 parfer.F90 output.F90 print_dats.F90 print_alldats.F90
 
 ifeq ($(OPS_COMPILER),intel)
-APP_FLAGS = -g -cpp -O3 -mcmodel=medium -fp-model strict -fp-model source -prec-div -prec-sqrt
+APP_FLAGS = -mcmodel=large -fp-model precise -fp-model source -no-fma -fimf-arch-consistency=true -fimf-precision=high
+#APP_FLAGS = -mcmodel=large -fp-model precise -fp-model source -no-fma -nolib-inline
 endif
 
 ifeq ($(OPS_COMPILER),pgi)
-APP_FLAGS = -Kieee -Mnofpapprox -mcmodel=medium -Ktrap=unf -Mnofprelaxed 
+APP_FLAGS = -Kieee -Mnofpapprox -mcmodel=medium -Ktrap=unf -Mnofprelaxed -m64 -pc 64
 endif
 
 APP_LIBS = fftlib/fftlib.a rndlib/rndlib.a parlib/parlib.a -lm
@@ -85,8 +86,6 @@ OTHER_FILES := $(filter-out $(MODULE_FILES), $(OTHER_FILES))
 OPS_GENERATED := $(filter-out $(MODULE_FILES), $(OPS_GENERATED))
 
 #=========================================================================================================================
-
-
 
 SEQ_OBJ = $(MODULE_FILES:.F90=_seq.o) $(OTHER_FILES:.F90=_seq.o) $(SEQ_KERNELS:.F90=_seq.o) $(OPS_GENERATED:.F90=_seq.o)
 OMP_OBJ = $(MODULE_FILES:.F90=_omp.o) $(OTHER_FILES:.F90=_omp.o) $(SEQ_KERNELS:.F90=_omp.o) $(OPS_GENERATED:.F90=_omp.o)
