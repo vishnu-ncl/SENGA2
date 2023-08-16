@@ -886,14 +886,19 @@ SUBROUTINE rhscal
 !       ------------------------------------
 
 !       SPECIES MASS FRACTION GRADIENTS
-        rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
-        call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ))
+!        rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
+!        call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz, &
+!                        ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ))
+!
+!        call dfbydx(d_store7,d_store1)
+!        call dfbydy(d_store7,d_store2)
+!        call dfbydz(d_store7,d_store3)
+        call dfbydx(d_yrhs(ispec),d_store1)
+        call dfbydy(d_yrhs(ispec),d_store2)
+        call dfbydz(d_yrhs(ispec),d_store3)
 
-        call dfbydx(d_store7,d_store1)
-        call dfbydy(d_store7,d_store2)
-        call dfbydz(d_store7,d_store3)
+
 
 !                                                         STORE1,2,3 = DYDX,Y,Z
 !                                                         RATE = Y SOURCE TERMS
@@ -1452,14 +1457,18 @@ SUBROUTINE rhscal
                         ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ))
 
 !       MOVE MASS FRACTION TO STORE7
-        rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
-        call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ))
+!        rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
+!        call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+!                        ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ))
+!
+!        call d2fdx2(d_store7,d_store1)
+!        call d2fdy2(d_store7,d_store2)
+!        call d2fdz2(d_store7,d_store3)
+        call d2fdx2(d_yrhs(ispec),d_store1)
+        call d2fdy2(d_yrhs(ispec),d_store2)
+        call d2fdz2(d_yrhs(ispec),d_store3)
 
-        call d2fdx2(d_store7,d_store1)
-        call d2fdy2(d_store7,d_store2)
-        call d2fdz2(d_store7,d_store3)
 
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
@@ -2673,14 +2682,17 @@ SUBROUTINE rhscal
 !       Y-EQUATION: DIFFUSIVE TERMS
 !       ---------------------------
 !       RECOMPUTE SPECIES MASS FRACTION GRADIENTS
-        rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
-        call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ))
-
-        call dfbydx(d_store7,d_store1)
-        call dfbydy(d_store7,d_store2)
-        call dfbydz(d_store7,d_store3)
+!        rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
+!        call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz, &
+!                        ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                        ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ))
+!
+!        call dfbydx(d_store7,d_store1)
+!        call dfbydy(d_store7,d_store2)
+!        call dfbydz(d_store7,d_store3)
+        call dfbydx(d_yrhs(ispec),d_store1)
+        call dfbydy(d_yrhs(ispec),d_store2)
+        call dfbydz(d_yrhs(ispec),d_store3)
 
 !       BOUNDARY CONDITIONS
 !       BC IN X: DIFFUSIVE TERMS (MASS FLUX) ZERO ON END POINTS
