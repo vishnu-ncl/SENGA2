@@ -36,7 +36,7 @@ SUBROUTINE d2fdxz_kernel_interior(functn, fderiv)
 END SUBROUTINE d2fdxz_kernel_interior
 
 !a3d_p402_m002_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_xdir_4th_onesided(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqA(functn, fderiv)
     
     implicit none
 
@@ -65,10 +65,10 @@ SUBROUTINE d2fdxz_kernel_lh_xdir_4th_onesided(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf1xz*fdiffa + bcf1xz*fdiffb  &
           + ccf1xz*fdiffc + dcf1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_lh_xdir_4th_onesided
+END SUBROUTINE d2fdxz_kernel_eqA
 
 !a3d_p302_m102_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_xdir_4th_mixed(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqB(functn, fderiv)
     
     implicit none
 
@@ -97,10 +97,10 @@ SUBROUTINE d2fdxz_kernel_lh_xdir_4th_mixed(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf2xz*fdiffa + bcf2xz*fdiffb  &
           + ccf2xz*fdiffc + dcf2xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_lh_xdir_4th_mixed
+END SUBROUTINE d2fdxz_kernel_eqB
 
 !a3d_p202_m202_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_xdir_4th_centered(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqC(functn, fderiv)
     
     implicit none
 
@@ -116,10 +116,10 @@ SUBROUTINE d2fdxz_kernel_lh_xdir_4th_centered(functn, fderiv)
 
     fderiv(OPS_ACC2(0,0,0)) = acf3xz*fdiffa + bcf3xz*fdiffb
 
-END SUBROUTINE d2fdxz_kernel_lh_xdir_4th_centered
+END SUBROUTINE d2fdxz_kernel_eqC
 
 !a3d_p303_m303_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_xdir_6th_centered(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqD(functn, fderiv)
     
     implicit none
 
@@ -138,10 +138,10 @@ SUBROUTINE d2fdxz_kernel_lh_xdir_6th_centered(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf4xz*fdiffa + bcf4xz*fdiffb  &
           + ccf4xz*fdiffc
 
-END SUBROUTINE d2fdxz_kernel_lh_xdir_6th_centered
+END SUBROUTINE d2fdxz_kernel_eqD
 
 !a3d_p404_m404_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_xdir_8th_centered(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqE(functn, fderiv)
     
     implicit none
 
@@ -162,10 +162,10 @@ SUBROUTINE d2fdxz_kernel_lh_xdir_8th_centered(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf5xz*fdiffa + bcf5xz*fdiffb  &
           + ccf5xz*fdiffc + dcf5xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_lh_xdir_8th_centered
+END SUBROUTINE d2fdxz_kernel_eqE
 
 !a3d_p404_m404_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_xdir_8th_centered(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqF(functn, fderiv)
     
     implicit none
 
@@ -186,10 +186,10 @@ SUBROUTINE d2fdxz_kernel_rh_xdir_8th_centered(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf5xz*fdiffa + bcf5xz*fdiffb  &
           + ccf5xz*fdiffc + dcf5xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_rh_xdir_8th_centered
+END SUBROUTINE d2fdxz_kernel_eqF
 
 !a3d_p303_m303_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_xdir_6th_centered(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqG(functn, fderiv)
     
     implicit none
 
@@ -208,10 +208,10 @@ SUBROUTINE d2fdxz_kernel_rh_xdir_6th_centered(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf4xz*fdiffa + bcf4xz*fdiffb  &
           + ccf4xz*fdiffc
 
-END SUBROUTINE d2fdxz_kernel_rh_xdir_6th_centered
+END SUBROUTINE d2fdxz_kernel_eqG
 
 !a3d_p202_m202_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_xdir_4th_centered(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqH(functn, fderiv)
     
     implicit none
 
@@ -227,10 +227,10 @@ SUBROUTINE d2fdxz_kernel_rh_xdir_4th_centered(functn, fderiv)
 
     fderiv(OPS_ACC2(0,0,0)) = acf3xz*fdiffa + bcf3xz*fdiffb
 
-END SUBROUTINE d2fdxz_kernel_rh_xdir_4th_centered
+END SUBROUTINE d2fdxz_kernel_eqH
 
 !a3d_p102_m302_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_xdir_4th_mixed(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqI(functn, fderiv)
     
     implicit none
 
@@ -259,10 +259,10 @@ SUBROUTINE d2fdxz_kernel_rh_xdir_4th_mixed(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf2xz*fdiffa + bcf2xz*fdiffb  &
           + ccf2xz*fdiffc + dcf2xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_rh_xdir_4th_mixed
+END SUBROUTINE d2fdxz_kernel_eqI
 
 !a3d_p002_m402_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_xdir_4th_onesided(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqJ(functn, fderiv)
     
     implicit none
 
@@ -291,10 +291,10 @@ SUBROUTINE d2fdxz_kernel_rh_xdir_4th_onesided(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf1xz*fdiffa + bcf1xz*fdiffb  &
           + ccf1xz*fdiffc + dcf1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_rh_xdir_4th_onesided
+END SUBROUTINE d2fdxz_kernel_eqJ
 
 !a3d_p204_m200_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_zdir_4th_onesided(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqK(functn, fderiv)
     
     implicit none
 
@@ -323,10 +323,10 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_4th_onesided(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf1xz*fdiffa + bcf1xz*fdiffb  &
           + ccf1xz*fdiffc + dcf1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_4th_onesided
+END SUBROUTINE d2fdxz_kernel_eqK
 
 !a3d_p203_m201_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_zdir_4th_mixed(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqL(functn, fderiv)
     
     implicit none
 
@@ -355,10 +355,10 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_4th_mixed(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf2xz*fdiffa + bcf2xz*fdiffb  &
           + ccf2xz*fdiffc + dcf2xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_4th_mixed
+END SUBROUTINE d2fdxz_kernel_eqL
 
 !a3d_p202_m202_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_zdir_4th_centered(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqM(functn, fderiv)
     
     implicit none
 
@@ -374,10 +374,10 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_4th_centered(functn, fderiv)
 
     fderiv(OPS_ACC2(0,0,0)) = acf3xz*fdiffa + bcf3xz*fdiffb
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_4th_centered
+END SUBROUTINE d2fdxz_kernel_eqM
 
 !a3d_p303_m303_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_zdir_6th_centered(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqN(functn, fderiv)
     
     implicit none
 
@@ -396,10 +396,10 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_6th_centered(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf4xz*fdiffa + bcf4xz*fdiffb  &
           + ccf4xz*fdiffc
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_6th_centered
+END SUBROUTINE d2fdxz_kernel_eqN
 
 !a3d_p404_m404_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_zdir_8th_centered(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqO(functn, fderiv)
     
     implicit none
 
@@ -420,10 +420,10 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_8th_centered(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf5xz*fdiffa + bcf5xz*fdiffb  &
           + ccf5xz*fdiffc + dcf5xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_8th_centered
+END SUBROUTINE d2fdxz_kernel_eqO
 
 !a3d_p404_p000_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqA(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqP(functn, fderiv)
     
     implicit none
 
@@ -444,10 +444,10 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqA(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acc1xz*fdiffa + bcc1xz*fdiffb  &
           + ccc1xz*fdiffc + dcc1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqA
+END SUBROUTINE d2fdxz_kernel_eqP
 
 !a3d_p303_m101_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqB(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqQ(functn, fderiv)
     
     implicit none
 
@@ -468,10 +468,10 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqB(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acc2xz*fdiffa + bcc2xz*fdiffb  &
           + ccc2xz*fdiffc + dcc2xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqB
+END SUBROUTINE d2fdxz_kernel_eqQ
 
 !a3d_p403_m001_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqC(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqR(functn, fderiv)
     
     implicit none
 
@@ -516,10 +516,10 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqC(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf1xz*fdiffa + bcf1xz*fdiffb  &
           + ccf1xz*fdiffc + dcf1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqC
+END SUBROUTINE d2fdxz_kernel_eqR
 
 !a3d_p304_m100_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqD(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqS(functn, fderiv)
     
     implicit none
 
@@ -564,10 +564,10 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqD(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf1xz*fdiffa + bcf1xz*fdiffb  &
           + ccf1xz*fdiffc + dcf1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqD
+END SUBROUTINE d2fdxz_kernel_eqS
 
 !a3d_p204_m200_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqE(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqT(functn, fderiv)
     
     implicit none
 
@@ -596,10 +596,10 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqE(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf1xz*fdiffa + bcf1xz*fdiffb  &
             + ccf1xz*fdiffc + dcf1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqE
+END SUBROUTINE d2fdxz_kernel_eqT
 
 !a3d_p203_m201_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqF(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqU(functn, fderiv)
     
     implicit none
 
@@ -628,10 +628,10 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqF(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf2xz*fdiffa + bcf2xz*fdiffb  &
             + ccf2xz*fdiffc + dcf2xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqF
+END SUBROUTINE d2fdxz_kernel_eqU
 
 !a3d_p402_m002_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqG(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqV(functn, fderiv)
     
     implicit none
 
@@ -660,10 +660,10 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqG(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf1xz*fdiffa + bcf1xz*fdiffb  &
             + ccf1xz*fdiffc + dcf1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqG
+END SUBROUTINE d2fdxz_kernel_eqV
 
 !a3d_p302_m102_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqH(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqW(functn, fderiv)
     
     implicit none
 
@@ -692,9 +692,9 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqH(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf2xz*fdiffa + bcf2xz*fdiffb  &
             + ccf2xz*fdiffc + dcf2xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqH
+END SUBROUTINE d2fdxz_kernel_eqW
 
-SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqI(functn, fderiv, idx)
+SUBROUTINE d2fdxz_kernel_eqX(functn, fderiv, idx)
     
     implicit none
 
@@ -739,10 +739,10 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqI(functn, fderiv, idx)
                                 + ccf5xz*fstorc + dcf5xz*fdiffd
     END IF
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqI
+END SUBROUTINE d2fdxz_kernel_eqX
 
 !a3d_p004_m400_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqL(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqY(functn, fderiv)
     
     implicit none
 
@@ -763,10 +763,10 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqL(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acc1xz*fdiffa + bcc1xz*fdiffb  &
           + ccc1xz*fdiffc + dcc1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqL
+END SUBROUTINE d2fdxz_kernel_eqY
 
 !a3d_p100_m300_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqM(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqZ(functn, fderiv)
     
     implicit none
 
@@ -787,10 +787,10 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqM(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acc2xz*fdiffa + bcc2xz*fdiffb  &
           + ccc2xz*fdiffc + dcc2xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqM
+END SUBROUTINE d2fdxz_kernel_eqZ
 
 !a3d_p003_m401_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqN(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAA(functn, fderiv)
     
     implicit none
 
@@ -835,10 +835,10 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqN(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf1xz*fdiffa + bcf1xz*fdiffb  &
           + ccf1xz*fdiffc + dcf1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqN
+END SUBROUTINE d2fdxz_kernel_eqAA
 
 !a3d_p104_m300_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqO(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAB(functn, fderiv)
     
     implicit none
 
@@ -883,10 +883,10 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqO(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf1xz*fdiffa + bcf1xz*fdiffb  &
           + ccf1xz*fdiffc + dcf1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqO
+END SUBROUTINE d2fdxz_kernel_eqAB
 
 !a3d_p204_m200_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqP(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAC(functn, fderiv)
     
     implicit none
 
@@ -915,10 +915,10 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqP(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf1xz*fdiffa + bcf1xz*fdiffb  &
             + ccf1xz*fdiffc + dcf1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqP
+END SUBROUTINE d2fdxz_kernel_eqAC
 
 !a3d_p203_m201_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqQ(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAD(functn, fderiv)
     
     implicit none
 
@@ -947,10 +947,10 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqQ(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf2xz*fdiffa + bcf2xz*fdiffb  &
             + ccf2xz*fdiffc + dcf2xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqQ
+END SUBROUTINE d2fdxz_kernel_eqAD
 
 !a3d_p002_m402_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqR(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAE(functn, fderiv)
     
     implicit none
 
@@ -979,10 +979,10 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqR(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf1xz*fdiffa + bcf1xz*fdiffb  &
             + ccf1xz*fdiffc + dcf1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqR
+END SUBROUTINE d2fdxz_kernel_eqAE
 
 !a3d_p102_m302_mixed_xz
-SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqS(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAF(functn, fderiv)
     
     implicit none
 
@@ -1011,9 +1011,9 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqS(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf2xz*fdiffa + bcf2xz*fdiffb  &
             + ccf2xz*fdiffc + dcf2xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqS
+END SUBROUTINE d2fdxz_kernel_eqAF
 
-SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqT(functn, fderiv, nxglbl, idx)
+SUBROUTINE d2fdxz_kernel_eqAG(functn, fderiv, nxglbl, idx)
     
     implicit none
 
@@ -1059,10 +1059,10 @@ SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqT(functn, fderiv, nxglbl, idx)
                                 + ccf5xz*fstorc + dcf5xz*fdiffd
     END IF
 
-END SUBROUTINE d2fdxz_kernel_lh_zdir_corner_eqT
+END SUBROUTINE d2fdxz_kernel_eqAG
 
 !a3d_p404_m404_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_zdir_8th_centered(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAH(functn, fderiv)
     
     implicit none
 
@@ -1083,10 +1083,10 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_8th_centered(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf5xz*fdiffa + bcf5xz*fdiffb  &
           + ccf5xz*fdiffc + dcf5xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_8th_centered
+END SUBROUTINE d2fdxz_kernel_eqAH
 
 !a3d_p303_m303_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_zdir_6th_centered(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAI(functn, fderiv)
     
     implicit none
 
@@ -1105,10 +1105,10 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_6th_centered(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf4xz*fdiffa + bcf4xz*fdiffb  &
           + ccf4xz*fdiffc
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_6th_centered
+END SUBROUTINE d2fdxz_kernel_eqAI
 
 !a3d_p202_m202_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_zdir_4th_centered(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAJ(functn, fderiv)
     
     implicit none
 
@@ -1124,10 +1124,10 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_4th_centered(functn, fderiv)
 
     fderiv(OPS_ACC2(0,0,0)) = acf3xz*fdiffa + bcf3xz*fdiffb
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_4th_centered
+END SUBROUTINE d2fdxz_kernel_eqAJ
 
 !a3d_p201_m203_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_zdir_4th_mixed(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAK(functn, fderiv)
     
     implicit none
 
@@ -1156,10 +1156,10 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_4th_mixed(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf2xz*fdiffa + bcf2xz*fdiffb  &
           + ccf2xz*fdiffc + dcf2xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_4th_mixed
+END SUBROUTINE d2fdxz_kernel_eqAK
 
 !a3d_p200_m204_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_zdir_4th_onesided(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAL(functn, fderiv)
     
     implicit none
 
@@ -1188,10 +1188,10 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_4th_onesided(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf1xz*fdiffa + bcf1xz*fdiffb  &
           + ccf1xz*fdiffc + dcf1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_4th_onesided
+END SUBROUTINE d2fdxz_kernel_eqAL
 
 !a3d_p400_p004_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqA(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAM(functn, fderiv)
     
     implicit none
 
@@ -1212,10 +1212,10 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqA(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acc1xz*fdiffa + bcc1xz*fdiffb  &
           + ccc1xz*fdiffc + dcc1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqA
+END SUBROUTINE d2fdxz_kernel_eqAM
 
 !a3d_p300_m100_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqB(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAN(functn, fderiv)
     
     implicit none
 
@@ -1236,10 +1236,10 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqB(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acc2xz*fdiffa + bcc2xz*fdiffb  &
           + ccc2xz*fdiffc + dcc2xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqB
+END SUBROUTINE d2fdxz_kernel_eqAN
 
 !a3d_p401_p003_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqC(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAO(functn, fderiv)
     
     implicit none
 
@@ -1284,10 +1284,10 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqC(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf1xz*fdiffa + bcf1xz*fdiffb  &
           + ccf1xz*fdiffc + dcf1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqC
+END SUBROUTINE d2fdxz_kernel_eqAO
 
 !a3d_p300_m104_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqD(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAP(functn, fderiv)
     
     implicit none
 
@@ -1332,10 +1332,10 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqD(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf1xz*fdiffa + bcf1xz*fdiffb  &
           + ccf1xz*fdiffc + dcf1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqD
+END SUBROUTINE d2fdxz_kernel_eqAP
 
 !a3d_p201_m203_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqE(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAQ(functn, fderiv)
     
     implicit none
 
@@ -1364,10 +1364,10 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqE(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf2xz*fdiffa + bcf2xz*fdiffb  &
             + ccf2xz*fdiffc + dcf2xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqE
+END SUBROUTINE d2fdxz_kernel_eqAQ
 
 !a3d_p200_m204_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqF(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAR(functn, fderiv)
     
     implicit none
 
@@ -1396,10 +1396,10 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqF(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf1xz*fdiffa + bcf1xz*fdiffb  &
             + ccf1xz*fdiffc + dcf1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqF
+END SUBROUTINE d2fdxz_kernel_eqAR
 
 !a3d_p402_m002_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqG(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAS(functn, fderiv)
     
     implicit none
 
@@ -1428,10 +1428,10 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqG(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf1xz*fdiffa + bcf1xz*fdiffb  &
             + ccf1xz*fdiffc + dcf1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqG
+END SUBROUTINE d2fdxz_kernel_eqAS
 
 !a3d_p302_m102_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqH(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAT(functn, fderiv)
     
     implicit none
 
@@ -1460,9 +1460,9 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqH(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf2xz*fdiffa + bcf2xz*fdiffb  &
             + ccf2xz*fdiffc + dcf2xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqH
+END SUBROUTINE d2fdxz_kernel_eqAT
 
-SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqI(functn, fderiv, nzglbl, idx)
+SUBROUTINE d2fdxz_kernel_eqAU(functn, fderiv, nzglbl, idx)
     
     implicit none
 
@@ -1508,10 +1508,10 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqI(functn, fderiv, nzglbl, idx)
                                 + ccf5xz*fstorc + dcf5xz*fdiffd
     END IF
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqI
+END SUBROUTINE d2fdxz_kernel_eqAU
 
 !a3d_p000_m404_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqL(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAV(functn, fderiv)
     
     implicit none
 
@@ -1532,10 +1532,10 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqL(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acc1xz*fdiffa + bcc1xz*fdiffb  &
           + ccc1xz*fdiffc + dcc1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqL
+END SUBROUTINE d2fdxz_kernel_eqAV
 
 !a3d_p101_m303_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqM(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAW(functn, fderiv)
     
     implicit none
 
@@ -1556,10 +1556,10 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqM(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acc2xz*fdiffa + bcc2xz*fdiffb  &
           + ccc2xz*fdiffc + dcc2xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqM
+END SUBROUTINE d2fdxz_kernel_eqAW
 
 !a3d_p001_m403_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqN(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAX(functn, fderiv)
     
     implicit none
 
@@ -1604,10 +1604,10 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqN(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf1xz*fdiffa + bcf1xz*fdiffb  &
           + ccf1xz*fdiffc + dcf1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqN
+END SUBROUTINE d2fdxz_kernel_eqAX
 
 !a3d_p100_m304_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqO(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAY(functn, fderiv)
     
     implicit none
 
@@ -1652,10 +1652,10 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqO(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf1xz*fdiffa + bcf1xz*fdiffb  &
           + ccf1xz*fdiffc + dcf1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqO
+END SUBROUTINE d2fdxz_kernel_eqAY
 
 !a3d_p201_m203_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqP(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqAZ(functn, fderiv)
     
     implicit none
 
@@ -1684,10 +1684,10 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqP(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf2xz*fdiffa + bcf2xz*fdiffb  &
             + ccf2xz*fdiffc + dcf2xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqP
+END SUBROUTINE d2fdxz_kernel_eqAZ
 
 !a3d_p200_m204_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqQ(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqBA(functn, fderiv)
     
     implicit none
 
@@ -1716,10 +1716,10 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqQ(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf1xz*fdiffa + bcf1xz*fdiffb  &
             + ccf1xz*fdiffc + dcf1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqQ
+END SUBROUTINE d2fdxz_kernel_eqBA
 
 !a3d_p002_m402_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqR(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqBB(functn, fderiv)
     
     implicit none
 
@@ -1748,10 +1748,10 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqR(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf1xz*fdiffa + bcf1xz*fdiffb  &
             + ccf1xz*fdiffc + dcf1xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqR
+END SUBROUTINE d2fdxz_kernel_eqBB
 
 !a3d_p102_m302_mixed_xz
-SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqS(functn, fderiv)
+SUBROUTINE d2fdxz_kernel_eqBC(functn, fderiv)
     
     implicit none
 
@@ -1780,9 +1780,9 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqS(functn, fderiv)
     fderiv(OPS_ACC2(0,0,0)) = acf2xz*fdiffa + bcf2xz*fdiffb  &
             + ccf2xz*fdiffc + dcf2xz*fdiffd
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqS
+END SUBROUTINE d2fdxz_kernel_eqBC
 
-SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqT(functn, fderiv, nxglbl, nzglbl, idx)
+SUBROUTINE d2fdxz_kernel_eqBD(functn, fderiv, nxglbl, nzglbl, idx)
     
     implicit none
 
@@ -1828,7 +1828,7 @@ SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqT(functn, fderiv, nxglbl, nzglbl, idx)
                                 + ccf5xz*fstorc + dcf5xz*fdiffd
     END IF
 
-END SUBROUTINE d2fdxz_kernel_rh_zdir_corner_eqT
+END SUBROUTINE d2fdxz_kernel_eqBD
 
 SUBROUTINE d2fdxz_kernel_scaling(fderiv)
     

@@ -1,4 +1,5 @@
-SUBROUTINE heat_flux_kernel_thermal_fxlcnw(erhs,store1,store7,acbcxl)
+!HEAT FLUX: Thermal fxlcnw
+SUBROUTINE hf_kernel_eqA(erhs,store1,store7,acbcxl)
     
     implicit none
 
@@ -14,9 +15,10 @@ SUBROUTINE heat_flux_kernel_thermal_fxlcnw(erhs,store1,store7,acbcxl)
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + fornow
 
-END SUBROUTINE heat_flux_kernel_thermal_fxlcnw
+END SUBROUTINE hf_kernel_eqA
 
-SUBROUTINE heat_flux_kernel_thermal_fxrcnw(erhs,store1,store7,acbcxr)
+!HEAT FLUX: Thermal fxrcnw
+SUBROUTINE hf_kernel_eqB(erhs,store1,store7,acbcxr)
     
     implicit none
 
@@ -32,9 +34,10 @@ SUBROUTINE heat_flux_kernel_thermal_fxrcnw(erhs,store1,store7,acbcxr)
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + fornow
 
-END SUBROUTINE heat_flux_kernel_thermal_fxrcnw
+END SUBROUTINE hf_kernel_eqB
 
-SUBROUTINE heat_flux_kernel_thermal_fylcnw(erhs,store2,store7,acbcyl)
+!HEAT FLUX: Thermal fylcnw
+SUBROUTINE hf_kernel_eqC(erhs,store2,store7,acbcyl)
     
     implicit none
 
@@ -50,9 +53,10 @@ SUBROUTINE heat_flux_kernel_thermal_fylcnw(erhs,store2,store7,acbcyl)
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + fornow
 
-END SUBROUTINE heat_flux_kernel_thermal_fylcnw
+END SUBROUTINE hf_kernel_eqC
 
-SUBROUTINE heat_flux_kernel_thermal_fyrcnw(erhs,store2,store7,acbcyr)
+!HEAT FLUX: Thermal fyrcnw
+SUBROUTINE hf_kernel_eqD(erhs,store2,store7,acbcyr)
     
     implicit none
 
@@ -68,9 +72,10 @@ SUBROUTINE heat_flux_kernel_thermal_fyrcnw(erhs,store2,store7,acbcyr)
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + fornow
 
-END SUBROUTINE heat_flux_kernel_thermal_fyrcnw
+END SUBROUTINE hf_kernel_eqD
 
-SUBROUTINE heat_flux_kernel_thermal_fzlcnw(erhs,store3,store7,acbczl)
+!HEAT FLUX: Thermal fzlcnw
+SUBROUTINE hf_kernel_eqE(erhs,store3,store7,acbczl)
     
     implicit none
 
@@ -86,9 +91,10 @@ SUBROUTINE heat_flux_kernel_thermal_fzlcnw(erhs,store3,store7,acbczl)
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + fornow
 
-END SUBROUTINE heat_flux_kernel_thermal_fzlcnw
+END SUBROUTINE hf_kernel_eqE
 
-SUBROUTINE heat_flux_kernel_thermal_fzrcnw(erhs,store3,store7,acbczr)
+!HEAT FLUX: Thermal fzrcnw
+SUBROUTINE hf_kernel_eqF(erhs,store3,store7,acbczr)
     
     implicit none
 
@@ -104,9 +110,10 @@ SUBROUTINE heat_flux_kernel_thermal_fzrcnw(erhs,store3,store7,acbczr)
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + fornow
 
-END SUBROUTINE heat_flux_kernel_thermal_fzrcnw
+END SUBROUTINE hf_kernel_eqF
 
-SUBROUTINE heat_flux_kernel_soret_fxlcnw(erhs,trun,tdrmix,store7,td1x,acbcxl,rgspec,ispec)
+!HEAT FLUX: Soret and DUFOUR fxlcnw
+SUBROUTINE hf_kernel_eqG(erhs,trun,tdrmix,store7,td1x,acbcxl,rgspec,ispec)
     
     implicit none
 
@@ -130,9 +137,10 @@ SUBROUTINE heat_flux_kernel_soret_fxlcnw(erhs,trun,tdrmix,store7,td1x,acbcxl,rgs
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + rgspec(ispec)*fornow
 
-END SUBROUTINE heat_flux_kernel_soret_fxlcnw
+END SUBROUTINE hf_kernel_eqG
 
-SUBROUTINE heat_flux_kernel_soret_fxrcnw(erhs,trun,tdrmix,store7,td1x,acbcxr,rgspec,ispec)
+!HEAT FLUX: Soret and DUFOUR fxrcnw
+SUBROUTINE hf_kernel_eqH(erhs,trun,tdrmix,store7,td1x,acbcxr,rgspec,ispec)
     
     implicit none
 
@@ -156,9 +164,10 @@ SUBROUTINE heat_flux_kernel_soret_fxrcnw(erhs,trun,tdrmix,store7,td1x,acbcxr,rgs
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + rgspec(ispec)*fornow
 
-END SUBROUTINE heat_flux_kernel_soret_fxrcnw
+END SUBROUTINE hf_kernel_eqH
 
-SUBROUTINE heat_flux_kernel_soret_fylcnw(erhs,trun,tdrmix,store7,td1y,acbcyl,rgspec,ispec)
+!HEAT FLUX: Soret and DUFOUR fylcnw
+SUBROUTINE hf_kernel_eqI(erhs,trun,tdrmix,store7,td1y,acbcyl,rgspec,ispec)
     
     implicit none
 
@@ -182,9 +191,10 @@ SUBROUTINE heat_flux_kernel_soret_fylcnw(erhs,trun,tdrmix,store7,td1y,acbcyl,rgs
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + rgspec(ispec)*fornow
 
-END SUBROUTINE heat_flux_kernel_soret_fylcnw
+END SUBROUTINE hf_kernel_eqI
 
-SUBROUTINE heat_flux_kernel_soret_fyrcnw(erhs,trun,tdrmix,store7,td1y,acbcyr,rgspec,ispec)
+!HEAT FLUX: Soret and DUFOUR fyrcnw
+SUBROUTINE hf_kernel_eqJ(erhs,trun,tdrmix,store7,td1y,acbcyr,rgspec,ispec)
     
     implicit none
 
@@ -208,9 +218,10 @@ SUBROUTINE heat_flux_kernel_soret_fyrcnw(erhs,trun,tdrmix,store7,td1y,acbcyr,rgs
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + rgspec(ispec)*fornow
 
-END SUBROUTINE heat_flux_kernel_soret_fyrcnw
+END SUBROUTINE hf_kernel_eqJ
 
-SUBROUTINE heat_flux_kernel_soret_fzlcnw(erhs,trun,tdrmix,store7,td1z,acbczl,rgspec,ispec)
+!HEAT FLUX: Soret and DUFOUR fzlcnw
+SUBROUTINE hf_kernel_eqK(erhs,trun,tdrmix,store7,td1z,acbczl,rgspec,ispec)
     
     implicit none
 
@@ -234,9 +245,10 @@ SUBROUTINE heat_flux_kernel_soret_fzlcnw(erhs,trun,tdrmix,store7,td1z,acbczl,rgs
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + rgspec(ispec)*fornow
 
-END SUBROUTINE heat_flux_kernel_soret_fzlcnw
+END SUBROUTINE hf_kernel_eqK
 
-SUBROUTINE heat_flux_kernel_soret_fzrcnw(erhs,trun,tdrmix,store7,td1z,acbczr,rgspec,ispec)
+!HEAT FLUX: Soret and DUFOUR fzrcnw
+SUBROUTINE hf_kernel_eqL(erhs,trun,tdrmix,store7,td1z,acbczr,rgspec,ispec)
     
     implicit none
 
@@ -260,9 +272,10 @@ SUBROUTINE heat_flux_kernel_soret_fzrcnw(erhs,trun,tdrmix,store7,td1z,acbczr,rgs
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + rgspec(ispec)*fornow
 
-END SUBROUTINE heat_flux_kernel_soret_fzrcnw
+END SUBROUTINE hf_kernel_eqL
 
-SUBROUTINE heat_flux_kernel_enthalpy_fxldfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1x,acbcxl,rgspec,ispec)
+!HEAT FLUX: Enthalpy fxldfw 
+SUBROUTINE hf_kernel_eqM(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1x,acbcxl,rgspec,ispec)
     
     implicit none
 
@@ -283,9 +296,10 @@ SUBROUTINE heat_flux_kernel_enthalpy_fxldfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*(utmp(OPS_ACC6(0,0,0))  &
                          + rgspec(ispec)*trun(OPS_ACC4(0,0,0))*tdrmix(OPS_ACC5(0,0,0)))
 
-END SUBROUTINE heat_flux_kernel_enthalpy_fxldfw
+END SUBROUTINE hf_kernel_eqM
 
-SUBROUTINE heat_flux_kernel_enthalpy_fxrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1x,acbcxr,rgspec,ispec)
+!HEAT FLUX: Enthalpy fxrdfw
+SUBROUTINE hf_kernel_eqN(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1x,acbcxr,rgspec,ispec)
     
     implicit none
 
@@ -306,9 +320,10 @@ SUBROUTINE heat_flux_kernel_enthalpy_fxrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*(utmp(OPS_ACC6(0,0,0))  &
                          + rgspec(ispec)*trun(OPS_ACC4(0,0,0))*tdrmix(OPS_ACC5(0,0,0)))
 
-END SUBROUTINE heat_flux_kernel_enthalpy_fxrdfw
+END SUBROUTINE hf_kernel_eqN
 
-SUBROUTINE heat_flux_kernel_enthalpy_fyldfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1y,acbcyl,rgspec,ispec)
+!HEAT FLUX: Enthalpy fyldfw
+SUBROUTINE hf_kernel_eqO(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1y,acbcyl,rgspec,ispec)
     
     implicit none
 
@@ -329,9 +344,10 @@ SUBROUTINE heat_flux_kernel_enthalpy_fyldfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*(utmp(OPS_ACC6(0,0,0))  &
                          + rgspec(ispec)*trun(OPS_ACC4(0,0,0))*tdrmix(OPS_ACC5(0,0,0)))
 
-END SUBROUTINE heat_flux_kernel_enthalpy_fyldfw
+END SUBROUTINE hf_kernel_eqO
 
-SUBROUTINE heat_flux_kernel_enthalpy_fyrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1y,acbcyr,rgspec,ispec)
+!HEAT FLUX: Enthalpy fyrdfw
+SUBROUTINE hf_kernel_eqP(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1y,acbcyr,rgspec,ispec)
     
     implicit none
 
@@ -352,9 +368,10 @@ SUBROUTINE heat_flux_kernel_enthalpy_fyrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*(utmp(OPS_ACC6(0,0,0))  &
                          + rgspec(ispec)*trun(OPS_ACC4(0,0,0))*tdrmix(OPS_ACC5(0,0,0)))
 
-END SUBROUTINE heat_flux_kernel_enthalpy_fyrdfw
+END SUBROUTINE hf_kernel_eqP
 
-SUBROUTINE heat_flux_kernel_enthalpy_fzldfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1z,acbczl,rgspec,ispec)
+!HEAT FLUX: Enthalpy fzldfw
+SUBROUTINE hf_kernel_eqQ(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1z,acbczl,rgspec,ispec)
     
     implicit none
 
@@ -375,9 +392,10 @@ SUBROUTINE heat_flux_kernel_enthalpy_fzldfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*(utmp(OPS_ACC6(0,0,0))  &
                          + rgspec(ispec)*trun(OPS_ACC4(0,0,0))*tdrmix(OPS_ACC5(0,0,0)))
 
-END SUBROUTINE heat_flux_kernel_enthalpy_fzldfw
+END SUBROUTINE hf_kernel_eqQ
 
-SUBROUTINE heat_flux_kernel_enthalpy_fzrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1z,acbczr,rgspec,ispec)
+!HEAT FLUX: Enthalpy fzrdfw
+SUBROUTINE hf_kernel_eqR(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1z,acbczr,rgspec,ispec)
     
     implicit none
 
@@ -398,9 +416,10 @@ SUBROUTINE heat_flux_kernel_enthalpy_fzrdfw(rate,erhs,vtmp,trun,tdrmix,utmp,stor
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*(utmp(OPS_ACC6(0,0,0))  &
                          + rgspec(ispec)*trun(OPS_ACC4(0,0,0))*tdrmix(OPS_ACC5(0,0,0)))
 
-END SUBROUTINE heat_flux_kernel_enthalpy_fzrdfw
+END SUBROUTINE hf_kernel_eqR
 
-SUBROUTINE heat_flux_kernel_enthalpy2_fxldfw(rate,erhs,vtmp,utmp,store7,arr1,acbcxl)
+!HEAT FLUX: Enthalpy fxldfw
+SUBROUTINE hf_kernel_eqS(rate,erhs,vtmp,utmp,store7,arr1,acbcxl)
     
     implicit none
 
@@ -418,9 +437,10 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fxldfw(rate,erhs,vtmp,utmp,store7,arr1,acb
     vtmp(OPS_ACC3(0,0,0)) = vtmp(OPS_ACC3(0,0,0)) + fornow
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*utmp(OPS_ACC4(0,0,0))
 
-END SUBROUTINE heat_flux_kernel_enthalpy2_fxldfw
+END SUBROUTINE hf_kernel_eqS
 
-SUBROUTINE heat_flux_kernel_enthalpy2_fxrdfw(rate,erhs,vtmp,utmp,store7,arr1,acbcxr)
+!HEAT FLUX: Enthalpy fxrdfw
+SUBROUTINE hf_kernel_eqT(rate,erhs,vtmp,utmp,store7,arr1,acbcxr)
     
     implicit none
 
@@ -438,9 +458,10 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fxrdfw(rate,erhs,vtmp,utmp,store7,arr1,acb
     vtmp(OPS_ACC3(0,0,0)) = vtmp(OPS_ACC3(0,0,0)) + fornow
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*utmp(OPS_ACC4(0,0,0))
 
-END SUBROUTINE heat_flux_kernel_enthalpy2_fxrdfw
+END SUBROUTINE hf_kernel_eqT
 
-SUBROUTINE heat_flux_kernel_enthalpy2_fyldfw(rate,erhs,vtmp,utmp,store7,arr1,acbcyl)
+!HEAT FLUX: Enthalpy fxrdfw
+SUBROUTINE hf_kernel_eqU(rate,erhs,vtmp,utmp,store7,arr1,acbcyl)
     
     implicit none
 
@@ -458,9 +479,10 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fyldfw(rate,erhs,vtmp,utmp,store7,arr1,acb
     vtmp(OPS_ACC3(0,0,0)) = vtmp(OPS_ACC3(0,0,0)) + fornow
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*utmp(OPS_ACC4(0,0,0))
 
-END SUBROUTINE heat_flux_kernel_enthalpy2_fyldfw
+END SUBROUTINE hf_kernel_eqU
 
-SUBROUTINE heat_flux_kernel_enthalpy2_fyrdfw(rate,erhs,vtmp,utmp,store7,arr1,acbcyr)
+!HEAT FLUX: Enthalpy fyrdfw
+SUBROUTINE hf_kernel_eqV(rate,erhs,vtmp,utmp,store7,arr1,acbcyr)
     
     implicit none
 
@@ -478,9 +500,10 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fyrdfw(rate,erhs,vtmp,utmp,store7,arr1,acb
     vtmp(OPS_ACC3(0,0,0)) = vtmp(OPS_ACC3(0,0,0)) + fornow
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*utmp(OPS_ACC4(0,0,0))
 
-END SUBROUTINE heat_flux_kernel_enthalpy2_fyrdfw
+END SUBROUTINE hf_kernel_eqV
 
-SUBROUTINE heat_flux_kernel_enthalpy2_fzldfw(rate,erhs,vtmp,utmp,store7,arr1,acbczl)
+!HEAT FLUX: Enthalpy fzldfw
+SUBROUTINE hf_kernel_eqW(rate,erhs,vtmp,utmp,store7,arr1,acbczl)
     
     implicit none
 
@@ -498,9 +521,10 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fzldfw(rate,erhs,vtmp,utmp,store7,arr1,acb
     vtmp(OPS_ACC3(0,0,0)) = vtmp(OPS_ACC3(0,0,0)) + fornow
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*utmp(OPS_ACC4(0,0,0))
 
-END SUBROUTINE heat_flux_kernel_enthalpy2_fzldfw
+END SUBROUTINE hf_kernel_eqW
 
-SUBROUTINE heat_flux_kernel_enthalpy2_fzrdfw(rate,erhs,vtmp,utmp,store7,arr1,acbczr)
+!HEAT FLUX: Enthalpy fzrdfw
+SUBROUTINE hf_kernel_eqX(rate,erhs,vtmp,utmp,store7,arr1,acbczr)
     
     implicit none
 
@@ -518,9 +542,10 @@ SUBROUTINE heat_flux_kernel_enthalpy2_fzrdfw(rate,erhs,vtmp,utmp,store7,arr1,acb
     vtmp(OPS_ACC3(0,0,0)) = vtmp(OPS_ACC3(0,0,0)) + fornow
     erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0)) + fornow*utmp(OPS_ACC4(0,0,0))
 
-END SUBROUTINE heat_flux_kernel_enthalpy2_fzrdfw
+END SUBROUTINE hf_kernel_eqX
 
-SUBROUTINE heat_flux_kernel_isothermal_fxladw(erhs,trun,tdrmix,store7,td1x,acbcxl,rgspec,ispec)
+!HEAT FLUX: Isothermal fxladw
+SUBROUTINE hf_kernel_eqY(erhs,trun,tdrmix,store7,td1x,acbcxl,rgspec,ispec)
     
     implicit none
 
@@ -545,9 +570,10 @@ SUBROUTINE heat_flux_kernel_isothermal_fxladw(erhs,trun,tdrmix,store7,td1x,acbcx
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + rgspec(ispec)*fornow
 
-END SUBROUTINE heat_flux_kernel_isothermal_fxladw
+END SUBROUTINE hf_kernel_eqY
 
-SUBROUTINE heat_flux_kernel_isothermal_fxradw(erhs,trun,tdrmix,store7,td1x,acbcxr,rgspec,ispec)
+!HEAT FLUX: Isothermal fxradw
+SUBROUTINE hf_kernel_eqZ(erhs,trun,tdrmix,store7,td1x,acbcxr,rgspec,ispec)
     
     implicit none
 
@@ -572,9 +598,10 @@ SUBROUTINE heat_flux_kernel_isothermal_fxradw(erhs,trun,tdrmix,store7,td1x,acbcx
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + rgspec(ispec)*fornow
 
-END SUBROUTINE heat_flux_kernel_isothermal_fxradw
+END SUBROUTINE hf_kernel_eqZ
 
-SUBROUTINE heat_flux_kernel_isothermal_fyladw(erhs,trun,tdrmix,store7,td1y,acbcyl,rgspec,ispec)
+!HEAT FLUX: Isothermal fyladw
+SUBROUTINE hf_kernel_eqAA(erhs,trun,tdrmix,store7,td1y,acbcyl,rgspec,ispec)
     
     implicit none
 
@@ -599,9 +626,10 @@ SUBROUTINE heat_flux_kernel_isothermal_fyladw(erhs,trun,tdrmix,store7,td1y,acbcy
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + rgspec(ispec)*fornow
 
-END SUBROUTINE heat_flux_kernel_isothermal_fyladw
+END SUBROUTINE hf_kernel_eqAA
 
-SUBROUTINE heat_flux_kernel_isothermal_fyradw(erhs,trun,tdrmix,store7,td1y,acbcyr,rgspec,ispec)
+!HEAT FLUX: Isothermal fyradw
+SUBROUTINE hf_kernel_eqAB(erhs,trun,tdrmix,store7,td1y,acbcyr,rgspec,ispec)
     
     implicit none
 
@@ -626,9 +654,10 @@ SUBROUTINE heat_flux_kernel_isothermal_fyradw(erhs,trun,tdrmix,store7,td1y,acbcy
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + rgspec(ispec)*fornow
 
-END SUBROUTINE heat_flux_kernel_isothermal_fyradw
+END SUBROUTINE hf_kernel_eqAB
 
-SUBROUTINE heat_flux_kernel_isothermal_fzladw(erhs,trun,tdrmix,store7,td1z,acbczl,rgspec,ispec)
+!HEAT FLUX: Isothermal fzladw
+SUBROUTINE hf_kernel_eqAC(erhs,trun,tdrmix,store7,td1z,acbczl,rgspec,ispec)
     
     implicit none
 
@@ -653,9 +682,10 @@ SUBROUTINE heat_flux_kernel_isothermal_fzladw(erhs,trun,tdrmix,store7,td1z,acbcz
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + rgspec(ispec)*fornow
 
-END SUBROUTINE heat_flux_kernel_isothermal_fzladw
+END SUBROUTINE hf_kernel_eqAC
 
-SUBROUTINE heat_flux_kernel_isothermal_fzradw(erhs,trun,tdrmix,store7,td1z,acbczr,rgspec,ispec)
+!HEAT FLUX: Isothermal fzradw
+SUBROUTINE hf_kernel_eqAD(erhs,trun,tdrmix,store7,td1z,acbczr,rgspec,ispec)
     
     implicit none
 
@@ -680,4 +710,4 @@ SUBROUTINE heat_flux_kernel_isothermal_fzradw(erhs,trun,tdrmix,store7,td1z,acbcz
 
     erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) + rgspec(ispec)*fornow
 
-END SUBROUTINE heat_flux_kernel_isothermal_fzradw
+END SUBROUTINE hf_kernel_eqAD
