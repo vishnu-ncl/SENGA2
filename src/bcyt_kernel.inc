@@ -1,6 +1,6 @@
 SUBROUTINE bcyt_kernel_xdir(stryx,dydtx,yrin,ispec)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: stryx,dydtx
     integer(kind=4), intent(in) :: ispec
@@ -13,7 +13,7 @@ END SUBROUTINE bcyt_kernel_xdir
 
 SUBROUTINE bcyt_kernel_ydir(stryy,dydty,yrin,ispec)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: stryy,dydty
     integer(kind=4), intent(in) :: ispec
@@ -26,7 +26,7 @@ END SUBROUTINE bcyt_kernel_ydir
 
 SUBROUTINE bcyt_kernel_zdir(stryz,dydtz,yrin,ispec)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: stryz,dydtz
     integer(kind=4), intent(in) :: ispec

@@ -1,6 +1,6 @@
 SUBROUTINE dfbydz_kernel_null(fderiv)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: fderiv
 
@@ -10,7 +10,7 @@ END SUBROUTINE dfbydz_kernel_null
 
 SUBROUTINE dfbydz_kernel_main(functn, fderiv, nzglbl, nendzl, nendzr, nbound, idx)
     
-    implicit none
+    
 
     real(kind=8), dimension(1), intent(in) :: functn
     real(kind=8), dimension(1) :: fderiv

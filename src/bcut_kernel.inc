@@ -1,6 +1,6 @@
 SUBROUTINE bcut_kernel_xdir_const_uvel(strux, strvx, strwx, dudtx, dvdtx, dwdtx, init_val)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: strux, strvx, strwx, dudtx, dvdtx, dwdtx
     real(kind=8), dimension(nbcprr), intent(in) :: init_val
@@ -17,7 +17,7 @@ END SUBROUTINE bcut_kernel_xdir_const_uvel
 
 SUBROUTINE bcut_kernel_xdir_sinusoidal_uvel(strux, strvx, strwx, dudtx, dvdtx, dwdtx, init_val1, init_val2)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: strux, strvx, strwx, dudtx, dvdtx, dwdtx
     real(kind=8), intent(in) :: init_val1, init_val2
@@ -34,7 +34,7 @@ END SUBROUTINE bcut_kernel_xdir_sinusoidal_uvel
 
 SUBROUTINE bcut_kernel_ydir(struy, strvy, strwy, dudty, dvdty, dwdty, init_val)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: struy, strvy, strwy, dudty, dvdty, dwdty
     real(kind=8), dimension(nbcprr), intent(in) :: init_val
@@ -51,7 +51,7 @@ END SUBROUTINE bcut_kernel_ydir
 
 SUBROUTINE bcut_kernel_zdir(struz, strvz, strwz, dudtz, dvdtz, dwdtz, init_val)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: struz, strvz, strwz, dudtz, dvdtz, dwdtz
     real(kind=8), dimension(nbcprr), intent(in) :: init_val
@@ -69,7 +69,7 @@ END SUBROUTINE bcut_kernel_zdir
 !A = A + B*val1
 SUBROUTINE bcut_kernel_xdir_eqA(out_arr, in_arr, val1)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr
@@ -82,7 +82,7 @@ END SUBROUTINE bcut_kernel_xdir_eqA
 !A = A - val1*B*val2
 SUBROUTINE bcut_kernel_xdir_eqB(out_arr, in_arr, val1, val2)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr
@@ -95,7 +95,7 @@ END SUBROUTINE bcut_kernel_xdir_eqB
 !A = A + val1*B*val2
 SUBROUTINE bcut_kernel_xdir_eqC(out_arr, in_arr, val1, val2)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr
@@ -108,7 +108,7 @@ END SUBROUTINE bcut_kernel_xdir_eqC
 !A = A * val1
 SUBROUTINE bcut_kernel_xdir_eqD(out_arr, val1)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), intent(in) :: val1
@@ -120,7 +120,7 @@ END SUBROUTINE bcut_kernel_xdir_eqD
 !A = A + val1
 SUBROUTINE bcut_kernel_xdir_eqE(out_arr, val1)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), intent(in) :: val1

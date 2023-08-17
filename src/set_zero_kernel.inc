@@ -1,7 +1,7 @@
 !set zero for x,y,z dimension
 SUBROUTINE set_zero_kernel(farray)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: farray
 
@@ -11,7 +11,7 @@ END SUBROUTINE set_zero_kernel
 
 SUBROUTINE set_zero_kernel_MD5(farray, ispec)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: farray
     integer(kind=4) :: ispec
@@ -22,7 +22,7 @@ END SUBROUTINE set_zero_kernel_MD5
 
 SUBROUTINE set_zero_kernel_MD6(farray, ispec)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: farray
     integer(kind=4) :: ispec
@@ -33,7 +33,7 @@ END SUBROUTINE set_zero_kernel_MD6
 
 SUBROUTINE set_zero_kernel_int(farray)
     
-    implicit none
+    
 
     integer(kind=4), dimension(1) :: farray
 
@@ -45,7 +45,7 @@ END SUBROUTINE set_zero_kernel_int
 !set zero for y,z dimension
 SUBROUTINE set_zero_kernel_xdir(farray)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: farray
 
@@ -57,7 +57,7 @@ END SUBROUTINE set_zero_kernel_xdir
 !set zero for x,z dimension
 SUBROUTINE set_zero_kernel_ydir(farray)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: farray
 
@@ -69,7 +69,7 @@ END SUBROUTINE set_zero_kernel_ydir
 !set zero for x,y dimension
 SUBROUTINE set_zero_kernel_zdir(farray)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: farray
 

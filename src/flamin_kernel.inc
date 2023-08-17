@@ -1,6 +1,6 @@
 SUBROUTINE flamin_kernel_set_velocity_tgv(urun, vrun, wrun, prun, prin, drin, u0, deltagx, deltagy, deltagz, angfrx, angfry, angfrz, idx)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: urun, vrun, wrun, prun
     real(kind=8), intent(in) :: prin,drin,u0, deltagx, deltagy, deltagz
@@ -40,7 +40,7 @@ END SUBROUTINE flamin_kernel_set_velocity_tgv
 !A = B/var
 SUBROUTINE flamin_kernel_eqA(trun, prun, rglocl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: trun
     real(kind=8), dimension(1), intent(in) :: prun

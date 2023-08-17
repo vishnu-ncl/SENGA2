@@ -1,6 +1,6 @@
 SUBROUTINE boundt_kernel_eqA_xdir(urhs,vrhs,wrhs,drhs,strux,strvx,strwx)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: urhs,vrhs,wrhs
     real(kind=8), dimension(1), intent(in) :: drhs,strux,strvx,strwx
@@ -13,7 +13,7 @@ END SUBROUTINE boundt_kernel_eqA_xdir
 
 SUBROUTINE boundt_kernel_eqA_ydir(urhs,vrhs,wrhs,drhs,struy,strvy,strwy)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: urhs,vrhs,wrhs
     real(kind=8), dimension(1), intent(in) :: drhs,struy,strvy,strwy
@@ -26,7 +26,7 @@ END SUBROUTINE boundt_kernel_eqA_ydir
 
 SUBROUTINE boundt_kernel_eqA_zdir(urhs,vrhs,wrhs,drhs,struz,strvz,strwz)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: urhs,vrhs,wrhs
     real(kind=8), dimension(1), intent(in) :: drhs,struz,strvz,strwz
@@ -39,7 +39,7 @@ END SUBROUTINE boundt_kernel_eqA_zdir
 
 SUBROUTINE boundt_kernel_eqB_xdir(erhs,drhs,strux,strvx,strwx)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: drhs,strux,strvx,strwx
@@ -53,7 +53,7 @@ END SUBROUTINE boundt_kernel_eqB_xdir
 
 SUBROUTINE boundt_kernel_eqB_ydir(erhs,drhs,struy,strvy,strwy)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: drhs,struy,strvy,strwy
@@ -67,7 +67,7 @@ END SUBROUTINE boundt_kernel_eqB_ydir
 
 SUBROUTINE boundt_kernel_eqB_zdir(erhs,drhs,struz,strvz,strwz)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: drhs,struz,strvz,strwz
@@ -81,7 +81,7 @@ END SUBROUTINE boundt_kernel_eqB_zdir
 
 SUBROUTINE boundt_kernel_eqC_xdir(drhs,urhs,vrhs,wrhs,strdx,strux,strvx,strwx)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs
     real(kind=8), dimension(1), intent(in) :: strdx,strux,strvx,strwx
@@ -96,7 +96,7 @@ END SUBROUTINE boundt_kernel_eqC_xdir
 
 SUBROUTINE boundt_kernel_eqC_ydir(drhs,urhs,vrhs,wrhs,strdy,struy,strvy,strwy)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs
     real(kind=8), dimension(1), intent(in) :: strdy,struy,strvy,strwy
@@ -111,7 +111,7 @@ END SUBROUTINE boundt_kernel_eqC_ydir
 
 SUBROUTINE boundt_kernel_eqC_zdir(drhs,urhs,vrhs,wrhs,strdz,struz,strvz,strwz)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs
     real(kind=8), dimension(1), intent(in) :: strdz,struz,strvz,strwz
@@ -126,7 +126,7 @@ END SUBROUTINE boundt_kernel_eqC_zdir
 
 SUBROUTINE boundt_kernel_eqD_xdir(yrhs,stryx,strdx)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryx,strdx
@@ -137,7 +137,7 @@ END SUBROUTINE boundt_kernel_eqD_xdir
 
 SUBROUTINE boundt_kernel_eqD_ydir(yrhs,stryy,strdy)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryy,strdy
@@ -148,7 +148,7 @@ END SUBROUTINE boundt_kernel_eqD_ydir
 
 SUBROUTINE boundt_kernel_eqD_zdir(yrhs,stryz,strdz)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryz,strdz
@@ -159,7 +159,7 @@ END SUBROUTINE boundt_kernel_eqD_zdir
 
 SUBROUTINE boundt_kernel_eqE_xdir(strtx,itndex,tinthi,ntint,ipower,ispec)
     
-    implicit none
+    
 
     integer(kind=4), dimension(1) :: itndex
     real(kind=8), dimension(1), intent(in) :: strtx
@@ -180,7 +180,7 @@ END SUBROUTINE boundt_kernel_eqE_xdir
 
 SUBROUTINE boundt_kernel_eqE_ydir(strty,itndex,tinthi,ntint,ipower,ispec)
     
-    implicit none
+    
 
     integer(kind=4), dimension(1) :: itndex
     real(kind=8), dimension(1), intent(in) :: strty
@@ -201,7 +201,7 @@ END SUBROUTINE boundt_kernel_eqE_ydir
 
 SUBROUTINE boundt_kernel_eqE_zdir(strtz,itndex,tinthi,ntint,ipower,ispec)
     
-    implicit none
+    
 
     integer(kind=4), dimension(1) :: itndex
     real(kind=8), dimension(1), intent(in) :: strtz
@@ -222,7 +222,7 @@ END SUBROUTINE boundt_kernel_eqE_zdir
 
 SUBROUTINE boundt_kernel_eqF_xdir(erhs,yrhs,itndex,drhs,strtx,stryx,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,icoef1,icoef2)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs,yrhs
     integer(kind=4), dimension(1), intent(in) :: itndex
@@ -256,7 +256,7 @@ END SUBROUTINE boundt_kernel_eqF_xdir
 
 SUBROUTINE boundt_kernel_eqF_ydir(erhs,yrhs,itndex,drhs,strty,stryy,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,icoef1,icoef2)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs,yrhs
     integer(kind=4), dimension(1), intent(in) :: itndex
@@ -290,7 +290,7 @@ END SUBROUTINE boundt_kernel_eqF_ydir
 
 SUBROUTINE boundt_kernel_eqF_zdir(erhs,yrhs,itndex,drhs,strtz,stryz,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,icoef1,icoef2)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs,yrhs
     integer(kind=4), dimension(1), intent(in) :: itndex
@@ -324,7 +324,7 @@ END SUBROUTINE boundt_kernel_eqF_zdir
 
 SUBROUTINE boundt_kernel_eqG_xdir(erhs,yrhs,itndex,strtx,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,icoef1,icoef2)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs
     integer(kind=4), dimension(1), intent(in) :: itndex
@@ -356,7 +356,7 @@ END SUBROUTINE boundt_kernel_eqG_xdir
 
 SUBROUTINE boundt_kernel_eqG_ydir(erhs,yrhs,itndex,strty,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,icoef1,icoef2)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs
     integer(kind=4), dimension(1), intent(in) :: itndex
@@ -388,7 +388,7 @@ END SUBROUTINE boundt_kernel_eqG_ydir
 
 SUBROUTINE boundt_kernel_eqG_zdir(erhs,yrhs,itndex,strtz,amasch,rgspec,ncpoly,ncpom1,ncenth,ispec,icoef1,icoef2)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs
     integer(kind=4), dimension(1), intent(in) :: itndex

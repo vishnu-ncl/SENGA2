@@ -2801,7 +2801,7 @@ SUBROUTINE rhscal
 
         IF(fzlcnv) THEN
             rangexyz = [1,nxglbl,1,nyglbl,1,1]
-            call ops_par_loop(boundary_kernel_density_zdir, "COLLECT DENSITY AND ITS GRADIENTS FOR BCs 2804", senga_grid, 3, rangexyz, &
+            call ops_par_loop(boundary_kernel_density_zdir, "COLLECT DENSITY AND ITS GRADIENTS FOR BCs - RHSCAL 2804", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
@@ -2810,7 +2810,7 @@ SUBROUTINE rhscal
         END IF
         IF(fzrcnv) THEN
             rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
-            call ops_par_loop(boundary_kernel_density_zdir, "COLLECT DENSITY AND ITS GRADIENTS FOR BCs 2813", senga_grid, 3, rangexyz, &
+            call ops_par_loop(boundary_kernel_density_zdir, "COLLECT DENSITY AND ITS GRADIENTS FOR BCs - RHSCAL 2813", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &

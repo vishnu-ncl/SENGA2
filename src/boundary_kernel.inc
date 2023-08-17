@@ -1,6 +1,6 @@
 SUBROUTINE boundary_kernel_CPandGAS_xdir(transp,store7,drhs,strgx,strrx)
     
-    implicit none
+    
 
     real(kind=8), dimension(1), intent(in) :: transp, store7, drhs
     real(kind=8), dimension(1) :: strgx,strrx
@@ -12,7 +12,7 @@ END SUBROUTINE boundary_kernel_CPandGAS_xdir
 
 SUBROUTINE boundary_kernel_CPandGAS_ydir(transp,store7,drhs,strgy,strry)
     
-    implicit none
+    
 
     real(kind=8), dimension(1), intent(in) :: transp, store7, drhs
     real(kind=8), dimension(1) :: strgy,strry
@@ -24,7 +24,7 @@ END SUBROUTINE boundary_kernel_CPandGAS_ydir
 
 SUBROUTINE boundary_kernel_CPandGAS_zdir(transp,store7,drhs,strgz,strrz)
     
-    implicit none
+    
 
     real(kind=8), dimension(1), intent(in) :: transp, store7, drhs
     real(kind=8), dimension(1) :: strgz,strrz
@@ -36,7 +36,7 @@ END SUBROUTINE boundary_kernel_CPandGAS_zdir
 
 SUBROUTINE boundary_kernel_internalenergy_xdir(erhs,strex)
     
-    implicit none
+    
 
     real(kind=8), dimension(1), intent(in) :: erhs
     real(kind=8), dimension(1) :: strex
@@ -47,7 +47,7 @@ END SUBROUTINE boundary_kernel_internalenergy_xdir
 
 SUBROUTINE boundary_kernel_internalenergy_ydir(erhs,strey)
     
-    implicit none
+    
 
     real(kind=8), dimension(1), intent(in) :: erhs
     real(kind=8), dimension(1) :: strey
@@ -58,7 +58,7 @@ END SUBROUTINE boundary_kernel_internalenergy_ydir
 
 SUBROUTINE boundary_kernel_internalenergy_zdir(erhs,strez)
     
-    implicit none
+    
 
     real(kind=8), dimension(1), intent(in) :: erhs
     real(kind=8), dimension(1) :: strez
@@ -69,7 +69,7 @@ END SUBROUTINE boundary_kernel_internalenergy_zdir
 
 SUBROUTINE boundary_kernel_temperature_xdir(trun,store1,strtx,bcltx)
     
-    implicit none
+    
 
     real(kind=8), dimension(1), intent(in) :: trun,store1
     real(kind=8), dimension(1) :: strtx,bcltx
@@ -81,7 +81,7 @@ END SUBROUTINE boundary_kernel_temperature_xdir
 
 SUBROUTINE boundary_kernel_temperature_ydir(trun,store1,strty,bclty)
     
-    implicit none
+    
 
     real(kind=8), dimension(1), intent(in) :: trun,store1
     real(kind=8), dimension(1) :: strty,bclty
@@ -93,7 +93,7 @@ END SUBROUTINE boundary_kernel_temperature_ydir
 
 SUBROUTINE boundary_kernel_temperature_zdir(trun,store1,strtz,bcltz)
     
-    implicit none
+    
 
     real(kind=8), dimension(1), intent(in) :: trun,store1
     real(kind=8), dimension(1) :: strtz,bcltz
@@ -105,7 +105,7 @@ END SUBROUTINE boundary_kernel_temperature_zdir
 
 SUBROUTINE boundary_kernel_density_xdir(drhs,store,strdx,bcl2x)
     
-    implicit none
+    
 
     real(kind=8), dimension(1), intent(in) :: drhs,store
     real(kind=8), dimension(1) :: strdx,bcl2x
@@ -117,7 +117,7 @@ END SUBROUTINE boundary_kernel_density_xdir
 
 SUBROUTINE boundary_kernel_density_ydir(drhs,store,strdy,bcl2y)
     
-    implicit none
+    
 
     real(kind=8), dimension(1), intent(in) :: drhs,store
     real(kind=8), dimension(1) :: strdy,bcl2y
@@ -129,7 +129,7 @@ END SUBROUTINE boundary_kernel_density_ydir
 
 SUBROUTINE boundary_kernel_density_zdir(drhs,store,strdz,bcl2z)
     
-    implicit none
+    
 
     real(kind=8), dimension(1), intent(in) :: drhs,store
     real(kind=8), dimension(1) :: strdz,bcl2z
@@ -141,7 +141,7 @@ END SUBROUTINE boundary_kernel_density_zdir
 
 SUBROUTINE boundary_kernel_velcomp_xdir(utmp,vtmp,wtmp,strux,strvx,strwx)
     
-    implicit none
+    
 
     real(kind=8), dimension(1), intent(in) :: utmp,vtmp,wtmp
     real(kind=8), dimension(1) :: strux,strvx,strwx
@@ -154,7 +154,7 @@ END SUBROUTINE boundary_kernel_velcomp_xdir
 
 SUBROUTINE boundary_kernel_velcomp_ydir(utmp,vtmp,wtmp,struy,strvy,strwy)
     
-    implicit none
+    
 
     real(kind=8), dimension(1), intent(in) :: utmp,vtmp,wtmp
     real(kind=8), dimension(1) :: struy,strvy,strwy
@@ -167,7 +167,7 @@ END SUBROUTINE boundary_kernel_velcomp_ydir
 
 SUBROUTINE boundary_kernel_velcomp_zdir(utmp,vtmp,wtmp,struz,strvz,strwz)
     
-    implicit none
+    
 
     real(kind=8), dimension(1), intent(in) :: utmp,vtmp,wtmp
     real(kind=8), dimension(1) :: struz,strvz,strwz
@@ -180,7 +180,7 @@ END SUBROUTINE boundary_kernel_velcomp_zdir
 
 SUBROUTINE boundary_kernel_pressure_xdir(prun,store4,strpx,bcl5x)
     
-    implicit none
+    
 
     real(kind=8), dimension(1), intent(in) :: prun,store4
     real(kind=8), dimension(1) :: strpx,bcl5x
@@ -192,7 +192,7 @@ END SUBROUTINE boundary_kernel_pressure_xdir
 
 SUBROUTINE boundary_kernel_pressure_ydir(prun,store5,strpy,bcl5y)
     
-    implicit none
+    
 
     real(kind=8), dimension(1), intent(in) :: prun,store5
     real(kind=8), dimension(1) :: strpy,bcl5y
@@ -204,7 +204,7 @@ END SUBROUTINE boundary_kernel_pressure_ydir
 
 SUBROUTINE boundary_kernel_pressure_zdir(prun,store6,strpz,bcl5z)
     
-    implicit none
+    
 
     real(kind=8), dimension(1), intent(in) :: prun,store6
     real(kind=8), dimension(1) :: strpz,bcl5z
@@ -216,7 +216,7 @@ END SUBROUTINE boundary_kernel_pressure_zdir
 
 SUBROUTINE boundary_kernel_velderiv_xdir(store,bclx)
     
-    implicit none
+    
 
     real(kind=8), dimension(1), intent(in) :: store
     real(kind=8), dimension(1) :: bclx
@@ -227,7 +227,7 @@ END SUBROUTINE boundary_kernel_velderiv_xdir
 
 SUBROUTINE boundary_kernel_velderiv_ydir(store,bcly)
     
-    implicit none
+    
 
     real(kind=8), dimension(1), intent(in) :: store
     real(kind=8), dimension(1) :: bcly
@@ -238,7 +238,7 @@ END SUBROUTINE boundary_kernel_velderiv_ydir
 
 SUBROUTINE boundary_kernel_velderiv_zdir(store,bclz)
     
-    implicit none
+    
 
     real(kind=8), dimension(1), intent(in) :: store
     real(kind=8), dimension(1) :: bclz
@@ -249,7 +249,7 @@ END SUBROUTINE boundary_kernel_velderiv_zdir
 
 SUBROUTINE boundary_kernel_mass_xdir(yrhs, store1, stryx, bclyx)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: stryx, bclyx
     real(kind=8), dimension(1), intent(in) :: yrhs, store1
@@ -261,7 +261,7 @@ END SUBROUTINE boundary_kernel_mass_xdir
 
 SUBROUTINE boundary_kernel_mass_ydir(yrhs, store2, stryy, bclyy)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: stryy, bclyy
     real(kind=8), dimension(1), intent(in) :: yrhs, store2
@@ -273,7 +273,7 @@ END SUBROUTINE boundary_kernel_mass_ydir
 
 SUBROUTINE boundary_kernel_mass_zdir(yrhs, store3, stryz, bclyz)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: stryz, bclyz
     real(kind=8), dimension(1), intent(in) :: yrhs, store3
@@ -285,7 +285,7 @@ END SUBROUTINE boundary_kernel_mass_zdir
 
 SUBROUTINE boundary_kernel_speciesH_xdir(utmp, strhx)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: strhx
     real(kind=8), dimension(1), intent(in) :: utmp
@@ -296,7 +296,7 @@ END SUBROUTINE boundary_kernel_speciesH_xdir
 
 SUBROUTINE boundary_kernel_speciesH_ydir(utmp, strhy)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: strhy
     real(kind=8), dimension(1), intent(in) :: utmp
@@ -307,7 +307,7 @@ END SUBROUTINE boundary_kernel_speciesH_ydir
 
 SUBROUTINE boundary_kernel_speciesH_zdir(utmp, strhz)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: strhz
     real(kind=8), dimension(1), intent(in) :: utmp

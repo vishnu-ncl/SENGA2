@@ -1,6 +1,6 @@
 SUBROUTINE bounds_kernel_reduced_enthalpy_xdir(strhx,strgx,strtx,strrx,rgspec,ispec)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: strhx
     real(kind=8), dimension(1), intent(in) :: strgx,strtx,strrx
@@ -14,7 +14,7 @@ END SUBROUTINE bounds_kernel_reduced_enthalpy_xdir
 
 SUBROUTINE bounds_kernel_reduced_enthalpy_ydir(strhy,strgy,strty,strry,rgspec,ispec)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: strhy
     real(kind=8), dimension(1), intent(in) :: strgy,strty,strry
@@ -28,7 +28,7 @@ END SUBROUTINE bounds_kernel_reduced_enthalpy_ydir
 
 SUBROUTINE bounds_kernel_reduced_enthalpy_zdir(strhz,strgz,strtz,strrz,rgspec,ispec)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: strhz
     real(kind=8), dimension(1), intent(in) :: strgz,strtz,strrz
@@ -42,7 +42,7 @@ END SUBROUTINE bounds_kernel_reduced_enthalpy_zdir
 
 SUBROUTINE bounds_kernel_reduced_energy_xdir(gam1x,strex,ovgmx,strgx,strrx,strtx)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: gam1x,strex,ovgmx
     real(kind=8), dimension(1), intent(in) :: strgx,strrx,strtx
@@ -57,7 +57,7 @@ END SUBROUTINE bounds_kernel_reduced_energy_xdir
 
 SUBROUTINE bounds_kernel_reduced_energy_ydir(gam1y,strey,ovgmy,strgy,strry,strty)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: gam1y,strey,ovgmy
     real(kind=8), dimension(1), intent(in) :: strgy,strry,strty
@@ -72,7 +72,7 @@ END SUBROUTINE bounds_kernel_reduced_energy_ydir
 
 SUBROUTINE bounds_kernel_reduced_energy_zdir(gam1z,strez,ovgmz,strgz,strrz,strtz)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: gam1z,strez,ovgmz
     real(kind=8), dimension(1), intent(in) :: strgz,strrz,strtz
@@ -87,7 +87,7 @@ END SUBROUTINE bounds_kernel_reduced_energy_zdir
 
 SUBROUTINE bounds_kernel_sound_speed_xdir(acoux,ova2x,strgx,gam1x,strtx)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: acoux,ova2x
     real(kind=8), dimension(1), intent(in) :: strgx,gam1x,strtx
@@ -101,7 +101,7 @@ END SUBROUTINE bounds_kernel_sound_speed_xdir
 
 SUBROUTINE bounds_kernel_sound_speed_ydir(acouy,ova2y,strgy,gam1y,strty)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: acouy,ova2y
     real(kind=8), dimension(1), intent(in) :: strgy,gam1y,strty
@@ -115,7 +115,7 @@ END SUBROUTINE bounds_kernel_sound_speed_ydir
 
 SUBROUTINE bounds_kernel_sound_speed_zdir(acouz,ova2z,strgz,gam1z,strtz)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: acouz,ova2z
     real(kind=8), dimension(1), intent(in) :: strgz,gam1z,strtz
@@ -130,7 +130,7 @@ END SUBROUTINE bounds_kernel_sound_speed_zdir
 !A_yz = A_yz + B_mulditim_yz*C_multidim_yz
 SUBROUTINE bounds_kernel_eqA_xdir(sorpx,strhx,ratex)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: sorpx
     real(kind=8), dimension(1), intent(in) :: strhx,ratex
@@ -142,7 +142,7 @@ END SUBROUTINE bounds_kernel_eqA_xdir
 !A_xz = A_xz + B_mulditim_xz*C_multidim_xz
 SUBROUTINE bounds_kernel_eqA_ydir(sorpy,strhy,ratey)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: sorpy
     real(kind=8), dimension(1), intent(in) :: strhy,ratey
@@ -154,7 +154,7 @@ END SUBROUTINE bounds_kernel_eqA_ydir
 !A_xy = A_xy + B_mulditim_xy*C_multidim_xy
 SUBROUTINE bounds_kernel_eqA_zdir(sorpz,strhz,ratez)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: sorpz
     real(kind=8), dimension(1), intent(in) :: strhz,ratez
@@ -166,7 +166,7 @@ END SUBROUTINE bounds_kernel_eqA_zdir
 !A_yz = A_yz + B_mulditim_yz*val1
 SUBROUTINE bounds_kernel_eqB_xdir(sydtx,dydtx,rgspec,ispec)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: sydtx
     real(kind=8), dimension(1), intent(in) :: dydtx
@@ -180,7 +180,7 @@ END SUBROUTINE bounds_kernel_eqB_xdir
 !A_xz = A_xz + B_mulditim_xz*val1
 SUBROUTINE bounds_kernel_eqB_ydir(sydty,dydty,rgspec,ispec)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: sydty
     real(kind=8), dimension(1), intent(in) :: dydty
@@ -194,7 +194,7 @@ END SUBROUTINE bounds_kernel_eqB_ydir
 !A_xy = A_xy + B_mulditim_xy*val1
 SUBROUTINE bounds_kernel_eqB_zdir(sydtz,dydtz,rgspec,ispec)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: sydtz
     real(kind=8), dimension(1), intent(in) :: dydtz
@@ -208,7 +208,7 @@ END SUBROUTINE bounds_kernel_eqB_zdir
 !A_xy = -A_xy*B_xy
 SUBROUTINE bounds_kernel_eqC_xdir(sorpx,gam1x)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: sorpx
     real(kind=8), dimension(1), intent(in) :: gam1x
@@ -220,7 +220,7 @@ END SUBROUTINE bounds_kernel_eqC_xdir
 !A_xz = -A_xz*B_xz
 SUBROUTINE bounds_kernel_eqC_ydir(sorpy,gam1y)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: sorpy
     real(kind=8), dimension(1), intent(in) :: gam1y
@@ -232,7 +232,7 @@ END SUBROUTINE bounds_kernel_eqC_ydir
 !A_xy = -A_xy*B_xy
 SUBROUTINE bounds_kernel_eqC_zdir(sorpz,gam1z)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: sorpz
     real(kind=8), dimension(1), intent(in) :: gam1z
@@ -244,7 +244,7 @@ END SUBROUTINE bounds_kernel_eqC_zdir
 !A_yz = A_yz/B_yz
 SUBROUTINE bounds_kernel_eqD_xdir(sydtx,strrx)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: sydtx
     real(kind=8), dimension(1), intent(in) :: strrx
@@ -256,7 +256,7 @@ END SUBROUTINE bounds_kernel_eqD_xdir
 !A_xz = A_xz/B_xz
 SUBROUTINE bounds_kernel_eqD_ydir(sydty,strry)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: sydty
     real(kind=8), dimension(1), intent(in) :: strry
@@ -268,7 +268,7 @@ END SUBROUTINE bounds_kernel_eqD_ydir
 !A_xy = A_xy/B_xy
 SUBROUTINE bounds_kernel_eqD_zdir(sydtz,strrz)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: sydtz
     real(kind=8), dimension(1), intent(in) :: strrz
@@ -279,7 +279,7 @@ END SUBROUTINE bounds_kernel_eqD_zdir
 
 SUBROUTINE bounds_kernel_outflowBC1_computeL_xl(bcl5xl,struxl,acouxl,strdxl,bcl1xl,sorpxl,strpxl,cobcxl,pinfxl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl5xl
     real(kind=8), dimension(1), intent(in) :: struxl,acouxl,strdxl,bcl1xl,sorpxl,strpxl
@@ -297,7 +297,7 @@ END SUBROUTINE bounds_kernel_outflowBC1_computeL_xl
 
 SUBROUTINE bounds_kernel_outflowBC1_computeL_yl(bcl5yl,strvyl,acouyl,strdyl,bcl1yl,sorpyl,strpyl,cobcyl,pinfyl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl5yl
     real(kind=8), dimension(1), intent(in) :: strvyl,acouyl,strdyl,bcl1yl,sorpyl,strpyl
@@ -315,7 +315,7 @@ END SUBROUTINE bounds_kernel_outflowBC1_computeL_yl
 
 SUBROUTINE bounds_kernel_outflowBC1_computeL_zl(bcl5zl,strwzl,acouzl,strdzl,bcl1zl,sorpzl,strpzl,cobczl,pinfzl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl5zl
     real(kind=8), dimension(1), intent(in) :: strwzl,acouzl,strdzl,bcl1zl,sorpzl,strpzl
@@ -333,7 +333,7 @@ END SUBROUTINE bounds_kernel_outflowBC1_computeL_zl
 
 SUBROUTINE bounds_kernel_inflowBC1_computeL_xl(bcl2xl,bcl3xl,bcl4xl,bcl5xl,strdxl,acouxl,bcl1xl,struxl,ova2xl,sorpxl,strpxl,cobcxl,pinfxl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl2xl,bcl3xl,bcl4xl,bcl5xl
     real(kind=8), dimension(1), intent(in) :: strdxl,acouxl,bcl1xl,struxl,ova2xl,sorpxl,strpxl
@@ -361,7 +361,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_computeL_xl
 
 SUBROUTINE bounds_kernel_inflowBC1_computeL_yl(bcl2yl,bcl3yl,bcl4yl,bcl5yl,strdyl,acouyl,bcl1yl,strvyl,ova2yl,sorpyl,strpyl,cobcyl,pinfyl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl2yl,bcl3yl,bcl4yl,bcl5yl
     real(kind=8), dimension(1), intent(in) :: strdyl,acouyl,bcl1yl,strvyl,ova2yl,sorpyl,strpyl
@@ -389,7 +389,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_computeL_yl
 
 SUBROUTINE bounds_kernel_inflowBC1_computeL_zl(bcl2zl,bcl3zl,bcl4zl,bcl5zl,strdzl,acouzl,bcl1zl,strwzl,ova2zl,sorpzl,strpzl,cobczl,pinfzl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl2zl,bcl3zl,bcl4zl,bcl5zl
     real(kind=8), dimension(1), intent(in) :: strdzl,acouzl,bcl1zl,strwzl,ova2zl,sorpzl,strpzl
@@ -417,7 +417,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_computeL_zl
 
 SUBROUTINE bounds_kernel_inflowBC1_LYX_xl(bclyxl,ratexl,struxl,strdxl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bclyxl
     real(kind=8), dimension(1), intent(in) :: ratexl,struxl,strdxl
@@ -433,7 +433,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_LYX_xl
 
 SUBROUTINE bounds_kernel_inflowBC1_LYY_yl(bclyyl,rateyl,strvyl,strdyl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bclyyl
     real(kind=8), dimension(1), intent(in) :: rateyl,strvyl,strdyl
@@ -449,7 +449,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_LYY_yl
 
 SUBROUTINE bounds_kernel_inflowBC1_LYZ_zl(bclyzl,ratezl,strwzl,strdzl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bclyzl
     real(kind=8), dimension(1), intent(in) :: ratezl,strwzl,strdzl
@@ -465,7 +465,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_LYZ_zl
 
 SUBROUTINE bounds_kernel_inflowBC2_computeL_xl(bcl1xl,bcl2xl,bcl5xl,strdxl,acouxl,struxl,ova2xl,dudtxl,gam1xl,dtdtxl,strtxl,sorpxl,strpxl,sydtxl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1xl,bcl2xl,bcl5xl
     real(kind=8), dimension(1), intent(in) :: strdxl,acouxl,struxl,ova2xl,dudtxl,gam1xl,dtdtxl,strtxl,sorpxl,strpxl,sydtxl
@@ -494,7 +494,7 @@ END SUBROUTINE bounds_kernel_inflowBC2_computeL_xl
 
 SUBROUTINE bounds_kernel_inflowBC2_computeL_yl(bcl1yl,bcl2yl,bcl5yl,strdyl,acouyl,strvyl,ova2yl,dvdtyl,gam1yl,dtdtyl,strtyl,sorpyl,strpyl,sydtyl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1yl,bcl2yl,bcl5yl
     real(kind=8), dimension(1), intent(in) :: strdyl,acouyl,strvyl,ova2yl,dvdtyl,gam1yl,dtdtyl,strtyl,sorpyl,strpyl,sydtyl
@@ -523,7 +523,7 @@ END SUBROUTINE bounds_kernel_inflowBC2_computeL_yl
 
 SUBROUTINE bounds_kernel_inflowBC2_computeL_zl(bcl1zl,bcl2zl,bcl5zl,strdzl,acouzl,strwzl,ova2zl,dwdtzl,gam1zl,dtdtzl,strtzl,sorpzl,strpzl,sydtzl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1zl,bcl2zl,bcl5zl
     real(kind=8), dimension(1), intent(in) :: strdzl,acouzl,strwzl,ova2zl,dwdtzl,gam1zl,dtdtzl,strtzl,sorpzl,strpzl,sydtzl
@@ -552,7 +552,7 @@ END SUBROUTINE bounds_kernel_inflowBC2_computeL_zl
 
 SUBROUTINE bounds_kernel_inflowBC3_computeL_xl(bcl1xl,bcl2xl,bcl3xl,bcl4xl,bcl5xl,strdxl,acouxl,struxl,ova2xl,dudtxl,dddtxl,dvdtxl,dwdtxl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1xl,bcl2xl,bcl3xl,bcl4xl,bcl5xl
     real(kind=8), dimension(1), intent(in) :: strdxl,acouxl,struxl,ova2xl,dudtxl,dddtxl,dvdtxl,dwdtxl
@@ -582,7 +582,7 @@ END SUBROUTINE bounds_kernel_inflowBC3_computeL_xl
 
 SUBROUTINE bounds_kernel_inflowBC3_computeL_yl(bcl1yl,bcl2yl,bcl3yl,bcl4yl,bcl5yl,strdyl,acouyl,strvyl,ova2yl,dudtyl,dddtyl,dvdtyl,dwdtyl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1yl,bcl2yl,bcl3yl,bcl4yl,bcl5yl
     real(kind=8), dimension(1), intent(in) :: strdyl,acouyl,strvyl,ova2yl,dudtyl,dddtyl,dvdtyl,dwdtyl
@@ -612,7 +612,7 @@ END SUBROUTINE bounds_kernel_inflowBC3_computeL_yl
 
 SUBROUTINE bounds_kernel_inflowBC3_computeL_zl(bcl1zl,bcl2zl,bcl3zl,bcl4zl,bcl5zl,strdzl,acouzl,strwzl,ova2zl,dudtzl,dddtzl,dvdtzl,dwdtzl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1zl,bcl2zl,bcl3zl,bcl4zl,bcl5zl
     real(kind=8), dimension(1), intent(in) :: strdzl,acouzl,strwzl,ova2zl,dudtzl,dddtzl,dvdtzl,dwdtzl
@@ -642,7 +642,7 @@ END SUBROUTINE bounds_kernel_inflowBC3_computeL_zl
 
 SUBROUTINE bounds_kernel_wallBC1_computeL_xl(bcl1xl,bcl3xl,bcl4xl,bcl5xl,strdxl,acouxl,struxl,dudtxl,dvdtxl,dwdtxl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1xl,bcl3xl,bcl4xl,bcl5xl
     real(kind=8), dimension(1), intent(in) :: strdxl,acouxl,struxl,dudtxl,dvdtxl,dwdtxl
@@ -668,7 +668,7 @@ END SUBROUTINE bounds_kernel_wallBC1_computeL_xl
 
 SUBROUTINE bounds_kernel_wallBC1_computeL_yl(bcl1yl,bcl3yl,bcl4yl,bcl5yl,strdyl,acouyl,strvyl,dudtyl,dvdtyl,dwdtyl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1yl,bcl3yl,bcl4yl,bcl5yl
     real(kind=8), dimension(1), intent(in) :: strdyl,acouyl,strvyl,dudtyl,dvdtyl,dwdtyl
@@ -694,7 +694,7 @@ END SUBROUTINE bounds_kernel_wallBC1_computeL_yl
 
 SUBROUTINE bounds_kernel_wallBC1_computeL_zl(bcl1zl,bcl3zl,bcl4zl,bcl5zl,strdzl,acouzl,strwzl,dudtzl,dvdtzl,dwdtzl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1zl,bcl3zl,bcl4zl,bcl5zl
     real(kind=8), dimension(1), intent(in) :: strdzl,acouzl,strwzl,dudtzl,dvdtzl,dwdtzl
@@ -720,7 +720,7 @@ END SUBROUTINE bounds_kernel_wallBC1_computeL_zl
 
 SUBROUTINE bounds_kernel_wallBC2_computeL_xl(bcl1xl,bcl2xl,bcl3xl,bcl4xl,bcl5xl,strdxl,acouxl,struxl,gam1xl,ova2xl,dtdtxl,strtxl,sorpxl,strpxl,dudtxl,dvdtxl,dwdtxl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1xl,bcl2xl,bcl3xl,bcl4xl,bcl5xl
     real(kind=8), dimension(1), intent(in) :: strdxl,acouxl,struxl,gam1xl,ova2xl,dtdtxl,strtxl,sorpxl,strpxl,dudtxl,dvdtxl,dwdtxl
@@ -752,7 +752,7 @@ END SUBROUTINE bounds_kernel_wallBC2_computeL_xl
 
 SUBROUTINE bounds_kernel_wallBC2_computeL_yl(bcl1yl,bcl2yl,bcl3yl,bcl4yl,bcl5yl,strdyl,acouyl,strvyl,gam1yl,ova2yl,dtdtyl,strtyl,sorpyl,strpyl,dudtyl,dvdtyl,dwdtyl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1yl,bcl2yl,bcl3yl,bcl4yl,bcl5yl
     real(kind=8), dimension(1), intent(in) :: strdyl,acouyl,strvyl,gam1yl,ova2yl,dtdtyl,strtyl,sorpyl,strpyl,dudtyl,dvdtyl,dwdtyl
@@ -784,7 +784,7 @@ END SUBROUTINE bounds_kernel_wallBC2_computeL_yl
 
 SUBROUTINE bounds_kernel_wallBC2_computeL_zl(bcl1zl,bcl2zl,bcl3zl,bcl4zl,bcl5zl,strdzl,acouzl,strwzl,gam1zl,ova2zl,dtdtzl,strtzl,sorpzl,strpzl,dudtzl,dvdtzl,dwdtzl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1zl,bcl2zl,bcl3zl,bcl4zl,bcl5zl
     real(kind=8), dimension(1), intent(in) :: strdzl,acouzl,strwzl,gam1zl,ova2zl,dtdtzl,strtzl,sorpzl,strpzl,dudtzl,dvdtzl,dwdtzl
@@ -816,7 +816,7 @@ END SUBROUTINE bounds_kernel_wallBC2_computeL_zl
 
 SUBROUTINE bounds_kernel_wallBC2_LYX_xl(bclyxl,bcl2xl,ratexl,struxl,strdxl,strrxl,rgspec,ispec)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) ::  bclyxl,bcl2xl
     real(kind=8), dimension(1), intent(in) :: ratexl,struxl,strdxl,strrxl
@@ -834,7 +834,7 @@ END SUBROUTINE bounds_kernel_wallBC2_LYX_xl
 
 SUBROUTINE bounds_kernel_wallBC2_LYY_yl(bclyyl,bcl2yl,rateyl,strvyl,strdyl,strryl,rgspec,ispec)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) ::  bclyyl,bcl2yl
     real(kind=8), dimension(1), intent(in) :: rateyl,strvyl,strdyl,strryl
@@ -852,7 +852,7 @@ END SUBROUTINE bounds_kernel_wallBC2_LYY_yl
 
 SUBROUTINE bounds_kernel_wallBC2_LYZ_zl(bclyzl,bcl2zl,ratezl,strwzl,strdzl,strrzl,rgspec,ispec)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) ::  bclyzl,bcl2zl
     real(kind=8), dimension(1), intent(in) :: ratezl,strwzl,strdzl,strrzl
@@ -870,7 +870,7 @@ END SUBROUTINE bounds_kernel_wallBC2_LYZ_zl
 
 SUBROUTINE bounds_kernel_outflowBC1_computeL_xr(bcl1xr,struxr,acouxr,bcl5xr,strdxr,sorpxr,strpxr,cobcxr,pinfxr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1xr
     real(kind=8), dimension(1), intent(in) :: struxr,acouxr,bcl5xr,strdxr,sorpxr,strpxr
@@ -888,7 +888,7 @@ END SUBROUTINE bounds_kernel_outflowBC1_computeL_xr
 
 SUBROUTINE bounds_kernel_outflowBC1_computeL_yr(bcl1yr,strvyr,acouyr,bcl5yr,strdyr,sorpyr,strpyr,cobcyr,pinfyr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1yr
     real(kind=8), dimension(1), intent(in) :: strvyr,acouyr,bcl5yr,strdyr,sorpyr,strpyr
@@ -906,7 +906,7 @@ END SUBROUTINE bounds_kernel_outflowBC1_computeL_yr
 
 SUBROUTINE bounds_kernel_outflowBC1_computeL_zr(bcl1zr,strwzr,acouzr,bcl5zr,strdzr,sorpzr,strpzr,cobczr,pinfzr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1zr
     real(kind=8), dimension(1), intent(in) :: strwzr,acouzr,bcl5zr,strdzr,sorpzr,strpzr
@@ -924,7 +924,7 @@ END SUBROUTINE bounds_kernel_outflowBC1_computeL_zr
 
 SUBROUTINE bounds_kernel_inflowBC1_computeL_xr(bcl1xr,bcl2xr,bcl3xr,bcl4xr,strdxr,acouxr,struxr,bcl5xr,ova2xr,sorpxr,strpxr,cobcxr,pinfxr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1xr,bcl2xr,bcl3xr,bcl4xr
     real(kind=8), dimension(1), intent(in) :: strdxr,acouxr,struxr,bcl5xr,ova2xr,sorpxr,strpxr
@@ -952,7 +952,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_computeL_xr
 
 SUBROUTINE bounds_kernel_inflowBC1_computeL_yr(bcl1yr,bcl2yr,bcl3yr,bcl4yr,strdyr,acouyr,strvyr,bcl5yr,ova2yr,sorpyr,strpyr,cobcyr,pinfyr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1yr,bcl2yr,bcl3yr,bcl4yr
     real(kind=8), dimension(1), intent(in) :: strdyr,acouyr,strvyr,bcl5yr,ova2yr,sorpyr,strpyr
@@ -980,7 +980,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_computeL_yr
 
 SUBROUTINE bounds_kernel_inflowBC1_computeL_zr(bcl1zr,bcl2zr,bcl3zr,bcl4zr,strdzr,acouzr,strwzr,bcl5zr,ova2zr,sorpzr,strpzr,cobczr,pinfzr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1zr,bcl2zr,bcl3zr,bcl4zr
     real(kind=8), dimension(1), intent(in) :: strdzr,acouzr,strwzr,bcl5zr,ova2zr,sorpzr,strpzr
@@ -1008,7 +1008,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_computeL_zr
 
 SUBROUTINE bounds_kernel_inflowBC1_LYX_xr(bclyxr,ratexr,struxr,strdxr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bclyxr
     real(kind=8), dimension(1), intent(in) :: ratexr,struxr,strdxr
@@ -1024,7 +1024,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_LYX_xr
 
 SUBROUTINE bounds_kernel_inflowBC1_LYY_yr(bclyyr,rateyr,strvyr,strdyr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bclyyr
     real(kind=8), dimension(1), intent(in) :: rateyr,strvyr,strdyr
@@ -1040,7 +1040,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_LYY_yr
 
 SUBROUTINE bounds_kernel_inflowBC1_LYZ_zr(bclyzr,ratezr,strwzr,strdzr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bclyzr
     real(kind=8), dimension(1), intent(in) :: ratezr,strwzr,strdzr
@@ -1056,7 +1056,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_LYZ_zr
 
 SUBROUTINE bounds_kernel_inflowBC2_computeL_xr(bcl1xr,bcl2xr,bcl5xr,strdxr,acouxr,struxr,ova2xr,dudtxr,gam1xr,dtdtxr,strtxr,sorpxr,strpxr,sydtxr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1xr,bcl2xr,bcl5xr
     real(kind=8), dimension(1), intent(in) :: strdxr,acouxr,struxr,ova2xr,dudtxr,gam1xr,dtdtxr,strtxr,sorpxr,strpxr,sydtxr
@@ -1085,7 +1085,7 @@ END SUBROUTINE bounds_kernel_inflowBC2_computeL_xr
 
 SUBROUTINE bounds_kernel_inflowBC2_computeL_yr(bcl1yr,bcl2yr,bcl5yr,strdyr,acouyr,strvyr,ova2yr,dvdtyr,gam1yr,dtdtyr,strtyr,sorpyr,strpyr,sydtyr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1yr,bcl2yr,bcl5yr
     real(kind=8), dimension(1), intent(in) :: strdyr,acouyr,strvyr,ova2yr,dvdtyr,gam1yr,dtdtyr,strtyr,sorpyr,strpyr,sydtyr
@@ -1114,7 +1114,7 @@ END SUBROUTINE bounds_kernel_inflowBC2_computeL_yr
 
 SUBROUTINE bounds_kernel_inflowBC2_computeL_zr(bcl1zr,bcl2zr,bcl5zr,strdzr,acouzr,strwzr,ova2zr,dwdtzr,gam1zr,dtdtzr,strtzr,sorpzr,strpzr,sydtzr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1zr,bcl2zr,bcl5zr
     real(kind=8), dimension(1), intent(in) :: strdzr,acouzr,strwzr,ova2zr,dwdtzr,gam1zr,dtdtzr,strtzr,sorpzr,strpzr,sydtzr
@@ -1143,7 +1143,7 @@ END SUBROUTINE bounds_kernel_inflowBC2_computeL_zr
 
 SUBROUTINE bounds_kernel_inflowBC3_computeL_xr(bcl1xr,bcl2xr,bcl3xr,bcl4xr,bcl5xr,strdxr,acouxr,struxr,ova2xr,dudtxr,dddtxr,dvdtxr,dwdtxr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1xr,bcl2xr,bcl3xr,bcl4xr,bcl5xr
     real(kind=8), dimension(1), intent(in) :: strdxr,acouxr,struxr,ova2xr,dudtxr,dddtxr,dvdtxr,dwdtxr
@@ -1173,7 +1173,7 @@ END SUBROUTINE bounds_kernel_inflowBC3_computeL_xr
 
 SUBROUTINE bounds_kernel_inflowBC3_computeL_yr(bcl1yr,bcl2yr,bcl3yr,bcl4yr,bcl5yr,strdyr,acouyr,strvyr,ova2yr,dudtyr,dddtyr,dvdtyr,dwdtyr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1yr,bcl2yr,bcl3yr,bcl4yr,bcl5yr
     real(kind=8), dimension(1), intent(in) :: strdyr,acouyr,strvyr,ova2yr,dudtyr,dddtyr,dvdtyr,dwdtyr
@@ -1203,7 +1203,7 @@ END SUBROUTINE bounds_kernel_inflowBC3_computeL_yr
 
 SUBROUTINE bounds_kernel_inflowBC3_computeL_zr(bcl1zr,bcl2zr,bcl3zr,bcl4zr,bcl5zr,strdzr,acouzr,strwzr,ova2zr,dudtzr,dddtzr,dvdtzr,dwdtzr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1zr,bcl2zr,bcl3zr,bcl4zr,bcl5zr
     real(kind=8), dimension(1), intent(in) :: strdzr,acouzr,strwzr,ova2zr,dudtzr,dddtzr,dvdtzr,dwdtzr
@@ -1233,7 +1233,7 @@ END SUBROUTINE bounds_kernel_inflowBC3_computeL_zr
 
 SUBROUTINE bounds_kernel_wallBC1_computeL_xr(bcl1xr,bcl3xr,bcl4xr,bcl5xr,strdxr,acouxr,struxr,dudtxr,dvdtxr,dwdtxr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1xr,bcl3xr,bcl4xr,bcl5xr
     real(kind=8), dimension(1), intent(in) :: strdxr,acouxr,struxr,dudtxr,dvdtxr,dwdtxr
@@ -1259,7 +1259,7 @@ END SUBROUTINE bounds_kernel_wallBC1_computeL_xr
 
 SUBROUTINE bounds_kernel_wallBC1_computeL_yr(bcl1yr,bcl3yr,bcl4yr,bcl5yr,strdyr,acouyr,strvyr,dudtyr,dvdtyr,dwdtyr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1yr,bcl3yr,bcl4yr,bcl5yr
     real(kind=8), dimension(1), intent(in) :: strdyr,acouyr,strvyr,dudtyr,dvdtyr,dwdtyr
@@ -1285,7 +1285,7 @@ END SUBROUTINE bounds_kernel_wallBC1_computeL_yr
 
 SUBROUTINE bounds_kernel_wallBC1_computeL_zr(bcl1zr,bcl3zr,bcl4zr,bcl5zr,strdzr,acouzr,strwzr,dudtzr,dvdtzr,dwdtzr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1zr,bcl3zr,bcl4zr,bcl5zr
     real(kind=8), dimension(1), intent(in) :: strdzr,acouzr,strwzr,dudtzr,dvdtzr,dwdtzr
@@ -1311,7 +1311,7 @@ END SUBROUTINE bounds_kernel_wallBC1_computeL_zr
 
 SUBROUTINE bounds_kernel_wallBC2_computeL_xr(bcl1xr,bcl2xr,bcl3xr,bcl4xr,bcl5xr,strdxr,acouxr,struxr,ova2xr,dudtxr,dvdtxr,dwdtxr,gam1xr,dtdtxr,strtxr,sorpxr,strpxr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1xr,bcl2xr,bcl3xr,bcl4xr,bcl5xr
     real(kind=8), dimension(1), intent(in) :: strdxr,acouxr,struxr,ova2xr,dudtxr,dvdtxr,dwdtxr,gam1xr,dtdtxr,strtxr,sorpxr,strpxr
@@ -1343,7 +1343,7 @@ END SUBROUTINE bounds_kernel_wallBC2_computeL_xr
 
 SUBROUTINE bounds_kernel_wallBC2_computeL_yr(bcl1yr,bcl2yr,bcl3yr,bcl4yr,bcl5yr,strdyr,acouyr,strvyr,ova2yr,dudtyr,dvdtyr,dwdtyr,gam1yr,dtdtyr,strtyr,sorpyr,strpyr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1yr,bcl2yr,bcl3yr,bcl4yr,bcl5yr
     real(kind=8), dimension(1), intent(in) :: strdyr,acouyr,strvyr,ova2yr,dudtyr,dvdtyr,dwdtyr,gam1yr,dtdtyr,strtyr,sorpyr,strpyr
@@ -1375,7 +1375,7 @@ END SUBROUTINE bounds_kernel_wallBC2_computeL_yr
 
 SUBROUTINE bounds_kernel_wallBC2_computeL_zr(bcl1zr,bcl2zr,bcl3zr,bcl4zr,bcl5zr,strdzr,acouzr,strwzr,ova2zr,dudtzr,dvdtzr,dwdtzr,gam1zr,dtdtzr,strtzr,sorpzr,strpzr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bcl1zr,bcl2zr,bcl3zr,bcl4zr,bcl5zr
     real(kind=8), dimension(1), intent(in) :: strdzr,acouzr,strwzr,ova2zr,dudtzr,dvdtzr,dwdtzr,gam1zr,dtdtzr,strtzr,sorpzr,strpzr
@@ -1407,7 +1407,7 @@ END SUBROUTINE bounds_kernel_wallBC2_computeL_zr
 
 SUBROUTINE bounds_kernel_wallBC2_LYX_xr(bclyxr,bcl2xr,ratexr,struxr,strdxr,strrxr,rgspec,ispec)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bclyxr,bcl2xr
     real(kind=8), dimension(1), intent(in) :: ratexr,struxr,strdxr,strrxr
@@ -1425,7 +1425,7 @@ END SUBROUTINE bounds_kernel_wallBC2_LYX_xr
 
 SUBROUTINE bounds_kernel_wallBC2_LYY_yr(bclyyr,bcl2yr,rateyr,strvyr,strdyr,strryr,rgspec,ispec)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bclyyr,bcl2yr
     real(kind=8), dimension(1), intent(in) :: rateyr,strvyr,strdyr,strryr
@@ -1443,7 +1443,7 @@ END SUBROUTINE bounds_kernel_wallBC2_LYY_yr
 
 SUBROUTINE bounds_kernel_wallBC2_LYZ_zr(bclyzr,bcl2zr,ratezr,strwzr,strdzr,strrzr,rgspec,ispec)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: bclyzr,bcl2zr
     real(kind=8), dimension(1), intent(in) :: ratezr,strwzr,strdzr,strrzr
@@ -1461,7 +1461,7 @@ END SUBROUTINE bounds_kernel_wallBC2_LYZ_zr
 
 SUBROUTINE bounds_kernel_outflowBC1_addsource_xl(drhs,urhs,vrhs,wrhs,erhs,bcl5xl,ova2xl,acouxl,struxl,strvxl,strwxl,strexl,ovgmxl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl5xl,ova2xl,acouxl,struxl,strvxl,strwxl,strexl,ovgmxl
@@ -1485,7 +1485,7 @@ END SUBROUTINE bounds_kernel_outflowBC1_addsource_xl
 
 SUBROUTINE bounds_kernel_outflowBC1_addsource_yl(drhs,urhs,vrhs,wrhs,erhs,bcl5yl,ova2yl,acouyl,struyl,strvyl,strwyl,streyl,ovgmyl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl5yl,ova2yl,acouyl,struyl,strvyl,strwyl,streyl,ovgmyl
@@ -1509,7 +1509,7 @@ END SUBROUTINE bounds_kernel_outflowBC1_addsource_yl
 
 SUBROUTINE bounds_kernel_outflowBC1_addsource_zl(drhs,urhs,vrhs,wrhs,erhs,bcl5zl,ova2zl,acouzl,struzl,strvzl,strwzl,strezl,ovgmzl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl5zl,ova2zl,acouzl,struzl,strvzl,strwzl,strezl,ovgmzl
@@ -1533,7 +1533,7 @@ END SUBROUTINE bounds_kernel_outflowBC1_addsource_zl
 
 SUBROUTINE bounds_kernel_outflowBC1_eval_xl(yrhs,stryxl,bcl5xl,ova2xl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryxl,bcl5xl,ova2xl
@@ -1545,7 +1545,7 @@ END SUBROUTINE bounds_kernel_outflowBC1_eval_xl
 
 SUBROUTINE bounds_kernel_outflowBC1_eval_yl(yrhs,stryyl,bcl5yl,ova2yl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryyl,bcl5yl,ova2yl
@@ -1557,7 +1557,7 @@ END SUBROUTINE bounds_kernel_outflowBC1_eval_yl
 
 SUBROUTINE bounds_kernel_outflowBC1_eval_zl(yrhs,stryzl,bcl5zl,ova2zl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryzl,bcl5zl,ova2zl
@@ -1569,7 +1569,7 @@ END SUBROUTINE bounds_kernel_outflowBC1_eval_zl
 
 SUBROUTINE bounds_kernel_inflowBC1_addsource_xl(drhs,urhs,vrhs,wrhs,erhs,bcl2xl,bcl3xl,bcl4xl,bcl5xl,struxl,strvxl,strwxl,strdxl,strexl,acouxl,ova2xl,ovgmxl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl2xl,bcl3xl,bcl4xl,bcl5xl,struxl,strvxl,strwxl,strdxl,strexl,acouxl,ova2xl,ovgmxl
@@ -1598,7 +1598,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_addsource_xl
 
 SUBROUTINE bounds_kernel_inflowBC1_addsource_yl(drhs,urhs,vrhs,wrhs,erhs,bcl2yl,bcl3yl,bcl4yl,bcl5yl,struyl,strvyl,strwyl,strdyl,streyl,acouyl,ova2yl,ovgmyl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl2yl,bcl3yl,bcl4yl,bcl5yl,struyl,strvyl,strwyl,strdyl,streyl,acouyl,ova2yl,ovgmyl
@@ -1627,7 +1627,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_addsource_yl
 
 SUBROUTINE bounds_kernel_inflowBC1_addsource_zl(drhs,urhs,vrhs,wrhs,erhs,bcl2zl,bcl3zl,bcl4zl,bcl5zl,struzl,strvzl,strwzl,strdzl,strezl,acouzl,ova2zl,ovgmzl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl2zl,bcl3zl,bcl4zl,bcl5zl,struzl,strvzl,strwzl,strdzl,strezl,acouzl,ova2zl,ovgmzl
@@ -1656,7 +1656,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_addsource_zl
 
 SUBROUTINE bounds_kernel_inflowBC1_eval_xl(erhs,yrhs,bclyxl,strhxl,stryxl,strdxl,bcl2xl,bcl5xl,ova2xl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs,yrhs
     real(kind=8), dimension(1), intent(in) :: bclyxl,strhxl,stryxl,strdxl,bcl2xl,bcl5xl,ova2xl
@@ -1674,7 +1674,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_eval_xl
 
 SUBROUTINE bounds_kernel_inflowBC1_eval_yl(erhs,yrhs,bclyyl,strhyl,stryyl,strdyl,bcl2yl,bcl5yl,ova2yl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs,yrhs
     real(kind=8), dimension(1), intent(in) :: bclyyl,strhyl,stryyl,strdyl,bcl2yl,bcl5yl,ova2yl
@@ -1692,7 +1692,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_eval_yl
 
 SUBROUTINE bounds_kernel_inflowBC1_eval_zl(erhs,yrhs,bclyzl,strhzl,stryzl,strdzl,bcl2zl,bcl5zl,ova2zl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs,yrhs
     real(kind=8), dimension(1), intent(in) :: bclyzl,strhzl,stryzl,strdzl,bcl2zl,bcl5zl,ova2zl
@@ -1710,7 +1710,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_eval_zl
 
 SUBROUTINE bounds_kernel_inflowBC2_addsource_xl(drhs,bcl2xl,bcl5xl,ova2xl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs
     real(kind=8), dimension(1), intent(in) :: bcl2xl,bcl5xl,ova2xl
@@ -1722,7 +1722,7 @@ END SUBROUTINE bounds_kernel_inflowBC2_addsource_xl
 
 SUBROUTINE bounds_kernel_inflowBC2_addsource_yl(drhs,bcl2yl,bcl5yl,ova2yl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs
     real(kind=8), dimension(1), intent(in) :: bcl2yl,bcl5yl,ova2yl
@@ -1734,7 +1734,7 @@ END SUBROUTINE bounds_kernel_inflowBC2_addsource_yl
 
 SUBROUTINE bounds_kernel_inflowBC2_addsource_zl(drhs,bcl2zl,bcl5zl,ova2zl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs
     real(kind=8), dimension(1), intent(in) :: bcl2zl,bcl5zl,ova2zl
@@ -1746,7 +1746,7 @@ END SUBROUTINE bounds_kernel_inflowBC2_addsource_zl
 
 SUBROUTINE bounds_kernel_inflowBC3_addsource_xl(erhs,bcl2xl,bcl3xl,bcl4xl,bcl5xl,strdxl,strexl,struxl,strvxl,strwxl,ova2xl,ovgmxl,acouxl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: bcl2xl,bcl3xl,bcl4xl,bcl5xl,strdxl,strexl,struxl,strvxl,strwxl,ova2xl,ovgmxl,acouxl
@@ -1761,7 +1761,7 @@ END SUBROUTINE bounds_kernel_inflowBC3_addsource_xl
 
 SUBROUTINE bounds_kernel_inflowBC3_addsource_yl(erhs,bcl2yl,bcl3yl,bcl4yl,bcl5yl,strdyl,streyl,struyl,strvyl,strwyl,ova2yl,ovgmyl,acouyl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: bcl2yl,bcl3yl,bcl4yl,bcl5yl,strdyl,streyl,struyl,strvyl,strwyl,ova2yl,ovgmyl,acouyl
@@ -1776,7 +1776,7 @@ END SUBROUTINE bounds_kernel_inflowBC3_addsource_yl
 
 SUBROUTINE bounds_kernel_inflowBC3_addsource_zl(erhs,bcl2zl,bcl3zl,bcl4zl,bcl5zl,strdzl,strezl,struzl,strvzl,strwzl,ova2zl,ovgmzl,acouzl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: bcl2zl,bcl3zl,bcl4zl,bcl5zl,strdzl,strezl,struzl,strvzl,strwzl,ova2zl,ovgmzl,acouzl
@@ -1791,7 +1791,7 @@ END SUBROUTINE bounds_kernel_inflowBC3_addsource_zl
 
 SUBROUTINE bounds_kernel_inflowBC3_eval_xl(erhs,bclyxl,ratexl,dydtxl,strhxl,strdxl,struxl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs,bclyxl
     real(kind=8), dimension(1), intent(in) :: ratexl,dydtxl,strhxl,strdxl,struxl
@@ -1806,7 +1806,7 @@ END SUBROUTINE bounds_kernel_inflowBC3_eval_xl
 
 SUBROUTINE bounds_kernel_inflowBC3_eval_yl(erhs,bclyyl,rateyl,dydtyl,strhyl,strdyl,strvyl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs,bclyyl
     real(kind=8), dimension(1), intent(in) :: rateyl,dydtyl,strhyl,strdyl,strvyl
@@ -1821,7 +1821,7 @@ END SUBROUTINE bounds_kernel_inflowBC3_eval_yl
 
 SUBROUTINE bounds_kernel_inflowBC3_eval_zl(erhs,bclyzl,ratezl,dydtzl,strhzl,strdzl,strwzl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs,bclyzl
     real(kind=8), dimension(1), intent(in) :: ratezl,dydtzl,strhzl,strdzl,strwzl
@@ -1836,7 +1836,7 @@ END SUBROUTINE bounds_kernel_inflowBC3_eval_zl
 
 SUBROUTINE bounds_kernel_wallBC1_addsource_xl(drhs,erhs,bcl3xl,bcl4xl,bcl5xl,strdxl,acouxl,strexl,struxl,strvxl,strwxl,ova2xl,ovgmxl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl3xl,bcl4xl,bcl5xl,strdxl,acouxl,strexl,struxl,strvxl,strwxl,ova2xl,ovgmxl
@@ -1853,7 +1853,7 @@ END SUBROUTINE bounds_kernel_wallBC1_addsource_xl
 
 SUBROUTINE bounds_kernel_wallBC1_addsource_yl(drhs,erhs,bcl3yl,bcl4yl,bcl5yl,strdyl,acouyl,streyl,struyl,strvyl,strwyl,ova2yl,ovgmyl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl3yl,bcl4yl,bcl5yl,strdyl,acouyl,streyl,struyl,strvyl,strwyl,ova2yl,ovgmyl
@@ -1870,7 +1870,7 @@ END SUBROUTINE bounds_kernel_wallBC1_addsource_yl
 
 SUBROUTINE bounds_kernel_wallBC1_addsource_zl(drhs,erhs,bcl3zl,bcl4zl,bcl5zl,strdzl,acouzl,strezl,struzl,strvzl,strwzl,ova2zl,ovgmzl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl3zl,bcl4zl,bcl5zl,strdzl,acouzl,strezl,struzl,strvzl,strwzl,ova2zl,ovgmzl
@@ -1887,7 +1887,7 @@ END SUBROUTINE bounds_kernel_wallBC1_addsource_zl
 
 SUBROUTINE bounds_kernel_wallBC1_eval_xl(yrhs,stryxl,bcl5xl,ova2xl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryxl,bcl5xl,ova2xl
@@ -1899,7 +1899,7 @@ END SUBROUTINE bounds_kernel_wallBC1_eval_xl
 
 SUBROUTINE bounds_kernel_wallBC1_eval_yl(yrhs,stryyl,bcl5yl,ova2yl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryyl,bcl5yl,ova2yl
@@ -1911,7 +1911,7 @@ END SUBROUTINE bounds_kernel_wallBC1_eval_yl
 
 SUBROUTINE bounds_kernel_wallBC1_eval_zl(yrhs,stryzl,bcl5zl,ova2zl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryzl,bcl5zl,ova2zl
@@ -1923,7 +1923,7 @@ END SUBROUTINE bounds_kernel_wallBC1_eval_zl
 
 SUBROUTINE bounds_kernel_wallBC2_addsource_xl(drhs,bcl2xl,bcl5xl,ova2xl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs
     real(kind=8), dimension(1), intent(in) :: bcl2xl,bcl5xl,ova2xl
@@ -1935,7 +1935,7 @@ END SUBROUTINE bounds_kernel_wallBC2_addsource_xl
 
 SUBROUTINE bounds_kernel_wallBC2_addsource_yl(drhs,bcl2yl,bcl5yl,ova2yl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs
     real(kind=8), dimension(1), intent(in) :: bcl2yl,bcl5yl,ova2yl
@@ -1947,7 +1947,7 @@ END SUBROUTINE bounds_kernel_wallBC2_addsource_yl
 
 SUBROUTINE bounds_kernel_wallBC2_addsource_zl(drhs,bcl2zl,bcl5zl,ova2zl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs
     real(kind=8), dimension(1), intent(in) :: bcl2zl,bcl5zl,ova2zl
@@ -1959,7 +1959,7 @@ END SUBROUTINE bounds_kernel_wallBC2_addsource_zl
 
 SUBROUTINE bounds_kernel_wallBC2_eval_xl(yrhs,stryxl,bcl2xl,bcl5xl,ova2xl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryxl,bcl2xl,bcl5xl,ova2xl
@@ -1971,7 +1971,7 @@ END SUBROUTINE bounds_kernel_wallBC2_eval_xl
 
 SUBROUTINE bounds_kernel_wallBC2_eval_yl(yrhs,stryyl,bcl2yl,bcl5yl,ova2yl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryyl,bcl2yl,bcl5yl,ova2yl
@@ -1983,7 +1983,7 @@ END SUBROUTINE bounds_kernel_wallBC2_eval_yl
 
 SUBROUTINE bounds_kernel_wallBC2_eval_zl(yrhs,stryzl,bcl2zl,bcl5zl,ova2zl)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryzl,bcl2zl,bcl5zl,ova2zl
@@ -1995,7 +1995,7 @@ END SUBROUTINE bounds_kernel_wallBC2_eval_zl
 
 SUBROUTINE bounds_kernel_outflowBC1_addsource_xr(drhs,urhs,vrhs,wrhs,erhs,bcl1xr,ova2xr,acouxr,struxr,strvxr,strwxr,strexr,ovgmxr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl1xr,ova2xr,acouxr,struxr,strvxr,strwxr,strexr,ovgmxr
@@ -2019,7 +2019,7 @@ END SUBROUTINE bounds_kernel_outflowBC1_addsource_xr
 
 SUBROUTINE bounds_kernel_outflowBC1_addsource_yr(drhs,urhs,vrhs,wrhs,erhs,bcl1yr,ova2yr,acouyr,struyr,strvyr,strwyr,streyr,ovgmyr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl1yr,ova2yr,acouyr,struyr,strvyr,strwyr,streyr,ovgmyr
@@ -2043,7 +2043,7 @@ END SUBROUTINE bounds_kernel_outflowBC1_addsource_yr
 
 SUBROUTINE bounds_kernel_outflowBC1_addsource_zr(drhs,urhs,vrhs,wrhs,erhs,bcl1zr,ova2zr,acouzr,struzr,strvzr,strwzr,strezr,ovgmzr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl1zr,ova2zr,acouzr,struzr,strvzr,strwzr,strezr,ovgmzr
@@ -2067,7 +2067,7 @@ END SUBROUTINE bounds_kernel_outflowBC1_addsource_zr
 
 SUBROUTINE bounds_kernel_outflowBC1_eval_xr(yrhs,stryxr,bcl1xr,ova2xr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryxr,bcl1xr,ova2xr
@@ -2079,7 +2079,7 @@ END SUBROUTINE bounds_kernel_outflowBC1_eval_xr
 
 SUBROUTINE bounds_kernel_outflowBC1_eval_yr(yrhs,stryyr,bcl1yr,ova2yr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryyr,bcl1yr,ova2yr
@@ -2091,7 +2091,7 @@ END SUBROUTINE bounds_kernel_outflowBC1_eval_yr
 
 SUBROUTINE bounds_kernel_outflowBC1_eval_zr(yrhs,stryzr,bcl1zr,ova2zr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryzr,bcl1zr,ova2zr
@@ -2103,7 +2103,7 @@ END SUBROUTINE bounds_kernel_outflowBC1_eval_zr
 
 SUBROUTINE bounds_kernel_inflowBC1_addsource_xr(drhs,urhs,vrhs,wrhs,erhs,bcl1xr,bcl2xr,bcl3xr,bcl4xr,strdxr,strexr,acouxr,struxr,strvxr,strwxr,ova2xr,ovgmxr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl1xr,bcl2xr,bcl3xr,bcl4xr,strdxr,strexr,acouxr,struxr,strvxr,strwxr,ova2xr,ovgmxr
@@ -2134,7 +2134,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_addsource_xr
 
 SUBROUTINE bounds_kernel_inflowBC1_addsource_yr(drhs,urhs,vrhs,wrhs,erhs,bcl1yr,bcl2yr,bcl3yr,bcl4yr,strdyr,streyr,acouyr,struyr,strvyr,strwyr,ova2yr,ovgmyr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl1yr,bcl2yr,bcl3yr,bcl4yr,strdyr,streyr,acouyr,struyr,strvyr,strwyr,ova2yr,ovgmyr
@@ -2165,7 +2165,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_addsource_yr
 
 SUBROUTINE bounds_kernel_inflowBC1_addsource_zr(drhs,urhs,vrhs,wrhs,erhs,bcl1zr,bcl2zr,bcl3zr,bcl4zr,strdzr,strezr,acouzr,struzr,strvzr,strwzr,ova2zr,ovgmzr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl1zr,bcl2zr,bcl3zr,bcl4zr,strdzr,strezr,acouzr,struzr,strvzr,strwzr,ova2zr,ovgmzr
@@ -2196,7 +2196,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_addsource_zr
 
 SUBROUTINE bounds_kernel_inflowBC1_eval_xr(erhs,yrhs,bclyxr,strhxr,stryxr,strdxr,bcl2xr,bcl1xr,ova2xr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs,yrhs
     real(kind=8), dimension(1), intent(in) :: bclyxr,strhxr,stryxr,strdxr,bcl2xr,bcl1xr,ova2xr
@@ -2214,7 +2214,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_eval_xr
 
 SUBROUTINE bounds_kernel_inflowBC1_eval_yr(erhs,yrhs,bclyyr,strhyr,stryyr,strdyr,bcl2yr,bcl1yr,ova2yr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs,yrhs
     real(kind=8), dimension(1), intent(in) :: bclyyr,strhyr,stryyr,strdyr,bcl2yr,bcl1yr,ova2yr
@@ -2232,7 +2232,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_eval_yr
 
 SUBROUTINE bounds_kernel_inflowBC1_eval_zr(erhs,yrhs,bclyzr,strhzr,stryzr,strdzr,bcl2zr,bcl5zr,ova2zr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs,yrhs
     real(kind=8), dimension(1), intent(in) :: bclyzr,strhzr,stryzr,strdzr,bcl2zr,bcl5zr,ova2zr
@@ -2250,7 +2250,7 @@ END SUBROUTINE bounds_kernel_inflowBC1_eval_zr
 
 SUBROUTINE bounds_kernel_inflowBC2_addsource_xr(drhs,bcl2xr,bcl1xr,ova2xr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs
     real(kind=8), dimension(1), intent(in) :: bcl2xr,bcl1xr,ova2xr
@@ -2262,7 +2262,7 @@ END SUBROUTINE bounds_kernel_inflowBC2_addsource_xr
 
 SUBROUTINE bounds_kernel_inflowBC2_addsource_yr(drhs,bcl2yr,bcl1yr,ova2yr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs
     real(kind=8), dimension(1), intent(in) :: bcl2yr,bcl1yr,ova2yr
@@ -2274,7 +2274,7 @@ END SUBROUTINE bounds_kernel_inflowBC2_addsource_yr
 
 SUBROUTINE bounds_kernel_inflowBC2_addsource_zr(drhs,bcl2zr,bcl1zr,ova2zr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs
     real(kind=8), dimension(1), intent(in) :: bcl2zr,bcl1zr,ova2zr
@@ -2286,7 +2286,7 @@ END SUBROUTINE bounds_kernel_inflowBC2_addsource_zr
 
 SUBROUTINE bounds_kernel_inflowBC3_addsource_xr(erhs,bcl1xr,bcl2xr,bcl3xr,bcl4xr,strdxr,strexr,struxr,strvxr,strwxr,ova2xr,ovgmxr,acouxr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: bcl1xr,bcl2xr,bcl3xr,bcl4xr,strdxr,strexr,struxr,strvxr,strwxr,ova2xr,ovgmxr,acouxr
@@ -2302,7 +2302,7 @@ END SUBROUTINE bounds_kernel_inflowBC3_addsource_xr
 
 SUBROUTINE bounds_kernel_inflowBC3_addsource_yr(erhs,bcl1yr,bcl2yr,bcl3yr,bcl4yr,strdyr,streyr,struyr,strvyr,strwyr,ova2yr,ovgmyr,acouyr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: bcl1yr,bcl2yr,bcl3yr,bcl4yr,strdyr,streyr,struyr,strvyr,strwyr,ova2yr,ovgmyr,acouyr
@@ -2318,7 +2318,7 @@ END SUBROUTINE bounds_kernel_inflowBC3_addsource_yr
 
 SUBROUTINE bounds_kernel_inflowBC3_addsource_zr(erhs,bcl1zr,bcl2zr,bcl3zr,bcl4zr,strdzr,strezr,struzr,strvzr,strwzr,ova2zr,ovgmzr,acouzr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: bcl1zr,bcl2zr,bcl3zr,bcl4zr,strdzr,strezr,struzr,strvzr,strwzr,ova2zr,ovgmzr,acouzr
@@ -2334,7 +2334,7 @@ END SUBROUTINE bounds_kernel_inflowBC3_addsource_zr
 
 SUBROUTINE bounds_kernel_inflowBC3_eval_xr(erhs,bclyxr,ratexr,dydtxr,strhxr,strdxr,struxr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs,bclyxr
     real(kind=8), dimension(1), intent(in) :: ratexr,dydtxr,strhxr,strdxr,struxr
@@ -2349,7 +2349,7 @@ END SUBROUTINE bounds_kernel_inflowBC3_eval_xr
 
 SUBROUTINE bounds_kernel_inflowBC3_eval_yr(erhs,bclyyr,rateyr,dydtyr,strhyr,strdyr,strvyr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs,bclyyr
     real(kind=8), dimension(1), intent(in) :: rateyr,dydtyr,strhyr,strdyr,strvyr
@@ -2364,7 +2364,7 @@ END SUBROUTINE bounds_kernel_inflowBC3_eval_yr
 
 SUBROUTINE bounds_kernel_inflowBC3_eval_zr(erhs,bclyzr,ratezr,dydtzr,strhzr,strdzr,strwzr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: erhs,bclyzr
     real(kind=8), dimension(1), intent(in) :: ratezr,dydtzr,strhzr,strdzr,strwzr
@@ -2379,7 +2379,7 @@ END SUBROUTINE bounds_kernel_inflowBC3_eval_zr
 
 SUBROUTINE bounds_kernel_wallBC1_addsource_xr(drhs,erhs,bcl1xr,bcl3xr,bcl4xr,strdxr,acouxr,strexr,struxr,strvxr,strwxr,ova2xr,ovgmxr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl1xr,bcl3xr,bcl4xr,strdxr,acouxr,strexr,struxr,strvxr,strwxr,ova2xr,ovgmxr
@@ -2396,7 +2396,7 @@ END SUBROUTINE bounds_kernel_wallBC1_addsource_xr
 
 SUBROUTINE bounds_kernel_wallBC1_addsource_yr(drhs,erhs,bcl1yr,bcl3yr,bcl4yr,strdyr,acouyr,streyr,struyr,strvyr,strwyr,ova2yr,ovgmyr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl1yr,bcl3yr,bcl4yr,strdyr,acouyr,streyr,struyr,strvyr,strwyr,ova2yr,ovgmyr
@@ -2413,7 +2413,7 @@ END SUBROUTINE bounds_kernel_wallBC1_addsource_yr
 
 SUBROUTINE bounds_kernel_wallBC1_addsource_zr(drhs,erhs,bcl1zr,bcl3zr,bcl4zr,strdzr,acouzr,strezr,struzr,strvzr,strwzr,ova2zr,ovgmzr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl1zr,bcl3zr,bcl4zr,strdzr,acouzr,strezr,struzr,strvzr,strwzr,ova2zr,ovgmzr
@@ -2430,7 +2430,7 @@ END SUBROUTINE bounds_kernel_wallBC1_addsource_zr
 
 SUBROUTINE bounds_kernel_wallBC1_eval_xr(yrhs,stryxr,bcl1xr,ova2xr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryxr,bcl1xr,ova2xr
@@ -2442,7 +2442,7 @@ END SUBROUTINE bounds_kernel_wallBC1_eval_xr
 
 SUBROUTINE bounds_kernel_wallBC1_eval_yr(yrhs,stryyr,bcl1yr,ova2yr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryyr,bcl1yr,ova2yr
@@ -2454,7 +2454,7 @@ END SUBROUTINE bounds_kernel_wallBC1_eval_yr
 
 SUBROUTINE bounds_kernel_wallBC1_eval_zr(yrhs,stryzr,bcl1zr,ova2zr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryzr,bcl1zr,ova2zr
@@ -2466,7 +2466,7 @@ END SUBROUTINE bounds_kernel_wallBC1_eval_zr
 
 SUBROUTINE bounds_kernel_wallBC2_addsource_xr(drhs,bcl1xr,bcl2xr,ova2xr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs
     real(kind=8), dimension(1), intent(in) :: bcl1xr,bcl2xr,ova2xr
@@ -2478,7 +2478,7 @@ END SUBROUTINE bounds_kernel_wallBC2_addsource_xr
 
 SUBROUTINE bounds_kernel_wallBC2_addsource_yr(drhs,bcl1yr,bcl2yr,ova2yr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs
     real(kind=8), dimension(1), intent(in) :: bcl1yr,bcl2yr,ova2yr
@@ -2490,7 +2490,7 @@ END SUBROUTINE bounds_kernel_wallBC2_addsource_yr
 
 SUBROUTINE bounds_kernel_wallBC2_addsource_zr(drhs,bcl1zr,bcl2zr,ova2zr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: drhs
     real(kind=8), dimension(1), intent(in) :: bcl1zr,bcl2zr,ova2zr
@@ -2502,7 +2502,7 @@ END SUBROUTINE bounds_kernel_wallBC2_addsource_zr
 
 SUBROUTINE bounds_kernel_wallBC2_eval_xr(yrhs,stryxr,bcl1xr,bcl2xr,ova2xr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryxr,bcl1xr,bcl2xr,ova2xr
@@ -2514,7 +2514,7 @@ END SUBROUTINE bounds_kernel_wallBC2_eval_xr
 
 SUBROUTINE bounds_kernel_wallBC2_eval_yr(yrhs,stryyr,bcl1yr,bcl2yr,ova2yr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryyr,bcl1yr,bcl2yr,ova2yr
@@ -2526,7 +2526,7 @@ END SUBROUTINE bounds_kernel_wallBC2_eval_yr
 
 SUBROUTINE bounds_kernel_wallBC2_eval_zr(yrhs,stryzr,bcl1zr,bcl2zr,ova2zr)
     
-    implicit none
+    
 
     real(kind=8), dimension(1) :: yrhs
     real(kind=8), dimension(1), intent(in) :: stryzr,bcl1zr,bcl2zr,ova2zr
