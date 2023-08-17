@@ -126,7 +126,7 @@ MPI_CUDA_OBJ = $(MODULE_FILES:.F90=_mpi_cuda.o) $(OTHER_FILES:.F90=_mpi_cuda.o) 
 %_mpi_cuda.o: %.F90
 	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(CUDAFOR) -DOPS_MPI $(FMODS_CUDA) -c $< -o $@
 
-%_mpicuda.o: %.CUF
+%_mpi_cuda.o: %.CUF
 	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(CUDAFOR) -DOPS_MPI $(FMODS_CUDA) -c $< -o $@
 
 #=========================================================================================================================
