@@ -29,7 +29,7 @@ SUBROUTINE fftixl(npencl,ilproc,nlproc,nlsize,ngsize,nprocs)
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
@@ -55,7 +55,7 @@ INTEGER, PARAMETER :: iforw = 1
 
 !     LOCAL DATA
 !     ==========
-real(kind=dp) :: pcount
+real(kind=8):: pcount
 INTEGER :: nstotl(0:nprmax)
 INTEGER :: nsize2,iofset
 INTEGER :: nlprm1,nlsiz2,ngsiz2,ncount
@@ -194,7 +194,7 @@ IF(ilproc == 0) THEN
     END DO
     
     ncount = icount
-    pcount = REAL(ncount,kind=dp)
+    pcount = REAL(ncount,kind=8)
     irproc = nprocs(icproc)
     irtag = iproc*nproc+irproc
     CALL p_send(pcount,1,1,irproc,irtag)
@@ -228,7 +228,7 @@ ELSE
   END DO
   
   ncount = icount
-  pcount = REAL(icount,kind=dp)
+  pcount = REAL(icount,kind=8)
   irtag = iproc*nproc+irproc
   CALL p_send(pcount,1,1,irproc,irtag)
   CALL p_send(parray,nparay,ncount,irproc,irtag)

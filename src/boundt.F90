@@ -28,15 +28,15 @@ SUBROUTINE boundt
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
 
 !     LOCAL DATA
 !     ==========
-real(kind=dp) :: fornow
-INTEGER :: jc,kc
+real(kind=8):: fornow
+INTEGER :: ic,jc,kc
 INTEGER :: ispec
 INTEGER :: iindex,ipower,icoef1,icoef2
 INTEGER :: itint,icp

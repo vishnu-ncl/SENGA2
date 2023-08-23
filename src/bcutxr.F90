@@ -30,7 +30,7 @@ SUBROUTINE bcutxr
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
@@ -38,8 +38,8 @@ use com_senga
 !     LOCAL DATA
 !     ==========
 !KA   FIX INFLOW BC
-!KA      REAL(KIND=dp) BTIME
-REAL(KIND=dp) :: fornow,argmnt
+!KA      real(kind=8)BTIME
+real(kind=8):: fornow,argmnt
 INTEGER :: jc,kc
 
 

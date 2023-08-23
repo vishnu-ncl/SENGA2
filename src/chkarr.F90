@@ -25,12 +25,11 @@ SUBROUTINE chkarr(array,  &
 !     CHECKS UNIFORMITY OF THE SPECIFIED ARRAY
 
 !     *************************************************************************
-use data_types
+
 
 !     ARGUMENTS
 !     =========
 
-REAL(KIND=dp), INTENT(IN)             :: array(nchkxl:nchkxr,nchkyl:nchkyr,nchkzl:nchkzr)
 INTEGER, INTENT(IN OUT)                  :: nchkxl
 INTEGER, INTENT(IN OUT)                  :: nchkxr
 INTEGER, INTENT(IN OUT)                  :: nchkyl
@@ -43,6 +42,7 @@ INTEGER, INTENT(IN)                      :: jstac
 INTEGER, INTENT(IN)                      :: jstoc
 INTEGER, INTENT(IN)                      :: kstac
 INTEGER, INTENT(IN)                      :: kstoc
+real(kind=8),INTENT(IN)             :: array(nchkxl:nchkxr,nchkyl:nchkyr,nchkzl:nchkzr)
 
 
 
@@ -50,7 +50,7 @@ INTEGER, INTENT(IN)                      :: kstoc
 
 !     LOCAL DATA
 !     ==========
-REAL(KIND=dp) :: arrmin,arrmax
+real(kind=8):: arrmin,arrmax
 INTEGER :: ic,jc,kc
 INTEGER :: icmin,jcmin,kcmin
 INTEGER :: icmax,jcmax,kcmax

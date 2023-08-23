@@ -30,7 +30,7 @@ SUBROUTINE flamin
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
@@ -38,36 +38,37 @@ use com_senga
 !     PARAMETERS
 !     ==========
 !     ESTIMATED FLAME LOCATION AND THICKNESS
-real(kind=dp) :: clocat,cthick
-PARAMETER(clocat = 0.0025_dp, cthick = 0.0005_dp)
+real(kind=8):: clocat,cthick
+PARAMETER(clocat = 0.0025_8, cthick = 0.0005_8)
 
 !C     PINCH OF HYDROGEN ATOM
-!      real(kind=dp) HPINCH,HLOCAT,HTHICK
+!      real(kind=8)HPINCH,HLOCAT,HTHICK
 !      PARAMETER(HPINCH = 1.0D-10, HLOCAT = 2.5D-3, HTHICK = 1.0D-4)
 !C     PINCH OF HYDROGEN MOLECULE
-!      real(kind=dp) H2PNCH,H2LOCT,H2THCK
+!      real(kind=8)H2PNCH,H2LOCT,H2THCK
 !      PARAMETER(H2PNCH = 1.0D-6, H2LOCT = 2.5D-3, H2THCK = 2.5D-4)
 
 
 !     FUNCTION
 !     ========
-real(kind=dp) :: erfunc
+real(kind=8):: erfunc
 EXTERNAL erfunc
 
 
 !     LOCAL DATA
 !     ==========
-real(kind=dp) :: crin(1:nxsize)
-real(kind=dp) :: yrinr(nspcmx),yrinp(nspcmx)
-real(kind=dp) :: trinr,trinp
-real(kind=dp) :: deltag,xcoord,argmnt
-real(kind=dp) :: flxmas
-real(kind=dp) :: xrgmnt,yrgmnt,zrgmnt
+real(kind=8):: deltagx,deltagy,deltagz,rglocl,u0,angfrx,angfry,angfrz
+real(kind=8):: crin(1:nxsize)
+real(kind=8):: yrinr(nspcmx),yrinp(nspcmx)
+real(kind=8):: trinr,trinp
+real(kind=8):: deltag,xcoord,argmnt,ycoord,zcoord
+real(kind=8):: flxmas
+real(kind=8):: xrgmnt,yrgmnt,zrgmnt
 INTEGER :: icproc
-INTEGER :: igofst
-INTEGER :: ix
+INTEGER :: igofst,igofsty,igofstx,igofstz
+INTEGER :: ix,iy,iz
 INTEGER :: ic,jc,kc
-INTEGER :: ispec
+INTEGER :: ispec,jspec
 
 
 !     BEGIN
@@ -83,7 +84,7 @@ INTEGER :: ispec
 !     -----------------------
 !     REACTANT TEMPERATURE SET IN CONTROL FILE
 trinr = trin
-u0 = 34.789806_dp
+u0 = 34.789806_8
 
 !Mixture gas constant
 rglocl = zero
@@ -95,9 +96,9 @@ rglocl  = drin*rglocl
 
 !Global indexing
 !---------------
-deltagx = xgdlen/(real(nxglbl-1,dp))
-deltagy = ygdlen/(real(nyglbl-1,dp))
-deltagz = zgdlen/(real(nzglbl-1,dp))
+deltagx = xgdlen/(real(nxglbl-1,kind=8))
+deltagy = ygdlen/(real(nyglbl-1,kind=8))
+deltagz = zgdlen/(real(nzglbl-1,kind=8))
 
 igofstx = 0
 do icproc = 0, ixproc-1
@@ -116,9 +117,9 @@ end do
 
 !SET THE VELOCITY PROFILE FOR TGV
 !--------------------------------
-angfrx = 8.0_dp*atan(1.0_dp)/xgdlen
-angfry = 8.0_dp*atan(1.0_dp)/ygdlen
-angfrz = 8.0_dp*atan(1.0_dp)/zgdlen
+angfrx = 8.0_8*atan(1.0_8)/xgdlen
+angfry = 8.0_8*atan(1.0_8)/ygdlen
+angfrz = 8.0_8*atan(1.0_8)/zgdlen
 
 do kc = kstal,kstol
  do jc = jstal,jstol
@@ -128,9 +129,9 @@ do kc = kstal,kstol
    iy = igofsty + jc
    iz = igofstz + kc
 
-   xcoord = real(ix-1,dp)*deltagx
-   ycoord = real(iy-1,dp)*deltagy
-   zcoord = real(iz-1,dp)*deltagz
+   xcoord = real(ix-1,kind=8)*deltagx
+   ycoord = real(iy-1,kind=8)*deltagy
+   zcoord = real(iz-1,kind=8)*deltagz
 
    xrgmnt = angfrx*xcoord
    yrgmnt = angfry*ycoord
@@ -139,13 +140,13 @@ do kc = kstal,kstol
 !       set taylor-green vortex velocity field
    urun(ic,jc,kc)=u0*dsin(xrgmnt)*dcos(yrgmnt)*dcos(zrgmnt)
    vrun(ic,jc,kc)=-u0*dcos(xrgmnt)*dsin(yrgmnt)*dcos(zrgmnt)
-   wrun(ic,jc,kc)=0.0_dp
+   wrun(ic,jc,kc)=0.0_8
 !       set pressure profile assuming constant density
-   xrgmnt = 2.0_dp*xrgmnt
-   yrgmnt = 2.0_dp*yrgmnt
-   zrgmnt = 2.0_dp*zrgmnt
+   xrgmnt = 2.0_8*xrgmnt
+   yrgmnt = 2.0_8*yrgmnt
+   zrgmnt = 2.0_8*zrgmnt
 
-   prun(ic,jc,kc)=prin+((drin*u0*u0)/16.0_dp)*(dcos(xrgmnt)+dcos(yrgmnt))*(dcos(zrgmnt)+2.0_dp)
+   prun(ic,jc,kc)=prin+((drin*u0*u0)/16.0_8)*(dcos(xrgmnt)+dcos(yrgmnt))*(dcos(zrgmnt)+2.0_8)
   end do
  end do
 end do

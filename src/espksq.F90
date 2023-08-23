@@ -23,19 +23,19 @@ FUNCTION espksq(waveno)
 !     AT THE GIVEN WAVENUMBER MAGNITUDE
 
 !     *************************************************************************
-use data_types
+
 
 !     EXTERNAL FUNCTION
 !     =================
 
-REAL(KIND=dp), INTENT(IN)             :: waveno
-REAL(KIND=dp) :: espect
+real(kind=8),INTENT(IN)             :: waveno
+real(kind=8):: espect
 EXTERNAL espect
 
 
 !     FUNCTION
 !     ========
-REAL(KIND=dp) :: espksq
+real(kind=8):: espksq
 
 
 !     ARGUMENT

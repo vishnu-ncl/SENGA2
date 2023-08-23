@@ -30,23 +30,23 @@ SUBROUTINE d2fdxy(functn,fderiv)
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
 !     ARGUMENTS
 !     =========
 
-real(kind=dp), INTENT(IN)             :: functn(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
-real(kind=dp), INTENT(OUT)            :: fderiv(nxsize,nysize,nzsize)
+real(kind=8),INTENT(IN)             :: functn(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
+real(kind=8),INTENT(OUT)            :: fderiv(nxsize,nysize,nzsize)
 
 
 
 
 !     LOCAL DATA
 !     ==========
-real(kind=dp) :: fstora(3,3),fstorb(3,3),fstorc(2,2)
-real(kind=dp) :: fdiffa,fdiffb,fdiffc,fdiffd,fdiffe
+real(kind=8):: fstora(3,3),fstorb(3,3),fstorc(2,2)
+real(kind=8):: fdiffa,fdiffb,fdiffc,fdiffd,fdiffe
 INTEGER :: ic,jc,kc
 INTEGER :: is,js,ism1,jsm1
 INTEGER :: istart,ifinis,jstart,jfinis

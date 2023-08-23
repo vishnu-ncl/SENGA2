@@ -1,8 +1,13 @@
 PROGRAM senga2
- 
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-02  Time: 14:52:30
 
+    use OPS_Fortran_Reference
+    use OPS_Fortran_hdf5_Declarations
+
+    use, intrinsic :: ISO_C_BINDING
+    use com_senga
+    use com_ops_senga
+
+    
 !     *************************************************************************
 
 !     SENGA2
@@ -64,7 +69,6 @@ PROGRAM senga2
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use com_senga
 !     -------------------------------------------------------------------------
 
 
@@ -81,6 +85,9 @@ INTEGER :: jtime,jrkstp
 
 !     INITIALISATION
 !     ==============
+    call ops_init(6)
+    call ops_data_init
+
 !     PARALLEL DOMAIN DECOMPOSITION
 CALL pardom
 
@@ -188,6 +195,10 @@ DO jtime = ntime1,ntime2
   CALL output
   
 !       =======================================================================
+        IF (itime == 240) THEN
+            call print_dats()
+            STOP
+        END IF
   
 END DO
 !     END OF TIME STEP LOOP
@@ -202,6 +213,6 @@ CALL finish
 
 !     =========================================================================
 
-
+    call ops_exit( )
 STOP
 END PROGRAM senga2

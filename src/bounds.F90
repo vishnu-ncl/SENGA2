@@ -30,14 +30,14 @@ SUBROUTINE bounds
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
 
 !     LOCAL DATA
 !     ==========
-real(kind=dp) :: fornow
+real(kind=8):: fornow
 INTEGER :: ic,jc,kc
 INTEGER :: ispec
 

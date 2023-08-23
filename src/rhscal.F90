@@ -36,16 +36,16 @@ SUBROUTINE rhscal
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
 
 !     LOCAL DATA
 !     ==========
-real(kind=dp) :: ctrans(nspcmx)
-real(kind=dp) :: fornow,combo1,combo2,combo3
-INTEGER :: ic,jc,kc,ispec
+real(kind=8):: ctrans(nspcmx)
+real(kind=8):: fornow,combo1,combo2,combo3
+INTEGER :: ic,jc,kc,ispec,jspec
 INTEGER :: itint,icp,iindex,ipower,icoef1,icoef2
 LOGICAL :: flmtds
 

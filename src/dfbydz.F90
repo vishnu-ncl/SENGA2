@@ -30,7 +30,7 @@ SUBROUTINE dfbydz(functn,fderiv)
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
@@ -38,15 +38,15 @@ use com_senga
 !     ARGUMENTS
 !     =========
 
-real(kind=dp), INTENT(IN)             :: functn(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
-real(kind=dp), INTENT(OUT)            :: fderiv(nxsize,nysize,nzsize)
+real(kind=8),INTENT(IN)             :: functn(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
+real(kind=8),INTENT(OUT)            :: fderiv(nxsize,nysize,nzsize)
 
 
 
 
 !     LOCAL DATA
 !     ==========
-real(kind=dp) :: fdiffa,fdiffb,fdiffc,fdiffd,fdiffe
+real(kind=8):: fdiffa,fdiffb,fdiffc,fdiffd,fdiffe
 INTEGER :: ic,jc,kc
 INTEGER :: kstart,kfinis
 INTEGER :: kcm5,kcm4,kcm3,kcm2,kcm1,kccc,kcp1,kcp2,kcp3,kcp4,kcp5

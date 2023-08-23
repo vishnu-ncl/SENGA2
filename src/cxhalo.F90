@@ -27,7 +27,7 @@ SUBROUTINE cxhalo(bigarr,jndexl,jndexr,kndexl,kndexr)
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ use com_senga
 !     ARGUMENTS
 !     =========
 
-REAL(KIND=dp), INTENT(OUT)            :: bigarr(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
+real(kind=8),INTENT(OUT)            :: bigarr(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
 INTEGER, INTENT(IN)                      :: jndexl
 INTEGER, INTENT(IN)                      :: jndexr
 INTEGER, INTENT(IN)                      :: kndexl

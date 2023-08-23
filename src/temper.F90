@@ -27,14 +27,14 @@ SUBROUTINE temper
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
 
 !     PARAMETERS
 !     ==========
-real(kind=dp) :: toltmp
+real(kind=8):: toltmp
 PARAMETER(toltmp = 1.0E-10)
 INTEGER :: ntitrs
 PARAMETER(ntitrs = 100)
@@ -42,9 +42,9 @@ PARAMETER(ntitrs = 100)
 
 !     LOCAL DATA
 !     ==========
-real(kind=dp) :: tcoeff(0:nctmax),tderiv(1:nctmax)
-real(kind=dp) :: ukuk
-real(kind=dp) :: tempor,tfpoly,tdpoly,deltmp,cpfory
+real(kind=8):: tcoeff(0:nctmax),tderiv(1:nctmax)
+real(kind=8):: ukuk
+real(kind=8):: tempor,tfpoly,tdpoly,deltmp,cpfory
 INTEGER :: ic,jc,kc,ispec,itint,icp,ititrs
 INTEGER :: iindex,ipower,icoef1,icoef2
 

@@ -29,7 +29,7 @@ SUBROUTINE exhalo(bigarr,buffer,indexl,indexr,  &
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
@@ -37,8 +37,8 @@ use com_senga
 !     ARGUMENTS
 !     =========
 
-REAL(KIND=dp), INTENT(IN)             :: bigarr(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
-REAL(KIND=dp), INTENT(OUT)            :: buffer(nparay)
+real(kind=8),INTENT(IN)             :: bigarr(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
+real(kind=8),INTENT(OUT)            :: buffer(nparay)
 INTEGER, INTENT(IN)                      :: indexl
 INTEGER, INTENT(IN)                      :: indexr
 INTEGER, INTENT(IN)                      :: jndexl

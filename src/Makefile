@@ -6,7 +6,7 @@
 #
 
 # Fortran compiler
-FC = ftn #-g -fcheck=all -cpp
+FC = mpif90 #-g -fcheck=all -cpp
 #FC = h5pfc -g -fcheck=all -DHDF5 -cpp
 
 # Quick non-optimized compile
