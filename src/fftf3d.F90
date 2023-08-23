@@ -28,8 +28,6 @@ SUBROUTINE fftf3d(carrre,carrim,nxphys,nyphys,nzphys,  &
 !   ==========
     integer(kind=4), parameter :: nftmax=1024
 
-    real(kind=8), intent(in out)         :: carrre(nxphys,nyphys,nzphys)
-    real(kind=8), intent(in out)         :: carrim(nxphys,nyphys,nzphys)
     integer(kind=4), intent(in out)                  :: nxphys
     integer(kind=4), intent(in out)                  :: nyphys
     integer(kind=4), intent(in out)                  :: nzphys
@@ -37,6 +35,9 @@ SUBROUTINE fftf3d(carrre,carrim,nxphys,nyphys,nzphys,  &
     integer(kind=4), intent(in)                      :: ny
     integer(kind=4), intent(in)                      :: nz
     integer(kind=4), intent(in out)                  :: iforw
+    real(kind=8), intent(in out)         :: carrre(nxphys,nyphys,nzphys)
+    real(kind=8), intent(in out)         :: carrim(nxphys,nyphys,nzphys)
+
 
 !   ARGUMENTS
 !   =========

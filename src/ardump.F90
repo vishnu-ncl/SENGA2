@@ -24,10 +24,10 @@ SUBROUTINE ardump(array,nxphys,nyphys,nzphys)
 !   ARGUMENTS
 !   =========
 
-    real(kind=8), intent(IN OUT)       :: array(nxphys,nyphys,nzphys)
     integer(kind=4), intent(IN OUT)             :: nxphys
     integer(kind=4), intent(IN)                 :: nyphys
     integer(kind=4), intent(IN)                 :: nzphys
+    real(kind=8), intent(IN OUT)       :: array(nxphys,nyphys,nzphys)
 
 !   LOCAL DATA
 !   ==========

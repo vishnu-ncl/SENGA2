@@ -1,6 +1,4 @@
 SUBROUTINE d2fdx2_kernel_main(functn, fderiv, nxglbl, nendxl, nendxr, nbound, idx)
-    
-    
 
     real(kind=8), dimension(1), intent(in) :: functn
     real(kind=8), dimension(1) :: fderiv

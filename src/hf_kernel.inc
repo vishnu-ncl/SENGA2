@@ -1,7 +1,5 @@
 !HEAT FLUX: Thermal fxlcnw
 SUBROUTINE hf_kernel_eqA(erhs,store1,store7,acbcxl)
-    
-    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: store1, store7
@@ -19,8 +17,6 @@ END SUBROUTINE hf_kernel_eqA
 
 !HEAT FLUX: Thermal fxrcnw
 SUBROUTINE hf_kernel_eqB(erhs,store1,store7,acbcxr)
-    
-    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: store1, store7
@@ -38,8 +34,6 @@ END SUBROUTINE hf_kernel_eqB
 
 !HEAT FLUX: Thermal fylcnw
 SUBROUTINE hf_kernel_eqC(erhs,store2,store7,acbcyl)
-    
-    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: store2, store7
@@ -57,8 +51,6 @@ END SUBROUTINE hf_kernel_eqC
 
 !HEAT FLUX: Thermal fyrcnw
 SUBROUTINE hf_kernel_eqD(erhs,store2,store7,acbcyr)
-    
-    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: store2, store7
@@ -76,8 +68,6 @@ END SUBROUTINE hf_kernel_eqD
 
 !HEAT FLUX: Thermal fzlcnw
 SUBROUTINE hf_kernel_eqE(erhs,store3,store7,acbczl)
-    
-    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: store3, store7
@@ -95,8 +85,6 @@ END SUBROUTINE hf_kernel_eqE
 
 !HEAT FLUX: Thermal fzrcnw
 SUBROUTINE hf_kernel_eqF(erhs,store3,store7,acbczr)
-    
-    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: store3, store7
@@ -114,8 +102,6 @@ END SUBROUTINE hf_kernel_eqF
 
 !HEAT FLUX: Soret and DUFOUR fxlcnw
 SUBROUTINE hf_kernel_eqG(erhs,trun,tdrmix,store7,td1x,acbcxl,rgspec,ispec)
-    
-    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1x
@@ -141,8 +127,6 @@ END SUBROUTINE hf_kernel_eqG
 
 !HEAT FLUX: Soret and DUFOUR fxrcnw
 SUBROUTINE hf_kernel_eqH(erhs,trun,tdrmix,store7,td1x,acbcxr,rgspec,ispec)
-    
-    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1x
@@ -168,8 +152,6 @@ END SUBROUTINE hf_kernel_eqH
 
 !HEAT FLUX: Soret and DUFOUR fylcnw
 SUBROUTINE hf_kernel_eqI(erhs,trun,tdrmix,store7,td1y,acbcyl,rgspec,ispec)
-    
-    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1y
@@ -195,8 +177,6 @@ END SUBROUTINE hf_kernel_eqI
 
 !HEAT FLUX: Soret and DUFOUR fyrcnw
 SUBROUTINE hf_kernel_eqJ(erhs,trun,tdrmix,store7,td1y,acbcyr,rgspec,ispec)
-    
-    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1y
@@ -222,8 +202,6 @@ END SUBROUTINE hf_kernel_eqJ
 
 !HEAT FLUX: Soret and DUFOUR fzlcnw
 SUBROUTINE hf_kernel_eqK(erhs,trun,tdrmix,store7,td1z,acbczl,rgspec,ispec)
-    
-    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1z
@@ -249,8 +227,6 @@ END SUBROUTINE hf_kernel_eqK
 
 !HEAT FLUX: Soret and DUFOUR fzrcnw
 SUBROUTINE hf_kernel_eqL(erhs,trun,tdrmix,store7,td1z,acbczr,rgspec,ispec)
-    
-    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1z
@@ -276,8 +252,6 @@ END SUBROUTINE hf_kernel_eqL
 
 !HEAT FLUX: Enthalpy fxldfw 
 SUBROUTINE hf_kernel_eqM(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1x,acbcxl,rgspec,ispec)
-    
-    
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,utmp,store7,td1x
@@ -300,8 +274,6 @@ END SUBROUTINE hf_kernel_eqM
 
 !HEAT FLUX: Enthalpy fxrdfw
 SUBROUTINE hf_kernel_eqN(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1x,acbcxr,rgspec,ispec)
-    
-    
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,utmp,store7,td1x
@@ -324,8 +296,6 @@ END SUBROUTINE hf_kernel_eqN
 
 !HEAT FLUX: Enthalpy fyldfw
 SUBROUTINE hf_kernel_eqO(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1y,acbcyl,rgspec,ispec)
-    
-    
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,utmp,store7,td1y
@@ -348,8 +318,6 @@ END SUBROUTINE hf_kernel_eqO
 
 !HEAT FLUX: Enthalpy fyrdfw
 SUBROUTINE hf_kernel_eqP(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1y,acbcyr,rgspec,ispec)
-    
-    
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,utmp,store7,td1y
@@ -372,8 +340,6 @@ END SUBROUTINE hf_kernel_eqP
 
 !HEAT FLUX: Enthalpy fzldfw
 SUBROUTINE hf_kernel_eqQ(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1z,acbczl,rgspec,ispec)
-    
-    
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,utmp,store7,td1z
@@ -396,8 +362,6 @@ END SUBROUTINE hf_kernel_eqQ
 
 !HEAT FLUX: Enthalpy fzrdfw
 SUBROUTINE hf_kernel_eqR(rate,erhs,vtmp,trun,tdrmix,utmp,store7,td1z,acbczr,rgspec,ispec)
-    
-    
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,utmp,store7,td1z
@@ -420,8 +384,6 @@ END SUBROUTINE hf_kernel_eqR
 
 !HEAT FLUX: Enthalpy fxldfw
 SUBROUTINE hf_kernel_eqS(rate,erhs,vtmp,utmp,store7,arr1,acbcxl)
-    
-    
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: utmp,store7,arr1
@@ -441,8 +403,6 @@ END SUBROUTINE hf_kernel_eqS
 
 !HEAT FLUX: Enthalpy fxrdfw
 SUBROUTINE hf_kernel_eqT(rate,erhs,vtmp,utmp,store7,arr1,acbcxr)
-    
-    
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: utmp,store7,arr1
@@ -462,8 +422,6 @@ END SUBROUTINE hf_kernel_eqT
 
 !HEAT FLUX: Enthalpy fxrdfw
 SUBROUTINE hf_kernel_eqU(rate,erhs,vtmp,utmp,store7,arr1,acbcyl)
-    
-    
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: utmp,store7,arr1
@@ -483,8 +441,6 @@ END SUBROUTINE hf_kernel_eqU
 
 !HEAT FLUX: Enthalpy fyrdfw
 SUBROUTINE hf_kernel_eqV(rate,erhs,vtmp,utmp,store7,arr1,acbcyr)
-    
-    
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: utmp,store7,arr1
@@ -504,8 +460,6 @@ END SUBROUTINE hf_kernel_eqV
 
 !HEAT FLUX: Enthalpy fzldfw
 SUBROUTINE hf_kernel_eqW(rate,erhs,vtmp,utmp,store7,arr1,acbczl)
-    
-    
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: utmp,store7,arr1
@@ -525,8 +479,6 @@ END SUBROUTINE hf_kernel_eqW
 
 !HEAT FLUX: Enthalpy fzrdfw
 SUBROUTINE hf_kernel_eqX(rate,erhs,vtmp,utmp,store7,arr1,acbczr)
-    
-    
 
     real(kind=8), dimension(1) :: rate,erhs,vtmp
     real(kind=8), dimension(1), intent(in) :: utmp,store7,arr1
@@ -546,8 +498,6 @@ END SUBROUTINE hf_kernel_eqX
 
 !HEAT FLUX: Isothermal fxladw
 SUBROUTINE hf_kernel_eqY(erhs,trun,tdrmix,store7,td1x,acbcxl,rgspec,ispec)
-    
-    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1x
@@ -574,8 +524,6 @@ END SUBROUTINE hf_kernel_eqY
 
 !HEAT FLUX: Isothermal fxradw
 SUBROUTINE hf_kernel_eqZ(erhs,trun,tdrmix,store7,td1x,acbcxr,rgspec,ispec)
-    
-    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1x
@@ -602,8 +550,6 @@ END SUBROUTINE hf_kernel_eqZ
 
 !HEAT FLUX: Isothermal fyladw
 SUBROUTINE hf_kernel_eqAA(erhs,trun,tdrmix,store7,td1y,acbcyl,rgspec,ispec)
-    
-    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1y
@@ -630,8 +576,6 @@ END SUBROUTINE hf_kernel_eqAA
 
 !HEAT FLUX: Isothermal fyradw
 SUBROUTINE hf_kernel_eqAB(erhs,trun,tdrmix,store7,td1y,acbcyr,rgspec,ispec)
-    
-    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1y
@@ -658,8 +602,6 @@ END SUBROUTINE hf_kernel_eqAB
 
 !HEAT FLUX: Isothermal fzladw
 SUBROUTINE hf_kernel_eqAC(erhs,trun,tdrmix,store7,td1z,acbczl,rgspec,ispec)
-    
-    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1z
@@ -686,8 +628,6 @@ END SUBROUTINE hf_kernel_eqAC
 
 !HEAT FLUX: Isothermal fzradw
 SUBROUTINE hf_kernel_eqAD(erhs,trun,tdrmix,store7,td1z,acbczr,rgspec,ispec)
-    
-    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,tdrmix,store7,td1z

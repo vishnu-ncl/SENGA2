@@ -8,6 +8,7 @@ SUBROUTINE print_alldats()
     use com_senga
     use com_ops_senga
 
+    integer :: ispec
     CHARACTER (LEN=60) :: fname
     CHARACTER (LEN=3) :: pnxres
     PARAMETER(pnxres = '.h5')

@@ -46,6 +46,7 @@ SUBROUTINE espini
 
 !   FUNCTIONS
 !   =========
+    real(kind=8) :: espect
     EXTERNAL espect,espovk,espksq
 
 !   LOCAL DATA

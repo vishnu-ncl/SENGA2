@@ -34,7 +34,7 @@ SUBROUTINE diffin
 !   ==========
     real(kind=8) :: pcount,fornow
     integer(kind=4) :: ispec,jspec,kspec,icoeff
-    integer(kind=4) :: ncount
+    integer(kind=4) :: ncount,ndspec
     integer(kind=4) :: iroot
     CHARACTER (LEN=10) :: spcdif(nspcmx)
 

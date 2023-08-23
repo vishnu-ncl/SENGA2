@@ -1,6 +1,4 @@
 SUBROUTINE temper_kernel_eqA(tcoeff, drhs, urhs, vrhs, wrhs, erhs)
-    
-    
 
     real(kind=8), dimension(1), intent(in) :: drhs, urhs, vrhs, wrhs, erhs
     real(kind=8), dimension(1) :: tcoeff
@@ -19,8 +17,6 @@ SUBROUTINE temper_kernel_eqA(tcoeff, drhs, urhs, vrhs, wrhs, erhs)
 END SUBROUTINE temper_kernel_eqA
 
 SUBROUTINE temper_kernel_eqB(tcoeff, tderiv, itndex, yrhs, amascp, amasct, ncpoly, ncenth, ipower, icoef1, icoef2, ispec)
-    
-    
 
     real(kind=8), dimension(1), intent(in) :: yrhs
     real(kind=8), dimension(1) :: tcoeff, tderiv
@@ -53,8 +49,6 @@ SUBROUTINE temper_kernel_eqB(tcoeff, tderiv, itndex, yrhs, amascp, amasct, ncpol
 END SUBROUTINE temper_kernel_eqB
 
 SUBROUTINE temper_kernel_eqC(store7, yrhs, rgspec, ispec)
-    
-    
 
     real(kind=8), dimension(1), intent(in) :: yrhs
     real(kind=8), dimension(1) :: store7
@@ -67,8 +61,6 @@ SUBROUTINE temper_kernel_eqC(store7, yrhs, rgspec, ispec)
 END SUBROUTINE temper_kernel_eqC
 
 SUBROUTINE temper_kernel_eqD(trun, tcoeff, tderiv, drhs, urhs, vrhs, wrhs, erhs, idx)
-    
-    
 
     real(kind=8), dimension(1), intent(in) :: tcoeff, tderiv, drhs, urhs, vrhs, wrhs, erhs
     real(kind=8), dimension(1) :: trun
@@ -149,8 +141,6 @@ END SUBROUTINE temper_kernel_eqD
 
 SUBROUTINE temper_kernel_eqE(transp, itndex, yrhs, trun, amascp, ncpoly, ncpom1, tinthi, ntint, ispec, ipower)
     
-    
-
     real(kind=8), dimension(1), intent(in) :: yrhs, trun
     real(kind=8), dimension(1) :: transp
     integer(kind=4), dimension(1) :: itndex
@@ -189,8 +179,6 @@ SUBROUTINE temper_kernel_eqE(transp, itndex, yrhs, trun, amascp, ncpoly, ncpom1,
 END SUBROUTINE temper_kernel_eqE
 
 SUBROUTINE temper_kernel_eqF(transp, prun, drhs, trun, store7)
-    
-    
 
     real(kind=8), dimension(1), intent(in) :: drhs, trun, store7
     real(kind=8), dimension(1) :: transp, prun
@@ -201,4 +189,3 @@ SUBROUTINE temper_kernel_eqF(transp, prun, drhs, trun, store7)
     prun(OPS_ACC2(0,0,0)) = trun(OPS_ACC4(0,0,0))*store7(OPS_ACC5(0,0,0))
 
 END SUBROUTINE temper_kernel_eqF
-

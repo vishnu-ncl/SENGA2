@@ -486,9 +486,11 @@ END SUBROUTINE
 
 SUBROUTINE check_err(ERR, line)
 integer(kind=4) :: ERR, line
+#ifdef hdf5
 IF (ERR /=0)THEN
   WRITE(*,*)"ERROR ON LINE", line
   CALL mpi_abort(mpi_comm_world, -1, ERR)
 END IF
+#endif
 END SUBROUTINE
 END module hdf5io

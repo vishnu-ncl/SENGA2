@@ -1,6 +1,4 @@
 SUBROUTINE dfbydy_kernel_null(fderiv)
-    
-    
 
     real(kind=8), dimension(1) :: fderiv
 
@@ -9,8 +7,6 @@ SUBROUTINE dfbydy_kernel_null(fderiv)
 END SUBROUTINE dfbydy_kernel_null
 
 SUBROUTINE dfbydy_kernel_main(functn, fderiv, nyglbl, nendyl, nendyr, nbound, idx)
-    
-    
 
     real(kind=8), dimension(1), intent(in) :: functn
     real(kind=8), dimension(1) :: fderiv

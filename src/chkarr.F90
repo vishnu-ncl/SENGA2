@@ -26,7 +26,6 @@ SUBROUTINE chkarr(array,  &
 !   ARGUMENTS
 !   =========
 
-    real(kind=8), intent(IN)   :: array(nchkxl:nchkxr,nchkyl:nchkyr,nchkzl:nchkzr)
     integer(kind=4), intent(IN OUT)     :: nchkxl
     integer(kind=4), intent(IN OUT)     :: nchkxr
     integer(kind=4), intent(IN OUT)     :: nchkyl
@@ -39,6 +38,7 @@ SUBROUTINE chkarr(array,  &
     integer(kind=4), intent(IN)         :: jstoc
     integer(kind=4), intent(IN)         :: kstac
     integer(kind=4), intent(IN)         :: kstoc
+    real(kind=8), intent(IN)   :: array(nchkxl:nchkxr,nchkyl:nchkyr,nchkzl:nchkzr)
 
 !   LOCAL DATA
 !   ==========

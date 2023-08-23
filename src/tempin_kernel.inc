@@ -1,6 +1,4 @@
 SUBROUTINE tempin_kernel_main(trun,drhs,urhs,vrhs,wrhs,erhs,yrhs,amascp,amasct,ncpoly,ncenth,tinthi,ntint,trin,nspec,iproc,idx)
-    
-    
 
     real(kind=8), dimension(1), intent(in) :: drhs,urhs,vrhs,wrhs,erhs,yrhs
     real(kind=8), dimension(1) :: trun

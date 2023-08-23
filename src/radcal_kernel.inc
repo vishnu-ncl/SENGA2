@@ -1,6 +1,4 @@
 SUBROUTINE radcal_kernel_addradiation(erhs,trun,store1)
-    
-    
 
     real(kind=8), dimension(1) :: erhs
     real(kind=8), dimension(1), intent(in) :: trun,store1
@@ -15,8 +13,6 @@ SUBROUTINE radcal_kernel_addradiation(erhs,trun,store1)
 END SUBROUTINE radcal_kernel_addradiation
 
 SUBROUTINE radcal_kernel_addspecies(store1,yrhs,trun,store2,rgspec,ispec)
-    
-    
 
     real(kind=8), dimension(1) :: store1
     real(kind=8), dimension(1), intent(in) :: yrhs,trun,store2
@@ -31,8 +27,6 @@ SUBROUTINE radcal_kernel_addspecies(store1,yrhs,trun,store2,rgspec,ispec)
 END SUBROUTINE radcal_kernel_addspecies
 
 SUBROUTINE radcal_kernel_meancoef(store2,trun,akprad,nkprad,nkprm1,jspec)
-    
-    
 
     real(kind=8), dimension(1) :: store2
     real(kind=8), dimension(1), intent(in) :: trun
@@ -53,4 +47,3 @@ SUBROUTINE radcal_kernel_meancoef(store2,trun,akprad,nkprad,nkprm1,jspec)
     store2(OPS_ACC1(0,0,0)) = plspec
 
 END SUBROUTINE radcal_kernel_meancoef
-

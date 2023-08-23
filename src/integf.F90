@@ -43,6 +43,7 @@ SUBROUTINE integf(functn,argmin,argmax,answer)
 
 !   ARGUMENTS
 !   =========
+    real(kind=8) :: functn
     EXTERNAL functn
 
 !   LOCAL DATA

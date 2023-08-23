@@ -1,6 +1,4 @@
 SUBROUTINE lincom_kernel_main(err_arr,run_arr,rhs_arr,rkerr,rklhs,rkrhs,irkstp)
-    
-    
 
     real(kind=8), dimension(1) :: err_arr, run_arr, rhs_arr
     integer(kind=4), intent(in) :: irkstp

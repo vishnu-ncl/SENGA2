@@ -79,7 +79,7 @@ SUBROUTINE indata
     real(kind=8) :: ttemp(5),ttold(5)
     real(kind=8) :: fornow,tmplog
     real(kind=8) :: combo1,combo2,combo3
-    integer(kind=4) :: iindex,ipower,icoef1,icoef2
+    integer(kind=4) :: iindex,ipower,icoeff,icoef1,icoef2
     integer(kind=4) :: ic,jc,kc,ispec,istep,itint,icp
     integer(kind=4) :: jspec,ncount
     integer(kind=4) :: nxdmax,nydmax,nzdmax,ndspec

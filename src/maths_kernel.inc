@@ -1,8 +1,6 @@
 !A = LOG(B)
 SUBROUTINE maths_kernel_eqA(out_arr, in_arr)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr
 
@@ -12,8 +10,6 @@ END SUBROUTINE maths_kernel_eqA
 
 !A = exp(A)
 SUBROUTINE maths_kernel_eqB(out_arr)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8) :: fornow
@@ -26,8 +22,6 @@ END SUBROUTINE maths_kernel_eqB
 !A = -B
 SUBROUTINE maths_kernel_eqC(out_arr, in_arr)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr
 
@@ -38,8 +32,6 @@ END SUBROUTINE maths_kernel_eqC
 !A = var
 SUBROUTINE maths_kernel_eqD(out_arr,var)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), intent(in) :: var
 
@@ -49,8 +41,6 @@ END SUBROUTINE maths_kernel_eqD
 
 !A = var(indx)
 SUBROUTINE maths_kernel_eqE(out_arr,var,ispec)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     integer(kind=4), intent(in) :: ispec
@@ -63,8 +53,6 @@ END SUBROUTINE maths_kernel_eqE
 !A = A + var
 SUBROUTINE maths_kernel_eqF(out_arr,var)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), intent(in) :: var
 
@@ -75,8 +63,6 @@ END SUBROUTINE maths_kernel_eqF
 !A = A*var
 SUBROUTINE maths_kernel_eqG(out_arr, var)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), intent(in) :: var
 
@@ -86,8 +72,6 @@ END SUBROUTINE maths_kernel_eqG
 
 !A = B*var(indx)
 SUBROUTINE maths_kernel_eqH(out_arr, in_arr, var, ispec)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr
@@ -101,8 +85,6 @@ END SUBROUTINE maths_kernel_eqH
 !A = var*B*C
 SUBROUTINE maths_kernel_eqI(out_arr, in_arr1, in_arr2, var)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
     real(kind=8), intent(in) :: var
@@ -114,8 +96,6 @@ END SUBROUTINE maths_kernel_eqI
 !A = A + var*B
 SUBROUTINE maths_kernel_eqJ(out_arr,in_arr,var)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr
     real(kind=8), intent(in) :: var
@@ -126,8 +106,6 @@ END SUBROUTINE maths_kernel_eqJ
 
 !A = A + var(indx)*B
 SUBROUTINE maths_kernel_eqK(out_arr,in_arr,rgspec,ispec)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr
@@ -141,8 +119,6 @@ END SUBROUTINE maths_kernel_eqK
 !A = A+var(indx)*B*C
 SUBROUTINE maths_kernel_eqL(out_arr, in_arr1, in_arr2, rgspec, ispec)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
     integer(kind=4), intent(in) :: ispec
@@ -154,8 +130,6 @@ END SUBROUTINE maths_kernel_eqL
 
 !A = A-var(indx)*B*C
 SUBROUTINE maths_kernel_eqM(out_arr, in_arr1, in_arr2, rgspec, ispec)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
@@ -169,8 +143,6 @@ END SUBROUTINE maths_kernel_eqM
 !A = var1*B-var2*A
 SUBROUTINE maths_kernel_eqN(out_arr, in_arr1, var1, var2)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1
     real(kind=8), intent(in) :: var1, var2
@@ -181,8 +153,6 @@ END SUBROUTINE maths_kernel_eqN
 
 !A = B*C*(one-var(indx)/D)
 SUBROUTINE maths_kernel_eqO(out_arr,in_arr1,in_arr2,in_arr3,var,ispec)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
@@ -195,8 +165,6 @@ END SUBROUTINE maths_kernel_eqO
 
 !A = A*max(B*var(indx)    zero)
 SUBROUTINE maths_kernel_eqP(out_arr,in_arr,var,ispec)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr
@@ -212,8 +180,6 @@ END SUBROUTINE maths_kernel_eqP
 !A = A+B
 SUBROUTINE maths_kernel_eqQ(out_arr, in_arr)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr
 
@@ -223,8 +189,6 @@ END SUBROUTINE maths_kernel_eqQ
 
 !A = B+C
 SUBROUTINE maths_kernel_eqR(out_arr, in_arr1, in_arr2)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
@@ -236,8 +200,6 @@ END SUBROUTINE maths_kernel_eqR
 !A = A-B
 SUBROUTINE maths_kernel_eqS(out_arr, in_arr)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr
 
@@ -247,8 +209,6 @@ END SUBROUTINE maths_kernel_eqS
 
 !A = A/B
 SUBROUTINE maths_kernel_eqT(out_arr, in_arr)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr
@@ -260,8 +220,6 @@ END SUBROUTINE maths_kernel_eqT
 !A = B/C
 SUBROUTINE maths_kernel_eqU(out_arr, in_arr1, in_arr2)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
 
@@ -271,8 +229,6 @@ END SUBROUTINE maths_kernel_eqU
 
 !A = A*B
 SUBROUTINE maths_kernel_eqV(out_arr, in_arr)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr
@@ -284,8 +240,6 @@ END SUBROUTINE maths_kernel_eqV
 !A = B*C
 SUBROUTINE maths_kernel_eqW(out_arr, in_arr1, in_arr2)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
 
@@ -295,8 +249,6 @@ END SUBROUTINE maths_kernel_eqW
 
 !A = B+C+D
 SUBROUTINE maths_kernel_eqX(out_arr, in_arr1, in_arr2, in_arr3)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
@@ -308,8 +260,6 @@ END SUBROUTINE maths_kernel_eqX
 !A = B*C*D
 SUBROUTINE maths_kernel_eqY(out_arr,in_arr1,in_arr2,in_arr3)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
 
@@ -319,8 +269,6 @@ END SUBROUTINE maths_kernel_eqY
 
 !A = A+B+C+D
 SUBROUTINE maths_kernel_eqZ(out_arr, in_arr1, in_arr2, in_arr3)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
@@ -332,8 +280,6 @@ END SUBROUTINE maths_kernel_eqZ
 !A = A+B*C
 SUBROUTINE maths_kernel_eqAA(out_arr, in_arr1, in_arr2)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
 
@@ -343,8 +289,6 @@ END SUBROUTINE maths_kernel_eqAA
 
 !A = B+C*D
 SUBROUTINE maths_kernel_eqAB(out_arr, in_arr1, in_arr2, in_arr3)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
@@ -356,8 +300,6 @@ END SUBROUTINE maths_kernel_eqAB
 !A = A+B*C*C
 SUBROUTINE maths_kernel_eqAC(out_arr, in_arr1, in_arr2)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
 
@@ -367,8 +309,6 @@ END SUBROUTINE maths_kernel_eqAC
 
 !A = A+B*C*D
 SUBROUTINE maths_kernel_eqAD(out_arr, in_arr1, in_arr2, in_arr3)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
@@ -380,8 +320,6 @@ END SUBROUTINE maths_kernel_eqAD
 !A = A*B+C*D
 SUBROUTINE maths_kernel_eqAE(out_arr, in_arr1, in_arr2, in_arr3)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
 
@@ -391,8 +329,6 @@ END SUBROUTINE maths_kernel_eqAE
 
 !A = A+(B+C+D)*E
 SUBROUTINE maths_kernel_eqAF(out_arr, in_arr1, in_arr2, in_arr3, in_arr4)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4
@@ -404,8 +340,6 @@ END SUBROUTINE maths_kernel_eqAF
 
 !A = A+(B+C+D)*E*F
 SUBROUTINE maths_kernel_eqAG(out_arr, in_arr1, in_arr2, in_arr3, in_arr4, in_arr5)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4, in_arr5
@@ -419,8 +353,6 @@ END SUBROUTINE maths_kernel_eqAG
 !A = A+(B*C+D*E+F*G)
 SUBROUTINE maths_kernel_eqAH(out_arr, in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6
 
@@ -433,8 +365,6 @@ END SUBROUTINE maths_kernel_eqAH
 
 !A = A+(B*C+D*E+F*G)*H
 SUBROUTINE maths_kernel_eqAI(out_arr, in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6, in_arr7)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6, in_arr7
@@ -450,8 +380,6 @@ END SUBROUTINE maths_kernel_eqAI
 !A = A - B*C
 SUBROUTINE maths_kernel_eqAJ(out_arr, in_arr1, in_arr2)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
 
@@ -461,8 +389,6 @@ END SUBROUTINE maths_kernel_eqAJ
 
 !A = A-B*(C+D+E)
 SUBROUTINE maths_kernel_eqAK(out_arr, in_arr1, in_arr2, in_arr3, in_arr4)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4
@@ -475,8 +401,6 @@ END SUBROUTINE maths_kernel_eqAK
 !A = A-B*C-D*E-F*G
 SUBROUTINE maths_kernel_eqAL(out_arr, in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6
 
@@ -488,8 +412,6 @@ END SUBROUTINE maths_kernel_eqAL
 
 !A = A-B*C-D*E-F*G-H*I
 SUBROUTINE maths_kernel_eqAM(out_arr, in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6, in_arr7, in_arr8)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6, in_arr7, in_arr8
@@ -504,8 +426,6 @@ END SUBROUTINE maths_kernel_eqAM
 !A = B - A*C - D*E - F*G - H*I
 SUBROUTINE maths_kernel_eqAN(out_arr,in_arr1,in_arr2,in_arr3,in_arr4,in_arr5,in_arr6,in_arr7,in_arr8)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6, in_arr7, in_arr8
 
@@ -519,8 +439,6 @@ END SUBROUTINE maths_kernel_eqAN
 !A = -half*(B+C)
 SUBROUTINE maths_kernel_eqAO(out_arr, in_arr1, in_arr2)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
 
@@ -530,8 +448,6 @@ END SUBROUTINE maths_kernel_eqAO
 
 !A = A - half*B*C
 SUBROUTINE maths_kernel_eqAP(out_arr,in_arr1,in_arr2)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
@@ -543,8 +459,6 @@ END SUBROUTINE maths_kernel_eqAP
 !A = A - half*(B+C+D)
 SUBROUTINE maths_kernel_eqAQ(out_arr,in_arr1,in_arr2,in_arr3)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
 
@@ -554,8 +468,6 @@ END SUBROUTINE maths_kernel_eqAQ
 
 !A = A-half*B*C*D
 SUBROUTINE maths_kernel_eqAR(out_arr, in_arr1, in_arr2, in_arr3)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
@@ -567,8 +479,6 @@ END SUBROUTINE maths_kernel_eqAR
 
 !A = -half*(B+C*D+E*F+G*H)
 SUBROUTINE maths_kernel_eqAS(out_arr, in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6, in_arr7)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6, in_arr7
@@ -583,8 +493,6 @@ END SUBROUTINE maths_kernel_eqAS
 !A = A - half*(B*C+D*E+F*G)
 SUBROUTINE maths_kernel_eqAT(out_arr,in_arr1,in_arr2,in_arr3,in_arr4,in_arr5,in_arr6)
 
-    
-
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4, in_arr5, in_arr6
 
@@ -596,8 +504,6 @@ END SUBROUTINE maths_kernel_eqAT
 
 !A = A - B + half*(C*C+D*D+E*E)
 SUBROUTINE maths_kernel_eqAU(out_arr,in_arr1,in_arr2,in_arr3,in_arr4)
-
-    
 
     real(kind=8), dimension(1) :: out_arr
     real(kind=8), dimension(1), intent(in) :: in_arr1,in_arr2,in_arr3,in_arr4
@@ -613,8 +519,6 @@ END SUBROUTINE maths_kernel_eqAU
 
 SUBROUTINE maths_kernel_eqAV(out_arr1,out_arr2,in_arr1)
 
-    
-
     real(kind=8), dimension(1) :: out_arr1, out_arr2
     real(kind=8), dimension(1), intent(in) :: in_arr1
     real(kind=8) :: fornow
@@ -628,8 +532,6 @@ END SUBROUTINE maths_kernel_eqAV
 
 SUBROUTINE maths_kernel_eqAW(out_arr1,out_arr2,in_arr1,racnst,rncnst,reovrr)
 
-    
-
     real(kind=8), dimension(1) :: out_arr1, out_arr2
     real(kind=8), dimension(1), intent(in) :: in_arr1
     real(kind=8), intent(in) :: racnst,rncnst,reovrr
@@ -641,8 +543,6 @@ SUBROUTINE maths_kernel_eqAW(out_arr1,out_arr2,in_arr1,racnst,rncnst,reovrr)
 END SUBROUTINE maths_kernel_eqAW
 
 SUBROUTINE maths_kernel_eqAX(out_arr1,out_arr2,out_arr3,in_arr1,in_arr2,racnst,rncnst,reovrr,flcnst)
-
-    
 
     real(kind=8), dimension(1) :: out_arr1, out_arr2, out_arr3
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
@@ -668,8 +568,6 @@ SUBROUTINE maths_kernel_eqAX(out_arr1,out_arr2,out_arr3,in_arr1,in_arr2,racnst,r
 END SUBROUTINE maths_kernel_eqAX
 
 SUBROUTINE maths_kernel_eqAY(out_arr1,out_arr2,out_arr3,in_arr1,in_arr2,racnst,rncnst,reovrr,talpha,ovtst1,tstar2,ovtst3,cfcst1,cfcst2,encst1,encst2,dtcnst,omalph,clnten)
-
-    
 
     real(kind=8), dimension(1) :: out_arr1, out_arr2, out_arr3
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
@@ -713,8 +611,6 @@ END SUBROUTINE maths_kernel_eqAY
 
 SUBROUTINE maths_kernel_eqAZ(out_arr1,out_arr2,out_arr3,in_arr1,in_arr2,racnst,rncnst,reovrr,acfsri,bcfsrm,ovcsrm,dcfsri,ecfsri)
 
-    
-
     real(kind=8), dimension(1) :: out_arr1, out_arr2, out_arr3
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2
     real(kind=8), intent(in) :: racnst,rncnst,reovrr,acfsri,bcfsrm,ovcsrm,dcfsri,ecfsri
@@ -750,8 +646,6 @@ END SUBROUTINE maths_kernel_eqAZ
 
 SUBROUTINE maths_kernel_eqBA(out_arr1,out_arr2,in_arr1,in_arr2,in_arr3,in_arr4,in_arr5,in_arr6)
 
-    
-
     real(kind=8), dimension(1) :: out_arr1,out_arr2
     real(kind=8), dimension(1), intent(in) :: in_arr1,in_arr2,in_arr3,in_arr4,in_arr5,in_arr6
     real(kind=8) :: fornow
@@ -770,8 +664,6 @@ END SUBROUTINE maths_kernel_eqBA
 
 SUBROUTINE maths_kernel_eqBB(out_arr1,out_arr2,in_arr1,in_arr2,in_arr3,in_arr4)
 
-    
-
     real(kind=8), dimension(1) :: out_arr1,out_arr2
     real(kind=8), dimension(1), intent(in) :: in_arr1,in_arr2,in_arr3,in_arr4
     real(kind=8) :: fornow
@@ -789,8 +681,6 @@ END SUBROUTINE maths_kernel_eqBB
 
 SUBROUTINE maths_kernel_eqBC(transp,trun,tdifgb)
 
-    
-
     real(kind=8), dimension(1), intent(in) :: trun
     real(kind=8), dimension(1) :: transp
 
@@ -801,8 +691,6 @@ SUBROUTINE maths_kernel_eqBC(transp,trun,tdifgb)
 END SUBROUTINE maths_kernel_eqBC
 
 SUBROUTINE maths_kernel_eqBD(combo1,combo2,combo3,transp,yrhs,condco,ovwmol,ncocon,ncocm1,ispec)
-
-    
 
     real(kind=8), dimension(1), intent(in) :: transp,yrhs
     real(kind=8), dimension(1) :: combo1,combo2,combo3
@@ -831,8 +719,6 @@ END SUBROUTINE maths_kernel_eqBD
 
 SUBROUTINE maths_kernel_eqBE(combo1,combo2,combo3,store7,wmomix,drhs)
 
-    
-
     real(kind=8), dimension(1), intent(in) :: drhs
     real(kind=8), dimension(1) :: combo1,combo2,combo3,store7,wmomix
 
@@ -846,8 +732,6 @@ SUBROUTINE maths_kernel_eqBE(combo1,combo2,combo3,store7,wmomix,drhs)
 END SUBROUTINE maths_kernel_eqBE
 
 SUBROUTINE maths_kernel_eqBF(ctrans,combo1,combo2,transp,prun,yrhs,diffco,ovwmol,pdifgb,dfctol,ncodif,ncodm1,jspec,ispec)
-
-    
 
     real(kind=8), dimension(1), intent(in) :: transp,prun,yrhs
     real(kind=8), dimension(1) :: ctrans,combo1,combo2
@@ -875,8 +759,6 @@ END SUBROUTINE maths_kernel_eqBF
 
 SUBROUTINE maths_kernel_eqBG(combo1,combo2,difmix,store7,ctrans,yrhs,wmomix,drhs,ovwmol,dfctol,ispec)
 
-    
-
     real(kind=8), dimension(1), intent(in) :: ctrans,yrhs,wmomix,drhs
     real(kind=8), dimension(1) :: combo1,combo2,difmix,store7
 
@@ -898,8 +780,6 @@ SUBROUTINE maths_kernel_eqBG(combo1,combo2,difmix,store7,ctrans,yrhs,wmomix,drhs
 END SUBROUTINE maths_kernel_eqBG
 
 SUBROUTINE maths_kernel_eqBH(tdrmix,trun,yrhs,wmomix,tdrcco,ovwmol,tdifgb,ncotdr,jspec,ispec,ncotm1)
-
-    
 
     real(kind=8), dimension(1) :: tdrmix
     real(kind=8), dimension(1), intent(in) :: trun,yrhs,wmomix
@@ -931,8 +811,6 @@ END SUBROUTINE maths_kernel_eqBH
 
 SUBROUTINE maths_kernel_eqBI(ctrans,transp,viscco,ncovis,ncovm1,ispec)
 
-    
-
     real(kind=8), dimension(1), intent(in) :: transp
     real(kind=8), dimension(1) :: ctrans
     integer(kind=4), intent(in) :: ncovis,ncovm1,ispec
@@ -953,8 +831,6 @@ END SUBROUTINE maths_kernel_eqBI
 
 SUBROUTINE maths_kernel_eqBJ(combo2,ctrans_ispec,ctrans_jspec,yrhs,ovwmol,wilko1,wilko2,ispec,jspec)
 
-    
-
     real(kind=8), dimension(1), intent(in) :: ctrans_ispec,ctrans_jspec,yrhs
     real(kind=8), dimension(1) :: combo2
     integer(kind=4), intent(in) :: ispec,jspec
@@ -973,8 +849,6 @@ END SUBROUTINE maths_kernel_eqBJ
 
 SUBROUTINE maths_kernel_eqBK(combo1,ctrans,combo2,yrhs,ovwmol,ispec)
 
-    
-
     real(kind=8), dimension(1), intent(in) :: ctrans,combo2,yrhs
     real(kind=8), dimension(1) :: combo1
     integer(kind=4), intent(in) :: ispec
@@ -989,8 +863,6 @@ SUBROUTINE maths_kernel_eqBK(combo1,ctrans,combo2,yrhs,ovwmol,ispec)
 END SUBROUTINE maths_kernel_eqBK
 
 SUBROUTINE maths_kernel_eqBL(utmp,wtmp,trun,itndex,yrhs,amasch,ncpoly,ncpom1,ncenth,icoef1,icoef2,ispec)
-
-    
 
     real(kind=8), dimension(1) :: utmp,wtmp
     real(kind=8), dimension(1), intent(in) :: trun,yrhs
@@ -1021,8 +893,6 @@ END SUBROUTINE maths_kernel_eqBL
 
 SUBROUTINE maths_kernel_eqBM(store1,yrhs,ovwmol,scoef,ysmall,ydenom,ispec)
 
-    
-
     real(kind=8), dimension(1) :: store1
     real(kind=8), dimension(1), intent(in) :: yrhs
     integer(kind=4), intent(in) ::  ispec
@@ -1039,8 +909,6 @@ SUBROUTINE maths_kernel_eqBM(store1,yrhs,ovwmol,scoef,ysmall,ydenom,ispec)
 END SUBROUTINE maths_kernel_eqBM
 
 SUBROUTINE maths_kernel_eqBN(store2,trun,itndex,amolgb,ncpoly,ncpom1,ncenth,ncenpy,diffmu,isspec,ispec,istep,ipower,icoef1,icoef2)
-
-    
 
     real(kind=8), dimension(1) :: store2
     real(kind=8), dimension(1), intent(in) :: trun
@@ -1077,8 +945,6 @@ END SUBROUTINE maths_kernel_eqBN
 
 SUBROUTINE maths_kernel_eqBO(itndex,trun,tinthi,ntint,ipower,ispec)
 
-    
-
     real(kind=8), dimension(1), intent(in) :: trun
     integer(kind=4), dimension(1) :: itndex
 
@@ -1099,8 +965,6 @@ SUBROUTINE maths_kernel_eqBO(itndex,trun,tinthi,ntint,ipower,ispec)
 END SUBROUTINE maths_kernel_eqBO
 
 SUBROUTINE maths_kernel_eqBP(erun,trun,itndex,yrun,amasch,ncpoly,ncpom1,ncenth,ipower,icoef1,icoef2,ispec)
-
-    
 
     real(kind=8), dimension(1), intent(in) :: trun, yrun
     real(kind=8), dimension(1) :: erun
@@ -1130,8 +994,6 @@ END SUBROUTINE maths_kernel_eqBP
 
 SUBROUTINE maths_kernel_eqtau(out_arr1,out_arr2,in_arr1,in_arr2,in_arr3,var)
 
-    
-
     real(kind=8), dimension(1) :: out_arr1, out_arr2
     real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3
     real(kind=8), intent(in) :: var
@@ -1144,8 +1006,6 @@ SUBROUTINE maths_kernel_eqtau(out_arr1,out_arr2,in_arr1,in_arr2,in_arr3,var)
 END SUBROUTINE maths_kernel_eqtau
 
 SUBROUTINE maths_kernel_print_drhs(out_arr, itime)
-
-    
 
     real(kind=8), dimension(1), intent(in) :: out_arr
     integer(kind=4), intent(in) :: itime
@@ -1160,8 +1020,6 @@ END SUBROUTINE maths_kernel_print_drhs
 
 SUBROUTINE maths_kernel_print_erhs(out_arr, itime)
 
-    
-
     real(kind=8), dimension(1), intent(in) :: out_arr
     integer(kind=4), intent(in) :: itime
 
@@ -1174,8 +1032,6 @@ SUBROUTINE maths_kernel_print_erhs(out_arr, itime)
 END SUBROUTINE maths_kernel_print_erhs
 
 SUBROUTINE maths_kernel_print_urhs(out_arr, itime)
-
-    
 
     real(kind=8), dimension(1), intent(in) :: out_arr
     integer(kind=4), intent(in) :: itime
