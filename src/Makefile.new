@@ -11,7 +11,7 @@ OTHER_FILES = constants.F90 cuda_constant.F90 com_espect.F90 com_senga2.F90 \
     finish.F90 diffin.F90 hdf5io.F90 contin.F90 bcinit.F90 turbft.F90 \
     fftsym.F90 fftf3d.F90 integf.F90 fftixl.F90
 
-OPS_FILES = com_ops_senga2.F90 senga2.F90 ops_data_init.F90 dfinit.F90 dfbydx.F90 d2fdx2.F90 \
+OPS_FILES = senga2.F90 com_ops_senga2.F90 ops_data_init.F90 dfinit.F90 dfbydx.F90 d2fdx2.F90 \
     dfbydy.F90 dfbydz.F90 d2fdy2.F90 d2fdz2.F90 zeroxl.F90 zeroxr.F90 zeroyl.F90 zeroyr.F90 \
     zerozl.F90 zerozr.F90 d2fdxy.F90 d2fdxz.F90 d2fdyz.F90 rhscal.F90 rhsvel.F90 \
     lincom.F90 fincom.F90 adaptt.F90 bcdtxl.F90 bcdtxr.F90 bcdtyl.F90 bcdtyr.F90 \
@@ -29,6 +29,7 @@ endif
 
 ifeq ($(OPS_COMPILER),pgi)
 APP_FLAGS = -Kieee -Mnofpapprox -mcmodel=medium -Ktrap=unf -Mnofprelaxed -m64 -pc 64
+#-nofma
 endif
 
 APP_LIBS = fftlib/fftlib.a rndlib/rndlib.a parlib/parlib.a -lm
@@ -81,21 +82,30 @@ all: $(APP_TARGETS)
 SEQ_KERNELS = $(wildcard MPI/*.F90)
 CUDA_KERNELS = $(wildcard CUDA/*.CUF)
 
-MODULE_FILES = constants.F90 com_espect.F90 com_senga2.F90 com_ops_senga2_ops.F90
+MODULE_FILES = com_espect.F90 com_senga2.F90
+OPS_MODULE_FILES = constants.F90 com_ops_senga2_ops.F90
 OTHER_FILES := $(filter-out $(MODULE_FILES), $(OTHER_FILES))
+OTHER_FILES := $(filter-out $(OPS_MODULE_FILES), $(OTHER_FILES))
 OPS_GENERATED := $(filter-out $(MODULE_FILES), $(OPS_GENERATED))
+OPS_GENERATED := $(filter-out $(OPS_MODULE_FILES), $(OPS_GENERATED))
 
 #=========================================================================================================================
 
-SEQ_OBJ = $(MODULE_FILES:.F90=_seq.o) $(OTHER_FILES:.F90=_seq.o) $(SEQ_KERNELS:.F90=_seq.o) $(OPS_GENERATED:.F90=_seq.o)
-OMP_OBJ = $(MODULE_FILES:.F90=_omp.o) $(OTHER_FILES:.F90=_omp.o) $(SEQ_KERNELS:.F90=_omp.o) $(OPS_GENERATED:.F90=_omp.o)
-TILED_OBJ = $(MODULE_FILES:.F90=_tiled.o) $(OTHER_FILES:.F90=_tiled.o) $(SEQ_KERNELS:.F90=_tiled.o) $(OPS_GENERATED:.F90=_tiled.o)
-MPI_OBJ = $(MODULE_FILES:.F90=_mpi.o) $(OTHER_FILES:.F90=_mpi.o) $(SEQ_KERNELS:.F90=_mpi.o) $(OPS_GENERATED:.F90=_mpi.o)
-MPI_TILED_OBJ = $(MODULE_FILES:.F90=_mpi_tiled.o) $(OTHER_FILES:.F90=_mpi_tiled.o) $(SEQ_KERNELS:.F90=_mpi_tiled.o) $(OPS_GENERATED:.F90=_mpi_tiled.o)
-MPI_OMP_OBJ = $(MODULE_FILES:.F90=_mpi_omp.o) $(OTHER_FILES:.F90=_mpi_omp.o) $(SEQ_KERNELS:.F90=_mpi_omp.o) $(OPS_GENERATED:.F90=_mpi_omp.o)
+SEQ_OBJ = $(MODULE_FILES:.F90=_seq.o) $(OPS_MODULE_FILES:.F90=_seq.o) $(OTHER_FILES:.F90=_seq.o) $(SEQ_KERNELS:.F90=_seq.o) $(OPS_GENERATED:.F90=_seq.o)
 
-CUDA_OBJ = $(MODULE_FILES:.F90=_cuda.o) $(OTHER_FILES:.F90=_cuda.o) $(CUDA_KERNELS:.CUF=_cuda.o) $(OPS_GENERATED:.F90=_cuda.o)
-MPI_CUDA_OBJ = $(MODULE_FILES:.F90=_mpi_cuda.o) $(OTHER_FILES:.F90=_mpi_cuda.o) $(CUDA_KERNELS:.CUF=_mpi_cuda.o) $(OPS_GENERATED:.F90=_mpi_cuda.o)
+OMP_OBJ = $(MODULE_FILES:.F90=_omp.o) $(OPS_MODULE_FILES:.F90=_omp.o) $(OTHER_FILES:.F90=_omp.o) $(SEQ_KERNELS:.F90=_omp.o) $(OPS_GENERATED:.F90=_omp.o)
+
+TILED_OBJ = $(MODULE_FILES:.F90=_tiled.o) $(OPS_MODULE_FILES:.F90=_tiled.o) $(OTHER_FILES:.F90=_tiled.o) $(SEQ_KERNELS:.F90=_tiled.o) $(OPS_GENERATED:.F90=_tiled.o)
+
+MPI_OBJ = $(MODULE_FILES:.F90=_mpi.o) $(OPS_MODULE_FILES:.F90=_mpi.o) $(OTHER_FILES:.F90=_mpi.o) $(SEQ_KERNELS:.F90=_mpi.o) $(OPS_GENERATED:.F90=_mpi.o)
+
+MPI_TILED_OBJ = $(MODULE_FILES:.F90=_mpi_tiled.o) $(OPS_MODULE_FILES:.F90=_mpi_tiled.o) $(OTHER_FILES:.F90=_mpi_tiled.o) $(SEQ_KERNELS:.F90=_mpi_tiled.o) $(OPS_GENERATED:.F90=_mpi_tiled.o)
+
+MPI_OMP_OBJ = $(MODULE_FILES:.F90=_mpi_omp.o) $(OPS_MODULE_FILES:.F90=_mpi_omp.o) $(OTHER_FILES:.F90=_mpi_omp.o) $(SEQ_KERNELS:.F90=_mpi_omp.o) $(OPS_GENERATED:.F90=_mpi_omp.o)
+
+CUDA_OBJ = $(MODULE_FILES:.F90=_cuda.o) $(OPS_MODULE_FILES:.F90=_cuda.o) $(OTHER_FILES:.F90=_cuda.o) $(CUDA_KERNELS:.CUF=_cuda.o) $(OPS_GENERATED:.F90=_cuda.o)
+
+MPI_CUDA_OBJ = $(MODULE_FILES:.F90=_mpi_cuda.o) $(OPS_MODULE_FILES:.F90=_mpi_cuda.o) $(OTHER_FILES:.F90=_mpi_cuda.o) $(CUDA_KERNELS:.CUF=_mpi_cuda.o) $(OPS_GENERATED:.F90=_mpi_cuda.o)
 
 #=========================================================================================================================
 
@@ -203,6 +213,7 @@ $(APP)_mpi_cuda: Makefile .generated $(MPI_CUDA_OBJ)
 #=========================================================================================================================
 
 clean:
+	rm -f .generated
 	rm -f *.o MPI/*.o CUDA/*.o
 	rm -f *.oo MPI/*.oo CUDA/*.oo
 	rm -f *.optrpt MPI/*.optrpt CUDA/*.optrpt

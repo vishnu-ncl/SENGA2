@@ -50,6 +50,8 @@ SUBROUTINE bctixl
     LOGICAL :: fxdump
     integer(kind=4) :: rangexyz(6)
 
+    real(kind=8) ::  store1(1,1,1), store4(1,1,1), store5(1,1,1), store6(1,1,1)
+
 !   BEGIN
 !   =====
 
