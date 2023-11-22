@@ -1,7 +1,6 @@
 MODULE com_ops_senga
 
     use OPS_Fortran_Reference
-    use OPS_CONSTANTS
 
     use, intrinsic :: ISO_C_BINDING
 

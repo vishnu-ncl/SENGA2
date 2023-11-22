@@ -21,14 +21,16 @@ OTHER_FILES = com_espect.F90 com_senga2.F90 rhsvel.F90 dfinit.F90 dfbydy.F90 dfb
 	bcinit.F90 bounds.F90 bountt.F90 boundt.F90 turbin.F90 turbft.F90 fftsym.F90 fftf3d.F90 \
 	flamin.F90 fftixl.F90
 
-OPS_FILES = com_ops_senga2.F90 senga2.F90 ops_data_init.F90 print_dats.F90
+OPS_FILES = senga2.F90 com_ops_senga2.F90 ops_data_init.F90 print_dats.F90
 
 ifeq ($(OPS_COMPILER),intel)
 APP_FLAGS = -mcmodel=large -fp-model precise -fp-model source -no-fma -fimf-arch-consistency=true -fimf-precision=high
+#APP_FLAGS = -mcmodel=large -fp-model precise -fp-model source -no-fma -nolib-inline
 endif
 
 ifeq ($(OPS_COMPILER),pgi)
 APP_FLAGS = -Kieee -Mnofpapprox -mcmodel=medium -Ktrap=unf -Mnofprelaxed -m64 -pc 64
+#-nofma
 endif
 
 APP_LIBS = fftlib/fftlib.a rndlib/rndlib.a parlib/parlib.a -lm
@@ -90,6 +92,7 @@ $(APP)_seq: Makefile .generated $(SEQ_OBJ)
 #=========================================================================================================================
 
 clean:
+	rm -f .generated
 	rm -f *.o MPI/*.o CUDA/*.o
 	rm -f *.oo MPI/*.oo CUDA/*.oo
 	rm -f *.optrpt MPI/*.optrpt CUDA/*.optrpt
