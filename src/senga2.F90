@@ -202,7 +202,7 @@ PROGRAM senga2
 !       ===================
         call output
 
-        IF (itime == 64) THEN
+        IF (itime == 240) THEN
             call print_dats()
             STOP
         END IF

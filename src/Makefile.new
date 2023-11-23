@@ -28,8 +28,7 @@ APP_FLAGS = -mcmodel=large -fp-model precise -fp-model source -no-fma -fimf-arch
 endif
 
 ifeq ($(OPS_COMPILER),pgi)
-APP_FLAGS = -Kieee -Mnofpapprox -mcmodel=medium -Ktrap=unf -Mnofprelaxed -m64 -pc 64
-#-nofma
+APP_FLAGS = -Kieee -Mnofpapprox -mcmodel=medium -Ktrap=unf -Mnofprelaxed -m64 -pc 64 -nofma
 endif
 
 APP_LIBS = fftlib/fftlib.a rndlib/rndlib.a parlib/parlib.a -lm

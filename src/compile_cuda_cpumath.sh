@@ -2,9 +2,9 @@
 
 # First generate all .o files for seq and cuda version and then run this file
 
-/opt/nvidia/hpc_sdk/Linux_x86_64/23.9/comm_libs/mpi/bin/mpif90 -O3 -fast -gopt  -Kieee -Mnofpapprox -mcmodel=medium \
-	-Ktrap=unf -Mnofprelaxed -m64 -pc 64 -module /ext-home/asl/New_SENGA/For_NVidia/OPS/ops/fortran/mod/pgi/cuda \
-	-L/ext-home/asl/New_SENGA/For_NVidia/OPS/ops/fortran/lib/pgi -pgc++libs -lstdc++ -DOPS_WITH_CUDAFOR -cuda -gpu=cc70  \
+mpif90 -O3 -fast -gopt  -Kieee -Mnofpapprox -mcmodel=medium \
+	-Ktrap=unf -Mnofprelaxed -m64 -pc 64 -nofma -module $OPS_INSTALL_PATH/fortran/mod/pgi/cuda \
+	-L$OPS_INSTALL_PATH/fortran/lib/pgi -pgc++libs -lstdc++ -DOPS_WITH_CUDAFOR -cuda -gpu=cc70  \
 	com_espect_cuda.o com_senga2_cuda.o constants_cuda.o com_ops_senga2_ops_cuda.o cuda_constant_cuda.o dfmstr_cuda.o \
 	ardums_cuda.o ardump_cuda.o buftxl_cuda.o chkarr_cuda.o chkary_cuda.o erfunc_cuda.o espect_cuda.o espksq_cuda.o \
 	espovk_cuda.o finish_cuda.o diffin_cuda.o hdf5io_cuda.o contin_cuda.o bcinit_cuda.o turbft_cuda.o fftsym_cuda.o \
