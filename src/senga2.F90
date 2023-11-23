@@ -195,7 +195,7 @@ DO jtime = ntime1,ntime2
   CALL output
   
 !       =======================================================================
-        IF (itime == 64) THEN
+        IF (itime == 240) THEN
             call print_dats()
             STOP
         END IF

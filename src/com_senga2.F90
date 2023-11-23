@@ -17,7 +17,7 @@ MODULE com_senga
 
 !     GLOBAL GRID SIZE
 INTEGER :: nxglbl,nyglbl,nzglbl
-PARAMETER(nxglbl=128, nyglbl=128, nzglbl=128)
+PARAMETER(nxglbl=16, nyglbl=16, nzglbl=16)
 INTEGER :: ngzmax
 !     SET NGZMAX=MAX(NXGLBL,NYGLBL,NZGLBL)
 PARAMETER(ngzmax=nxglbl)
@@ -31,7 +31,7 @@ PARAMETER(nprmax=nxproc)
 
 !     LOCAL GRID SIZE
 INTEGER :: nxsize,nysize,nzsize
-PARAMETER(nxsize=128, nysize=128, nzsize=128)
+PARAMETER(nxsize=16, nysize=16, nzsize=16)
 INTEGER :: nszmax
 !     SET NSZMAX=MAX(NXSIZE,NYSIZE,NZSIZE)
 PARAMETER(nszmax=nxsize)
