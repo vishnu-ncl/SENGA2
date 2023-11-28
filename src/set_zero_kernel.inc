@@ -7,12 +7,14 @@ SUBROUTINE set_zero_kernel(farray)
 
 END SUBROUTINE set_zero_kernel
 
-SUBROUTINE set_zero_kernel_MD5(farray, ispec)
+SUBROUTINE set_zero_kernel_MD5(farray)
 
     real(kind=8), dimension(1) :: farray
-    integer(kind=4) :: ispec
+    integer(kind=4) :: icp
 
-    farray(OPS_ACC_MD1(ispec,0,0,0)) = 0.0_8
+    DO icp = 1, nctmax
+        farray(OPS_ACC_MD1(icp,0,0,0)) = 0.0_8
+    END DO
 
 END SUBROUTINE set_zero_kernel_MD5
 

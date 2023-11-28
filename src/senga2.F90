@@ -137,9 +137,9 @@ PROGRAM senga2
 
 !           EVALUATE RHS FOR SCALARS
             call rhscal
-#ifdef OPS_LAZY
-    call ops_execute()
-#endif
+!#ifdef OPS_LAZY
+!    call ops_execute()
+!#endif
 
 !           EVALUATE RHS FOR VELOCITIES
             call rhsvel
@@ -166,9 +166,9 @@ PROGRAM senga2
 
 !       EVALUATE RHS FOR SCALARS
         call rhscal
-#ifdef OPS_LAZY
-    call ops_execute()
-#endif
+!#ifdef OPS_LAZY
+!    call ops_execute()
+!#endif
 !       EVALUATE RHS FOR VELOCITIES
         call rhsvel
 
