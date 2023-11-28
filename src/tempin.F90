@@ -28,26 +28,26 @@ SUBROUTINE tempin
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
 
 !     PARAMETERS
 !     ==========
-REAL(KIND=dp) :: toltmp
-PARAMETER(toltmp = 0.00010_dp)
-REAL(KIND=dp) :: tininc
-PARAMETER(tininc = 50.0_dp)
-REAL(KIND=dp) :: tlimlo,tlimhi
-PARAMETER(tlimlo = 200.0_dp, tlimhi = 3000.0_dp)
+REAL(kind=8) :: toltmp
+PARAMETER(toltmp = 0.00010_8)
+REAL(kind=8) :: tininc
+PARAMETER(tininc = 50.0_8)
+REAL(kind=8) :: tlimlo,tlimhi
+PARAMETER(tlimlo = 200.0_8, tlimhi = 3000.0_8)
 
 
 !     LOCAL DATA
 !     ==========
-REAL(KIND=dp) :: tcoeff(0:nctmax)
-REAL(KIND=dp) :: ukuk
-REAL(KIND=dp) :: tempor,tupper,tlower,tresid,tuk2me,cpfory
+REAL(kind=8) :: tcoeff(0:nctmax)
+REAL(kind=8) :: ukuk
+REAL(kind=8) :: tempor,tupper,tlower,tresid,tuk2me,cpfory
 INTEGER :: ic,jc,kc,ispec,itint,icp
 INTEGER :: iindex,ipower
 LOGICAL :: fnconv

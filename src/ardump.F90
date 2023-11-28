@@ -24,12 +24,12 @@ SUBROUTINE ardump(array,nxphys,nyphys,nzphys)
 
 !     *************************************************************************
 
-use data_types
+
 
 !     ARGUMENTS
 !     =========
 
-REAL(KIND=dp), INTENT(IN OUT)         :: array(nxphys,nyphys,nzphys)
+REAL(kind=8), INTENT(IN OUT)         :: array(nxphys,nyphys,nzphys)
 INTEGER, INTENT(IN OUT)                  :: nxphys
 INTEGER, INTENT(IN)                      :: nyphys
 INTEGER, INTENT(IN)                      :: nzphys

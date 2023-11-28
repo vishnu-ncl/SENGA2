@@ -8,19 +8,19 @@ MODULE com_espect
 !     GENERAL SPECTRUM PARAMETERS
 !     ---------------------------
 !     NUMBER OF SPECTRUM PARAMETERS
-use data_types
+
 
 INTEGER :: nsparm
 PARAMETER(nsparm = 4)
 
 !     SPECTRUM PARAMETERS
-REAL(KIND=dp) :: sparam(nsparm)
+REAL(kind=8) :: sparam(nsparm)
 
 
 !     DATA SPECIFIC TO THE SPECTRUM FUNCTION
 !     --------------------------------------
 !     BATCHELOR-TOWNSEND SPECTRUM
-REAL(KIND=dp) :: const0,ck0,ovk0,covk0
+REAL(kind=8) :: const0,ck0,ovk0,covk0
 
 
 COMMON/espcom/sparam, const0,ck0,ovk0,covk0

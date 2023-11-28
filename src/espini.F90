@@ -32,7 +32,7 @@ SUBROUTINE espini
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_espect
 use com_senga
 !     -------------------------------------------------------------------------
@@ -41,8 +41,8 @@ use com_senga
 !     PARAMETERS
 !     ==========
 !     RSC 09-JUN-2008 ENHANCEMENTS
-real(kind=dp) :: ten
-PARAMETER(ten = 10.0_dp)
+REAL(kind=8) :: ten
+PARAMETER(ten = 10.0_8)
 
 
 !     FUNCTIONS
@@ -52,11 +52,11 @@ EXTERNAL espect,espovk,espksq
 
 !     LOCAL DATA
 !     ==========
-real(kind=dp) :: tenrgy,tinscl,tdisip
-real(kind=dp) :: speclo,spechi
-real(kind=dp) :: argmnt
+REAL(kind=8) :: tenrgy,tinscl,tdisip
+REAL(kind=8) :: speclo,spechi
+REAL(kind=8) :: argmnt
 !     RSC 09-JUN-2008 ENHANCEMENTS
-real(kind=dp) :: viscos,viskin,tkolmo,taylor,rtin,dvrin
+REAL(kind=8) :: viscos,viskin,tkolmo,taylor,rtin,dvrin
 INTEGER :: imodes,nmodes
 !     RSC 09-JUN-2008 ENHANCEMENTS
 INTEGER :: ispec
@@ -93,7 +93,7 @@ IF(iproc == 0)THEN
   DO imodes = 0, nmodes
 !         RSC 09-JUN-2008 BUG FIX
 !          ARGMNT = TWO*PI*REAL(IMODES)
-    argmnt = REAL(imodes,kind=dp)
+    argmnt = REAL(imodes,kind=8)
     WRITE(ncrept,'(I5,2(1PE12.4))')imodes,argmnt,espect(argmnt)
   END DO
   WRITE(ncrept,*)
@@ -103,7 +103,7 @@ IF(iproc == 0)THEN
   speclo = zero
 !         RSC 09-JUN-2008 BUG FIX
 !        SPECHI = TWO*PI*REAL(NMODES)
-  spechi = REAL(nmodes,kind=dp)
+  spechi = REAL(nmodes,kind=8)
   
 !       INTEGRATE FOR THE ENERGY
   CALL integf(espect,speclo,spechi,tenrgy)

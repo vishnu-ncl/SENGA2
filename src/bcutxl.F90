@@ -31,7 +31,7 @@ SUBROUTINE bcutxl
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
@@ -39,10 +39,10 @@ use com_senga
 !     LOCAL DATA
 !     ==========
 !KA   FIX INFLOW BUG, BTIME IS DEFINED IN COM_SENGA2.H
-!KA      REAL(KIND=dp) BTIME
-REAL(KIND=dp) :: fornow,argmnt,argval,realkx
-REAL(KIND=dp) :: cosval,sinval,costht,sintht
-REAL(KIND=dp) :: pcount
+!KA      REAL(kind=8) BTIME
+REAL(kind=8) :: fornow,argmnt,argval,realkx
+REAL(kind=8) :: cosval,sinval,costht,sintht
+REAL(kind=8) :: pcount
 INTEGER :: ic,jc,kc
 INTEGER :: iic,iim,kx,kxbase
 INTEGER :: icproc,ncount,irproc,irtag
@@ -151,7 +151,7 @@ IF(nxlprm(1) == 3)THEN
   IF(fllixl)THEN
     
     kx = kxbase
-    realkx = REAL(kx,kind=dp)
+    realkx = REAL(kx,kind=8)
     argval = argmnt*realkx
     cosval = COS(argval)
     sinval = SIN(argval)
@@ -186,7 +186,7 @@ IF(nxlprm(1) == 3)THEN
       DO jc = jstal,jstol
         
         kx = kxbase
-        realkx = REAL(kx,kind=dp)
+        realkx = REAL(kx,kind=8)
         argval = argmnt*realkx
         cosval = COS(argval)
         sinval = SIN(argval)
@@ -208,7 +208,7 @@ IF(nxlprm(1) == 3)THEN
     DO jc = jstal,jstol
       
       kx = kxbase
-      realkx = REAL(kx,kind=dp)
+      realkx = REAL(kx,kind=8)
       argval = argmnt*realkx
       cosval = COS(argval)
       sinval = SIN(argval)
@@ -233,7 +233,7 @@ IF(nxlprm(1) == 3)THEN
             - wfxl(iic,jc,kc)*cosval)
         
         kx = kx + 1
-        realkx = REAL(kx,kind=dp)
+        realkx = REAL(kx,kind=8)
         fornow = cosval
         cosval = costht*cosval - sintht*sinval
         sinval = sintht*fornow + costht*sinval
@@ -249,7 +249,7 @@ IF(nxlprm(1) == 3)THEN
   IF(fltrxl)THEN
     
     kx = kxbase + istoxl/2
-    realkx = REAL(kx,kind=dp)
+    realkx = REAL(kx,kind=8)
     argval = argmnt*realkx
     cosval = COS(argval)
     sinval = SIN(argval)
@@ -357,7 +357,7 @@ IF(nxlprm(1) == 3)THEN
       END DO
     END DO
     
-    pcount = REAL(ncount,kind=dp)
+    pcount = REAL(ncount,kind=8)
     irproc = nprocx(0)
     irtag = iproc*nproc+irproc
     CALL p_send(pcount,1,1,irproc,irtag)

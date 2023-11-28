@@ -23,25 +23,25 @@ FUNCTION espovk(waveno)
 !     AT THE GIVEN WAVENUMBER MAGNITUDE
 
 !     *************************************************************************
-use data_types
+
 
 !     EXTERNAL FUNCTION
 !     =================
 
-REAL(KIND=dp), INTENT(IN)             :: waveno
-REAL(KIND=dp) :: espect
+REAL(kind=8), INTENT(IN)             :: waveno
+REAL(kind=8) :: espect
 EXTERNAL espect
 
 
 !     PARAMETER
 !     =========
 
-REAL(KIND=dp), PARAMETER :: zero = 0.0_dp
+REAL(kind=8), PARAMETER :: zero = 0.0_8
 
 
 !     FUNCTION
 !     ========
-REAL(KIND=dp) :: espovk
+REAL(kind=8) :: espovk
 
 
 !     ARGUMENT

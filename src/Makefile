@@ -6,8 +6,9 @@
 #
 
 # Fortran compiler
-FC = ftn #-g -fcheck=all -cpp
+#FC = ftn #-g -fcheck=all -cpp
 #FC = h5pfc -g -fcheck=all -DHDF5 -cpp
+FC = mpif90
 
 # Quick non-optimized compile
 #FFLAGS = -g -fno-silent -ftrapping-math -ftrapv -Wimplicit -Wall
@@ -16,15 +17,17 @@ FC = ftn #-g -fcheck=all -cpp
 #FFLAGS = -pg -fno-silent -ftrapping-math -ftrapv -Wimplicit -Wall
 
 # Optimized compile
-FFLAGS = -O3 -fallow-argument-mismatch -mcmodel=medium
+#FFLAGS = -O3 -fallow-argument-mismatch -mcmodel=medium
 
 # Optimized compile with profiling
 #FFLAGS = -pg -O3 -fno-silent -Wimplicit -Wall
 
+#Intel
+FFLAGS = -O3 -g -mcmodel=large -fp-model precise -fp-model source -no-fma -fimf-arch-consistency=true -fimf-precision=high 
 # Source files hdf5io.F90 
 SRC = 
 
-SRC_F90 = data_type.F90 com_espect.F90 com_senga2.F90 senga2.F90 \
+SRC_F90 = com_espect.F90 com_senga2.F90 senga2.F90 \
 	rhsvel.F90 dfinit.F90 dfbydy.F90 dfbydz.F90 pardom.F90 indata.F90 \
     dtinit.F90 parfer.F90 tempin.F90 flinit.F90 output.F90 \
     d2fdy2.F90 d2fdz2.F90 \

@@ -34,37 +34,37 @@ SUBROUTINE turbin
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
 
 !     FUNCTIONS
 !     =========
-real(kind=dp) :: espect,ranuni
+REAL(kind=8) :: espect,ranuni
 EXTERNAL espect,ranuni
 
 
 !     PARAMETERS
 !     ==========
-real(kind=dp) :: vectol,tolimg
-PARAMETER(vectol=0.00001_dp, tolimg=1.0E-6)
+REAL(kind=8) :: vectol,tolimg
+PARAMETER(vectol=0.00001_8, tolimg=1.0E-6)
 
 
 !     LOCAL DATA
 !     ==========
-real(kind=dp) :: vectk1,vectk2,vectk3,vksize,ovksiz
-real(kind=dp) :: velmag,vfactr,plnmag
-real(kind=dp) :: ovplmg,aziang,cosazi,sinazi
-real(kind=dp) :: phang1,phang2,cosph1,sinph1,cosph2,sinph2
-real(kind=dp) :: vaterm,vbterm
-real(kind=dp) :: tklodd
-real(kind=dp) :: twopi,ovtopi
-real(kind=dp) :: ubart,vbart,wbart,uvart,vvart,wvart,tket
-real(kind=dp) :: ubartt,vbartt,wbartt,uvartt,vvartt,wvartt,tketot
-real(kind=dp) :: ubartl,vbartl,wbartl,uvartl,vvartl,wvartl,tketl
-real(kind=dp) :: ubartg,vbartg,wbartg,uvartg,vvartg,wvartg,tketg
-real(kind=dp) :: udev,vdev,wdev,faclav,facgav
+REAL(kind=8) :: vectk1,vectk2,vectk3,vksize,ovksiz
+REAL(kind=8) :: velmag,vfactr,plnmag
+REAL(kind=8) :: ovplmg,aziang,cosazi,sinazi
+REAL(kind=8) :: phang1,phang2,cosph1,sinph1,cosph2,sinph2
+REAL(kind=8) :: vaterm,vbterm
+REAL(kind=8) :: tklodd
+REAL(kind=8) :: twopi,ovtopi
+REAL(kind=8) :: ubart,vbart,wbart,uvart,vvart,wvart,tket
+REAL(kind=8) :: ubartt,vbartt,wbartt,uvartt,vvartt,wvartt,tketot
+REAL(kind=8) :: ubartl,vbartl,wbartl,uvartl,vvartl,wvartl,tketl
+REAL(kind=8) :: ubartg,vbartg,wbartg,uvartg,vvartg,wvartg,tketg
+REAL(kind=8) :: udev,vdev,wdev,faclav,facgav
 INTEGER :: ic,jc,kc,ix,jx,kx,icproc
 INTEGER :: igofst,jgofst,kgofst,igofm1,jgofm1,kgofm1
 INTEGER :: igstal,jgstal,kgstal,igstol,jgstol,kgstol
@@ -235,9 +235,9 @@ DO kc = kstal,kstol
 !             IN UPPER-CENTRAL HALF OF FOURIER SPACE
         
 !             EVALUATE THE WAVENUMBER VECTOR COMPONENTS
-        vectk1 = REAL(ix,kind=dp)
-        vectk2 = REAL(jx,kind=dp)
-        vectk3 = REAL(kx,kind=dp)
+        vectk1 = REAL(ix,kind=8)
+        vectk2 = REAL(jx,kind=8)
+        vectk3 = REAL(kx,kind=8)
         vksize = SQRT(vectk1*vectk1+vectk2*vectk2+vectk3*vectk3)
 !             SPECIAL CASE OF ZERO VECTOR
         ovksiz = one
@@ -391,8 +391,8 @@ END DO
 !     ---------------------------
 
 !     AVERAGING FACTORS
-faclav = one/REAL(nxnode,kind=dp)/REAL(nynode,kind=dp)/REAL(nznode,kind=dp)
-facgav = one/REAL(nxglbl,kind=dp)/REAL(nyglbl,kind=dp)/REAL(nzglbl,kind=dp)
+faclav = one/REAL(nxnode,kind=8)/REAL(nynode,kind=8)/REAL(nznode,kind=8)
+facgav = one/REAL(nxglbl,kind=8)/REAL(nyglbl,kind=8)/REAL(nzglbl,kind=8)
 
 
 !     VELOCITY MEANS

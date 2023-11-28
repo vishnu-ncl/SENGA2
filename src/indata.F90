@@ -44,7 +44,7 @@ SUBROUTINE indata
 use hdf5io
 #endif
 use com_espect
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
@@ -66,19 +66,19 @@ INTEGER :: lenlin
 PARAMETER(lenlin = 79)
 
 !     THERMO DATA INTERVAL-MATCHING TOLERANCE
-REAL(KIND=dp) :: tttol
-PARAMETER(tttol = 0.0010_dp)
+REAL(kind=8) :: tttol
+PARAMETER(tttol = 0.0010_8)
 
 
 !     LOCAL DATA
 !     ==========
-REAL(KIND=dp) :: dyrin(nspcmx)
-REAL(KIND=dp) :: ctrans(nspcmx,4)
-REAL(KIND=dp) :: dtrans(nspcmx)
-REAL(KIND=dp) :: rtin,durin,dvrin,dwrin,derin
-REAL(KIND=dp) :: ttemp(5),ttold(5)
-REAL(KIND=dp) :: fornow,tmplog
-REAL(KIND=dp) :: combo1,combo2,combo3
+REAL(kind=8) :: dyrin(nspcmx)
+REAL(kind=8) :: ctrans(nspcmx,4)
+REAL(kind=8) :: dtrans(nspcmx)
+REAL(kind=8) :: rtin,durin,dvrin,dwrin,derin
+REAL(kind=8) :: ttemp(5),ttold(5)
+REAL(kind=8) :: fornow,tmplog
+REAL(kind=8) :: combo1,combo2,combo3
 INTEGER :: iindex,ipower,icoef1,icoef2
 INTEGER :: ic,jc,kc,ispec,istep,itint,icp
 INTEGER :: jspec,ncount
@@ -156,7 +156,7 @@ IF(iproc == 0)THEN
     cldash(ic:ic) = '-'
   END DO
   
-  OPEN(UNIT=ncrept,FILE=fnrept,STATUS='NEW',FORM='FORMATTED')
+  OPEN(UNIT=ncrept,FILE=fnrept,STATUS='REPLACE',FORM='FORMATTED')
   
 !       WRITE A HEADER
   WRITE(ncrept,9000)clstar
@@ -934,7 +934,7 @@ END IF
 IF(iproc == 0)THEN
   
 !       INITIALISE THE STATISTICS FILE
-  OPEN(UNIT=ncstat,FILE=fnstat,STATUS='NEW',FORM='FORMATTED')
+  OPEN(UNIT=ncstat,FILE=fnstat,STATUS='REPLACE',FORM='FORMATTED')
   ENDFILE(ncstat)
   CLOSE(ncstat)
   
@@ -951,18 +951,18 @@ itstat = 0
 INQUIRE(FILE=fndmpo(1),EXIST=fxdump)
 IF(.NOT.fxdump)THEN
   IF(ndofmt == 0)THEN
-    OPEN(UNIT=ncdmpo,FILE=fndmpo(1),STATUS='NEW',FORM='UNFORMATTED')
+    OPEN(UNIT=ncdmpo,FILE=fndmpo(1),STATUS='REPLACE',FORM='UNFORMATTED')
   ELSE
-    OPEN(UNIT=ncdmpo,FILE=fndmpo(1),STATUS='NEW',FORM='FORMATTED')
+    OPEN(UNIT=ncdmpo,FILE=fndmpo(1),STATUS='REPLACE',FORM='FORMATTED')
   END IF
   CLOSE(ncdmpo)
 END IF
 INQUIRE(FILE=fndmpo(2),EXIST=fxdump)
 IF(.NOT.fxdump)THEN
   IF(ndofmt == 0)THEN
-    OPEN(UNIT=ncdmpo,FILE=fndmpo(2),STATUS='NEW',FORM='UNFORMATTED')
+    OPEN(UNIT=ncdmpo,FILE=fndmpo(2),STATUS='REPLACE',FORM='UNFORMATTED')
   ELSE
-    OPEN(UNIT=ncdmpo,FILE=fndmpo(2),STATUS='NEW',FORM='FORMATTED')
+    OPEN(UNIT=ncdmpo,FILE=fndmpo(2),STATUS='REPLACE',FORM='FORMATTED')
   END IF
   CLOSE(ncdmpo)
 END IF
@@ -983,7 +983,7 @@ pi = FOUR*ATAN(ONE)
 
 !     SET VALUE OF LN(10)
 !     -------------------
-clnten = LOG(10.0_dp)
+clnten = LOG(10.0_8)
 
 !     TIME STEPPING
 !     -------------

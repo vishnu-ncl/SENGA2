@@ -29,14 +29,14 @@ SUBROUTINE radcal
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
 
 !     LOCAL DATA
 !     ==========
-real(kind=dp) :: plspec,fornow
+REAL(kind=8) :: plspec,fornow
 INTEGER :: ic,jc,kc,ispec,jspec,icp
 
 

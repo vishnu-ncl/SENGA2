@@ -30,7 +30,7 @@ SUBROUTINE finish
 #ifdef HDF5
 use hdf5io
 #endif
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 

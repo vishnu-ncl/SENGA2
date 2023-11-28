@@ -28,7 +28,7 @@ SUBROUTINE cyhals(bigarr,indexl,indexr,kndexl,kndexr)
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
@@ -36,7 +36,7 @@ use com_senga
 !     ARGUMENTS
 !     =========
 
-REAL(KIND=dp), INTENT(OUT)            :: bigarr(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr,nspcmx)
+REAL(kind=8), INTENT(OUT)            :: bigarr(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr,nspcmx)
 INTEGER, INTENT(IN)                      :: indexl
 INTEGER, INTENT(IN)                      :: indexr
 INTEGER, INTENT(IN)                      :: kndexl

@@ -23,12 +23,12 @@ SUBROUTINE ardums(array,nxphys,nyphys,nzphys,nspec,ispec)
 !     PRINTS THE CONTENTS OF THE SPECIFIED SPECIES ARRAY
 
 !     *************************************************************************
-use data_types
+
 
 !     ARGUMENTS
 !     =========
 
-REAL(KIND=dp), INTENT(IN OUT)         :: array(nxphys,nyphys,nzphys,nspec)
+REAL(kind=8), INTENT(IN OUT)         :: array(nxphys,nyphys,nzphys,nspec)
 INTEGER, INTENT(IN OUT)                  :: nxphys
 INTEGER, INTENT(IN)                      :: nyphys
 INTEGER, INTENT(IN)                      :: nzphys

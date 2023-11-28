@@ -33,7 +33,7 @@ FUNCTION espect(waveno)
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_espect
 !     -------------------------------------------------------------------------
 
@@ -41,14 +41,14 @@ use com_espect
 !     PARAMETERS
 !     ==========
 
-REAL(KIND=dp), INTENT(IN)             :: waveno
+REAL(kind=8), INTENT(IN)             :: waveno
 
-REAL(KIND=dp), PARAMETER :: two = 2.0_dp
+REAL(kind=8), PARAMETER :: two = 2.0_8
 
 
 !     FUNCTION
 !     ========
-REAL(KIND=dp) :: espect
+REAL(kind=8) :: espect
 
 
 !     ARGUMENT
@@ -58,7 +58,7 @@ REAL(KIND=dp) :: espect
 
 !     LOCAL DATA
 !     ==========
-REAL(KIND=dp) :: wavrat
+REAL(kind=8) :: wavrat
 
 
 !     BEGIN

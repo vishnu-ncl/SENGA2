@@ -29,7 +29,7 @@ SUBROUTINE flinit
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
@@ -43,15 +43,15 @@ use com_senga
 !     ---------------
 
 !     TWELFTH ORDER EXPLICIT CENTRED DIFFERENCES
-twfact = -EXP(-12.0_dp*LOG(two))
-facofx =  792.0_dp*twfact
-fbcofx = -495.0_dp*twfact
-fccofx =  220.0_dp*twfact
-fdcofx = -66.0_dp*twfact
-fecofx =  12.0_dp*twfact
-ffcofx = -1.00_dp*twfact
-fgcofx = -924.0_dp*twfact
-fgcofx =  1.00_dp + fgcofx
+twfact = -EXP(-12.0_8*LOG(two))
+facofx =  792.0_8*twfact
+fbcofx = -495.0_8*twfact
+fccofx =  220.0_8*twfact
+fdcofx = -66.0_8*twfact
+fecofx =  12.0_8*twfact
+ffcofx = -1.00_8*twfact
+fgcofx = -924.0_8*twfact
+fgcofx =  1.00_8 + fgcofx
 
 facofy = facofx
 fbcofy = fbcofx
@@ -74,14 +74,14 @@ fgcofz = fgcofx
 !     ------------------
 
 !     FIRST POINT SCHEME (6TH ORDER ONE SIDED)
-facf1x = -1.00_dp*twfact
-fbcf1x =  6.00_dp*twfact
-fccf1x = -15.0_dp*twfact
-fdcf1x =  20.0_dp*twfact
-fecf1x = -15.0_dp*twfact
-ffcf1x =  6.00_dp*twfact
-fgcf1x = -1.00_dp*twfact
-facf1x =  1.00_dp + facf1x
+facf1x = -1.00_8*twfact
+fbcf1x =  6.00_8*twfact
+fccf1x = -15.0_8*twfact
+fdcf1x =  20.0_8*twfact
+fecf1x = -15.0_8*twfact
+ffcf1x =  6.00_8*twfact
+fgcf1x = -1.00_8*twfact
+facf1x =  1.00_8 + facf1x
 
 facf1y = facf1x
 fbcf1y = fbcf1x
@@ -100,15 +100,15 @@ ffcf1z = ffcf1x
 fgcf1z = fgcf1x
 
 !     SECOND POINT SCHEME (7TH ORDER MIXED)
-facf2x =  6.00_dp*twfact
-fbcf2x = -37.0_dp*twfact
-fccf2x =  96.0_dp*twfact
-fdcf2x = -135.0_dp*twfact
-fecf2x =  110.0_dp*twfact
-ffcf2x = -51.0_dp*twfact
-fgcf2x =  12.0_dp*twfact
-fhcf2x = -1.00_dp*twfact
-fbcf2x =  1.00_dp + fbcf2x
+facf2x =  6.00_8*twfact
+fbcf2x = -37.0_8*twfact
+fccf2x =  96.0_8*twfact
+fdcf2x = -135.0_8*twfact
+fecf2x =  110.0_8*twfact
+ffcf2x = -51.0_8*twfact
+fgcf2x =  12.0_8*twfact
+fhcf2x = -1.00_8*twfact
+fbcf2x =  1.00_8 + fbcf2x
 
 facf2y = facf2x
 fbcf2y = fbcf2x
@@ -130,16 +130,16 @@ fhcf2z = fhcf2x
 
 
 !     THIRD POINT SCHEME  (8TH ORDER MIXED)
-facf3x = -15.0_dp*twfact
-fbcf3x =  96.0_dp*twfact
-fccf3x = -262.0_dp*twfact
-fdcf3x =  396.0_dp*twfact
-fecf3x = -360.0_dp*twfact
-ffcf3x =  200.0_dp*twfact
-fgcf3x = -66.0_dp*twfact
-fhcf3x =  12.0_dp*twfact
-ficf3x = -1.00_dp*twfact
-fccf3x =  1.00_dp + fccf3x
+facf3x = -15.0_8*twfact
+fbcf3x =  96.0_8*twfact
+fccf3x = -262.0_8*twfact
+fdcf3x =  396.0_8*twfact
+fecf3x = -360.0_8*twfact
+ffcf3x =  200.0_8*twfact
+fgcf3x = -66.0_8*twfact
+fhcf3x =  12.0_8*twfact
+ficf3x = -1.00_8*twfact
+fccf3x =  1.00_8 + fccf3x
 
 facf3y = facf3x
 fbcf3y = fbcf3x
@@ -162,17 +162,17 @@ fhcf3z = fhcf3x
 ficf3z = ficf3x
 
 !     FOURTH POINT SCHEME (9TH ORDER MIXED)
-facf4x =  20.0_dp*twfact
-fbcf4x = -135.0_dp*twfact
-fccf4x =  396.0_dp*twfact
-fdcf4x = -662.0_dp*twfact
-fecf4x =  696.0_dp*twfact
-ffcf4x = -480.0_dp*twfact
-fgcf4x =  220.0_dp*twfact
-fhcf4x = -66.0_dp*twfact
-ficf4x =  12.0_dp*twfact
-fjcf4x = -1.00_dp*twfact
-fdcf4x =  1.00_dp + fdcf4x
+facf4x =  20.0_8*twfact
+fbcf4x = -135.0_8*twfact
+fccf4x =  396.0_8*twfact
+fdcf4x = -662.0_8*twfact
+fecf4x =  696.0_8*twfact
+ffcf4x = -480.0_8*twfact
+fgcf4x =  220.0_8*twfact
+fhcf4x = -66.0_8*twfact
+ficf4x =  12.0_8*twfact
+fjcf4x = -1.00_8*twfact
+fdcf4x =  1.00_8 + fdcf4x
 
 facf4y = facf4x
 fbcf4y = fbcf4x
@@ -197,18 +197,18 @@ ficf4z = ficf4x
 fjcf4z = fjcf4x
 
 !     FIFTH POINT SCHEME  (10TH ORDER MIXED)
-facf5x = -15.0_dp*twfact
-fbcf5x =  110.0_dp*twfact
-fccf5x = -360.0_dp*twfact
-fdcf5x =  696.0_dp*twfact
-fecf5x = -887.0_dp*twfact
-ffcf5x =  786.0_dp*twfact
-fgcf5x = -495.0_dp*twfact
-fhcf5x =  220.0_dp*twfact
-ficf5x = -66.0_dp*twfact
-fjcf5x =  12.0_dp*twfact
-fkcf5x = -1.00_dp*twfact
-fecf5x =  1.00_dp + fecf5x
+facf5x = -15.0_8*twfact
+fbcf5x =  110.0_8*twfact
+fccf5x = -360.0_8*twfact
+fdcf5x =  696.0_8*twfact
+fecf5x = -887.0_8*twfact
+ffcf5x =  786.0_8*twfact
+fgcf5x = -495.0_8*twfact
+fhcf5x =  220.0_8*twfact
+ficf5x = -66.0_8*twfact
+fjcf5x =  12.0_8*twfact
+fkcf5x = -1.00_8*twfact
+fecf5x =  1.00_8 + fecf5x
 
 facf5y = facf5x
 fbcf5y = fbcf5x
@@ -235,19 +235,19 @@ fjcf5z = fjcf5x
 fkcf5z = fkcf5x
 
 !     SIXTH POINT SCHEME  (11TH ORDER MIXED)
-facf6x =  6.00_dp*twfact
-fbcf6x = -51.0_dp*twfact
-fccf6x =  200.0_dp*twfact
-fdcf6x = -480.0_dp*twfact
-fecf6x =  786.0_dp*twfact
-ffcf6x = -923.0_dp*twfact
-fgcf6x =  792.0_dp*twfact
-fhcf6x = -495.0_dp*twfact
-ficf6x =  220.0_dp*twfact
-fjcf6x = -66.0_dp*twfact
-fkcf6x =  12.0_dp*twfact
-flcf6x = -1.00_dp*twfact
-ffcf6x =  1.00_dp + ffcf6x
+facf6x =  6.00_8*twfact
+fbcf6x = -51.0_8*twfact
+fccf6x =  200.0_8*twfact
+fdcf6x = -480.0_8*twfact
+fecf6x =  786.0_8*twfact
+ffcf6x = -923.0_8*twfact
+fgcf6x =  792.0_8*twfact
+fhcf6x = -495.0_8*twfact
+ficf6x =  220.0_8*twfact
+fjcf6x = -66.0_8*twfact
+fkcf6x =  12.0_8*twfact
+flcf6x = -1.00_8*twfact
+ffcf6x =  1.00_8 + ffcf6x
 
 facf6y = facf6x
 fbcf6y = fbcf6x

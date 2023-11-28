@@ -33,26 +33,26 @@ SUBROUTINE chrate
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
 
 !     PARAMETERS
 !     ==========
-real(kind=dp) :: ysmall,ydenom
-PARAMETER(ysmall = 0.000000000000000000000000000001_dp,ydenom = 0.000000000000001_dp)
+REAL(kind=8) :: ysmall,ydenom
+PARAMETER(ysmall = 0.000000000000000000000000000001_8,ydenom = 0.000000000000001_8)
 
 
 !     LOCAL DATA
 !     ==========
-real(kind=dp) :: racnst,rncnst,reovrr
-real(kind=dp) :: ovwmas,gibbsp,scoef,preduc
-real(kind=dp) :: ovtst1,tstar2,ovtst3,omalph
-real(kind=dp) :: fbroad,ftcent,trats1,trats2,trats3,cfactr,enfact
-real(kind=dp) :: acfsri,bcfsrm,ovcsrm,dcfsri,ecfsri
-real(kind=dp) :: fornow
-real(kind=dp) :: talpha,flcnst,cfcst1,cfcst2,encst1,encst2,dtcnst
+REAL(kind=8) :: racnst,rncnst,reovrr
+REAL(kind=8) :: ovwmas,gibbsp,scoef,preduc
+REAL(kind=8) :: ovtst1,tstar2,ovtst3,omalph
+REAL(kind=8) :: fbroad,ftcent,trats1,trats2,trats3,cfactr,enfact
+REAL(kind=8) :: acfsri,bcfsrm,ovcsrm,dcfsri,ecfsri
+REAL(kind=8) :: fornow
+REAL(kind=8) :: talpha,flcnst,cfcst1,cfcst2,encst1,encst2,dtcnst
 INTEGER :: ispec,isspec
 INTEGER :: istep,ibody
 INTEGER :: iindex,ipower,icoef1,icoef2,itint,icp

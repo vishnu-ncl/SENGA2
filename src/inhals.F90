@@ -30,7 +30,7 @@ SUBROUTINE inhals(bigarr,ispec,buffer,indexl,indexr,  &
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
@@ -38,9 +38,9 @@ use com_senga
 !     ARGUMENTS
 !     =========
 
-REAL(KIND=dp), INTENT(OUT)            :: bigarr(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr,nspcmx)
+REAL(kind=8), INTENT(OUT)            :: bigarr(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr,nspcmx)
 INTEGER, INTENT(IN OUT)                  :: ispec
-REAL(KIND=dp), INTENT(IN)             :: buffer(nparay)
+REAL(kind=8), INTENT(IN)             :: buffer(nparay)
 INTEGER, INTENT(IN)                      :: indexl
 INTEGER, INTENT(IN)                      :: indexr
 INTEGER, INTENT(IN)                      :: jndexl

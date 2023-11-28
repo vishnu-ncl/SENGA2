@@ -37,7 +37,7 @@ SUBROUTINE output
 #ifdef HDF5
 use hdf5io
 #endif
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
@@ -56,20 +56,20 @@ INTEGER :: iddump
 !     LOCAL DATA
 !     ==========
 !     DIAGNOSTICS
-REAL(KIND=dp) :: deltag,fornow
-REAL(KIND=dp) :: ttemp(nxsize,nysize,nzsize)
-REAL(KIND=dp) :: ptemp(nxsize,nysize,nzsize)
-REAL(KIND=dp) :: ytemp(nxsize,nysize,nzsize,nspec)
-real(kind=dp) :: utgv(nxsize,nysize,nzsize)
-real(kind=dp) :: vtgv(nxsize,nysize,nzsize)
-real(kind=dp) :: wtgv(nxsize,nysize,nzsize)
-real(kind=dp) :: vort1(nxsize,nysize,nzsize)
-real(kind=dp) :: vort2(nxsize,nysize,nzsize)
-real(kind=dp) :: vort3(nxsize,nysize,nzsize)
-real(kind=dp) :: enstro(nxsize,nysize,nzsize)
-real(kind=dp) :: tkel(nxsize,nysize,nzsize)
+REAL(kind=8) :: deltag,fornow
+REAL(kind=8) :: ttemp(nxsize,nysize,nzsize)
+REAL(kind=8) :: ptemp(nxsize,nysize,nzsize)
+REAL(kind=8) :: ytemp(nxsize,nysize,nzsize,nspec)
+REAL(kind=8) :: utgv(nxsize,nysize,nzsize)
+REAL(kind=8) :: vtgv(nxsize,nysize,nzsize)
+REAL(kind=8) :: wtgv(nxsize,nysize,nzsize)
+REAL(kind=8) :: vort1(nxsize,nysize,nzsize)
+REAL(kind=8) :: vort2(nxsize,nysize,nzsize)
+REAL(kind=8) :: vort3(nxsize,nysize,nzsize)
+REAL(kind=8) :: enstro(nxsize,nysize,nzsize)
+REAL(kind=8) :: tkel(nxsize,nysize,nzsize)
 
-real(kind=dp) :: tkes,tkeg,enstrs,enstrg
+REAL(kind=8) :: tkes,tkeg,enstrs,enstrg
 
 INTEGER :: ispec
 INTEGER :: ic,jc,kc
@@ -92,41 +92,41 @@ CHARACTER (LEN=5) :: ipdump
 
 !     REPORT OUTPUT
 !     =============
-IF(MOD(itime,ntrept) == 0)THEN
+!ops IF(MOD(itime,ntrept) == 0)THEN
   
 !       REPORT ON PROCESSOR NO.1 ONLY
 !       ------
-  IF(iproc == 0)THEN
+!ops  IF(iproc == 0)THEN
     
-    OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
+!ops    OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
     
 !         GO TO EOF
-    1000      CONTINUE
-    READ(ncrept,9000,END=1010)
-    GO TO 1000
-    1010      BACKSPACE(ncrept)
+!ops    1000      CONTINUE
+!ops    READ(ncrept,9000,END=1010)
+!ops    GO TO 1000
+!ops    1010      BACKSPACE(ncrept)
     
-    WRITE(ncrept,9100)itime
-    WRITE(ncrept,9110)etime,tstep
-    CLOSE(ncrept)
+!ops    WRITE(ncrept,9100)itime
+!ops    WRITE(ncrept,9110)etime,tstep
+!ops    CLOSE(ncrept)
     
-  END IF
+!ops  END IF
   
 !       =======================================================================
   
 !       DIAGNOSTICS
-  jc = MAX(nyglbl/2,1)
-  kc = MAX(nzglbl/2,1)
+!ops  jc = MAX(nyglbl/2,1)
+!ops  kc = MAX(nzglbl/2,1)
   
-  WRITE(pnproc,'(I6.6)')iproc
+!ops  WRITE(pnproc,'(I6.6)')iproc
   
 !       GLOBAL INDEXING
-  deltag = xgdlen/(REAL(nxglbl-1))
+!ops  deltag = xgdlen/(REAL(nxglbl-1))
   
-  igofst = 0
-  DO ic = 0, ixproc-1
-    igofst = igofst + npmapx(ic)
-  END DO
+!ops  igofst = 0
+!ops  DO ic = 0, ixproc-1
+!ops    igofst = igofst + npmapx(ic)
+!ops  END DO
   
 !        STRQTY = 'output/pres'
 !        FNDIAG = STRQTY//PNPROC//PNXRES
@@ -246,37 +246,37 @@ IF(MOD(itime,ntrept) == 0)THEN
 !C        WRITE(NCDIAG,*)
 !C        CLOSE(NCDIAG)
   
-END IF
+!ops END IF
 
 !     =========================================================================
 !     UMOD START
 !     DATA OUTPUT FOR POST-PROCESSING
 !     ======
-IF(MOD(itime,ntdump) == 0)THEN
-  iddump=itime/ntdump
-  WRITE(ipdump,'(I5.5)') iddump
-  WRITE(proc,'(I4.4)') iproc
+!ops IF(MOD(itime,ntdump) == 0)THEN
+!ops   iddump=itime/ntdump
+!ops   WRITE(ipdump,'(I5.5)') iddump
+!ops   WRITE(proc,'(I4.4)') iproc
   
-  fname = 'output/out'//ipdump//proc//pnxres
+!ops   fname = 'output/out'//ipdump//proc//pnxres
   
   
-  DO kc = 1,nzsize
-    DO jc = 1,nysize
-      DO ic = 1,nxsize
-        DO ispec =1,nspec
-          ytemp(ic,jc,kc,ispec)=yrun(ic,jc,kc,ispec)/drun(ic,jc,kc)
-        END DO
-        ttemp(ic,jc,kc)=trun(ic,jc,kc)
-        ptemp(ic,jc,kc)=prun(ic,jc,kc)
-      END DO
-    END DO
-  END DO
+!ops  DO kc = 1,nzsize
+!ops     DO jc = 1,nysize
+!ops       DO ic = 1,nxsize
+!ops         DO ispec =1,nspec
+!ops           ytemp(ic,jc,kc,ispec)=yrun(ic,jc,kc,ispec)/drun(ic,jc,kc)
+!ops         END DO
+!ops         ttemp(ic,jc,kc)=trun(ic,jc,kc)
+!ops         ptemp(ic,jc,kc)=prun(ic,jc,kc)
+!ops       END DO
+!ops     END DO
+!ops   END DO
   
-  OPEN(UNIT=16,FILE=trim(fname),FORM='UNFORMATTED',STATUS='NEW')
-  WRITE(16)drun,urun/drun,vrun/drun,wrun/drun,erun/drun,ttemp,  &
-      ptemp,ytemp,rrte,etime
-  CLOSE(16)
-END IF
+!ops   OPEN(UNIT=16,FILE=trim(fname),FORM='UNFORMATTED',STATUS='REPLACE')
+!ops   WRITE(16)drun,urun/drun,vrun/drun,wrun/drun,erun/drun,ttemp,  &
+!ops       ptemp,ytemp,rrte,etime
+!ops   CLOSE(16)
+!ops END IF
 
 
 
@@ -284,130 +284,130 @@ END IF
 !     =====
 !     FULL DUMP OUTPUT
 !     ================
-IF(MOD(itime,ntdump) == 0)THEN
+!ops IF(MOD(itime,ntdump) == 0)THEN
   
 !       CARRY OUT A FULL DUMP
 !       ---------------------
 !       USE THE DUMP FILE INDICATED BY IDFLAG
 !       RSC 11-JUL-2009 ADD A DUMP FORMAT SWITCH
-#ifndef HDF5
-  IF(ndofmt == 0)THEN
+!ops #ifndef HDF5
+!ops   IF(ndofmt == 0)THEN
     
 !         UNFORMATTED DUMP OUTPUT
-    OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag+1),STATUS='OLD', FORM='UNFORMATTED')
-    REWIND(ncdmpo)
-    WRITE(ncdmpo)nxnode,nynode,nznode,nspec, drun,urun,vrun,wrun,erun,yrun,  &
-        etime,tstep,errold,errldr
-    CLOSE(ncdmpo)
+!ops     OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag+1),STATUS='OLD', FORM='UNFORMATTED')
+!ops     REWIND(ncdmpo)
+!ops     WRITE(ncdmpo)nxnode,nynode,nznode,nspec, drun,urun,vrun,wrun,erun,yrun,  &
+!ops         etime,tstep,errold,errldr
+!ops     CLOSE(ncdmpo)
     
-  ELSE
+!ops   ELSE
     
 !         FORMATTED DUMP OUTPUT
-    OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag+1),STATUS='OLD', FORM='FORMATTED')
-    REWIND(ncdmpo)
-    WRITE(ncdmpo,*)nxnode,nynode,nznode,nspec
-    DO kc = 1,nznode
-      DO jc = 1,nynode
-        DO ic = 1,nxnode
-          WRITE(ncdmpo,*)drun(ic,jc,kc),  &
-              urun(ic,jc,kc),vrun(ic,jc,kc),wrun(ic,jc,kc), erun(ic,jc,kc),  &
-              (yrun(ic,jc,kc,ispec),ispec=1,nspec)
-        END DO
-      END DO
-    END DO
-    WRITE(ncdmpo,*)etime,tstep,errold,errldr
-    CLOSE(ncdmpo)
+!ops     OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag+1),STATUS='OLD', FORM='FORMATTED')
+!ops     REWIND(ncdmpo)
+!ops     WRITE(ncdmpo,*)nxnode,nynode,nznode,nspec
+!ops     DO kc = 1,nznode
+!ops       DO jc = 1,nynode
+!ops         DO ic = 1,nxnode
+!ops           WRITE(ncdmpo,*)drun(ic,jc,kc),  &
+!ops               urun(ic,jc,kc),vrun(ic,jc,kc),wrun(ic,jc,kc), erun(ic,jc,kc),  &
+!ops               (yrun(ic,jc,kc,ispec),ispec=1,nspec)
+!ops         END DO
+!ops       END DO
+!ops     END DO
+!ops     WRITE(ncdmpo,*)etime,tstep,errold,errldr
+!ops     CLOSE(ncdmpo)
     
-  END IF
+!ops   END IF
   
-#else
-  CALL write_h5_dumpfile
-#endif
+!ops #else
+!ops   CALL write_h5_dumpfile
+!ops #endif
 
 !       REPORT THE DUMP
 !       RSC 11-JUL-2009
-IF(iproc == 0)THEN
+!ops IF(iproc == 0)THEN
   
-  OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
-  3000      CONTINUE
-  READ(ncrept,9000,END=3010)
-  GO TO 3000
-  3010      BACKSPACE(ncrept)
-  WRITE(ncrept,9120)fndmpo(idflag+1)
-  CLOSE(ncrept)
+!ops   OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
+!ops   3000      CONTINUE
+!ops   READ(ncrept,9000,END=3010)
+!ops   GO TO 3000
+!ops   3010      BACKSPACE(ncrept)
+!ops   WRITE(ncrept,9120)fndmpo(idflag+1)
+!ops   CLOSE(ncrept)
   
-END IF
+!ops END IF
 
 !       RESET THE DUMP FLAG
-idflag = MOD(idflag+1,2)
+!ops idflag = MOD(idflag+1,2)
 
-END IF
+!ops END IF
 
 !     =========================================================================
 
 !     DUMP BC INFORMATION AS REQUIRED
 !     ===============================
-IF(MOD(itime,ntdump) == 0)THEN
+!ops IF(MOD(itime,ntdump) == 0)THEN
   
-  bcflag = (nsbcxl == nsbci2).OR.(nsbcxl == nsbci3)
-  bcflag = bcflag.AND.(nxlprm(1) == 3)
+!ops   bcflag = (nsbcxl == nsbci2).OR.(nsbcxl == nsbci3)
+!ops   bcflag = bcflag.AND.(nxlprm(1) == 3)
   
-  IF(bcflag)THEN
+!ops   IF(bcflag)THEN
     
 !         DUMP THE INLET TURBULENT VELOCITY FIELD
-    OPEN(UNIT=nctixl,FILE=fntixl,STATUS='OLD', FORM='UNFORMATTED')
-    REWIND(nctixl)
-    WRITE(nctixl)ufxl,vfxl,wfxl,slocxl,svelxl,bvelxl
-    CLOSE(nctixl)
+!ops     OPEN(UNIT=nctixl,FILE=fntixl,STATUS='OLD', FORM='UNFORMATTED')
+!ops     REWIND(nctixl)
+!ops     WRITE(nctixl)ufxl,vfxl,wfxl,slocxl,svelxl,bvelxl
+!ops     CLOSE(nctixl)
     
-  END IF
+!ops   END IF
   
-END IF
+!ops END IF
 !     ==========
 !     umod tgv stats 
-deltagx = xgdlen/(real(nxglbl-1))
-deltagy = ygdlen/(real(nyglbl-1))
-deltagz = zgdlen/(real(nzglbl-1))
+!ops deltagx = xgdlen/(real(nxglbl-1))
+!ops deltagy = ygdlen/(real(nyglbl-1))
+!ops deltagz = zgdlen/(real(nzglbl-1))
 
-do kc=kstal,kstol
-  do jc=jstal,jstol
-    do ic=istal,istol
-      utgv(ic,jc,kc)=urun(ic,jc,kc)/drun(ic,jc,kc)
-      vtgv(ic,jc,kc)=vrun(ic,jc,kc)/drun(ic,jc,kc)
-      wtgv(ic,jc,kc)=wrun(ic,jc,kc)/drun(ic,jc,kc)
-    end do
-  end do
-end do
+!ops do kc=kstal,kstol
+!ops   do jc=jstal,jstol
+!ops     do ic=istal,istol
+!ops       utgv(ic,jc,kc)=urun(ic,jc,kc)/drun(ic,jc,kc)
+!ops       vtgv(ic,jc,kc)=vrun(ic,jc,kc)/drun(ic,jc,kc)
+!ops       wtgv(ic,jc,kc)=wrun(ic,jc,kc)/drun(ic,jc,kc)
+!ops     end do
+!ops   end do
+!ops end do
 
 
 !kinetic energy
 !====================
 
-do kc = kstal, kstol
-  do jc = jstal, jstol
-    do ic = istal, istol
+!ops do kc = kstal, kstol
+!ops   do jc = jstal, jstol
+!ops     do ic = istal, istol
 
-      tkel(ic,jc,kc)=(utgv(ic,jc,kc)*utgv(ic,jc,kc))+ &
-                    (vtgv(ic,jc,kc)*vtgv(ic,jc,kc))+ &
-                    (wtgv(ic,jc,kc)*wtgv(ic,jc,kc))
+!ops       tkel(ic,jc,kc)=(utgv(ic,jc,kc)*utgv(ic,jc,kc))+ &
+!ops                     (vtgv(ic,jc,kc)*vtgv(ic,jc,kc))+ &
+!ops                     (wtgv(ic,jc,kc)*wtgv(ic,jc,kc))
 
-    end do
-  end do
-end do
+!ops     end do
+!ops   end do
+!ops end do
 
-tkes=0.0d0
+!ops tkes=0.0d0
 
-do kc = kstal, kstol
-  do jc = jstal, jstol
-    do ic = istal, istol
+!ops do kc = kstal, kstol
+!ops   do jc = jstal, jstol
+!ops     do ic = istal, istol
 
-     tkes=tkes+(0.5d0*drun(ic,jc,kc)*tkel(ic,jc,kc) &
-               *deltagx*deltagy*deltagz)
+!ops      tkes=tkes+(0.5d0*drun(ic,jc,kc)*tkel(ic,jc,kc) &
+!ops                *deltagx*deltagy*deltagz)
 
-    end do
-  end do
-end do
-call p_summ(tkes,tkeg)
+!ops     end do
+!ops   end do
+!ops end do
+!ops call p_summ(tkes,tkeg)
 
 !fornow = drin*xgdlen*ygdlen*zgdlen
 !fornow = 1.d0/fornow
@@ -417,46 +417,46 @@ call p_summ(tkes,tkeg)
 !enstrophy calculation      
 
 
-do kc = kstal, kstol
- do jc = jstal, jstol 
-  do ic = istal, istol
+!ops do kc = kstal, kstol
+!ops  do jc = jstal, jstol 
+!ops   do ic = istal, istol
 
-   vort1(ic,jc,kc)= dwtgvdy(ic,jc,kc)-dvtgvdz(ic,jc,kc)
-   vort2(ic,jc,kc)= dutgvdz(ic,jc,kc)-dwtgvdx(ic,jc,kc)
-   vort3(ic,jc,kc)= dvtgvdx(ic,jc,kc)-dutgvdy(ic,jc,kc)
+!ops    vort1(ic,jc,kc)= dwtgvdy(ic,jc,kc)-dvtgvdz(ic,jc,kc)
+!ops    vort2(ic,jc,kc)= dutgvdz(ic,jc,kc)-dwtgvdx(ic,jc,kc)
+!ops    vort3(ic,jc,kc)= dvtgvdx(ic,jc,kc)-dutgvdy(ic,jc,kc)
 
-   enstro(ic,jc,kc)=(vort1(ic,jc,kc)*vort1(ic,jc,kc))+&
-              (vort2(ic,jc,kc)*vort2(ic,jc,kc))+&
-              (vort3(ic,jc,kc)*vort3(ic,jc,kc)) 
+!ops    enstro(ic,jc,kc)=(vort1(ic,jc,kc)*vort1(ic,jc,kc))+&
+!ops               (vort2(ic,jc,kc)*vort2(ic,jc,kc))+&
+!ops               (vort3(ic,jc,kc)*vort3(ic,jc,kc)) 
 
-  end do
- end do
-end do
+!ops   end do
+!ops  end do
+!ops end do
 
-enstrs=0.0d0
+!ops enstrs=0.0d0
 
-do kc = kstal, kstol
- do jc = jstal, jstol 
-  do ic = istal, istol
+!ops do kc = kstal, kstol
+!ops  do jc = jstal, jstol 
+!ops   do ic = istal, istol
 
-   enstrs=enstrs+(0.5d0*drun(ic,jc,kc)*enstro(ic,jc,kc) &
-            *deltagx*deltagy*deltagz)
+!ops    enstrs=enstrs+(0.5d0*drun(ic,jc,kc)*enstro(ic,jc,kc) &
+!ops             *deltagx*deltagy*deltagz)
 
-  end do
- end do
-end do
+!ops   end do
+!ops  end do
+!ops end do
 
-call p_summ(enstrs,enstrg)
+!ops call p_summ(enstrs,enstrg)
 
-fornow = drin*xgdlen*ygdlen*zgdlen
-fornow = 1.d0/fornow
+!ops fornow = drin*xgdlen*ygdlen*zgdlen
+!ops fornow = 1.d0/fornow
 !enstrg=enstrg*fornow
-if(iproc.eq.0)print*,tkeg, enstrg*fornow,enstrs 
-if(iproc.eq.0) then
-  open(44,file='output/tgv_stat.res',access='append')
-    write(44,'(3e20.9)') etime,tkeg*fornow,enstrg*fornow 
-  close(44)
-endif
+!ops if(iproc.eq.0)print*,tkeg, enstrg*fornow,enstrs 
+!ops if(iproc.eq.0) then
+!ops   open(44,file='output/tgv_stat.res',access='append')
+!ops     write(44,'(3e20.9)') etime,tkeg*fornow,enstrg*fornow 
+!ops   close(44)
+!ops endif
 !umod tgv stats
 !========================
 
@@ -483,7 +483,7 @@ END IF
 
 !     STATISTICS MASTER SWITCH
 !     ------------------------
-IF(ntstat >= 0)THEN
+!ops IF(ntstat >= 0)THEN
   
 !     =========================================================================
   
@@ -492,33 +492,33 @@ IF(ntstat >= 0)THEN
   
 !       STATISTICS ON ONE PROCESSOR ONLY
 !       ----------
-  IF(iproc == 0)THEN
+!ops   IF(iproc == 0)THEN
     
-    IF(MOD(itime,ntstat) == 0)THEN
+!ops     IF(MOD(itime,ntstat) == 0)THEN
       
-      OPEN(UNIT=ncstat,FILE=fnstat,STATUS='OLD',FORM='FORMATTED')
+!ops       OPEN(UNIT=ncstat,FILE=fnstat,STATUS='OLD',FORM='FORMATTED')
       
 !           GO TO EOF
-      2000        CONTINUE
-      READ(ncstat,9200,END=2010)
-      GO TO 2000
-      2010        BACKSPACE(ncstat)
+!ops       2000        CONTINUE
+!ops       READ(ncstat,9200,END=2010)
+!ops       GO TO 2000
+!ops       2010        BACKSPACE(ncstat)
       
-      WRITE(ncstat,9100)itime
+!ops       WRITE(ncstat,9100)itime
       
-      CLOSE(ncstat)
+!ops       CLOSE(ncstat)
       
-    END IF
+!ops     END IF
     
-  END IF
+!ops   END IF
   
 !       RESET STORAGE INDEX
-  itstat = 0
+!ops   itstat = 0
   
 !     =========================================================================
   
 !     STATISTICS MASTER SWITCH
-END IF
+!ops END IF
 
 !     =========================================================================
 

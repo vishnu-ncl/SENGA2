@@ -30,20 +30,20 @@ SUBROUTINE adaptt
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
 
 !     LOCAL DATA
 !     ==========
-REAL(KIND=dp) :: erytot(nspcmx)
-REAL(KIND=dp) :: erdtot,erutot,ervtot,erwtot,eretot
-REAL(KIND=dp) :: errmax,tratio,tstold
+REAL(kind=8) :: erytot(nspcmx)
+REAL(kind=8) :: erdtot,erutot,ervtot,erwtot,eretot
+REAL(kind=8) :: errmax,tratio,tstold
 !     RSC/RACG 09-AUG-2012 USE GLOBAL ERROR
-!      REAL(KIND=dp) TSTLOC
-REAL(KIND=dp) :: errloc
-REAL(KIND=dp) :: fornow
+!      REAL(kind=8) TSTLOC
+REAL(kind=8) :: errloc
+REAL(kind=8) :: fornow
 INTEGER :: ic,jc,kc,ispec
 
 

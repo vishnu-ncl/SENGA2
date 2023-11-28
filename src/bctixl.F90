@@ -29,7 +29,7 @@ SUBROUTINE bctixl
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
+
 use com_senga
 !     -------------------------------------------------------------------------
 
@@ -79,7 +79,7 @@ IF(nxlprm(2) == 0)THEN
 !       CHECK AND INITIALISE RESTART FILE
   INQUIRE(FILE=fntixl,EXIST=fxdump)
   IF(.NOT.fxdump)THEN
-    OPEN(UNIT=nctixl,FILE=fntixl,STATUS='NEW',FORM='UNFORMATTED')
+    OPEN(UNIT=nctixl,FILE=fntixl,STATUS='REPLACE',FORM='UNFORMATTED')
     CLOSE(nctixl)
   END IF
   
@@ -148,8 +148,8 @@ slocxl = elocxl
 
 !     INITIALISE SCALE FACTORS
 tpovxg = two*pi/xgdlen
-scauxl = two/REAL(nxglbl,kind=dp)
-scduxl = -two*pi*scauxl*REAL(nxglbl-1,kind=dp)/REAL(nxglbl,kind=dp)/xgdlen
+scauxl = two/REAL(nxglbl,kind=8)
+scduxl = -two*pi*scauxl*REAL(nxglbl-1,kind=8)/REAL(nxglbl,kind=8)/xgdlen
 
 !     INITIALISE FLAGS AND INDICES FOR INLET PLANE DFT
 fllixl = .false.

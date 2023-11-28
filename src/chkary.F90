@@ -26,12 +26,12 @@ SUBROUTINE chkary(array,  &
 !     VARIANT FOR SPECIES ARRAYS
 
 !     *************************************************************************
-use data_types
+
 
 !     ARGUMENTS
 !     =========
 
-REAL(KIND=dp), INTENT(IN)             :: array(nchkxl:nchkxr,nchkyl:nchkyr,nchkzl:nchkzr,ncpcmx)
+REAL(kind=8), INTENT(IN)             :: array(nchkxl:nchkxr,nchkyl:nchkyr,nchkzl:nchkzr,ncpcmx)
 INTEGER, INTENT(IN OUT)                  :: nchkxl
 INTEGER, INTENT(IN OUT)                  :: nchkxr
 INTEGER, INTENT(IN OUT)                  :: nchkyl
@@ -50,7 +50,7 @@ INTEGER, INTENT(IN OUT)                  :: icpec
 
 !     LOCAL DATA
 !     ==========
-REAL(KIND=dp) :: arrmin,arrmax
+REAL(kind=8) :: arrmin,arrmax
 INTEGER :: ic,jc,kc
 INTEGER :: icmin,jcmin,kcmin
 INTEGER :: icmax,jcmax,kcmax
