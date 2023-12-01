@@ -22,6 +22,10 @@ OPS_FILES = senga2.F90 com_ops_senga2.F90 ops_data_init.F90 dfinit.F90 dfbydx.F9
     indata.F90 dtinit.F90 chemin.F90 espini.F90 turbin.F90 temper.F90 pardom.F90 \
     tempin.F90 parfer.F90 output.F90 print_dats.F90 print_alldats.F90
 
+ifeq ($(OPS_COMPILER),gnu)
+APP_FLAGS = -mcmodel=medium -fallow-argument-mismatch
+endif
+
 ifeq ($(OPS_COMPILER),intel)
 APP_FLAGS = -mcmodel=large -fp-model precise -fp-model source -no-fma -fimf-arch-consistency=true -fimf-precision=high
 #APP_FLAGS = -mcmodel=large -fp-model precise -fp-model source -no-fma -nolib-inline
@@ -58,9 +62,9 @@ OPS_FILES_GEN=$(OTHER_FILES) $(OPS_GENERATED)
 # check what targets can not be built with current environment setting and give warnings
 ifneq ($(strip $(TARGETS)),)
 
-ifneq (,$(filter cuda mpi_cuda openacc mpi_openacc,$(TARGETS)))
+ifneq (,$(filter cuda mpi_cuda mpi_cuda_tiled,$(TARGETS)))
 ifneq ($(OPS_COMPILER),pgi)
-TARGETS:=$(filter-out cuda mpi_cuda openacc mpi_openacc,$(TARGETS))
+TARGETS:=$(filter-out cuda mpi_cuda mpi_cuda_tiled,$(TARGETS))
 endif
 endif
 
@@ -70,7 +74,7 @@ ifndef TARGETS
 TARGETS = seq openmp tiled mpi mpi_openmp mpi_tiled
 
 ifeq ($(OPS_COMPILER),pgi)
-	TARGETS += cuda mpi_cuda openacc mpi_openacc
+	TARGETS += cuda mpi_cuda mpi_cuda_tiled
 endif
 
 endif
@@ -107,6 +111,8 @@ CUDA_OBJ = $(MODULE_FILES:.F90=_cuda.o) $(OPS_MODULE_FILES:.F90=_cuda.o) $(OTHER
 
 MPI_CUDA_OBJ = $(MODULE_FILES:.F90=_mpi_cuda.o) $(OPS_MODULE_FILES:.F90=_mpi_cuda.o) $(OTHER_FILES:.F90=_mpi_cuda.o) $(CUDA_KERNELS:.CUF=_mpi_cuda.o) $(OPS_GENERATED:.F90=_mpi_cuda.o)
 
+MPI_CUDA_TILED_OBJ = $(MODULE_FILES:.F90=_mpi_cuda_tiled.o) $(OPS_MODULE_FILES:.F90=_mpi_cuda_tiled.o) $(OTHER_FILES:.F90=_mpi_cuda_tiled.o) $(CUDA_KERNELS:.CUF=_mpi_cuda_tiled.o) $(OPS_GENERATED:.F90=_mpi_cuda_tiled.o)
+
 #=========================================================================================================================
 
 %_seq.o: %.F90
@@ -138,6 +144,12 @@ MPI_CUDA_OBJ = $(MODULE_FILES:.F90=_mpi_cuda.o) $(OPS_MODULE_FILES:.F90=_mpi_cud
 
 %_mpi_cuda.o: %.CUF
 	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(CUDAFOR) -DOPS_MPI $(FMODS_CUDA) -c $< -o $@
+
+%_mpi_cuda_tiled.o: %.F90
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(CUDAFOR) -DOPS_MPI -DOPS_LAZY $(FMODS_CUDA) -c $< -o $@
+
+%_mpi_cuda_tiled.o: %.CUF
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(CUDAFOR) -DOPS_MPI -DOPS_LAZY $(FMODS_CUDA) -c $< -o $@
 
 #=========================================================================================================================
 
@@ -181,7 +193,7 @@ $(APP)_mpi_tiled: Makefile .generated $(MPI_TILED_OBJ)
 	@echo ""
 	@echo ""
 	@echo ""
-	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS) $(FLINK) $(PGIMPILINK) -DOPS_LAZY -DOPS_MPI $(MPI_TILED_OBJ) -o $(APP)_mpi_tiled $(APP_LIBS) -lops_for_mpi $(F_HDF5_LIB_MPI)
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS) $(FLINK) $(PGIMPILINK) -DOPS_MPI -DOPS_LAZY $(MPI_TILED_OBJ) -o $(APP)_mpi_tiled $(APP_LIBS) -lops_for_mpi $(F_HDF5_LIB_MPI)
 
 #=========================================================================================================================
 
@@ -212,6 +224,15 @@ $(APP)_mpi_cuda: Makefile .generated $(MPI_CUDA_OBJ)
 
 #=========================================================================================================================
 
+$(APP)_mpi_cuda_tiled: Makefile .generated $(MPI_CUDA_TILED_OBJ)
+	@echo ""
+	@echo ""
+	@echo "Building ${APP}_mpi_cuda_tiled"
+	@echo ""
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS_CUDA) $(FLINK) $(PGIMPILINK) $(CUDAFOR) -DOPS_MPI -DOPS_LAZY $(MPI_CUDA_OBJ) -o $(APP)_mpi_cuda_tiled $(APP_LIBS) -lops_for_mpi_cuda $(F_HDF5_LIB_MPI)
+
+#=========================================================================================================================
+
 clean:
 	rm -f .generated
 	rm -f *.o MPI/*.o CUDA/*.o
@@ -220,5 +241,5 @@ clean:
 	rm -f *.mod MPI/*.mod CUDA/*.mod
 	rm -f *~ MPI/*~ CUDA/*~
 	rm -f constants_list.txt
-	rm -f $(APP)_seq $(APP)_openmp $(APP)_tiled $(APP)_mpi $(APP)_mpi_openmp $(APP)_mpi_tiled $(APP)_cuda $(APP)_mpi_cuda
+	rm -f $(APP)_seq $(APP)_openmp $(APP)_tiled $(APP)_mpi $(APP)_mpi_openmp $(APP)_mpi_tiled $(APP)_cuda $(APP)_mpi_cuda $(APP)_mpi_cuda_tiled
 
