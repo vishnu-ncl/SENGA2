@@ -90,7 +90,7 @@ SUBROUTINE tempin
     END DO
 
     call ops_par_loop(tempin_kernel_main, "tempin kernel", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
