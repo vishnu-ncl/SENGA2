@@ -81,6 +81,7 @@ SUBROUTINE temper
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_READ))
 
     DO icp = 1, nctmax
+        ! OPS_RW is used instead of OPS_WRITE to get correct tiling result
         call ops_par_loop(set_zero_kernel_MD6, "set_zero tcoeff", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_tcoeff, 6, s3d_000, "real(kind=8)", OPS_RW), &
                         ops_arg_gbl(icp+1, 1, "integer(kind=4)", OPS_READ))
@@ -154,7 +155,7 @@ SUBROUTINE temper
 !   FOR ALL SPECIES RELOCATE TEMPERATURE IN AN INTERVAL
 !   EVALUATE MIXTURE SPECIFIC HEAT CP
     DO iindex = 1,nintmx
-        call ops_par_loop(set_zero_kernel_int, "set_zero", senga_grid, 3, rangexyz,  &
+        call ops_par_loop(set_zero_kernel_int, "set_zero itndex", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_WRITE))
     END DO
 
