@@ -8,7 +8,7 @@
 # Fortran compiler
 #FC = ftn #-g -fcheck=all -cpp
 #FC = h5pfc -g -fcheck=all -DHDF5 -cpp
-FC = mpif90
+FC = ftn
 
 # Quick non-optimized compile
 #FFLAGS = -g -fno-silent -ftrapping-math -ftrapv -Wimplicit -Wall
@@ -17,13 +17,13 @@ FC = mpif90
 #FFLAGS = -pg -fno-silent -ftrapping-math -ftrapv -Wimplicit -Wall
 
 # Optimized compile
-#FFLAGS = -O3 -fallow-argument-mismatch -mcmodel=medium
+FFLAGS = -O3 -g -ffree-form -ffree-line-length-none -fallow-argument-mismatch -mcmodel=medium
 
 # Optimized compile with profiling
 #FFLAGS = -pg -O3 -fno-silent -Wimplicit -Wall
 
 #Intel
-FFLAGS = -O3 -g -mcmodel=large -fp-model precise -fp-model source -no-fma -fimf-arch-consistency=true -fimf-precision=high 
+#FFLAGS = -O3 -g -mcmodel=large -fp-model precise -fp-model source -no-fma -fimf-arch-consistency=true -fimf-precision=high 
 # Source files hdf5io.F90 
 SRC = 
 
@@ -64,13 +64,13 @@ OBJS_F90=$(SRC_F90:.F90=.o)
 .f.o: $(FC) $(INC) -c $<
 
 %.o: %.F90
-	$(FC) $(FFLAGS) -O3 -c $<
+	$(FC) $(FFLAGS) -c $<
 
 # Full make of SENGA2
 all: senga2
 
 senga2: $(OBJS_F90) $(OBJS) 
-	$(FC) $(OBJS) $(OBJS_F90) -o senga2 $(LIBS)
+	$(FC) $(FFLAGS) $(OBJS) $(OBJS_F90) -o senga2 $(LIBS)
 
 # Add -pg for profiling
 #senga2: $(OBJS) 

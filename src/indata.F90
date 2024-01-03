@@ -1463,7 +1463,10 @@ END DO
 !     INITIAL PARALLEL DATA TRANSFER
 !     ==============================
 !     INITIALISES TIME-STEPPING RHS TERMS TO BIGGER DOMAIN SIZE
+call cpu_time(start_comm_time)
 CALL parfer
+call cpu_time(finish_comm_time)
+total_comm_time = total_comm_time + (finish_comm_time-start_comm_time)
 
 !     =========================================================================
 

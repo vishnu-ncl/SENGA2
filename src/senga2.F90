@@ -73,15 +73,17 @@ use com_senga
 !     RSC 29-DEC-2006 UPDATED INDEXING
 INTEGER :: jtime,jrkstp
 
-
 !     BEGIN
 !     =====
 
 !     =========================================================================
+total_time = 0.0_8
+total_comm_time = 0.0_8
 
 !     INITIALISATION
 !     ==============
 !     PARALLEL DOMAIN DECOMPOSITION
+call cpu_time(start_time)
 CALL pardom
 
 !     INITIALISE THE DATA
@@ -116,8 +118,11 @@ DO jtime = ntime1,ntime2
     CALL boundt
     
 !         PARALLEL DATA TRANSFER
+    call cpu_time(start_comm_time)
     CALL parfer
-    
+    call cpu_time(finish_comm_time)
+    total_comm_time = total_comm_time + (finish_comm_time-start_comm_time)
+
 !         EVALUATE RHS FOR SCALARS
     CALL rhscal
     
@@ -142,8 +147,11 @@ DO jtime = ntime1,ntime2
   CALL boundt
   
 !       PARALLEL DATA TRANSFER
+  call cpu_time(start_comm_time)
   CALL parfer
-  
+  call cpu_time(finish_comm_time)
+  total_comm_time = total_comm_time + (finish_comm_time-start_comm_time)
+
 !       EVALUATE RHS FOR SCALARS
   CALL rhscal
   
@@ -199,6 +207,12 @@ END DO
 
 !     TERMINATE THE PROGRAM
 CALL finish
+call cpu_time(finish_time)
+
+total_time = total_time + (finish_time-start_time)
+
+write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,'  total_runtime =', total_time,' seconds'
+write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,'  total_comm_time =', total_comm_time,' seconds'
 
 !     =========================================================================
 
