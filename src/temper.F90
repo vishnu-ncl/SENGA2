@@ -80,12 +80,12 @@ SUBROUTINE temper
                     ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_READ))
 
-    DO icp = 1, nctmax
-        ! OPS_RW is used instead of OPS_WRITE to get correct tiling result
-        call ops_par_loop(set_zero_kernel_MD6, "set_zero tcoeff", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_tcoeff, 6, s3d_000, "real(kind=8)", OPS_RW), &
-                        ops_arg_gbl(icp+1, 1, "integer(kind=4)", OPS_READ))
-    END DO
+!    DO icp = 1, nctmax
+!        ! OPS_RW is used instead of OPS_WRITE to get correct tiling result
+!        call ops_par_loop(set_zero_kernel_MD6, "set_zero tcoeff", senga_grid, 3, rangexyz,  &
+!                        ops_arg_dat(d_tcoeff, 6, s3d_000, "real(kind=8)", OPS_RW), &
+!                        ops_arg_gbl(icp+1, 1, "integer(kind=4)", OPS_READ))
+!    END DO
 
     call ops_par_loop(set_zero_kernel_MD5, "set_zero tderiv", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_tderiv, 5, s3d_000, "real(kind=8)", OPS_WRITE))
