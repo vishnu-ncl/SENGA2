@@ -1,74 +1,44 @@
-#
-# make file for SENGA2
-#
-# RSC 08-JAN-2005 LAM/MPI implementation
-# RSC 12-JUN-2008 SUSE/MPICH implementation
-#
 
-# Fortran compiler
-FC = mpif90 -g -fcheck=all -cpp
-#FC = h5pfc -g -fcheck=all -DHDF5 -cpp
+include $(OPS_INSTALL_PATH)/../makefiles/Makefile.common
+include $(OPS_INSTALL_PATH)/../makefiles/Makefile.mpi
+include $(OPS_INSTALL_PATH)/../makefiles/Makefile.cuda
+USE_HDF5=1
+include $(OPS_INSTALL_PATH)/../makefiles/Makefile.hdf5
 
-# Quick non-optimized compile
-#FFLAGS = -g -fno-silent -ftrapping-math -ftrapv -Wimplicit -Wall
+OTHER_FILES = data_type.F90 constants.F90 cuda_constant.F90 com_espect.F90 com_senga2.F90 \
+    dfmstr.F90 ardums.F90 ardump.F90 buftxl.F90 \
+    chkarr.F90 chkary.F90 erfunc.F90 espect.F90 espksq.F90 espovk.F90 \
+    finish.F90 diffin.F90 hdf5io.F90 contin.F90 bcinit.F90 turbft.F90 \
+    fftsym.F90 fftf3d.F90 integf.F90 fftixl.F90
 
-# Non-optimized compile with profiling
-#FFLAGS = -pg -fno-silent -ftrapping-math -ftrapv -Wimplicit -Wall
+OPS_FILES = com_ops_senga2.F90 senga2.F90 ops_data_init.F90 dfinit.F90 dfbydx.F90 d2fdx2.F90 \
+    dfbydy.F90 dfbydz.F90 d2fdy2.F90 d2fdz2.F90 zeroxl.F90 zeroxr.F90 zeroyl.F90 zeroyr.F90 \
+    zerozl.F90 zerozr.F90 d2fdxy.F90 d2fdxz.F90 d2fdyz.F90 rhscal.F90 rhsvel.F90 \
+    lincom.F90 fincom.F90 adaptt.F90 bcdtxl.F90 bcdtxr.F90 bcdtyl.F90 bcdtyr.F90 \
+    bcdtzl.F90 bcdtzr.F90 bcttxl.F90 bcttxr.F90 bcttyl.F90 bcttyr.F90 bcttzl.F90 \
+    bcttzr.F90 bcutxl.F90 bcutxr.F90 bcutyl.F90 bcutyr.F90 bcutzl.F90 bcutzr.F90 \
+    bcytxl.F90 bcytxr.F90 bcytyl.F90 bcytyr.F90 bcytzl.F90 bcytzr.F90 bounds.F90 \
+    bountt.F90 boundt.F90 radcal.F90 radcin.F90 bctixl.F90 flamin.F90 chrate.F90 \
+    indata.F90 dtinit.F90 chemin.F90 espini.F90 turbin.F90 temper.F90 pardom.F90 \
+    tempin.F90 parfer.F90 output.F90 print_dats.F90 print_alldats.F90
 
-# Optimized compile
-FFLAGS = -O3 -Wall -mcmodel=medium
+OPS_GENERATED = com_ops_senga2_ops.F90 senga2_ops.F90 ops_data_init_ops.F90 dfinit_ops.F90 dfbydx_ops.F90 d2fdx2_ops.F90 \
+    dfbydy_ops.F90 dfbydz_ops.F90 d2fdy2_ops.F90 d2fdz2_ops.F90 zeroxl_ops.F90 zeroxr_ops.F90 zeroyl_ops.F90 zeroyr_ops.F90 \
+    zerozl_ops.F90 zerozr_ops.F90 d2fdxy_ops.F90 d2fdxz_ops.F90 d2fdyz_ops.F90 rhscal_ops.F90 rhsvel_ops.F90 \
+    lincom_ops.F90 fincom_ops.F90 adaptt_ops.F90 bcdtxl_ops.F90 bcdtxr_ops.F90 bcdtyl_ops.F90 bcdtyr_ops.F90 \
+    bcdtzl_ops.F90 bcdtzr_ops.F90 bcttxl_ops.F90 bcttxr_ops.F90 bcttyl_ops.F90 bcttyr_ops.F90 bcttzl_ops.F90 \
+    bcttzr_ops.F90 bcutxl_ops.F90 bcutxr_ops.F90 bcutyl_ops.F90 bcutyr_ops.F90 bcutzl_ops.F90 bcutzr_ops.F90 \
+    bcytxl_ops.F90 bcytxr_ops.F90 bcytyl_ops.F90 bcytyr_ops.F90 bcytzl_ops.F90 bcytzr_ops.F90 bounds_ops.F90 \
+    bountt_ops.F90 boundt_ops.F90 radcal_ops.F90 radcin_ops.F90 bctixl_ops.F90 flamin_ops.F90 chrate_ops.F90 \
+    indata_ops.F90 dtinit_ops.F90 chemin_ops.F90 espini_ops.F90 turbin_ops.F90 temper_ops.F90 pardom_ops.F90 \
+    tempin_ops.F90 parfer_ops.F90 output_ops.F90 print_dats_ops.F90 print_alldats_ops.F90
 
-# Optimized compile with profiling
-#FFLAGS = -pg -O3 -fno-silent -Wimplicit -Wall
+APP_FLAGS = -g -fallow-argument-mismatch -cpp -O0 -Wall -mcmodel=medium #-fbacktrace#-fp-model strict -fp-model source -prec-div -prec-sqrt
+#APP_FLAGS = -Kieee
+APP_LIBS = fftlib/fftlib.a rndlib/rndlib.a parlib/parlib.a -lm
 
-# Source files
-SRC =   senga2.f rhscal.f rhsvel.f lincom.f fincom.f \
-	temper.f tempin.f chrate.f chemin.f diffin.f radcal.f radcin.f \
-	hdf5io.f indata.f contin.f output.f finish.f \
-	dfinit.f dfbydx.f dfbydy.f dfbydz.f d2fdx2.f d2fdy2.f d2fdz2.f \
-	d2fdxy.f d2fdxz.f d2fdyz.f dfmstr.f \
-	flinit.f fltrem.f filtrx.f filtry.f filtrz.f \
-	dtinit.f adaptt.f \
-	turbin.f turbft.f fftsym.f fftf3d.f \
-	espect.f espini.f espovk.f espksq.f integf.f \
-	flamin.f erfunc.f \
-	bcinit.f bounds.f boundt.f bountt.f \
-	bcutxl.f bcttxl.f bcdtxl.f bcytxl.f bctixl.f buftxl.f fftixl.f \
-	bcutxr.f bcttxr.f bcdtxr.f bcytxr.f \
-	bcutyl.f bcttyl.f bcdtyl.f bcytyl.f \
-	bcutyr.f bcttyr.f bcdtyr.f bcytyr.f \
-	bcutzl.f bcttzl.f bcdtzl.f bcytzl.f \
-	bcutzr.f bcttzr.f bcdtzr.f bcytzr.f \
-	pardom.f parfer.f \
-	cxhalo.f cyhalo.f czhalo.f cxhals.f cyhals.f czhals.f \
-	exhalo.f inhalo.f exhals.f inhals.f \
-	zeroxl.f zeroxr.f zeroyl.f zeroyr.f zerozl.f zerozr.f \
-	ardump.f ardums.f chkarr.f chkary.f
+APP = senga2
+MAIN_SRC=senga2
 
-# Include files
-INC = com_senga2.h com_espect.h
+include $(OPS_INSTALL_PATH)/../makefiles/Makefile.f_app
 
-# Libraries: need separate compilation in their own subdirectories
-# FFTs; random number generators
-# MPI libraries
-LIBS = fftlib/fftlib.a rndlib/rndlib.a parlib/parlib.a -lm
-
-# Object files are the same as the source files but with .o rather than .f
-OBJS=$(SRC:.f=.o)
-
-# Default compilation of .f files to .o
-.f.o: $(FC) $(INC) -c $<
-
-# Full make of SENGA2
-all: senga2
-
-senga2: $(OBJS) 
-	$(FC) $(OBJS) -o senga2 $(LIBS)
-
-# Add -pg for profiling
-#senga2: $(OBJS) 
-#	$(FC) $(OBJS) -pg -o senga2 $(LIBS)
-
-# Command to clean up after
-clean: 
-	rm -f *.o senga2 core *.mod

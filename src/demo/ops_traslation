@@ -1,0 +1,123 @@
+
+
+!------------------------------------------------------------------------------------------------------
+
+    DO kc = 1,nzsize
+        DO jc = 1,nysize
+            DO ic = 1,nxsize
+      
+                fdiffa = functn(ic+1,jc,kc) - functn(ic-1,jc,kc)
+                fdiffb = functn(ic+2,jc,kc) - functn(ic-2,jc,kc)
+                fdiffc = functn(ic+3,jc,kc) - functn(ic-3,jc,kc)
+                fdiffd = functn(ic+4,jc,kc) - functn(ic-4,jc,kc)
+                fdiffe = functn(ic+5,jc,kc) - functn(ic-5,jc,kc)
+      
+                fderiv(ic,jc,kc) = acoffx*fdiffa + bcoffx*fdiffb  &
+                                 + ccoffx*fdiffc + dcoffx*fdiffd  &
+                                 + ecoffx*fdiffe
+      
+            END DO
+        END DO
+    END DO
+
+!------------------------------------------------------------------------------------------------------
+    
+    SUBROUTINE dfbydx_kernel_interior(functn, fderiv)
+        implicit none
+
+        real(kind=8), dimension(1), intent(in) :: functn
+        real(kind=8), dimension(1) :: fderiv
+        real(kind=8) :: fdiffa, fdiffb, fdiffc, fdiffd, fdiffe
+
+        fdiffa = functn(OPS_ACC1(1,0,0)) - functn(OPS_ACC1(-1,0,0))
+        fdiffb = functn(OPS_ACC1(2,0,0)) - functn(OPS_ACC1(-2,0,0))
+        fdiffc = functn(OPS_ACC1(3,0,0)) - functn(OPS_ACC1(-3,0,0))
+        fdiffd = functn(OPS_ACC1(4,0,0)) - functn(OPS_ACC1(-4,0,0))
+        fdiffe = functn(OPS_ACC1(5,0,0)) - functn(OPS_ACC1(-5,0,0))
+
+        fderiv(OPS_ACC2(0,0,0)) = acoffx*fdiffa + bcoffx*fdiffb  &
+                                + ccoffx*fdiffc + dcoffx*fdiffd  &
+                                + ecoffx*fdiffe
+
+    END SUBROUTINE dfbydx_kernel_interior
+
+!------------------------------------------------------------------------------------------------------    
+
+    TYPE(ops_block) :: senga_grid
+
+    call ops_decl_block(3, senga_grid, "senga grid")
+
+!------------------------------------------------------------------------------------------------------
+
+    TYPE(ops_dat) :: d_functn, d_fderiv
+   
+    allocate (fderiv(nxsize,nysize,nzsize))
+
+    d_size = (/nxsize, nysize, nzsize/)
+    d_m = (/0,0,0/)
+    d_p = (/0,0,0/)
+
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, fderiv, d_fderiv, "real(8)", "FDERIV")
+
+
+    allocate (functn(1-nhalox:nxsize+nhalox,1-nhaloy:nysize+nhaloy,1-nhaloz:nzsize+nhaloz)
+    
+    d_size = (/nxsize, nysize, nzsize/)
+    d_m = (/-nhalox,-nhaloy,-nhaloz/)
+    d_p = (/nhalox,nhaloy,nhaloz/)
+
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, functn, d_functn, "real(8)", "FUNCTN")
+
+!------------------------------------------------------------------------------------------------------
+    
+    TYPE(ops_stencil) :: s3d_000, s3d_p500_to_m500_x
+
+    INTEGER a3d_000(3)    /0,0,0/
+
+    call ops_decl_stencil( 3, 1, a3d_000, s3d_000, "0,0,0")
+
+
+    INTEGER a3d_p500_to_m500_x(33) /5,0,0, 4,0,0, 3,0,0, 2,0,0, 1,0,0, 0,0,0, -1,0,0, -2,0,0, -3,0,0, -4,0,0, -5,0,0/
+    
+    call ops_decl_stencil( 3, 11, a3d_p500_to_m500_x, s3d_p500_to_m500_x, "5,0,0 to -5,0,0")
+
+!------------------------------------------------------------------------------------------------------
+
+MODULE OPS_CONSTANTS
+#ifdef OPS_WITH_CUDAFOR
+    use cudafor
+        real(kind=8), constant :: acoffx_opsconstant, bcoffx_opsconstant, ccoffx_opsconstant, dcoffx_opsconstant, ecoffx_opsconstant
+
+        real(kind=8) :: acoffx, bcoffx, ccoffx, dcoffx, ecoffx
+
+#else
+        real(kind=8) :: acoffx, bcoffx, ccoffx, dcoffx, ecoffx
+#endif
+
+END MODULE OPS_CONSTANTS    
+
+#ifdef OPS_WITH_CUDAFOR
+    acoffx_opsconstant = acoffx
+    bcoffx_opsconstant = bcoffx
+    ccoffx_opsconstant = ccoffx
+    dcoffx_opsconstant = dcoffx
+    ecoffx_opsconstant = ecoffx
+
+#endif
+
+    call ops_decl_const("acoffx", 1, "double", acoffx)
+    call ops_decl_const("bcoffx", 1, "double", bcoffx)
+    call ops_decl_const("ccoffx", 1, "double", ccoffx)
+    call ops_decl_const("dcoffx", 1, "double", dcoffx)
+    call ops_decl_const("ecoffx", 1, "double", ecoffx)
+
+!------------------------------------------------------------------------------------------------------
+
+    integer :: rangexyz(6)
+
+    rangexyz = (/1,nxsize,1,nysize,1,nzsize/)
+    call ops_par_loop(dfbydx_kernel_interior, "dfbydx_interior_scheme", senga_grid, 3, rangexyz,  &
+                      ops_arg_dat(functn, 1, s3d_p500_to_m500_x, "real(8)", OPS_READ),  &
+                      ops_arg_dat(fderiv, 1, s3d_000, "real(8)", OPS_WRITE))
+
+!------------------------------------------------------------------------------------------------------

@@ -1,0 +1,45 @@
+ERROR1
+
+Traceback (most recent call last):
+  File "/work/e01/e01/ve01/SENGA_OPS/OPS/ops/../ops_translator/fortran/ops_fortran.py", line 773, in <module>
+    main(source_files=sys.argv[1:]) # [1:] ignores the ops.py file itself.
+  File "/work/e01/e01/ve01/SENGA_OPS/OPS/ops/../ops_translator/fortran/ops_fortran.py", line 767, in main
+    ops_fortran_gen_mpi_openacc(str(source_files[0]), date, consts, kernels, soa_set)
+  File "/mnt/lustre/a2fs-work1/work/e01/e01/ve01/SENGA_OPS/OPS/ops_translator/fortran/ops_fortran_gen_mpi_openacc.py", line 254, in ops_fortran_gen_mpi_openacc
+    if int(dims[n]) == 1:
+ValueError: invalid literal for int() with base 10: 'nccfmx*nspcmx'
+make: *** [/work/e01/e01/ve01/SENGA_OPS/OPS/ops/../makefiles/Makefile.f_app:21: .generated] Error 1
+
+SOLUTION
+
+comment the ops_translator for CUDA
+
+ERROR2
+
+No supported cpu target is set, CRAY_CPU_TARGET=x86-64 will be used.
+Load a valid targeting module or set CRAY_CPU_TARGET
+diffin.F90:265:20:
+
+  260 |         call p_bcst(pcount,1,1,iroot)
+      |                    2
+......
+  265 |         call p_bcst(parray,nparay,ncount,iroot)
+      |                    1
+Error: Rank mismatch between actual argument at (1) and actual argument at (2) (scalar and rank-1)
+
+SOLUTION
+
+Add -fallow-argument-mistmatch to APP_FLAGS in Makefile and add APP_FLAGS to makefiles/makefile.f_app
+
+use mpif90 instead of ftn
+
+ERROR3
+
+
+/usr/bin/ld: cannot find -lhdf5_hl: No such file or directory
+/usr/bin/ld: cannot find -lhdf5: No such file or directory
+collect2: error: ld returned 1 exit status
+make: *** [/work/e01/e01/ve01/SENGA_OPS/OPS/ops/../makefiles/Makefile.f_app:40: senga2_seq] Error 1
+
+
+SOLUTION

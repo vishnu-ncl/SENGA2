@@ -1,46 +1,28 @@
-#!/bin/bash
-
-# example MPI job script for SLURM
-
-# set max wallclock time
+#!/bin/bash --login
+#SBATCH --nodes=4
+#SBATCH --ntasks-per-node=128
 #SBATCH --time=48:00:00
-
-#Job name
-#SBATCH --job-name=1D_H2_p07
-
-#Job queue
-#SBATCH --partition=defq
-####SBATCH --partition=bigmem
-####SBATCH --mem=128G
-##SBATCH --exclusive
+#SBATCH --job-name=TGVOPS
+#SBATCH --account=e01-NU-Ahmed
 
 
-#Cost code
-#SBATCH -A nccstrfm
+#SBATCH --partition=standard
+#SBATCH --qos=long
+####SBATCH --qos=lowpriority
+####SBATCH --reservation=shortqos
+####SBATCH --error=/work/e01/e01/ashutoshl/senga_org/fortran90-3D/SENGA2/EO/job.%J.err
+####SBATCH --output=/work/e01/e01/ashutoshl/senga_org/fortran90-3D/SENGA2/EO/job.%J.out
 
+export OMP_NUM_THREADS=1
 
-# SLURM defaults to the directory you were working in when you submitted the job.
-# Output files are also put in this directory. To set a different working directory add:
+echo "Submission directory is ${SLURM_SUBMIT_DIR}"
 
-##SBATCH --workdir=/nobackup/my_directory
+# Setup the batch environment
+cd /work/e01/e01/ve01/SENGA_OPS
+#source setup_env_gnu_ops.sh
+source ops_source_environment.sh
 
-# Tell SLURM if you want to be emailed when your job starts, ends, etc.
-# Currently mail can only be sent to addresses @ncl.ac.uk
+cd $SLURM_SUBMIT_DIR
 
-#SBATCH --mail-type=ALL
-
-#SBATCH --mail-user=vishnu.mohan@ncl.ac.uk
-
-#number of cores used
-#SBATCH --nodes=1
-#SBATCH --ntasks=40
-
-#unset I_MPI_PMI_LIBRARY
-#set SLURM_MPI_TYPE=pmi2
-# use Intel programming tools
-#module load intel
-#
-# SLURM recommend using srun instead of mpirun for better job control.
-#mpirun -np 480 ./senga
-srun -n 40 --mpi=pmi2 ./senga2
-
+time srun --distribution=block:block --hint=nomultithread --unbuffered --ntasks-per-node=128 --ntasks=512 ./senga2_mpi 2>&1 | tee log_new_1nodes.txt
+#srun -n 512 ./senga2_mpi
