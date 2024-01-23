@@ -8,13 +8,13 @@ Global domain size (x,y,z) in metres
  4.52783412D-3   4.52783412D-3   4.52783412D-3
 
 Global domain size (nx,ny,nz)
- 64    64     64
+ 512    512     512
 
 No. of processors (x,y,z)
  1      1      1
 
 Time step; start step, no of steps, step switch (0=fixed, 1=adaptive))
- 1.0D-12    1   30000   1
+ 1.0D-12    1   101   1
 
 Intervals between dumps, reports, statistics, dump output (0/1=un/formatted)
  100    1    1      0

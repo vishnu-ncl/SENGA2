@@ -992,6 +992,23 @@ SUBROUTINE maths_kernel_eqBP(erun,trun,itndex,yrun,amasch,ncpoly,ncpom1,ncenth,i
 
 END SUBROUTINE maths_kernel_eqBP
 
+SUBROUTINE maths_kernel_eqBQ(utgv, vtgv, wtgv, drun, deltagx, deltagy, deltagz, tkes)
+
+    real(kind=8), dimension(1), intent(in) :: utgv, vtgv, wtgv, drun
+    real(kind=8), intent(in) :: deltagx, deltagy, deltagz
+    real(kind=8) :: tkes
+
+    real(kind=8) :: tkel
+
+    tkel = (utgv(OPS_ACC1(0,0,0))*utgv(OPS_ACC1(0,0,0))) + &
+           (vtgv(OPS_ACC2(0,0,0))*vtgv(OPS_ACC2(0,0,0))) + &
+           (wtgv(OPS_ACC3(0,0,0))*wtgv(OPS_ACC3(0,0,0)))
+
+    tkes = tkes + (0.5_8*drun(OPS_ACC4(0,0,0))*tkel &
+                  *deltagx*deltagy*deltagz)
+
+END SUBROUTINE maths_kernel_eqBQ
+
 SUBROUTINE maths_kernel_eqtau(out_arr1,out_arr2,in_arr1,in_arr2,in_arr3,var)
 
     real(kind=8), dimension(1) :: out_arr1, out_arr2

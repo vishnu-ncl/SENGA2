@@ -128,16 +128,11 @@ SUBROUTINE indata
     fnstat = pnstat//pnxres
     idflag = 0
     WRITE(pnflag,'(I1)')idflag
-    fndmpo(1) = pndmpi//pnproc//pnflag//pnxdat
-#ifdef HDF5
-    h5_filename(1) = pndmpi//pnflag//".h5"
-#endif
+    fndmpo(1) = pndmpi//pnflag//pnxdat
     idflag = 1
     WRITE(pnflag,'(I1)')idflag
-    fndmpo(2) = pndmpi//pnproc//pnflag//pnxdat
-#ifdef HDF5
-    h5_filename(2) = pndmpi//pnflag//".h5"
-#endif
+    fndmpo(2) = pndmpi//pnflag//pnxdat
+
 !   =========================================================================
 
 !   GET THE RUN CONTROL DATA
@@ -886,31 +881,28 @@ SUBROUTINE indata
 
 !   CHECK AND INITIALISE DUMP FILES
 !   -------------------------------
-#ifndef HDF5
-    INQUIRE(FILE=fndmpo(1),EXIST=fxdump)
-    IF(.NOT.fxdump) THEN
-        IF(ndofmt == 0) THEN
-            OPEN(UNIT=ncdmpo,FILE=fndmpo(1),STATUS='REPLACE',FORM='UNFORMATTED')
-        ELSE
-            OPEN(UNIT=ncdmpo,FILE=fndmpo(1),STATUS='REPLACE',FORM='FORMATTED')
+    IF ( ops_is_root() ) THEN
+        INQUIRE(FILE=fndmpo(1),EXIST=fxdump)
+        IF(.NOT.fxdump) THEN
+            IF(ndofmt == 0) THEN
+                OPEN(UNIT=ncdmpo,FILE=fndmpo(1),STATUS='REPLACE',FORM='UNFORMATTED')
+            ELSE
+                OPEN(UNIT=ncdmpo,FILE=fndmpo(1),STATUS='REPLACE',FORM='FORMATTED')
+            END IF
+            CLOSE(ncdmpo)
         END IF
-        CLOSE(ncdmpo)
-    END IF
 
-    INQUIRE(FILE=fndmpo(2),EXIST=fxdump)
+        INQUIRE(FILE=fndmpo(2),EXIST=fxdump)
 
-    IF(.NOT.fxdump) THEN
-        IF(ndofmt == 0) THEN
-            OPEN(UNIT=ncdmpo,FILE=fndmpo(2),STATUS='REPLACE',FORM='UNFORMATTED')
-        ELSE
-            OPEN(UNIT=ncdmpo,FILE=fndmpo(2),STATUS='REPLACE',FORM='FORMATTED')
+        IF(.NOT.fxdump) THEN
+            IF(ndofmt == 0) THEN
+                OPEN(UNIT=ncdmpo,FILE=fndmpo(2),STATUS='REPLACE',FORM='UNFORMATTED')
+            ELSE
+                OPEN(UNIT=ncdmpo,FILE=fndmpo(2),STATUS='REPLACE',FORM='FORMATTED')
+            END IF
+            CLOSE(ncdmpo)
         END IF
-        CLOSE(ncdmpo)
     END IF
-#else
-    call create_h5dump_files
-#endif
-
 
 !   ==========================================================================
 
@@ -1226,58 +1218,78 @@ SUBROUTINE indata
 !       READ THE DATA FROM DUMP INPUT FILE 1
 !       NOTE THAT URUN,VRUN,WRUN,ERUN AND YRUN ARE ALL IN CONSERVATIVE FORM
 !       RSC 11-JUL-2009 ADD A DUMP FORMAT SWITCH
-#ifndef HDF5
-        IF(ndifmt == 0) THEN
 
-            write(*, '(a)') "Using the arrays not allocated by OPS, &
-                        Please implement the function in OPS first, indata.F90: ID=1307"
-            STOP
+        WRITE(*,*) "Restart is not yet implemented in OPS"
+        STOP
 
-!           UNFORMATTED DUMP INPUT
-            OPEN(UNIT=ncdmpi,FILE=fndmpo(2),STATUS='OLD', FORM='UNFORMATTED')
-            READ(ncdmpi)nxdmax,nydmax,nzdmax,ndspec, drun,urun,vrun,wrun,erun,yrun,  &
-                etime,tstep,errold,errldr
+        IF ( ops_is_root() ) THEN
+            IF(ndifmt == 0) THEN
 
-!           SIZE ERROR CHECK
-            IF(nxdmax /= nxsize)WRITE(6,*)'Dump input size error: x'
-            IF(nydmax /= nysize)WRITE(6,*)'Dump input size error: y'
-            IF(nzdmax /= nzsize)WRITE(6,*)'Dump input size error: z'
-            IF(ndspec /= nspec)WRITE(6,*)'Dump input size error: species'
+!               UNFORMATTED DUMP INPUT
+                OPEN(UNIT=ncdmpi,FILE=fndmpo(2),STATUS='OLD', FORM='UNFORMATTED')
+                READ(ncdmpi)nxdmax,nydmax,nzdmax,ndspec,&
+                    etime,tstep,errold,errldr
 
-            CLOSE(ncdmpi)
-        ELSE
+!               SIZE ERROR CHECK
+                IF(nxdmax /= nxglbl)WRITE(6,*)'Dump input size error: x'
+                IF(nydmax /= nyglbl)WRITE(6,*)'Dump input size error: y'
+                IF(nzdmax /= nzglbl)WRITE(6,*)'Dump input size error: z'
+                IF(ndspec /= nspec)WRITE(6,*)'Dump input size error: species'
 
-!           FORMATTED DUMP INPUT
-            OPEN(UNIT=ncdmpi,FILE=fndmpo(1),STATUS='OLD',FORM='FORMATTED')
-            READ(ncdmpi,*)nxdmax,nydmax,nzdmax,ndspec
+                CLOSE(ncdmpi)
+            ELSE
 
-!           SIZE ERROR CHECK
-            IF(nxdmax /= nxsize)WRITE(6,*)'Dump input size error: x'
-            IF(nydmax /= nysize)WRITE(6,*)'Dump input size error: y'
-            IF(nzdmax /= nzsize)WRITE(6,*)'Dump input size error: z'
-            IF(ndspec /= nspec)WRITE(6,*)'Dump input size error: species'
+!               FORMATTED DUMP INPUT
+                OPEN(UNIT=ncdmpi,FILE=fndmpo(1),STATUS='OLD',FORM='FORMATTED')
+                READ(ncdmpi,*)nxdmax,nydmax,nzdmax,ndspec
 
-            write(*, '(a)') "Using the arrays not allocated by OPS, &
-                        Please implement the function in OPS first, indata.F90: ID=1335"
-            STOP
+!               SIZE ERROR CHECK
+                IF(nxdmax /= nxglbl)WRITE(6,*)'Dump input size error: x'
+                IF(nydmax /= nyglbl)WRITE(6,*)'Dump input size error: y'
+                IF(nzdmax /= nzglbl)WRITE(6,*)'Dump input size error: z'
+                IF(ndspec /= nspec)WRITE(6,*)'Dump input size error: species'
 
-            DO kc = 1, nzsize
-                DO jc = 1, nysize
-                    DO ic = 1, nxsize
-                        READ(ncdmpi,*)drun(ic,jc,kc),  &
-                            urun(ic,jc,kc),vrun(ic,jc,kc),wrun(ic,jc,kc), erun(ic,jc,kc),  &
-                            (yrun(ispec,ic,jc,kc),ispec=1,nspec)
-                    END DO
-                END DO
-            END DO
+                READ(ncdmpi,*)etime,tstep,errold,errldr
 
-            READ(ncdmpi,*)etime,tstep,errold,errldr
-
-            CLOSE(ncdmpi)
+                CLOSE(ncdmpi)
+            END IF
         END IF
-#else
-        call read_h5dump_files
-#endif
+
+        rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+        call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_drun_dump, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+        call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_urun_dump, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+        call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_vrun_dump, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+        call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_wrun_dump, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+        call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_erun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_erun_dump, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+        DO ispec = 1,nspcmx
+            call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_yrun_dump(ispec), 1, s3d_000, "real(kind=8)", OPS_READ))
+        END DO
+
+        call ops_free_dat(d_drun_dump)
+        call ops_free_dat(d_urun_dump)
+        call ops_free_dat(d_vrun_dump)
+        call ops_free_dat(d_wrun_dump)
+        call ops_free_dat(d_erun_dump)
+        DO ispec = 1,nspcmx
+            call ops_free_dat(d_yrun_dump(ispec))
+        END DO
 
 !       =======================================================================
 !       WARM START COMPLETE

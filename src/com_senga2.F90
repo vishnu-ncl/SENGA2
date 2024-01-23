@@ -13,17 +13,17 @@ MODULE com_senga
     implicit none
 
 !   GLOBAL GRID SIZE
-    integer(kind=4), parameter :: nxglbl=64, nyglbl=64, nzglbl=64
+    integer(kind=4), parameter :: nxglbl=512, nyglbl=512, nzglbl=512
 !   SET NGZMAX=MAX(NXGLBL,NYGLBL,NZGLBL)
     integer(kind=4), parameter :: ngzmax=nxglbl
 
-!   NUMBER OF PROCESSORS
+!   NUMBER OF PROCESSORS - DO NOT CHANGE - KEEP AS 1 ONLY
     integer(kind=4), parameter :: nxproc=1, nyproc=1, nzproc=1
 !   SET NPRMAX=MAX(NXPROC,NYPROC,NZPROC)
     integer(kind=4), parameter :: nprmax=nxproc
 
-!   LOCAL GRID SIZE
-    integer(kind=4), parameter :: nxsize=64, nysize=64, nzsize=64
+!   LOCAL GRID SIZE - MENTION SAME VALUE AS GLOBAL GRID SIZE
+    integer(kind=4), parameter :: nxsize=512, nysize=512, nzsize=512
 !   SET NSZMAX=MAX(NXSIZE,NYSIZE,NZSIZE)
     integer(kind=4), parameter :: nszmax=nxsize
 
