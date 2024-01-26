@@ -1,9 +1,8 @@
 SUBROUTINE output
 
     use OPS_Fortran_Reference
-    use OPS_Fortran_hdf5_Declarations
-    use OPS_CONSTANTS
 
+    use OPS_CONSTANTS
     use, intrinsic :: ISO_C_BINDING
 
     use com_senga
@@ -39,47 +38,45 @@ SUBROUTINE output
 !   GLOBAL DATA
 !   ===========
 !   -------------------------------------------------------------------------
+#ifdef HDF5
+    use hdf5io
+#endif
+!   -------------------------------------------------------------------------
 
-!   LOCAL parameters
+!   LOCAL PARAMETERS
 !   ================
 !   DIAGNOSTICS
-    character(len=4) :: pnxres
-    parameter(pnxres = '.res')
-    character(len=2) :: pnxryf
-    parameter(pnxryf = 'yf')
+    CHARACTER (LEN=4) :: pnxres
+    PARAMETER(pnxres = '.res')
+    CHARACTER (LEN=2) :: pnxryf
+    PARAMETER(pnxryf = 'yf')
     integer(kind=4) :: ncdiag
-    parameter(ncdiag = 11)
+    PARAMETER(ncdiag = 11)
     integer(kind=4) :: iddump
 
 !   LOCAL DATA
 !   ==========
 !   DIAGNOSTICS
-    real(kind=8) :: deltag, deltagx, deltagy, deltagz, fornow
-!    real(kind=8) :: ttemp(nxsize,nysize,nzsize)
-!    real(kind=8) :: ptemp(nxsize,nysize,nzsize)
-!    real(kind=8) :: ytemp(nspec,nxsize,nysize,nzsize)
-    real(kind=8) :: tkeg
+    real(kind=8) :: deltag,fornow
+    real(kind=8) :: ttemp(nxsize,nysize,nzsize)
+    real(kind=8) :: ptemp(nxsize,nysize,nzsize)
+    real(kind=8) :: ytemp(nspec,nxsize,nysize,nzsize)
 
     integer(kind=4) :: ispec
-    integer(kind=4) :: ic, jc, kc
+    integer(kind=4) :: ic,jc,kc
     integer(kind=4) :: ix
     integer(kind=4) :: rangexyz(6)
-    character(len=21) :: fndiag
+    CHARACTER (LEN=21) :: fndiag
 
 !   RSC UPDATE NUMBER OF PROCESSORS
-    character(len=6) :: pnproc
-    character(len=11) :: strqty
-    character(len=2) :: strspc
-    logical :: bcflag, file_exist
+    CHARACTER (LEN=6) :: pnproc
+    CHARACTER (LEN=11) :: strqty
+    CHARACTER (LEN=2) :: strspc
+    LOGICAL :: bcflag
 
-    character(len=60) :: fname
-    character(len=4) :: proc
-    character(len=5) :: ipdump
-
-    character(len=25) :: fndump
-    character(len=16) :: pndump
-    character(len=3) :: pnxhdf
-    parameter(pndump = 'output/dmpi_dats', pnxhdf = '.h5')
+    CHARACTER (LEN=60) :: fname
+    CHARACTER (LEN=4) :: proc
+    CHARACTER (LEN=5) :: ipdump
 
 !   BEGIN
 !   =====
@@ -271,69 +268,66 @@ SUBROUTINE output
 
 !   UMOD END
 !   =====
-
 !   FULL DUMP OUTPUT
 !   ================
-!    IF( MOD(itime,ntdump) == 0 .and. (.not. (((itime == ntime1) .or. (itime == 0)) .and. ncdmpi == 1)) ) THEN
-    IF( MOD(itime,ntdump) == 0 ) THEN
+!ops    IF(MOD(itime,ntdump) == 0) THEN
 
 !       CARRY OUT A FULL DUMP
 !       ---------------------
 !       USE THE DUMP FILE INDICATED BY IDFLAG
 !       RSC 11-JUL-2009 ADD A DUMP FORMAT SWITCH
-        IF ( ops_is_root() ) THEN
-            IF( ndofmt == 0 ) THEN
+!ops#ifndef HDF5
+!ops        IF(ndofmt == 0) THEN
 
-!               UNFORMATTED DUMP OUTPUT
-                OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag+1),STATUS='OLD', FORM='UNFORMATTED')
-                REWIND(ncdmpo)
-                WRITE(ncdmpo)nxglbl,nyglbl,nzglbl,nspec,&
-                             etime,tstep,errold,errldr
-                CLOSE(ncdmpo)
-            ELSE
+!           UNFORMATTED DUMP OUTPUT
+!ops            OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag+1),STATUS='OLD', FORM='UNFORMATTED')
+!ops            REWIND(ncdmpo)
+!ops            WRITE(ncdmpo)nxsize,nysize,nzsize,nspec, drun,urun,vrun,wrun,erun,yrun,  &
+!ops                         etime,tstep,errold,errldr
+!ops            CLOSE(ncdmpo)
 
-!               FORMATTED DUMP OUTPUT
-                OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag+1),STATUS='OLD', FORM='FORMATTED')
-                REWIND(ncdmpo)
-                WRITE(ncdmpo,*)nxglbl,nyglbl,nzglbl,nspec
-                WRITE(ncdmpo,*)etime,tstep,errold,errldr
-                CLOSE(ncdmpo)
-            END IF
-        END IF
+!ops        ELSE
 
-!       DUMP THE DATASETS
-        fndump = pndump//pnxhdf
+!           FORMATTED DUMP OUTPUT
+!ops            OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag+1),STATUS='OLD', FORM='FORMATTED')
+!ops            REWIND(ncdmpo)
+!ops            WRITE(ncdmpo,*)nxsize,nysize,nzsize,nspec
+!ops            DO kc = 1,nzsize
+!ops                DO jc = 1,nysize
+!ops                    DO ic = 1,nxsize
+!ops                        WRITE(ncdmpo,*)drun(ic,jc,kc),  &
+!ops                            urun(ic,jc,kc),vrun(ic,jc,kc),wrun(ic,jc,kc), erun(ic,jc,kc),  &
+!ops                            (yrun(ispec,ic,jc,kc),ispec=1,nspec)
+!ops                    END DO
+!ops                END DO
+!ops            END DO
+!ops            WRITE(ncdmpo,*)etime,tstep,errold,errldr
+!ops            CLOSE(ncdmpo)
 
-        call ops_fetch_block_hdf5_file(senga_grid, trim(fndump))
+!ops        END IF
 
-        call ops_fetch_dat_hdf5_file(d_drun, trim(fndump))
-        call ops_fetch_dat_hdf5_file(d_urun, trim(fndump))
-        call ops_fetch_dat_hdf5_file(d_vrun, trim(fndump))
-        call ops_fetch_dat_hdf5_file(d_wrun, trim(fndump))
-        call ops_fetch_dat_hdf5_file(d_erun, trim(fndump))
-
-        DO ispec = 1,nspcmx
-            call ops_fetch_dat_hdf5_file(d_yrun(ispec), trim(fndump))
-        END DO
+!ops#else
+!ops    CALL write_h5_dumpfile
+!ops#endif
 
 !       REPORT THE DUMP
 !       RSC 11-JUL-2009
-        IF ( ops_is_root() ) THEN
+!ops        IF(iproc == 0) THEN
 
-            OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
-            3000      CONTINUE
-            READ(ncrept,9000,END=3010)
-            GO TO 3000
-            3010      BACKSPACE(ncrept)
-            WRITE(ncrept,9120)fndmpo(idflag+1)
-            CLOSE(ncrept)
+!ops            OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
+!ops            3000      CONTINUE
+!ops            READ(ncrept,9000,END=3010)
+!ops            GO TO 3000
+!ops            3010      BACKSPACE(ncrept)
+!ops            WRITE(ncrept,9120)fndmpo(idflag+1)
+!ops            CLOSE(ncrept)
 
-        END IF
+!ops        END IF
 
 !       RESET THE DUMP FLAG
-        idflag = MOD(idflag+1,2)
+!ops        idflag = MOD(idflag+1,2)
 
-    END IF
+!ops    END IF
 
 !   =========================================================================
 
@@ -359,83 +353,26 @@ SUBROUTINE output
 !   =========================================================================
 
 !   TIME STEP HISTORY
-    IF ( ops_is_root() ) THEN
+    IF(iproc == 0) THEN
         WRITE(*,'(I7,1PE12.4,I5)')itime,tstep,inderr
     END IF
 
-    rangexyz = [3,3,11,11,7,7]
-    call ops_par_loop(maths_kernel_print_drhs, "print single value", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(itime, 1, "integer(kind=4)", OPS_READ))
+    call print_reqdats()
 
-    rangexyz = [4,4,12,12,8,8]
-    call ops_par_loop(maths_kernel_print_erhs, "print single value", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(itime, 1, "integer(kind=4)", OPS_READ))
-
-    rangexyz = [5,5,13,13,9,9]
-    call ops_par_loop(maths_kernel_print_urhs, "print single value", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(itime, 1, "integer(kind=4)", OPS_READ))
-
-!    IF( MOD(itime,ntdump) == 0 .and. (.not. (((itime == ntime1) .or. (itime == 0)) .and. ncdmpi == 1)) ) THEN
-    IF( MOD(itime,ntdump) == 0 ) THEN
-      call print_output()
-      IF ( ops_is_root() ) THEN
-        INQUIRE(FILE="output/filed_time.dat",EXIST=file_exist)
-        IF ( file_exist ) THEN
-          OPEN(UNIT=1011,FILE="output/filed_time.dat",STATUS='OLD',POSITION='APPEND',FORM='FORMATTED')
-        ELSE
-          OPEN(UNIT=1011,FILE="output/filed_time.dat",STATUS='NEW',FORM='FORMATTED')
-        END IF
-        WRITE(1011,*) INT(itime/ntdump), etime
-        CLOSE(1011)
-      END IF
-    END IF
-
-!-------TGV CALCULATIONS----------------------
-    tkeg = zero
-    deltagx = xgdlen/(REAL(nxglbl-1))
-    deltagy = ygdlen/(REAL(nyglbl-1))
-    deltagz = zgdlen/(REAL(nzglbl-1))
-
-    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
-    call ops_par_loop(maths_kernel_eqU, "A = B/C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_utgv, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ))
-
-    call ops_par_loop(maths_kernel_eqU, "A = B/C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_vtgv, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ))
-
-    call ops_par_loop(maths_kernel_eqU, "A = B/C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_wtgv, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ))
-
-    call ops_par_loop(maths_kernel_eqBQ, "Summing up energy", senga_grid, 3, rangexyz, &
-                  &  ops_arg_dat(d_utgv, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                  &  ops_arg_dat(d_vtgv, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                  &  ops_arg_dat(d_wtgv, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                  &  ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                  &  ops_arg_gbl(deltagx, 1, "real(kind=8)", OPS_READ), &
-                  &  ops_arg_gbl(deltagy, 1, "real(kind=8)", OPS_READ), &
-                  &  ops_arg_gbl(deltagz, 1, "real(kind=8)", OPS_READ), &
-                  &  ops_arg_reduce(h_tkes, 1, "real(kind=8)", OPS_INC))
-    call ops_reduction_result(h_tkes, tkeg)
-
-    IF ( ops_is_root() ) THEN
-        INQUIRE(FILE="output/tgv_stat.dat",EXIST=file_exist)
-        IF ( file_exist ) THEN
-            OPEN(UNIT=1011,FILE="output/tgv_stat.dat",STATUS='OLD',POSITION='APPEND',FORM='FORMATTED')
-        ELSE
-            OPEN(UNIT=1011,FILE="output/tgv_stat.dat",STATUS='NEW',FORM='FORMATTED')
-        END IF
-        WRITE(1011,*) etime, tkeg
-        CLOSE(1011)
-    END IF
+!    rangexyz = [3,3,11,11,7,7]
+!    call ops_par_loop(maths_kernel_print_drhs, "print single value", senga_grid, 3, rangexyz,  &
+!                    ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                    ops_arg_gbl(itime, 1, "integer(kind=4)", OPS_READ))
+!
+!    rangexyz = [4,4,12,12,8,8]
+!    call ops_par_loop(maths_kernel_print_erhs, "print single value", senga_grid, 3, rangexyz,  &
+!                    ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                    ops_arg_gbl(itime, 1, "integer(kind=4)", OPS_READ))
+!
+!    rangexyz = [5,5,13,13,9,9]
+!    call ops_par_loop(maths_kernel_print_urhs, "print single value", senga_grid, 3, rangexyz,  &
+!                    ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                    ops_arg_gbl(itime, 1, "integer(kind=4)", OPS_READ))
 
 !   =========================================================================
 
@@ -483,16 +420,16 @@ SUBROUTINE output
 
 !   =========================================================================
 
-9000  FORMAT(a)
-9100  FORMAT('Time step number: ',i7)
-9110  FORMAT('Elapsed time: ',1PE12.4,';',2X,'next time step:',1PE12.4)
-9120  FORMAT('Dump completed: ',a)
-9200  FORMAT(i5,/ 5X,6(1PE12.4)/  &
-    5X,6(1PE12.4)/ 5X,6(1PE12.4)/  &
-    5X,4(1PE12.4)/ 5X,3(1PE12.4)/  &
-    5X,3(1PE12.4)/ 5X,3(1PE12.4)/  &
-    5X,3(1PE12.4)/ 5X,3(1PE12.4)/  &
-    5X,2(1PE12.4))
-9300  FORMAT(2(1PE15.7))
+!ops9000  FORMAT(a)
+!ops9100  FORMAT('Time step number: ',i7)
+!ops9110  FORMAT('Elapsed time: ',1PE12.4,';',2X,'next time step:',1PE12.4)
+!ops9120  FORMAT('Dump completed: ',a)
+!ops9200  FORMAT(i5,/ 5X,6(1PE12.4)/  &
+!ops    5X,6(1PE12.4)/ 5X,6(1PE12.4)/  &
+!ops    5X,4(1PE12.4)/ 5X,3(1PE12.4)/  &
+!ops    5X,3(1PE12.4)/ 5X,3(1PE12.4)/  &
+!ops    5X,3(1PE12.4)/ 5X,3(1PE12.4)/  &
+!ops    5X,2(1PE12.4))
+!ops9300  FORMAT(2(1PE15.7))
 
 END SUBROUTINE output

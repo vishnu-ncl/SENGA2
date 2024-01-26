@@ -1,47 +1,90 @@
-SUBROUTINE flamin_kernel_set_velocity_tgv(urun, vrun, wrun, prun, prin, drin, u0, deltagx, deltagy, deltagz, angfrx, angfry, angfrz, idx)
+SUBROUTINE flamin_kernel_defc(crin,deltag,clocat,cthick,idx)
+  real(kind=8), dimension(1) :: crin
+  real(kind=8), intent(in) :: deltag,clocat,cthick
+  integer(kind=4),dimension(3),intent(in):: idx
 
-    real(kind=8), dimension(1) :: urun, vrun, wrun, prun
-    real(kind=8), intent(in) :: prin,drin,u0, deltagx, deltagy, deltagz
-    real(kind=8), intent(in) :: angfrx, angfry, angfrz
-    integer(kind=4), dimension(3), intent(in) :: idx
+  real(kind=8) :: xcoord,argmnt
 
-    real(kind=8) :: xcoord,ycoord,zcoord
-    real(kind=8) :: xrgmnt,yrgmnt,zrgmnt
-    integer(kind=4) :: ix, iy, iz
+  real(kind=8) :: erfunc
+  integer, parameter :: ncoeff = 5
+  integer, parameter :: ncofm1 = ncoeff-1
 
-    ix = idx(1)
-    iy = idx(2)
-    iz = idx(3)
+  real(kind=8) :: ecoeff(ncoeff)
+  real(kind=8) :: pcoeff
+  real(kind=8) :: etotal,zvalue,tvalue
+  integer :: ix,icoeff
 
-    xcoord = REAL(ix-1,kind=8)*deltagx
-    ycoord = REAL(iy-1,kind=8)*deltagy
-    zcoord = REAL(iz-1,kind=8)*deltagz
+! SET THE COEFFICIENTS
+  pcoeff = 0.3275911_8
+  ecoeff(1) = 0.254829592_8
+  ecoeff(2) =-0.284496736_8
+  ecoeff(3) = 1.421413741_8
+  ecoeff(4) =-1.453152027_8
+  ecoeff(5) = 1.061405429_8
 
-    xrgmnt = angfrx*xcoord
-    yrgmnt = angfry*ycoord
-    zrgmnt = angfrz*zcoord
+  ix = idx(1)
+  xcoord = real(ix-1,kind=8)*deltag
 
-!  set taylor-green vortex velocity field
-   urun(OPS_ACC1(0,0,0)) = u0 * dsin(xrgmnt) * dcos(yrgmnt) * dcos(zrgmnt)
-   vrun(OPS_ACC2(0,0,0)) = -u0 * dcos(xrgmnt) * dsin(yrgmnt) * dcos(zrgmnt)
-   wrun(OPS_ACC3(0,0,0)) = 0.0_8
+  argmnt = (xcoord-clocat)/cthick
 
-!  set pressure profile assuming constant density
-   xrgmnt = 2.0_8*xrgmnt
-   yrgmnt = 2.0_8*yrgmnt
-   zrgmnt = 2.0_8*zrgmnt
+! EVALUATE ERROR FUNCTION
+  zvalue = abs(argmnt)
+  tvalue = 1.0_8/(1.0_8+pcoeff*zvalue)
 
-   prun(OPS_ACC4(0,0,0)) = prin+((drin*u0*u0)/16.0_8)*(dcos(xrgmnt)+dcos(yrgmnt))*(dcos(zrgmnt)+2.0_8)
+  etotal = ecoeff(ncoeff)
+  DO icoeff = ncofm1,1,-1
+    etotal = ecoeff(icoeff) + etotal*tvalue
+  END DO
+  etotal = etotal*tvalue
 
-END SUBROUTINE flamin_kernel_set_velocity_tgv
+  erfunc = 1.0_8 - etotal*exp(-zvalue*zvalue)
+  IF(argmnt < 0.0_8) erfunc = -erfunc
 
-!A = B/var
-SUBROUTINE flamin_kernel_eqA(trun, prun, rglocl)
+  crin(OPS_ACC1(0,0,0)) = 0.5_8*(1.0_8+erfunc)
+END SUBROUTINE flamin_kernel_defc
 
-    real(kind=8), dimension(1) :: trun
-    real(kind=8), dimension(1), intent(in) :: prun
-    real(kind=8), intent(in) :: rglocl
+SUBROUTINE flamin_kernel_eqA(yrun,crin,yrinr,yrinp)
 
-    trun(OPS_ACC1(0,0,0)) = prun(OPS_ACC2(0,0,0))/rglocl
+   real(kind=8), dimension(1) :: yrun
+   real(kind=8), dimension(1), intent(in) :: crin
+   real(kind=8), intent(in) :: yrinr,yrinp
 
+   yrun(OPS_ACC1(0,0,0))=yrinr+crin(OPS_ACC2(0,0,0))*(yrinp-yrinr)
 END SUBROUTINE flamin_kernel_eqA
+
+SUBROUTINE flamin_kernel_eqB(yrun_n,yrun_i)
+   real(kind=8), dimension(1) :: yrun_n
+   real(kind=8), dimension(1), intent(in) :: yrun_i
+
+   yrun_n(OPS_ACC1(0,0,0))=yrun_n(OPS_ACC1(0,0,0))+yrun_i(OPS_ACC2(0,0,0))
+END SUBROUTINE flamin_kernel_eqB
+
+SUBROUTINE flamin_kernel_eqC(yrun)
+   real(kind=8), dimension(1) :: yrun
+
+   yrun(OPS_ACC1(0,0,0)) = 1.0_8-yrun(OPS_ACC1(0,0,0))
+END SUBROUTINE flamin_kernel_eqC
+
+SUBROUTINE flamin_kernel_eqD(store1,yrun,rgspec)
+   real(kind=8), dimension(1) :: store1
+   real(kind=8), dimension(1), intent(in) :: yrun
+   real(kind=8), intent(in) :: rgspec
+
+   store1(OPS_ACC1(0,0,0)) = store1(OPS_ACC1(0,0,0))+rgspec*yrun(OPS_ACC2(0,0,0))
+END SUBROUTINE flamin_kernel_eqD
+
+SUBROUTINE flamin_kernel_eqE(drun,store1,trun,prin)
+   real(kind=8), dimension(1) :: drun
+   real(kind=8), dimension(1), intent(in) :: store1,trun
+   real(kind=8), intent(in) :: prin
+
+   drun(OPS_ACC1(0,0,0))=prin/(store1(OPS_ACC2(0,0,0))*trun(OPS_ACC3(0,0,0)))
+END SUBROUTINE flamin_kernel_eqE
+
+SUBROUTINE flamin_kernel_eqF(urun,drun,flxmas)
+   real(kind=8), dimension(1) :: urun
+   real(kind=8), dimension(1), intent(in) :: drun
+   real(kind=8), intent(in) :: flxmas
+
+   urun(OPS_ACC1(0,0,0)) = flxmas/(drun(OPS_ACC2(0,0,0)))
+END SUBROUTINE flamin_kernel_eqF

@@ -6,7 +6,6 @@ SUBROUTINE temper_kernel_eqA(tcoeff, drhs, urhs, vrhs, wrhs, erhs)
 !   LOCAL DATA
 !   ==========
     real(kind=8) :: ukuk
-    integer(kind=4) :: icp
 
 !   KINETIC ENERGY TERM
     ukuk = (urhs(OPS_ACC3(0,0,0))*urhs(OPS_ACC3(0,0,0))  &
@@ -14,10 +13,6 @@ SUBROUTINE temper_kernel_eqA(tcoeff, drhs, urhs, vrhs, wrhs, erhs)
           + wrhs(OPS_ACC5(0,0,0))*wrhs(OPS_ACC5(0,0,0)))/drhs(OPS_ACC2(0,0,0))
 
     tcoeff(OPS_ACC_MD1(1,0,0,0)) = 0.5_8*ukuk - erhs(OPS_ACC6(0,0,0))
-
-    DO icp = 1, nctmax
-        tcoeff(OPS_ACC_MD1(icp+1,0,0,0)) = 0.0_8
-    END DO
 
 END SUBROUTINE temper_kernel_eqA
 

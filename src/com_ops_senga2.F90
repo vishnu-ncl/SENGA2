@@ -31,10 +31,9 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_ufxl, d_vfxl, d_wfxl
 
     TYPE(ops_dat) :: d_drun, d_urun, d_vrun, d_wrun, d_erun
-    TYPE(ops_dat) :: d_drun_dump, d_urun_dump, d_vrun_dump, d_wrun_dump, d_erun_dump
+    TYPE(ops_dat) :: d2prun, d2trun
     TYPE(ops_dat) :: d_drhs, d_urhs, d_vrhs, d_wrhs, d_erhs
     TYPE(ops_dat) :: d_derr, d_uerr, d_verr, d_werr, d_eerr
-    TYPE(ops_dat) :: d2prun, d2trun
 
     TYPE(ops_dat) :: d_wmomix, d_difmix, d_tdrmix
     TYPE(ops_dat) :: d_combo1, d_combo2, d_combo3
@@ -44,7 +43,6 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_itndex(nintmx)
     TYPE(ops_dat) :: d_yrhs_mdim
     TYPE(ops_dat) :: d_yrhs(nspcmx), d_yrun(nspcmx), d_yerr(nspcmx), d_rate(nspcmx), d_rrte(nspcmx)
-    TYPE(ops_dat) :: d_yrun_dump(nspcmx)
     TYPE(ops_dat) :: d_ctrans(nspcmx)
     TYPE(ops_dat) :: d_tcoeff, d_tderiv;
 
@@ -99,13 +97,10 @@ MODULE com_ops_senga
 
     TYPE(ops_dat) :: d_crin
 
-!   OPS dats - specific to TGV case
-    TYPE(ops_dat) :: d_utgv, d_vtgv, d_wtgv
-
 !------------------------------------------------------------------------------------------------------------
 !   OPS reduction handles
     TYPE(ops_reduction) :: h_erdtot, h_erutot, h_ervtot, h_erwtot, h_eretot, h_erytot
-    TYPE(ops_reduction) :: h_tket, h_tkes, h_ubart, h_vbart, h_wbart, h_uvart, h_vvart, h_wvart
+    TYPE(ops_reduction) :: h_tket, h_ubart, h_vbart, h_wbart, h_uvart, h_vvart, h_wvart
 
 !------------------------------------------------------------------------------------------------------------
 !   OPS stencils
