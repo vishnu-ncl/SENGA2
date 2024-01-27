@@ -363,78 +363,24 @@ SUBROUTINE output
         WRITE(*,'(I7,1PE12.4,I5)')itime,tstep,inderr
     END IF
 
-    rangexyz = [3,3,11,11,7,7]
+    rangexyz = [5,5,1,1,1,1]
     call ops_par_loop(maths_kernel_print_drhs, "print single value", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_gbl(itime, 1, "integer(kind=4)", OPS_READ))
 
-    rangexyz = [4,4,12,12,8,8]
+    rangexyz = [6,6,1,1,1,1]
     call ops_par_loop(maths_kernel_print_erhs, "print single value", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_gbl(itime, 1, "integer(kind=4)", OPS_READ))
 
-    rangexyz = [5,5,13,13,9,9]
+    rangexyz = [7,7,1,1,1,1]
     call ops_par_loop(maths_kernel_print_urhs, "print single value", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_gbl(itime, 1, "integer(kind=4)", OPS_READ))
 
 !    IF( MOD(itime,ntdump) == 0 .and. (.not. (((itime == ntime1) .or. (itime == 0)) .and. ncdmpi == 1)) ) THEN
     IF( MOD(itime,ntdump) == 0 ) THEN
-      call print_output()
-      IF ( ops_is_root() ) THEN
-        INQUIRE(FILE="output/filed_time.dat",EXIST=file_exist)
-        IF ( file_exist ) THEN
-          OPEN(UNIT=1011,FILE="output/filed_time.dat",STATUS='OLD',POSITION='APPEND',FORM='FORMATTED')
-        ELSE
-          OPEN(UNIT=1011,FILE="output/filed_time.dat",STATUS='NEW',FORM='FORMATTED')
-        END IF
-        WRITE(1011,*) INT(itime/ntdump), etime
-        CLOSE(1011)
-      END IF
-    END IF
-
-!-------TGV CALCULATIONS----------------------
-    tkeg = zero
-    deltagx = xgdlen/(REAL(nxglbl-1))
-    deltagy = ygdlen/(REAL(nyglbl-1))
-    deltagz = zgdlen/(REAL(nzglbl-1))
-
-    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
-    call ops_par_loop(maths_kernel_eqU, "A = B/C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_utgv, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ))
-
-    call ops_par_loop(maths_kernel_eqU, "A = B/C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_vtgv, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ))
-
-    call ops_par_loop(maths_kernel_eqU, "A = B/C", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_wtgv, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ))
-
-    call ops_par_loop(maths_kernel_eqBQ, "Summing up energy", senga_grid, 3, rangexyz, &
-                  &  ops_arg_dat(d_utgv, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                  &  ops_arg_dat(d_vtgv, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                  &  ops_arg_dat(d_wtgv, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                  &  ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                  &  ops_arg_gbl(deltagx, 1, "real(kind=8)", OPS_READ), &
-                  &  ops_arg_gbl(deltagy, 1, "real(kind=8)", OPS_READ), &
-                  &  ops_arg_gbl(deltagz, 1, "real(kind=8)", OPS_READ), &
-                  &  ops_arg_reduce(h_tkes, 1, "real(kind=8)", OPS_INC))
-    call ops_reduction_result(h_tkes, tkeg)
-
-    IF ( ops_is_root() ) THEN
-        INQUIRE(FILE="output/tgv_stat.dat",EXIST=file_exist)
-        IF ( file_exist ) THEN
-            OPEN(UNIT=1011,FILE="output/tgv_stat.dat",STATUS='OLD',POSITION='APPEND',FORM='FORMATTED')
-        ELSE
-            OPEN(UNIT=1011,FILE="output/tgv_stat.dat",STATUS='NEW',FORM='FORMATTED')
-        END IF
-        WRITE(1011,*) etime, tkeg
-        CLOSE(1011)
+        call print_output()
     END IF
 
 !   =========================================================================

@@ -99,13 +99,10 @@ MODULE com_ops_senga
 
     TYPE(ops_dat) :: d_crin
 
-!   OPS dats - specific to TGV case
-    TYPE(ops_dat) :: d_utgv, d_vtgv, d_wtgv
-
 !------------------------------------------------------------------------------------------------------------
 !   OPS reduction handles
     TYPE(ops_reduction) :: h_erdtot, h_erutot, h_ervtot, h_erwtot, h_eretot, h_erytot
-    TYPE(ops_reduction) :: h_tket, h_tkes, h_ubart, h_vbart, h_wbart, h_uvart, h_vvart, h_wvart
+    TYPE(ops_reduction) :: h_tket, h_ubart, h_vbart, h_wbart, h_uvart, h_vvart, h_wvart
 
 !------------------------------------------------------------------------------------------------------------
 !   OPS stencils

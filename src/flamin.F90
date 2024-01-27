@@ -1,5 +1,5 @@
 SUBROUTINE flamin
-
+ 
     use OPS_Fortran_Reference
 
     use OPS_CONSTANTS
@@ -48,11 +48,11 @@ SUBROUTINE flamin
 
 !   LOCAL DATA
 !   ==========
-    real(kind=8) :: trinr,u0
-    real(kind=8) :: deltagx,deltagy,deltagz
-    real(kind=8) :: rglocl
-    real(kind=8) :: angfrx,angfry,angfrz
-    integer(kind=4) :: jspec
+    real(kind=8) :: yrinr(nspcmx),yrinp(nspcmx)
+    real(kind=8) :: trinr,trinp
+    real(kind=8) :: deltag
+    real(kind=8) :: flxmas
+    integer(kind=4) :: ispec
     integer(kind=4) :: rangexyz(6)
 
 !   BEGIN
@@ -67,58 +67,147 @@ SUBROUTINE flamin
 !   -----------------------
 !   REACTANT TEMPERATURE SET IN CONTROL FILE
     trinr = trin
-    u0 = 34.789806_8
+!   TRINP = 2330.96554
+    trinp = 2200.0_8
 
-!   Mixture gas constant
-    rglocl = zero
-    do jspec = 1,nspec
-        rglocl = rglocl + rgspec(jspec)*yrin(jspec)
-    end do
+!   SET SPECIES MASS FRACTIONS
+!   --------------------------
+!   OVERRIDE MASS FRACTION VALUES SET IN CONTROL FILE
 
-!   Times (constant) density
-    rglocl  = drin*rglocl
+!   REACTANTS
+    yrinr(1) = 0.0199886_8     !2.8312571D-2
+    yrinr(2) = 0.2286239_8     !2.26500566D-1
+    DO ispec = 3,nspm1
+        yrinr(ispec) = zero
+    END DO
 
-!   Global indexing
+    yrinr(nspec) = zero
+    DO ispec = 1,nspm1
+        yrinr(nspec) = yrinr(nspec) + yrinr(ispec)
+    END DO
+    yrinr(nspec) = one - yrinr(nspec)
+
+!   PRODUCTS
+    yrinp(1) = zero
+    yrinp(2) = 0.0685323_8     !ZERO
+    yrinp(3) = 0.1798974_8     !2.54716981D-1
+    DO ispec = 4,nspm1
+        yrinp(ispec) = zero
+    END DO
+    yrinp(nspec) = zero
+    DO ispec = 1,nspm1
+        yrinp(nspec) = yrinp(nspec) + yrinp(ispec)
+    END DO
+    yrinp(nspec) = one - yrinp(nspec)
+
+!   WRITE TO REPORT FILE
+    IF( ops_is_root() ) THEN
+  
+        WRITE(ncrept,*)
+        WRITE(ncrept,*)'FLAMIN: reactant mass fractions:'
+        DO ispec = 1,nspec
+            WRITE(ncrept,'(I5,1PE15.7)')ispec,yrinr(ispec)
+        END DO
+        WRITE(ncrept,*)
+  
+        WRITE(ncrept,*)'FLAMIN: product mass fractions:'
+        DO ispec = 1,nspec
+            WRITE(ncrept,'(I5,1PE15.7)')ispec,yrinp(ispec)
+        END DO
+        WRITE(ncrept,*)
+  
+        WRITE(ncrept,*)'FLAMIN: reactant and product temperatures:'
+        WRITE(ncrept,'(2(1PE15.7))')trinr,trinp
+        WRITE(ncrept,*)
+  
+    END IF
+
+!   GLOBAL INDEXING
 !   ---------------
-    deltagx = xgdlen/(REAL(nxglbl-1,kind=8))
-    deltagy = ygdlen/(REAL(nyglbl-1,kind=8))
-    deltagz = zgdlen/(REAL(nzglbl-1,kind=8))
+    deltag = xgdlen/(REAL(nxglbl-1,kind=8))
 
-!   SET THE VELOCITY PROFILE FOR TGV
-!   --------------------------------
-    angfrx = 8.0_8*atan(1.0_8)/xgdlen
-    angfry = 8.0_8*atan(1.0_8)/ygdlen
-    angfrz = 8.0_8*atan(1.0_8)/zgdlen
-
-    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
-    call ops_par_loop(flamin_kernel_set_velocity_tgv, "SET THE VELOCITY PROFILE FOR TGV",  senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_gbl(prin, 1, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(drin, 1, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(u0, 1, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(deltagx, 1, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(deltagy, 1, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(deltagz, 1, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(angfrx, 1, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(angfry, 1, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(angfrz, 1, "real(kind=8)", OPS_READ), &
+!   SET REACTION PROGRESS VARIABLE PROFILE
+!   --------------------------------------
+!   SIMPLE 1D LEFT-FACING ERROR FUNCTION PROFILE
+    rangexyz = [1,nxglbl,1,1,1,1]
+    call ops_par_loop(flamin_kernel_set_reaction_var, "SIMPLE 1D LEFT-FACING ERROR FUNCTION PROFILE", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_crin, 1, s3d_000_strid3d_x, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_gbl(deltag, 1, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(clocat, 1, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(cthick, 1, "real(kind=8)", OPS_READ), &
                     ops_arg_idx())
 
-!   set temperature profile assuming constant density
-    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
-    call ops_par_loop(flamin_kernel_eqA, "A = B/var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(rglocl, 1, "real(kind=8)", OPS_READ))
+!   SET SPECIES MASS FRACTION PROFILES
+!   ----------------------------------
+    DO ispec = 1, nspm1
+        rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+        call ops_par_loop(flamin_kernel_eqA, "Set species mass fraction profiles", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_crin, 1, s3d_000_strid3d_x, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(yrinr, nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(yrinp, nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
 
-!   set constant density
+    END DO
+
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
-    call ops_par_loop(maths_kernel_eqD, "set constant density",  senga_grid, 3, rangexyz,  &
+    call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
+                    ops_arg_dat(d_yrun(nspec), 1, s3d_000, "real(kind=8)", OPS_WRITE))
+
+    DO ispec = 1, nspm1
+        rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+        call ops_par_loop(flamin_kernel_eqB, "Summing mass fractions", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_yrun(nspec), 1, s3d_000, "real(kind=8)", OPS_INC), &
+                        ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_READ))
+    END DO
+
+    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+    call ops_par_loop(flamin_kernel_eqC, "A = 1.0 - A", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_yrun(nspec), 1, s3d_000, "real(kind=8)", OPS_RW))
+
+!   SET TEMPERATURE PROFILE
+!   -----------------------
+    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+    call ops_par_loop(flamin_kernel_eqD, "A = var1 + B_xdimonly*(var2-var1)", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_crin, 1, s3d_000_strid3d_x, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(trinr, 1, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(trinp, 1, "real(kind=8)", OPS_READ))
+
+!   SET DENSITY PROFILE ASSUMING CONSTANT PRESSURE
+!   -------------------
+!   PRESSURE SET IN CONTROL FILE
+
+    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+    call ops_par_loop(set_zero_kernel, "set zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_WRITE))
+
+    DO ispec = 1,nspec
+        rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+        call ops_par_loop(flamin_kernel_eqE, "Calculate R", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                        ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(rgspec, nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+
+    END DO
+
+    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+    call ops_par_loop(flamin_kernel_eqF, "Calculate density", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_gbl(drin, 1, "real(kind=8)", OPS_READ))
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(prin, 1, "real(kind=8)", OPS_READ))
+
+!   SET VELOCITY PROFILE ASSUMING CONSTANT MASS FLUX
+!   --------------------
+!   INITIAL (INLET) VEOCITY SET IN CONTROL FILE
+    flxmas = drin*urin
+    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+    call ops_par_loop(flamin_kernel_eqG, "Calculate velocity", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(flxmas, 1, "real(kind=8)", OPS_READ))
 
 !   =========================================================================
 
