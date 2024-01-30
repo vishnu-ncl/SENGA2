@@ -1,7 +1,7 @@
 SUBROUTINE rhsvel
- 
+
 ! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-02  Time: 15:08:24
+! Date: 2024-01-30  Time: 13:41:33
 
 !     *************************************************************************
 
@@ -63,23 +63,26 @@ DO kc = kstab,kstob
     END DO
   END DO
 END DO
-
 !     =========================================
 !     umod recording derivatives for tgv
-      call dfbydx(utmp,dutgvdx)
-      call dfbydy(utmp,dutgvdy)
-      call dfbydz(utmp,dutgvdz)
+call dfbydx(utmp,dutgvdx)
+call dfbydy(utmp,dutgvdy)
+call dfbydz(utmp,dutgvdz)
 
-      call dfbydx(vtmp,dvtgvdx)
-      call dfbydy(vtmp,dvtgvdy)
-      call dfbydz(vtmp,dvtgvdz)
+call dfbydx(vtmp,dvtgvdx)
+call dfbydy(vtmp,dvtgvdy)
+call dfbydz(vtmp,dvtgvdz)
 
-      call dfbydx(wtmp,dwtgvdx)
-      call dfbydy(wtmp,dwtgvdy)
-      call dfbydz(wtmp,dwtgvdz)
+call dfbydx(wtmp,dwtgvdx)
+call dfbydy(wtmp,dwtgvdy)
+call dfbydz(wtmp,dwtgvdz)
 !     end umod
-!
-!     =========================================================================
+
+!    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+
+
+CALL dfbydy(utmp,store1)
+CALL dfbydz(utmp,store2)
 
 !     =========================================================================
 
@@ -95,6 +98,9 @@ IF(fxlcnv)THEN
       strvxl(jc,kc) = vtmp(istal,jc,kc)
       strwxl(jc,kc) = wtmp(istal,jc,kc)
       
+!    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+      t2bxl(jc,kc)=-vtmp(istal,jc,kc)*store1(istal,jc,kc)  &
+          -wtmp(istal,jc,kc)*store2(istal,jc,kc)
     END DO
   END DO
 END IF
@@ -106,9 +112,19 @@ IF(fxrcnv)THEN
       strvxr(jc,kc) = vtmp(istol,jc,kc)
       strwxr(jc,kc) = wtmp(istol,jc,kc)
       
+!    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+      t2bxr(jc,kc)=-vtmp(istol,jc,kc)*store1(istol,jc,kc)  &
+          -wtmp(istol,jc,kc)*store2(istol,jc,kc)
     END DO
   END DO
 END IF
+
+!    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+
+
+CALL dfbydx(vtmp,store1)
+CALL dfbydz(vtmp,store2)
+
 
 !     Y-DIRECTION
 IF(fylcnv)THEN
@@ -118,6 +134,10 @@ IF(fylcnv)THEN
       struyl(ic,kc) = utmp(ic,jstal,kc)
       strvyl(ic,kc) = vtmp(ic,jstal,kc)
       strwyl(ic,kc) = wtmp(ic,jstal,kc)
+      
+!    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+      t2byl(ic,kc)=-utmp(ic,jstal,kc)*store1(ic,jstal,kc)  &
+          -wtmp(ic,jstal,kc)*store2(ic,jstal,kc)
       
     END DO
   END DO
@@ -130,9 +150,15 @@ IF(fyrcnv)THEN
       strvyr(ic,kc) = vtmp(ic,jstol,kc)
       strwyr(ic,kc) = wtmp(ic,jstol,kc)
       
+!    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+      t2byr(ic,kc)=-utmp(ic,jstol,kc)*store1(ic,jstol,kc)  &
+          -wtmp(ic,jstol,kc)*store2(ic,jstol,kc)
     END DO
   END DO
 END IF
+
+CALL dfbydx(wtmp,store1)
+CALL dfbydy(wtmp,store2)
 
 !     Z-DIRECTION
 IF(fzlcnv)THEN
@@ -143,6 +169,9 @@ IF(fzlcnv)THEN
       strvzl(ic,jc) = vtmp(ic,jc,kstal)
       strwzl(ic,jc) = wtmp(ic,jc,kstal)
       
+!    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+      t2bzl(ic,jc)=-utmp(ic,jc,kstal)*store1(ic,jc,kstal)  &
+          -vtmp(ic,jc,kstal)*store2(ic,jc,kstal)
     END DO
   END DO
 END IF
@@ -154,6 +183,174 @@ IF(fzrcnv)THEN
       strvzr(ic,jc) = vtmp(ic,jc,kstol)
       strwzr(ic,jc) = wtmp(ic,jc,kstol)
       
+!    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+      t2bzr(ic,jc)=-utmp(ic,jc,kstol)*store1(ic,jc,kstol)  &
+          -vtmp(ic,jc,kstol)*store2(ic,jc,kstol)
+    END DO
+  END DO
+END IF
+
+CALL dfbydy(vtmp,store1)
+CALL dfbydz(vtmp,store2)
+
+!     X-DIRECTION
+IF(fxlcnv)THEN
+  DO kc = kstal,kstol
+    DO jc = jstal,jstol
+      
+!    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+      t3bxl(jc,kc)=-vtmp(istal,jc,kc)*store1(istal,jc,kc)  &
+          -wtmp(istal,jc,kc)*store2(istal,jc,kc)
+      
+      
+    END DO
+  END DO
+END IF
+IF(fxrcnv)THEN
+  DO kc = kstal,kstol
+    DO jc = jstal,jstol
+      
+!    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+      t3bxr(jc,kc)=-vtmp(istol,jc,kc)*store1(istol,jc,kc)  &
+          -wtmp(istol,jc,kc)*store2(istol,jc,kc)
+      
+    END DO
+  END DO
+END IF
+
+CALL dfbydx(wtmp,store1)
+CALL dfbydz(wtmp,store2)
+
+!     Y-DIRECTION
+IF(fylcnv)THEN
+  DO kc = kstal,kstol
+    DO ic = istal,istol
+      
+!    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+!NC and VM changed here: ycorrection
+      t4byl(ic,kc)=-utmp(ic,jstal,kc)*store1(ic,jstal,kc)  &
+          -wtmp(ic,jstal,kc)*store2(ic,jstal,kc)
+      
+    END DO
+  END DO
+END IF
+IF(fyrcnv)THEN
+  DO kc = kstal,kstol
+    DO ic = istal,istol
+      
+!    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+!NC and VM changed here: ycorrection
+      t4byr(ic,kc)=-utmp(ic,jstol,kc)*store1(ic,jstol,kc)  &
+          -wtmp(ic,jstol,kc)*store2(ic,jstol,kc)
+    END DO
+  END DO
+END IF
+
+
+CALL dfbydx(utmp,store1)
+CALL dfbydy(utmp,store2)
+
+!     Z-DIRECTION
+IF(fzlcnv)THEN
+  DO jc = jstal,jstol
+    DO ic = istal,istol
+      
+!    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+      t3bzl(ic,jc)=-utmp(ic,jc,kstal)*store1(ic,jc,kstal)  &
+          -vtmp(ic,jc,kstal)*store2(ic,jc,kstal)
+    END DO
+  END DO
+END IF
+IF(fzrcnv)THEN
+  DO jc = jstal,jstol
+    DO ic = istal,istol
+      
+!    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+      t3bzr(ic,jc)=-utmp(ic,jc,kstol)*store1(ic,jc,kstol)  &
+          -vtmp(ic,jc,kstol)*store2(ic,jc,kstol)
+    END DO
+  END DO
+END IF
+
+
+CALL dfbydy(wtmp,store1)
+CALL dfbydz(wtmp,store2)
+
+!     X-DIRECTION
+IF(fxlcnv)THEN
+  DO kc = kstal,kstol
+    DO jc = jstal,jstol
+      
+!    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+      t4bxl(jc,kc)=-vtmp(istal,jc,kc)*store1(istal,jc,kc)  &
+          -wtmp(istal,jc,kc)*store2(istal,jc,kc)
+      
+      
+    END DO
+  END DO
+END IF
+
+IF(fxrcnv)THEN
+  DO kc = kstal,kstol
+    DO jc = jstal,jstol
+      
+!    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+      t4bxr(jc,kc)=-vtmp(istol,jc,kc)*store1(istol,jc,kc)  &
+          -wtmp(istol,jc,kc)*store2(istol,jc,kc)
+      
+    END DO
+  END DO
+END IF
+
+CALL dfbydx(utmp,store1)
+CALL dfbydz(utmp,store2)
+
+!     Y-DIRECTION
+IF(fylcnv)THEN
+  DO kc = kstal,kstol
+    DO ic = istal,istol
+      
+!    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+!NC and VM changed here: ycorrection
+      t3byl(ic,kc)=-utmp(ic,jstal,kc)*store1(ic,jstal,kc)  &
+          -wtmp(ic,jstal,kc)*store2(ic,jstal,kc)
+      
+    END DO
+  END DO
+END IF
+IF(fyrcnv)THEN
+  DO kc = kstal,kstol
+    DO ic = istal,istol
+      
+!    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+!NC and VM changed here: ycorrection
+      t3byr(ic,kc)=-utmp(ic,jstol,kc)*store1(ic,jstol,kc)  &
+          -wtmp(ic,jstol,kc)*store2(ic,jstol,kc)
+    END DO
+  END DO
+END IF
+
+CALL dfbydx(vtmp,store1)
+CALL dfbydy(vtmp,store2)
+
+!     Z-DIRECTION
+IF(fzlcnv)THEN
+  DO jc = jstal,jstol
+    DO ic = istal,istol
+      
+!    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+      t4bzl(ic,jc)=-utmp(ic,jc,kstal)*store1(ic,jc,kstal)  &
+          -vtmp(ic,jc,kstal)*store2(ic,jc,kstal)
+    END DO
+  END DO
+END IF
+IF(fzrcnv)THEN
+  DO jc = jstal,jstol
+    DO ic = istal,istol
+      
+!    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+      t4bzr(ic,jc)=-utmp(ic,jc,kstol)*store1(ic,jc,kstol)  &
+          -vtmp(ic,jc,kstol)*store2(ic,jc,kstol)
     END DO
   END DO
 END IF
@@ -564,18 +761,18 @@ DO kc = kstab,kstob
   END DO
 END DO
 
-!     8DX,8DY,8DZ
+!     DPDX,DPDY,DPDZ
 CALL dfbydx(store7,store4)
 CALL dfbydy(store7,store5)
 CALL dfbydz(store7,store6)
 !                                                   STORE1,2,3 = DUDX,DVDY,DWDZ
-!                                                   STORE4,5,6 = 8DX,8DY,8DZ
+!                                                   STORE4,5,6 = DPDX,DPDY,DPDZ
 !     =========================================================================
 
 !     COLLECT PRESSURE AND ITS GRADIENTS FOR BCs
 !     ------------------------------------------
 
-!     X-DIRECTION: P AND 8DX
+!     X-DIRECTION: P AND DPDX
 IF(fxlcnv)THEN
   DO kc = kstal,kstol
     DO jc = jstal,jstol
@@ -583,6 +780,13 @@ IF(fxlcnv)THEN
       strpxl(jc,kc) = prun(istal,jc,kc)
       bcl5xl(jc,kc) = store4(istal,jc,kc)
       
+!           BOUNDARY CONDITION DUE TO LODATO's FORMULATION
+      t3bxl(jc,kc) = t3bxl(jc,kc)- store5(istal,jc,kc)/drhs(istal,jc,kc)
+      t4bxl(jc,kc) = t4bxl(jc,kc)- store6(istal,jc,kc)/drhs(istal,jc,kc)
+      t51bxl(jc,kc)=-vtmp(istal,jc,kc)*store5(istal,jc,kc)  &
+          -wtmp(istal,jc,kc)*store6(istal,jc,kc)
+      t52bxl(jc,kc)=-prun(istal,jc,kc)*(store2(istal,jc,kc)+  &
+          store3(istal,jc,kc))
     END DO
   END DO
 END IF
@@ -592,19 +796,32 @@ IF(fxrcnv)THEN
       
       strpxr(jc,kc) = prun(istol,jc,kc)
       bcl5xr(jc,kc) = store4(istol,jc,kc)
-      
+!           BOUNDARY CONDITION DUE TO LODATO's FORMULATION
+      t3bxr(jc,kc) = t3bxr(jc,kc)- store5(istol,jc,kc)/drhs(istol,jc,kc)
+      t4bxr(jc,kc) = t4bxr(jc,kc)- store6(istol,jc,kc)/drhs(istol,jc,kc)
+      t51bxr(jc,kc)=-vtmp(istol,jc,kc)*store5(istol,jc,kc)  &
+          -wtmp(istol,jc,kc)*store6(istol,jc,kc)
+      t52bxr(jc,kc)=-prun(istol,jc,kc)*(store2(istol,jc,kc)+  &
+          store3(istol,jc,kc))
     END DO
   END DO
 END IF
 
-!     Y-DIRECTION: P AND 8DY
+!     Y-DIRECTION: P AND DPDY
 IF(fylcnv)THEN
   DO kc = kstal,kstol
     DO ic = istal,istol
       
       strpyl(ic,kc) = prun(ic,jstal,kc)
       bcl5yl(ic,kc) = store5(ic,jstal,kc)
-      
+!           BOUNDARY CONDITION DUE TO LODATO's FORMULATION
+!NC and VM changed here: ycorrection
+      t4byl(ic,kc) = t4byl(ic,kc)- store6(ic,jstal,kc)/drhs(ic,jstal,kc)
+      t3byl(ic,kc) = t3byl(ic,kc)- store4(ic,jstal,kc)/drhs(ic,jstal,kc)
+      t51byl(ic,kc)=-utmp(ic,jstal,kc)*store4(ic,jstal,kc)  &
+          -wtmp(ic,jstal,kc)*store6(ic,jstal,kc)
+      t52byl(ic,kc)=-prun(ic,jstal,kc)*(store1(ic,jstal,kc)+  &
+          store3(ic,jstal,kc))
     END DO
   END DO
 END IF
@@ -614,19 +831,32 @@ IF(fyrcnv)THEN
       
       strpyr(ic,kc) = prun(ic,jstol,kc)
       bcl5yr(ic,kc) = store5(ic,jstol,kc)
-      
+!           BOUNDARY CONDITION DUE TO LODATO's FORMULATION
+!NC and VM changed here: ycorrection
+      t4byr(ic,kc) = t4byr(ic,kc)- store6(ic,jstol,kc)/drhs(ic,jstol,kc)
+      t3byr(ic,kc) = t3byr(ic,kc)- store4(ic,jstol,kc)/drhs(ic,jstol,kc)
+      t51byr(ic,kc)=-utmp(ic,jstol,kc)*store4(ic,jstol,kc)  &
+          -wtmp(ic,jstol,kc)*store6(ic,jstol,kc)
+      t52byr(ic,kc)=-prun(ic,jstol,kc)*(store1(ic,jstol,kc)+  &
+          store3(ic,jstol,kc))
     END DO
   END DO
 END IF
 
-!     Z-DIRECTION: P AND 8DZ
+!     Z-DIRECTION: P AND DPDZ
 IF(fzlcnv)THEN
   DO jc = jstal,jstol
     DO ic = istal,istol
       
       strpzl(ic,jc) = prun(ic,jc,kstal)
       bcl5zl(ic,jc) = store6(ic,jc,kstal)
-      
+!           BOUNDARY CONDITION DUE TO LODATO's FORMULATION
+      t3bzl(ic,jc) = t3bzl(ic,jc)- store4(ic,jc,kstal)/drhs(ic,jc,kstal)
+      t4bzl(ic,jc) = t4bzl(ic,jc)- store5(ic,jc,kstal)/drhs(ic,jc,kstal)
+      t51bzl(ic,jc)=-utmp(ic,jc,kstal)*store4(ic,jc,kstal)  &
+          -vtmp(ic,jc,kstal)*store5(ic,jc,kstal)
+      t52bzl(ic,jc)=-prun(ic,jc,kstal)*(store1(ic,jc,kstal)+  &
+          store2(ic,jc,kstal))
     END DO
   END DO
 END IF
@@ -636,7 +866,13 @@ IF(fzrcnv)THEN
       
       strpzr(ic,jc) = prun(ic,jc,kstol)
       bcl5zr(ic,jc) = store6(ic,jc,kstol)
-      
+!           BOUNDARY CONDITION DUE TO LODATO's FORMULATION
+      t3bzr(ic,jc) = t3bzr(ic,jc)- store4(ic,jc,kstol)/drhs(ic,jc,kstol)
+      t4bzr(ic,jc) = t4bzr(ic,jc)- store5(ic,jc,kstol)/drhs(ic,jc,kstol)
+      t51bzr(ic,jc)=-utmp(ic,jc,kstol)*store4(ic,jc,kstol)  &
+          -vtmp(ic,jc,kstol)*store5(ic,jc,kstol)
+      t52bzr(ic,jc)=-prun(ic,jc,kstol)*(store1(ic,jc,kstol)+  &
+          store2(ic,jc,kstol))
     END DO
   END DO
 END IF
@@ -646,8 +882,8 @@ END IF
 !     U,V,W-EQUATIONS: PRESSURE GRADIENT TERMS
 !     E-EQUATION: PRESSURE WORK TERMS
 !     -------------------------------
-!     8DX,8DY,8DZ
-!     U 8DX + V 8DY + W 8DZ
+!     DPDX,DPDY,DPDZ
+!     U DPDX + V DPDY + W DPDZ
 
 DO kc = kstal,kstol
   DO jc = jstal,jstol

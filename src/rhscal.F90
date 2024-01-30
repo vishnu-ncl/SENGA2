@@ -1,7 +1,7 @@
 SUBROUTINE rhscal
- 
+
 ! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-26  Time: 15:26:16
+! Date: 2024-01-30  Time: 13:29:16
 
 !     *************************************************************************
 
@@ -21,6 +21,7 @@ SUBROUTINE rhscal
 !     14-JUL-2013:  RSC RADIATION HEAT LOSS
 !     08-JUN-2015:  RSC REMOVE Nth SPECIES TREATMENT
 !     08-JUN-2015:  RSC UPDATED WALL BCS
+!     01-DEC-2022:  VM CONSERVATIVE-PRIMITIVE FIX/SORET FIX
 
 !     DESCRIPTION
 !     -----------
@@ -154,6 +155,72 @@ DO kc = kstal,kstol
     END DO
   END DO
 END DO
+
+!    TRANSVERSE TERMS FOR BOUNDARIES (IMPLEMENTED BY NC)
+!     X-DIRECTION
+IF(fxlcnv)THEN
+  DO kc = kstal,kstol
+    DO jc = jstal,jstol
+      
+      t1bxl(jc,kc) = -(store2(istal,jc,kc) + store3(istal,jc,kc))
+      
+    END DO
+  END DO
+END IF
+
+IF(fxrcnv)THEN
+  DO kc = kstal,kstol
+    DO jc = jstal,jstol
+      
+      t1bxr(jc,kc) = -(store2(istol,jc,kc) + store3(istol,jc,kc))
+      
+    END DO
+  END DO
+END IF
+
+!     Y-DIRECTION
+IF(fylcnv)THEN
+  DO kc = kstal,kstol
+    DO ic= istal,istol
+      
+      t1byl(ic,kc) = -(store1(ic,jstal,kc) + store3(ic,jstal,kc))
+      
+    END DO
+  END DO
+END IF
+
+IF(fyrcnv)THEN
+  DO kc = kstal,kstol
+    DO ic= istal,istol
+      
+      t1byr(ic,kc) = -(store1(ic,jstol,kc) + store3(ic,jstol,kc))
+      
+    END DO
+  END DO
+END IF
+
+!     Z-DIRECTION
+IF(fzlcnv)THEN
+  DO jc = jstal,jstol
+    DO ic= istal,istol
+      
+      t1bzl(ic,jc) = -(store1(ic,jc,kstal) + store2(ic,jc,kstal))
+      
+    END DO
+  END DO
+END IF
+
+IF(fzrcnv)THEN
+  DO jc = jstal,jstol
+    DO ic= istal,istol
+      
+      t1bzr(ic,jc) = -(store1(ic,jc,kstol) + store2(ic,jc,kstol))
+      
+    END DO
+  END DO
+END IF
+
+!=========================REFER TO EQ. 3.74 OF LODATO'S THESIS=================
 !                                                              ALL STORES CLEAR
 !     =========================================================================
 !     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -871,6 +938,7 @@ END IF
 !     -----------------------
 !     RSC 08-AUG-2012 EVALUATE ALL SPECIES
 !     RSC 08-JUN-2015 REMOVE Nth SPECIES TREATMENT
+!     VM: CONSERVATIVE-PRIMITIVE FIX
 DO ispec = 1,nspec
   
 !       =======================================================================
@@ -886,6 +954,10 @@ DO ispec = 1,nspec
       END DO
     END DO
   END DO
+END DO
+
+DO ispec = 1,nspec
+  
   
 !       =======================================================================
   
@@ -1002,6 +1074,12 @@ DO ispec = 1,nspec
         stryxl(jc,kc,ispec) = yrhs(istal,jc,kc,ispec)
         bclyxl(jc,kc,ispec) = store1(istal,jc,kc)
         
+!             TRANSVERSE TERM FOR SPECIES TRANSPORT (see Eq. 3.74 of Lodato's thesis)
+        
+        t6bxl(jc,kc,ispec)=-store2(istal,jc,kc)*  &
+            vrhs(istal,jc,kc)/drhs(istal,jc,kc)  &
+            -store3(istal,jc,kc)*wrhs(istal,jc,kc)/ drhs(istal,jc,kc)
+        
       END DO
     END DO
   END IF
@@ -1011,6 +1089,13 @@ DO ispec = 1,nspec
         
         stryxr(jc,kc,ispec) = yrhs(istol,jc,kc,ispec)
         bclyxr(jc,kc,ispec) = store1(istol,jc,kc)
+        
+!             TRANSVERSE TERM FOR SPECIES TRANSPORT (see Eq. 3.74 of Lodato's thesis)
+        
+        t6bxr(jc,kc,ispec)=-store2(istol,jc,kc)*  &
+            vrhs(istol,jc,kc)/drhs(istol,jc,kc)  &
+            -store3(istol,jc,kc)*wrhs(istol,jc,kc)/ drhs(istol,jc,kc)
+        
         
       END DO
     END DO
@@ -1024,6 +1109,11 @@ DO ispec = 1,nspec
         stryyl(ic,kc,ispec) = yrhs(ic,jstal,kc,ispec)
         bclyyl(ic,kc,ispec) = store2(ic,jstal,kc)
         
+!             TRANSVERSE TERM FOR SPECIES TRANSPORT (see Eq. 3.74 of Lodato's thesis)
+        
+        t6byl(ic,kc,ispec)=-store1(ic,jstal,kc)*  &
+            urhs(ic,jstal,kc)/drhs(ic,jstal,kc)  &
+            -store3(ic,jstal,kc)*wrhs(ic,jstal,kc)/ drhs(ic,jstal,kc)
       END DO
     END DO
   END IF
@@ -1034,6 +1124,11 @@ DO ispec = 1,nspec
         stryyr(ic,kc,ispec) = yrhs(ic,jstol,kc,ispec)
         bclyyr(ic,kc,ispec) = store2(ic,jstol,kc)
         
+!             TRANSVERSE TERM FOR SPECIES TRANSPORT (see Eq. 3.74 of Lodato's thesis)
+        
+        t6byr(ic,kc,ispec)=-store1(ic,jstol,kc)*  &
+            urhs(ic,jstol,kc)/drhs(ic,jstol,kc)  &
+            -store3(ic,jstol,kc)*wrhs(ic,jstol,kc)/ drhs(ic,jstol,kc)
       END DO
     END DO
   END IF
@@ -1046,6 +1141,11 @@ DO ispec = 1,nspec
         stryzl(ic,jc,ispec) = yrhs(ic,jc,kstal,ispec)
         bclyzl(ic,jc,ispec) = store3(ic,jc,kstal)
         
+!             TRANSVERSE TERM FOR SPECIES TRANSPORT (see Eq. 3.74 of Lodato's thesis)
+        
+        t6bzl(ic,jc,ispec)=-store1(ic,jc,kstal)*  &
+            urhs(ic,jc,kstal)/drhs(ic,jc,kstal)  &
+            -store2(ic,jc,kstal)*vrhs(ic,jc,kstal)/ drhs(ic,jc,kstal)
       END DO
     END DO
   END IF
@@ -1056,9 +1156,17 @@ DO ispec = 1,nspec
         stryzr(ic,jc,ispec) = yrhs(ic,jc,kstol,ispec)
         bclyzr(ic,jc,ispec) = store3(ic,jc,kstol)
         
+!             TRANSVERSE TERM FOR SPECIES TRANSPORT (see Eq. 3.74 of Lodato's thesis)
+        
+        t6bzr(ic,jc,ispec)=-store1(ic,jc,kstol)*  &
+            urhs(ic,jc,kstol)/drhs(ic,jc,kstol)  &
+            -store2(ic,jc,kstol)*vrhs(ic,jc,kstol)/ drhs(ic,jc,kstol)
       END DO
     END DO
   END IF
+  
+  
+  
 !                                                         STORE1,2,3 = DYDX,Y,Z
 !                                                         RATE = Y SOURCE TERMS
 !                                                           VTMP = DIV CORR VEL
@@ -1206,6 +1314,22 @@ DO ispec = 1,nspec
         
       END IF
       
+    END DO
+    
+!         VM WITH HELP FROM RSC: CORRECTION IN THERMAL DIFFUSION TO ADD MOLE-FRACTION OF
+!         ORIGINAL SPECIES
+!         TDRCCO IS THERMAL DIFFUSION FACTOR (MASON ET AL. 1968)
+!         NEED TO MULTIPLY BY X_ALPHA AS WELL
+    
+    DO kc=kstab,kstob
+      DO jc=jstab,jstob
+        DO ic=istab,istob
+          tdrmix(ic,jc,kc)=tdrmix(ic,jc,kc)*yrhs(ic,jc,kc,ispec)  &
+              *wmomix(ic,jc,kc)*ovwmol(ispec)
+          
+          
+        END DO
+      END DO
     END DO
     
   END IF
