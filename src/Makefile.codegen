@@ -32,8 +32,7 @@ APP_FLAGS = -mcmodel=large -fp-model precise -fp-model source -no-fma -fimf-arch
 endif
 
 ifeq ($(OPS_COMPILER),pgi)
-APP_FLAGS = -Kieee -Mnofpapprox -mcmodel=medium -Ktrap=unf -Mnofprelaxed -m64 -pc 64
-#-nofma
+APP_FLAGS = -Kieee -Mnofpapprox -mcmodel=medium -Ktrap=unf -Mnofprelaxed -m64 -pc 64 -nofma
 endif
 
 APP_LIBS = fftlib/fftlib.a rndlib/rndlib.a parlib/parlib.a -lm
@@ -54,10 +53,21 @@ endif
 
 OPS_FILES_GEN=$(OTHER_FILES) $(OPS_GENERATED)
 
-.generated: $(OPS_FILES) $(OPS_INSTALL_PATH)/../ops_translator_legacy/fortran/*.py
-	$(OPS_INSTALL_PATH)/../ops_translator_legacy/fortran/ops_fortran.py $(OPS_FILES)
+# New clang/fparser based code-gen
+.generated: $(OPS_FILES) $(OPS_INSTALL_PATH)/../ops_translator/ops-translator/*.py
+	@echo "generating translations for ${OPS_FILES}"
+	@echo "OPS_EXTENTIONS: ${OPS_GENERATED_SUFFIX}"
+	@echo "OPS_GENERATED: ${OPS_GENERATED}"
+	which python3
+	python3 $(OPS_INSTALL_PATH)/../ops_translator/ops-translator $(VERBOSE) $(DEFINES) -I $(OPS_INSTALL_PATH)/c/include/ --file_paths $(OPS_FILES)
 	rm -f .generated
 	touch .generated
+
+# Legacy code-gen
+#.generated: $(OPS_FILES) $(OPS_INSTALL_PATH)/../ops_translator_legacy/fortran/*.py
+#	$(OPS_INSTALL_PATH)/../ops_translator_legacy/fortran/ops_fortran.py $(OPS_FILES)
+#	rm -f .generated
+#	touch .generated
 
 # check what targets can not be built with current environment setting and give warnings
 ifneq ($(strip $(TARGETS)),)
@@ -84,10 +94,10 @@ APP_TARGETS = $(addprefix $(APP)_, $(TARGETS))
 all: $(APP_TARGETS)
 
 SEQ_KERNELS = $(wildcard mpi_openmp/*.F90)
-CUDA_KERNELS = $(wildcard CUDA/*.CUF)
+CUDA_KERNELS = $(wildcard cuda/*.CUF)
 
-MODULE_FILES = com_espect.F90 com_senga2.F90
-OPS_MODULE_FILES = constants.F90 com_ops_senga2_ops.F90
+MODULE_FILES = constants.F90 com_espect.F90 com_senga2.F90
+OPS_MODULE_FILES = com_ops_senga2_ops.F90
 OTHER_FILES := $(filter-out $(MODULE_FILES), $(OTHER_FILES))
 OTHER_FILES := $(filter-out $(OPS_MODULE_FILES), $(OTHER_FILES))
 OPS_GENERATED := $(filter-out $(MODULE_FILES), $(OPS_GENERATED))
@@ -235,11 +245,11 @@ $(APP)_mpi_cuda_tiled: Makefile .generated $(MPI_CUDA_TILED_OBJ)
 
 clean:
 	rm -f .generated
-	rm -f *.o mpi_openmp/*.o CUDA/*.o
-	rm -f *.oo mpi_openmp/*.oo CUDA/*.oo
-	rm -f *.optrpt mpi_openmp/*.optrpt CUDA/*.optrpt
-	rm -f *.mod MPI/*.mod CUDA/*.mod
-	rm -f *~ mpi_openmp/*~ CUDA/*~
+	rm -f *.o mpi_openmp/*.o cuda/*.o
+	rm -f *.oo mpi_openmp/*.oo cuda/*.oo
+	rm -f *.optrpt mpi_openmp/*.optrpt cuda/*.optrpt
+	rm -f *.mod MPI/*.mod cuda/*.mod
+	rm -f *~ mpi_openmp/*~ cuda/*~
 	rm -f constants_list.txt
 	rm -f $(APP)_seq $(APP)_openmp $(APP)_tiled $(APP)_mpi $(APP)_mpi_openmp $(APP)_mpi_tiled $(APP)_cuda $(APP)_mpi_cuda $(APP)_mpi_cuda_tiled
 

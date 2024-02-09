@@ -281,7 +281,7 @@ SUBROUTINE output
 !       ---------------------
 !       USE THE DUMP FILE INDICATED BY IDFLAG
 !       RSC 11-JUL-2009 ADD A DUMP FORMAT SWITCH
-        IF ( ops_is_root() ) THEN
+        IF ( ops_is_root() == 1 ) THEN
             IF( ndofmt == 0 ) THEN
 
 !               UNFORMATTED DUMP OUTPUT
@@ -318,7 +318,7 @@ SUBROUTINE output
 
 !       REPORT THE DUMP
 !       RSC 11-JUL-2009
-        IF ( ops_is_root() ) THEN
+        IF ( ops_is_root() == 1 ) THEN
 
             OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
             3000      CONTINUE
@@ -359,7 +359,7 @@ SUBROUTINE output
 !   =========================================================================
 
 !   TIME STEP HISTORY
-    IF ( ops_is_root() ) THEN
+    IF ( ops_is_root() == 1 ) THEN
         WRITE(*,'(I7,1PE12.4,I5)')itime,tstep,inderr
     END IF
 

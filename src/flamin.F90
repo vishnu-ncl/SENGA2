@@ -101,7 +101,7 @@ SUBROUTINE flamin
     yrinp(nspec) = one - yrinp(nspec)
 
 !   WRITE TO REPORT FILE
-    IF( ops_is_root() ) THEN
+    IF( ops_is_root() == 1 ) THEN
   
         WRITE(ncrept,*)
         WRITE(ncrept,*)'FLAMIN: reactant mass fractions:'

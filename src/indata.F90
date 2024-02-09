@@ -881,7 +881,7 @@ SUBROUTINE indata
 
 !   CHECK AND INITIALISE DUMP FILES
 !   -------------------------------
-    IF ( ops_is_root() ) THEN
+    IF ( ops_is_root() == 1 ) THEN
         INQUIRE(FILE=fndmpo(1),EXIST=fxdump)
         IF(.NOT.fxdump) THEN
             IF(ndofmt == 0) THEN
@@ -1222,7 +1222,7 @@ SUBROUTINE indata
         WRITE(*,*) "Restart is not yet implemented in OPS"
         STOP
 
-        IF ( ops_is_root() ) THEN
+        IF ( ops_is_root() == 1 ) THEN
             IF(ndifmt == 0) THEN
 
 !               UNFORMATTED DUMP INPUT

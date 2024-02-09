@@ -597,7 +597,7 @@ SUBROUTINE ops_data_init()
 !       ----------------------------
 !       READ THE DATA FROM DUMP INPUT FILE
 !       NOTE THAT URUN,VRUN,WRUN,ERUN AND YRUN ARE ALL IN CONSERVATIVE FORM
-        IF ( ops_is_root() ) THEN
+        IF ( ops_is_root() == 1 ) THEN
             WRITE(*,*)  "Warm Start: Reading from dumped data"
         END IF
 
