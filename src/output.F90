@@ -283,64 +283,66 @@ CHARACTER (LEN=5) :: ipdump
 !     =====
 !     FULL DUMP OUTPUT
 !     ================
-!ops IF(MOD(itime,ntdump) == 0)THEN
+  IF(MOD(itime,ntdump) == 0)THEN
   
 !       CARRY OUT A FULL DUMP
 !       ---------------------
 !       USE THE DUMP FILE INDICATED BY IDFLAG
 !       RSC 11-JUL-2009 ADD A DUMP FORMAT SWITCH
-!ops #ifndef HDF5
-!ops  IF(ndofmt == 0)THEN
-    
+#ifndef HDF5
+  IF(ndofmt == 0)THEN
+   
+    write(*,*) "Timestep: ", itime, "  Writing output to: ",fndmpo(idflag+1)
+ 
 !         UNFORMATTED DUMP OUTPUT
-!ops    OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag+1),STATUS='OLD', FORM='UNFORMATTED')
-!ops    REWIND(ncdmpo)
-!ops    WRITE(ncdmpo)nxnode,nynode,nznode,nspec, drun,urun,vrun,wrun,erun,yrun,  &
-!ops        etime,tstep,errold,errldr
-!ops    CLOSE(ncdmpo)
+    OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag+1),STATUS='OLD', FORM='UNFORMATTED')
+    REWIND(ncdmpo)
+    WRITE(ncdmpo)nxnode,nynode,nznode,nspec, drun,urun,vrun,wrun,erun,yrun,  &
+        etime,tstep,errold,errldr
+    CLOSE(ncdmpo)
     
-!ops  ELSE
+  ELSE
     
 !         FORMATTED DUMP OUTPUT
-!ops    OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag+1),STATUS='OLD', FORM='FORMATTED')
-!ops    REWIND(ncdmpo)
-!ops    WRITE(ncdmpo,*)nxnode,nynode,nznode,nspec
-!ops    DO kc = 1,nznode
-!ops      DO jc = 1,nynode
-!ops        DO ic = 1,nxnode
-!ops          WRITE(ncdmpo,*)drun(ic,jc,kc),  &
-!ops              urun(ic,jc,kc),vrun(ic,jc,kc),wrun(ic,jc,kc), erun(ic,jc,kc),  &
-!ops              (yrun(ic,jc,kc,ispec),ispec=1,nspec)
-!ops        END DO
-!ops      END DO
-!ops    END DO
-!ops    WRITE(ncdmpo,*)etime,tstep,errold,errldr
-!ops    CLOSE(ncdmpo)
+    OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag+1),STATUS='OLD', FORM='FORMATTED')
+    REWIND(ncdmpo)
+    WRITE(ncdmpo,*)nxnode,nynode,nznode,nspec
+    DO kc = 1,nznode
+      DO jc = 1,nynode
+        DO ic = 1,nxnode
+          WRITE(ncdmpo,*)drun(ic,jc,kc),  &
+              urun(ic,jc,kc),vrun(ic,jc,kc),wrun(ic,jc,kc), erun(ic,jc,kc),  &
+              (yrun(ic,jc,kc,ispec),ispec=1,nspec)
+        END DO
+      END DO
+    END DO
+    WRITE(ncdmpo,*)etime,tstep,errold,errldr
+    CLOSE(ncdmpo)
     
-!ops  END IF
+  END IF
   
-!ops #else
-!ops  CALL write_h5_dumpfile
-!ops #endif
+#else
+  CALL write_h5_dumpfile
+#endif
 
 !       REPORT THE DUMP
 !       RSC 11-JUL-2009
-!ops IF(iproc == 0)THEN
+IF(iproc == 0)THEN
   
-!ops  OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
-!ops  3000      CONTINUE
-!ops  READ(ncrept,9000,END=3010)
-!ops  GO TO 3000
-!ops  3010      BACKSPACE(ncrept)
-!ops  WRITE(ncrept,9120)fndmpo(idflag+1)
-!ops  CLOSE(ncrept)
+  OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
+ 3000      CONTINUE
+ READ(ncrept,9000,END=3010)
+ GO TO 3000
+ 3010      BACKSPACE(ncrept)
+ WRITE(ncrept,9120)fndmpo(idflag+1)
+CLOSE(ncrept)
   
-!ops END IF
+END IF
 
 !       RESET THE DUMP FLAG
-!ops idflag = MOD(idflag+1,2)
+idflag = MOD(idflag+1,2)
 
-!ops END IF
+END IF
 
 !     =========================================================================
 
@@ -524,16 +526,16 @@ END IF
 
 !ops RETURN
 
-!ops 9000  FORMAT(a)
-!ops 9100  FORMAT('Time step number: ',i7)
-!ops 9110  FORMAT('Elapsed time: ',1PE12.4,';',2X,'next time step:',1PE12.4)
-!ops 9120  FORMAT('Dump completed: ',a)
-!ops 9200  FORMAT(i5,/ 5X,6(1PE12.4)/  &
-!ops    5X,6(1PE12.4)/ 5X,6(1PE12.4)/  &
-!ops    5X,4(1PE12.4)/ 5X,3(1PE12.4)/  &
-!ops    5X,3(1PE12.4)/ 5X,3(1PE12.4)/  &
-!ops    5X,3(1PE12.4)/ 5X,3(1PE12.4)/  &
-!ops    5X,2(1PE12.4))
-!ops 9300  FORMAT(2(1PE15.7))
+ 9000  FORMAT(a)
+ 9100  FORMAT('Time step number: ',i7)
+ 9110  FORMAT('Elapsed time: ',1PE12.4,';',2X,'next time step:',1PE12.4)
+ 9120  FORMAT('Dump completed: ',a)
+ 9200  FORMAT(i5,/ 5X,6(1PE12.4)/  &
+    5X,6(1PE12.4)/ 5X,6(1PE12.4)/  &
+   5X,4(1PE12.4)/ 5X,3(1PE12.4)/  &
+    5X,3(1PE12.4)/ 5X,3(1PE12.4)/  &
+    5X,3(1PE12.4)/ 5X,3(1PE12.4)/  &
+    5X,2(1PE12.4))
+ 9300  FORMAT(2(1PE15.7))
 
 END SUBROUTINE output
