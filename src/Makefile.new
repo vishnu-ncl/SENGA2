@@ -24,7 +24,7 @@ OTHER_FILES = com_espect.F90 com_senga2.F90 rhsvel.F90 dfinit.F90 dfbydy.F90 dfb
 OPS_FILES = senga2.F90 com_ops_senga2.F90 ops_data_init.F90 print_dats.F90
 
 ifeq ($(OPS_COMPILER),gnu)
-APP_FLAGS = -mcmodel=medium -fallow-argument-mismatch
+APP_FLAGS = -mcmodel=medium
 endif
 
 ifeq ($(OPS_COMPILER),intel)

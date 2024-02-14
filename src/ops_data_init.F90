@@ -8,7 +8,8 @@ SUBROUTINE ops_data_init()
     integer(kind=4) :: d_base(3) = [1,1,1] !array indexing - start from 1
     integer(kind=4) :: d_p(3) !max boundary depths for the dat in the possitive direction
     integer(kind=4) :: d_m(3) !max boundary depths for the dat in the negative direction
-
+    integer(kind=4) :: ispec
+    character(len=20) :: buf
 
 !   *-----------------------------------------OPS Declarations-----------------------------------------------*
 
@@ -53,6 +54,27 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, transp, d_transp, "real(kind=8)", "TRANSP")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, store7, d_store7, "real(kind=8)", "STORE7")
 
+!---------------------------------------MULTI-DIM DAT--------------------------------------------------------
+
+    d_size = [nxglbl, nyglbl, nzglbl]
+    d_m    = [0,0,0]
+    d_p    = [0,0,0]
+    DO ispec = 1,nspcmx
+        WRITE(buf,"(A4,I2.2)") "YRUN",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, yrun(:,:,:,ispec), d_yrun(ispec), "real(kind=8)", trim(buf))
+        WRITE(buf,"(A4,I2.2)") "RATE",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, rate(:,:,:,ispec), d_rate(ispec), "real(kind=8)", trim(buf))
+        WRITE(buf,"(A4,I2.2)") "RRTE",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, rrte(:,:,:,ispec), d_rrte(ispec), "real(kind=8)", trim(buf))
+    END DO
+
+    d_size = [ nxglbl, nyglbl, nzglbl]
+    d_m    = [-nhalox,-nhaloy,-nhaloz]
+    d_p    = [ nhalox, nhaloy, nhaloz]
+    DO ispec = 1,nspcmx
+        WRITE(buf,"(A4,I2.2)") "YRHS",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, yrhs(:,:,:,ispec), d_yrhs(ispec), "real(kind=8)", trim(buf))
+    END DO
 !------------------------------------------------------------------------------------------------------------
     call ops_partition(" ")
 !------------------------------------------------------------------------------------------------------------
