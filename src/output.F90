@@ -88,25 +88,25 @@ SUBROUTINE output
 
 !   REPORT OUTPUT
 !   =============
-!ops    IF(MOD(itime,ntrept) == 0) THEN
+    IF(MOD(itime,ntrept) == 0) THEN
 
 !       REPORT ON PROCESSOR NO.1 ONLY
 !       ------
-!ops        IF(iproc == 0) THEN
+        IF (ops_is_root() == 1) THEN
 
-!ops            OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
+            OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
 
 !           GO TO EOF
-!ops            1000      CONTINUE
-!ops            READ(ncrept,9000,END=1010)
-!ops            GO TO 1000
-!ops            1010      BACKSPACE(ncrept)
+            1000      CONTINUE
+            READ(ncrept,9000,END=1010)
+            GO TO 1000
+            1010      BACKSPACE(ncrept)
 
-!ops            WRITE(ncrept,9100)itime
-!ops            WRITE(ncrept,9110)etime,tstep
-!ops            CLOSE(ncrept)
+            WRITE(ncrept,9100)itime
+            WRITE(ncrept,9110)etime,tstep
+            CLOSE(ncrept)
 
-!ops        END IF
+        END IF
 
 !       =======================================================================
 
@@ -237,7 +237,7 @@ SUBROUTINE output
 !C        WRITE(NCDIAG,*)
 !C        CLOSE(NCDIAG)
 
-!ops    END IF
+    END IF
 
 !   =========================================================================
 !   UMOD START

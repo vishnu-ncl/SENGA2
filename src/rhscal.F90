@@ -26,6 +26,7 @@ SUBROUTINE rhscal
 !   14-JUL-2013:  RSC RADIATION HEAT LOSS
 !   08-JUN-2015:  RSC REMOVE Nth SPECIES TREATMENT
 !   08-JUN-2015:  RSC UPDATED WALL BCS
+!   01-DEC-2022:  VM CONSERVATIVE-PRIMITIVE FIX/SORET FIX
 
 !   DESCRIPTION
 !   -----------
@@ -153,6 +154,59 @@ SUBROUTINE rhscal
                     ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ))
 
+!   TRANSVERSE TERMS FOR BOUNDARIES (IMPLEMENTED BY NC)
+!   X-DIRECTION
+    IF(fxlcnv) THEN
+        rangexyz = [1,1,1,nyglbl,1,nzglbl]
+        call ops_par_loop(maths_kernel_eqBR_xdir, "RHSCAL 161", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_t1bxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ))
+    END IF
+
+    IF(fxrcnv) THEN
+        rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
+        call ops_par_loop(maths_kernel_eqBR_xdir, "RHSCAL 169", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_t1bxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ))
+    END IF
+
+!   Y-DIRECTION
+    IF(fylcnv) THEN
+        rangexyz = [1,nxglbl,1,1,1,nzglbl]
+        call ops_par_loop(maths_kernel_eqBR_ydir, "RHSCAL 178", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_t1byl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ))
+    END IF
+
+    IF(fyrcnv) THEN
+        rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
+        call ops_par_loop(maths_kernel_eqBR_ydir, "RHSCAL 186", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_t1byr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ))
+    END IF
+
+!   Z-DIRECTION
+    IF(fzlcnv) THEN
+        rangexyz = [1,nxglbl,1,nyglbl,1,1]
+        call ops_par_loop(maths_kernel_eqBR_zdir, "RHSCAL 195", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_t1bzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
+    END IF
+
+    IF(fzrcnv) THEN
+        rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
+        call ops_par_loop(maths_kernel_eqBR_zdir, "RHSCAL 195", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_t1bzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
+    END IF
+
+!=========================REFER TO EQ. 3.74 OF LODATO'S THESIS=================
 !                                                            ALL STORES CLEAR
 !   =========================================================================
 !   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -783,6 +837,7 @@ SUBROUTINE rhscal
 !   -----------------------
 !   RSC 08-AUG-2012 EVALUATE ALL SPECIES
 !   RSC 08-JUN-2015 REMOVE Nth SPECIES TREATMENT
+!   VM: CONSERVATIVE-PRIMITIVE FIX
     DO ispec = 1,nspec
 
 !   =======================================================================
@@ -816,6 +871,10 @@ SUBROUTINE rhscal
         call ops_par_loop(maths_kernel_eqT, "A = A/B - RHSCAL 816", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_RW), &
                         ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+    END DO
+
+    DO ispec = 1,nspec
 
 !       =======================================================================
 
@@ -915,8 +974,14 @@ SUBROUTINE rhscal
             call ops_par_loop(boundary_kernel_mass_xdir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs - RHSCAL 915", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_stryxl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_bclyxl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
+                            ops_arg_dat(d_bclyxl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_t6bxl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
 
         END IF
         IF(fxrcnv) THEN
@@ -924,8 +989,14 @@ SUBROUTINE rhscal
             call ops_par_loop(boundary_kernel_mass_xdir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs - RHSCAL 924", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_stryxr(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_bclyxr(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
+                            ops_arg_dat(d_bclyxr(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_t6bxr(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
 
         END IF
 
@@ -934,18 +1005,30 @@ SUBROUTINE rhscal
             rangexyz = [1,nxglbl,1,1,1,nzglbl]
             call ops_par_loop(boundary_kernel_mass_ydir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs - RHSCAL 935", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_stryyl(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_bclyyl(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE))
+                            ops_arg_dat(d_bclyyl(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_t6byl(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE))
 
         END IF
         IF(fyrcnv) THEN
             rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
             call ops_par_loop(boundary_kernel_mass_ydir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs - RHSCAL 944", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_stryyr(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_bclyyr(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE))
+                            ops_arg_dat(d_bclyyr(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_t6byr(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE))
 
         END IF
 
@@ -954,18 +1037,30 @@ SUBROUTINE rhscal
             rangexyz = [1,nxglbl,1,nyglbl,1,1]
             call ops_par_loop(boundary_kernel_mass_zdir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs - RHSCAL 955", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_stryzl(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_bclyzl(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE))
+                            ops_arg_dat(d_bclyzl(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_t6bzl(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE))
 
         END IF
         IF(fzrcnv) THEN
             rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
             call ops_par_loop(boundary_kernel_mass_zdir, "COLLECT SPECIES MASS FRACTION AND ITS GRADIENTS FOR BCs - RHSCAL 964", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_stryzr(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_bclyzr(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE))
+                            ops_arg_dat(d_bclyzr(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_t6bzr(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE))
 
         END IF
 !                                                         STORE1,2,3 = DYDX,Y,Z
@@ -1106,6 +1201,18 @@ SUBROUTINE rhscal
                 END IF
 
             END DO
+
+!           VM WITH HELP FROM RSC: CORRECTION IN THERMAL DIFFUSION TO ADD MOLE-FRACTION OF
+!           ORIGINAL SPECIES
+!           TDRCCO IS THERMAL DIFFUSION FACTOR (MASON ET AL. 1968)
+!           NEED TO MULTIPLY BY X_ALPHA AS WELL
+            rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
+            call ops_par_loop(maths_kernel_eqBS, "maths_kernel_eqBS", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_tdrmix, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_wmomix, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
 
         END IF
 

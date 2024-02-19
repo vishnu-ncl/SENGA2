@@ -1009,6 +1009,47 @@ SUBROUTINE maths_kernel_eqBQ(utgv, vtgv, wtgv, drun, deltagx, deltagy, deltagz, 
 
 END SUBROUTINE maths_kernel_eqBQ
 
+SUBROUTINE maths_kernel_eqBR_xdir(t1bx, store2, store3)
+
+    real(kind=8), dimension(1), intent(in) :: store2, store3
+    real(kind=8), dimension(1) :: t1bx
+
+    t1bx(OPS_ACC1(0,0,0)) = -(store2(OPS_ACC2(0,0,0)) + store3(OPS_ACC3(0,0,0)))
+
+END SUBROUTINE maths_kernel_eqBR_xdir
+
+SUBROUTINE maths_kernel_eqBR_ydir(t1by, store1, store3)
+
+    real(kind=8), dimension(1), intent(in) :: store1, store3
+    real(kind=8), dimension(1) :: t1by
+
+    t1by(OPS_ACC1(0,0,0)) = -(store1(OPS_ACC2(0,0,0)) + store3(OPS_ACC3(0,0,0)))
+
+END SUBROUTINE maths_kernel_eqBR_ydir
+
+SUBROUTINE maths_kernel_eqBR_zdir(t1bz, store1, store2)
+
+    real(kind=8), dimension(1), intent(in) :: store1, store2
+    real(kind=8), dimension(1) :: t1bz
+
+    t1bz(OPS_ACC1(0,0,0)) = -(store1(OPS_ACC2(0,0,0)) + store2(OPS_ACC3(0,0,0)))
+
+END SUBROUTINE maths_kernel_eqBR_zdir
+
+SUBROUTINE maths_kernel_eqBS(tdrmix, yrhs, wmomix, ovwmol, ispec)
+
+    real(kind=8), dimension(1), intent(in) :: yrhs, wmomix
+    real(kind=8), dimension(1) :: tdrmix
+
+    integer(kind=4), intent(in) :: ispec
+
+    real(kind=8), dimension(nspcmx), intent(in) :: ovwmol
+
+    tdrmix(OPS_ACC1(0,0,0)) = tdrmix(OPS_ACC1(0,0,0))*yrhs(OPS_ACC2(0,0,0))  &
+                            * wmomix(OPS_ACC3(0,0,0))*ovwmol(ispec)
+
+END SUBROUTINE maths_kernel_eqBS
+
 SUBROUTINE maths_kernel_eqtau(out_arr1,out_arr2,in_arr1,in_arr2,in_arr3,var)
 
     real(kind=8), dimension(1) :: out_arr1, out_arr2

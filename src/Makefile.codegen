@@ -23,7 +23,7 @@ OPS_FILES = senga2.F90 com_ops_senga2.F90 ops_data_init.F90 dfinit.F90 dfbydx.F9
     tempin.F90 parfer.F90 output.F90 print_dats.F90 print_alldats.F90 print_output.F90
 
 ifeq ($(OPS_COMPILER),gnu)
-APP_FLAGS = -mcmodel=medium -fallow-argument-mismatch
+APP_FLAGS = -mcmodel=medium
 endif
 
 ifeq ($(OPS_COMPILER),intel)
@@ -195,7 +195,7 @@ $(APP)_mpi: Makefile .generated $(MPI_OBJ)
 	@echo ""
 	@echo "Building ${APP}_mpi"
 	@echo ""
-	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS) $(FLINK) $(PGIMPILINK) -DOPS_MPI $(MPI_OBJ) -o $(APP)_mpi $(APP_LIBS) -lops_for_mpi $(F_HDF5_LIB_MPI)
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS) $(FLINK) $(MPILINK) -DOPS_MPI $(MPI_OBJ) -o $(APP)_mpi $(APP_LIBS) -lops_for_mpi $(F_HDF5_LIB_MPI)
 
 #=========================================================================================================================
 
@@ -203,7 +203,7 @@ $(APP)_mpi_tiled: Makefile .generated $(MPI_TILED_OBJ)
 	@echo ""
 	@echo ""
 	@echo ""
-	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS) $(FLINK) $(PGIMPILINK) -DOPS_MPI -DOPS_LAZY $(MPI_TILED_OBJ) -o $(APP)_mpi_tiled $(APP_LIBS) -lops_for_mpi $(F_HDF5_LIB_MPI)
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS) $(FLINK) $(MPILINK) -DOPS_MPI -DOPS_LAZY $(MPI_TILED_OBJ) -o $(APP)_mpi_tiled $(APP_LIBS) -lops_for_mpi $(F_HDF5_LIB_MPI)
 
 #=========================================================================================================================
 
@@ -212,7 +212,7 @@ $(APP)_mpi_openmp: Makefile .generated $(MPI_OMP_OBJ)
 	@echo ""
 	@echo "Building ${APP}_mpi_openmp"
 	@echo ""
-	$(MPIF90) $(FFLAGS) $(OMPFLAGS) $(APP_FLAGS) $(FMODS) $(FLINK) $(PGIMPILINK) -DOPS_MPI $(MPI_OMP_OBJ) -o $(APP)_mpi_openmp $(APP_LIBS) -lops_for_mpi $(F_HDF5_LIB_MPI)
+	$(MPIF90) $(FFLAGS) $(OMPFLAGS) $(APP_FLAGS) $(FMODS) $(FLINK) $(MPILINK) -DOPS_MPI $(MPI_OMP_OBJ) -o $(APP)_mpi_openmp $(APP_LIBS) -lops_for_mpi $(F_HDF5_LIB_MPI)
 
 #=========================================================================================================================
 
@@ -230,7 +230,7 @@ $(APP)_mpi_cuda: Makefile .generated $(MPI_CUDA_OBJ)
 	@echo ""
 	@echo "Building ${APP}_mpi_cuda"
 	@echo ""
-	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS_CUDA) $(FLINK) $(PGIMPILINK) $(CUDAFOR) -DOPS_MPI $(MPI_CUDA_OBJ) -o $(APP)_mpi_cuda $(APP_LIBS) -lops_for_mpi_cuda $(F_HDF5_LIB_MPI)
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS_CUDA) $(FLINK) $(MPILINK) $(CUDAFOR) -DOPS_MPI $(MPI_CUDA_OBJ) -o $(APP)_mpi_cuda $(APP_LIBS) -lops_for_mpi_cuda $(F_HDF5_LIB_MPI)
 
 #=========================================================================================================================
 
@@ -239,7 +239,7 @@ $(APP)_mpi_cuda_tiled: Makefile .generated $(MPI_CUDA_TILED_OBJ)
 	@echo ""
 	@echo "Building ${APP}_mpi_cuda_tiled"
 	@echo ""
-	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS_CUDA) $(FLINK) $(PGIMPILINK) $(CUDAFOR) -DOPS_MPI -DOPS_LAZY $(MPI_CUDA_TILED_OBJ) -o $(APP)_mpi_cuda_tiled $(APP_LIBS) -lops_for_mpi_cuda $(F_HDF5_LIB_MPI)
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS_CUDA) $(FLINK) $(MPILINK) $(CUDAFOR) -DOPS_MPI -DOPS_LAZY $(MPI_CUDA_TILED_OBJ) -o $(APP)_mpi_cuda_tiled $(APP_LIBS) -lops_for_mpi_cuda $(F_HDF5_LIB_MPI)
 
 #=========================================================================================================================
 

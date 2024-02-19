@@ -86,6 +86,18 @@ SUBROUTINE print_dats()
         call ops_fetch_dat_hdf5_file(d_yrun(ispec), trim(fname))
     END DO
 
+    fname = 'test_dir/rate_timestep'//citime//pnxhdf
+    call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
+    DO ispec = 1,nspcmx
+        call ops_fetch_dat_hdf5_file(d_rate(ispec), trim(fname))
+    END DO
+
+    fname = 'test_dir/rrte_timestep'//citime//pnxhdf
+    call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
+    DO ispec = 1,nspcmx
+        call ops_fetch_dat_hdf5_file(d_rrte(ispec), trim(fname))
+    END DO
+
     fname = 'test_dir/trun_timestep'//citime//pnxhdf
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
     call ops_fetch_dat_hdf5_file(d_trun, trim(fname))
