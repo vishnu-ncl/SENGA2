@@ -2373,7 +2373,7 @@ SUBROUTINE bounds_kernel_eqQ_zr(erhs,yrhs,strdzr,strwzr,strhzr,stryzr,bclyzr,bcl
         erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) - fornow*strhzr(OPS_ACC5(0,0,0))
 
         yrhs(OPS_ACC2(0,0,0)) = yrhs(OPS_ACC2(0,0,0)) &
-                              - (bcl2zr(OPS_ACC9(0,0,0))+bcl5zr(ic,jc)*ova2zr(OPS_ACC10(0,0,0)))*stryzr(OPS_ACC6(0,0,0)) &
+                              - (bcl2zr(OPS_ACC9(0,0,0))+bcl1zr(OPS_ACC8(0,0,0))*ova2zr(OPS_ACC10(0,0,0)))*stryzr(OPS_ACC6(0,0,0)) &
                               - fornow
 
     ELSE

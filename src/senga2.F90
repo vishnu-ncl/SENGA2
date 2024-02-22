@@ -216,7 +216,7 @@ PROGRAM senga2
 !   TERMINATION
 !   ===========
     call ops_timers ( endTime )
-    call ops_timing_output( )
+!    call ops_timing_output( )
     IF ( ops_is_root() == 1 ) THEN
         write (*,'(a,f16.7,a)') 'Max total runtime =', endTime - startTime,' seconds'
     END IF
