@@ -923,7 +923,7 @@ SUBROUTINE bounds
                             ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_ovgmxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_acouxr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_acouxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
 
             DO ispec = 1,nspec
                 rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]

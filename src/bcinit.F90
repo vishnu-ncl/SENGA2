@@ -41,42 +41,42 @@ SUBROUTINE bcinit
     nsbcxl = ngbcxl
     nendxl = nbound
     IF(nsbcxl == nsperi)THEN
-        nendxl = nobc
+        nendxl = nperi
     END IF
 
 !   X-RIGHT
     nsbcxr = ngbcxr
     nendxr = nbound
     IF(nsbcxr == nsperi)THEN
-        nendxr = nobc
+        nendxr = nperi
     END IF
 
 !   Y-LEFT
     nsbcyl = ngbcyl
     nendyl = nbound
     IF(nsbcyl == nsperi)THEN
-        nendyl = nobc
+        nendyl = nperi
     END IF
 
 !   Y-RIGHT
     nsbcyr = ngbcyr
     nendyr = nbound
     IF(nsbcyr == nsperi)THEN
-        nendyr = nobc
+        nendyr = nperi
     END IF
 
 !   Z-LEFT
     nsbczl = ngbczl
     nendzl = nbound
     IF(nsbczl == nsperi)THEN
-        nendzl = nobc
+        nendzl = nperi
     END IF
 
 !   Z-RIGHT
     nsbczr = ngbczr
     nendzr = nbound
     IF(nsbczr == nsperi)THEN
-        nendzr = nobc
+        nendzr = nperi
     END IF
 
     IF (iproc == 0) THEN

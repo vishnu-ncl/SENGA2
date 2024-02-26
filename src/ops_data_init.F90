@@ -589,8 +589,8 @@ SUBROUTINE ops_data_init()
     IF(ncdmpi == 1) THEN
         fndump = pndump//pnxhdf
 
-        WRITE(*,*) "Restart is not yet implemented in OPS"
-        STOP
+!        WRITE(*,*) "Restart is not yet implemented in OPS"
+!        STOP
 !       -----------------------------------------------------------------------
 !       THIS BLOCK MAY BE MODIFIED AS REQUIRED
 !       TO BLEND INITIAL VELOCITY AND SCALAR FIELDS
@@ -601,7 +601,7 @@ SUBROUTINE ops_data_init()
 !       ----------------------------
 !       READ THE DATA FROM DUMP INPUT FILE
 !       NOTE THAT URUN,VRUN,WRUN,ERUN AND YRUN ARE ALL IN CONSERVATIVE FORM
-        IF ( ops_is_root() ) THEN
+        IF (ops_is_root() .eq. 1) THEN
             WRITE(*,*)  "Warm Start: Reading from dumped data"
         END IF
 

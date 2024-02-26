@@ -88,25 +88,25 @@ SUBROUTINE output
 
 !   REPORT OUTPUT
 !   =============
-!ops    IF(MOD(itime,ntrept) == 0) THEN
+    IF(MOD(itime,ntrept) == 0) THEN
 
 !       REPORT ON PROCESSOR NO.1 ONLY
 !       ------
-!ops        IF(iproc == 0) THEN
+        IF(ops_is_root() == 1) THEN
 
-!ops            OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
+            OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
 
 !           GO TO EOF
-!ops            1000      CONTINUE
-!ops            READ(ncrept,9000,END=1010)
-!ops            GO TO 1000
-!ops            1010      BACKSPACE(ncrept)
+            1000      CONTINUE
+            READ(ncrept,9000,END=1010)
+            GO TO 1000
+            1010      BACKSPACE(ncrept)
 
-!ops            WRITE(ncrept,9100)itime
-!ops            WRITE(ncrept,9110)etime,tstep
-!ops            CLOSE(ncrept)
+            WRITE(ncrept,9100)itime
+            WRITE(ncrept,9110)etime,tstep
+            CLOSE(ncrept)
 
-!ops        END IF
+       END IF
 
 !       =======================================================================
 
@@ -237,7 +237,7 @@ SUBROUTINE output
 !C        WRITE(NCDIAG,*)
 !C        CLOSE(NCDIAG)
 
-!ops    END IF
+    END IF
 
 !   =========================================================================
 !   UMOD START
@@ -281,7 +281,7 @@ SUBROUTINE output
 !       ---------------------
 !       USE THE DUMP FILE INDICATED BY IDFLAG
 !       RSC 11-JUL-2009 ADD A DUMP FORMAT SWITCH
-        IF ( ops_is_root() ) THEN
+        IF (ops_is_root() == 1) THEN
             IF( ndofmt == 0 ) THEN
 
 !               UNFORMATTED DUMP OUTPUT
@@ -304,21 +304,21 @@ SUBROUTINE output
 !       DUMP THE DATASETS
         fndump = pndump//pnxhdf
 
-        call ops_fetch_block_hdf5_file(senga_grid, trim(fndump))
+!        call ops_fetch_block_hdf5_file(senga_grid, trim(fndump))
 
-        call ops_fetch_dat_hdf5_file(d_drun, trim(fndump))
-        call ops_fetch_dat_hdf5_file(d_urun, trim(fndump))
-        call ops_fetch_dat_hdf5_file(d_vrun, trim(fndump))
-        call ops_fetch_dat_hdf5_file(d_wrun, trim(fndump))
-        call ops_fetch_dat_hdf5_file(d_erun, trim(fndump))
+!        call ops_fetch_dat_hdf5_file(d_drun, trim(fndump))
+!        call ops_fetch_dat_hdf5_file(d_urun, trim(fndump))
+!        call ops_fetch_dat_hdf5_file(d_vrun, trim(fndump))
+!        call ops_fetch_dat_hdf5_file(d_wrun, trim(fndump))
+!        call ops_fetch_dat_hdf5_file(d_erun, trim(fndump))
 
-        DO ispec = 1,nspcmx
-            call ops_fetch_dat_hdf5_file(d_yrun(ispec), trim(fndump))
-        END DO
+!        DO ispec = 1,nspcmx
+!            call ops_fetch_dat_hdf5_file(d_yrun(ispec), trim(fndump))
+!        END DO
 
 !       REPORT THE DUMP
 !       RSC 11-JUL-2009
-        IF ( ops_is_root() ) THEN
+        IF (ops_is_root() == 1) THEN
 
             OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
             3000      CONTINUE
@@ -359,7 +359,7 @@ SUBROUTINE output
 !   =========================================================================
 
 !   TIME STEP HISTORY
-    IF ( ops_is_root() ) THEN
+    IF (ops_is_root() .eq. 1) THEN
         WRITE(*,'(I7,1PE12.4,I5)')itime,tstep,inderr
     END IF
 
@@ -381,7 +381,7 @@ SUBROUTINE output
 !    IF( MOD(itime,ntdump) == 0 .and. (.not. (((itime == ntime1) .or. (itime == 0)) .and. ncdmpi == 1)) ) THEN
     IF( MOD(itime,ntdump) == 0 ) THEN
       call print_output()
-      IF ( ops_is_root() ) THEN
+      IF (ops_is_root() == 1) THEN
         INQUIRE(FILE="output/filed_time.dat",EXIST=file_exist)
         IF ( file_exist ) THEN
           OPEN(UNIT=1011,FILE="output/filed_time.dat",STATUS='OLD',POSITION='APPEND',FORM='FORMATTED')
@@ -426,7 +426,7 @@ SUBROUTINE output
                   &  ops_arg_reduce(h_tkes, 1, "real(kind=8)", OPS_INC))
     call ops_reduction_result(h_tkes, tkeg)
 
-    IF ( ops_is_root() ) THEN
+    IF (ops_is_root() == 1) THEN
         INQUIRE(FILE="output/tgv_stat.dat",EXIST=file_exist)
         IF ( file_exist ) THEN
             OPEN(UNIT=1011,FILE="output/tgv_stat.dat",STATUS='OLD',POSITION='APPEND',FORM='FORMATTED')

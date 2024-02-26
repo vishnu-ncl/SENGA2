@@ -202,9 +202,9 @@ PROGRAM senga2
 !       ===================
         call output
 
-!        IF (itime == 2100) THEN
+!        IF (itime == 1 .or. itime == 500 .or. itime == 1000) THEN
 !            call print_dats()
-!            STOP
+!            IF (itime == 1000) STOP
 !        END IF
 
 !       =======================================================================
@@ -217,7 +217,7 @@ PROGRAM senga2
 !   ===========
     call ops_timers ( endTime )
     call ops_timing_output( )
-    IF (ops_is_root() .eq. 1) THEN
+    IF (ops_is_root() == 1) THEN
         write (*,'(a,f16.7,a)') 'Max total runtime =', endTime - startTime,' seconds'
     END IF
 

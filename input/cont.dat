@@ -14,7 +14,7 @@ No. of processors (x,y,z)
  1      1      1
 
 Time step; start step, no of steps, step switch (0=fixed, 1=adaptive))
- 1.0D-12    1   101   1
+ 1.0D-12    1   2000000   1
 
 Intervals between dumps, reports, statistics, dump output (0/1=un/formatted)
  100    1    1      0

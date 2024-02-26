@@ -12,11 +12,11 @@ SUBROUTINE print_output()
     character(len=60) :: fname
     character(len=3) :: pnxhdf
     parameter(pnxhdf = '.h5')
-    character(len=4) :: citime
+    character(len=8) :: citime
     integer(kind=4) :: rangexyz(6)
 
     dtime=INT(itime/ntdump)
-    WRITE(citime,'(I4.4)') dtime
+    WRITE(citime,'(I8.8)') dtime
 
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
@@ -37,6 +37,7 @@ SUBROUTINE print_output()
 
     DO ispec = 1,nspcmx
         call ops_fetch_dat_hdf5_file(d_yrun(ispec), trim(fname))
+        call ops_fetch_dat_hdf5_file(d_rrte(ispec), trim(fname))
     END DO
 
     call ops_fetch_dat_hdf5_file(d2trun, trim(fname))

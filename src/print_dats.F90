@@ -12,12 +12,12 @@ SUBROUTINE print_dats()
     character(len=60) :: fname
     character(len=3) :: pnxhdf
     parameter(pnxhdf = '.h5')
-    character(len=4) :: citime
+    character(len=8) :: citime
     character(len=4) :: pnxtxt
     parameter(pnxtxt = '.txt')
 
 
-    WRITE(citime,'(I4.4)') itime
+    WRITE(citime,'(I8.8)') itime
 
     fname = 'test_dir/drhs_timestep'//citime//pnxhdf
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
@@ -84,6 +84,18 @@ SUBROUTINE print_dats()
     call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
     DO ispec = 1,nspcmx
         call ops_fetch_dat_hdf5_file(d_yrun(ispec), trim(fname))
+    END DO
+
+    fname = 'test_dir/rate_timestep'//citime//pnxhdf
+    call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
+    DO ispec = 1,nspcmx
+        call ops_fetch_dat_hdf5_file(d_rate(ispec), trim(fname))
+    END DO
+
+    fname = 'test_dir/rrte_timestep'//citime//pnxhdf
+    call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
+    DO ispec = 1,nspcmx
+        call ops_fetch_dat_hdf5_file(d_rrte(ispec), trim(fname))
     END DO
 
     fname = 'test_dir/trun_timestep'//citime//pnxhdf
