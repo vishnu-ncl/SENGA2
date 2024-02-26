@@ -17,7 +17,7 @@ MODULE com_senga
 
 !     GLOBAL GRID SIZE
 INTEGER :: nxglbl,nyglbl,nzglbl
-PARAMETER(nxglbl=16, nyglbl=16, nzglbl=16)
+PARAMETER(nxglbl=128, nyglbl=128, nzglbl=128)
 INTEGER :: ngzmax
 !     SET NGZMAX=MAX(NXGLBL,NYGLBL,NZGLBL)
 PARAMETER(ngzmax=nxglbl)
@@ -31,7 +31,7 @@ PARAMETER(nprmax=nxproc)
 
 !     LOCAL GRID SIZE
 INTEGER :: nxsize,nysize,nzsize
-PARAMETER(nxsize=16, nysize=16, nzsize=16)
+PARAMETER(nxsize=128, nysize=128, nzsize=128)
 INTEGER :: nszmax
 !     SET NSZMAX=MAX(NXSIZE,NYSIZE,NZSIZE)
 PARAMETER(nszmax=nxsize)
@@ -249,6 +249,7 @@ INTEGER :: ipref,jpref,kpref
 PARAMETER(ipref=1,jpref=1,kpref=1)
 
 !     PHYSICAL AND NUMERICAL DATA
+real(kind=8):: crin(1:nxsize)
 real(kind=8):: yrin(nspcmx)
 real(kind=8):: prin,trin,drin,urin,vrin,wrin,erin
 real(kind=8):: xgdlen,ygdlen,zgdlen
@@ -261,7 +262,7 @@ INTEGER :: itime,ntime,ntime1,ntime2,nstpsw,nsaved, inturb,inflam,inseed,  &
 CHARACTER (LEN=60) :: fncont,fnchem,fndiff,fnradn,fnrept,fnstat,fndmpo(2)
 LOGICAL :: fladpt
 
-COMMON/params/ yrin,prin,trin,drin,urin,vrin,wrin,erin,  &
+COMMON/params/ crin,yrin,prin,trin,drin,urin,vrin,wrin,erin,  &
     xgdlen,ygdlen,zgdlen, etime,tstep,deltax,deltay,deltaz,pi,clnten,  &
     itime,ntime,ntime1,ntime2,nstpsw,nsaved, inturb,inflam,inseed,  &
     nxgreq,nygreq,nzgreq,nxpreq,nypreq,nzpreq,nspreq,  &
@@ -550,9 +551,10 @@ real(kind=8):: utmp(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr),  &
     prun(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr),  &
     trun(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr),  &
     transp(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr),  &
-    store7(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr)
+    store7(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr), &
+    prun2(nxsize,nysize,nzsize),trun2(nxsize,nysize,nzsize)
 
-COMMON/worksb/utmp,vtmp,wtmp,prun,trun,transp,store7
+COMMON/worksb/utmp,vtmp,wtmp,prun,trun,transp,store7,prun2,trun2
 
 !     WORKSPACE (TEMPERATURE INDEXING)
 INTEGER :: itndex(nxbigl:nxbigr,nybigl:nybigr,nzbigl:nzbigr,nintmx)

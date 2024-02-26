@@ -195,10 +195,10 @@ DO jtime = ntime1,ntime2
   CALL output
   
 !       =======================================================================
-        IF (itime == 240) THEN
-            call print_dats()
-            STOP
-        END IF
+!    IF (itime == 1 .or. itime == 500 .or. itime == 1000) THEN
+!        call print_dats()
+!        IF (itime == 1000) STOP
+!    END IF
 
 END DO
 !     END OF TIME STEP LOOP

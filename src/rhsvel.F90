@@ -37,7 +37,7 @@ use com_senga
 
 !     LOCAL DATA
 !     ==========
-real(kind=8):: fornow,prefer
+real(kind=8):: fornow
 INTEGER :: ic,jc,kc
 
 
@@ -552,22 +552,10 @@ END DO
 
 !     PRESSURE GRADIENTS
 !     ------------------
+CALL dfbydx(prun,store4)
+CALL dfbydy(prun,store5)
+CALL dfbydz(prun,store6)
 
-prefer = prun(ipref,jpref,kpref)
-DO kc = kstab,kstob
-  DO jc = jstab,jstob
-    DO ic = istab,istob
-      
-      store7(ic,jc,kc) = prun(ic,jc,kc) - prefer
-      
-    END DO
-  END DO
-END DO
-
-!     8DX,8DY,8DZ
-CALL dfbydx(store7,store4)
-CALL dfbydy(store7,store5)
-CALL dfbydz(store7,store6)
 !                                                   STORE1,2,3 = DUDX,DVDY,DWDZ
 !                                                   STORE4,5,6 = 8DX,8DY,8DZ
 !     =========================================================================

@@ -58,7 +58,6 @@ EXTERNAL erfunc
 !     LOCAL DATA
 !     ==========
 real(kind=8):: deltagx,deltagy,deltagz,rglocl,u0,angfrx,angfry,angfrz
-real(kind=8):: crin(1:nxsize)
 real(kind=8):: yrinr(nspcmx),yrinp(nspcmx)
 real(kind=8):: trinr,trinp
 real(kind=8):: deltag,xcoord,argmnt,ycoord,zcoord
