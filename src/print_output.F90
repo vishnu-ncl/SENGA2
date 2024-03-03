@@ -34,6 +34,7 @@ SUBROUTINE print_output()
     call ops_fetch_dat_hdf5_file(d_urun, trim(fname))
     call ops_fetch_dat_hdf5_file(d_vrun, trim(fname))
     call ops_fetch_dat_hdf5_file(d_wrun, trim(fname))
+    call ops_fetch_dat_hdf5_file(d_erun, trim(fname))
 
     DO ispec = 1,nspcmx
         call ops_fetch_dat_hdf5_file(d_yrun(ispec), trim(fname))

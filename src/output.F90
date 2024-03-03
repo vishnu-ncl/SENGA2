@@ -279,42 +279,37 @@ SUBROUTINE output
 
 !       CARRY OUT A FULL DUMP
 !       ---------------------
+!       Datasets dumped for output visualization as well as for restart purpose
+        call print_output()
+
 !       USE THE DUMP FILE INDICATED BY IDFLAG
 !       RSC 11-JUL-2009 ADD A DUMP FORMAT SWITCH
-        IF (ops_is_root() == 1) THEN
-            IF( ndofmt == 0 ) THEN
+        idflag = MOD(INT(itime/ntdump), 2) + 1
+        IF( ndofmt == 0 ) THEN
+!           UNFORMATTED DUMP OUTPUT
+            OPEN(UNIT=ncdmpo, FILE=fndmpo(idflag), STATUS='OLD', FORM='UNFORMATTED')
 
-!               UNFORMATTED DUMP OUTPUT
-                OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag+1),STATUS='OLD', FORM='UNFORMATTED')
-                REWIND(ncdmpo)
-                WRITE(ncdmpo)nxglbl,nyglbl,nzglbl,nspec,&
-                             etime,tstep,errold,errldr
-                CLOSE(ncdmpo)
-            ELSE
-
-!               FORMATTED DUMP OUTPUT
-                OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag+1),STATUS='OLD', FORM='FORMATTED')
-                REWIND(ncdmpo)
-                WRITE(ncdmpo,*)nxglbl,nyglbl,nzglbl,nspec
-                WRITE(ncdmpo,*)etime,tstep,errold,errldr
-                CLOSE(ncdmpo)
+            IF (ops_is_root() == 1) THEN
+                WRITE(*,*) "Writing run information to file(unformatted): ", trim(fndmpo(idflag)), "  idflag: ", idflag
             END IF
+
+            REWIND(ncdmpo)
+            WRITE(ncdmpo)nxglbl,nyglbl,nzglbl,nspec,&
+                         etime,tstep,errold,errldr
+            CLOSE(ncdmpo)
+        ELSE
+!           FORMATTED DUMP OUTPUT
+            OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag),STATUS='OLD', FORM='FORMATTED')
+
+            IF (ops_is_root() == 1) THEN
+                WRITE(*,*) "Writing run information to file(formatted): ", trim(fndmpo(idflag)), "  idflag: ", idflag
+            END IF
+
+            REWIND(ncdmpo)
+            WRITE(ncdmpo,*)nxglbl,nyglbl,nzglbl,nspec
+            WRITE(ncdmpo,*)etime,tstep,errold,errldr
+            CLOSE(ncdmpo)
         END IF
-
-!       DUMP THE DATASETS
-        fndump = pndump//pnxhdf
-
-!        call ops_fetch_block_hdf5_file(senga_grid, trim(fndump))
-
-!        call ops_fetch_dat_hdf5_file(d_drun, trim(fndump))
-!        call ops_fetch_dat_hdf5_file(d_urun, trim(fndump))
-!        call ops_fetch_dat_hdf5_file(d_vrun, trim(fndump))
-!        call ops_fetch_dat_hdf5_file(d_wrun, trim(fndump))
-!        call ops_fetch_dat_hdf5_file(d_erun, trim(fndump))
-
-!        DO ispec = 1,nspcmx
-!            call ops_fetch_dat_hdf5_file(d_yrun(ispec), trim(fndump))
-!        END DO
 
 !       REPORT THE DUMP
 !       RSC 11-JUL-2009
@@ -325,13 +320,21 @@ SUBROUTINE output
             READ(ncrept,9000,END=3010)
             GO TO 3000
             3010      BACKSPACE(ncrept)
-            WRITE(ncrept,9120)fndmpo(idflag+1)
+            WRITE(ncrept,9120)fndmpo(idflag)
             CLOSE(ncrept)
 
         END IF
 
-!       RESET THE DUMP FLAG
-        idflag = MOD(idflag+1,2)
+        IF (ops_is_root() == 1) THEN
+            INQUIRE(FILE="output/filed_time.dat",EXIST=file_exist)
+            IF ( file_exist ) THEN
+                OPEN(UNIT=1011,FILE="output/filed_time.dat",STATUS='OLD',POSITION='APPEND',FORM='FORMATTED')
+            ELSE
+                OPEN(UNIT=1011,FILE="output/filed_time.dat",STATUS='NEW',FORM='FORMATTED')
+            END IF
+            WRITE(1011,*) INT(itime/ntdump), etime
+            CLOSE(1011)
+        END IF
 
     END IF
 
@@ -359,7 +362,7 @@ SUBROUTINE output
 !   =========================================================================
 
 !   TIME STEP HISTORY
-    IF (ops_is_root() .eq. 1) THEN
+    IF (ops_is_root() == 1) THEN
         WRITE(*,'(I7,1PE12.4,I5)')itime,tstep,inderr
     END IF
 
@@ -377,21 +380,6 @@ SUBROUTINE output
     call ops_par_loop(maths_kernel_print_urhs, "print single value", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_gbl(itime, 1, "integer(kind=4)", OPS_READ))
-
-!    IF( MOD(itime,ntdump) == 0 .and. (.not. (((itime == ntime1) .or. (itime == 0)) .and. ncdmpi == 1)) ) THEN
-    IF( MOD(itime,ntdump) == 0 ) THEN
-      call print_output()
-      IF (ops_is_root() == 1) THEN
-        INQUIRE(FILE="output/filed_time.dat",EXIST=file_exist)
-        IF ( file_exist ) THEN
-          OPEN(UNIT=1011,FILE="output/filed_time.dat",STATUS='OLD',POSITION='APPEND',FORM='FORMATTED')
-        ELSE
-          OPEN(UNIT=1011,FILE="output/filed_time.dat",STATUS='NEW',FORM='FORMATTED')
-        END IF
-        WRITE(1011,*) INT(itime/ntdump), etime
-        CLOSE(1011)
-      END IF
-    END IF
 
 !-------TGV CALCULATIONS----------------------
     tkeg = zero

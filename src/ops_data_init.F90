@@ -38,10 +38,11 @@ SUBROUTINE ops_data_init()
     character(len=4) :: pnxdat
     parameter(pncont = 'input/cont', pnxdat = '.dat')
 
-    character(len=25) :: fndump
-    character(len=16) :: pndump
+    character(len=60) :: fname
     character(len=3) :: pnxhdf
-    parameter(pndump = 'output/dmpi_dats', pnxhdf = '.h5')
+    parameter(pnxhdf = '.h5')
+    integer(kind=4) :: dtime
+    character(len=8) :: citime
 
 !------------------------------------------------------------------------------------------------------------
 
@@ -576,9 +577,15 @@ SUBROUTINE ops_data_init()
     fncont = pncont//pnxdat
 !   Open the input file and find if its cold start/restart
     OPEN(UNIT=nccont,FILE=fncont,STATUS='OLD',FORM='FORMATTED')
-    DO line = 1,22
+    DO line = 1,16
         READ(nccont,*)
     END DO
+    READ(nccont,*)tstep,ntime1,ntime,nstpsw
+    READ(nccont,*)
+    READ(nccont,*)
+    READ(nccont,*)ntdump,ntrept,ntstat,ndofmt
+    READ(nccont,*)
+    READ(nccont,*)
 !   COLD START SWITCH (0=COLD START, 1=RESTART), DUMP INPUT FORMAT
     READ(nccont,*)ncdmpi,ndifmt
     CLOSE(nccont)
@@ -587,10 +594,12 @@ SUBROUTINE ops_data_init()
 !   WARM START
 !   ====================
     IF(ncdmpi == 1) THEN
-        fndump = pndump//pnxhdf
 
-!        WRITE(*,*) "Restart is not yet implemented in OPS"
-!        STOP
+        dtime=INT((ntime1-1)/ntdump)
+        WRITE(citime,'(I8.8)') dtime
+
+        fname = 'output/timestep'//citime//pnxhdf
+
 !       -----------------------------------------------------------------------
 !       THIS BLOCK MAY BE MODIFIED AS REQUIRED
 !       TO BLEND INITIAL VELOCITY AND SCALAR FIELDS
@@ -601,19 +610,20 @@ SUBROUTINE ops_data_init()
 !       ----------------------------
 !       READ THE DATA FROM DUMP INPUT FILE
 !       NOTE THAT URUN,VRUN,WRUN,ERUN AND YRUN ARE ALL IN CONSERVATIVE FORM
-        IF (ops_is_root() .eq. 1) THEN
-            WRITE(*,*)  "Warm Start: Reading from dumped data"
+        IF (ops_is_root() == 1) THEN
+            WRITE(*,*) "Warm Start: start step -> ", ntime1
+            WRITE(*,*) "Reading from dumped file: ", trim(fname)
         END IF
 
-        call ops_decl_dat_hdf5(d_drun_dump, senga_grid, 1, "real(kind=8)", "DRUN", trim(fndump), status)
-        call ops_decl_dat_hdf5(d_urun_dump, senga_grid, 1, "real(kind=8)", "URUN", trim(fndump), status)
-        call ops_decl_dat_hdf5(d_vrun_dump, senga_grid, 1, "real(kind=8)", "VRUN", trim(fndump), status)
-        call ops_decl_dat_hdf5(d_wrun_dump, senga_grid, 1, "real(kind=8)", "WRUN", trim(fndump), status)
-        call ops_decl_dat_hdf5(d_erun_dump, senga_grid, 1, "real(kind=8)", "ERUN", trim(fndump), status)
+        call ops_decl_dat_hdf5(d_drun_dump, senga_grid, 1, "real(kind=8)", "DRUN", trim(fname), status)
+        call ops_decl_dat_hdf5(d_urun_dump, senga_grid, 1, "real(kind=8)", "URUN", trim(fname), status)
+        call ops_decl_dat_hdf5(d_vrun_dump, senga_grid, 1, "real(kind=8)", "VRUN", trim(fname), status)
+        call ops_decl_dat_hdf5(d_wrun_dump, senga_grid, 1, "real(kind=8)", "WRUN", trim(fname), status)
+        call ops_decl_dat_hdf5(d_erun_dump, senga_grid, 1, "real(kind=8)", "ERUN", trim(fname), status)
 
         DO ispec = 1,nspcmx
             WRITE(buf,"(A4,I2.2)") "YRUN",ispec
-             call ops_decl_dat_hdf5(d_yrun_dump(ispec), senga_grid, 1, "real(kind=8)", trim(buf), trim(fndump), status)
+             call ops_decl_dat_hdf5(d_yrun_dump(ispec), senga_grid, 1, "real(kind=8)", trim(buf), trim(fname), status)
         END DO
 
     END IF
