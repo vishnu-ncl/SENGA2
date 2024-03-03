@@ -85,4 +85,9 @@ MODULE com_ops_senga
 
     TYPE(ops_dat) :: d_crin
 
+    TYPE(ops_dat) :: d_drun_dump, d_urun_dump, d_vrun_dump, d_wrun_dump, d_erun_dump
+    TYPE(ops_dat) :: d_yrun_dump(nspcmx)
+
+    TYPE(ops_stencil) :: s3d_000
+
 END MODULE com_ops_senga

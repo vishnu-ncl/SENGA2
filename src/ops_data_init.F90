@@ -1,5 +1,8 @@
 SUBROUTINE ops_data_init()
     use OPS_Fortran_Reference
+    use OPS_Fortran_hdf5_Declarations
+
+    use, intrinsic :: ISO_C_BINDING
 
     use com_senga
     use com_ops_senga
@@ -8,8 +11,20 @@ SUBROUTINE ops_data_init()
     integer(kind=4) :: d_base(3) = [1,1,1] !array indexing - start from 1
     integer(kind=4) :: d_p(3) !max boundary depths for the dat in the possitive direction
     integer(kind=4) :: d_m(3) !max boundary depths for the dat in the negative direction
-    integer(kind=4) :: ispec
+    integer(kind=4) :: ispec,status
     character(len=20) :: buf
+
+    integer(kind=4) :: a3d_000(3) = [0,0,0]
+
+    character(len=10) :: pncont
+    character(len=4) :: pnxdat
+    parameter(pncont = 'input/cont', pnxdat = '.dat')
+
+    character(len=60) :: fname
+    character(len=3) :: pnxhdf
+    parameter(pnxhdf = '.h5')
+    integer(kind=4) :: dtime
+    character(len=8) :: citime
 
 !   *-----------------------------------------OPS Declarations-----------------------------------------------*
 
@@ -302,7 +317,66 @@ SUBROUTINE ops_data_init()
     d_p    = [0,0,0]
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, crin, d_crin, "real(kind=8)", "CRIN")
 
+!------------------------------------Check for COLD/WARM start-----------------------------------------------
+
+    fncont = pncont//pnxdat
+!   Open the input file and find if its cold start/restart
+    OPEN(UNIT=nccont,FILE=fncont,STATUS='OLD',FORM='FORMATTED')
+    DO line = 1,16
+        READ(nccont,*)
+    END DO
+    READ(nccont,*)tstep,ntime1,ntime,nstpsw
+    READ(nccont,*)
+    READ(nccont,*)
+    READ(nccont,*)ntdump,ntrept,ntstat,ndofmt
+    READ(nccont,*)
+    READ(nccont,*)
+!   COLD START SWITCH (0=COLD START, 1=RESTART), DUMP INPUT FORMAT
+    READ(nccont,*)ncdmpi,ndifmt
+    CLOSE(nccont)
+
+!   ====================
+!   WARM START
+!   ====================
+    IF(ncdmpi == 1) THEN
+
+        dtime=INT((ntime1-1)/ntdump)
+        WRITE(citime,'(I8.8)') dtime
+
+        fname = 'output/timestep'//citime//pnxhdf
+
+!       -----------------------------------------------------------------------
+!       THIS BLOCK MAY BE MODIFIED AS REQUIRED
+!       TO BLEND INITIAL VELOCITY AND SCALAR FIELDS
+!       WITH PREVIOUSLY DUMPED DATA
+!       -----------------------------------------------------------------------
+
+!       RESTART FROM FULL DUMP FILES
+!       ----------------------------
+!       READ THE DATA FROM DUMP INPUT FILE
+!       NOTE THAT URUN,VRUN,WRUN,ERUN AND YRUN ARE ALL IN CONSERVATIVE FORM
+        IF (ops_is_root() == 1) THEN
+            WRITE(*,*) "Warm Start: start step -> ", ntime1
+            WRITE(*,*) "Reading from dumped file: ", trim(fname)
+        END IF
+
+        call ops_decl_dat_hdf5(d_drun_dump, senga_grid, 1, "real(kind=8)", "DRUN", trim(fname), status)
+        call ops_decl_dat_hdf5(d_urun_dump, senga_grid, 1, "real(kind=8)", "URUN", trim(fname), status)
+        call ops_decl_dat_hdf5(d_vrun_dump, senga_grid, 1, "real(kind=8)", "VRUN", trim(fname), status)
+        call ops_decl_dat_hdf5(d_wrun_dump, senga_grid, 1, "real(kind=8)", "WRUN", trim(fname), status)
+        call ops_decl_dat_hdf5(d_erun_dump, senga_grid, 1, "real(kind=8)", "ERUN", trim(fname), status)
+
+        DO ispec = 1,nspcmx
+            WRITE(buf,"(A4,I2.2)") "YRUN",ispec
+             call ops_decl_dat_hdf5(d_yrun_dump(ispec), senga_grid, 1, "real(kind=8)", trim(buf), trim(fname), status)
+        END DO
+
+    END IF
+
 !------------------------------------------------------------------------------------------------------------
+
+    call ops_decl_stencil( 3, 1, a3d_000, s3d_000, "0,0,0")
+
     call ops_partition(" ")
 !------------------------------------------------------------------------------------------------------------
 

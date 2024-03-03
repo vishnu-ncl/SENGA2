@@ -1,114 +1,123 @@
 SUBROUTINE indata
  
-! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-04  Time: 20:08:30
+    use OPS_Fortran_Reference
+    use OPS_Fortran_hdf5_Declarations
 
-!     *************************************************************************
+    use, intrinsic :: ISO_C_BINDING
 
-!     INDATA
-!     ======
+!   *************************************************************************
 
-!     AUTHOR
-!     ------
-!     R.S.CANT
+!   INDATA
+!   ======
 
-!     CHANGE RECORD
-!     -------------
-!     01-AUG-1996:  CREATED
-!     12-MAR-2003:  RSC UPDATED FOR SENGA2
-!     11-JUL-2009:  RSC ADD A DUMP FORMAT SWITCH
-!     29-AUG-2009:  RSC UPDATE NUMBER OF PROCESSORS
-!     06-JAN-2013:  RSC MIXTURE-AVERAGED TRANSPORT
-!     14-JUL-2013:  RSC RADIATION TREATMENT
+!   AUTHOR
+!   ------
+!   R.S.CANT
 
-!     DESCRIPTION
-!     -----------
-!     DNS CODE SENGA2
-!     INITIALISES ALL DATA
+!   CHANGE RECORD
+!   -------------
+!   01-AUG-1996:  CREATED
+!   12-MAR-2003:  RSC UPDATED FOR SENGA2
+!   11-JUL-2009:  RSC ADD A DUMP FORMAT SWITCH
+!   29-AUG-2009:  RSC UPDATE NUMBER OF PROCESSORS
+!   06-JAN-2013:  RSC MIXTURE-AVERAGED TRANSPORT
+!   14-JUL-2013:  RSC RADIATION TREATMENT
 
-!     FILES: CHEMICAL DATA FILE  - UNIT NCCHEM - FORMATTED INPUT
-!            TRANSPORT DATA FILE - UNIT NCDIFF - FORMATTED INPUT
-!            RADIATION DATA FILE - UNIT NCRADN - FORMATTED INPUT
-!            REPORT FILE         - UNIT NCREPT - FORMATTED OUTPUT
-!            STATISTICS FILE     - UNIT NCSTAT - FORMATTED OUTPUT
-!            DUMP OUTPUT FILES   - UNIT NCDMPO - UNFORMATTED
-!            DUMP INPUT FILES    - UNIT NCDMPI - UNFORMATTED  (RESTART ONLY)
+!   DESCRIPTION
+!   -----------
+!   DNS CODE SENGA2
+!   INITIALISES ALL DATA
 
-!     *************************************************************************
+!   FILES: CHEMICAL DATA FILE  - UNIT NCCHEM - FORMATTED INPUT
+!          TRANSPORT DATA FILE - UNIT NCDIFF - FORMATTED INPUT
+!          RADIATION DATA FILE - UNIT NCRADN - FORMATTED INPUT
+!          REPORT FILE         - UNIT NCREPT - FORMATTED OUTPUT
+!          STATISTICS FILE     - UNIT NCSTAT - FORMATTED OUTPUT
+!          DUMP OUTPUT FILES   - UNIT NCDMPO - UNFORMATTED
+!          DUMP INPUT FILES    - UNIT NCDMPI - UNFORMATTED  (RESTART ONLY)
+
+!   *************************************************************************
 
 
-!     GLOBAL DATA
-!     ===========
-!     -------------------------------------------------------------------------
+!   GLOBAL DATA
+!   ===========
+!   -------------------------------------------------------------------------
 #ifdef HDF5
-use hdf5io
+    use hdf5io
 #endif
-use com_espect
+    use com_espect
 
-use com_senga
-!     -------------------------------------------------------------------------
+    use com_senga
+    use com_ops_senga
+!   -------------------------------------------------------------------------
 
 
-!     PARAMETERS
-!     ==========
-!     FILENAME COMPONENTS
-CHARACTER (LEN=10) :: pncont,pnchem,pndiff,pnradn
-CHARACTER (LEN=11) :: pnrept,pnstat,pndmpi,pndmpo
-CHARACTER (LEN=4) :: pnxdat,pnxres
-PARAMETER(pncont = 'input/cont', pnchem = 'input/chem',  &
+!   PARAMETERS
+!   ==========
+!   FILENAME COMPONENTS
+    CHARACTER (LEN=10) :: pncont,pnchem,pndiff,pnradn
+    CHARACTER (LEN=11) :: pnrept,pnstat,pndmpi,pndmpo
+    CHARACTER (LEN=4) :: pnxdat,pnxres
+    PARAMETER(pncont = 'input/cont', pnchem = 'input/chem',  &
     pndiff = 'input/diff', pnradn = 'input/radn',  &
     pnrept = 'output/rept', pnstat = 'output/stat',  &
     pndmpi = 'output/dmpi', pndmpo = 'output/dmpo',  &
     pnxdat = '.dat', pnxres = '.res')
 
-!     REPORT FILE LINE LENGTH
-INTEGER :: lenlin
-PARAMETER(lenlin = 79)
+!   REPORT FILE LINE LENGTH
+    integer(kind=4) :: lenlin
+    PARAMETER(lenlin = 79)
 
-!     THERMO DATA INTERVAL-MATCHING TOLERANCE
-real(kind=8):: tttol
-PARAMETER(tttol = 0.0010_8)
+!   THERMO DATA INTERVAL-MATCHING TOLERANCE
+    real(kind=8):: tttol
+    PARAMETER(tttol = 0.0010_8)
 
+!   LOCAL DATA
+!   ==========
+    real(kind=8):: dyrin(nspcmx)
+    real(kind=8):: ctrans(nspcmx,4)
+    real(kind=8):: dtrans(nspcmx)
+    real(kind=8):: rtin,durin,dvrin,dwrin,derin
+    real(kind=8):: ttemp(5),ttold(5)
+    real(kind=8):: fornow,tmplog
+    real(kind=8):: combo1,combo2,combo3
+    integer(kind=4) :: iindex,ipower,icoeff,icoef1,icoef2
+    integer(kind=4) :: ic,jc,kc,ispec,istep,itint,icp
+    integer(kind=4) :: jspec,ncount
+    integer(kind=4) :: nxdmax,nydmax,nzdmax,ndspec
+    CHARACTER (LEN=132) :: strout
+    CHARACTER (LEN=79) :: clstar,cldash
+    CHARACTER (LEN=10) :: streac
+    CHARACTER (LEN=5) :: strstp
+    CHARACTER (LEN=4) :: straro
+    CHARACTER (LEN=1) :: strcof
+!   RSC UPDATE NUMBER OF PROCESSORS
+    CHARACTER (LEN=6) :: pnproc
+    CHARACTER (LEN=1) :: pnflag
+    LOGICAL :: fxdump
+    LOGICAL :: flgreq
 
-!     LOCAL DATA
-!     ==========
-real(kind=8):: dyrin(nspcmx)
-real(kind=8):: ctrans(nspcmx,4)
-real(kind=8):: dtrans(nspcmx)
-real(kind=8):: rtin,durin,dvrin,dwrin,derin
-real(kind=8):: ttemp(5),ttold(5)
-real(kind=8):: fornow,tmplog
-real(kind=8):: combo1,combo2,combo3
-INTEGER :: iindex,ipower,icoeff,icoef1,icoef2
-INTEGER :: ic,jc,kc,ispec,istep,itint,icp
-INTEGER :: jspec,ncount
-INTEGER :: nxdmax,nydmax,nzdmax,ndspec
-CHARACTER (LEN=132) :: strout
-CHARACTER (LEN=79) :: clstar,cldash
-CHARACTER (LEN=10) :: streac
-CHARACTER (LEN=5) :: strstp
-CHARACTER (LEN=4) :: straro
-CHARACTER (LEN=1) :: strcof
-!     RSC UPDATE NUMBER OF PROCESSORS
-CHARACTER (LEN=6) :: pnproc
-CHARACTER (LEN=1) :: pnflag
-LOGICAL :: fxdump
-LOGICAL :: flgreq
+    integer(kind=4) :: rangexyz(6)
+    integer(kind=4) :: dtime
+    character(len=60) :: fname
+    character(len=3) :: pnxhdf
+    parameter(pnxhdf = '.h5')
+    character(len=8) :: citime
 
-!     BEGIN
-!     =====
+!   BEGIN
+!   =====
 
-!     =========================================================================
+!   =========================================================================
 
-!     SET UP HDF5 I/O
-!     ===============
+!   SET UP HDF5 I/O
+!   ===============
 #ifdef HDF5
-CALL hdf5_init
+    CALL hdf5_init
 #endif
-!     SET UP FILE I/O
-!     ===============
+!   SET UP FILE I/O
+!   ===============
 
-!     UNIT NUMBERS
+!   UNIT NUMBERS
 nccont = 1
 ncchem = 2
 ncdiff = 3
@@ -1337,12 +1346,17 @@ END DO
 !   NOTE THAT URUN,VRUN,WRUN,ERUN AND YRUN ARE ALL IN CONSERVATIVE FORM
 !   RSC 11-JUL-2009 ADD A DUMP FORMAT SWITCH
 #ifndef HDF5
+        idflag = MOD(INT((ntime1-1)/ntdump), 2) + 1
         IF(ndifmt == 0)THEN
     
 !           UNFORMATTED DUMP INPUT
-            OPEN(UNIT=ncdmpi,FILE=fndmpo(1),STATUS='OLD', FORM='UNFORMATTED')
-            READ(ncdmpi)nxdmax,nydmax,nzdmax,ndspec, drun,urun,vrun,wrun,erun,yrun,  &
-                etime,tstep,errold,errldr
+            OPEN(UNIT=ncdmpi,FILE=fndmpo(idflag),STATUS='OLD', FORM='UNFORMATTED')
+
+            WRITE(*,*) "Reading previous run information from file(unformatted): ", trim(fndmpo(idflag)), " idflag: ", idflag
+
+!            READ(ncdmpi)nxdmax,nydmax,nzdmax,ndspec, drun,urun,vrun,wrun,erun,yrun,  &
+!                etime,tstep,errold,errldr
+            READ(ncdmpi) nxdmax, nydmax, nzdmax, ndspec, etime, tstep, errold, errldr
     
 !           SIZE ERROR CHECK
             IF(nxdmax /= nxnode)WRITE(6,*)'Dump input size error: x'
@@ -1354,7 +1368,10 @@ END DO
         ELSE
     
 !           FORMATTED DUMP INPUT
-            OPEN(UNIT=ncdmpi,FILE=fndmpo(1),STATUS='OLD',FORM='FORMATTED')
+            OPEN(UNIT=ncdmpi,FILE=fndmpo(idflag),STATUS='OLD',FORM='FORMATTED')
+
+            WRITE(*,*) "Reading previous run information from file(formatted): ", trim(fndmpo(idflag)), " idflag: ", idflag
+
             READ(ncdmpi,*)nxdmax,nydmax,nzdmax,ndspec
     
 !           SIZE ERROR CHECK
@@ -1363,20 +1380,66 @@ END DO
             IF(nzdmax /= nznode)WRITE(6,*)'Dump input size error: z'
             IF(ndspec /= nspec)WRITE(6,*)'Dump input size error: species'
     
-            DO kc = 1, nznode
-                DO jc = 1, nynode
-                    DO ic = 1, nxnode
-                        READ(ncdmpi,*)drun(ic,jc,kc),  &
-                            urun(ic,jc,kc),vrun(ic,jc,kc),wrun(ic,jc,kc), erun(ic,jc,kc),  &
-                            (yrun(ic,jc,kc,ispec),ispec=1,nspec)
-                    END DO
-                END DO
-            END DO
+!            DO kc = 1, nznode
+!                DO jc = 1, nynode
+!                    DO ic = 1, nxnode
+!                        READ(ncdmpi,*)drun(ic,jc,kc),  &
+!                            urun(ic,jc,kc),vrun(ic,jc,kc),wrun(ic,jc,kc), erun(ic,jc,kc),  &
+!                            (yrun(ic,jc,kc,ispec),ispec=1,nspec)
+!                    END DO
+!                END DO
+!            END DO
     
             READ(ncdmpi,*)etime,tstep,errold,errldr
     
             CLOSE(ncdmpi)
+
         END IF
+
+        WRITE(*,*) "etime: ", etime, "  tstep: ", tstep, "  errold:", errold, "  errldr: ",errldr
+
+        rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+        call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_drun_dump, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+        call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_urun_dump, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+        call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_vrun_dump, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+        call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_wrun_dump, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+        call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_erun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_erun_dump, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+        DO ispec = 1,nspcmx
+            call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_yrun_dump(ispec), 1, s3d_000, "real(kind=8)", OPS_READ))
+        END DO
+
+        dtime=INT((ntime1-1)/ntdump)
+        WRITE(citime,'(I8.8)') dtime
+        fname = 'output/timestep_warmstart'//citime//pnxhdf
+        call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
+
+        call ops_fetch_dat_hdf5_file(d_drun, trim(fname))
+        call ops_fetch_dat_hdf5_file(d_urun, trim(fname))
+        call ops_fetch_dat_hdf5_file(d_vrun, trim(fname))
+        call ops_fetch_dat_hdf5_file(d_wrun, trim(fname))
+        call ops_fetch_dat_hdf5_file(d_erun, trim(fname))
+
+        DO ispec = 1,nspcmx
+            call ops_fetch_dat_hdf5_file(d_yrun(ispec), trim(fname))
+        END DO
+
 #else
         CALL read_h5dump_files
 #endif

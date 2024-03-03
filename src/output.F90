@@ -281,31 +281,36 @@ SUBROUTINE output
 !   =====
 !   FULL DUMP OUTPUT
 !   ================
-!    IF(MOD(itime,ntdump) == 0)THEN
+    IF(MOD(itime,ntdump) == 0)THEN
   
 !       CARRY OUT A FULL DUMP
 !       ---------------------
 !       USE THE DUMP FILE INDICATED BY IDFLAG
 !       RSC 11-JUL-2009 ADD A DUMP FORMAT SWITCH
-!#ifndef HDF5
-!        IF(ndofmt == 0)THEN
+
+#ifndef HDF5
+        idflag = MOD(INT(itime/ntdump), 2) + 1
+        IF(ndofmt == 0)THEN
    
-!            write(*,*) "Timestep: ", itime, "  Writing output to: ",fndmpo(idflag+1)
- 
 !           UNFORMATTED DUMP OUTPUT
-!            OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag+1),STATUS='OLD', FORM='UNFORMATTED')
-!            REWIND(ncdmpo)
-            !WRITE(ncdmpo)nxnode,nynode,nznode,nspec, drun,urun,vrun,wrun,erun,yrun,  &
-            !             etime,tstep,errold,errldr
-!            WRITE(ncdmpo)nxglbl,nyglbl,nzglbl,nspec,&
-!                             etime,tstep,errold,errldr
-!            CLOSE(ncdmpo)
+            OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag),STATUS='OLD', FORM='UNFORMATTED')
+
+            WRITE(*,*) "Writing run information to file(unformatted): ", trim(fndmpo(idflag)), "  idflag: ", idflag
+
+            REWIND(ncdmpo)
+!            WRITE(ncdmpo)nxnode,nynode,nznode,nspec, drun,urun,vrun,wrun,erun,yrun,  &
+!                         etime,tstep,errold,errldr
+            WRITE(ncdmpo) nxglbl, nyglbl, nzglbl, nspec, etime, tstep, errold, errldr
+            CLOSE(ncdmpo)
     
-!        ELSE
+        ELSE
 !           FORMATTED DUMP OUTPUT
-!            OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag+1),STATUS='OLD', FORM='FORMATTED')
-!            REWIND(ncdmpo)
-!            WRITE(ncdmpo,*)nxnode,nynode,nznode,nspec
+            OPEN(UNIT=ncdmpo,FILE=fndmpo(idflag),STATUS='OLD', FORM='FORMATTED')
+
+            WRITE(*,*) "Writing run information to file(formatted): ", trim(fndmpo(idflag)), "  idflag: ", idflag
+
+            REWIND(ncdmpo)
+            WRITE(ncdmpo,*) nxnode, nynode, nznode, nspec
             !DO kc = 1,nznode
             !DO jc = 1,nynode
             !DO ic = 1,nxnode
@@ -315,32 +320,29 @@ SUBROUTINE output
             !END DO
             !END DO
             !END DO
-!            WRITE(ncdmpo,*)etime,tstep,errold,errldr
-!            CLOSE(ncdmpo)
-!        END IF
+            WRITE(ncdmpo,*) etime, tstep, errold, errldr
+            CLOSE(ncdmpo)
+        END IF
   
-!#else
-!  CALL write_h5_dumpfile
-!#endif
+#else
+  CALL write_h5_dumpfile
+#endif
 
 !       REPORT THE DUMP
 !       RSC 11-JUL-2009
-!        IF(iproc == 0)THEN
-!
-!            OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
-!            3000      CONTINUE
-!            READ(ncrept,9000,END=3010)
-!            GO TO 3000
-!            3010      BACKSPACE(ncrept)
-!            WRITE(ncrept,9120)fndmpo(idflag+1)
-!            CLOSE(ncrept)
-  
-!        END IF
+        IF(iproc == 0)THEN
 
-!       RESET THE DUMP FLAG
-!       idflag = MOD(idflag+1,2)
+            OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
+            3000      CONTINUE
+            READ(ncrept,9000,END=3010)
+            GO TO 3000
+            3010      BACKSPACE(ncrept)
+            WRITE(ncrept,9120)fndmpo(idflag)
+            CLOSE(ncrept)
 
-!    END IF
+        END IF
+
+    END IF
 
 !     =========================================================================
 
