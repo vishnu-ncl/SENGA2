@@ -246,10 +246,19 @@ SUBROUTINE ops_data_init()
 
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d2prun, "real(kind=8)", "PRN2")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d2trun, "real(kind=8)", "TRN2")
-
+!TGV Postprocessing data
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_utgv, "real(kind=8)", "UTGV")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_vtgv, "real(kind=8)", "VTGV")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_wtgv, "real(kind=8)", "WTGV")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_dutgvdx, "real(kind=8)", "DUTX")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_dvtgvdx, "real(kind=8)", "DVTX")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_dwtgvdx, "real(kind=8)", "DWTX")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_dutgvdy, "real(kind=8)", "DUTY")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_dvtgvdy, "real(kind=8)", "DVTY")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_dwtgvdy, "real(kind=8)", "DWTY")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_dutgvdz, "real(kind=8)", "DUTZ")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_dvtgvdz, "real(kind=8)", "DVTZ")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_dwtgvdz, "real(kind=8)", "DWTZ")
 
 !---------------------------------------MULTI-DIM DAT--------------------------------------------------------
 
@@ -638,6 +647,7 @@ SUBROUTINE ops_data_init()
     call ops_decl_reduction_handle(8, h_erytot, "real(kind=8)", "erytot")
     call ops_decl_reduction_handle(8, h_tket, "real(kind=8)", "tket")
     call ops_decl_reduction_handle(8, h_tkes, "real(kind=8)", "tkes")
+    call ops_decl_reduction_handle(8, h_enstro, "real(kind=8)", "enstro")
     call ops_decl_reduction_handle(8, h_ubart, "real(kind=8)", "ubart")
     call ops_decl_reduction_handle(8, h_vbart, "real(kind=8)", "vbart")
     call ops_decl_reduction_handle(8, h_wbart, "real(kind=8)", "wbart")

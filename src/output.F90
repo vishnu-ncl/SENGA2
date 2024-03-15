@@ -58,7 +58,7 @@ SUBROUTINE output
 !    real(kind=8) :: ttemp(nxsize,nysize,nzsize)
 !    real(kind=8) :: ptemp(nxsize,nysize,nzsize)
 !    real(kind=8) :: ytemp(nspec,nxsize,nysize,nzsize)
-    real(kind=8) :: tkeg
+    real(kind=8) :: tkeg,enstrg
 
     integer(kind=4) :: ispec
     integer(kind=4) :: ic, jc, kc
@@ -414,6 +414,22 @@ SUBROUTINE output
                   &  ops_arg_reduce(h_tkes, 1, "real(kind=8)", OPS_INC))
     call ops_reduction_result(h_tkes, tkeg)
 
+!-----ENSTROPHY CALCULATION-------------------
+    enstrg = zero
+    call ops_par_loop(maths_kernel_eqCQ, "Calculating enstrophy",senga_grid, 3,rangexyz, &
+                     ops_arg_dat(d_dvtgvdx, 1, s3d_000, "real(kind=8)",OPS_READ), &
+                     ops_arg_dat(d_dwtgvdx, 1, s3d_000, "real(kind=8)",OPS_READ), &
+                     ops_arg_dat(d_dutgvdy, 1, s3d_000, "real(kind=8)",OPS_READ), &
+                     ops_arg_dat(d_dwtgvdy, 1, s3d_000, "real(kind=8)",OPS_READ), &
+                     ops_arg_dat(d_dutgvdz, 1, s3d_000, "real(kind=8)",OPS_READ), &
+                     ops_arg_dat(d_dvtgvdz, 1, s3d_000, "real(kind=8)",OPS_READ), &
+                     ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                     ops_arg_gbl(deltagx, 1, "real(kind=8)", OPS_READ), &
+                     ops_arg_gbl(deltagy, 1, "real(kind=8)", OPS_READ), &
+                     ops_arg_gbl(deltagz, 1, "real(kind=8)", OPS_READ), &
+                     ops_arg_reduce(h_enstro, 1, "real(kind=8)",OPS_INC))
+    call ops_reduction_result(h_enstro, enstrg)                     
+
     IF (ops_is_root() == 1) THEN
         INQUIRE(FILE="output/tgv_stat.dat",EXIST=file_exist)
         IF ( file_exist ) THEN
@@ -421,7 +437,7 @@ SUBROUTINE output
         ELSE
             OPEN(UNIT=1011,FILE="output/tgv_stat.dat",STATUS='NEW',FORM='FORMATTED')
         END IF
-        WRITE(1011,*) etime, tkeg
+        WRITE(1011,*) etime, tkeg, enstrg
         CLOSE(1011)
     END IF
 
