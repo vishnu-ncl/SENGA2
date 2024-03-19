@@ -984,11 +984,7 @@ SUBROUTINE chemin
 
 !   =========================================================================
 
-    call ops_decl_const("alamdc", 1, "real(kind=8)", alamdc)
     call ops_decl_const("rlamda", 1, "real(kind=8)", rlamda)
-    call ops_decl_const("tlamda", 1, "real(kind=8)", tlamda)
-    call ops_decl_const("prantl", 1, "real(kind=8)", prantl)
-
     call ops_decl_const("alamda", 1, "real(kind=8)", alamda)
 
 !   =========================================================================
