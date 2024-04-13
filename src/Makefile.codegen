@@ -24,6 +24,7 @@ OPS_FILES = senga2.F90 com_ops_senga2.F90 ops_data_init.F90 dfinit.F90 dfbydx.F9
 
 ifeq ($(OPS_COMPILER),gnu)
 APP_FLAGS = -mcmodel=medium
+#-fallow-argument-mismatch
 endif
 
 ifeq ($(OPS_COMPILER),intel)
@@ -32,12 +33,17 @@ APP_FLAGS = -mcmodel=large -fp-model precise -fp-model source -no-fma -fimf-arch
 endif
 
 ifeq ($(OPS_COMPILER),pgi)
-APP_FLAGS = -Kieee -Mnofpapprox -mcmodel=medium -Ktrap=unf -Mnofprelaxed -m64 -pc 64 -nofma
+APP_FLAGS = -Kieee -Mnofpapprox -mcmodel=medium -Ktrap=unf -Mnofprelaxed -m64 -pc 64
+#-nofma
 endif
 
 APP_LIBS = fftlib/fftlib.a rndlib/rndlib.a parlib/parlib.a -lm
 
-TARGETS = mpi cuda
+TARGETS = seq tiled openmp mpi mpi_openmp mpi_tiled ompoffload mpi_ompoffload mpi_ompoffload_tiled
+
+ifeq ($(OPS_COMPILER),pgi)
+	TARGETS += cuda mpi_cuda mpi_cuda_tiled
+endif
 
 APP = senga2
 MAIN_SRC = senga2
@@ -81,12 +87,35 @@ endif
 endif
 
 ifndef TARGETS
-TARGETS = seq openmp tiled mpi mpi_openmp mpi_tiled
+TARGETS = seq openmp tiled mpi mpi_openmp mpi_tiled ompoffload mpi_ompoffload mpi_ompoffload_tiled
 
 ifeq ($(OPS_COMPILER),pgi)
 	TARGETS += cuda mpi_cuda mpi_cuda_tiled
 endif
 
+endif
+
+ifneq (,$(filter ompoffload mpi_ompoffload mpi_ompoffload_tiled,$(TARGETS)))
+ifeq ($(OPS_COMPILER),gnu)
+TARGETS:=$(filter-out ompoffload mpi_ompoffload mpi_ompoffload_tiled,$(TARGETS))
+endif
+ifeq ($(OPS_COMPILER),intel)
+TARGETS:=$(filter-out ompoffload mpi_ompoffload mpi_ompoffload_tiled,$(TARGETS))
+endif
+ifeq ($(OPS_COMPILER),intel-sycl)
+TARGETS:=$(filter-out ompoffload mpi_ompoffload mpi_ompoffload_tiled,$(TARGETS))
+endif
+endif
+
+ifneq (,$(filter ompoffload mpi_ompoffload mpi_ompoffload_tiled,$(TARGETS)))
+OTHER_FILES_OFFLOAD := $(patsubst %, %_offload, $(filter-out constants.F90, $(OTHER_FILES))) constants_offload.F90
+endif
+
+ifneq ($(strip $(MPI_INSTALL_PATH)),)
+	I_MPI_INC = -I$(MPI_INC)
+	L_MPI_LIB = -L$(MPI_LIB)
+else
+	I_MPI_INC = $(foreach dir,$(shell $(MPICC) --showme:incdirs),-I$(dir))
 endif
 
 APP_TARGETS = $(addprefix $(APP)_, $(TARGETS))
@@ -95,6 +124,7 @@ all: $(APP_TARGETS)
 
 SEQ_KERNELS = $(wildcard mpi_openmp/*.F90)
 CUDA_KERNELS = $(wildcard cuda/*.CUF)
+OFFLOAD_KERNELS = $(wildcard openmp_offload/*.F90)
 
 MODULE_FILES = constants.F90 com_espect.F90 com_senga2.F90
 OPS_MODULE_FILES = com_ops_senga2_ops.F90
@@ -102,6 +132,8 @@ OTHER_FILES := $(filter-out $(MODULE_FILES), $(OTHER_FILES))
 OTHER_FILES := $(filter-out $(OPS_MODULE_FILES), $(OTHER_FILES))
 OPS_GENERATED := $(filter-out $(MODULE_FILES), $(OPS_GENERATED))
 OPS_GENERATED := $(filter-out $(OPS_MODULE_FILES), $(OPS_GENERATED))
+
+MODULE_FILES_OMPOFFLOAD = constants_offload.F90 com_espect.F90 com_senga2.F90
 
 #=========================================================================================================================
 
@@ -122,6 +154,12 @@ CUDA_OBJ = $(MODULE_FILES:.F90=_cuda.o) $(OPS_MODULE_FILES:.F90=_cuda.o) $(OTHER
 MPI_CUDA_OBJ = $(MODULE_FILES:.F90=_mpi_cuda.o) $(OPS_MODULE_FILES:.F90=_mpi_cuda.o) $(OTHER_FILES:.F90=_mpi_cuda.o) $(CUDA_KERNELS:.CUF=_mpi_cuda.o) $(OPS_GENERATED:.F90=_mpi_cuda.o)
 
 MPI_CUDA_TILED_OBJ = $(MODULE_FILES:.F90=_mpi_cuda_tiled.o) $(OPS_MODULE_FILES:.F90=_mpi_cuda_tiled.o) $(OTHER_FILES:.F90=_mpi_cuda_tiled.o) $(CUDA_KERNELS:.CUF=_mpi_cuda_tiled.o) $(OPS_GENERATED:.F90=_mpi_cuda_tiled.o)
+
+OMPOFFLOAD_OBJ = $(MODULE_FILES_OMPOFFLOAD:.F90=_offload.o) $(OPS_MODULE_FILES:.F90=_offload.o) $(OTHER_FILES:.F90=_offload.o) $(OFFLOAD_KERNELS:.F90=_offload.o) $(OPS_GENERATED:.F90=_offload.o)
+
+MPI_OMPOFFLOAD_OBJ = $(MODULE_FILES_OMPOFFLOAD:.F90=_mpi_offload.o) $(OPS_MODULE_FILES:.F90=_mpi_offload.o) $(OTHER_FILES:.F90=_mpi_offload.o) $(OFFLOAD_KERNELS:.F90=_mpi_offload.o) $(OPS_GENERATED:.F90=_mpi_offload.o)
+
+MPI_OMPOFFLOAD_TILED_OBJ = $(MODULE_FILES_OMPOFFLOAD:.F90=_mpi_offload_tiled.o) $(OPS_MODULE_FILES:.F90=_mpi_offload_tiled.o) $(OTHER_FILES:.F90=_mpi_offload_tiled.o) $(OFFLOAD_KERNELS:.F90=_mpi_offload_tiled.o) $(OPS_GENERATED:.F90=_mpi_offload_tiled.o)
 
 #=========================================================================================================================
 
@@ -161,95 +199,135 @@ MPI_CUDA_TILED_OBJ = $(MODULE_FILES:.F90=_mpi_cuda_tiled.o) $(OPS_MODULE_FILES:.
 %_mpi_cuda_tiled.o: %.CUF
 	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(CUDAFOR) -DOPS_MPI -DOPS_LAZY $(FMODS_CUDA) -c $< -o $@
 
+%_offload.o: %.F90
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(OMPOFFLOADFLAGS) $(OMPOFFLOADFOR) $(FMODS_OMPOFFLOAD) -c $< -o $@
+
+%_mpi_offload.o: %.F90
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(OMPOFFLOADFLAGS) $(OMPOFFLOADFOR) -DOPS_MPI $(FMODS_OMPOFFLOAD) -c $< -o $@
+
+%_mpi_offload_tiled.o: %.F90
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(OMPOFFLOADFLAGS) $(OMPOFFLOADFOR) -DOPS_MPI -DOPS_LAZY $(FMODS_OMPOFFLOAD) -c $< -o $@
+
+
 #=========================================================================================================================
 
-$(APP)_seq: Makefile .generated $(SEQ_OBJ)
+$(APP)_seq: Makefile .generated $(OPS_INSTALL_PATH)/fortran/lib/$(OPS_COMPILER)/libops_for_seq.a $(SEQ_OBJ)
 	@echo ""
 	@echo ""
 	@echo "Building ${APP}_seq"
 	@echo ""
-	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS) $(FLINK) $(SEQ_OBJ) -o $(APP)_seq $(APP_LIBS) -lops_for_seq $(F_HDF5_LIB_SEQ)
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS) $(SEQ_OBJ) $(APP_LIBS) $(FLINK) -lops_for_seq $(F_HDF5_LIB_SEQ) -o $(APP)_seq
 
 #=========================================================================================================================
 
-$(APP)_openmp: Makefile .generated $(OMP_OBJ)
+$(APP)_openmp: Makefile .generated $(OPS_INSTALL_PATH)/fortran/lib/$(OPS_COMPILER)/libops_for_seq.a $(OMP_OBJ)
 	@echo ""
 	@echo ""
 	@echo "Building ${APP}_openmp"
 	@echo ""
-	$(MPIF90) $(FFLAGS) $(OMPFLAGS) $(APP_FLAGS) $(FMODS) $(FLINK) $(OMP_OBJ) -o $(APP)_openmp $(APP_LIBS) -lops_for_seq $(F_HDF5_LIB_SEQ)
+	$(MPIF90) $(FFLAGS) $(OMPFLAGS) $(APP_FLAGS) $(FMODS) $(OMP_OBJ) $(APP_LIBS) $(FLINK) -lops_for_seq $(F_HDF5_LIB_SEQ) -o $(APP)_openmp
 
 #=========================================================================================================================
 
-$(APP)_tiled: Makefile .generated $(TILED_OBJ)
+$(APP)_tiled: Makefile .generated $(OPS_INSTALL_PATH)/fortran/lib/$(OPS_COMPILER)/libops_for_seq.a $(TILED_OBJ)
 	@echo ""
 	@echo ""
 	@echo "Building ${APP}_tiled"
 	@echo ""
-	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS) $(FLINK) -DOPS_LAZY $(TILED_OBJ) -o $(APP)_tiled $(APP_LIBS) -lops_for_seq $(F_HDF5_LIB_SEQ)
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS) -DOPS_LAZY $(TILED_OBJ) $(APP_LIBS) $(FLINK) -lops_for_seq $(F_HDF5_LIB_SEQ) -o $(APP)_tiled
 
 #=========================================================================================================================
 
-$(APP)_mpi: Makefile .generated $(MPI_OBJ)
+$(APP)_mpi: Makefile .generated $(OPS_INSTALL_PATH)/fortran/lib/$(OPS_COMPILER)/libops_for_mpi.a $(MPI_OBJ)
 	@echo ""
 	@echo ""
 	@echo "Building ${APP}_mpi"
 	@echo ""
-	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS) $(FLINK) $(MPILINK) -DOPS_MPI $(MPI_OBJ) -o $(APP)_mpi $(APP_LIBS) -lops_for_mpi $(F_HDF5_LIB_MPI)
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS) -DOPS_MPI $(MPI_OBJ) $(APP_LIBS) $(FLINK) -lops_for_mpi $(F_HDF5_LIB_MPI) $(L_MPI_LIB) $(MPI_LINK) -o $(APP)_mpi
 
 #=========================================================================================================================
 
-$(APP)_mpi_tiled: Makefile .generated $(MPI_TILED_OBJ)
+$(APP)_mpi_tiled: Makefile .generated $(OPS_INSTALL_PATH)/fortran/lib/$(OPS_COMPILER)/libops_for_mpi.a $(MPI_TILED_OBJ)
 	@echo ""
 	@echo ""
 	@echo ""
-	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS) $(FLINK) $(MPILINK) -DOPS_MPI -DOPS_LAZY $(MPI_TILED_OBJ) -o $(APP)_mpi_tiled $(APP_LIBS) -lops_for_mpi $(F_HDF5_LIB_MPI)
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS) -DOPS_MPI -DOPS_LAZY $(MPI_TILED_OBJ) $(APP_LIBS) $(FLINK) -lops_for_mpi $(F_HDF5_LIB_MPI) $(L_MPI_LIB) $(MPI_LINK) -o $(APP)_mpi_tiled
 
 #=========================================================================================================================
 
-$(APP)_mpi_openmp: Makefile .generated $(MPI_OMP_OBJ)
+$(APP)_mpi_openmp: Makefile .generated $(OPS_INSTALL_PATH)/fortran/lib/$(OPS_COMPILER)/libops_for_mpi.a $(MPI_OMP_OBJ)
 	@echo ""
 	@echo ""
 	@echo "Building ${APP}_mpi_openmp"
 	@echo ""
-	$(MPIF90) $(FFLAGS) $(OMPFLAGS) $(APP_FLAGS) $(FMODS) $(FLINK) $(MPILINK) -DOPS_MPI $(MPI_OMP_OBJ) -o $(APP)_mpi_openmp $(APP_LIBS) -lops_for_mpi $(F_HDF5_LIB_MPI)
+	$(MPIF90) $(FFLAGS) $(OMPFLAGS) $(APP_FLAGS) $(FMODS) -DOPS_MPI $(MPI_OMP_OBJ) $(APP_LIBS) $(FLINK) -lops_for_mpi $(F_HDF5_LIB_MPI) $(L_MPI_LIB) $(MPI_LINK) -o $(APP)_mpi_openmp
 
 #=========================================================================================================================
 
-$(APP)_cuda: Makefile .generated $(CUDA_OBJ)
+$(APP)_cuda: Makefile .generated $(OPS_INSTALL_PATH)/fortran/lib/$(OPS_COMPILER)/libops_for_cuda.a $(CUDA_OBJ)
 	@echo ""
 	@echo ""
 	@echo "Building ${APP}_cuda"
 	@echo ""
-	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS_CUDA) $(FLINK) $(CUDAFOR) $(CUDA_OBJ) -o $(APP)_cuda $(APP_LIBS) -lops_for_cuda $(F_HDF5_LIB_SEQ)
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS_CUDA) $(CUDAFOR) $(CUDA_OBJ) $(APP_LIBS) $(FLINK) -lops_for_cuda $(F_HDF5_LIB_SEQ) -o $(APP)_cuda
 
 #=========================================================================================================================
 
-$(APP)_mpi_cuda: Makefile .generated $(MPI_CUDA_OBJ)
+$(APP)_mpi_cuda: Makefile .generated $(OPS_INSTALL_PATH)/fortran/lib/$(OPS_COMPILER)/libops_for_mpi_cuda.a $(MPI_CUDA_OBJ)
 	@echo ""
 	@echo ""
 	@echo "Building ${APP}_mpi_cuda"
 	@echo ""
-	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS_CUDA) $(FLINK) $(MPILINK) $(CUDAFOR) -DOPS_MPI $(MPI_CUDA_OBJ) -o $(APP)_mpi_cuda $(APP_LIBS) -lops_for_mpi_cuda $(F_HDF5_LIB_MPI)
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS_CUDA) $(CUDAFOR) -DOPS_MPI $(MPI_CUDA_OBJ) $(APP_LIBS) $(FLINK) -lops_for_mpi_cuda $(F_HDF5_LIB_MPI) $(L_MPI_LIB) $(MPI_LINK) -o $(APP)_mpi_cuda
 
 #=========================================================================================================================
 
-$(APP)_mpi_cuda_tiled: Makefile .generated $(MPI_CUDA_TILED_OBJ)
+$(APP)_mpi_cuda_tiled: Makefile .generated $(OPS_INSTALL_PATH)/fortran/lib/$(OPS_COMPILER)/libops_for_mpi_cuda.a $(MPI_CUDA_TILED_OBJ)
 	@echo ""
 	@echo ""
 	@echo "Building ${APP}_mpi_cuda_tiled"
 	@echo ""
-	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS_CUDA) $(FLINK) $(MPILINK) $(CUDAFOR) -DOPS_MPI -DOPS_LAZY $(MPI_CUDA_TILED_OBJ) -o $(APP)_mpi_cuda_tiled $(APP_LIBS) -lops_for_mpi_cuda $(F_HDF5_LIB_MPI)
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS_CUDA) $(CUDAFOR) -DOPS_MPI -DOPS_LAZY $(MPI_CUDA_TILED_OBJ) $(APP_LIBS) $(FLINK) -lops_for_mpi_cuda $(F_HDF5_LIB_MPI) $(L_MPI_LIB) $(MPI_LINK) -o $(APP)_mpi_cuda_tiled
 
 #=========================================================================================================================
 
+$(APP)_ompoffload: Makefile .generated $(OPS_INSTALL_PATH)/fortran/lib/$(OPS_COMPILER)/libops_for_ompoffload.a $(OMPOFFLOAD_OBJ)
+	@echo ""
+	@echo ""
+	@echo "Building ${APP}_ompoffload"
+	@echo ""
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(OMPOFFLOADFLAGS) $(FMODS_OMPOFFLOAD) $(OMPOFFLOADFOR) $(OMPOFFLOAD_OBJ) $(APP_LIBS) $(FLINK) -lops_for_ompoffload $(F_HDF5_LIB_SEQ) -o $(APP)_ompoffload
+
+#=========================================================================================================================
+
+$(APP)_mpi_ompoffload: Makefile .generated $(OPS_INSTALL_PATH)/fortran/lib/$(OPS_COMPILER)/libops_for_mpi_ompoffload.a $(MPI_OMPOFFLOAD_OBJ)
+	@echo ""
+	@echo ""
+	@echo "Building ${APP}_mpi_ompoffload"
+	@echo ""
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(OMPOFFLOADFLAGS) $(FMODS_OMPOFFLOAD) $(OMPOFFLOADFOR) -DOPS_MPI $(MPI_OMPOFFLOAD_OBJ) $(APP_LIBS) $(FLINK) -lops_for_mpi_ompoffload $(F_HDF5_LIB_MPI) $(L_MPI_LIB) $(MPI_LINK) -o $(APP)_mpi_ompoffload
+
+#=========================================================================================================================
+
+$(APP)_mpi_ompoffload_tiled: Makefile .generated $(OPS_INSTALL_PATH)/fortran/lib/$(OPS_COMPILER)/libops_for_mpi_ompoffload.a $(MPI_OMPOFFLOAD_TILED_OBJ)
+	@echo ""
+	@echo ""
+	@echo "Building ${APP}_mpi_ompoffload_tiled"
+	@echo ""
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(OMPOFFLOADFLAGS) $(FMODS_OMPOFFLOAD) $(OMPOFFLOADFOR) -DOPS_LAZY -DOPS_MPI $(MPI_OMPOFFLOAD_TILED_OBJ) $(APP_LIBS) $(FLINK) -lops_for_mpi_ompoffload $(F_HDF5_LIB_MPI) $(L_MPI_LIB) $(MPI_LINK) -o $(APP)_mpi_ompoffload_tiled
+
+#=========================================================================================================================
+
+cleanall: clean
+	rm -rf ./mpi_openmp ./cuda ./openmp_offload
+
 clean:
 	rm -f .generated
-	rm -f *.o mpi_openmp/*.o cuda/*.o
-	rm -f *.oo mpi_openmp/*.oo cuda/*.oo
-	rm -f *.optrpt mpi_openmp/*.optrpt cuda/*.optrpt
-	rm -f *.mod MPI/*.mod cuda/*.mod
-	rm -f *~ mpi_openmp/*~ cuda/*~
-	rm -f constants_list.txt
-	rm -f $(APP)_seq $(APP)_openmp $(APP)_tiled $(APP)_mpi $(APP)_mpi_openmp $(APP)_mpi_tiled $(APP)_cuda $(APP)_mpi_cuda $(APP)_mpi_cuda_tiled
+	rm -f *.o mpi_openmp/*.o cuda/*.o openmp_offload/*.o
+	rm -f *.oo mpi_openmp/*.oo cuda/*.oo openmp_offload/*.oo
+	rm -f *.optrpt mpi_openmp/*.optrpt cuda/*.optrpt openmp_offload/*.optrpt
+	rm -f *.mod mpi_openmp/*.mod cuda/*.mod openmp_offload/*.mod
+	rm -f *~ mpi_openmp/*~ cuda/*~ openmp_offload/*~
+	rm -f constants_list.txt constants_offload.F90
+	rm -f $(APP)_seq $(APP)_openmp $(APP)_tiled $(APP)_mpi $(APP)_mpi_openmp $(APP)_mpi_tiled $(APP)_cuda $(APP)_mpi_cuda $(APP)_mpi_cuda_tiled $(APP)_ompoffload $(APP)_mpi_ompoffload $(APP)_mpi_ompoffload_tiled
 

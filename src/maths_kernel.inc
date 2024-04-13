@@ -1070,7 +1070,7 @@ SUBROUTINE maths_kernel_print_drhs(out_arr, itime)
 
 !    WRITE(*,'(a,I7,a,F16.8)')  &
 !      'test_drhs: (step=',itime,') value: ',out_arr(OPS_ACC1(0,0,0))
-#ifndef OPS_WITH_CUDAFOR
+#if !defined(OPS_WITH_CUDAFOR) && !defined(OPS_WITH_OMPOFFLOADFOR)
     print '(a,I7,a,F16.8)', 'test_drhs: (step=', itime, ') value: ', out_arr(OPS_ACC1(0,0,0))
 #endif
 
@@ -1083,7 +1083,7 @@ SUBROUTINE maths_kernel_print_erhs(out_arr, itime)
 
 !    WRITE(*,'(a,I7,a,F16.8)')  &
 !      'test_erhs: (step=',itime,') value: ',out_arr(OPS_ACC1(0,0,0))
-#ifndef OPS_WITH_CUDAFOR
+#if !defined(OPS_WITH_CUDAFOR) && !defined(OPS_WITH_OMPOFFLOADFOR)
     print '(a,I7,a,F16.8)', 'test_erhs: (step=', itime, ') value: ', out_arr(OPS_ACC1(0,0,0))
 #endif
 
@@ -1096,7 +1096,7 @@ SUBROUTINE maths_kernel_print_urhs(out_arr, itime)
 
 !    WRITE(*,'(a,I7,a,F16.8)')  &
 !      'test_urhs: (step=',itime,') value: ',out_arr(OPS_ACC1(0,0,0))
-#ifndef OPS_WITH_CUDAFOR
+#if !defined(OPS_WITH_CUDAFOR) && !defined(OPS_WITH_OMPOFFLOADFOR)
     print '(a,I7,a,F16.8)', 'test_urhs: (step=', itime, ') value: ', out_arr(OPS_ACC1(0,0,0))
 #endif
 

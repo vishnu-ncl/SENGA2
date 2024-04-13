@@ -1,8 +1,9 @@
 SUBROUTINE indata
 
     use OPS_Fortran_Reference
-
+    use OPS_Fortran_hdf5_Declarations
     use OPS_CONSTANTS
+
     use, intrinsic :: ISO_C_BINDING
 
     use com_senga
@@ -96,6 +97,12 @@ SUBROUTINE indata
     LOGICAL :: fxdump
     LOGICAL :: flgreq
 
+    integer(kind=4) :: dtime
+    character(len=60) :: fname
+    character(len=3) :: pnxhdf
+    parameter(pnxhdf = '.h5')
+    character(len=8) :: citime
+
 !   BEGIN
 !   =====
 
@@ -128,10 +135,10 @@ SUBROUTINE indata
     fnstat = pnstat//pnxres
     idflag = 0
     WRITE(pnflag,'(I1)')idflag
-    fndmpo(1) = pndmpi//pnflag//pnxdat
+    fndmpo(1) = pndmpi//pnproc//pnflag//pnxdat
     idflag = 1
     WRITE(pnflag,'(I1)')idflag
-    fndmpo(2) = pndmpi//pnflag//pnxdat
+    fndmpo(2) = pndmpi//pnproc//pnflag//pnxdat
 
 !   =========================================================================
 
@@ -881,27 +888,24 @@ SUBROUTINE indata
 
 !   CHECK AND INITIALISE DUMP FILES
 !   -------------------------------
-    IF ( ops_is_root() == 1 ) THEN
-        INQUIRE(FILE=fndmpo(1),EXIST=fxdump)
-        IF(.NOT.fxdump) THEN
-            IF(ndofmt == 0) THEN
-                OPEN(UNIT=ncdmpo,FILE=fndmpo(1),STATUS='REPLACE',FORM='UNFORMATTED')
-            ELSE
-                OPEN(UNIT=ncdmpo,FILE=fndmpo(1),STATUS='REPLACE',FORM='FORMATTED')
-            END IF
-            CLOSE(ncdmpo)
+    INQUIRE(FILE=fndmpo(1),EXIST=fxdump)
+    IF(.NOT.fxdump) THEN
+        IF(ndofmt == 0) THEN
+            OPEN(UNIT=ncdmpo,FILE=fndmpo(1),STATUS='REPLACE',FORM='UNFORMATTED')
+        ELSE
+            OPEN(UNIT=ncdmpo,FILE=fndmpo(1),STATUS='REPLACE',FORM='FORMATTED')
         END IF
+        CLOSE(ncdmpo)
+    END IF
 
-        INQUIRE(FILE=fndmpo(2),EXIST=fxdump)
-
-        IF(.NOT.fxdump) THEN
-            IF(ndofmt == 0) THEN
-                OPEN(UNIT=ncdmpo,FILE=fndmpo(2),STATUS='REPLACE',FORM='UNFORMATTED')
-            ELSE
-                OPEN(UNIT=ncdmpo,FILE=fndmpo(2),STATUS='REPLACE',FORM='FORMATTED')
-            END IF
-            CLOSE(ncdmpo)
+    INQUIRE(FILE=fndmpo(2),EXIST=fxdump)
+    IF(.NOT.fxdump) THEN
+        IF(ndofmt == 0) THEN
+            OPEN(UNIT=ncdmpo,FILE=fndmpo(2),STATUS='REPLACE',FORM='UNFORMATTED')
+        ELSE
+            OPEN(UNIT=ncdmpo,FILE=fndmpo(2),STATUS='REPLACE',FORM='FORMATTED')
         END IF
+        CLOSE(ncdmpo)
     END IF
 
 !   ==========================================================================
@@ -1218,41 +1222,52 @@ SUBROUTINE indata
 !       READ THE DATA FROM DUMP INPUT FILE 1
 !       NOTE THAT URUN,VRUN,WRUN,ERUN AND YRUN ARE ALL IN CONSERVATIVE FORM
 !       RSC 11-JUL-2009 ADD A DUMP FORMAT SWITCH
+        idflag = MOD(INT((ntime1-1)/ntdump), 2) + 1
+        IF(ndifmt == 0) THEN
 
-        WRITE(*,*) "Restart is not yet implemented in OPS"
-        STOP
+!           UNFORMATTED DUMP INPUT
+            OPEN(UNIT=ncdmpi,FILE=fndmpo(idflag),STATUS='OLD', FORM='UNFORMATTED')
 
-        IF ( ops_is_root() == 1 ) THEN
-            IF(ndifmt == 0) THEN
-
-!               UNFORMATTED DUMP INPUT
-                OPEN(UNIT=ncdmpi,FILE=fndmpo(2),STATUS='OLD', FORM='UNFORMATTED')
-                READ(ncdmpi)nxdmax,nydmax,nzdmax,ndspec,&
-                    etime,tstep,errold,errldr
-
-!               SIZE ERROR CHECK
-                IF(nxdmax /= nxglbl)WRITE(6,*)'Dump input size error: x'
-                IF(nydmax /= nyglbl)WRITE(6,*)'Dump input size error: y'
-                IF(nzdmax /= nzglbl)WRITE(6,*)'Dump input size error: z'
-                IF(ndspec /= nspec)WRITE(6,*)'Dump input size error: species'
-
-                CLOSE(ncdmpi)
-            ELSE
-
-!               FORMATTED DUMP INPUT
-                OPEN(UNIT=ncdmpi,FILE=fndmpo(1),STATUS='OLD',FORM='FORMATTED')
-                READ(ncdmpi,*)nxdmax,nydmax,nzdmax,ndspec
-
-!               SIZE ERROR CHECK
-                IF(nxdmax /= nxglbl)WRITE(6,*)'Dump input size error: x'
-                IF(nydmax /= nyglbl)WRITE(6,*)'Dump input size error: y'
-                IF(nzdmax /= nzglbl)WRITE(6,*)'Dump input size error: z'
-                IF(ndspec /= nspec)WRITE(6,*)'Dump input size error: species'
-
-                READ(ncdmpi,*)etime,tstep,errold,errldr
-
-                CLOSE(ncdmpi)
+            IF (ops_is_root() == 1) THEN
+                WRITE(*,*) "Reading previous run information from file(unformatted): ", trim(fndmpo(idflag)), " idflag: ", idflag
             END IF
+
+            READ(ncdmpi)nxdmax,nydmax,nzdmax,ndspec,&
+                        etime,tstep,errold,errldr
+
+!           SIZE ERROR CHECK
+            IF(nxdmax /= nxglbl) WRITE(6,*)'Dump input size error: x'
+            IF(nydmax /= nyglbl) WRITE(6,*)'Dump input size error: y'
+            IF(nzdmax /= nzglbl) WRITE(6,*)'Dump input size error: z'
+            IF(ndspec /= nspec)  WRITE(6,*)'Dump input size error: species'
+
+            CLOSE(ncdmpi)
+        ELSE
+
+!           FORMATTED DUMP INPUT
+            OPEN(UNIT=ncdmpi,FILE=fndmpo(idflag),STATUS='OLD',FORM='FORMATTED')
+
+            IF (ops_is_root() == 1) THEN
+                WRITE(*,*) "Reading previous run information from file(formatted): ", trim(fndmpo(idflag)), " idflag: ", idflag
+            END IF
+
+            READ(ncdmpi,*)nxdmax,nydmax,nzdmax,ndspec
+
+!           SIZE ERROR CHECK
+            IF(nxdmax /= nxglbl) WRITE(6,*)'Dump input size error: x'
+            IF(nydmax /= nyglbl) WRITE(6,*)'Dump input size error: y'
+            IF(nzdmax /= nzglbl) WRITE(6,*)'Dump input size error: z'
+            IF(ndspec /= nspec)  WRITE(6,*)'Dump input size error: species'
+
+            READ(ncdmpi,*)etime,tstep,errold,errldr
+
+            CLOSE(ncdmpi)
+
+        END IF
+
+        IF (ops_is_root() == 1) THEN
+            WRITE(*,*) "etime: ", etime, "  tstep: ", tstep, "  errold:", errold, "  errldr: ",errldr
+            WRITE(*,*) "Warm Start: Copying dumped dats....."
         END IF
 
         rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
@@ -1289,6 +1304,21 @@ SUBROUTINE indata
         call ops_free_dat(d_erun_dump)
         DO ispec = 1,nspcmx
             call ops_free_dat(d_yrun_dump(ispec))
+        END DO
+
+        dtime=INT((ntime1-1)/ntdump)
+        WRITE(citime,'(I8.8)') dtime
+        fname = 'output/timestep_warmstart'//citime//pnxhdf
+        call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
+
+        call ops_fetch_dat_hdf5_file(d_drun, trim(fname))
+        call ops_fetch_dat_hdf5_file(d_urun, trim(fname))
+        call ops_fetch_dat_hdf5_file(d_vrun, trim(fname))
+        call ops_fetch_dat_hdf5_file(d_wrun, trim(fname))
+        call ops_fetch_dat_hdf5_file(d_erun, trim(fname))
+
+        DO ispec = 1,nspcmx
+            call ops_fetch_dat_hdf5_file(d_yrun(ispec), trim(fname))
         END DO
 
 !       =======================================================================
