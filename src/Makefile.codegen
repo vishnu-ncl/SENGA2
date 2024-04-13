@@ -23,7 +23,7 @@ OPS_FILES = senga2.F90 com_ops_senga2.F90 ops_data_init.F90 dfinit.F90 dfbydx.F9
     tempin.F90 parfer.F90 output.F90 print_dats.F90 print_alldats.F90 print_output.F90
 
 ifeq ($(OPS_COMPILER),gnu)
-APP_FLAGS = -mcmodel=medium 
+APP_FLAGS = -mcmodel=medium
 #-fallow-argument-mismatch
 endif
 
@@ -39,7 +39,7 @@ endif
 
 APP_LIBS = fftlib/fftlib.a rndlib/rndlib.a parlib/parlib.a -lm
 
-TARGETS = seq tiled openmp mpi mpi_openmp mpi_tiled cuda mpi_cuda mpi_cuda_tiled ompoffload mpi_ompoffload mpi_ompoffload_tiled
+TARGETS = seq tiled openmp mpi mpi_openmp mpi_tiled ompoffload mpi_ompoffload mpi_ompoffload_tiled
 
 ifeq ($(OPS_COMPILER),pgi)
 	TARGETS += cuda mpi_cuda mpi_cuda_tiled
@@ -71,9 +71,9 @@ OPS_FILES_GEN=$(OTHER_FILES) $(OPS_GENERATED)
 
 # Legacy code-gen
 #.generated: $(OPS_FILES) $(OPS_INSTALL_PATH)/../ops_translator_legacy/fortran/*.py
-#   $(OPS_INSTALL_PATH)/../ops_translator_legacy/fortran/ops_fortran.py $(OPS_FILES)
-#   rm -f .generated
-#   touch .generated
+#	$(OPS_INSTALL_PATH)/../ops_translator_legacy/fortran/ops_fortran.py $(OPS_FILES)
+#	rm -f .generated
+#	touch .generated
 
 # check what targets can not be built with current environment setting and give warnings
 ifneq ($(strip $(TARGETS)),)

@@ -336,11 +336,22 @@ SUBROUTINE diffin
         END DO
 
 !       FILL OUT THE THERMAL DIFFUSION COEFFICIENT MATRIX
-!       MATRIX IS SYMMETRIC
+!       RSC 26-MAY-2023
         DO ispec = 1, nspec
+!           LEADING DIAGONAL IS ZERO
             DO icoeff = 1, ncotdr
                 tdrcco(icoeff,ispec,ispec) = zero
             END DO
+
+!           MATRIX IS ANTISYMMETRIC
+!           ELEMENTS OF THE MATRIX TRANSPOSE ARE STORED
+            DO jspec = 1, ispec-1
+                DO icoeff = 1, ncotdr
+                    fornow = tdrcco(icoeff,jspec,ispec)
+                    tdrcco(icoeff,jspec,ispec) = -fornow
+                END DO
+            END DO
+
             DO jspec = ispec+1, nspec
                 DO icoeff = 1, ncotdr
                     fornow = tdrcco(icoeff,ispec,jspec)

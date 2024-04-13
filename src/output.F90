@@ -92,7 +92,7 @@ SUBROUTINE output
 
 !       REPORT ON PROCESSOR NO.1 ONLY
 !       ------
-        IF(ops_is_root() == 1) THEN
+        IF (ops_is_root() == 1) THEN
 
             OPEN(UNIT=ncrept,FILE=fnrept,STATUS='OLD',FORM='FORMATTED')
 
@@ -106,7 +106,7 @@ SUBROUTINE output
             WRITE(ncrept,9110)etime,tstep
             CLOSE(ncrept)
 
-       END IF
+        END IF
 
 !       =======================================================================
 

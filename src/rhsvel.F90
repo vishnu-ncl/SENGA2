@@ -83,7 +83,7 @@ SUBROUTINE rhsvel
       call dfbydx(d_wtmp,d_dwtgvdx)                                                                       
       call dfbydy(d_wtmp,d_dwtgvdy)                                                                       
       call dfbydz(d_wtmp,d_dwtgvdz)                                                                       
-!     END UMOD                                                                                        
+!     END UMOD
 
 
 !   =========================================================================
@@ -91,77 +91,251 @@ SUBROUTINE rhsvel
 !   COLLECT VELOCITY COMPONENTS FOR BCs
 !   -----------------------------------
 
+!   EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+    call dfbydy(d_utmp,d_store1)
+    call dfbydz(d_utmp,d_store2)
+
 !   X-DIRECTION
     IF(fxlcnv)THEN
         rangexyz = [1,1,1,nyglbl,1,nzglbl]
         call ops_par_loop(boundary_kernel_velcomp_xdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_t2bxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                        ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
 
     END IF
     IF(fxrcnv)THEN
         rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(boundary_kernel_velcomp_xdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_t2bxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                        ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
-
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
     END IF
+
+!   EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+    call dfbydx(d_vtmp,d_store1)
+    call dfbydz(d_vtmp,d_store2)
 
 !   Y-DIRECTION
     IF(fylcnv)THEN
         rangexyz = [1,nxglbl,1,1,1,nzglbl]
         call ops_par_loop(boundary_kernel_velcomp_ydir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_struyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_strwyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_t2byl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                        ops_arg_dat(d_struyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_strwyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE))
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
 
     END IF
     IF(fyrcnv)THEN
         rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
         call ops_par_loop(boundary_kernel_velcomp_ydir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_t2byr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                        ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE))
-
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
     END IF
+
+!   EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+    call dfbydx(d_wtmp,d_store1)
+    call dfbydy(d_wtmp,d_store2)
 
 !   Z-DIRECTION
     IF(fzlcnv)THEN
         rangexyz = [1,nxglbl,1,nyglbl,1,1]
         call ops_par_loop(boundary_kernel_velcomp_zdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_t2bzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                        ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE))
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
 
     END IF
     IF(fzrcnv)THEN
         rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
         call ops_par_loop(boundary_kernel_velcomp_zdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_struzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_strvzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_t2bzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                        ops_arg_dat(d_struzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_strvzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE))
-
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
     END IF
+
+!   EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+    call dfbydy(d_vtmp,d_store1)
+    call dfbydz(d_vtmp,d_store2)
+
+!   X-DIRECTION
+    IF(fxlcnv)THEN
+        rangexyz = [1,1,1,nyglbl,1,nzglbl]
+        call ops_par_loop(boundary_kernel_eqA_xdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_t3bxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
+    END IF
+    IF(fxrcnv)THEN
+        rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
+        call ops_par_loop(boundary_kernel_eqA_xdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_t3bxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
+    END IF
+
+!   EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+!   NC and VM changed here: ycorrection
+    call dfbydx(d_wtmp,d_store1)
+    call dfbydz(d_wtmp,d_store2)
+
+!   Y-DIRECTION
+    IF(fylcnv)THEN
+        rangexyz = [1,nxglbl,1,1,1,nzglbl]
+        call ops_par_loop(boundary_kernel_eqA_ydir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_t4byl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
+    END IF
+    IF(fyrcnv)THEN
+        rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
+        call ops_par_loop(boundary_kernel_eqA_ydir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_t4byr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
+    END IF
+
+!   EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+    call dfbydx(d_utmp,d_store1)
+    call dfbydy(d_utmp,d_store2)
+
+!   Z-DIRECTION
+    IF(fzlcnv)THEN
+        rangexyz = [1,nxglbl,1,nyglbl,1,1]
+        call ops_par_loop(boundary_kernel_eqA_zdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_t3bzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
+    END IF
+    IF(fzrcnv)THEN
+        rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
+        call ops_par_loop(boundary_kernel_eqA_zdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_t3bzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
+    END IF
+
+!   EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+    call dfbydy(d_wtmp,d_store1)
+    call dfbydz(d_wtmp,d_store2)
+
+!   X-DIRECTION
+    IF(fxlcnv)THEN
+        rangexyz = [1,1,1,nyglbl,1,nzglbl]
+        call ops_par_loop(boundary_kernel_eqA_xdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_t4bxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
+    END IF
+    IF(fxrcnv)THEN
+        rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
+        call ops_par_loop(boundary_kernel_eqA_xdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_t4bxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
+    END IF
+
+!   EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+!   NC and VM changed here: ycorrection
+    call dfbydx(d_utmp,d_store1)
+    call dfbydz(d_utmp,d_store2)
+
+!   Y-DIRECTION
+    IF(fylcnv)THEN
+        rangexyz = [1,nxglbl,1,1,1,nzglbl]
+        call ops_par_loop(boundary_kernel_eqA_ydir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_t3byl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
+    END IF
+    IF(fyrcnv)THEN
+        rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
+        call ops_par_loop(boundary_kernel_eqA_ydir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_t3byr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
+    END IF
+
+!   EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
+    call dfbydx(d_vtmp,d_store1)
+    call dfbydy(d_vtmp,d_store2)
+
+!   Z-DIRECTION
+    IF(fzlcnv)THEN
+        rangexyz = [1,nxglbl,1,nyglbl,1,1]
+        call ops_par_loop(boundary_kernel_eqA_zdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_t4bzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
+    END IF
+    IF(fzrcnv)THEN
+        rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
+        call ops_par_loop(boundary_kernel_eqA_zdir, "COLLECT VELOCITY COMPONENTS FOR BCs", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_t4bzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
+    END IF
+
 
 !   =========================================================================
 !   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -465,76 +639,139 @@ SUBROUTINE rhsvel
 !   PRESSURE GRADIENTS
 !   ------------------
 
-!   8DX,8DY,8DZ
+!   DPDX,DPDY,DPDZ
     call dfbydx(d_prun,d_store4)
     call dfbydy(d_prun,d_store5)
     call dfbydz(d_prun,d_store6)
 
 !                                              STORE1,2,3 = DUDX,DVDY,DWDZ
-!                                                 STORE4,5,6 = 8DX,8DY,8DZ
+!                                              STORE4,5,6 = DPDX,DPDY,DPDZ
 !   ======================================================================
 
 !   COLLECT PRESSURE AND ITS GRADIENTS FOR BCs
 !   ------------------------------------------
 
-!   X-DIRECTION: P AND 8DX
+!   X-DIRECTION: P AND DPDX
     IF(fxlcnv)THEN
         rangexyz = [1,1,1,nyglbl,1,nzglbl]
         call ops_par_loop(boundary_kernel_pressure_xdir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                        ops_arg_dat(d_store4, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_strpxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
+                        ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_t3bxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_INC), &
+                        ops_arg_dat(d_t4bxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_INC), &
+                        ops_arg_dat(d_t51bxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_t52bxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store5, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store6, 1, s3d_000, "real(kind=8)", OPS_READ))
 
     END IF
     IF(fxrcnv)THEN
         rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(boundary_kernel_pressure_xdir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                        ops_arg_dat(d_store4, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_strpxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_bcl5xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
-
+                        ops_arg_dat(d_bcl5xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_t3bxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_INC), &
+                        ops_arg_dat(d_t4bxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_INC), &
+                        ops_arg_dat(d_t51bxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_t52bxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store5, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store6, 1, s3d_000, "real(kind=8)", OPS_READ))
     END IF
 
-!   Y-DIRECTION: P AND 8DY
+!   Y-DIRECTION: P AND DPDY
     IF(fylcnv)THEN
         rangexyz = [1,nxglbl,1,1,1,nzglbl]
         call ops_par_loop(boundary_kernel_pressure_ydir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                        ops_arg_dat(d_store5, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_strpyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE))
+                        ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_t3byl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_INC), &
+                        ops_arg_dat(d_t4byl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_INC), &
+                        ops_arg_dat(d_t51byl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_t52byl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store5, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store6, 1, s3d_000, "real(kind=8)", OPS_READ))
 
     END IF
     IF(fyrcnv)THEN
         rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
         call ops_par_loop(boundary_kernel_pressure_ydir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                        ops_arg_dat(d_store5, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_strpyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_bcl5yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE))
-
+                        ops_arg_dat(d_bcl5yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_t3byr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_INC), &
+                        ops_arg_dat(d_t4byr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_INC), &
+                        ops_arg_dat(d_t51byr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_t52byr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store5, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store6, 1, s3d_000, "real(kind=8)", OPS_READ))
     END IF
 
-!   Z-DIRECTION: P AND 8DZ
+!   Z-DIRECTION: P AND DPDZ
     IF(fzlcnv)THEN
         rangexyz = [1,nxglbl,1,nyglbl,1,1]
         call ops_par_loop(boundary_kernel_pressure_zdir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                        ops_arg_dat(d_store6, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_strpzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE))
+                        ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_t3bzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_INC), &
+                        ops_arg_dat(d_t4bzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_INC), &
+                        ops_arg_dat(d_t51bzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_t52bzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store5, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store6, 1, s3d_000, "real(kind=8)", OPS_READ))
 
     END IF
     IF(fzrcnv)THEN
         rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
         call ops_par_loop(boundary_kernel_pressure_zdir, "COLLECT PRESSURE AND ITS GRADIENTS FOR BCs", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                        ops_arg_dat(d_store6, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_strpzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_bcl5zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE))
-
+                        ops_arg_dat(d_bcl5zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_t3bzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_INC), &
+                        ops_arg_dat(d_t4bzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_INC), &
+                        ops_arg_dat(d_t51bzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_t52bzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store4, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store5, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store6, 1, s3d_000, "real(kind=8)", OPS_READ))
     END IF
 
 !   =========================================================================
@@ -542,8 +779,8 @@ SUBROUTINE rhsvel
 !   U,V,W-EQUATIONS: PRESSURE GRADIENT TERMS
 !   E-EQUATION: PRESSURE WORK TERMS
 !   -------------------------------
-!   8DX,8DY,8DZ
-!   U 8DX + V 8DY + W 8DZ
+!   DPDX,DpDY,DPDZ
+!   U DPDX + V DPDY + W DPDZ
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     call ops_par_loop(maths_kernel_eqS, "A = A-B", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_INC), &

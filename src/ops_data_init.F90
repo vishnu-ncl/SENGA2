@@ -319,6 +319,14 @@ SUBROUTINE ops_data_init()
         call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_strhxl(ispec), "real(kind=8)", trim(buf))
         WRITE(buf,"(A6,I2.2)") "STRHXR",ispec
         call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_strhxr(ispec), "real(kind=8)", trim(buf))
+        WRITE(buf,"(A6,I2.2)") "T6BXL",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t6bxl(ispec), "real(kind=8)", trim(buf))
+        WRITE(buf,"(A6,I2.2)") "T6BXR",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t6bxr(ispec), "real(kind=8)", trim(buf))
+        WRITE(buf,"(A6,I2.2)") "TT6XL",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt6xl(ispec), "real(kind=8)", trim(buf))
+        WRITE(buf,"(A6,I2.2)") "TT6XR",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt6xr(ispec), "real(kind=8)", trim(buf))
     END DO
 
     d_size = [nxglbl, 1, nzglbl]
@@ -345,6 +353,14 @@ SUBROUTINE ops_data_init()
         call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_strhyl(ispec), "real(kind=8)", trim(buf))
         WRITE(buf,"(A6,I2.2)") "STRHYR",ispec
         call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_strhyr(ispec), "real(kind=8)", trim(buf))
+        WRITE(buf,"(A6,I2.2)") "T6BYL",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t6byl(ispec), "real(kind=8)", trim(buf))
+        WRITE(buf,"(A6,I2.2)") "T6BYR",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t6byr(ispec), "real(kind=8)", trim(buf))
+        WRITE(buf,"(A6,I2.2)") "TT6YL",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt6yl(ispec), "real(kind=8)", trim(buf))
+        WRITE(buf,"(A6,I2.2)") "TT6YR",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt6yr(ispec), "real(kind=8)", trim(buf))
     END DO
 
     d_size = [nxglbl, nyglbl, 1]
@@ -371,6 +387,14 @@ SUBROUTINE ops_data_init()
         call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_strhzl(ispec), "real(kind=8)", trim(buf))
         WRITE(buf,"(A6,I2.2)") "STRHZR",ispec
         call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_strhzr(ispec), "real(kind=8)", trim(buf))
+        WRITE(buf,"(A6,I2.2)") "T6BZL",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t6bzl(ispec), "real(kind=8)", trim(buf))
+        WRITE(buf,"(A6,I2.2)") "T6BZR",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t6bzr(ispec), "real(kind=8)", trim(buf))
+        WRITE(buf,"(A6,I2.2)") "TT6ZL",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt6zl(ispec), "real(kind=8)", trim(buf))
+        WRITE(buf,"(A6,I2.2)") "TT6ZR",ispec
+        call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt6zr(ispec), "real(kind=8)", trim(buf))
     END DO
 
 !---------------------------------------WITH HALOS-----------------------------------------------------------
@@ -457,6 +481,28 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_sydtxr, "real(kind=8)", "SYDTXR")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_sorpxl, "real(kind=8)", "SORPXL")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_sorpxr, "real(kind=8)", "SORPXR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t1bxl, "real(kind=8)", "T1BXL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t1bxr, "real(kind=8)", "T1BXR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t2bxl, "real(kind=8)", "T2BXL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t2bxr, "real(kind=8)", "T2BXR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t3bxl, "real(kind=8)", "T3BXL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t3bxr, "real(kind=8)", "T3BXR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t4bxl, "real(kind=8)", "T4BXL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t4bxr, "real(kind=8)", "T4BXR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t51bxl, "real(kind=8)", "T51BXL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t51bxr, "real(kind=8)", "T51BXR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t52bxl, "real(kind=8)", "T52BXL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t52bxr, "real(kind=8)", "T52BXR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt1xl, "real(kind=8)", "TT1XL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt1xr, "real(kind=8)", "TT1XR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt2xl, "real(kind=8)", "TT2XL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt2xr, "real(kind=8)", "TT2XR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt3xl, "real(kind=8)", "TT3XL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt3xr, "real(kind=8)", "TT3XR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt4xl, "real(kind=8)", "TT4XL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt4xr, "real(kind=8)", "TT4XR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt5xl, "real(kind=8)", "TT5XL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt5xr, "real(kind=8)", "TT5XR")
 
 !-----------------------------------------Boundary XZ--------------------------------------------------------
 
@@ -515,6 +561,28 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_sydtyr, "real(kind=8)", "SYDTYR")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_sorpyl, "real(kind=8)", "SORPYL")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_sorpyr, "real(kind=8)", "SORPYR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t1byl, "real(kind=8)", "T1BYL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t1byr, "real(kind=8)", "T1BYR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t2byl, "real(kind=8)", "T2BYL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t2byr, "real(kind=8)", "T2BYR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t3byl, "real(kind=8)", "T3BYL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t3byr, "real(kind=8)", "T3BYR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t4byl, "real(kind=8)", "T4BYL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t4byr, "real(kind=8)", "T4BYR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t51byl, "real(kind=8)", "T51BYL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t51byr, "real(kind=8)", "T51BYR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t52byl, "real(kind=8)", "T52BYL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t52byr, "real(kind=8)", "T52BYR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt1yl, "real(kind=8)", "TT1YL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt1yr, "real(kind=8)", "TT1YR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt2yl, "real(kind=8)", "TT2YL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt2yr, "real(kind=8)", "TT2YR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt3yl, "real(kind=8)", "TT3YL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt3yr, "real(kind=8)", "TT3YR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt4yl, "real(kind=8)", "TT4YL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt4yr, "real(kind=8)", "TT4YR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt5yl, "real(kind=8)", "TT5YL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt5yr, "real(kind=8)", "TT5YR")
 
 !-----------------------------------------Boundary XY--------------------------------------------------------
 
@@ -573,6 +641,28 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_sydtzr, "real(kind=8)", "SYDTZR")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_sorpzl, "real(kind=8)", "SORPZL")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_sorpzr, "real(kind=8)", "SORPZR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t1bzl, "real(kind=8)", "T1BZL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t1bzr, "real(kind=8)", "T1BZR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t2bzl, "real(kind=8)", "T2BZL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t2bzr, "real(kind=8)", "T2BZR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t3bzl, "real(kind=8)", "T3BZL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t3bzr, "real(kind=8)", "T3BZR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t4bzl, "real(kind=8)", "T4BZL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t4bzr, "real(kind=8)", "T4BZR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t51bzl, "real(kind=8)", "T51BZL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t51bzr, "real(kind=8)", "T51BZR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t52bzl, "real(kind=8)", "T52BZL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_t52bzr, "real(kind=8)", "T52BZR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt1zl, "real(kind=8)", "TT1ZL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt1zr, "real(kind=8)", "TT1ZR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt2zl, "real(kind=8)", "TT2ZL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt2zr, "real(kind=8)", "TT2ZR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt3zl, "real(kind=8)", "TT3ZL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt3zr, "real(kind=8)", "TT3ZR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt4zl, "real(kind=8)", "TT4ZL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt4zr, "real(kind=8)", "TT4ZR")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt5zl, "real(kind=8)", "TT5ZL")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, temp_real_null, d_tt5zr, "real(kind=8)", "TT5ZR")
 
 !------------------------------------Only X-direction--------------------------------------------------------
 

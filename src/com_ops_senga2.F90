@@ -49,11 +49,17 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_tcoeff, d_tderiv;
 
     TYPE(ops_dat) :: d_bclyxl(nspcmx), d_stryxl(nspcmx), d_dydtxl(nspcmx), d_ratexl(nspcmx), d_strhxl(nspcmx)
+    TYPE(ops_dat) :: d_t6bxl(nspcmx), d_tt6xl(nspcmx)
     TYPE(ops_dat) :: d_bclyxr(nspcmx), d_stryxr(nspcmx), d_dydtxr(nspcmx), d_ratexr(nspcmx), d_strhxr(nspcmx)
+    TYPE(ops_dat) :: d_t6bxr(nspcmx), d_tt6xr(nspcmx)
     TYPE(ops_dat) :: d_bclyyl(nspcmx), d_stryyl(nspcmx), d_dydtyl(nspcmx), d_rateyl(nspcmx), d_strhyl(nspcmx)
+    TYPE(ops_dat) :: d_t6byl(nspcmx), d_tt6yl(nspcmx)
     TYPE(ops_dat) :: d_bclyyr(nspcmx), d_stryyr(nspcmx), d_dydtyr(nspcmx), d_rateyr(nspcmx), d_strhyr(nspcmx)
+    TYPE(ops_dat) :: d_t6byr(nspcmx), d_tt6yr(nspcmx)
     TYPE(ops_dat) :: d_bclyzl(nspcmx), d_stryzl(nspcmx), d_dydtzl(nspcmx), d_ratezl(nspcmx), d_strhzl(nspcmx)
+    TYPE(ops_dat) :: d_t6bzl(nspcmx), d_tt6zl(nspcmx)
     TYPE(ops_dat) :: d_bclyzr(nspcmx), d_stryzr(nspcmx), d_dydtzr(nspcmx), d_ratezr(nspcmx), d_strhzr(nspcmx)
+    TYPE(ops_dat) :: d_t6bzr(nspcmx), d_tt6zr(nspcmx)
 
     TYPE(ops_dat) :: d_bcl1xl, d_bcl2xl, d_bcl3xl, d_bcl4xl, d_bcl5xl, d_bcltxl
     TYPE(ops_dat) :: d_bcl1xr, d_bcl2xr, d_bcl3xr, d_bcl4xr, d_bcl5xr, d_bcltxr
@@ -69,6 +75,12 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_acouxl, d_ova2xl, d_gam1xl, d_ovgmxl, d_sydtxl, d_sorpxl
     TYPE(ops_dat) :: d_acouxr, d_ova2xr, d_gam1xr, d_ovgmxr, d_sydtxr, d_sorpxr
 
+    TYPE(ops_dat) :: d_t1bxl, d_t2bxl, d_t3bxl, d_t4bxl, d_t51bxl, d_t52bxl
+    TYPE(ops_dat) :: d_t1bxr, d_t2bxr, d_t3bxr, d_t4bxr, d_t51bxr, d_t52bxr
+
+    TYPE(ops_dat) :: d_tt1xl, d_tt2xl, d_tt3xl, d_tt4xl, d_tt5xl
+    TYPE(ops_dat) :: d_tt1xr, d_tt2xr, d_tt3xr, d_tt4xr, d_tt5xr
+
     TYPE(ops_dat) :: d_bcl1yl, d_bcl2yl, d_bcl3yl, d_bcl4yl, d_bcl5yl, d_bcltyl
     TYPE(ops_dat) :: d_bcl1yr, d_bcl2yr, d_bcl3yr, d_bcl4yr, d_bcl5yr, d_bcltyr
 
@@ -83,6 +95,12 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_acouyl, d_ova2yl, d_gam1yl, d_ovgmyl, d_sydtyl, d_sorpyl
     TYPE(ops_dat) :: d_acouyr, d_ova2yr, d_gam1yr, d_ovgmyr, d_sydtyr, d_sorpyr
 
+    TYPE(ops_dat) :: d_t1byl, d_t2byl, d_t3byl, d_t4byl, d_t51byl, d_t52byl
+    TYPE(ops_dat) :: d_t1byr, d_t2byr, d_t3byr, d_t4byr, d_t51byr, d_t52byr
+
+    TYPE(ops_dat) :: d_tt1yl, d_tt2yl, d_tt3yl, d_tt4yl, d_tt5yl
+    TYPE(ops_dat) :: d_tt1yr, d_tt2yr, d_tt3yr, d_tt4yr, d_tt5yr
+
     TYPE(ops_dat) :: d_bcl1zl, d_bcl2zl, d_bcl3zl, d_bcl4zl, d_bcl5zl, d_bcltzl
     TYPE(ops_dat) :: d_bcl1zr, d_bcl2zr, d_bcl3zr, d_bcl4zr, d_bcl5zr, d_bcltzr
 
@@ -96,6 +114,12 @@ MODULE com_ops_senga
 
     TYPE(ops_dat) :: d_acouzl, d_ova2zl, d_gam1zl, d_ovgmzl, d_sydtzl, d_sorpzl
     TYPE(ops_dat) :: d_acouzr, d_ova2zr, d_gam1zr, d_ovgmzr, d_sydtzr, d_sorpzr
+
+    TYPE(ops_dat) :: d_t1bzl, d_t2bzl, d_t3bzl, d_t4bzl, d_t51bzl, d_t52bzl
+    TYPE(ops_dat) :: d_t1bzr, d_t2bzr, d_t3bzr, d_t4bzr, d_t51bzr, d_t52bzr
+
+    TYPE(ops_dat) :: d_tt1zl, d_tt2zl, d_tt3zl, d_tt4zl, d_tt5zl
+    TYPE(ops_dat) :: d_tt1zr, d_tt2zr, d_tt3zr, d_tt4zr, d_tt5zr
 
     TYPE(ops_dat) :: d_crin
 
