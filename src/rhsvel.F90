@@ -70,22 +70,6 @@ SUBROUTINE rhsvel
                     ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ))
 
-!     =========================================                                                       
-!     UMOD RECORDING DERIVATIVES FOR TGV                                                              
-      call dfbydx(d_utmp,d_dutgvdx)                                                                       
-      call dfbydy(d_utmp,d_dutgvdy)                                                                       
-      call dfbydz(d_utmp,d_dutgvdz)                                                                       
-      
-      call dfbydx(d_vtmp,d_dvtgvdx)                                                                       
-      call dfbydy(d_vtmp,d_dvtgvdy)                                                                       
-      call dfbydz(d_vtmp,d_dvtgvdz)                                                                       
-      
-      call dfbydx(d_wtmp,d_dwtgvdx)                                                                       
-      call dfbydy(d_wtmp,d_dwtgvdy)                                                                       
-      call dfbydz(d_wtmp,d_dwtgvdz)                                                                       
-!     END UMOD
-
-
 !   =========================================================================
 
 !   COLLECT VELOCITY COMPONENTS FOR BCs

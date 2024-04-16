@@ -123,12 +123,6 @@ MODULE com_ops_senga
 
     TYPE(ops_dat) :: d_crin
 
-!   OPS dats - specific to TGV case
-    TYPE(ops_dat) :: d_utgv, d_vtgv, d_wtgv
-    TYPE(ops_dat) :: d_dutgvdx, d_dvtgvdx, d_dwtgvdx
-    TYPE(ops_dat) :: d_dutgvdy, d_dvtgvdy, d_dwtgvdy
-    TYPE(ops_dat) :: d_dutgvdz, d_dvtgvdz, d_dwtgvdz
-
 !------------------------------------------------------------------------------------------------------------
 !   OPS reduction handles
     TYPE(ops_reduction) :: h_erdtot, h_erutot, h_ervtot, h_erwtot, h_eretot, h_erytot
