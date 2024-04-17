@@ -4,8 +4,8 @@
 #
 #  g77 compiler on Redhat 9.0
 #
-mpif90 -O3 -Wall -c ranini.f
-mpif90 -O3 -Wall -c ranuni.f
+mpif90 -O3 -c ranini.f
+mpif90 -O3 -c ranuni.f
 #
 ar rcsv rndlib.a ranini.o ranuni.o
 #
