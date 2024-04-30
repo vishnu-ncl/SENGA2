@@ -143,18 +143,18 @@ SUBROUTINE bounds
                         ops_arg_dat(d_acouxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
 
         rangexyz = [1,1,1,nyglbl,1,nzglbl]
-        call ops_par_loop(copy_kernel_xdir, "copy", senga_grid, 3, rangexyz, &
+        call ops_par_loop(copy_kernel_xxdir, "copy", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_tt3xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_t3bxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
 
         rangexyz = [1,1,1,nyglbl,1,nzglbl]
-        call ops_par_loop(copy_kernel_xdir, "copy", senga_grid, 3, rangexyz, &
+        call ops_par_loop(copy_kernel_xxdir, "copy", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_tt4xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_t4bxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
 
         rangexyz = [1,1,1,nyglbl,1,nzglbl]
         DO ispec = 1,nspec
-            call ops_par_loop(copy_kernel_xdir, "copy", senga_grid, 3, rangexyz, &
+            call ops_par_loop(copy_kernel_xxdir, "copy", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_tt6xl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
                             ops_arg_dat(d_t6bxl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
         END DO
@@ -722,18 +722,18 @@ SUBROUTINE bounds
                         ops_arg_dat(d_acouxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
 
         rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
-        call ops_par_loop(copy_kernel_xdir, "copy", senga_grid, 3, rangexyz, &
+        call ops_par_loop(copy_kernel_xxdir, "copy", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_tt3xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_t3bxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
 
         rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
-        call ops_par_loop(copy_kernel_xdir, "copy", senga_grid, 3, rangexyz, &
+        call ops_par_loop(copy_kernel_xxdir, "copy", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_tt4xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_t4bxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
 
         rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
         DO ispec = 1,nspec
-            call ops_par_loop(copy_kernel_xdir, "copy", senga_grid, 3, rangexyz, &
+            call ops_par_loop(copy_kernel_xxdir, "copy", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_tt6xr(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
                             ops_arg_dat(d_t6bxr(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
         END DO
@@ -1302,18 +1302,18 @@ SUBROUTINE bounds
                         ops_arg_dat(d_acouyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
 
         rangexyz = [1,nxglbl,1,1,1,nzglbl]
-        call ops_par_loop(copy_kernel_ydir, "copy", senga_grid, 3, rangexyz, &
+        call ops_par_loop(copy_kernel_yydir, "copy", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_tt3yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_t3byl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
 
         rangexyz = [1,nxglbl,1,1,1,nzglbl]
-        call ops_par_loop(copy_kernel_ydir, "copy", senga_grid, 3, rangexyz, &
+        call ops_par_loop(copy_kernel_yydir, "copy", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_tt4yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_t4byl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
 
         rangexyz = [1,nxglbl,1,1,1,nzglbl]
         DO ispec = 1,nspec
-            call ops_par_loop(copy_kernel_ydir, "copy", senga_grid, 3, rangexyz, &
+            call ops_par_loop(copy_kernel_yydir, "copy", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_tt6yl(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
                             ops_arg_dat(d_t6byl(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
         END DO
@@ -1882,18 +1882,18 @@ SUBROUTINE bounds
                         ops_arg_dat(d_acouyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
 
         rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
-        call ops_par_loop(copy_kernel_ydir, "copy", senga_grid, 3, rangexyz, &
+        call ops_par_loop(copy_kernel_yydir, "copy", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_tt3yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_t3byr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
 
         rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
-        call ops_par_loop(copy_kernel_ydir, "copy", senga_grid, 3, rangexyz, &
+        call ops_par_loop(copy_kernel_yydir, "copy", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_tt4yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_t4byr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
 
         rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
         DO ispec = 1,nspec
-            call ops_par_loop(copy_kernel_ydir, "copy", senga_grid, 3, rangexyz, &
+            call ops_par_loop(copy_kernel_yydir, "copy", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_tt6yr(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
                             ops_arg_dat(d_t6byr(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
         END DO
@@ -2462,18 +2462,18 @@ SUBROUTINE bounds
                         ops_arg_dat(d_acouzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
 
         rangexyz = [1,nxglbl,1,nyglbl,1,1]
-        call ops_par_loop(copy_kernel_zdir, "copy", senga_grid, 3, rangexyz, &
+        call ops_par_loop(copy_kernel_zzdir, "copy", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_tt3zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_t3bzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
 
         rangexyz = [1,nxglbl,1,nyglbl,1,1]
-        call ops_par_loop(copy_kernel_zdir, "copy", senga_grid, 3, rangexyz, &
+        call ops_par_loop(copy_kernel_zzdir, "copy", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_tt4zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_t4bzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
 
         rangexyz = [1,nxglbl,1,nyglbl,1,1]
         DO ispec = 1,nspec
-            call ops_par_loop(copy_kernel_zdir, "copy", senga_grid, 3, rangexyz, &
+            call ops_par_loop(copy_kernel_zzdir, "copy", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_tt6zl(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
                             ops_arg_dat(d_t6bzl(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
         END DO
@@ -3041,18 +3041,18 @@ SUBROUTINE bounds
                         ops_arg_dat(d_acouzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
 
         rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
-        call ops_par_loop(copy_kernel_zdir, "copy", senga_grid, 3, rangexyz, &
+        call ops_par_loop(copy_kernel_zzdir, "copy", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_tt3zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_t3bzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
 
         rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
-        call ops_par_loop(copy_kernel_zdir, "copy", senga_grid, 3, rangexyz, &
+        call ops_par_loop(copy_kernel_zzdir, "copy", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_tt4zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_t4bzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
 
         rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
         DO ispec = 1,nspec
-            call ops_par_loop(copy_kernel_zdir, "copy", senga_grid, 3, rangexyz, &
+            call ops_par_loop(copy_kernel_zzdir, "copy", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_tt6zr(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
                             ops_arg_dat(d_t6bzr(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
         END DO
