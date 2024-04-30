@@ -3,7 +3,7 @@ subroutine read_h5()
    use hdf5
    implicit none
    integer :: i,j,k,nt,ispec
-   character(len=4)::tstamp
+   character(len=8)::tstamp
    character(len=6)::spec
 
    character(len=15) :: dataset
@@ -11,7 +11,7 @@ subroutine read_h5()
    character(len=35) :: fname
 
    do nt = fstart,fstop,fstep
-     write(tstamp,'(I4.4)')nt
+     write(tstamp,'(I8.8)')nt
      fname="../../output/timestep"//tstamp//".h5"
      dataset="SENGA_GRID/DRUN"
 

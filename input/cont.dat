@@ -17,7 +17,7 @@ Time step; start step, no of steps, step switch (0=fixed, 1=adaptive))
  5.0D-10    1770001   40000   0
 
 Intervals between dumps, reports, statistics, dump output (0/1=un/formatted)
- 5000    1    100      0
+ 500    1    100      0
 
 Cold start switch (0=cold start, 1=restart), dump input (0/1=un/formatted)
  1      0
@@ -48,8 +48,8 @@ Global boundary condition types
 one per line: x-left; x-right; y-left; y-right; z-left; z-right
 (1=periodic; 1a=inlet; 2b=outlet; 3c=wall; a,b,c denotes BC subtype)
 (four integer and four real parameters allowed for each)
-21    1    0    0   0   1.0D5     2.87D-1  1.0D-3    0.0D0
-21    1    0    0   0   1.0D5     2.87D-1  1.0D-3    0.0D0
+21    1    1    0   0   1.0D5     2.87D-1  1.0D-3    0.0D0
+21    1    1    0   0   1.0D5     2.87D-1  1.0D-3    0.0D0
 1     0    0    0   0   0.0D0     0.0D0    0.0D0     0.0D0
 1     0    0    0   0   0.0D0     0.0D0    0.0D0     0.0D0
 1     0    0    0   0   0.0D0     0.0D0    0.0D0     0.0D0
