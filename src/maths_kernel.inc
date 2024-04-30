@@ -791,7 +791,7 @@ SUBROUTINE maths_kernel_eqBH(tdrmix,trun,yrhs,wmomix,tdrcco,ovwmol,tdifgb,ncotdr
     real(kind=8), intent(in) :: tdifgb
 
     real(kind=8) :: fornow, combo2
-    real(kind=8), dimension(nspcmx) :: ctrans
+    real(kind=8) :: ctrans
     integer(kind=4) :: icp
 
 !   THERMAL DIFFUSION RATIO FOR THIS SPECIES PAIR
@@ -800,12 +800,12 @@ SUBROUTINE maths_kernel_eqBH(tdrmix,trun,yrhs,wmomix,tdrcco,ovwmol,tdifgb,ncotdr
     DO icp = ncotm1,1,-1
         fornow = fornow*combo2 + tdrcco(icp,jspec,ispec)
     END DO
-    ctrans(jspec) = fornow
+    ctrans = fornow
 
 !   COMBINATION RULE FOR THERMAL DIFFUSIION RATIO
     fornow = yrhs(OPS_ACC3(0,0,0))*ovwmol(jspec)
     tdrmix(OPS_ACC1(0,0,0)) = tdrmix(OPS_ACC1(0,0,0))  &
-                     + fornow*wmomix(OPS_ACC4(0,0,0))*ctrans(jspec)
+                     + fornow*wmomix(OPS_ACC4(0,0,0))*ctrans
 
 END SUBROUTINE maths_kernel_eqBH
 
