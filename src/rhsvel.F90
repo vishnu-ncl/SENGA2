@@ -827,7 +827,7 @@ SUBROUTINE rhsvel
     rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
     call ops_par_loop(maths_kernel_eqG, "A = A*var", senga_grid, 3, rangexyz, &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_RW), &
-                    ops_arg_gbl(prantl,1,"real(kind=8)", OPS_READ))
+                    ops_arg_gbl(prantl_ops, 1,"real(kind=8)", OPS_READ))
 
 !                                                 STORE1,2,3 = DUDX,DVDY,DWDZ
 !    -------------------------------------------------------------------------
@@ -883,8 +883,8 @@ SUBROUTINE rhsvel
     call ops_par_loop(maths_kernel_eqN, "A = var1*B-var2*A", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store6, 1, s3d_000, "real(kind=8)", OPS_RW), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(fthd, 1, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(tthd, 1, "real(kind=8)", OPS_READ))
+                    ops_arg_gbl(fthd_ops, 1, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(tthd_ops, 1, "real(kind=8)", OPS_READ))
 
 !   E-EQUATION: VISCOUS WORK TERMS
 !   ------------------------------
@@ -954,8 +954,8 @@ SUBROUTINE rhsvel
     call ops_par_loop(maths_kernel_eqN, "A = var1*B-var2*A", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store6, 1, s3d_000, "real(kind=8)", OPS_RW), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(fthd, 1, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(tthd, 1, "real(kind=8)", OPS_READ))
+                    ops_arg_gbl(fthd_ops, 1, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(tthd_ops, 1, "real(kind=8)", OPS_READ))
 
 !   E-EQUATION: VISCOUS WORK TERMS
 !   ------------------------------
@@ -1024,8 +1024,8 @@ SUBROUTINE rhsvel
     call ops_par_loop(maths_kernel_eqN, "A = var1*B-var2*A", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_RW), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(fthd, 1, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(tthd, 1, "real(kind=8)", OPS_READ))
+                    ops_arg_gbl(fthd_ops, 1, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(tthd_ops, 1, "real(kind=8)", OPS_READ))
 
 !   E-EQUATION: VISCOUS WORK TERMS
 !   ------------------------------
@@ -1198,7 +1198,7 @@ SUBROUTINE rhsvel
                     ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(tthd, 1, "real(kind=8)", OPS_READ))
+                    ops_arg_gbl(tthd_ops, 1, "real(kind=8)", OPS_READ))
 
 !   BOUNDARY CONDITIONS
 !   BC IN X: TAUXX,X TERMS ZERO ON END POINTS
@@ -1232,7 +1232,7 @@ SUBROUTINE rhsvel
                     ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(tthd, 1, "real(kind=8)", OPS_READ))
+                    ops_arg_gbl(tthd_ops, 1, "real(kind=8)", OPS_READ))
 
 
 !   BOUNDARY CONDITIONS
@@ -1467,7 +1467,7 @@ SUBROUTINE rhsvel
                     ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(tthd, 1, "real(kind=8)", OPS_READ))
+                    ops_arg_gbl(tthd_ops, 1, "real(kind=8)", OPS_READ))
 
 !   BOUNDARY CONDITIONS
 !   BC IN X: TAUXX,X TERMS ZERO ON END POINTS
@@ -1500,7 +1500,7 @@ SUBROUTINE rhsvel
                     ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(tthd, 1, "real(kind=8)", OPS_READ))
+                    ops_arg_gbl(tthd_ops, 1, "real(kind=8)", OPS_READ))
 
 !   BOUNDARY CONDITIONS
 !   BC IN Z: TAUZZ,Z TERMS ZERO ON END POINTS
@@ -1742,7 +1742,7 @@ SUBROUTINE rhsvel
                     ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(tthd, 1, "real(kind=8)", OPS_READ))
+                    ops_arg_gbl(tthd_ops, 1, "real(kind=8)", OPS_READ))
 
 !   BOUNDARY CONDITIONS
 !   BC IN Y: TAUYY,2 TERMS ZERO ON END POINTS
@@ -1777,7 +1777,7 @@ SUBROUTINE rhsvel
                     ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                     ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(tthd, 1, "real(kind=8)", OPS_READ))
+                    ops_arg_gbl(tthd_ops, 1, "real(kind=8)", OPS_READ))
 
 !   BOUNDARY CONDITIONS
 !   BC IN Z: TAUZZ,Z TERMS ZERO ON END POINTS
@@ -1932,7 +1932,7 @@ SUBROUTINE rhsvel
                     ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(fthd, 1, "real(kind=8)", OPS_READ))
+                    ops_arg_gbl(fthd_ops, 1, "real(kind=8)", OPS_READ))
 
 !   V-EQUATION: VISCOUS STRESS TERMS
 !   E-EQUATION: VISCOUS WORK TERMS
@@ -1947,7 +1947,7 @@ SUBROUTINE rhsvel
                     ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(fthd, 1, "real(kind=8)", OPS_READ))
+                    ops_arg_gbl(fthd_ops, 1, "real(kind=8)", OPS_READ))
 
 !   W-EQUATION: VISCOUS STRESS TERMS
 !   E-EQUATION: VISCOUS WORK TERMS
@@ -1962,7 +1962,7 @@ SUBROUTINE rhsvel
                     ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(fthd, 1, "real(kind=8)", OPS_READ))
+                    ops_arg_gbl(fthd_ops, 1, "real(kind=8)", OPS_READ))
 
 !   =========================================================================
 !   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

@@ -200,17 +200,17 @@ SUBROUTINE bcutxl
             call ops_par_loop(bcut_kernel_xdir_eqC, "A = A + val1*B*val2", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_ufxl, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_gbl(half, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(half_ops, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(cosval, 1, "real(kind=8)", OPS_READ))
             call ops_par_loop(bcut_kernel_xdir_eqC, "A = A + val1*B*val2", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_vfxl, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_gbl(half, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(half_ops, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(cosval, 1, "real(kind=8)", OPS_READ))
             call ops_par_loop(bcut_kernel_xdir_eqC, "A = A + val1*B*val2", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_wfxl, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_gbl(half, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(half_ops, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(cosval, 1, "real(kind=8)", OPS_READ))
 
             kxbase = kxbase + 1

@@ -16,6 +16,7 @@ MODULE com_senga
     integer(kind=4), parameter :: nxglbl=128, nyglbl=128, nzglbl=128
 !   SET NGZMAX=MAX(NXGLBL,NYGLBL,NZGLBL)
     integer(kind=4), parameter :: ngzmax=nxglbl
+    integer(kind=4), target :: nxglbl_ops=nxglbl, nyglbl_ops=nyglbl, nzglbl_ops=nzglbl
 
 !   NUMBER OF PROCESSORS - DO NOT CHANGE - KEEP AS 1 ONLY
     integer(kind=4), parameter :: nxproc=1, nyproc=1, nzproc=1
@@ -68,6 +69,7 @@ MODULE com_senga
 
 !   TRANSPORT COEFFICIENTS
     real(kind=8), parameter :: alamdc=0.0000258_8, tlamda=298.0_8, prantl=0.70_8
+    real(kind=8), target :: prantl_ops=prantl
 
 !   UNIVERSAL GAS CONSTANT
     real(kind=8), parameter :: rguniv=8314.20_8
@@ -122,6 +124,7 @@ MODULE com_senga
 
 !   MASS FRACTION TOLERANCE
     real(kind=8), parameter :: dfctol = 0.0000000000010_8
+    real(kind=8), target :: dfctol_ops=dfctol
 
 !   MOLECULAR TRANSPORT DATA
     real(kind=8) :: diffco(ndcfmx,nspcmx,nspcmx)
@@ -168,6 +171,8 @@ MODULE com_senga
                           half=one/two,  thrf=three*half, thrd=one/three,  &
                           tthd=two*thrd, fthd=two*tthd,   qrtr=one/four
 
+    real(kind=8), target :: half_ops=half, tthd_ops=tthd, fthd_ops=fthd
+
 !   PHYSICAL AND NUMERICAL DATA
     real(kind=8) :: yrin(nspcmx)
     real(kind=8) :: prin,trin,drin,urin,vrin,wrin,erin
@@ -188,6 +193,7 @@ MODULE com_senga
 
 !   DERIVATIVE BC STATUS
     integer(kind=4), parameter :: nobc=0, nbound=1, nperi=2
+    integer(kind=4), target :: nbound_ops=nbound
 
 !   COEFFICIENTS OF SPATIAL DIFFERENCING SCHEMES
     real(kind=8) :: acoeff,bcoeff,ccoeff,dcoeff,ecoeff,  &
