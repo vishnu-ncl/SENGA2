@@ -284,7 +284,7 @@ use OPS_Fortran_Reference
             call ops_par_loop(d2fdxy_kernel_eqAG, "d2fdxy_kernel_eqAG", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p440_m440_mixed_xy, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_gbl(nxglbl, 1, "integer(kind=4)", OPS_READ), &
+                            ops_arg_gbl(nxglbl_ops, 1, "integer(kind=4)", OPS_READ), &
                             ops_arg_idx())
 
             END IF
@@ -370,7 +370,7 @@ use OPS_Fortran_Reference
             call ops_par_loop(d2fdxy_kernel_eqAU, "d2fdxy_kernel_eqAU", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p440_m440_mixed_xy, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_gbl(nyglbl, 1 , "integer(kind=4)", OPS_READ), &
+                            ops_arg_gbl(nyglbl_ops, 1 , "integer(kind=4)", OPS_READ), &
                             ops_arg_idx())
 
             END IF
@@ -422,8 +422,8 @@ use OPS_Fortran_Reference
             call ops_par_loop(d2fdxy_kernel_eqBD, "d2fdxy_kernel_eqBD", senga_grid, 3, rangexyz, &
                             ops_arg_dat(functn, 1, s3d_p440_m440_mixed_xy, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(fderiv, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_gbl(nxglbl, 1, "integer(kind=4)", OPS_READ), &
-                            ops_arg_gbl(nyglbl, 1, "integer(kind=4)", OPS_READ), &
+                            ops_arg_gbl(nxglbl_ops, 1, "integer(kind=4)", OPS_READ), &
+                            ops_arg_gbl(nyglbl_ops, 1, "integer(kind=4)", OPS_READ), &
                             ops_arg_idx())
 
             END IF

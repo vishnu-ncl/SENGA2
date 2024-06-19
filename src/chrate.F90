@@ -42,6 +42,7 @@ SUBROUTINE chrate
 !   PARAMETERS
 !   ==========
     real(kind=8), parameter :: ysmall = 0.000000000000000000000000000001_8,ydenom = 0.000000000000001_8
+    real(kind=8), target :: ysmall_ops=ysmall, ydenom_ops=ydenom
 
 !   LOCAL DATA
 !   ==========
@@ -411,8 +412,8 @@ SUBROUTINE chrate
                             ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(scoef, 1, "real(kind=8)", OPS_READ), &
-                            ops_arg_gbl(ysmall, 1, "real(kind=8)", OPS_READ), &
-                            ops_arg_gbl(ydenom, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ysmall_ops, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ydenom_ops, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
 
             END DO
@@ -542,8 +543,8 @@ SUBROUTINE chrate
                                     ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(scoef, 1, "real(kind=8)", OPS_READ), &
-                                    ops_arg_gbl(ysmall, 1, "real(kind=8)", OPS_READ), &
-                                    ops_arg_gbl(ydenom, 1, "real(kind=8)", OPS_READ), &
+                                    ops_arg_gbl(ysmall_ops, 1, "real(kind=8)", OPS_READ), &
+                                    ops_arg_gbl(ydenom_ops, 1, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
 
                 END DO

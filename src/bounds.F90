@@ -46,6 +46,7 @@ SUBROUTINE bounds
     integer(kind=4) :: ispec
     integer(kind=4) :: rangexyz(6)
     real(kind=8), parameter :: bet=0.050_8
+    real(kind=8), target :: bet_ops=bet
 !   VM: SWITCH TO SET BET=LOCAL_MACH
 !   FLAG_BET=0 POINTS TO GLOBAL VALUE OF BET
 !   FLAG_BET=1 POINTS TO LOCAL VALUE OF BET
@@ -212,7 +213,7 @@ SUBROUTINE bounds
                             ops_arg_gbl(cobcxl, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(pinfxl, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(xgdlen, 1, "real(kind=8)", OPS_READ), &
-                            ops_arg_gbl(bet, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(bet_ops, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(flag_bet_xl, 1, "integer(kind=4)", OPS_READ), &
                             ops_arg_gbl(flag_pio_xl, 1, "integer(kind=4)", OPS_READ))
 
@@ -792,7 +793,7 @@ SUBROUTINE bounds
                             ops_arg_gbl(cobcxr, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(pinfxr, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(xgdlen, 1, "real(kind=8)", OPS_READ), &
-                            ops_arg_gbl(bet, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(bet_ops, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(flag_bet_xr, 1, "integer(kind=4)", OPS_READ), &
                             ops_arg_gbl(flag_pio_xr, 1, "integer(kind=4)", OPS_READ))
 
@@ -1372,7 +1373,7 @@ SUBROUTINE bounds
                             ops_arg_gbl(cobcyl, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(pinfyl, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(ygdlen, 1, "real(kind=8)", OPS_READ), &
-                            ops_arg_gbl(bet, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(bet_ops, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(flag_bet_yl, 1, "integer(kind=4)", OPS_READ), &
                             ops_arg_gbl(flag_pio_yl, 1, "integer(kind=4)", OPS_READ))
 
@@ -1952,7 +1953,7 @@ SUBROUTINE bounds
                             ops_arg_gbl(cobcyr, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(pinfyr, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(ygdlen, 1, "real(kind=8)", OPS_READ), &
-                            ops_arg_gbl(bet, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(bet_ops, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(flag_bet_yr, 1, "integer(kind=4)", OPS_READ), &
                             ops_arg_gbl(flag_pio_yr, 1, "integer(kind=4)", OPS_READ))
 
@@ -2531,7 +2532,7 @@ SUBROUTINE bounds
                             ops_arg_gbl(cobczl, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(pinfzl, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(zgdlen, 1, "real(kind=8)", OPS_READ), &
-                            ops_arg_gbl(bet, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(bet_ops, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(flag_bet_zl, 1, "integer(kind=4)", OPS_READ), &
                             ops_arg_gbl(flag_pio_zl, 1, "integer(kind=4)", OPS_READ))
 
@@ -3110,7 +3111,7 @@ SUBROUTINE bounds
                             ops_arg_gbl(cobczr, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(pinfzr, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(zgdlen, 1, "real(kind=8)", OPS_READ), &
-                            ops_arg_gbl(bet, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(bet_ops, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(flag_bet_zr, 1, "integer(kind=4)", OPS_READ), &
                             ops_arg_gbl(flag_pio_zr, 1, "integer(kind=4)", OPS_READ))
 
