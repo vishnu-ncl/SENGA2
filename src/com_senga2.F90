@@ -20,28 +20,28 @@ real(kind=8) :: start_time, finish_time, total_time
 real(kind=8) :: start_comm_time, finish_comm_time, total_comm_time
 
 INTEGER :: nxglbl,nyglbl,nzglbl
-PARAMETER(nxglbl=384, nyglbl=384, nzglbl=384)
+PARAMETER(nxglbl=2000, nyglbl=1, nzglbl=1)
 INTEGER :: ngzmax
 !     SET NGZMAX=MAX(NXGLBL,NYGLBL,NZGLBL)
 PARAMETER(ngzmax=nxglbl)
 
 !     NUMBER OF PROCESSORS
 INTEGER :: nxproc,nyproc,nzproc
-PARAMETER(nxproc=8, nyproc=4, nzproc=4)
+PARAMETER(nxproc=100, nyproc=1, nzproc=1)
 INTEGER :: nprmax
 !     SET NPRMAX=MAX(NXPROC,NYPROC,NZPROC)
 PARAMETER(nprmax=nxproc)
 
 !     LOCAL GRID SIZE
 INTEGER :: nxsize,nysize,nzsize
-PARAMETER(nxsize=48, nysize=96, nzsize=96)
+PARAMETER(nxsize=20, nysize=1, nzsize=1)
 INTEGER :: nszmax
 !     SET NSZMAX=MAX(NXSIZE,NYSIZE,NZSIZE)
 PARAMETER(nszmax=nxsize)
 
 !     SIZE OF HALO
 INTEGER :: nhalox,nhaloy,nhaloz
-PARAMETER(nhalox=5,nhaloy=5,nhaloz=5)
+PARAMETER(nhalox=5,nhaloy=0,nhaloz=0)
 
 !     SIZE OF PARALLEL TRANSFER ARRAY
 !     NPARAY MUST BE >= MAX(NHALOX,NHALOY,NHALOZ)
@@ -79,7 +79,7 @@ COMMON/ifturb/fftrow,ftpart,fftinx
 !     ==========
 !     MAX NO OF SPECIES, NO OF STEPS
 INTEGER :: nspcmx,nstpmx
-PARAMETER(nspcmx=2, nstpmx=1)
+PARAMETER(nspcmx=9, nstpmx=21)
 
 !     THERMODYNAMIC DATA
 !     MAX NO OF TEMPERATURE INTERVALS, THERMO POLYNOMIAL COEFFICIENTS
