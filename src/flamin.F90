@@ -30,7 +30,6 @@ SUBROUTINE flamin
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-use data_types
 use com_senga
 !     -------------------------------------------------------------------------
 
@@ -38,8 +37,8 @@ use com_senga
 !     PARAMETERS
 !     ==========
 !     ESTIMATED FLAME LOCATION AND THICKNESS
-real(kind=dp) :: clocat,cthick
-PARAMETER(clocat = 0.0025_dp, cthick = 0.0005_dp)
+real(kind=8) :: clocat,cthick
+PARAMETER(clocat = 0.0025_8, cthick = 0.0005_8)
 
 !C     PINCH OF HYDROGEN ATOM
 !      real(kind=dp) HPINCH,HLOCAT,HTHICK
@@ -51,17 +50,17 @@ PARAMETER(clocat = 0.0025_dp, cthick = 0.0005_dp)
 
 !     FUNCTION
 !     ========
-real(kind=dp) :: erfunc
+real(kind=8) :: erfunc
 EXTERNAL erfunc
 
 
 !     LOCAL DATA
 !     ==========
-real(kind=dp) :: crin(1:nxsize)
-real(kind=dp) :: yrinr(nspcmx),yrinp(nspcmx)
-real(kind=dp) :: trinr,trinp
-real(kind=dp) :: deltag,xcoord,argmnt
-real(kind=dp) :: flxmas
+real(kind=8) :: crin(1:nxsize)
+real(kind=8) :: yrinr(nspcmx),yrinp(nspcmx)
+real(kind=8) :: trinr,trinp
+real(kind=8) :: deltag,xcoord,argmnt
+real(kind=8) :: flxmas
 INTEGER :: icproc
 INTEGER :: igofst
 INTEGER :: ix
@@ -83,7 +82,7 @@ INTEGER :: ispec
 !     REACTANT TEMPERATURE SET IN CONTROL FILE
 trinr = trin
 !      TRINP = 2330.96554
-trinp = 1400.0_dp
+trinp = 1400.0_8
 
 
 !     SET SPECIES MASS FRACTIONS
@@ -91,8 +90,8 @@ trinp = 1400.0_dp
 !     OVERRIDE MASS FRACTION VALUES SET IN CONTROL FILE
 
 !     REACTANTS
-yrinr(1) = 0.0116075_dp     !2.8312571D-2
-yrinr(2) = 0.2302951_dp     !2.26500566D-1
+yrinr(1) = 0.0116075_8     !2.8312571D-2
+yrinr(2) = 0.2302951_8     !2.26500566D-1
 DO ispec = 3,nspm1
   yrinr(ispec) = zero
 END DO
@@ -105,8 +104,8 @@ yrinr(nspec) = one - yrinr(nspec)
 
 !     PRODUCTS
 yrinp(1) = zero
-yrinp(2) = 0.1390901_dp     !ZERO
-yrinp(3) = 0.1043176_dp     !2.54716981D-1
+yrinp(2) = 0.1390901_8     !ZERO
+yrinp(3) = 0.1043176_8     !2.54716981D-1
 DO ispec = 4,nspm1
   yrinp(ispec) = zero
 END DO
@@ -151,7 +150,7 @@ END IF
 
 !     GLOBAL INDEXING
 !     ---------------
-deltag = xgdlen/(REAL(nxglbl-1,kind=dp))
+deltag = xgdlen/(REAL(nxglbl-1,kind=8))
 
 igofst = 0
 DO icproc = 0, ixproc-1
@@ -165,7 +164,7 @@ END DO
 DO ic = istal,istol
   
   ix = igofst + ic
-  xcoord = REAL(ix-1,kind=dp)*deltag
+  xcoord = REAL(ix-1,kind=8)*deltag
   argmnt = (xcoord-clocat)/cthick
   crin(ic) = half*(one+erfunc(argmnt))
   
