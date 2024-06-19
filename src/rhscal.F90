@@ -1143,7 +1143,7 @@ SUBROUTINE rhscal
                                 ops_arg_gbl(diffco, ndcfmx*nspcmx*nspcmx, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(pdifgb, 1, "real(kind=8)", OPS_READ), &
-                                ops_arg_gbl(dfctol, 1, "real(kind=8)", OPS_READ), &
+                                ops_arg_gbl(dfctol_ops, 1, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(ncodif, 1, "integer(kind=4)", OPS_READ), &
                                 ops_arg_gbl(ncodm1, 1, "integer(kind=4)", OPS_READ), &
                                 ops_arg_gbl(jspec, 1, "integer(kind=4)", OPS_READ), &
@@ -1160,7 +1160,7 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_wmomix, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
-                            ops_arg_gbl(dfctol, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(dfctol_ops, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
 
         END IF
