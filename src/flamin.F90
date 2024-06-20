@@ -90,8 +90,8 @@ trinp = 1400.0_8
 !     OVERRIDE MASS FRACTION VALUES SET IN CONTROL FILE
 
 !     REACTANTS
-yrinr(1) = 0.0116075_8     !2.8312571D-2
-yrinr(2) = 0.2302951_8     !2.26500566D-1
+yrinr(1) = 0.0199886_8     !2.8312571D-2
+yrinr(2) = 0.2286239_8     !2.26500566D-1
 DO ispec = 3,nspm1
   yrinr(ispec) = zero
 END DO
@@ -104,8 +104,8 @@ yrinr(nspec) = one - yrinr(nspec)
 
 !     PRODUCTS
 yrinp(1) = zero
-yrinp(2) = 0.1390901_8     !ZERO
-yrinp(3) = 0.1043176_8     !2.54716981D-1
+yrinp(2) = 0.0685323_8     !ZERO
+yrinp(3) = 0.1798974_8     !2.54716981D-1
 DO ispec = 4,nspm1
   yrinp(ispec) = zero
 END DO

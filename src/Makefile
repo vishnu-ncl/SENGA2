@@ -24,7 +24,7 @@ FFLAGS = -O3 -g -ffree-form -ffree-line-length-none -fallow-argument-mismatch -m
 
 #Intel
 #FFLAGS = -O3 -g -mcmodel=large -fp-model precise -fp-model source -no-fma -fimf-arch-consistency=true -fimf-precision=high 
-# Source files hdf5io.F90 
+# Source files hdf5io.F90
 SRC = 
 
 SRC_F90 = com_espect.F90 com_senga2.F90 senga2.F90 \
