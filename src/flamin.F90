@@ -82,7 +82,7 @@ INTEGER :: ispec
 !     REACTANT TEMPERATURE SET IN CONTROL FILE
 trinr = trin
 !      TRINP = 2330.96554
-trinp = 1400.0_8
+trinp = 2200.0_8
 
 
 !     SET SPECIES MASS FRACTIONS

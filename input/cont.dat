@@ -48,7 +48,7 @@ Global boundary condition types
 one per line: x-left; x-right; y-left; y-right; z-left; z-right
 (1=periodic; 1a=inlet; 2b=outlet; 3c=wall; a,b,c denotes BC subtype)
 (four integer and four real parameters allowed for each)
-13    1    0    0   0   0.158D0    0.0D0    0.0D0     0.0D0
+13    1    0    0   0   2.05D0    0.0D0    0.0D0     0.0D0
 21    0    0    0   0   1.0D5     2.87D-1  1.0D-3    0.0D0
 1     0    0    0   0   0.0D0     0.0D0    0.0D0     0.0D0
 1     0    0    0   0   0.0D0     0.0D0    0.0D0     0.0D0
