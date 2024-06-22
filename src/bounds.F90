@@ -1,7 +1,7 @@
 SUBROUTINE bounds
- 
+
 ! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-26  Time: 15:24:36
+! Date: 2024-01-30  Time: 13:43:22
 
 !     *************************************************************************
 
@@ -26,6 +26,10 @@ SUBROUTINE bounds
 
 !     *************************************************************************
 
+! VISHNU MOHAN (VM), KHALIL ABO AMSHA (KAA) AND NILANJAN CHAKRABORTY (NC)
+! IMPLEMENTED THE TRANSVERSE DERIVATIVE TERMS FOR BOUNDARY CONDITION AS PER METHOD
+! OF YOO AND IM
+
 
 !     GLOBAL DATA
 !     ===========
@@ -37,10 +41,41 @@ use com_senga
 
 !     LOCAL DATA
 !     ==========
-real(kind=8):: fornow
+REAL(kind=8) :: fornow
 INTEGER :: ic,jc,kc
 INTEGER :: ispec
+!     THESE ARE INTRODUCED FOR LODATO'S BC EQN. 3.80- NC
+DOUBLE PRECISION :: tt1xl(nysize,nzsize), tt2xl(nysize,nzsize),  &
+    tt3xl(nysize,nzsize), tt4xl(nysize,nzsize),  &
+    tt5xl(nysize,nzsize), tt6xl(nysize,nzsize,nspec)
+DOUBLE PRECISION :: tt1xr(nysize,nzsize), tt2xr(nysize,nzsize),  &
+    tt3xr(nysize,nzsize), tt4xr(nysize,nzsize),  &
+    tt5xr(nysize,nzsize), tt6xr(nysize,nzsize,nspec)
+!UMAIRS CORRECTION HERE
+DOUBLE PRECISION :: tt1yl(nxsize,nzsize), tt2yl(nxsize,nzsize),  &
+    tt3yl(nxsize,nzsize), tt4yl(nxsize,nzsize),  &
+    tt5yl(nxsize,nzsize), tt6yl(nxsize,nzsize,nspec)
+DOUBLE PRECISION :: tt1yr(nxsize,nzsize), tt2yr(nxsize,nzsize),  &
+    tt3yr(nxsize,nzsize), tt4yr(nxsize,nzsize),  &
+    tt5yr(nxsize,nzsize), tt6yr(nxsize,nzsize,nspec)
+DOUBLE PRECISION :: tt1zl(nxsize,nysize), tt2zl(nxsize,nysize),  &
+    tt3zl(nxsize,nysize), tt4zl(nxsize,nysize),  &
+    tt5zl(nxsize,nysize), tt6zl(nxsize,nysize,nspec)
+DOUBLE PRECISION :: tt1zr(nxsize,nysize), tt2zr(nxsize,nysize),  &
+    tt3zr(nxsize,nysize), tt4zr(nxsize,nysize),  &
+    tt5zr(nxsize,nysize), tt6zr(nxsize,nysize,nspec)
+DOUBLE PRECISION :: bet
+INTEGER :: flag_bet_xl,flag_bet_xr,flag_bet_yl,flag_bet_yr,  &
+    flag_bet_zl,flag_bet_zr
+!VM: SWITCH TO SET BET=LOCAL_MACH
+!FLAG_BET=0 POINTS TO GLOBAL VALUE OF BET
+!FLAG_BET=1 POINTS TO LOCAL VALUE OF BET
 
+INTEGER :: flag_pio_xl,flag_pio_xr,flag_pio_yl,flag_pio_yr,  &
+    flag_pio_zl,flag_pio_zr
+!VM: SWITCH TO TURN POINTWISE INFLOW-OUTFLOW ON/OFF
+!1 IS ON, 0 IS OFF
+bet=0.050D0
 
 !     BEGIN
 !     =====
@@ -107,6 +142,8 @@ IF(fxlcnv)THEN
       gam1xl(jc,kc) = strrxl(jc,kc)/gam1xl(jc,kc)
       ovgmxl(jc,kc) = one/gam1xl(jc,kc)
       
+      
+      
     END DO
   END DO
   
@@ -119,6 +156,24 @@ IF(fxlcnv)THEN
       acouxl(jc,kc) = SQRT(fornow)
       ova2xl(jc,kc) = one/fornow
       
+!     THESE ARE INTRODUCED FOR LODATO'S BC- NC
+      
+      tt1xl(jc,kc)=t51bxl(jc,kc)+ t52bxl(jc,kc)*(gam1xl(jc,kc)+1.0)-  &
+          strdxl(jc,kc)* acouxl(jc,kc)*t2bxl(jc,kc)
+      
+      tt2xl(jc,kc)=acouxl(jc,kc)*acouxl(jc,kc)*  &
+          t1bxl(jc,kc)-t51bxl(jc,kc)-(gam1xl(jc,kc)+1.0)* t52bxl(jc,kc)
+      
+      tt3xl(jc,kc)=t3bxl(jc,kc)
+      tt4xl(jc,kc)=t4bxl(jc,kc)
+      
+      tt5xl(jc,kc)=t51bxl(jc,kc)+ t52bxl(jc,kc)*(gam1xl(jc,kc)+1.0)+  &
+          strdxl(jc,kc)* acouxl(jc,kc)*t2bxl(jc,kc)
+      
+      DO is=1,nspec
+        tt6xl(jc,kc,is)=t6bxl(jc,kc,is)
+      END DO
+      
     END DO
   END DO
   
@@ -128,6 +183,8 @@ IF(fxlcnv)THEN
 !       ---------------------------
   
   IF(nsbcxl == nsbco1)THEN
+    flag_pio_xl=nxlprm(1)!0
+    flag_bet_xl=nxlprm(2)!1
     
 !         OUTFLOW BC No 1
 !         SUBSONIC NON-REFLECTING OUTFLOW
@@ -166,14 +223,43 @@ IF(fxlcnv)THEN
 !         SPECIFY L5X AS REQUIRED
     DO kc = kstal,kstol
       DO jc = jstal,jstol
-        
+        bcl2xl(jc,kc) = struxl(jc,kc)  &
+            *(bcl2xl(jc,kc)-bcl5xl(jc,kc)*ova2xl(jc,kc))
+        bcl3xl(jc,kc) = struxl(jc,kc)*bcl3xl(jc,kc)
+        bcl4xl(jc,kc) = struxl(jc,kc)*bcl4xl(jc,kc)
 !             OLD VALUE OF L5X
         bcl5xl(jc,kc) = half*(struxl(jc,kc)+acouxl(jc,kc))  &
             *(bcl5xl(jc,kc)+strdxl(jc,kc)*acouxl(jc,kc)*bcl1xl(jc,kc))
         
 !             SUBTRACT FROM NEW VALUE OF L5X
-        bcl5xl(jc,kc)= half*sorpxl(jc,kc)  &
-            + cobcxl*acouxl(jc,kc)*(strpxl(jc,kc)-pinfxl) - bcl5xl(jc,kc)
+!             TERM INTRODUCED FOR LODATO'S BC- NC
+        IF(flag_bet_xl==1) THEN
+          bet=struxl(jc,kc)*struxl(jc,kc)+ strvxl(jc,kc)*strvxl(jc,kc)+  &
+              strwxl(jc,kc)*strwxl(jc,kc)
+          bet=SQRT(bet)/acouxl(jc,kc)
+        END IF
+        IF((struxl(jc,kc) > zero).AND.(flag_pio_xl==1))THEN
+          
+!             SUBTRACT FROM NEW VALUE OF L5X
+          bcl2xl(jc,kc) = -bcl2xl(jc,kc)  &
+              -ova2xl(jc,kc)*sorpxl(jc,kc)
+          
+          bcl3xl(jc,kc) = 0.1*(strvxl(jc,kc)-0.0D0)  &
+              -bcl3xl(jc,kc)
+          
+          bcl4xl(jc,kc) = 0.1*(strwxl(jc,kc)-0.0D0)  &
+              -bcl4xl(jc,kc)
+          bcl5xl(jc,kc)= half*sorpxl(jc,kc)  &
+              + cobcxl*acouxl(jc,kc)*(strpxl(jc,kc)-pinfxl)  &
+              +0.5*(1.0-bet)*tt5xl(jc,kc)- bcl5xl(jc,kc)  &
+              + 100.0*strdxl(jc,kc)*(one/xgdlen)  &
+              *(acouxl(jc,kc)**2.0-struxl(jc,kc)**2.0) *(struxl(jc,kc)-0.0)
+        ELSE
+          
+          bcl5xl(jc,kc)= half*sorpxl(jc,kc)  &
+              + cobcxl*acouxl(jc,kc)*(strpxl(jc,kc)-pinfxl)  &
+              +0.5*(1.0-bet)*tt5xl(jc,kc)- bcl5xl(jc,kc)
+        END IF
         
       END DO
     END DO
@@ -181,21 +267,46 @@ IF(fxlcnv)THEN
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO kc = kstal,kstol
       DO jc = jstal,jstol
-        
-        drhs(istal,jc,kc) = drhs(istal,jc,kc) - bcl5xl(jc,kc)*ova2xl(jc,kc)
-        
-        urhs(istal,jc,kc) = urhs(istal,jc,kc)  &
-            - bcl5xl(jc,kc)*ova2xl(jc,kc)*(struxl(jc,kc)+acouxl(jc,kc))
-        
-        vrhs(istal,jc,kc) = vrhs(istal,jc,kc)  &
-            - bcl5xl(jc,kc)*ova2xl(jc,kc)*strvxl(jc,kc)
-        
-        wrhs(istal,jc,kc) = wrhs(istal,jc,kc)  &
-            - bcl5xl(jc,kc)*ova2xl(jc,kc)*strwxl(jc,kc)
-        
-        erhs(istal,jc,kc) = erhs(istal,jc,kc)  &
-            - bcl5xl(jc,kc)*(ova2xl(jc,kc)*strexl(jc,kc)  &
-            + struxl(jc,kc)/acouxl(jc,kc) + ovgmxl(jc,kc))
+        IF((struxl(jc,kc) > zero).AND.(flag_pio_xl==1))THEN
+          
+          drhs(istal,jc,kc) = drhs(istal,jc,kc) - bcl2xl(jc,kc)  &
+              - bcl5xl(jc,kc)*ova2xl(jc,kc)
+          
+          urhs(istal,jc,kc) = urhs(istal,jc,kc)  &
+              - bcl2xl(jc,kc)*struxl(jc,kc)  &
+              - bcl5xl(jc,kc)*ova2xl(jc,kc)*(struxl(jc,kc)+acouxl(jc,kc))
+          
+          vrhs(istal,jc,kc) = vrhs(istal,jc,kc)  &
+              - bcl2xl(jc,kc)*strvxl(jc,kc) - bcl3xl(jc,kc)*strdxl(jc,kc)  &
+              - bcl5xl(jc,kc)*ova2xl(jc,kc)*strvxl(jc,kc)
+          
+          wrhs(istal,jc,kc) = wrhs(istal,jc,kc)  &
+              - bcl2xl(jc,kc)*strwxl(jc,kc) - bcl4xl(jc,kc)*strdxl(jc,kc)  &
+              - bcl5xl(jc,kc)*ova2xl(jc,kc)*strwxl(jc,kc)
+          
+          erhs(istal,jc,kc) = erhs(istal,jc,kc)  &
+              - bcl2xl(jc,kc)*strexl(jc,kc)  &
+              - bcl3xl(jc,kc)*strdxl(jc,kc)*strvxl(jc,kc)  &
+              - bcl4xl(jc,kc)*strdxl(jc,kc)*strwxl(jc,kc)  &
+              - bcl5xl(jc,kc)*(ova2xl(jc,kc)*strexl(jc,kc)  &
+              + struxl(jc,kc)/acouxl(jc,kc) + ovgmxl(jc,kc))
+          
+        ELSE
+          drhs(istal,jc,kc) = drhs(istal,jc,kc) - bcl5xl(jc,kc)*ova2xl(jc,kc)
+          
+          urhs(istal,jc,kc) = urhs(istal,jc,kc)  &
+              - bcl5xl(jc,kc)*ova2xl(jc,kc)*(struxl(jc,kc)+acouxl(jc,kc))
+          
+          vrhs(istal,jc,kc) = vrhs(istal,jc,kc)  &
+              - bcl5xl(jc,kc)*ova2xl(jc,kc)*strvxl(jc,kc)
+          
+          wrhs(istal,jc,kc) = wrhs(istal,jc,kc)  &
+              - bcl5xl(jc,kc)*ova2xl(jc,kc)*strwxl(jc,kc)
+          
+          erhs(istal,jc,kc) = erhs(istal,jc,kc)  &
+              - bcl5xl(jc,kc)*(ova2xl(jc,kc)*strexl(jc,kc)  &
+              + struxl(jc,kc)/acouxl(jc,kc) + ovgmxl(jc,kc))
+        END IF
         
       END DO
     END DO
@@ -207,8 +318,19 @@ IF(fxlcnv)THEN
       DO kc = kstal,kstol
         DO jc = jstal,jstol
           
-          yrhs(istal,jc,kc,ispec) = yrhs(istal,jc,kc,ispec)  &
-              - bcl5xl(jc,kc)*ova2xl(jc,kc)*stryxl(jc,kc,ispec)
+          IF((struxl(jc,kc) > zero).AND.(flag_pio_xl==1))THEN
+            fornow = bclyxl(jc,kc,ispec)*strdxl(jc,kc)
+            
+            erhs(istal,jc,kc) = erhs(istal,jc,kc) - fornow*strhxl(jc,kc,ispec)
+            
+            yrhs(istal,jc,kc,ispec) = yrhs(istal,jc,kc,ispec)  &
+                - (bcl2xl(jc,kc)+bcl5xl(jc,kc)*ova2xl(jc,kc))*stryxl(jc,kc,ispec)  &
+                - fornow
+            
+          ELSE
+            yrhs(istal,jc,kc,ispec) = yrhs(istal,jc,kc,ispec)  &
+                - bcl5xl(jc,kc)*ova2xl(jc,kc)*stryxl(jc,kc,ispec)
+          END IF
           
         END DO
       END DO
@@ -764,6 +886,25 @@ IF(fxrcnv)THEN
       acouxr(jc,kc) = SQRT(fornow)
       ova2xr(jc,kc) = one/fornow
       
+!     THESE ARE INTRODUCED FOR LODATO'S BC- NC
+      
+      tt1xr(jc,kc)=t51bxr(jc,kc)+ t52bxr(jc,kc)*(gam1xr(jc,kc)+1.0)-  &
+          strdxr(jc,kc)* acouxr(jc,kc)*t2bxr(jc,kc)
+      
+      tt2xr(jc,kc)=acouxr(jc,kc)*acouxr(jc,kc)*  &
+          t1bxr(jc,kc)-t51bxr(jc,kc)-(gam1xr(jc,kc)+1.0)* t52bxr(jc,kc)
+      
+      tt3xr(jc,kc)=t3bxr(jc,kc)
+      tt4xr(jc,kc)=t4bxr(jc,kc)
+      
+      tt5xr(jc,kc)=t51bxr(jc,kc)+ t52bxr(jc,kc)*(gam1xr(jc,kc)+1.0)+  &
+          strdxr(jc,kc)* acouxr(jc,kc)*t2bxr(jc,kc)
+      
+      DO is=1,nspec
+        tt6xr(jc,kc,is)=t6bxr(jc,kc,is)
+      END DO
+      
+      
     END DO
   END DO
   
@@ -773,6 +914,8 @@ IF(fxrcnv)THEN
 !       ---------------------------
   
   IF(nsbcxr == nsbco1)THEN
+    flag_pio_xr=nxrprm(1)!0
+    flag_bet_xr=nxrprm(2)!1
     
 !         OUTFLOW BC No 1
 !         SUBSONIC NON-REFLECTING OUTFLOW
@@ -811,36 +954,86 @@ IF(fxrcnv)THEN
 !         SPECIFY L1X AS REQUIRED
     DO kc = kstal,kstol
       DO jc = jstal,jstol
+        bcl2xr(jc,kc) = struxr(jc,kc)*(bcl2xr(jc,kc)-ova2xr(jc,kc)  &
+            *bcl5xr(jc,kc))
+        
+        bcl3xr(jc,kc) = struxr(jc,kc)*bcl3xr(jc,kc)
+        bcl4xr(jc,kc) = struxr(jc,kc)*bcl4xr(jc,kc)
         
 !             OLD VALUE OF L1X
         bcl1xr(jc,kc) = half*(struxr(jc,kc)-acouxr(jc,kc))  &
             *(bcl5xr(jc,kc)-strdxr(jc,kc)*acouxr(jc,kc)*bcl1xr(jc,kc))
         
 !             SUBTRACT FROM NEW VALUE OF L1X
-        bcl1xr(jc,kc)= half*sorpxr(jc,kc)  &
-            + cobcxr*acouxr(jc,kc)*(strpxr(jc,kc)-pinfxr) - bcl1xr(jc,kc)
-        
+!     TERMS INTRODUCED FOR LODATO'S BC- NC
+        IF(flag_bet_xr==1) THEN
+          bet=struxr(jc,kc)*struxr(jc,kc)+ strvxr(jc,kc)*strvxr(jc,kc)+  &
+              strwxr(jc,kc)*strwxr(jc,kc)
+          bet=SQRT(bet)/acouxr(jc,kc)
+        END IF
+        IF((struxr(jc,kc) < zero).AND.(flag_pio_xr==1))THEN
+          bcl2xr(jc,kc)=-ova2xr(jc,kc)*sorpxr(jc,kc) -bcl2xr(jc,kc)
+          
+          bcl3xr(jc,kc)=0.1*(strvxr(jc,kc)-0.0D0)-bcl3xr(jc,kc)
+          
+          bcl4xr(jc,kc)=0.1*(strwxr(jc,kc)-0.0D0)-bcl4xr(jc,kc)
+          bcl1xr(jc,kc)= half*sorpxr(jc,kc)  &
+              + cobcxr*acouxr(jc,kc)*(strpxr(jc,kc)-pinfxr)  &
+              +0.5*(1.0-bet)*tt1xr(jc,kc)- bcl1xr(jc,kc)  &
+              -100.0*strdxr(jc,kc)*(one/xgdlen)  &
+              *(acouxr(jc,kc)**2.0-struxr(jc,kc)**2.0) *(struxr(jc,kc)-0.0D0)
+        ELSE
+          bcl1xr(jc,kc)= half*sorpxr(jc,kc)  &
+              + cobcxr*acouxr(jc,kc)*(strpxr(jc,kc)-pinfxr)  &
+              +0.5*(1.0-bet)*tt1xr(jc,kc)- bcl1xr(jc,kc)
+        END IF
       END DO
     END DO
     
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO kc = kstal,kstol
       DO jc = jstal,jstol
-        
-        drhs(istol,jc,kc) = drhs(istol,jc,kc) - bcl1xr(jc,kc)*ova2xr(jc,kc)
-        
-        urhs(istol,jc,kc) = urhs(istol,jc,kc)  &
-            - bcl1xr(jc,kc)*ova2xr(jc,kc)*(struxr(jc,kc)-acouxr(jc,kc))
-        
-        vrhs(istol,jc,kc) = vrhs(istol,jc,kc)  &
-            - bcl1xr(jc,kc)*ova2xr(jc,kc)*strvxr(jc,kc)
-        
-        wrhs(istol,jc,kc) = wrhs(istol,jc,kc)  &
-            - bcl1xr(jc,kc)*ova2xr(jc,kc)*strwxr(jc,kc)
-        
-        erhs(istol,jc,kc) = erhs(istol,jc,kc)  &
-            - bcl1xr(jc,kc)*(ova2xr(jc,kc)*strexr(jc,kc)  &
-            - struxr(jc,kc)/acouxr(jc,kc) + ovgmxr(jc,kc))
+        IF((struxr(jc,kc) < zero).AND.(flag_pio_xr==1))THEN
+          drhs(istol,jc,kc) = drhs(istol,jc,kc)  &
+              - bcl1xr(jc,kc)*ova2xr(jc,kc) - bcl2xr(jc,kc)
+          
+          urhs(istol,jc,kc) = urhs(istol,jc,kc)  &
+              - bcl1xr(jc,kc)*ova2xr(jc,kc)*(struxr(jc,kc)-acouxr(jc,kc))  &
+              - bcl2xr(jc,kc)*struxr(jc,kc)
+          
+          vrhs(istol,jc,kc) = vrhs(istol,jc,kc)  &
+              - bcl1xr(jc,kc)*ova2xr(jc,kc)*strvxr(jc,kc)  &
+              - bcl2xr(jc,kc)*strvxr(jc,kc) - bcl3xr(jc,kc)*strdxr(jc,kc)
+          
+          wrhs(istol,jc,kc) = wrhs(istol,jc,kc)  &
+              - bcl1xr(jc,kc)*ova2xr(jc,kc)*strwxr(jc,kc)  &
+              - bcl2xr(jc,kc)*strwxr(jc,kc) - bcl4xr(jc,kc)*strdxr(jc,kc)
+          
+          erhs(istol,jc,kc) = erhs(istol,jc,kc)  &
+              - bcl1xr(jc,kc)*(ova2xr(jc,kc)*strexr(jc,kc)  &
+              - struxr(jc,kc)/acouxr(jc,kc) + ovgmxr(jc,kc))  &
+              - bcl2xr(jc,kc)*strexr(jc,kc)  &
+              - bcl3xr(jc,kc)*strdxr(jc,kc)*strvxr(jc,kc)  &
+              - bcl4xr(jc,kc)*strdxr(jc,kc)*strwxr(jc,kc)
+          
+          
+        ELSE
+          
+          drhs(istol,jc,kc) = drhs(istol,jc,kc) - bcl1xr(jc,kc)*ova2xr(jc,kc)
+          
+          urhs(istol,jc,kc) = urhs(istol,jc,kc)  &
+              - bcl1xr(jc,kc)*ova2xr(jc,kc)*(struxr(jc,kc)-acouxr(jc,kc))
+          
+          vrhs(istol,jc,kc) = vrhs(istol,jc,kc)  &
+              - bcl1xr(jc,kc)*ova2xr(jc,kc)*strvxr(jc,kc)
+          
+          wrhs(istol,jc,kc) = wrhs(istol,jc,kc)  &
+              - bcl1xr(jc,kc)*ova2xr(jc,kc)*strwxr(jc,kc)
+          
+          erhs(istol,jc,kc) = erhs(istol,jc,kc)  &
+              - bcl1xr(jc,kc)*(ova2xr(jc,kc)*strexr(jc,kc)  &
+              - struxr(jc,kc)/acouxr(jc,kc) + ovgmxr(jc,kc))
+        END IF
         
       END DO
     END DO
@@ -852,8 +1045,20 @@ IF(fxrcnv)THEN
       DO kc = kstal,kstol
         DO jc = jstal,jstol
           
-          yrhs(istol,jc,kc,ispec) = yrhs(istol,jc,kc,ispec)  &
-              - bcl1xr(jc,kc)*ova2xr(jc,kc)*stryxr(jc,kc,ispec)
+          IF((struxr(jc,kc) < zero).AND.(flag_pio_xr==1))THEN
+            
+            fornow = bclyxr(jc,kc,ispec)*strdxr(jc,kc)
+            
+            erhs(istol,jc,kc) = erhs(istol,jc,kc) - fornow*strhxr(jc,kc,ispec)
+            
+            yrhs(istol,jc,kc,ispec) = yrhs(istol,jc,kc,ispec)  &
+                - (bcl2xr(jc,kc)+bcl1xr(jc,kc)*ova2xr(jc,kc))*stryxr(jc,kc,ispec)  &
+                - fornow
+            
+          ELSE
+            yrhs(istol,jc,kc,ispec) = yrhs(istol,jc,kc,ispec)  &
+                - bcl1xr(jc,kc)*ova2xr(jc,kc)*stryxr(jc,kc,ispec)
+          END IF
           
         END DO
       END DO
@@ -1411,6 +1616,25 @@ IF(fylcnv)THEN
       acouyl(ic,kc) = SQRT(fornow)
       ova2yl(ic,kc) = one/fornow
       
+!     THESE ARE INTRODUCED FOR LODATO'S BC- NC
+      
+      tt1yl(ic,kc)=t51byl(ic,kc)+ t52byl(ic,kc)*(gam1yl(ic,kc)+1.0)-  &
+          strdyl(ic,kc)* acouyl(ic,kc)*t2byl(ic,kc)
+      
+      tt2yl(ic,kc)=acouyl(ic,kc)*acouyl(ic,kc)*  &
+          t1byl(ic,kc)-t51byl(ic,kc)-(gam1yl(ic,kc)+1.0)* t52byl(ic,kc)
+      
+      tt3yl(ic,kc)=t3byl(ic,kc)
+      tt4yl(ic,kc)=t4byl(ic,kc)
+      
+      tt5yl(ic,kc)=t51byl(ic,kc)+ t52byl(ic,kc)*(gam1yl(ic,kc)+1.0)+  &
+          strdyl(ic,kc)* acouyl(ic,kc)*t2byl(ic,kc)
+      
+      DO is=1,nspec
+        tt6yl(ic,kc,is)=t6byl(ic,kc,is)
+      END DO
+      
+      
     END DO
   END DO
   
@@ -1420,6 +1644,8 @@ IF(fylcnv)THEN
 !       ---------------------------
   
   IF(nsbcyl == nsbco1)THEN
+    flag_pio_yl=nylprm(1)!0
+    flag_bet_yl=nylprm(2)!1
     
 !         OUTFLOW BC No 1
 !         SUBSONIC NON-REFLECTING OUTFLOW
@@ -1458,37 +1684,87 @@ IF(fylcnv)THEN
 !         SPECIFY L5Y AS REQUIRED
     DO kc = kstal,kstol
       DO ic = istal,istol
-        
+        bcl2yl(ic,kc) = strvyl(ic,kc)  &
+            *(bcl2yl(ic,kc)-bcl5yl(ic,kc)*ova2yl(ic,kc))
+        bcl3yl(ic,kc) = strvyl(ic,kc)*bcl3yl(ic,kc)
+        bcl4yl(ic,kc) = strvyl(ic,kc)*bcl4yl(ic,kc)
 !             OLD VALUE OF L5Y
         bcl5yl(ic,kc) = half*(strvyl(ic,kc)+acouyl(ic,kc))  &
             *(bcl5yl(ic,kc)+strdyl(ic,kc)*acouyl(ic,kc)*bcl1yl(ic,kc))
         
 !             SUBTRACT FROM NEW VALUE OF L5Y
-        bcl5yl(ic,kc)= half*sorpyl(ic,kc)  &
-            + cobcyl*acouyl(ic,kc)*(strpyl(ic,kc)-pinfyl) - bcl5yl(ic,kc)
-        
+!             TERMS INTRODUCED FOR LODATO'S BC- NC
+        IF(flag_bet_yl==1) THEN
+          bet=struyl(ic,kc)*struyl(ic,kc)+ strvyl(ic,kc)*strvyl(ic,kc)+  &
+              strwyl(ic,kc)*strwyl(ic,kc)
+          bet=SQRT(bet)/acouyl(ic,kc)
+        END IF
+        IF((strvyl(ic,kc) > zero).AND.(flag_pio_yl==1))THEN
+          bcl2yl(ic,kc) = -bcl2yl(ic,kc)  &
+              -ova2yl(ic,kc)*sorpyl(ic,kc)
+          
+          bcl3yl(ic,kc) = 0.1*(struyl(ic,kc)-0.0D0)  &
+              -bcl3yl(ic,kc)
+          
+          bcl4yl(ic,kc) = 0.1*(strwyl(ic,kc)-0.0D0)  &
+              -bcl4yl(ic,kc)
+          bcl5yl(ic,kc)= half*sorpyl(ic,kc)  &
+              + cobcyl*acouyl(ic,kc)*(strpyl(ic,kc)-pinfyl)  &
+              +0.5*(1.0-bet)*tt5yl(ic,kc)- bcl5yl(ic,kc)  &
+              + 100.0*strdyl(ic,kc)*(one/ygdlen) &!ASK NC: CHANGED TO YGDLEN  &
+              *(acouyl(ic,kc)**2.0-strvyl(ic,kc)**2.0)*(strvyl(ic,kc)-0.0)
+          
+        ELSE
+          bcl5yl(ic,kc)= half*sorpyl(ic,kc)  &
+              + cobcyl*acouyl(ic,kc)*(strpyl(ic,kc)-pinfyl)  &
+              +0.5*(1.0-bet)*tt5yl(ic,kc)- bcl5yl(ic,kc)
+        END IF
       END DO
     END DO
     
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO kc = kstal,kstol
       DO ic = istal,istol
-        
-        drhs(ic,jstal,kc) = drhs(ic,jstal,kc) - bcl5yl(ic,kc)*ova2yl(ic,kc)
-        
-        urhs(ic,jstal,kc) = urhs(ic,jstal,kc)  &
-            - bcl5yl(ic,kc)*ova2yl(ic,kc)*struyl(ic,kc)
-        
-        vrhs(ic,jstal,kc) = vrhs(ic,jstal,kc)  &
-            - bcl5yl(ic,kc)*ova2yl(ic,kc)*(strvyl(ic,kc)+acouyl(ic,kc))
-        
-        wrhs(ic,jstal,kc) = wrhs(ic,jstal,kc)  &
-            - bcl5yl(ic,kc)*ova2yl(ic,kc)*strwyl(ic,kc)
-        
-        erhs(ic,jstal,kc) = erhs(ic,jstal,kc)  &
-            - bcl5yl(ic,kc)*(ova2yl(ic,kc)*streyl(ic,kc)  &
-            + strvyl(ic,kc)/acouyl(ic,kc) + ovgmyl(ic,kc))
-        
+        IF((strvyl(ic,kc) > zero).AND.(flag_pio_yl==1))THEN
+          
+          drhs(ic,jstal,kc) = drhs(ic,jstal,kc) - bcl2yl(ic,kc)  &
+              - bcl5yl(ic,kc)*ova2yl(ic,kc)
+          
+          urhs(ic,jstal,kc) = urhs(ic,jstal,kc)  &
+              - bcl2yl(ic,kc)*struyl(ic,kc) - bcl3yl(ic,kc)*strdyl(ic,kc)  &
+              - bcl5yl(ic,kc)*ova2yl(ic,kc)*struyl(ic,kc)
+          
+          vrhs(ic,jstal,kc) = vrhs(ic,jstal,kc)  &
+              - bcl2yl(ic,kc)*strvyl(ic,kc)  &
+              - bcl5yl(ic,kc)*ova2yl(ic,kc)*(strvyl(ic,kc)+acouyl(ic,kc))
+          
+          wrhs(ic,jstal,kc) = wrhs(ic,jstal,kc)  &
+              - bcl2yl(ic,kc)*strwyl(ic,kc) - bcl4yl(ic,kc)*strdyl(ic,kc)  &
+              - bcl5yl(ic,kc)*ova2yl(ic,kc)*strwyl(ic,kc)
+          
+          erhs(ic,jstal,kc) = erhs(ic,jstal,kc)  &
+              - bcl2yl(ic,kc)*streyl(ic,kc)  &
+              - bcl3yl(ic,kc)*strdyl(ic,kc)*struyl(ic,kc)  &
+              - bcl4yl(ic,kc)*strdyl(ic,kc)*strwyl(ic,kc)  &
+              - bcl5yl(ic,kc)*(ova2yl(ic,kc)*streyl(ic,kc)  &
+              + strvyl(ic,kc)/acouyl(ic,kc) + ovgmyl(ic,kc))
+          
+        ELSE
+          drhs(ic,jstal,kc) = drhs(ic,jstal,kc) - bcl5yl(ic,kc)*ova2yl(ic,kc)
+          
+          urhs(ic,jstal,kc) = urhs(ic,jstal,kc)  &
+              - bcl5yl(ic,kc)*ova2yl(ic,kc)*struyl(ic,kc)
+          
+          vrhs(ic,jstal,kc) = vrhs(ic,jstal,kc)  &
+              - bcl5yl(ic,kc)*ova2yl(ic,kc)*(strvyl(ic,kc)+acouyl(ic,kc))
+          
+          wrhs(ic,jstal,kc) = wrhs(ic,jstal,kc)  &
+              - bcl5yl(ic,kc)*ova2yl(ic,kc)*strwyl(ic,kc)
+          
+          erhs(ic,jstal,kc) = erhs(ic,jstal,kc)  &
+              - bcl5yl(ic,kc)*(ova2yl(ic,kc)*streyl(ic,kc)  &
+              + strvyl(ic,kc)/acouyl(ic,kc) + ovgmyl(ic,kc))
+        END IF
       END DO
     END DO
     
@@ -1498,10 +1774,21 @@ IF(fylcnv)THEN
       
       DO kc = kstal,kstol
         DO ic = istal,istol
-          
-          yrhs(ic,jstal,kc,ispec) = yrhs(ic,jstal,kc,ispec)  &
-              - bcl5yl(ic,kc)*ova2yl(ic,kc)*stryyl(ic,kc,ispec)
-          
+          IF((strvyl(ic,kc) > zero).AND.(flag_pio_yl==1))THEN
+            
+            fornow = bclyyl(ic,kc,ispec)*strdyl(ic,kc)
+            
+            erhs(ic,jstal,kc) = erhs(ic,jstal,kc) - fornow*strhyl(ic,kc,ispec)
+            
+            yrhs(ic,jstal,kc,ispec) = yrhs(ic,jstal,kc,ispec)  &
+                - (bcl2yl(ic,kc)+bcl5yl(ic,kc)*ova2yl(ic,kc))*stryyl(ic,kc,ispec)  &
+                - fornow
+            
+            
+          ELSE
+            yrhs(ic,jstal,kc,ispec) = yrhs(ic,jstal,kc,ispec)  &
+                - bcl5yl(ic,kc)*ova2yl(ic,kc)*stryyl(ic,kc,ispec)
+          END IF
         END DO
       END DO
       
@@ -2056,6 +2343,24 @@ IF(fyrcnv)THEN
       acouyr(ic,kc) = SQRT(fornow)
       ova2yr(ic,kc) = one/fornow
       
+!     THESE ARE INTRODUCED FOR LODATO'S BC- NC
+      
+      tt1yr(ic,kc)=t51byr(ic,kc)+ t52byr(ic,kc)*(gam1yr(ic,kc)+1.0)-  &
+          strdyr(ic,kc)* acouyr(ic,kc)*t2byr(ic,kc)
+      
+      tt2yr(ic,kc)=acouyr(ic,kc)*acouyr(ic,kc)*  &
+          t1byr(ic,kc)-t51byr(ic,kc)-(gam1yr(ic,kc)+1.0)* t52byr(ic,kc)
+      
+      tt3yr(ic,kc)=t3byr(ic,kc)
+      tt4yr(ic,kc)=t4byr(ic,kc)
+      
+      tt5yr(ic,kc)=t51byr(ic,kc)+ t52byr(ic,kc)*(gam1yr(ic,kc)+1.0)+  &
+          strdyr(ic,kc)* acouyr(ic,kc)*t2byr(ic,kc)
+      
+      DO is=1,nspec
+        tt6yr(ic,kc,is)=t6byr(ic,kc,is)
+      END DO
+      
     END DO
   END DO
   
@@ -2065,6 +2370,8 @@ IF(fyrcnv)THEN
 !       ---------------------------
   
   IF(nsbcyr == nsbco1)THEN
+    flag_pio_yr=nyrprm(1)!0
+    flag_bet_yr=nyrprm(2)!1
     
 !         OUTFLOW BC No 1
 !         SUBSONIC NON-REFLECTING OUTFLOW
@@ -2104,36 +2411,91 @@ IF(fyrcnv)THEN
     DO kc = kstal,kstol
       DO ic = istal,istol
         
+        bcl2yr(ic,kc) = strvyr(ic,kc)  &
+            *(bcl2yr(ic,kc)-bcl5yr(ic,kc)*ova2yr(ic,kc))
+        bcl3yr(ic,kc) = strvyr(ic,kc)*bcl3yr(ic,kc)
+        bcl4yr(ic,kc) = strvyr(ic,kc)*bcl4yr(ic,kc)
 !             OLD VALUE OF L1Y
         bcl1yr(ic,kc) = half*(strvyr(ic,kc)-acouyr(ic,kc))  &
             *(bcl5yr(ic,kc)-strdyr(ic,kc)*acouyr(ic,kc)*bcl1yr(ic,kc))
         
 !             SUBTRACT FROM NEW VALUE OF L1Y
-        bcl1yr(ic,kc)= half*sorpyr(ic,kc)  &
-            + cobcyr*acouyr(ic,kc)*(strpyr(ic,kc)-pinfyr) - bcl1yr(ic,kc)
+!     TERMS INTRODUCED FOR LODATO'S BC- NC
+        IF(flag_bet_yr==1) THEN
+          bet=struyr(ic,kc)*struyr(ic,kc)+ strvyr(ic,kc)*strvyr(ic,kc)+  &
+              strwyr(ic,kc)*strwyr(ic,kc)
+          bet=SQRT(bet)/acouyr(ic,kc)
+        END IF
         
+        IF((strvyr(ic,kc) < zero).AND.(flag_pio_yr==1))THEN
+          bcl2yr(ic,kc) = -bcl2yr(ic,kc)  &
+              -ova2yr(ic,kc)*sorpyr(ic,kc)
+          
+          bcl3yr(ic,kc) = 0.1*(struyr(ic,kc)-0.0D0)  &
+              -bcl3yr(ic,kc)
+          
+          bcl4yr(ic,kc) = 0.1*(strwyr(ic,kc)-0.0D0)  &
+              -bcl4yr(ic,kc)
+          bcl1yr(ic,kc)= half*sorpyr(ic,kc)  &
+              + cobcyr*acouyr(ic,kc)*(strpyr(ic,kc)-pinfyr)  &
+              +0.5*(1.0-bet)*tt1yr(ic,kc)- bcl1yr(ic,kc) &
+!              17 JAN 2024 VM: change making negative
+!     +                     + 100.0*STRDYR(IC,KC)*(ONE/YGDLEN)!ASK NC: CHANGED TO YGDLEN  &
+          - 100.0*strdyr(ic,kc)*(one/ygdlen)  &!ASK NC: CHANGED TO YGDLEN
+              *(acouyr(ic,kc)**2.0-strvyr(ic,kc)**2.0) *(strvyr(ic,kc)-0.0)
+        ELSE
+          bcl1yr(ic,kc)= half*sorpyr(ic,kc)  &
+              + cobcyr*acouyr(ic,kc)*(strpyr(ic,kc)-pinfyr)  &
+              +0.5*(1.0-bet)*tt1yr(ic,kc)- bcl1yr(ic,kc)
+        END IF
       END DO
     END DO
     
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO kc = kstal,kstol
       DO ic = istal,istol
-        
-        drhs(ic,jstol,kc) = drhs(ic,jstol,kc) - bcl1yr(ic,kc)*ova2yr(ic,kc)
-        
-        urhs(ic,jstol,kc) = urhs(ic,jstol,kc)  &
-            - bcl1yr(ic,kc)*ova2yr(ic,kc)*struyr(ic,kc)
-        
-        vrhs(ic,jstol,kc) = vrhs(ic,jstol,kc)  &
-            - bcl1yr(ic,kc)*ova2yr(ic,kc)*(strvyr(ic,kc)-acouyr(ic,kc))
-        
-        wrhs(ic,jstol,kc) = wrhs(ic,jstol,kc)  &
-            - bcl1yr(ic,kc)*ova2yr(ic,kc)*strwyr(ic,kc)
-        
-        erhs(ic,jstol,kc) = erhs(ic,jstol,kc)  &
-            - bcl1yr(ic,kc)*(ova2yr(ic,kc)*streyr(ic,kc)  &
-            - strvyr(ic,kc)/acouyr(ic,kc) + ovgmyr(ic,kc))
-        
+        IF((strvyr(ic,kc) < zero).AND.(flag_pio_yr==1))THEN
+          
+          drhs(ic,jstol,kc) = drhs(ic,jstol,kc)  &
+              - bcl1yr(ic,kc)*ova2yr(ic,kc) - bcl2yr(ic,kc)
+          
+          urhs(ic,jstol,kc) = urhs(ic,jstol,kc)  &
+              - bcl1yr(ic,kc)*ova2yr(ic,kc)*struyr(ic,kc)  &
+              - bcl2yr(ic,kc)*struyr(ic,kc) - bcl3yr(ic,kc)*strdyr(ic,kc)
+          
+          vrhs(ic,jstol,kc) = vrhs(ic,jstol,kc)  &
+              - bcl1yr(ic,kc)*ova2yr(ic,kc)*(strvyr(ic,kc)-acouyr(ic,kc))  &
+              - bcl2yr(ic,kc)*strvyr(ic,kc)
+          
+          wrhs(ic,jstol,kc) = wrhs(ic,jstol,kc)  &
+              - bcl1yr(ic,kc)*ova2yr(ic,kc)*strwyr(ic,kc)  &
+              - bcl2yr(ic,kc)*strwyr(ic,kc) - bcl4yr(ic,kc)*strdyr(ic,kc)
+          
+          erhs(ic,jstol,kc) = erhs(ic,jstol,kc)  &
+              - bcl1yr(ic,kc)*(ova2yr(ic,kc)*streyr(ic,kc) &
+!              16 JAN 2024: VM+NC sign change
+!     +                                     + STRVYR(IC,KC)/ACOUYR(IC,KC)  &
+          - strvyr(ic,kc)/acouyr(ic,kc) + ovgmyr(ic,kc))  &
+              - bcl2yr(ic,kc)*streyr(ic,kc)  &
+              - bcl3yr(ic,kc)*strdyr(ic,kc)*struyr(ic,kc)  &
+              - bcl4yr(ic,kc)*strdyr(ic,kc)*strwyr(ic,kc)
+          
+        ELSE
+          drhs(ic,jstol,kc) = drhs(ic,jstol,kc) - bcl1yr(ic,kc)*ova2yr(ic,kc)
+          
+          urhs(ic,jstol,kc) = urhs(ic,jstol,kc)  &
+              - bcl1yr(ic,kc)*ova2yr(ic,kc)*struyr(ic,kc)
+          
+          vrhs(ic,jstol,kc) = vrhs(ic,jstol,kc)  &
+              - bcl1yr(ic,kc)*ova2yr(ic,kc)*(strvyr(ic,kc)-acouyr(ic,kc))
+          
+          wrhs(ic,jstol,kc) = wrhs(ic,jstol,kc)  &
+              - bcl1yr(ic,kc)*ova2yr(ic,kc)*strwyr(ic,kc)
+          
+          erhs(ic,jstol,kc) = erhs(ic,jstol,kc)  &
+              - bcl1yr(ic,kc)*(ova2yr(ic,kc)*streyr(ic,kc)  &
+              - strvyr(ic,kc)/acouyr(ic,kc) + ovgmyr(ic,kc))
+        END IF
       END DO
     END DO
     
@@ -2143,9 +2505,20 @@ IF(fyrcnv)THEN
       
       DO kc = kstal,kstol
         DO ic = istal,istol
-          
-          yrhs(ic,jstol,kc,ispec) = yrhs(ic,jstol,kc,ispec)  &
-              - bcl1yr(ic,kc)*ova2yr(ic,kc)*stryyr(ic,kc,ispec)
+          IF((strvyr(ic,kc) < zero).AND.(flag_pio_yr==1))THEN
+            
+            fornow = bclyyr(ic,kc,ispec)*strdyr(ic,kc)
+            
+            erhs(ic,jstol,kc) = erhs(ic,jstol,kc) - fornow*strhyr(ic,kc,ispec)
+            
+            yrhs(ic,jstol,kc,ispec) = yrhs(ic,jstol,kc,ispec)  &
+                - (bcl2yr(ic,kc)+bcl1yr(ic,kc)*ova2yr(ic,kc))*stryyr(ic,kc,ispec)  &
+                - fornow
+            
+          ELSE
+            yrhs(ic,jstol,kc,ispec) = yrhs(ic,jstol,kc,ispec)  &
+                - bcl1yr(ic,kc)*ova2yr(ic,kc)*stryyr(ic,kc,ispec)
+          END IF
           
         END DO
       END DO
@@ -2257,8 +2630,10 @@ IF(fyrcnv)THEN
             - bcl2yr(ic,kc)*strwyr(ic,kc) - bcl4yr(ic,kc)*strdyr(ic,kc)
         
         erhs(ic,jstol,kc) = erhs(ic,jstol,kc)  &
-            - bcl1yr(ic,kc)*(ova2yr(ic,kc)*streyr(ic,kc)  &
-            + strvyr(ic,kc)/acouyr(ic,kc) + ovgmyr(ic,kc))  &
+            - bcl1yr(ic,kc)*(ova2yr(ic,kc)*streyr(ic,kc) &
+!                     16 JAN 2024: VM+NC sign change
+!     +                                     + STRVYR(IC,KC)/ACOUYR(IC,KC)  &
+        - strvyr(ic,kc)/acouyr(ic,kc) + ovgmyr(ic,kc))  &
             - bcl2yr(ic,kc)*streyr(ic,kc)  &
             - bcl3yr(ic,kc)*strdyr(ic,kc)*struyr(ic,kc)  &
             - bcl4yr(ic,kc)*strdyr(ic,kc)*strwyr(ic,kc)
@@ -2703,6 +3078,24 @@ IF(fzlcnv)THEN
       acouzl(ic,jc) = SQRT(fornow)
       ova2zl(ic,jc) = one/fornow
       
+!     THESE ARE INTRODUCED FOR LODATO'S BC- NC
+      
+      tt1zl(ic,jc)=t51bzl(ic,jc)+ t52bzl(ic,jc)*(gam1zl(ic,jc)+1.0)-  &
+          strdzl(ic,jc)* acouzl(ic,jc)*t2bzl(ic,jc)
+      
+      tt2zl(ic,jc)=acouzl(ic,jc)*acouzl(ic,jc)*  &
+          t1bzl(ic,jc)-t51bzl(ic,jc)-(gam1zl(ic,jc)+1.0)* t52bzl(ic,jc)
+      
+      tt3zl(ic,jc)=t3bzl(ic,jc)
+      tt4zl(ic,jc)=t4bzl(ic,jc)
+      
+      tt5zl(ic,jc)=t51bzl(ic,jc)+ t52bzl(ic,jc)*(gam1zl(ic,jc)+1.0)+  &
+          strdzl(ic,jc)* acouzl(ic,jc)*t2bzl(ic,jc)
+      
+      DO is=1,nspec
+        tt6zl(ic,jc,is)=t6bzl(ic,jc,is)
+      END DO
+      
     END DO
   END DO
   
@@ -2712,6 +3105,8 @@ IF(fzlcnv)THEN
 !       ---------------------------
   
   IF(nsbczl == nsbco1)THEN
+    flag_pio_zl=nzlprm(1)!0
+    flag_bet_zl=nzlprm(2)!1
     
 !         OUTFLOW BC No 1
 !         SUBSONIC NON-REFLECTING OUTFLOW
@@ -2750,37 +3145,85 @@ IF(fzlcnv)THEN
 !         SPECIFY L5Z AS REQUIRED
     DO jc = jstal,jstol
       DO ic = istal,istol
+        bcl2zl(ic,jc) = strwzl(ic,jc)  &
+            *(bcl2zl(ic,jc)-bcl5zl(ic,jc)*ova2zl(ic,jc))
+        bcl3zl(ic,jc) = strwzl(ic,jc)*bcl3zl(ic,jc)
+        bcl4zl(ic,jc) = strwzl(ic,jc)*bcl4zl(ic,jc)
         
 !             OLD VALUE OF L5Z
         bcl5zl(ic,jc) = half*(strwzl(ic,jc)+acouzl(ic,jc))  &
             *(bcl5zl(ic,jc)+strdzl(ic,jc)*acouzl(ic,jc)*bcl1zl(ic,jc))
         
 !             SUBTRACT FROM NEW VALUE OF L5Z
-        bcl5zl(ic,jc)= half*sorpzl(ic,jc)  &
-            + cobczl*acouzl(ic,jc)*(strpzl(ic,jc)-pinfzl) - bcl5zl(ic,jc)
-        
+!             TERMS INTRODUCED FOR LODATO'S BC- NC
+        IF(flag_bet_zl==1) THEN
+          bet=struzl(ic,jc)*struzl(ic,jc)+ strvzl(ic,jc)*strvzl(ic,jc)+  &
+              strwzl(ic,jc)*strwzl(ic,jc)
+          bet=SQRT(bet)/acouzl(ic,jc)
+        END IF
+        IF((strwzl(ic,jc) > zero).AND.(flag_pio_zl==1))THEN
+          bcl2zl(ic,jc) = -bcl2zl(ic,jc)  &
+              -ova2zl(ic,jc)*sorpzl(ic,jc)
+          
+          bcl3zl(ic,jc) = 0.1*(struzl(ic,jc)-0.0D0)  &
+              -bcl3zl(ic,jc)
+          
+          bcl4zl(ic,jc) = 0.1*(strvzl(ic,jc)-0.0D0)  &
+              -bcl4zl(ic,jc)
+          bcl5zl(ic,jc)= half*sorpzl(ic,jc)  &
+              + cobczl*acouzl(ic,jc)*(strpzl(ic,jc)-pinfzl)  &
+              +0.5*(1.0-bet)*tt5zl(ic,jc)- bcl5zl(ic,jc)  &
+              + 100.0*strdzl(ic,jc)*(one/zgdlen)  &
+              *(acouzl(ic,jc)**2.0-strwzl(ic,jc)**2.0) *(strwzl(ic,jc)-0.0)
+        ELSE
+          bcl5zl(ic,jc)= half*sorpzl(ic,jc)  &
+              + cobczl*acouzl(ic,jc)*(strpzl(ic,jc)-pinfzl)  &
+              +0.5*(1.0-bet)*tt5zl(ic,jc)- bcl5zl(ic,jc)
+        END IF
       END DO
     END DO
     
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO jc = jstal,jstol
       DO ic = istal,istol
-        
-        drhs(ic,jc,kstal) = drhs(ic,jc,kstal) - bcl5zl(ic,jc)*ova2zl(ic,jc)
-        
-        urhs(ic,jc,kstal) = urhs(ic,jc,kstal)  &
-            - bcl5zl(ic,jc)*ova2zl(ic,jc)*struzl(ic,jc)
-        
-        vrhs(ic,jc,kstal) = vrhs(ic,jc,kstal)  &
-            - bcl5zl(ic,jc)*ova2zl(ic,jc)*strvzl(ic,jc)
-        
-        wrhs(ic,jc,kstal) = wrhs(ic,jc,kstal)  &
-            - bcl5zl(ic,jc)*ova2zl(ic,jc)*(strwzl(ic,jc)+acouzl(ic,jc))
-        
-        erhs(ic,jc,kstal) = erhs(ic,jc,kstal)  &
-            - bcl5zl(ic,jc)*(ova2zl(ic,jc)*strezl(ic,jc)  &
-            + strwzl(ic,jc)/acouzl(ic,jc) + ovgmzl(ic,jc))
-        
+        IF((strwzl(ic,jc) > zero).AND.(flag_pio_zl==1))THEN
+          drhs(ic,jc,kstal) = drhs(ic,jc,kstal) - bcl2zl(ic,jc)  &
+              - bcl5zl(ic,jc)*ova2zl(ic,jc)
+          
+          urhs(ic,jc,kstal) = urhs(ic,jc,kstal)  &
+              - bcl2zl(ic,jc)*struzl(ic,jc) - bcl3zl(ic,jc)*strdzl(ic,jc)  &
+              - bcl5zl(ic,jc)*ova2zl(ic,jc)*struzl(ic,jc)
+          
+          vrhs(ic,jc,kstal) = vrhs(ic,jc,kstal)  &
+              - bcl2zl(ic,jc)*strvzl(ic,jc) - bcl4zl(ic,jc)*strdzl(ic,jc)  &
+              - bcl5zl(ic,jc)*ova2zl(ic,jc)*strvzl(ic,jc)
+          
+          wrhs(ic,jc,kstal) = wrhs(ic,jc,kstal)  &
+              - bcl2zl(ic,jc)*strwzl(ic,jc)  &
+              - bcl5zl(ic,jc)*ova2zl(ic,jc)*(strwzl(ic,jc)+acouzl(ic,jc))
+          
+          erhs(ic,jc,kstal) = erhs(ic,jc,kstal)  &
+              - bcl2zl(ic,jc)*strezl(ic,jc)  &
+              - bcl3zl(ic,jc)*strdzl(ic,jc)*struzl(ic,jc)  &
+              - bcl4zl(ic,jc)*strdzl(ic,jc)*strvzl(ic,jc)  &
+              - bcl5zl(ic,jc)*(ova2zl(ic,jc)*strezl(ic,jc)  &
+              + strwzl(ic,jc)/acouzl(ic,jc) + ovgmzl(ic,jc))
+        ELSE
+          drhs(ic,jc,kstal) = drhs(ic,jc,kstal) - bcl5zl(ic,jc)*ova2zl(ic,jc)
+          
+          urhs(ic,jc,kstal) = urhs(ic,jc,kstal)  &
+              - bcl5zl(ic,jc)*ova2zl(ic,jc)*struzl(ic,jc)
+          
+          vrhs(ic,jc,kstal) = vrhs(ic,jc,kstal)  &
+              - bcl5zl(ic,jc)*ova2zl(ic,jc)*strvzl(ic,jc)
+          
+          wrhs(ic,jc,kstal) = wrhs(ic,jc,kstal)  &
+              - bcl5zl(ic,jc)*ova2zl(ic,jc)*(strwzl(ic,jc)+acouzl(ic,jc))
+          
+          erhs(ic,jc,kstal) = erhs(ic,jc,kstal)  &
+              - bcl5zl(ic,jc)*(ova2zl(ic,jc)*strezl(ic,jc)  &
+              + strwzl(ic,jc)/acouzl(ic,jc) + ovgmzl(ic,jc))
+        END IF
       END DO
     END DO
     
@@ -2790,10 +3233,18 @@ IF(fzlcnv)THEN
       
       DO jc = jstal,jstol
         DO ic = istal,istol
-          
-          yrhs(ic,jc,kstal,ispec) = yrhs(ic,jc,kstal,ispec)  &
-              - bcl5zl(ic,jc)*ova2zl(ic,jc)*stryzl(ic,jc,ispec)
-          
+          IF((strwzl(ic,jc) > zero).AND.(flag_pio_zl==1))THEN
+            fornow = bclyzl(ic,jc,ispec)*strdzl(ic,jc)
+            
+            erhs(ic,jc,kstal) = erhs(ic,jc,kstal) - fornow*strhzl(ic,jc,ispec)
+            
+            yrhs(ic,jc,kstal,ispec) = yrhs(ic,jc,kstal,ispec)  &
+                - (bcl2zl(ic,jc)+bcl5zl(ic,jc)*ova2zl(ic,jc))*stryzl(ic,jc,ispec)  &
+                - fornow
+          ELSE
+            yrhs(ic,jc,kstal,ispec) = yrhs(ic,jc,kstal,ispec)  &
+                - bcl5zl(ic,jc)*ova2zl(ic,jc)*stryzl(ic,jc,ispec)
+          END IF
         END DO
       END DO
       
@@ -3347,6 +3798,24 @@ IF(fzrcnv)THEN
       acouzr(ic,jc) = SQRT(fornow)
       ova2zr(ic,jc) = one/fornow
       
+!     THESE ARE INTRODUCED FOR LODATO'S BC- NC
+      
+      tt1zr(ic,jc)=t51bzr(ic,jc)+ t52bzr(ic,jc)*(gam1zr(ic,jc)+1.0)-  &
+          strdzr(ic,jc)* acouzr(ic,jc)*t2bzr(ic,jc)
+      
+      tt2zr(ic,jc)=acouzr(ic,jc)*acouzr(ic,jc)*  &
+          t1bzr(ic,jc)-t51bzr(ic,jc)-(gam1zr(ic,jc)+1.0)* t52bzr(ic,jc)
+      
+      tt3zr(ic,jc)=t3bzr(ic,jc)
+      tt4zr(ic,jc)=t4bzr(ic,jc)
+      
+      tt5zr(ic,jc)=t51bzr(ic,jc)+ t52bzr(ic,jc)*(gam1zr(ic,jc)+1.0)+  &
+          strdzr(ic,jc)* acouzr(ic,jc)*t2bzr(ic,jc)
+      
+      DO is=1,nspec
+        tt6zr(ic,jc,is)=t6bzr(ic,jc,is)
+      END DO
+      
     END DO
   END DO
   
@@ -3356,6 +3825,8 @@ IF(fzrcnv)THEN
 !       ---------------------------
   
   IF(nsbczr == nsbco1)THEN
+    flag_pio_zr=nzrprm(1)!0
+    flag_bet_zr=nzrprm(2)!1
     
 !         OUTFLOW BC No 1
 !         SUBSONIC NON-REFLECTING OUTFLOW
@@ -3395,36 +3866,88 @@ IF(fzrcnv)THEN
     DO jc = jstal,jstol
       DO ic = istal,istol
         
+        bcl2zr(ic,jc) = strwzr(ic,jc)  &
+            *(bcl2zr(ic,jc)-bcl5zr(ic,jc)*ova2zr(ic,jc))
+        bcl3zr(ic,jc) = strwzr(ic,jc)*bcl3zr(ic,jc)
+        bcl4zr(ic,jc) = strwzr(ic,jc)*bcl4zr(ic,jc)
 !             OLD VALUE OF L1Z
         bcl1zr(ic,jc) = half*(strwzr(ic,jc)-acouzr(ic,jc))  &
             *(bcl5zr(ic,jc)-strdzr(ic,jc)*acouzr(ic,jc)*bcl1zr(ic,jc))
         
 !             SUBTRACT FROM NEW VALUE OF L1Z
-        bcl1zr(ic,jc)= half*sorpzr(ic,jc)  &
-            + cobczr*acouzr(ic,jc)*(strpzr(ic,jc)-pinfzr) - bcl1zr(ic,jc)
-        
+!             TERMS INTRODUCED FOR LODATO'S BC- NC
+        IF(flag_bet_zr==1) THEN
+          bet=struzr(ic,jc)*struzr(ic,jc)+ strvzr(ic,jc)*strvzr(ic,jc)+  &
+              strwzr(ic,jc)*strwzr(ic,jc)
+          bet=SQRT(bet)/acouzr(ic,jc)
+        END IF
+        IF((strwzr(ic,jc) < zero).AND.(flag_pio_zr==1))THEN
+          bcl2zr(ic,jc) = -bcl2zr(ic,jc)  &
+              -ova2zr(ic,jc)*sorpzr(ic,jc)
+          
+          bcl3zr(ic,jc) = 0.1*(struzr(ic,jc)-0.0D0)  &
+              -bcl3zr(ic,jc)
+          
+          bcl4zr(ic,jc) = 0.1*(strvzr(ic,jc)-0.0D0)  &
+              -bcl4zr(ic,jc)
+          bcl1zr(ic,jc)= half*sorpzr(ic,jc)  &
+              + cobczr*acouzr(ic,jc)*(strpzr(ic,jc)-pinfzr)  &
+              + 0.5*(1.0-bet)*tt1zr(ic,jc)- bcl1zr(ic,jc) &
+!              19 JAN 2024 VM: change making negative
+!     +                     + 100.0*STRDZR(IC,JC)*(ONE/ZGDLEN)  &
+          - 100.0*strdzr(ic,jc)*(one/zgdlen)  &
+              *(acouzr(ic,jc)**2.0-strwzr(ic,jc)**2.0) *(strwzr(ic,jc)-0.0)
+        ELSE
+          bcl1zr(ic,jc)= half*sorpzr(ic,jc)  &
+              + cobczr*acouzr(ic,jc)*(strpzr(ic,jc)-pinfzr)  &
+              + 0.5*(1.0-bet)*tt1zr(ic,jc)- bcl1zr(ic,jc)
+        END IF
       END DO
     END DO
     
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO jc = jstal,jstol
       DO ic = istal,istol
-        
-        drhs(ic,jc,kstol) = drhs(ic,jc,kstol) - bcl1zr(ic,jc)*ova2zr(ic,jc)
-        
-        urhs(ic,jc,kstol) = urhs(ic,jc,kstol)  &
-            - bcl1zr(ic,jc)*ova2zr(ic,jc)*struzr(ic,jc)
-        
-        vrhs(ic,jc,kstol) = vrhs(ic,jc,kstol)  &
-            - bcl1zr(ic,jc)*ova2zr(ic,jc)*strvzr(ic,jc)
-        
-        wrhs(ic,jc,kstol) = wrhs(ic,jc,kstol)  &
-            - bcl1zr(ic,jc)*ova2zr(ic,jc)*(strwzr(ic,jc)-acouzr(ic,jc))
-        
-        erhs(ic,jc,kstol) = erhs(ic,jc,kstol)  &
-            - bcl1zr(ic,jc)*(ova2zr(ic,jc)*strezr(ic,jc)  &
-            - strwzr(ic,jc)/acouzr(ic,jc) + ovgmzr(ic,jc))
-        
+        IF((strwzr(ic,jc) < zero).AND.(flag_pio_zr==1))THEN
+          drhs(ic,jc,kstol) = drhs(ic,jc,kstol)  &
+              - bcl1zr(ic,jc)*ova2zr(ic,jc) - bcl2zr(ic,jc)
+          
+          urhs(ic,jc,kstol) = urhs(ic,jc,kstol)  &
+              - bcl1zr(ic,jc)*ova2zr(ic,jc)*struzr(ic,jc)  &
+              - bcl2zr(ic,jc)*struzr(ic,jc) - bcl3zr(ic,jc)*strdzr(ic,jc)
+          
+          vrhs(ic,jc,kstol) = vrhs(ic,jc,kstol)  &
+              - bcl1zr(ic,jc)*ova2zr(ic,jc)*strvzr(ic,jc)  &
+              - bcl2zr(ic,jc)*strvzr(ic,jc) - bcl4zr(ic,jc)*strdzr(ic,jc)
+          
+          wrhs(ic,jc,kstol) = wrhs(ic,jc,kstol)  &
+              - bcl1zr(ic,jc)*ova2zr(ic,jc)*(strwzr(ic,jc)-acouzr(ic,jc))  &
+              - bcl2zr(ic,jc)*strwzr(ic,jc)
+          
+          erhs(ic,jc,kstol) = erhs(ic,jc,kstol)  &
+              - bcl1zr(ic,jc)*(ova2zr(ic,jc)*strezr(ic,jc) &
+!              16 JAN 2024: VM+NC sign change
+!     +                                     + STRWZR(IC,JC)/ACOUZR(IC,JC)  &
+          - strwzr(ic,jc)/acouzr(ic,jc) + ovgmzr(ic,jc))  &
+              - bcl2zr(ic,jc)*strezr(ic,jc)  &
+              - bcl3zr(ic,jc)*strdzr(ic,jc)*struzr(ic,jc)  &
+              - bcl4zr(ic,jc)*strdzr(ic,jc)*strvzr(ic,jc)
+        ELSE
+          drhs(ic,jc,kstol) = drhs(ic,jc,kstol) - bcl1zr(ic,jc)*ova2zr(ic,jc)
+          
+          urhs(ic,jc,kstol) = urhs(ic,jc,kstol)  &
+              - bcl1zr(ic,jc)*ova2zr(ic,jc)*struzr(ic,jc)
+          
+          vrhs(ic,jc,kstol) = vrhs(ic,jc,kstol)  &
+              - bcl1zr(ic,jc)*ova2zr(ic,jc)*strvzr(ic,jc)
+          
+          wrhs(ic,jc,kstol) = wrhs(ic,jc,kstol)  &
+              - bcl1zr(ic,jc)*ova2zr(ic,jc)*(strwzr(ic,jc)-acouzr(ic,jc))
+          
+          erhs(ic,jc,kstol) = erhs(ic,jc,kstol)  &
+              - bcl1zr(ic,jc)*(ova2zr(ic,jc)*strezr(ic,jc)  &
+              - strwzr(ic,jc)/acouzr(ic,jc) + ovgmzr(ic,jc))
+        END IF
       END DO
     END DO
     
@@ -3434,10 +3957,19 @@ IF(fzrcnv)THEN
       
       DO jc = jstal,jstol
         DO ic = istal,istol
-          
-          yrhs(ic,jc,kstol,ispec) = yrhs(ic,jc,kstol,ispec)  &
-              - bcl1zr(ic,jc)*ova2zr(ic,jc)*stryzr(ic,jc,ispec)
-          
+          IF((strwzr(ic,jc) < zero).AND.(flag_pio_zr==1))THEN
+            fornow = bclyzr(ic,jc,ispec)*strdzr(ic,jc)
+            
+            erhs(ic,jc,kstol) = erhs(ic,jc,kstol) - fornow*strhzr(ic,jc,ispec)
+            
+            yrhs(ic,jc,kstol,ispec) = yrhs(ic,jc,kstol,ispec)  &
+                - (bcl2zr(ic,jc)+bcl5zr(ic,jc)*ova2zr(ic,jc))*stryzr(ic,jc,ispec)  &
+                - fornow
+            
+          ELSE
+            yrhs(ic,jc,kstol,ispec) = yrhs(ic,jc,kstol,ispec)  &
+                - bcl1zr(ic,jc)*ova2zr(ic,jc)*stryzr(ic,jc,ispec)
+          END IF
         END DO
       END DO
       
@@ -3548,8 +4080,10 @@ IF(fzrcnv)THEN
             - bcl2zr(ic,jc)*strwzr(ic,jc)
         
         erhs(ic,jc,kstol) = erhs(ic,jc,kstol)  &
-            - bcl1zr(ic,jc)*(ova2zr(ic,jc)*strezr(ic,jc)  &
-            + strwzr(ic,jc)/acouzr(ic,jc) + ovgmzr(ic,jc))  &
+            - bcl1zr(ic,jc)*(ova2zr(ic,jc)*strezr(ic,jc) &
+!              16 JAN 2024: VM+NC sign change
+!     +                                     + STRWZR(IC,JC)/ACOUZR(IC,JC)  &
+        - strwzr(ic,jc)/acouzr(ic,jc) + ovgmzr(ic,jc))  &
             - bcl2zr(ic,jc)*strezr(ic,jc)  &
             - bcl3zr(ic,jc)*strdzr(ic,jc)*struzr(ic,jc)  &
             - bcl4zr(ic,jc)*strdzr(ic,jc)*strvzr(ic,jc)

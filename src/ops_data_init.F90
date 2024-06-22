@@ -11,6 +11,8 @@ SUBROUTINE ops_data_init()
     integer(kind=4) :: ispec
     character(len=20) :: buf
 
+    integer(kind=4) :: a3d_000(3) = [0,0,0]
+
 !   *-----------------------------------------OPS Declarations-----------------------------------------------*
 
 !   Declare OPS Block
@@ -34,6 +36,9 @@ SUBROUTINE ops_data_init()
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, vrun, d_vrun, "real(kind=8)", "VRUN")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, wrun, d_wrun, "real(kind=8)", "WRUN")
     call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, erun, d_erun, "real(kind=8)", "ERUN")
+
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, prun2, d2prun, "real(kind=8)", "PRN2")
+    call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, trun2, d2trun, "real(kind=8)", "TRN2")
 
 !---------------------------------------WITH HALOS-----------------------------------------------------------
 
@@ -75,6 +80,11 @@ SUBROUTINE ops_data_init()
         WRITE(buf,"(A4,I2.2)") "YRHS",ispec
         call ops_decl_dat(senga_grid, 1, d_size, d_base, d_m, d_p, yrhs(:,:,:,ispec), d_yrhs(ispec), "real(kind=8)", trim(buf))
     END DO
+
+!------------------------------------OPS Stencil-------------------------------------------------------------
+
+    call ops_decl_stencil( 3, 1, a3d_000, s3d_000, "0,0,0")
+
 !------------------------------------------------------------------------------------------------------------
     call ops_partition(" ")
 !------------------------------------------------------------------------------------------------------------

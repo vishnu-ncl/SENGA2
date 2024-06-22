@@ -5,7 +5,7 @@ include $(OPS_INSTALL_PATH)/../makefiles/Makefile.cuda
 USE_HDF5=1
 include $(OPS_INSTALL_PATH)/../makefiles/Makefile.hdf5
 
-OTHER_FILES = com_espect.F90 com_senga2.F90 rhsvel.F90 dfinit.F90 dfbydy.F90 dfbydz.F90 pardom.F90 indata.F90 \
+OTHER_FILES = constants.F90 com_espect.F90 com_senga2.F90 rhsvel.F90 dfinit.F90 dfbydy.F90 dfbydz.F90 pardom.F90 indata.F90 \
 	dtinit.F90 parfer.F90 tempin.F90 flinit.F90 output.F90 d2fdy2.F90 d2fdz2.F90 \
 	d2fdxy.F90 d2fdxz.F90 d2fdyz.F90 dfmstr.F90 exhalo.F90 inhalo.F90 exhals.F90 inhals.F90 \
 	zeroxl.F90 zeroxr.F90 zeroyl.F90 zeroyr.F90 zerozl.F90 zerozr.F90 \
@@ -21,10 +21,11 @@ OTHER_FILES = com_espect.F90 com_senga2.F90 rhsvel.F90 dfinit.F90 dfbydy.F90 dfb
 	bcinit.F90 bounds.F90 bountt.F90 boundt.F90 turbin.F90 turbft.F90 fftsym.F90 fftf3d.F90 \
 	flamin.F90 fftixl.F90
 
-OPS_FILES = senga2.F90 com_ops_senga2.F90 ops_data_init.F90 print_dats.F90
+OPS_FILES = senga2.F90 com_ops_senga2.F90 ops_data_init.F90 print_dats.F90 print_output.F90
 
 ifeq ($(OPS_COMPILER),gnu)
 APP_FLAGS = -mcmodel=medium
+#-fallow-argument-mismatch
 endif
 
 ifeq ($(OPS_COMPILER),intel)
@@ -78,8 +79,7 @@ APP_TARGETS = $(addprefix $(APP)_, $(TARGETS))
 
 all: $(APP_TARGETS)
 
-SEQ_KERNELS = $(wildcard MPI/*.F90)
-CUDA_KERNELS = $(wildcard CUDA/*.CUF)
+SEQ_KERNELS = $(wildcard mpi_openmp/*.F90)
 
 MODULE_FILES = com_espect.F90 com_senga2.F90 com_ops_senga2_ops.F90
 OTHER_FILES := $(filter-out $(MODULE_FILES), $(OTHER_FILES))
@@ -101,17 +101,17 @@ $(APP)_seq: Makefile .generated $(SEQ_OBJ)
 	@echo ""
 	@echo "Building ${APP}_seq"
 	@echo ""
-	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS) $(FLINK) $(SEQ_OBJ) -o $(APP)_seq $(APP_LIBS) -lops_for_seq $(F_HDF5_LIB_SEQ)
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS) $(SEQ_OBJ) $(APP_LIBS) $(FLINK) -lops_for_seq $(F_HDF5_LIB_SEQ) -o $(APP)_seq
 
 #=========================================================================================================================
 
 clean:
 	rm -f .generated
-	rm -f *.o MPI/*.o CUDA/*.o
-	rm -f *.oo MPI/*.oo CUDA/*.oo
-	rm -f *.optrpt MPI/*.optrpt CUDA/*.optrpt
-	rm -f *.mod MPI/*.mod CUDA/*.mod
-	rm -f *~ MPI/*~ CUDA/*~
+	rm -f *.o mpi_openmp/*.o cuda/*.o
+	rm -f *.oo mpi_openmp/*.oo cuda/*.oo
+	rm -f *.optrpt mpi_openmp/*.optrpt cuda/*.optrpt
+	rm -f *.mod mpi_openmp/*.mod cuda/*.mod
+	rm -f *~ mpi_openmp/*~ cuda/*~
 	rm -f constants_list.txt
 	rm -f $(APP)_seq
 

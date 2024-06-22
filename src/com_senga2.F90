@@ -467,9 +467,10 @@ COMMON/rknorm/erdrhs,erurhs,ervrhs,erwrhs,ererhs,eryrhs
 !     PRINCIPAL VARIABLES (ALL STANDARD SIZE ARRAYS)
 real(kind=8) :: drun(nxsize,nysize,nzsize),urun(nxsize,nysize,nzsize),  &
     vrun(nxsize,nysize,nzsize),wrun(nxsize,nysize,nzsize),  &
-    erun(nxsize,nysize,nzsize), yrun(nxsize,nysize,nzsize,nspcmx)
+    erun(nxsize,nysize,nzsize), yrun(nxsize,nysize,nzsize,nspcmx), &
+    prun2(nxsize,nysize,nzsize), trun2(nxsize,nysize,nzsize)
 
-COMMON/prvars/drun,urun,vrun,wrun,erun,yrun
+COMMON/prvars/drun,urun,vrun,wrun,erun,yrun,prun2,trun2
 
 !     PRVARS-------------------------------------------------------------------
 !     TIMRHS-------------------------------------------------------------------
@@ -664,11 +665,16 @@ real(kind=8) ::  &
     dwdtxl(nysize,nzsize),dtdtxl(nysize,nzsize), dddtxl(nysize,nzsize),  &
     acouxl(nysize,nzsize),ova2xl(nysize,nzsize),  &
     gam1xl(nysize,nzsize),ovgmxl(nysize,nzsize),  &
-    sydtxl(nysize,nzsize),sorpxl(nysize,nzsize)
+    sydtxl(nysize,nzsize),sorpxl(nysize,nzsize), &
+    t1bxl(nysize,nzsize),t2bxl(nysize,nzsize),    &
+    t3bxl(nysize,nzsize),t4bxl(nysize,nzsize),    &
+    t51bxl(nysize,nzsize),t52bxl(nysize,nzsize),  &
+    t6bxl(nysize,nzsize,nspcmx)
 COMMON/nbccxl/bclyxl,stryxl,dydtxl,ratexl,strhxl,  &
     bcl1xl,bcl2xl,bcl3xl,bcl4xl,bcl5xl,bcltxl,  &
     struxl,strvxl,strwxl,strpxl,strdxl,strtxl, strexl,strgxl,strrxl,  &
-    dudtxl,dvdtxl,dwdtxl,dtdtxl,dddtxl, acouxl,ova2xl,gam1xl,ovgmxl,sydtxl,sorpxl
+    dudtxl,dvdtxl,dwdtxl,dtdtxl,dddtxl, acouxl,ova2xl,gam1xl,ovgmxl,sydtxl,sorpxl, &
+    t1bxl,t2bxl,t3bxl,t4bxl,t51bxl,t52bxl,t6bxl
 
 !     X-DIRECTION RIGHT-HAND END
 real(kind=8) ::  &
@@ -685,11 +691,16 @@ real(kind=8) ::  &
     dwdtxr(nysize,nzsize),dtdtxr(nysize,nzsize), dddtxr(nysize,nzsize),  &
     acouxr(nysize,nzsize),ova2xr(nysize,nzsize),  &
     gam1xr(nysize,nzsize),ovgmxr(nysize,nzsize),  &
-    sydtxr(nysize,nzsize),sorpxr(nysize,nzsize)
+    sydtxr(nysize,nzsize),sorpxr(nysize,nzsize), &
+    T1BXR(NYSIZE,NZSIZE),T2BXR(NYSIZE,NZSIZE), &
+    T3BXR(NYSIZE,NZSIZE),T4BXR(NYSIZE,NZSIZE), &
+    T51BXR(NYSIZE,NZSIZE),T52BXR(NYSIZE,NZSIZE), &
+    T6BXR(NYSIZE,NZSIZE,NSPCMX)
 COMMON/nbccxr/bclyxr,stryxr,dydtxr,ratexr,strhxr,  &
     bcl1xr,bcl2xr,bcl3xr,bcl4xr,bcl5xr,bcltxr,  &
     struxr,strvxr,strwxr,strpxr,strdxr,strtxr, strexr,strgxr,strrxr,  &
-    dudtxr,dvdtxr,dwdtxr,dtdtxr,dddtxr, acouxr,ova2xr,gam1xr,ovgmxr,sydtxr,sorpxr
+    dudtxr,dvdtxr,dwdtxr,dtdtxr,dddtxr, acouxr,ova2xr,gam1xr,ovgmxr,sydtxr,sorpxr, &
+    t1bxr,t2bxr,t3bxr,t4bxr,t51bxr,t52bxr,t6bxr
 
 
 !     Y-DIRECTION LEFT-HAND END
@@ -707,11 +718,16 @@ real(kind=8) ::  &
     dwdtyl(nxsize,nzsize),dtdtyl(nxsize,nzsize), dddtyl(nxsize,nzsize),  &
     acouyl(nxsize,nzsize),ova2yl(nxsize,nzsize),  &
     gam1yl(nxsize,nzsize),ovgmyl(nxsize,nzsize),  &
-    sydtyl(nxsize,nzsize),sorpyl(nxsize,nzsize)
+    sydtyl(nxsize,nzsize),sorpyl(nxsize,nzsize), &
+    t1byl(nxsize,nzsize),t2byl(nxsize,nzsize), &
+    t3byl(nxsize,nzsize),t4byl(nxsize,nzsize), &
+    t51byl(nxsize,nzsize),t52byl(nxsize,nzsize), &
+    t6byl(nxsize,nzsize,nspcmx)
 COMMON/nbccyl/bclyyl,stryyl,dydtyl,rateyl,strhyl,  &
     bcl1yl,bcl2yl,bcl3yl,bcl4yl,bcl5yl,bcltyl,  &
     struyl,strvyl,strwyl,strpyl,strdyl,strtyl, streyl,strgyl,strryl,  &
-    dudtyl,dvdtyl,dwdtyl,dtdtyl,dddtyl, acouyl,ova2yl,gam1yl,ovgmyl,sydtyl,sorpyl
+    dudtyl,dvdtyl,dwdtyl,dtdtyl,dddtyl, acouyl,ova2yl,gam1yl,ovgmyl,sydtyl,sorpyl, &
+    t1byl,t2byl,t3byl,t4byl,t51byl,t52byl,t6byl
 
 !     Y-DIRECTION RIGHT-HAND END
 real(kind=8) ::  &
@@ -728,11 +744,16 @@ real(kind=8) ::  &
     dwdtyr(nxsize,nzsize),dtdtyr(nxsize,nzsize), dddtyr(nxsize,nzsize),  &
     acouyr(nxsize,nzsize),ova2yr(nxsize,nzsize),  &
     gam1yr(nxsize,nzsize),ovgmyr(nxsize,nzsize),  &
-    sydtyr(nxsize,nzsize),sorpyr(nxsize,nzsize)
+    sydtyr(nxsize,nzsize),sorpyr(nxsize,nzsize), &
+    t1byr(nxsize,nzsize),t2byr(nxsize,nzsize), &
+    t3byr(nxsize,nzsize),t4byr(nxsize,nzsize), &
+    t51byr(nxsize,nzsize),t52byr(nxsize,nzsize), &
+    t6byr(nxsize,nzsize,nspcmx)
 COMMON/nbccyr/bclyyr,stryyr,dydtyr,rateyr,strhyr,  &
     bcl1yr,bcl2yr,bcl3yr,bcl4yr,bcl5yr,bcltyr,  &
     struyr,strvyr,strwyr,strpyr,strdyr,strtyr, streyr,strgyr,strryr,  &
-    dudtyr,dvdtyr,dwdtyr,dtdtyr,dddtyr, acouyr,ova2yr,gam1yr,ovgmyr,sydtyr,sorpyr
+    dudtyr,dvdtyr,dwdtyr,dtdtyr,dddtyr, acouyr,ova2yr,gam1yr,ovgmyr,sydtyr,sorpyr, &
+    t1byr,t2byr,t3byr,t4byr,t51byr,t52byr,t6byr
 
 
 !     Z-DIRECTION LEFT-HAND END
@@ -750,11 +771,16 @@ real(kind=8) ::  &
     dwdtzl(nxsize,nysize),dtdtzl(nxsize,nysize), dddtzl(nxsize,nysize),  &
     acouzl(nxsize,nysize),ova2zl(nxsize,nysize),  &
     gam1zl(nxsize,nysize),ovgmzl(nxsize,nysize),  &
-    sydtzl(nxsize,nysize),sorpzl(nxsize,nysize)
+    sydtzl(nxsize,nysize),sorpzl(nxsize,nysize), &
+    t1bzl(nxsize,nysize),t2bzl(nxsize,nysize), &
+    t3bzl(nxsize,nysize),t4bzl(nxsize,nysize), &
+    t51bzl(nxsize,nysize),t52bzl(nxsize,nysize), &
+    t6bzl(nxsize,nysize,nspcmx)
 COMMON/nbcczl/bclyzl,stryzl,dydtzl,ratezl,strhzl,  &
     bcl1zl,bcl2zl,bcl3zl,bcl4zl,bcl5zl,bcltzl,  &
     struzl,strvzl,strwzl,strpzl,strdzl,strtzl, strezl,strgzl,strrzl,  &
-    dudtzl,dvdtzl,dwdtzl,dtdtzl,dddtzl, acouzl,ova2zl,gam1zl,ovgmzl,sydtzl,sorpzl
+    dudtzl,dvdtzl,dwdtzl,dtdtzl,dddtzl, acouzl,ova2zl,gam1zl,ovgmzl,sydtzl,sorpzl, &
+    t1bzl,t2bzl,t3bzl,t4bzl,t51bzl,t52bzl,t6bzl
 
 !     Z-DIRECTION RIGHT-HAND END
 real(kind=8) ::  &
@@ -771,11 +797,16 @@ real(kind=8) ::  &
     dwdtzr(nxsize,nysize),dtdtzr(nxsize,nysize), dddtzr(nxsize,nysize),  &
     acouzr(nxsize,nysize),ova2zr(nxsize,nysize),  &
     gam1zr(nxsize,nysize),ovgmzr(nxsize,nysize),  &
-    sydtzr(nxsize,nysize),sorpzr(nxsize,nysize)
+    sydtzr(nxsize,nysize),sorpzr(nxsize,nysize), &
+    t1bzr(nxsize,nysize),t2bzr(nxsize,nysize), &
+    t3bzr(nxsize,nysize),t4bzr(nxsize,nysize), &
+    t51bzr(nxsize,nysize),t52bzr(nxsize,nysize), &
+    t6bzr(nxsize,nysize,nspcmx)
 COMMON/nbcczr/bclyzr,stryzr,dydtzr,ratezr,strhzr,  &
     bcl1zr,bcl2zr,bcl3zr,bcl4zr,bcl5zr,bcltzr,  &
     struzr,strvzr,strwzr,strpzr,strdzr,strtzr, strezr,strgzr,strrzr,  &
-    dudtzr,dvdtzr,dwdtzr,dtdtzr,dddtzr, acouzr,ova2zr,gam1zr,ovgmzr,sydtzr,sorpzr
+    dudtzr,dvdtzr,dwdtzr,dtdtzr,dddtzr, acouzr,ova2zr,gam1zr,ovgmzr,sydtzr,sorpzr, &
+    t1bzr,t2bzr,t3bzr,t4bzr,t51bzr,t52bzr,t6bzr
 
 !     NSBCCL-------------------------------------------------------------------
 !     DOMDEC-------------------------------------------------------------------
