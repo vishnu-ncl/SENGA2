@@ -1,7 +1,7 @@
 SUBROUTINE diffin
- 
+
 ! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-26  Time: 15:25:03
+! Date: 2024-01-30  Time: 13:23:03
 
 !     *************************************************************************
 
@@ -34,15 +34,15 @@ use com_senga
 
 !     PARAMETER
 !     =========
-real(kind=8):: wmltol
+REAL(kind=8) :: wmltol
 PARAMETER(wmltol = 0.001_8)
 
 
 !     LOCAL DATA
 !     ==========
-real(kind=8):: pcount,fornow
+REAL(kind=8) :: pcount,fornow
 INTEGER :: ispec,jspec,kspec,icoeff
-INTEGER :: ncount,ndspec
+INTEGER :: ncount
 INTEGER :: iroot
 CHARACTER (LEN=10) :: spcdif(nspcmx)
 
@@ -345,10 +345,19 @@ IF(nfmavt == 1)THEN
   END DO
   
 !       FILL OUT THE THERMAL DIFFUSION COEFFICIENT MATRIX
-!       MATRIX IS SYMMETRIC
+!       RSC 26-MAY-2023
   DO ispec = 1, nspec
+!         LEADING DIAGONAL IS ZERO
     DO icoeff = 1, ncotdr
       tdrcco(icoeff,ispec,ispec) = zero
+    END DO
+!         MATRIX IS ANTISYMMETRIC
+!         ELEMENTS OF THE MATRIX TRANSPOSE ARE STORED
+    DO jspec = 1, ispec-1
+      DO icoeff = 1, ncotdr
+        fornow = tdrcco(icoeff,jspec,ispec)
+        tdrcco(icoeff,jspec,ispec) = -fornow
+      END DO
     END DO
     DO jspec = ispec+1, nspec
       DO icoeff = 1, ncotdr
