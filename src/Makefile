@@ -10,21 +10,22 @@
 #FC = h5pfc -g -fcheck=all -DHDF5 -cpp
 FC = ftn
 
-# Quick non-optimized compile
-#FFLAGS = -g -fno-silent -ftrapping-math -ftrapv -Wimplicit -Wall
+# GNU
+#FFLAGS = -O3 -g -fopenmp -ftree-vectorize -ffree-form -ffree-line-length-none -fallow-argument-mismatch -mcmodel=medium
 
-# Non-optimized compile with profiling
-#FFLAGS = -pg -fno-silent -ftrapping-math -ftrapv -Wimplicit -Wall
+# GNU-ARCHER2
+FFLAGS = -O3 -march=znver2 -mtune=znver2 -g -ftree-vectorize -fopenmp -ffree-form -ffree-line-length-none -fallow-argument-mismatch -mcmodel=medium
 
-# Optimized compile
-FFLAGS = -O3 -g -ffree-form -ffree-line-length-none -fallow-argument-mismatch -mcmodel=medium
+#FFLAGS = -O3 -march=znver2 -mtune=znver2 -g -ftree-vectorize -fopenmp -ffree-form -ffree-line-length-none -fallow-argument-mismatch -mcmodel=medium -fopt-info-vec -fopt-info-vec-optimized -fopt-info-vec-missed -funroll-loops -finline-functions -fstrict-aliasing
 
-# Optimized compile with profiling
-#FFLAGS = -pg -O3 -fno-silent -Wimplicit -Wall
+# INTEL
+#FFLAGS = -O3 -g -mcmodel=large -fp-model precise -fp-model source -no-fma -fimf-arch-consistency=true -fimf-precision=high
 
-#Intel
-#FFLAGS = -O3 -g -mcmodel=large -fp-model precise -fp-model source -no-fma -fimf-arch-consistency=true -fimf-precision=high 
-# Source files hdf5io.F90 
+# CRAY
+#FFLAGS = -O3 -g -fopenmp -fPIC -M 878 -f free -N 1023 -h vector3 
+#-h flex_mp=strict -h nofma -hfp1=noapprox -K trap=divz,fp,inv,unf
+
+# Source files hdf5io.F90
 SRC = 
 
 SRC_F90 = com_espect.F90 com_senga2.F90 senga2.F90 \
@@ -70,7 +71,7 @@ OBJS_F90=$(SRC_F90:.F90=.o)
 all: senga2
 
 senga2: $(OBJS_F90) $(OBJS) 
-	$(FC) $(FFLAGS) $(OBJS) $(OBJS_F90) -o senga2 $(LIBS)
+	$(FC) $(FFLAGS) $(OBJS) $(OBJS_F90) -o senga2_gnu $(LIBS)
 
 # Add -pg for profiling
 #senga2: $(OBJS) 
@@ -78,4 +79,4 @@ senga2: $(OBJS_F90) $(OBJS)
 
 # Command to clean up after
 clean: 
-	rm -f *.o senga2 core *.mod
+	rm -f *.o core *.mod
