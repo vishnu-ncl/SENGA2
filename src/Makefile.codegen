@@ -23,8 +23,8 @@ OPS_FILES = senga2.F90 com_ops_senga2.F90 ops_data_init.F90 dfinit.F90 dfbydx.F9
     tempin.F90 parfer.F90 output.F90 print_dats.F90 print_alldats.F90 print_output.F90
 
 ifeq ($(OPS_COMPILER),gnu)
-APP_FLAGS = -mcmodel=medium
-#-fallow-argument-mismatch
+APP_FLAGS = -mcmodel=medium -fallow-argument-mismatch -fopt-info -fopt-info-vec-missed -funroll-loops -funroll-all-loops -finline-functions -fstrict-aliasing
+#-fallow-argument-mismatch -fopt-info-vec -fopt-info-vec-optimized -fopt-info-vec-missed -funroll-loops -finline-functions -fstrict-aliasing
 endif
 
 ifeq ($(OPS_COMPILER),intel)
@@ -35,6 +35,11 @@ endif
 ifeq ($(OPS_COMPILER),pgi)
 APP_FLAGS = -Kieee -Mnofpapprox -mcmodel=medium -Ktrap=unf -Mnofprelaxed -m64 -pc 64
 #-nofma
+endif
+
+ifeq ($(OPS_COMPILER),cray)
+APP_FLAGS = -N 1023 -hlist=m -h vector3 -h flex_mp=strict
+#APP_FLAGS = -h noacc,fp1,contiguous_assumed_shape,nofma,zero -h flex_mp=strict  -h nofma -hfp1=noapprox -K trap=divz,fp,inv,unf
 endif
 
 APP_LIBS = fftlib/fftlib.a rndlib/rndlib.a parlib/parlib.a -lm
@@ -305,7 +310,7 @@ $(APP)_mpi_ompoffload: Makefile .generated $(OPS_INSTALL_PATH)/fortran/lib/$(OPS
 	@echo ""
 	@echo "Building ${APP}_mpi_ompoffload"
 	@echo ""
-	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(OMPOFFLOADFLAGS) $(FMODS_OMPOFFLOAD) $(OMPOFFLOADFOR) -DOPS_MPI $(MPI_OMPOFFLOAD_OBJ) $(APP_LIBS) $(FLINK) -lops_for_mpi_ompoffload $(F_HDF5_LIB_MPI) $(L_MPI_LIB) $(MPI_LINK) -o $(APP)_mpi_ompoffload
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(OMPOFFLOADFLAGS) $(FMODS_OMPOFFLOAD) $(OMPOFFLOADFOR) -DOPS_MPI $(MPI_OMPOFFLOAD_OBJ) $(APP_LIBS) $(FLINK) -lops_for_mpi_ompoffload $(F_HDF5_LIB_MPI) $(L_MPI_LIB) $(MPI_LINK) $(MPI_OMPOFFLOAD_LINK) -o $(APP)_mpi_ompoffload
 
 #=========================================================================================================================
 
@@ -314,7 +319,7 @@ $(APP)_mpi_ompoffload_tiled: Makefile .generated $(OPS_INSTALL_PATH)/fortran/lib
 	@echo ""
 	@echo "Building ${APP}_mpi_ompoffload_tiled"
 	@echo ""
-	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(OMPOFFLOADFLAGS) $(FMODS_OMPOFFLOAD) $(OMPOFFLOADFOR) -DOPS_LAZY -DOPS_MPI $(MPI_OMPOFFLOAD_TILED_OBJ) $(APP_LIBS) $(FLINK) -lops_for_mpi_ompoffload $(F_HDF5_LIB_MPI) $(L_MPI_LIB) $(MPI_LINK) -o $(APP)_mpi_ompoffload_tiled
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(OMPOFFLOADFLAGS) $(FMODS_OMPOFFLOAD) $(OMPOFFLOADFOR) -DOPS_LAZY -DOPS_MPI $(MPI_OMPOFFLOAD_TILED_OBJ) $(APP_LIBS) $(FLINK) -lops_for_mpi_ompoffload $(F_HDF5_LIB_MPI) $(L_MPI_LIB) $(MPI_LINK) $(MPI_OMPOFFLOAD_LINK) -o $(APP)_mpi_ompoffload_tiled
 
 #=========================================================================================================================
 
@@ -326,6 +331,7 @@ clean:
 	rm -f *.o mpi_openmp/*.o cuda/*.o openmp_offload/*.o
 	rm -f *.oo mpi_openmp/*.oo cuda/*.oo openmp_offload/*.oo
 	rm -f *.optrpt mpi_openmp/*.optrpt cuda/*.optrpt openmp_offload/*.optrpt
+	rm -f *.lst mpi_openmp/*.lst cuda/*.lst openmp_offload/*.lst
 	rm -f *.mod mpi_openmp/*.mod cuda/*.mod openmp_offload/*.mod
 	rm -f *~ mpi_openmp/*~ cuda/*~ openmp_offload/*~
 	rm -f constants_list.txt constants_offload.F90

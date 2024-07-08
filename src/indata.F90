@@ -1306,20 +1306,20 @@ SUBROUTINE indata
             call ops_free_dat(d_yrun_dump(ispec))
         END DO
 
-        dtime=INT((ntime1-1)/ntdump)
-        WRITE(citime,'(I8.8)') dtime
-        fname = 'output/timestep_warmstart'//citime//pnxhdf
-        call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
+!        dtime=INT((ntime1-1)/ntdump)
+!        WRITE(citime,'(I8.8)') dtime
+!        fname = 'output/timestep_warmstart'//citime//pnxhdf
+!        call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
 
-        call ops_fetch_dat_hdf5_file(d_drun, trim(fname))
-        call ops_fetch_dat_hdf5_file(d_urun, trim(fname))
-        call ops_fetch_dat_hdf5_file(d_vrun, trim(fname))
-        call ops_fetch_dat_hdf5_file(d_wrun, trim(fname))
-        call ops_fetch_dat_hdf5_file(d_erun, trim(fname))
+!        call ops_fetch_dat_hdf5_file(d_drun, trim(fname))
+!        call ops_fetch_dat_hdf5_file(d_urun, trim(fname))
+!        call ops_fetch_dat_hdf5_file(d_vrun, trim(fname))
+!        call ops_fetch_dat_hdf5_file(d_wrun, trim(fname))
+!        call ops_fetch_dat_hdf5_file(d_erun, trim(fname))
 
-        DO ispec = 1,nspcmx
-            call ops_fetch_dat_hdf5_file(d_yrun(ispec), trim(fname))
-        END DO
+!        DO ispec = 1,nspcmx
+!            call ops_fetch_dat_hdf5_file(d_yrun(ispec), trim(fname))
+!        END DO
 
 !       =======================================================================
 !       WARM START COMPLETE

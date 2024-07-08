@@ -3,8 +3,8 @@
 #
 #
 #
-#g77 -O -fno-silent -Wimplicit -Wall -o ppthrm \
-mpif90 -O3 -Wall -o ppthrm \
+#g77 -O -fno-silent -Wimplicit -o ppthrm \
+mpif90 -O3 -o ppthrm \
 ppthrm.f parser.f chkstr.f erhand.f -lm
 #
 exit
