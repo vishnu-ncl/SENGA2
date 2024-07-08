@@ -15,5 +15,7 @@ MAIN_SRC=create
 
 TARGETS=seq
 
+APP_FLAGS = -fPIC
+
 include $(OPS_INSTALL_PATH)/../makefiles/Makefile.f_app
 

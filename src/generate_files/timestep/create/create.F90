@@ -23,7 +23,7 @@ PROGRAM create
     integer(kind=4) :: iproc,ic,jc,kc,itime,idflag,ispec,index1d
     integer(kind=4), parameter :: ncdmpi=1
     integer(kind=4), parameter :: ncdmpo=2
-    integer(kind=4), parameter :: ntdump=5000
+    integer(kind=4), parameter :: ntdump=1000
     integer(kind=4) :: dtime
 
     real(kind=8) :: etime,tstep,errold,errldr    
@@ -175,7 +175,7 @@ PROGRAM create
     END DO
 
 !   Write etime,tstep,errold,errldr to dmpi<timestep>.dat file
-    DO iproc = 0, 2047
+    DO iproc = 0, 127
         WRITE(pnproc,'(I6.6)')iproc
         idflag = 0
         WRITE(pnflag,'(I1)')idflag
