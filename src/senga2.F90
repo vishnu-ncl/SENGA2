@@ -7,6 +7,7 @@ PROGRAM senga2
     use, intrinsic :: ISO_C_BINDING
 
     use com_senga
+    use omp_lib
     use com_ops_senga
 
 !   *************************************************************************
@@ -81,19 +82,30 @@ PROGRAM senga2
     real(kind=c_double) :: endTime = 0
 
 !   Timings
-    real(kind=8) :: indata_stime=0.0_8, indata_etime=0.0_8, indata_ttime=0.0_8, &
-                    parfer_stime=0.0_8, parfer_etime=0.0_8, parfer_ttime=0.0_8, &
-                    rhscal_stime=0.0_8, rhscal_etime=0.0_8, rhscal_ttime=0.0_8, &
-                    rhsvel_stime=0.0_8, rhsvel_etime=0.0_8, rhsvel_ttime=0.0_8, &
-                    boundt_stime=0.0_8, boundt_etime=0.0_8, boundt_ttime=0.0_8, &
-                    bounds_stime=0.0_8, bounds_etime=0.0_8, bounds_ttime=0.0_8, &
-                    bountt_stime=0.0_8, bountt_etime=0.0_8, bountt_ttime=0.0_8, &
-                    lincom_stime=0.0_8, lincom_etime=0.0_8, lincom_ttime=0.0_8, &
-                    fincom_stime=0.0_8, fincom_etime=0.0_8, fincom_ttime=0.0_8, &
-                    adaptt_stime=0.0_8, adaptt_etime=0.0_8, adaptt_ttime=0.0_8
+    DOUBLE PRECISION :: indata_stime, indata_etime, indata_ttime, &
+                    parfer_stime, parfer_etime, parfer_ttime, &
+                    rhscal_stime, rhscal_etime, rhscal_ttime, &
+                    rhsvel_stime, rhsvel_etime, rhsvel_ttime, &
+                    boundt_stime, boundt_etime, boundt_ttime, &
+                    bounds_stime, bounds_etime, bounds_ttime, &
+                    bountt_stime, bountt_etime, bountt_ttime, &
+                    lincom_stime, lincom_etime, lincom_ttime, &
+                    fincom_stime, fincom_etime, fincom_ttime, &
+                    adaptt_stime, adaptt_etime, adaptt_ttime
 
 !   BEGIN
 !   =====
+    indata_ttime = 0d0
+    parfer_ttime = 0d0
+    rhscal_ttime = 0d0
+    rhsvel_ttime = 0d0
+    boundt_ttime = 0d0
+    bounds_ttime = 0d0
+    bountt_ttime = 0d0
+    lincom_ttime = 0d0
+    fincom_ttime = 0d0
+    adaptt_ttime = 0d0
+    total_ttime  = 0d0
 
 !   =========================================================================
 
@@ -198,7 +210,7 @@ PROGRAM senga2
         boundt_ttime = boundt_ttime + (boundt_etime-boundt_stime)
 
 !       PARALLEL DATA TRANSFER
-        parfer_stime = omp_get_wtime
+        parfer_stime = omp_get_wtime()
         call parfer
         parfer_etime = omp_get_wtime()
         parfer_ttime = parfer_ttime + (parfer_etime-parfer_stime)
