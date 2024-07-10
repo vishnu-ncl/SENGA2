@@ -287,6 +287,17 @@ SUBROUTINE maths_kernel_eqAA(out_arr, in_arr1, in_arr2)
 
 END SUBROUTINE maths_kernel_eqAA
 
+SUBROUTINE maths_kernel_eqAA_fused(out_arr1, out_arr2, out_arr3, in_arr1, in_arr2, in_arr3, in_arr4)
+
+    real(kind=8), dimension(1) :: out_arr1, out_arr2, out_arr3
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4
+
+    out_arr1(OPS_ACC1(0,0,0)) = out_arr1(OPS_ACC1(0,0,0)) + (in_arr1(OPS_ACC4(0,0,0)) * in_arr2(OPS_ACC5(0,0,0)))
+    out_arr2(OPS_ACC2(0,0,0)) = out_arr2(OPS_ACC2(0,0,0)) + (in_arr1(OPS_ACC4(0,0,0)) * in_arr3(OPS_ACC6(0,0,0)))
+    out_arr3(OPS_ACC3(0,0,0)) = out_arr3(OPS_ACC3(0,0,0)) + (in_arr1(OPS_ACC4(0,0,0)) * in_arr4(OPS_ACC7(0,0,0)))
+
+END SUBROUTINE maths_kernel_eqAA_fused
+
 !A = B+C*D
 SUBROUTINE maths_kernel_eqAB(out_arr, in_arr1, in_arr2, in_arr3)
 
