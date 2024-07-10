@@ -917,6 +917,49 @@ SUBROUTINE maths_kernel_eqBK(combo1,ctrans,combo2,yrhs,ovwmol,ispec)
 
 END SUBROUTINE maths_kernel_eqBK
 
+SUBROUTINE maths_kernel_eqBIJK(difmix,transp,yrhs_md,viscco,wilko1,wilko2,ovwmol,ncovis,ncovm1)
+
+!   Function Arguments
+    real(kind=8), dimension(1) :: difmix
+    real(kind=8), dimension(1), intent(in) :: transp
+    real(kind=8), dimension(1), intent(in) :: yrhs_md
+    real(kind=8), dimension(nvcfmx,nspcmx), intent(in) :: viscco
+    real(kind=8), dimension(nspcmx,nspcmx), intent(in) :: wilko1,wilko2
+    real(kind=8), dimension(nspcmx), intent(in) :: ovwmol
+    integer(kind=4), intent(in) :: ncovis,ncovm1
+
+!   Local data
+    real(kind=8) :: fornow, combo1, combo2
+    real(kind=8) :: ctrans(nspcmx)
+    integer(kind=4) :: ispec,jspec,icp
+
+!   VISCOSITY FOR EACH SPECIES
+    DO ispec = 1, nspcmx
+        fornow = viscco(ncovis,ispec)
+        DO icp = ncovm1,1,-1
+            fornow = fornow*transp(OPS_ACC2(0,0,0)) + viscco(icp,ispec)
+        END DO
+        ctrans(ispec) = EXP(fornow)
+    END DO
+
+!   COMBINATION RULE FOR VISCOSITY
+    combo1 = 0.0_8
+    DO ispec = 1, nspcmx
+        combo2 = 0.0_8
+        DO jspec = 1, nspcmx
+            fornow = SQRT(ctrans(ispec)/ctrans(jspec))
+            fornow = 1.0_8 + fornow*wilko2(jspec,ispec)
+            fornow = wilko1(jspec,ispec)*fornow*fornow
+            combo2 = combo2 + yrhs_md(OPS_ACC_MD3(jspec,0,0,0))*ovwmol(jspec)*fornow
+        END DO
+        fornow = ctrans(ispec)/combo2
+        combo1 = combo1 + yrhs_md(OPS_ACC_MD3(ispec,0,0,0))*ovwmol(ispec)*fornow
+    END DO
+
+    difmix(OPS_ACC1(0,0,0)) = combo1
+
+END SUBROUTINE maths_kernel_eqBIJK
+
 SUBROUTINE maths_kernel_eqBL(utmp,wtmp,trun,itndex,yrhs,amasch,ncpoly,ncpom1,ncenth,icoef1,icoef2,ispec)
 
     real(kind=8), dimension(1) :: utmp,wtmp

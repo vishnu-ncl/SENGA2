@@ -2792,51 +2792,70 @@ SUBROUTINE rhscal
 !   STORE VISCOSITY IN DIFMIX FOR NOW
     IF(flmavt)THEN
 
+!        rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
+
+!        DO ispec = 1, nspec
+!            call ops_par_loop(maths_kernel_eqBI, "STORE VISCOSITY IN DIFMIX - part 1 - RHSCAL 2630", senga_grid, 3, rangexyz, &
+!                            ops_arg_dat(d_ctrans(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                            ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                            ops_arg_gbl(viscco, nvcfmx*nspcmx, "real(kind=8)", OPS_READ), &
+!                            ops_arg_gbl(ncovis, 1, "integer(kind=4)", OPS_READ), &
+!                            ops_arg_gbl(ncovm1, 1, "integer(kind=4)", OPS_READ), &
+!                            ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+!       END DO
+
+!        call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 2639", senga_grid, 3, rangexyz, &
+!                        ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_WRITE))
+
+!        DO ispec = 1, nspec
+!            call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 2643", senga_grid, 3, rangexyz, &
+!                            ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_WRITE))
+
+!            DO jspec = 1, nspec
+!                call ops_par_loop(maths_kernel_eqBJ, "STORE VISCOSITY IN DIFMIX - part 2 - RHSCAL 2647", senga_grid, 3, rangexyz, &
+!                                ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_RW), &
+!                                ops_arg_dat(d_ctrans(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                                ops_arg_dat(d_ctrans(jspec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                                ops_arg_dat(d_yrhs(jspec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                                ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
+!                                ops_arg_gbl(wilko1, nspcmx*nspcmx, "real(kind=8)", OPS_READ), &
+!                                ops_arg_gbl(wilko2, nspcmx*nspcmx, "real(kind=8)", OPS_READ), &
+!                                ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ), &
+!                                ops_arg_gbl(jspec, 1, "integer(kind=4)", OPS_READ))
+!            END DO
+
+!            call ops_par_loop(maths_kernel_eqBK, "STORE VISCOSITY IN DIFMIX - part 2 - RHSCAL 2659", senga_grid, 3, rangexyz, &
+!                            ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_RW), &
+!                            ops_arg_dat(d_ctrans(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                            ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                            ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
+!                            ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+
+!        END DO
+
+!        call ops_par_loop(copy_kernel, "copy - RHSCAL 2669", senga_grid, 3, rangexyz, &
+!                        ops_arg_dat(d_difmix, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                        ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_READ))
+
         rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
-
-        DO ispec = 1, nspec
-            call ops_par_loop(maths_kernel_eqBI, "STORE VISCOSITY IN DIFMIX - part 1 - RHSCAL 2630", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(d_ctrans(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_gbl(viscco, nvcfmx*nspcmx, "real(kind=8)", OPS_READ), &
-                            ops_arg_gbl(ncovis, 1, "integer(kind=4)", OPS_READ), &
-                            ops_arg_gbl(ncovm1, 1, "integer(kind=4)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+        DO jspec = 1, nspec
+            call ops_par_loop(copy_kernel_sdim_to_mdim, "A_multidim(ispec) = B", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_yrhs(jspec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(jspec, 1, "integer(kind=4)", OPS_READ))
         END DO
 
-        call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 2639", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_WRITE))
-
-        DO ispec = 1, nspec
-            call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 2643", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_WRITE))
-
-            DO jspec = 1, nspec
-                call ops_par_loop(maths_kernel_eqBJ, "STORE VISCOSITY IN DIFMIX - part 2 - RHSCAL 2647", senga_grid, 3, rangexyz, &
-                                ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_RW), &
-                                ops_arg_dat(d_ctrans(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_ctrans(jspec), 1, s3d_000, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_yrhs(jspec), 1, s3d_000, "real(kind=8)", OPS_READ), &
-                                ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
-                                ops_arg_gbl(wilko1, nspcmx*nspcmx, "real(kind=8)", OPS_READ), &
-                                ops_arg_gbl(wilko2, nspcmx*nspcmx, "real(kind=8)", OPS_READ), &
-                                ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ), &
-                                ops_arg_gbl(jspec, 1, "integer(kind=4)", OPS_READ))
-            END DO
-
-            call ops_par_loop(maths_kernel_eqBK, "STORE VISCOSITY IN DIFMIX - part 2 - RHSCAL 2659", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_RW), &
-                            ops_arg_dat(d_ctrans(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
-
-        END DO
-
-        call ops_par_loop(copy_kernel, "copy - RHSCAL 2669", senga_grid, 3, rangexyz, &
+        call ops_par_loop(maths_kernel_eqBIJK, "STORE VISCOSITY IN DIFMIX - RHSCAL 2849", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_difmix, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_READ))
+                        ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(viscco, nvcfmx*nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(wilko1, nspcmx*nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(wilko2, nspcmx*nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(ncovis, 1, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(ncovm1, 1, "integer(kind=4)", OPS_READ))
 
     END IF
 
