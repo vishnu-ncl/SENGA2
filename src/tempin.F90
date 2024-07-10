@@ -166,6 +166,6 @@ SUBROUTINE tempin
 
 !   =========================================================================
 
-    call ops_free_dat(d_yrhs_mdim)
+!    call ops_free_dat(d_yrhs_mdim)
 
 END SUBROUTINE tempin

@@ -790,6 +790,50 @@ SUBROUTINE maths_kernel_eqBG(combo1,combo2,difmix,store7,ctrans,yrhs,wmomix,drhs
 
 END SUBROUTINE maths_kernel_eqBG
 
+SUBROUTINE maths_kernel_eqBFG(difmix,store7,transp,prun,yrhs_md,wmomix,drhs,diffco,ovwmol,pdifgb,dfctol,ncodif,ncodm1,ispec)
+
+!   Function Arguments
+    real(kind=8), dimension(1) :: difmix, store7
+    real(kind=8), dimension(1), intent(in) :: transp,prun
+    real(kind=8), dimension(1), intent(in) :: yrhs_md
+    real(kind=8), dimension(1), intent(in) :: wmomix,drhs
+
+    real(kind=8), dimension(ndcfmx,nspcmx,nspcmx), intent(in) :: diffco
+    real(kind=8), dimension(nspcmx), intent(in) :: ovwmol
+    real(kind=8), intent(in) :: pdifgb,dfctol
+
+    integer(kind=4), intent(in) :: ncodif,ncodm1,ispec
+
+!   Local data
+    real(kind=8) :: fornow, combo1, combo2
+    real(kind=8) :: ctrans(nspcmx)
+    integer(kind=4) :: jspec,icp
+
+    DO jspec = 1, nspcmx
+        fornow = diffco(ncodif,jspec,ispec)
+        DO icp = ncodm1,1,-1
+            fornow = fornow*transp(OPS_ACC3(0,0,0)) + diffco(icp,jspec,ispec)
+        END DO
+        ctrans(jspec) = EXP(fornow)*pdifgb/prun(OPS_ACC4(0,0,0))
+    END DO
+
+!   COMBINATION RULE FOR MASS DIFFUSIVITY
+    combo1 = 0.0_8
+    combo2 = 0.0_8
+    DO jspec = 1, nspcmx
+        fornow = yrhs_md(OPS_ACC_MD5(jspec,0,0,0)) + dfctol
+        combo1 = combo1 + fornow
+        combo2 = combo2 + fornow*ovwmol(jspec)/ctrans(jspec)
+    END DO
+    fornow = yrhs_md(OPS_ACC_MD5(ispec,0,0,0)) + dfctol
+    combo1 = combo1 - fornow
+    combo2 = combo2 - fornow*ovwmol(ispec)/ctrans(ispec)
+    combo2 = combo2*wmomix(OPS_ACC6(0,0,0))
+    difmix(OPS_ACC1(0,0,0)) = drhs(OPS_ACC7(0,0,0))*combo1/combo2
+    store7(OPS_ACC2(0,0,0)) = difmix(OPS_ACC1(0,0,0))
+
+END SUBROUTINE maths_kernel_eqBFG
+
 SUBROUTINE maths_kernel_eqBH(tdrmix,trun,yrhs,wmomix,tdrcco,ovwmol,tdifgb,ncotdr,jspec,ispec,ncotm1)
 
     real(kind=8), dimension(1) :: tdrmix
