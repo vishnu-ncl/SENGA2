@@ -211,7 +211,7 @@ SUBROUTINE chrate
         rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(maths_kernel_eqAW, "EVALUATE THE SPECIFIC REACTION RATE CONSTANT", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_gbl(racnst, 1, "real(kind=8)", OPS_READ), &
                         ops_arg_gbl(rncnst, 1, "real(kind=8)", OPS_READ), &
@@ -240,7 +240,7 @@ SUBROUTINE chrate
             call ops_par_loop(maths_kernel_eqAX, "REFORMULATE FOR LINDEMANN RATE EXPRESSIONS", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_store4, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_store4, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                             ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(racnst, 1, "real(kind=8)", OPS_READ), &
@@ -283,7 +283,7 @@ SUBROUTINE chrate
             call ops_par_loop(maths_kernel_eqAY, "INCLUDE TROE FORM RATE EVALUATION", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_store4, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_store4, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                             ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(racnst, 1, "real(kind=8)", OPS_READ), &
@@ -330,7 +330,7 @@ SUBROUTINE chrate
             call ops_par_loop(maths_kernel_eqAZ, "INCLUDE SRI FORM RATE EVALUATION", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_store4, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_store4, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                             ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(racnst, 1, "real(kind=8)", OPS_READ), &

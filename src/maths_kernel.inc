@@ -227,6 +227,17 @@ SUBROUTINE maths_kernel_eqU(out_arr, in_arr1, in_arr2)
 
 END SUBROUTINE maths_kernel_eqU
 
+SUBROUTINE maths_kernel_eqU_fused(out_arr1, out_arr2, out_arr3, in_arr1, in_arr2, in_arr3, in_arr4)
+
+    real(kind=8), dimension(1) :: out_arr1, out_arr2, out_arr3
+    real(kind=8), dimension(1), intent(in) :: in_arr1, in_arr2, in_arr3, in_arr4
+
+    out_arr1(OPS_ACC1(0,0,0)) = in_arr1(OPS_ACC4(0,0,0)) / in_arr4(OPS_ACC7(0,0,0))
+    out_arr2(OPS_ACC2(0,0,0)) = in_arr2(OPS_ACC5(0,0,0)) / in_arr4(OPS_ACC7(0,0,0))
+    out_arr3(OPS_ACC3(0,0,0)) = in_arr3(OPS_ACC6(0,0,0)) / in_arr4(OPS_ACC7(0,0,0))
+
+END SUBROUTINE maths_kernel_eqU_fused
+
 !A = A*B
 SUBROUTINE maths_kernel_eqV(out_arr, in_arr)
 
@@ -236,6 +247,19 @@ SUBROUTINE maths_kernel_eqV(out_arr, in_arr)
     out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) * in_arr(OPS_ACC2(0,0,0))
 
 END SUBROUTINE maths_kernel_eqV
+
+SUBROUTINE maths_kernel_eqV_fused(out_arr1, out_arr2, out_arr3, out_arr4, in_arr)
+
+	real(kind=8), dimension(1) :: out_arr1, out_arr2, out_arr3, out_arr4
+	real(kind=8), dimension(1), intent(in) :: in_arr
+
+	out_arr1(OPS_ACC1(0,0,0)) = out_arr1(OPS_ACC1(0,0,0)) * in_arr(OPS_ACC5(0,0,0))
+	out_arr2(OPS_ACC2(0,0,0)) = out_arr2(OPS_ACC2(0,0,0)) * in_arr(OPS_ACC5(0,0,0))
+	out_arr3(OPS_ACC3(0,0,0)) = out_arr3(OPS_ACC3(0,0,0)) * in_arr(OPS_ACC5(0,0,0))
+
+	out_arr4(OPS_ACC4(0,0,0)) = out_arr4(OPS_ACC4(0,0,0)) * in_arr(OPS_ACC5(0,0,0))
+
+END SUBROUTINE maths_kernel_eqV_fused
 
 !A = B*C
 SUBROUTINE maths_kernel_eqW(out_arr, in_arr1, in_arr2)
@@ -741,6 +765,51 @@ SUBROUTINE maths_kernel_eqBE(combo1,combo2,combo3,store7,wmomix,drhs)
     wmomix(OPS_ACC5(0,0,0)) = drhs(OPS_ACC6(0,0,0))*combo3(OPS_ACC3(0,0,0))
 
 END SUBROUTINE maths_kernel_eqBE
+
+SUBROUTINE maths_kernel_eqBCDE(transp,store7,wmomix,trun,drhs,yrhs_md,condco,ovwmol,tdifgb,ncocon,ncocm1)
+
+    real(kind=8), dimension(1) :: transp,store7,wmomix
+    real(kind=8), dimension(1), intent(in) :: trun,drhs
+    real(kind=8), dimension(1), intent(in) :: yrhs_md
+
+    real(kind=8), dimension(nccfmx,nspcmx), intent(in) :: condco
+    real(kind=8), dimension(nspcmx), intent(in) :: ovwmol
+    real(kind=8), intent(in) :: tdifgb
+    integer(kind=4), intent(in) :: ncocon,ncocm1
+
+!   Local data
+    real(kind=8) :: fornow, combo1, combo2, combo3
+    real(kind=8) :: ctrans(nspcmx)
+    integer(kind=4) :: ispec,icp
+
+!   CONDUCTIVITY FOR EACH SPECIES
+    transp(OPS_ACC1(0,0,0)) = LOG(trun(OPS_ACC4(0,0,0))/tdifgb)
+    DO ispec = 1, nspcmx
+        fornow = condco(ncocon,ispec)
+        DO icp = ncocm1,1,-1
+            fornow = fornow*transp(OPS_ACC1(0,0,0)) + condco(icp,ispec)
+        END DO
+        ctrans(ispec) = EXP(fornow)
+    END DO
+
+!   COMBINATION RULE FOR CONDUCTIVITY
+    combo1 = 0.0_8
+    combo2 = 0.0_8
+    combo3 = 0.0_8
+    DO ispec = 1, nspcmx
+        fornow = yrhs_md(OPS_ACC_MD6(ispec,0,0,0))*ovwmol(ispec)
+        combo1 = combo1 + fornow*ctrans(ispec)
+        combo2 = combo2 + fornow/ctrans(ispec)
+        combo3 = combo3 + fornow
+    END DO
+
+    combo3 = 1.0_8/combo3
+    combo1 = combo1*combo3
+    combo2 = combo2*combo3
+    store7(OPS_ACC2(0,0,0)) = 0.5_8*(combo1 + 1.0_8/combo2)
+    wmomix(OPS_ACC3(0,0,0)) = drhs(OPS_ACC5(0,0,0))*combo3
+
+END SUBROUTINE maths_kernel_eqBCDE
 
 SUBROUTINE maths_kernel_eqBF(ctrans,combo1,combo2,transp,prun,yrhs,diffco,ovwmol,pdifgb,dfctol,ncodif,ncodm1,jspec,ispec)
 

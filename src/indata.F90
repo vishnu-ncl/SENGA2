@@ -1119,7 +1119,7 @@ SUBROUTINE indata
         ipower = ispec - (iindex-1)*nspimx - 1
 
         call ops_par_loop(maths_kernel_eqBO, "INTERNAL ENERGY FIELD", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_RW), &
+                    ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_INC), &
                     ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
                     ops_arg_gbl(ntint, nspcmx, "integer(kind=4)", OPS_READ), &
@@ -1174,19 +1174,11 @@ SUBROUTINE indata
 !   CONVERT VARIABLES TO CONSERVATIVE FORM
 !   ======================================
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
-    call ops_par_loop(maths_kernel_eqV, "A = A*B", senga_grid, 3, rangexyz,  &
+
+    call ops_par_loop(maths_kernel_eqV_fused, "A = A*B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_RW), &
-                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ))
-
-    call ops_par_loop(maths_kernel_eqV, "A = A*B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_RW), &
-                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ))
-
-    call ops_par_loop(maths_kernel_eqV, "A = A*B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_RW), &
-                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ))
-
-    call ops_par_loop(maths_kernel_eqV, "A = A*B", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erun, 1, s3d_000, "real(kind=8)", OPS_RW), &
                     ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ))
 

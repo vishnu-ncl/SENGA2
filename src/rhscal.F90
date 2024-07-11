@@ -487,41 +487,62 @@ SUBROUTINE rhscal
 !   THERMAL CONDUCTIVITY
 
     IF(flmavt) THEN
-        rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
-        call ops_par_loop(maths_kernel_eqBC, "THERMAL CONDUCTIVITY - part 1 - RHSCAL 437", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                        ops_arg_gbl(tdifgb, 1, "real(kind=8)", OPS_READ))
+!        rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
+!        call ops_par_loop(maths_kernel_eqBC, "THERMAL CONDUCTIVITY - part 1 - RHSCAL 437", senga_grid, 3, rangexyz, &
+!                        ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                        ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                        ops_arg_gbl(tdifgb, 1, "real(kind=8)", OPS_READ))
 
-        call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 442", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_WRITE))
-        call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 444", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_WRITE))
-        call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 446", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_combo3, 1, s3d_000, "real(kind=8)", OPS_WRITE))
+!        call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 442", senga_grid, 3, rangexyz, &
+!                        ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_WRITE))
+!        call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 444", senga_grid, 3, rangexyz, &
+!                        ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_WRITE))
+!        call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 446", senga_grid, 3, rangexyz, &
+!                        ops_arg_dat(d_combo3, 1, s3d_000, "real(kind=8)", OPS_WRITE))
 
 !       CONDUCTIVITY FOR EACH SPECIES
-        DO ispec = 1, nspec
-            call ops_par_loop(maths_kernel_eqBD, "THERMAL CONDUCTIVITY - part 2 - RHSCAL 451", senga_grid, 3, rangexyz, &
-                            ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_RW), &
-                            ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_RW), &
-                            ops_arg_dat(d_combo3, 1, s3d_000, "real(kind=8)", OPS_RW), &
-                            ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_gbl(condco, nccfmx*nspcmx, "real(kind=8)", OPS_READ), &
-                            ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
-                            ops_arg_gbl(ncocon, 1, "integer(kind=4)", OPS_READ), &
-                            ops_arg_gbl(ncocm1, 1, "integer(kind=4)", OPS_READ), &
-                            ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+!        DO ispec = 1, nspec
+!            call ops_par_loop(maths_kernel_eqBD, "THERMAL CONDUCTIVITY - part 2 - RHSCAL 451", senga_grid, 3, rangexyz, &
+!                            ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_RW), &
+!                            ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_RW), &
+!                            ops_arg_dat(d_combo3, 1, s3d_000, "real(kind=8)", OPS_RW), &
+!                            ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                            ops_arg_gbl(condco, nccfmx*nspcmx, "real(kind=8)", OPS_READ), &
+!                            ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
+!                            ops_arg_gbl(ncocon, 1, "integer(kind=4)", OPS_READ), &
+!                            ops_arg_gbl(ncocm1, 1, "integer(kind=4)", OPS_READ), &
+!                            ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+!        END DO
+
+!        call ops_par_loop(maths_kernel_eqBE, "THERMAL CONDUCTIVITY - part 3 - RHSCAL 464", senga_grid, 3, rangexyz, &
+!                        ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_RW), &
+!                        ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_RW), &
+!                        ops_arg_dat(d_combo3, 1, s3d_000, "real(kind=8)", OPS_RW), &
+!                        ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                        ops_arg_dat(d_wmomix, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                        ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+        rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
+        DO jspec = 1, nspec
+            call ops_par_loop(copy_kernel_sdim_to_mdim, "A_multidim(ispec) = B", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_yrhs(jspec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(jspec, 1, "integer(kind=4)", OPS_READ))
         END DO
 
-        call ops_par_loop(maths_kernel_eqBE, "THERMAL CONDUCTIVITY - part 3 - RHSCAL 464", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_RW), &
-                        ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_RW), &
-                        ops_arg_dat(d_combo3, 1, s3d_000, "real(kind=8)", OPS_RW), &
+        call ops_par_loop(maths_kernel_eqBCDE, "THERMAL CONDUCTIVITY - RHSCAL 527", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_wmomix, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ))
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(condco, nccfmx*nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(tdifgb, 1, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(ncocon, 1, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(ncocm1, 1, "integer(kind=4)", OPS_READ))
 
     END IF
 
@@ -1173,7 +1194,7 @@ SUBROUTINE rhscal
             END DO
 
             call ops_par_loop(maths_kernel_eqBFG, "MASS DIFFUSIVITY FOR EACH SPECIES - RHSCAL 1175", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_difmix, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_difmix, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                             ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_READ), &
@@ -1290,7 +1311,7 @@ SUBROUTINE rhscal
 !       STORE MIXTURE H IN WTMP FOR NOW
         rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
         call ops_par_loop(maths_kernel_eqBL, "SPECIES ENTHALPY - RHSCAL 1151", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_INC), &
                         ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_READ), &
