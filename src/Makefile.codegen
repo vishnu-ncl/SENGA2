@@ -23,8 +23,8 @@ OPS_FILES = senga2.F90 com_ops_senga2.F90 ops_data_init.F90 dfinit.F90 dfbydx.F9
     tempin.F90 parfer.F90 output.F90 print_dats.F90 print_alldats.F90 print_output.F90
 
 ifeq ($(OPS_COMPILER),gnu)
-APP_FLAGS = -mcmodel=medium -fallow-argument-mismatch -fopt-info -fopt-info-vec-missed -funroll-loops -funroll-all-loops -finline-functions -ftree-vectorize -fstrict-aliasing
-#-fallow-argument-mismatch -fopt-info-vec -fopt-info-vec-optimized -fopt-info-vec-missed -funroll-loops -finline-functions -fstrict-aliasing
+APP_FLAGS = -mcmodel=medium -fopt-info-vec -fopt-info-vec-optimized -fopt-info-vec-missed -funroll-loops -funroll-all-loops -finline-functions -ftree-vectorize -fstrict-aliasing
+#-fallow-argument-mismatch
 endif
 
 ifeq ($(OPS_COMPILER),intel)
@@ -38,7 +38,7 @@ APP_FLAGS = -Kieee -Mnofpapprox -mcmodel=medium -Ktrap=unf -Mnofprelaxed -m64 -p
 endif
 
 ifeq ($(OPS_COMPILER),cray)
-APP_FLAGS = -N 1023 
+APP_FLAGS = -N 1023
 #-hlist=m -h vector3 -h flex_mp=strict
 #APP_FLAGS = -h noacc,fp1,contiguous_assumed_shape,nofma,zero -h flex_mp=strict  -h nofma -hfp1=noapprox -K trap=divz,fp,inv,unf
 endif
