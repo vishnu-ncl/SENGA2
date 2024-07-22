@@ -7,6 +7,7 @@ PROGRAM senga2
     use, intrinsic :: ISO_C_BINDING
 
     use com_senga
+    use omp_lib
     use com_ops_senga
 
 !   *************************************************************************
@@ -80,8 +81,31 @@ PROGRAM senga2
     real(kind=c_double) :: startTime = 0
     real(kind=c_double) :: endTime = 0
 
+!   Timings
+    DOUBLE PRECISION :: indata_stime, indata_etime, indata_ttime, &
+                    parfer_stime, parfer_etime, parfer_ttime, &
+                    rhscal_stime, rhscal_etime, rhscal_ttime, &
+                    rhsvel_stime, rhsvel_etime, rhsvel_ttime, &
+                    boundt_stime, boundt_etime, boundt_ttime, &
+                    bounds_stime, bounds_etime, bounds_ttime, &
+                    bountt_stime, bountt_etime, bountt_ttime, &
+                    lincom_stime, lincom_etime, lincom_ttime, &
+                    fincom_stime, fincom_etime, fincom_ttime, &
+                    adaptt_stime, adaptt_etime, adaptt_ttime
+
 !   BEGIN
 !   =====
+    indata_ttime = 0d0
+    parfer_ttime = 0d0
+    rhscal_ttime = 0d0
+    rhsvel_ttime = 0d0
+    boundt_ttime = 0d0
+    bounds_ttime = 0d0
+    bountt_ttime = 0d0
+    lincom_ttime = 0d0
+    fincom_ttime = 0d0
+    adaptt_ttime = 0d0
+    total_ttime  = 0d0
 
 !   =========================================================================
 
@@ -99,7 +123,10 @@ PROGRAM senga2
     call pardom
 
 !   INITIALISE THE DATA
+    indata_stime = omp_get_wtime()
     call indata
+    indata_etime = omp_get_wtime()
+    indata_ttime = indata_ttime + (indata_etime-indata_stime)
 
 !   RECORD INITIAL CONDITIONS
     call output
@@ -130,25 +157,43 @@ PROGRAM senga2
             irkstp = jrkstp
 
 !           APPLY BCS ON PRIMITIVE VARIABLES
+            boundt_stime = omp_get_wtime()
             call boundt
+            boundt_etime = omp_get_wtime()
+            boundt_ttime = boundt_ttime + (boundt_etime-boundt_stime)
 
 !           PARALLEL DATA TRANSFER
+            parfer_stime = omp_get_wtime()
             call parfer
+            parfer_etime = omp_get_wtime()
+            parfer_ttime = parfer_ttime + (parfer_etime-parfer_stime)
 
 !           EVALUATE RHS FOR SCALARS
+            rhscal_stime = omp_get_wtime()
             call rhscal
+            rhscal_etime = omp_get_wtime()
+            rhscal_ttime = rhscal_ttime + (rhscal_etime-rhscal_stime)
 !#ifdef OPS_LAZY
 !    call ops_execute()
 !#endif
 
 !           EVALUATE RHS FOR VELOCITIES
+            rhsvel_stime = omp_get_wtime()
             call rhsvel
+            rhsvel_etime = omp_get_wtime()
+            rhsvel_ttime = rhsvel_ttime + (rhsvel_etime-rhsvel_stime)
 
 !           APPLY BCS ON SOURCE TERMS
+            bounds_stime = omp_get_wtime()
             call bounds
+            bounds_etime = omp_get_wtime()
+            bounds_ttime = bounds_ttime + (bounds_etime-bounds_stime)
 
 !           RUNGE-KUTTA ADVANCEMENT
+            lincom_stime = omp_get_wtime()
             call lincom
+            lincom_etime = omp_get_wtime()
+            lincom_ttime = lincom_ttime + (lincom_etime-lincom_stime)
 
         END DO
 
@@ -159,24 +204,42 @@ PROGRAM senga2
         irkstp = nrkstp
 
 !       APPLY BCS ON PRIMITIVE VARIABLES
+        boundt_stime = omp_get_wtime()
         call boundt
+        boundt_etime = omp_get_wtime()
+        boundt_ttime = boundt_ttime + (boundt_etime-boundt_stime)
 
 !       PARALLEL DATA TRANSFER
+        parfer_stime = omp_get_wtime()
         call parfer
+        parfer_etime = omp_get_wtime()
+        parfer_ttime = parfer_ttime + (parfer_etime-parfer_stime)
 
 !       EVALUATE RHS FOR SCALARS
+        rhscal_stime = omp_get_wtime()
         call rhscal
+        rhscal_etime = omp_get_wtime()
+        rhscal_ttime = rhscal_ttime + (rhscal_etime-rhscal_stime)
 !#ifdef OPS_LAZY
 !    call ops_execute()
 !#endif
 !       EVALUATE RHS FOR VELOCITIES
+        rhsvel_stime = omp_get_wtime()
         call rhsvel
+        rhsvel_etime = omp_get_wtime()
+        rhsvel_ttime = rhsvel_ttime + (rhsvel_etime-rhsvel_stime)
 
 !       APPLY BCS ON SOURCE TERMS
+        bounds_stime = omp_get_wtime()
         call bounds
+        bounds_etime = omp_get_wtime()
+        bounds_ttime = bounds_ttime + (bounds_etime-bounds_stime)
 
 !       RUNGE-KUTTA ADVANCEMENT
+        fincom_stime = omp_get_wtime()
         call fincom
+        fincom_etime = omp_get_wtime()
+        fincom_ttime = fincom_ttime + (fincom_etime-fincom_stime)
 
 !       =======================================================================
 
@@ -188,13 +251,19 @@ PROGRAM senga2
 
 !       SYNCHRONISE THE TIME-DEPENDENT BCS
 !       ==================================
+        bountt_stime = omp_get_wtime()
         call bountt
+        bountt_etime = omp_get_wtime()
+        bountt_ttime = bountt_ttime + (bountt_etime-bountt_stime)
 
 !       =======================================================================
 
 !       ADJUST THE TIME STEP
 !       ====================
+        adaptt_stime = omp_get_wtime()
         call adaptt
+        adaptt_etime = omp_get_wtime()
+        adaptt_ttime = adaptt_ttime + (adaptt_etime-adaptt_stime)
 
 !       =======================================================================
 
@@ -218,7 +287,17 @@ PROGRAM senga2
     call ops_timers ( endTime )
     call ops_timing_output( )
     IF (ops_is_root() == 1) THEN
-        write (*,'(a,f16.7,a)') 'Max total runtime =', endTime - startTime,' seconds'
+        write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,' indata_ttime  =', indata_ttime,' seconds'
+        write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,' parfer_ttime  =', parfer_ttime,' seconds'
+        write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,' rhscal_ttime  =', rhscal_ttime,' seconds'
+        write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,' rhsvel_ttime  =', rhsvel_ttime,' seconds'
+        write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,' boundt_ttime  =', boundt_ttime,' seconds'
+        write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,' bounds_ttime  =', bounds_ttime,' seconds'
+        write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,' bountt_ttime  =', bountt_ttime,' seconds'
+        write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,' lincom_ttime  =', lincom_ttime,' seconds'
+        write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,' fincom_ttime  =', fincom_ttime,' seconds'
+        write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,' adaptt_ttime  =', adaptt_ttime,' seconds'
+        write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,' total_ttime   =', endTime - startTime,' seconds'
     END IF
 
 !   TERMINATE THE PROGRAM

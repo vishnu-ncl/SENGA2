@@ -487,6 +487,9 @@ SUBROUTINE rhscal
 !   THERMAL CONDUCTIVITY
 
     IF(flmavt) THEN
+
+!#if defined(OPS_LAZY) || defined(OPS_WITH_CUDAFOR) || defined(OPS_WITH_OMPOFFLOADFOR)
+
         rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
         call ops_par_loop(maths_kernel_eqBC, "THERMAL CONDUCTIVITY - part 1 - RHSCAL 437", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
@@ -522,6 +525,32 @@ SUBROUTINE rhscal
                         ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_wmomix, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+!#else
+!   Ashutosh - 22 July 24, observed precision difference when using fused equation, need to debug
+
+!        rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
+!        DO jspec = 1, nspec
+!            call ops_par_loop(copy_kernel_sdim_to_mdim, "A_multidim(ispec) = B", senga_grid, 3, rangexyz,  &
+!                            ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                            ops_arg_dat(d_yrhs(jspec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                            ops_arg_gbl(jspec, 1, "integer(kind=4)", OPS_READ))
+!        END DO
+
+!        call ops_par_loop(maths_kernel_eqBCDE, "THERMAL CONDUCTIVITY - RHSCAL 527", senga_grid, 3, rangexyz, &
+!                        ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                        ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                        ops_arg_dat(d_wmomix, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                        ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                        ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                        ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_READ), &
+!                        ops_arg_gbl(condco, nccfmx*nspcmx, "real(kind=8)", OPS_READ), &
+!                        ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
+!                        ops_arg_gbl(tdifgb, 1, "real(kind=8)", OPS_READ), &
+!                        ops_arg_gbl(ncocon, 1, "integer(kind=4)", OPS_READ), &
+!                        ops_arg_gbl(ncocm1, 1, "integer(kind=4)", OPS_READ))
+
+!#endif
 
     END IF
 
@@ -1125,6 +1154,8 @@ SUBROUTINE rhscal
 
 !           MASS DIFFUSIVITY FOR EACH SPECIES
 !           RELATIVE TO CURRENT SPECIES
+#if defined(OPS_LAZY) || defined(OPS_WITH_CUDAFOR) || defined(OPS_WITH_OMPOFFLOADFOR)
+
             rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
             call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 1034", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_WRITE))
@@ -1134,7 +1165,7 @@ SUBROUTINE rhscal
             DO jspec = 1, nspec
 !               COMBINATION RULE FOR MASS DIFFUSIVITY
                 call ops_par_loop(maths_kernel_eqBF, "MASS DIFFUSIVITY FOR EACH SPECIES - part 1 - RHSCAL 1041", senga_grid, 3, rangexyz, &
-                                ops_arg_dat(d_ctrans(jspec), 1, s3d_000, "real(kind=8)", OPS_RW), &
+                                ops_arg_dat(d_ctrans(jspec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                                 ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_RW), &
                                 ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_RW), &
                                 ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
@@ -1153,7 +1184,7 @@ SUBROUTINE rhscal
             call ops_par_loop(maths_kernel_eqBG, "MASS DIFFUSIVITY FOR EACH SPECIES - part 2 - RHSCAL 1058", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_RW), &
-                            ops_arg_dat(d_difmix, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_difmix, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                             ops_arg_dat(d_ctrans(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
@@ -1162,6 +1193,34 @@ SUBROUTINE rhscal
                             ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(dfctol_ops, 1, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+
+#else
+
+            rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
+            DO jspec = 1, nspec
+                call ops_par_loop(copy_kernel_sdim_to_mdim, "A_multidim(ispec) = B", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_yrhs(jspec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(jspec, 1, "integer(kind=4)", OPS_READ))
+            END DO
+
+            call ops_par_loop(maths_kernel_eqBFG, "MASS DIFFUSIVITY FOR EACH SPECIES - RHSCAL 1175", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_difmix, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_wmomix, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(diffco, ndcfmx*nspcmx*nspcmx, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(pdifgb, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(dfctol_ops, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ncodif, 1, "integer(kind=4)", OPS_READ), &
+                            ops_arg_gbl(ncodm1, 1, "integer(kind=4)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+
+#endif
 
         END IF
 
@@ -1220,19 +1279,28 @@ SUBROUTINE rhscal
 
 !       DIFFUSION CORRECTION VELOCITY
         rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
-        call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 1116", senga_grid, 3, rangexyz,  &
+!        call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 1223", senga_grid, 3, rangexyz,  &
+!                        ops_arg_dat(d_ucor, 1, s3d_000, "real(kind=8)", OPS_INC), &
+!                        ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+!        call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 1228", senga_grid, 3, rangexyz,  &
+!                        ops_arg_dat(d_vcor, 1, s3d_000, "real(kind=8)", OPS_INC), &
+!                        ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+!        call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 1233", senga_grid, 3, rangexyz,  &
+!                        ops_arg_dat(d_wcor, 1, s3d_000, "real(kind=8)", OPS_INC), &
+!                        ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                        ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+        call ops_par_loop(maths_kernel_eqAA_fused, "A = A+B*C - RHSCAL 1238", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_ucor, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                        ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ))
-
-        call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 1121", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_vcor, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                        ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ))
-
-        call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 1126", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_wcor, 1, s3d_000, "real(kind=8)", OPS_INC), &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ))
 
 !                                                         STORE1,2,3 = DYDX,Y,Z
@@ -1256,7 +1324,7 @@ SUBROUTINE rhscal
 !       STORE MIXTURE H IN WTMP FOR NOW
         rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
         call ops_par_loop(maths_kernel_eqBL, "SPECIES ENTHALPY - RHSCAL 1151", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                        ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_INC), &
                         ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_READ), &
@@ -1643,19 +1711,28 @@ SUBROUTINE rhscal
 !           DIFFUSION CORRECTION VELOCITY
 !           FIRST DERIVATIVES OF LN(MIXTURE MOLAR MASS) ALREADY STORED
             rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
-            call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 1539", senga_grid, 3, rangexyz,  &
+!            call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 1646", senga_grid, 3, rangexyz,  &
+!                            ops_arg_dat(d_ucor, 1, s3d_000, "real(kind=8)", OPS_INC), &
+!                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                            ops_arg_dat(d_wd1x, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+!            call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 1651", senga_grid, 3, rangexyz,  &
+!                            ops_arg_dat(d_vcor, 1, s3d_000, "real(kind=8)", OPS_INC), &
+!                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                            ops_arg_dat(d_wd1y, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+!            call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 1656", senga_grid, 3, rangexyz,  &
+!                            ops_arg_dat(d_wcor, 1, s3d_000, "real(kind=8)", OPS_INC), &
+!                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                            ops_arg_dat(d_wd1z, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+            call ops_par_loop(maths_kernel_eqAA_fused, "A = A+B*C - RHSCAL 1661", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_ucor, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_wd1x, 1, s3d_000, "real(kind=8)", OPS_READ))
-
-            call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 1544", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_vcor, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_wd1y, 1, s3d_000, "real(kind=8)", OPS_READ))
-
-            call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 1549", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_wcor, 1, s3d_000, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_wd1x, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_wd1y, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_wd1z, 1, s3d_000, "real(kind=8)", OPS_READ))
 
 !           Y EQUATION: DIFFUSIVE TERMS
@@ -1912,19 +1989,28 @@ SUBROUTINE rhscal
 !           DIFFUSION CORRECTION VELOCITY
 !           FIRST DERIVATIVES OF LN(PRESSURE) ALREADY STORED
             rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
-            call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 1808", senga_grid, 3, rangexyz,  &
+!            call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 1924", senga_grid, 3, rangexyz,  &
+!                            ops_arg_dat(d_ucor, 1, s3d_000, "real(kind=8)", OPS_INC), &
+!                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                            ops_arg_dat(d_pd1x, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+!            call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 1929", senga_grid, 3, rangexyz,  &
+!                            ops_arg_dat(d_vcor, 1, s3d_000, "real(kind=8)", OPS_INC), &
+!                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                            ops_arg_dat(d_pd1y, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+!            call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 1934", senga_grid, 3, rangexyz,  &
+!                            ops_arg_dat(d_wcor, 1, s3d_000, "real(kind=8)", OPS_INC), &
+!                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                            ops_arg_dat(d_pd1z, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+            call ops_par_loop(maths_kernel_eqAA_fused, "A = A+B*C - RHSCAL 1939", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_ucor, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_pd1x, 1, s3d_000, "real(kind=8)", OPS_READ))
-
-            call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 1813", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_vcor, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_pd1y, 1, s3d_000, "real(kind=8)", OPS_READ))
-
-            call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 1818", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_wcor, 1, s3d_000, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_pd1x, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_pd1y, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_pd1z, 1, s3d_000, "real(kind=8)", OPS_READ))
 
 !           Y EQUATION: DIFFUSIVE TERMS
@@ -2178,19 +2264,28 @@ SUBROUTINE rhscal
 !           DIFFUSION CORRECTION VELOCITY
 !           FIRST DERIVATIVES OF LN(TEMPERATURE) ALREADY STORED
             rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
-            call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 2074", senga_grid, 3, rangexyz,  &
+!            call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 2199", senga_grid, 3, rangexyz,  &
+!                            ops_arg_dat(d_ucor, 1, s3d_000, "real(kind=8)", OPS_INC), &
+!                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                            ops_arg_dat(d_td1x, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+!            call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 2204", senga_grid, 3, rangexyz,  &
+!                            ops_arg_dat(d_vcor, 1, s3d_000, "real(kind=8)", OPS_INC), &
+!                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                            ops_arg_dat(d_td1y, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+!            call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 2209", senga_grid, 3, rangexyz,  &
+!                            ops_arg_dat(d_wcor, 1, s3d_000, "real(kind=8)", OPS_INC), &
+!                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                            ops_arg_dat(d_td1z, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+            call ops_par_loop(maths_kernel_eqAA_fused, "A = A+B*C - RHSCAL 2214", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_ucor, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_td1x, 1, s3d_000, "real(kind=8)", OPS_READ))
-
-            call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 2079", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_vcor, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_td1y, 1, s3d_000, "real(kind=8)", OPS_READ))
-
-            call ops_par_loop(maths_kernel_eqAA, "A = A+B*C - RHSCAL 2084", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_wcor, 1, s3d_000, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_td1x, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_td1y, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_td1z, 1, s3d_000, "real(kind=8)", OPS_READ))
 
 !           Y EQUATION: DIFFUSIVE TERMS
@@ -2731,6 +2826,8 @@ SUBROUTINE rhscal
 !   STORE VISCOSITY IN DIFMIX FOR NOW
     IF(flmavt)THEN
 
+#if defined(OPS_LAZY) || defined(OPS_WITH_CUDAFOR) || defined(OPS_WITH_OMPOFFLOADFOR)
+
         rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
 
         DO ispec = 1, nspec
@@ -2741,7 +2838,7 @@ SUBROUTINE rhscal
                             ops_arg_gbl(ncovis, 1, "integer(kind=4)", OPS_READ), &
                             ops_arg_gbl(ncovm1, 1, "integer(kind=4)", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
-        END DO
+       END DO
 
         call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 2639", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_WRITE))
@@ -2776,6 +2873,29 @@ SUBROUTINE rhscal
         call ops_par_loop(copy_kernel, "copy - RHSCAL 2669", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_difmix, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+#else
+
+        rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
+        DO jspec = 1, nspec
+            call ops_par_loop(copy_kernel_sdim_to_mdim, "A_multidim(ispec) = B", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_yrhs(jspec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(jspec, 1, "integer(kind=4)", OPS_READ))
+        END DO
+
+        call ops_par_loop(maths_kernel_eqBIJK, "STORE VISCOSITY IN DIFMIX - RHSCAL 2849", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_difmix, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(viscco, nvcfmx*nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(wilko1, nspcmx*nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(wilko2, nspcmx*nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(ncovis, 1, "integer(kind=4)", OPS_READ), &
+                        ops_arg_gbl(ncovm1, 1, "integer(kind=4)", OPS_READ))
+
+#endif
 
     END IF
 

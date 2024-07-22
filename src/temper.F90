@@ -109,9 +109,9 @@ SUBROUTINE temper
 
 !       CONSTRUCT COEFFICIENTS OF TEMPERATURE POLYNOMIAL
         call ops_par_loop(temper_kernel_eqB, "temper eq B", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_tcoeff, 6, s3d_000, "real(kind=8)", OPS_RW), &
+                        ops_arg_dat(d_tcoeff, 6, s3d_000, "real(kind=8)", OPS_INC), &
                         ops_arg_dat(d_tderiv, 5, s3d_000, "real(kind=8)", OPS_RW), &
-                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_WRITE), &
+                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_READ), &
                         ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_gbl(amascp, ncofmx*ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
                         ops_arg_gbl(amasct, ncofmx*ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
@@ -127,7 +127,7 @@ SUBROUTINE temper
 !       USE STORE7
 !       TO ACCUMULATE (DENSITY TIMES) MIXTURE SPECIFIC GAS CONSTANT
         call ops_par_loop(temper_kernel_eqC, "temper eq C", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_INC), &
                         ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_gbl(rgspec, nspcmx, "real(kind=8)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
@@ -168,8 +168,8 @@ SUBROUTINE temper
         ipower = ispec - (iindex-1)*nspimx - 1
 
         call ops_par_loop(temper_kernel_eqE, "temper eq E", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_RW), &
-                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_RW), &
+                        ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                        ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_INC), &
                         ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_gbl(amascp, ncofmx*ntinmx*nspcmx, "real(kind=8)", OPS_READ), &

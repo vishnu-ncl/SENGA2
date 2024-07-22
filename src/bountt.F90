@@ -111,7 +111,7 @@ SUBROUTINE bountt
 
                 call ops_par_loop(boundt_kernel_eqE_xdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_RW),  &
+                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_INC),  &
                                 ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(ntint, nspcmx, "integer(kind=4)", OPS_READ), &
                                 ops_arg_gbl(ipower, 1, "integer(kind=4)", OPS_READ), &
@@ -121,9 +121,9 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [1,1,1,nyglbl,1,nzglbl]
             call ops_par_loop(bountt_kernel_eqA_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -136,7 +136,7 @@ SUBROUTINE bountt
                             ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
 
             call ops_par_loop(bountt_kernel_eqB_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ),  &
                             ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
@@ -157,7 +157,7 @@ SUBROUTINE bountt
                 rangexyz = [1,1,1,nyglbl,1,nzglbl]
                 call ops_par_loop(bountt_kernel_eqF_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC),  &
-                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yerr(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_READ), &
@@ -199,10 +199,10 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [1,1,1,nyglbl,1,nzglbl]
             call ops_par_loop(bountt_kernel_eqC_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -223,7 +223,7 @@ SUBROUTINE bountt
             DO ispec = 1,nspec
                 rangexyz = [1,1,1,nyglbl,1,nzglbl]
                 call ops_par_loop(bountt_kernel_eqE_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yerr(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_stryxl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
@@ -246,9 +246,9 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [1,1,1,nyglbl,1,nzglbl]
             call ops_par_loop(bountt_kernel_eqA_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -289,7 +289,7 @@ SUBROUTINE bountt
 
                 call ops_par_loop(boundt_kernel_eqE_xdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_RW),  &
+                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_INC),  &
                                 ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(ntint, nspcmx, "integer(kind=4)", OPS_READ), &
                                 ops_arg_gbl(ipower, 1, "integer(kind=4)", OPS_READ), &
@@ -299,9 +299,9 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [1,1,1,nyglbl,1,nzglbl]
             call ops_par_loop(bountt_kernel_eqA_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -314,7 +314,7 @@ SUBROUTINE bountt
                             ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
 
             call ops_par_loop(bountt_kernel_eqB_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ),  &
                             ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
@@ -412,7 +412,7 @@ SUBROUTINE bountt
 
                 call ops_par_loop(boundt_kernel_eqE_xdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_RW),  &
+                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_INC),  &
                                 ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(ntint, nspcmx, "integer(kind=4)", OPS_READ), &
                                 ops_arg_gbl(ipower, 1, "integer(kind=4)", OPS_READ), &
@@ -422,9 +422,9 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
             call ops_par_loop(bountt_kernel_eqA_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -437,7 +437,7 @@ SUBROUTINE bountt
                             ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
 
             call ops_par_loop(bountt_kernel_eqB_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ),  &
                             ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
@@ -458,7 +458,7 @@ SUBROUTINE bountt
                 rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
                 call ops_par_loop(bountt_kernel_eqF_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC),  &
-                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yerr(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_READ), &
@@ -500,10 +500,10 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
             call ops_par_loop(bountt_kernel_eqC_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -524,7 +524,7 @@ SUBROUTINE bountt
             DO ispec = 1,nspec
                 rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
                 call ops_par_loop(bountt_kernel_eqE_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yerr(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_stryxr(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
@@ -548,9 +548,9 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
             call ops_par_loop(bountt_kernel_eqA_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -592,7 +592,7 @@ SUBROUTINE bountt
 
                 call ops_par_loop(boundt_kernel_eqE_xdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_RW),  &
+                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_INC),  &
                                 ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(ntint, nspcmx, "integer(kind=4)", OPS_READ), &
                                 ops_arg_gbl(ipower, 1, "integer(kind=4)", OPS_READ), &
@@ -602,9 +602,9 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
             call ops_par_loop(bountt_kernel_eqA_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -617,7 +617,7 @@ SUBROUTINE bountt
                             ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
 
             call ops_par_loop(bountt_kernel_eqB_xdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ),  &
                             ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
@@ -721,7 +721,7 @@ SUBROUTINE bountt
 
                 call ops_par_loop(boundt_kernel_eqE_ydir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_RW),  &
+                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_INC),  &
                                 ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(ntint, nspcmx, "integer(kind=4)", OPS_READ), &
                                 ops_arg_gbl(ipower, 1, "integer(kind=4)", OPS_READ), &
@@ -731,9 +731,9 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [1,nxglbl,1,1,1,nzglbl]
             call ops_par_loop(bountt_kernel_eqA_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -746,7 +746,7 @@ SUBROUTINE bountt
                             ops_arg_dat(d_strwyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
 
             call ops_par_loop(bountt_kernel_eqB_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ),  &
                             ops_arg_dat(d_struyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
@@ -767,7 +767,7 @@ SUBROUTINE bountt
                 rangexyz = [1,nxglbl,1,1,1,nzglbl]
                 call ops_par_loop(bountt_kernel_eqF_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC),  &
-                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yerr(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_READ), &
@@ -809,10 +809,10 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [1,nxglbl,1,1,1,nzglbl]
             call ops_par_loop(bountt_kernel_eqC_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -833,7 +833,7 @@ SUBROUTINE bountt
             DO ispec = 1,nspec
                 rangexyz = [1,nxglbl,1,1,1,nzglbl]
                 call ops_par_loop(bountt_kernel_eqE_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yerr(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_stryyl(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
@@ -856,9 +856,9 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [1,nxglbl,1,1,1,nzglbl]
             call ops_par_loop(bountt_kernel_eqA_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -899,7 +899,7 @@ SUBROUTINE bountt
 
                 call ops_par_loop(boundt_kernel_eqE_ydir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_RW),  &
+                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_INC),  &
                                 ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(ntint, nspcmx, "integer(kind=4)", OPS_READ), &
                                 ops_arg_gbl(ipower, 1, "integer(kind=4)", OPS_READ), &
@@ -909,9 +909,9 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [1,nxglbl,1,1,1,nzglbl]
             call ops_par_loop(bountt_kernel_eqA_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -924,7 +924,7 @@ SUBROUTINE bountt
                             ops_arg_dat(d_strwyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
 
              call ops_par_loop(bountt_kernel_eqB_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ),  &
                             ops_arg_dat(d_struyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
@@ -1029,7 +1029,7 @@ SUBROUTINE bountt
 
                 call ops_par_loop(boundt_kernel_eqE_ydir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_RW),  &
+                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_INC),  &
                                 ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(ntint, nspcmx, "integer(kind=4)", OPS_READ), &
                                 ops_arg_gbl(ipower, 1, "integer(kind=4)", OPS_READ), &
@@ -1039,9 +1039,9 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
             call ops_par_loop(bountt_kernel_eqA_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -1054,7 +1054,7 @@ SUBROUTINE bountt
                             ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
 
              call ops_par_loop(bountt_kernel_eqB_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ),  &
                             ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
@@ -1075,7 +1075,7 @@ SUBROUTINE bountt
                 rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
                 call ops_par_loop(bountt_kernel_eqF_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC),  &
-                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yerr(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_READ), &
@@ -1117,10 +1117,10 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
             call ops_par_loop(bountt_kernel_eqC_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -1141,7 +1141,7 @@ SUBROUTINE bountt
             DO ispec = 1,nspec
                 rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
                 call ops_par_loop(bountt_kernel_eqE_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yerr(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_stryyr(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
@@ -1165,9 +1165,9 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
             call ops_par_loop(bountt_kernel_eqA_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -1209,7 +1209,7 @@ SUBROUTINE bountt
 
                 call ops_par_loop(boundt_kernel_eqE_ydir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_RW),  &
+                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_INC),  &
                                 ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(ntint, nspcmx, "integer(kind=4)", OPS_READ), &
                                 ops_arg_gbl(ipower, 1, "integer(kind=4)", OPS_READ), &
@@ -1219,9 +1219,9 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
             call ops_par_loop(bountt_kernel_eqA_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -1234,7 +1234,7 @@ SUBROUTINE bountt
                             ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
 
              call ops_par_loop(bountt_kernel_eqB_ydir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ),  &
                             ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
@@ -1338,7 +1338,7 @@ SUBROUTINE bountt
 
                 call ops_par_loop(boundt_kernel_eqE_zdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_strtzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_RW),  &
+                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_INC),  &
                                 ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(ntint, nspcmx, "integer(kind=4)", OPS_READ), &
                                 ops_arg_gbl(ipower, 1, "integer(kind=4)", OPS_READ), &
@@ -1348,9 +1348,9 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [1,nxglbl,1,nyglbl,1,1]
             call ops_par_loop(bountt_kernel_eqA_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -1363,7 +1363,7 @@ SUBROUTINE bountt
                             ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
 
              call ops_par_loop(bountt_kernel_eqB_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ),  &
                             ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
@@ -1384,7 +1384,7 @@ SUBROUTINE bountt
                 rangexyz = [1,nxglbl,1,nyglbl,1,1]
                 call ops_par_loop(bountt_kernel_eqF_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC),  &
-                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yerr(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_READ), &
@@ -1426,10 +1426,10 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [1,nxglbl,1,nyglbl,1,1]
             call ops_par_loop(bountt_kernel_eqC_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -1450,7 +1450,7 @@ SUBROUTINE bountt
             DO ispec = 1,nspec
                 rangexyz = [1,nxglbl,1,nyglbl,1,1]
                 call ops_par_loop(bountt_kernel_eqE_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yerr(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_stryzl(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
@@ -1474,9 +1474,9 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [1,nxglbl,1,nyglbl,1,1]
             call ops_par_loop(bountt_kernel_eqA_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -1518,7 +1518,7 @@ SUBROUTINE bountt
 
                 call ops_par_loop(boundt_kernel_eqE_zdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_strtzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_RW),  &
+                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_INC),  &
                                 ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(ntint, nspcmx, "integer(kind=4)", OPS_READ), &
                                 ops_arg_gbl(ipower, 1, "integer(kind=4)", OPS_READ), &
@@ -1528,9 +1528,9 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [1,nxglbl,1,nyglbl,1,1]
             call ops_par_loop(bountt_kernel_eqA_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -1543,7 +1543,7 @@ SUBROUTINE bountt
                             ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
 
             call ops_par_loop(bountt_kernel_eqB_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ),  &
                             ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
@@ -1647,7 +1647,7 @@ SUBROUTINE bountt
 
                 call ops_par_loop(boundt_kernel_eqE_zdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_RW),  &
+                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_INC),  &
                                 ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(ntint, nspcmx, "integer(kind=4)", OPS_READ), &
                                 ops_arg_gbl(ipower, 1, "integer(kind=4)", OPS_READ), &
@@ -1657,9 +1657,9 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
             call ops_par_loop(bountt_kernel_eqA_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -1672,7 +1672,7 @@ SUBROUTINE bountt
                             ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
 
             call ops_par_loop(bountt_kernel_eqB_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ),  &
                             ops_arg_dat(d_struzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_strvzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
@@ -1693,7 +1693,7 @@ SUBROUTINE bountt
                 rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
                 call ops_par_loop(bountt_kernel_eqF_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC),  &
-                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yerr(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_READ), &
@@ -1735,10 +1735,10 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
             call ops_par_loop(bountt_kernel_eqC_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -1759,7 +1759,7 @@ SUBROUTINE bountt
             DO ispec = 1,nspec
                 rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
                 call ops_par_loop(bountt_kernel_eqE_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_yerr(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                                 ops_arg_dat(d_stryzr(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
@@ -1783,9 +1783,9 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
             call ops_par_loop(bountt_kernel_eqA_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -1827,7 +1827,7 @@ SUBROUTINE bountt
 
                 call ops_par_loop(boundt_kernel_eqE_zdir, "SET TEMPERATURE INTERVAL INDEX", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_RW),  &
+                                ops_arg_dat(d_itndex(iindex), 1, s3d_000, "integer(kind=4)", OPS_INC),  &
                                 ops_arg_gbl(tinthi, ntinmx*nspcmx, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(ntint, nspcmx, "integer(kind=4)", OPS_READ), &
                                 ops_arg_gbl(ipower, 1, "integer(kind=4)", OPS_READ), &
@@ -1837,9 +1837,9 @@ SUBROUTINE bountt
 !           CONSERVATIVE VARIABLES
             rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
             call ops_par_loop(bountt_kernel_eqA_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
-                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
@@ -1852,7 +1852,7 @@ SUBROUTINE bountt
                             ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
 
             call ops_par_loop(bountt_kernel_eqB_zdir, "CONSERVATIVE VARIABLES", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_RW),  &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE),  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ),  &
                             ops_arg_dat(d_struzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_strvzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &

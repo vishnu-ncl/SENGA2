@@ -113,7 +113,7 @@ SUBROUTINE bounds
 !       GAMMA-1, 1/(GAMMA-1)
         rangexyz = [1,1,1,nyglbl,1,nzglbl]
         call ops_par_loop(bounds_kernel_eqB_xdir, "REDUCED INTERNAL ENERGY", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_gam1xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW),  &
+                        ops_arg_dat(d_gam1xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE),  &
                         ops_arg_dat(d_strexl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_INC),  &
                         ops_arg_dat(d_ovgmxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE),  &
                         ops_arg_dat(d_strgxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
@@ -692,7 +692,7 @@ SUBROUTINE bounds
 !       GAMMA-1, 1/(GAMMA-1)
         rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(bounds_kernel_eqB_xdir, "REDUCED INTERNAL ENERGY", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_gam1xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW),  &
+                        ops_arg_dat(d_gam1xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE),  &
                         ops_arg_dat(d_strexr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_INC),  &
                         ops_arg_dat(d_ovgmxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE),  &
                         ops_arg_dat(d_strgxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
@@ -1272,7 +1272,7 @@ SUBROUTINE bounds
 !       GAMMA-1, 1/(GAMMA-1)
         rangexyz = [1,nxglbl,1,1,1,nzglbl]
         call ops_par_loop(bounds_kernel_eqB_ydir, "REDUCED INTERNAL ENERGY", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_gam1yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_RW),  &
+                        ops_arg_dat(d_gam1yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE),  &
                         ops_arg_dat(d_streyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_INC),  &
                         ops_arg_dat(d_ovgmyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE),  &
                         ops_arg_dat(d_strgyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
@@ -1852,7 +1852,7 @@ SUBROUTINE bounds
 !       GAMMA-1, 1/(GAMMA-1)
         rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
         call ops_par_loop(bounds_kernel_eqB_ydir, "REDUCED INTERNAL ENERGY", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_gam1yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_RW),  &
+                        ops_arg_dat(d_gam1yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE),  &
                         ops_arg_dat(d_streyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_INC),  &
                         ops_arg_dat(d_ovgmyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE),  &
                         ops_arg_dat(d_strgyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
@@ -2432,7 +2432,7 @@ SUBROUTINE bounds
 !       GAMMA-1, 1/(GAMMA-1)
         rangexyz = [1,nxglbl,1,nyglbl,1,1]
         call ops_par_loop(bounds_kernel_eqB_zdir, "REDUCED INTERNAL ENERGY", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_gam1zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_RW),  &
+                        ops_arg_dat(d_gam1zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE),  &
                         ops_arg_dat(d_strezl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_INC),  &
                         ops_arg_dat(d_ovgmzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE),  &
                         ops_arg_dat(d_strgzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
@@ -3011,7 +3011,7 @@ SUBROUTINE bounds
 !       GAMMA-1, 1/(GAMMA-1)
         rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
         call ops_par_loop(bounds_kernel_eqB_zdir, "REDUCED INTERNAL ENERGY", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_gam1zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_RW),  &
+                        ops_arg_dat(d_gam1zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE),  &
                         ops_arg_dat(d_strezr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_INC),  &
                         ops_arg_dat(d_ovgmzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE),  &
                         ops_arg_dat(d_strgzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
