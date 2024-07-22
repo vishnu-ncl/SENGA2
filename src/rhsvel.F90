@@ -55,18 +55,26 @@ SUBROUTINE rhsvel
 !   U,V,W HELD IN U,V,WTMP THROUGHOUT THIS ROUTINE
 !   U,V,W ARE PARALLEL
     rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
-    call ops_par_loop(maths_kernel_eqU, "A = B/C", senga_grid, 3, rangexyz,  &
+!    call ops_par_loop(maths_kernel_eqU, "A = B/C", senga_grid, 3, rangexyz,  &
+!                    ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                    ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                    ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+!    call ops_par_loop(maths_kernel_eqU, "A = B/C", senga_grid, 3, rangexyz,  &
+!                    ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                    ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+!    call ops_par_loop(maths_kernel_eqU, "A = B/C", senga_grid, 3, rangexyz,  &
+!                    ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                    ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                    ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ))
+    call ops_par_loop(maths_kernel_eqU_fused, "A = B/C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ))
-
-    call ops_par_loop(maths_kernel_eqU, "A = B/C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ))
-
-    call ops_par_loop(maths_kernel_eqU, "A = B/C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_wtmp, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ))
 
