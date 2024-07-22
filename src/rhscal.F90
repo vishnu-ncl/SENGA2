@@ -487,62 +487,70 @@ SUBROUTINE rhscal
 !   THERMAL CONDUCTIVITY
 
     IF(flmavt) THEN
-!        rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
-!        call ops_par_loop(maths_kernel_eqBC, "THERMAL CONDUCTIVITY - part 1 - RHSCAL 437", senga_grid, 3, rangexyz, &
-!                        ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-!                        ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-!                        ops_arg_gbl(tdifgb, 1, "real(kind=8)", OPS_READ))
 
-!        call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 442", senga_grid, 3, rangexyz, &
-!                        ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_WRITE))
-!        call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 444", senga_grid, 3, rangexyz, &
-!                        ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_WRITE))
-!        call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 446", senga_grid, 3, rangexyz, &
-!                        ops_arg_dat(d_combo3, 1, s3d_000, "real(kind=8)", OPS_WRITE))
-
-!       CONDUCTIVITY FOR EACH SPECIES
-!        DO ispec = 1, nspec
-!            call ops_par_loop(maths_kernel_eqBD, "THERMAL CONDUCTIVITY - part 2 - RHSCAL 451", senga_grid, 3, rangexyz, &
-!                            ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_RW), &
-!                            ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_RW), &
-!                            ops_arg_dat(d_combo3, 1, s3d_000, "real(kind=8)", OPS_RW), &
-!                            ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-!                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
-!                            ops_arg_gbl(condco, nccfmx*nspcmx, "real(kind=8)", OPS_READ), &
-!                            ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
-!                            ops_arg_gbl(ncocon, 1, "integer(kind=4)", OPS_READ), &
-!                            ops_arg_gbl(ncocm1, 1, "integer(kind=4)", OPS_READ), &
-!                            ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
-!        END DO
-
-!        call ops_par_loop(maths_kernel_eqBE, "THERMAL CONDUCTIVITY - part 3 - RHSCAL 464", senga_grid, 3, rangexyz, &
-!                        ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_RW), &
-!                        ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_RW), &
-!                        ops_arg_dat(d_combo3, 1, s3d_000, "real(kind=8)", OPS_RW), &
-!                        ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-!                        ops_arg_dat(d_wmomix, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-!                        ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ))
+!#if defined(OPS_LAZY) || defined(OPS_WITH_CUDAFOR) || defined(OPS_WITH_OMPOFFLOADFOR)
 
         rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
-        DO jspec = 1, nspec
-            call ops_par_loop(copy_kernel_sdim_to_mdim, "A_multidim(ispec) = B", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_yrhs(jspec), 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_gbl(jspec, 1, "integer(kind=4)", OPS_READ))
+        call ops_par_loop(maths_kernel_eqBC, "THERMAL CONDUCTIVITY - part 1 - RHSCAL 437", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_gbl(tdifgb, 1, "real(kind=8)", OPS_READ))
+
+        call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 442", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_WRITE))
+        call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 444", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_WRITE))
+        call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 446", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_combo3, 1, s3d_000, "real(kind=8)", OPS_WRITE))
+
+!       CONDUCTIVITY FOR EACH SPECIES
+        DO ispec = 1, nspec
+            call ops_par_loop(maths_kernel_eqBD, "THERMAL CONDUCTIVITY - part 2 - RHSCAL 451", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_combo3, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(condco, nccfmx*nspcmx, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ncocon, 1, "integer(kind=4)", OPS_READ), &
+                            ops_arg_gbl(ncocm1, 1, "integer(kind=4)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
         END DO
 
-        call ops_par_loop(maths_kernel_eqBCDE, "THERMAL CONDUCTIVITY - RHSCAL 527", senga_grid, 3, rangexyz, &
-                        ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+        call ops_par_loop(maths_kernel_eqBE, "THERMAL CONDUCTIVITY - part 3 - RHSCAL 464", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                        ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                        ops_arg_dat(d_combo3, 1, s3d_000, "real(kind=8)", OPS_RW), &
                         ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_wmomix, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                        ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                        ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_READ), &
-                        ops_arg_gbl(condco, nccfmx*nspcmx, "real(kind=8)", OPS_READ), &
-                        ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
-                        ops_arg_gbl(tdifgb, 1, "real(kind=8)", OPS_READ), &
-                        ops_arg_gbl(ncocon, 1, "integer(kind=4)", OPS_READ), &
-                        ops_arg_gbl(ncocm1, 1, "integer(kind=4)", OPS_READ))
+                        ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+!#else
+!   Ashutosh - 22 July 24, observed precision difference when using fused equation, need to debug
+
+!        rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
+!        DO jspec = 1, nspec
+!            call ops_par_loop(copy_kernel_sdim_to_mdim, "A_multidim(ispec) = B", senga_grid, 3, rangexyz,  &
+!                            ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                            ops_arg_dat(d_yrhs(jspec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                            ops_arg_gbl(jspec, 1, "integer(kind=4)", OPS_READ))
+!        END DO
+
+!        call ops_par_loop(maths_kernel_eqBCDE, "THERMAL CONDUCTIVITY - RHSCAL 527", senga_grid, 3, rangexyz, &
+!                        ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                        ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                        ops_arg_dat(d_wmomix, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                        ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                        ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                        ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_READ), &
+!                        ops_arg_gbl(condco, nccfmx*nspcmx, "real(kind=8)", OPS_READ), &
+!                        ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
+!                        ops_arg_gbl(tdifgb, 1, "real(kind=8)", OPS_READ), &
+!                        ops_arg_gbl(ncocon, 1, "integer(kind=4)", OPS_READ), &
+!                        ops_arg_gbl(ncocm1, 1, "integer(kind=4)", OPS_READ))
+
+!#endif
 
     END IF
 
@@ -1146,44 +1154,47 @@ SUBROUTINE rhscal
 
 !           MASS DIFFUSIVITY FOR EACH SPECIES
 !           RELATIVE TO CURRENT SPECIES
-!            rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
-!            call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 1034", senga_grid, 3, rangexyz, &
-!                            ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_WRITE))
-!            call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
-!                            ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_WRITE))
+#if defined(OPS_LAZY) || defined(OPS_WITH_CUDAFOR) || defined(OPS_WITH_OMPOFFLOADFOR)
 
-!            DO jspec = 1, nspec
+            rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
+            call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 1034", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_WRITE))
+            call ops_par_loop(set_zero_kernel, "set_zero", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_WRITE))
+
+            DO jspec = 1, nspec
 !               COMBINATION RULE FOR MASS DIFFUSIVITY
-!                call ops_par_loop(maths_kernel_eqBF, "MASS DIFFUSIVITY FOR EACH SPECIES - part 1 - RHSCAL 1041", senga_grid, 3, rangexyz, &
-!                                ops_arg_dat(d_ctrans(jspec), 1, s3d_000, "real(kind=8)", OPS_RW), &
-!                                ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_RW), &
-!                                ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_RW), &
-!                                ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-!                                ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-!                                ops_arg_dat(d_yrhs(jspec), 1, s3d_000, "real(kind=8)", OPS_READ), &
-!                                ops_arg_gbl(diffco, ndcfmx*nspcmx*nspcmx, "real(kind=8)", OPS_READ), &
-!                                ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
-!                                ops_arg_gbl(pdifgb, 1, "real(kind=8)", OPS_READ), &
-!                                ops_arg_gbl(dfctol_ops, 1, "real(kind=8)", OPS_READ), &
-!                                ops_arg_gbl(ncodif, 1, "integer(kind=4)", OPS_READ), &
-!                                ops_arg_gbl(ncodm1, 1, "integer(kind=4)", OPS_READ), &
-!                                ops_arg_gbl(jspec, 1, "integer(kind=4)", OPS_READ), &
-!                                ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
-!            END DO
+                call ops_par_loop(maths_kernel_eqBF, "MASS DIFFUSIVITY FOR EACH SPECIES - part 1 - RHSCAL 1041", senga_grid, 3, rangexyz, &
+                                ops_arg_dat(d_ctrans(jspec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                                ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                                ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                                ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_yrhs(jspec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_gbl(diffco, ndcfmx*nspcmx*nspcmx, "real(kind=8)", OPS_READ), &
+                                ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
+                                ops_arg_gbl(pdifgb, 1, "real(kind=8)", OPS_READ), &
+                                ops_arg_gbl(dfctol_ops, 1, "real(kind=8)", OPS_READ), &
+                                ops_arg_gbl(ncodif, 1, "integer(kind=4)", OPS_READ), &
+                                ops_arg_gbl(ncodm1, 1, "integer(kind=4)", OPS_READ), &
+                                ops_arg_gbl(jspec, 1, "integer(kind=4)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+            END DO
 
-!            call ops_par_loop(maths_kernel_eqBG, "MASS DIFFUSIVITY FOR EACH SPECIES - part 2 - RHSCAL 1058", senga_grid, 3, rangexyz, &
-!                            ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_RW), &
-!                            ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_RW), &
-!                            ops_arg_dat(d_difmix, 1, s3d_000, "real(kind=8)", OPS_RW), &
-!                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-!                            ops_arg_dat(d_ctrans(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
-!                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
-!                            ops_arg_dat(d_wmomix, 1, s3d_000, "real(kind=8)", OPS_READ), &
-!                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
-!                            ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
-!                            ops_arg_gbl(dfctol_ops, 1, "real(kind=8)", OPS_READ), &
-!                            ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
-!
+            call ops_par_loop(maths_kernel_eqBG, "MASS DIFFUSIVITY FOR EACH SPECIES - part 2 - RHSCAL 1058", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_difmix, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_ctrans(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_wmomix, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(dfctol_ops, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+
+#else
 
             rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
             DO jspec = 1, nspec
@@ -1208,6 +1219,8 @@ SUBROUTINE rhscal
                             ops_arg_gbl(ncodif, 1, "integer(kind=4)", OPS_READ), &
                             ops_arg_gbl(ncodm1, 1, "integer(kind=4)", OPS_READ), &
                             ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+
+#endif
 
         END IF
 
@@ -2813,51 +2826,55 @@ SUBROUTINE rhscal
 !   STORE VISCOSITY IN DIFMIX FOR NOW
     IF(flmavt)THEN
 
-!        rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
+#if defined(OPS_LAZY) || defined(OPS_WITH_CUDAFOR) || defined(OPS_WITH_OMPOFFLOADFOR)
 
-!        DO ispec = 1, nspec
-!            call ops_par_loop(maths_kernel_eqBI, "STORE VISCOSITY IN DIFMIX - part 1 - RHSCAL 2630", senga_grid, 3, rangexyz, &
-!                            ops_arg_dat(d_ctrans(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-!                            ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-!                            ops_arg_gbl(viscco, nvcfmx*nspcmx, "real(kind=8)", OPS_READ), &
-!                            ops_arg_gbl(ncovis, 1, "integer(kind=4)", OPS_READ), &
-!                            ops_arg_gbl(ncovm1, 1, "integer(kind=4)", OPS_READ), &
-!                            ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
-!       END DO
+        rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
 
-!        call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 2639", senga_grid, 3, rangexyz, &
-!                        ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_WRITE))
+        DO ispec = 1, nspec
+            call ops_par_loop(maths_kernel_eqBI, "STORE VISCOSITY IN DIFMIX - part 1 - RHSCAL 2630", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_ctrans(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(viscco, nvcfmx*nspcmx, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ncovis, 1, "integer(kind=4)", OPS_READ), &
+                            ops_arg_gbl(ncovm1, 1, "integer(kind=4)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+       END DO
 
-!        DO ispec = 1, nspec
-!            call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 2643", senga_grid, 3, rangexyz, &
-!                            ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_WRITE))
+        call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 2639", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_WRITE))
 
-!            DO jspec = 1, nspec
-!                call ops_par_loop(maths_kernel_eqBJ, "STORE VISCOSITY IN DIFMIX - part 2 - RHSCAL 2647", senga_grid, 3, rangexyz, &
-!                                ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_RW), &
-!                                ops_arg_dat(d_ctrans(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
-!                                ops_arg_dat(d_ctrans(jspec), 1, s3d_000, "real(kind=8)", OPS_READ), &
-!                                ops_arg_dat(d_yrhs(jspec), 1, s3d_000, "real(kind=8)", OPS_READ), &
-!                                ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
-!                                ops_arg_gbl(wilko1, nspcmx*nspcmx, "real(kind=8)", OPS_READ), &
-!                                ops_arg_gbl(wilko2, nspcmx*nspcmx, "real(kind=8)", OPS_READ), &
-!                                ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ), &
-!                                ops_arg_gbl(jspec, 1, "integer(kind=4)", OPS_READ))
-!            END DO
+        DO ispec = 1, nspec
+            call ops_par_loop(set_zero_kernel, "set_zero - RHSCAL 2643", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_WRITE))
 
-!            call ops_par_loop(maths_kernel_eqBK, "STORE VISCOSITY IN DIFMIX - part 2 - RHSCAL 2659", senga_grid, 3, rangexyz, &
-!                            ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_RW), &
-!                            ops_arg_dat(d_ctrans(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
-!                            ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_READ), &
-!                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
-!                            ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
-!                            ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+            DO jspec = 1, nspec
+                call ops_par_loop(maths_kernel_eqBJ, "STORE VISCOSITY IN DIFMIX - part 2 - RHSCAL 2647", senga_grid, 3, rangexyz, &
+                                ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                                ops_arg_dat(d_ctrans(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_ctrans(jspec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_yrhs(jspec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
+                                ops_arg_gbl(wilko1, nspcmx*nspcmx, "real(kind=8)", OPS_READ), &
+                                ops_arg_gbl(wilko2, nspcmx*nspcmx, "real(kind=8)", OPS_READ), &
+                                ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ), &
+                                ops_arg_gbl(jspec, 1, "integer(kind=4)", OPS_READ))
+            END DO
 
-!        END DO
+            call ops_par_loop(maths_kernel_eqBK, "STORE VISCOSITY IN DIFMIX - part 2 - RHSCAL 2659", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_ctrans(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_combo2, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
 
-!        call ops_par_loop(copy_kernel, "copy - RHSCAL 2669", senga_grid, 3, rangexyz, &
-!                        ops_arg_dat(d_difmix, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-!                        ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_READ))
+        END DO
+
+        call ops_par_loop(copy_kernel, "copy - RHSCAL 2669", senga_grid, 3, rangexyz, &
+                        ops_arg_dat(d_difmix, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_combo1, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+#else
 
         rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
         DO jspec = 1, nspec
@@ -2877,6 +2894,8 @@ SUBROUTINE rhscal
                         ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
                         ops_arg_gbl(ncovis, 1, "integer(kind=4)", OPS_READ), &
                         ops_arg_gbl(ncovm1, 1, "integer(kind=4)", OPS_READ))
+
+#endif
 
     END IF
 
