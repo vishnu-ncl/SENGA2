@@ -375,3 +375,16 @@ SUBROUTINE boundt_kernel_eqG_zdir(erhs,yrhs,itndex,strtz,amasch,rgspec,ncpoly,nc
                       + (fornow-rgspec(ispec)*strtz(OPS_ACC4(0,0,0)))*yrhs(OPS_ACC2(0,0,0))
 
 END SUBROUTINE boundt_kernel_eqG_zdir
+
+SUBROUTINE boundt_kernel_eqH_xyz(urhs,vrhs,wrhs,erhs,drhs)
+
+    real(kind=8), dimension(1) :: urhs,vrhs,wrhs,erhs
+    real(kind=8), dimension(1), intent(in) :: drhs
+
+    urhs(OPS_ACC1(0,0,0)) = 0.0_8
+    vrhs(OPS_ACC2(0,0,0)) = 0.0_8
+    wrhs(OPS_ACC3(0,0,0)) = 0.0_8
+    erhs(OPS_ACC4(0,0,0)) = 0.0_8
+    erhs(OPS_ACC4(0,0,0)) = drhs(OPS_ACC5(0,0,0))*erhs(OPS_ACC4(0,0,0))
+
+END SUBROUTINE boundt_kernel_eqH_xyz 

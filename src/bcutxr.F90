@@ -44,6 +44,7 @@ SUBROUTINE bcutxr
     integer(kind=4) :: jc,kc
     integer(kind=4) :: rangexyz(6)
     real(kind=8) :: init_val1, init_val2
+    real(kind=8) :: rxrprm_1
 
 !   BEGIN
 !   =====
@@ -59,15 +60,16 @@ SUBROUTINE bcutxr
 !   CONSTANT U-VELOCITY
 !   PARAMETER I1=1, R1=U-VELOCITY
     IF(nxrprm(1) == 1) THEN
+        rxrprm_1 = rxrprm(1)
         rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
-        call ops_par_loop(bcut_kernel_xdir_const_uvel, "bcut_kernel_xdir_const_uvel", senga_grid, 3, rangexyz,  &
+        call ops_par_loop(bcut_kernel_xdir_eqF, "bcut_kernel_xdir_eqF", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE),  &
                         ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE),  &
                         ops_arg_dat(d_dudtxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_dvdtxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE),  &
                         ops_arg_dat(d_dwdtxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_gbl(rxrprm, nbcprr, "real(kind=8)", OPS_READ))
+                        ops_arg_gbl(rxrprm_1, 1, "real(kind=8)", OPS_READ))
 
     END IF
 
@@ -82,7 +84,7 @@ SUBROUTINE bcutxr
         init_val2 = fornow*rxrprm(1)*COS(argmnt)
 
         rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
-        call ops_par_loop(bcut_kernel_xdir_sinusoidal_uvel, "bcut_kernel_xdir_sinusoidal_uvel", senga_grid, 3, rangexyz,  &
+        call ops_par_loop(bcut_kernel_xdir_eqG, "bcut_kernel_xdir_eqG", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE),  &
                         ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE),  &

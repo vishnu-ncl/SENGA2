@@ -17,13 +17,13 @@ PROGRAM create
     implicit none
 
 !   Declare paramaters
-    integer(kind=4), parameter :: nxglbl=504, nyglbl=252, nzglbl=252
+    integer(kind=4), parameter :: nxglbl=1152, nyglbl=288, nzglbl=288
     integer(kind=4), parameter :: nspcmx=9
     integer(kind=4) :: nxdmax,nydmax,nzdmax,ndspec,nsize
     integer(kind=4) :: iproc,ic,jc,kc,itime,idflag,ispec,index1d
     integer(kind=4), parameter :: ncdmpi=1
     integer(kind=4), parameter :: ncdmpo=2
-    integer(kind=4), parameter :: ntdump=1000
+    integer(kind=4), parameter :: ntdump=40000
     integer(kind=4) :: dtime
 
     real(kind=8) :: etime,tstep,errold,errldr    
@@ -132,7 +132,7 @@ PROGRAM create
                     ops_arg_dat(d_temp, 1, s3d_000, "real(kind=8)", OPS_WRITE))
 
 !   Read the last dump file
-    fndmpi = 'h2flame_3D_timestep1770000.dat'
+    fndmpi = 'h2flame_1152X288X288_timestep440000.dat'
     OPEN(UNIT=ncdmpi,FILE=trim(fndmpi),STATUS='OLD',FORM='UNFORMATTED')
     READ(ncdmpi)nxdmax,nydmax,nzdmax,ndspec, drun,urun,vrun,wrun,erun,yrun, &
                etime,tstep,errold,errldr
@@ -196,7 +196,7 @@ PROGRAM create
     END DO
 
 !   Write OPS_DATS to HDF5 file
-    itime = 1770000
+    itime = 440000
     dtime=INT(itime/ntdump)
     WRITE(citime,'(I8.8)') dtime
     fname = 'timestep'//citime//pnxhdf

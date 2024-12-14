@@ -675,213 +675,185 @@ SUBROUTINE bounds_kernel_eqL_zl(bcl1zl,bcl2zl,bcl3zl,bcl4zl,bcl5zl,strdzl,acouzl
 
 END SUBROUTINE bounds_kernel_eqL_zl
 
-SUBROUTINE bounds_kernel_eqM_xl(bcl1xl,bcl3xl,bcl4xl,bcl5xl,strdxl,acouxl,struxl,dudtxl,dvdtxl,dwdtxl)
-
-    real(kind=8), dimension(1) :: bcl1xl,bcl3xl,bcl4xl,bcl5xl
-    real(kind=8), dimension(1), intent(in) :: strdxl,acouxl,struxl,dudtxl,dvdtxl,dwdtxl
-    real(kind=8) :: fornow
-
-!   OLD VALUE OF L's
-    fornow = strdxl(OPS_ACC5(0,0,0))*acouxl(OPS_ACC6(0,0,0))*bcl1xl(OPS_ACC1(0,0,0))
-    bcl1xl(OPS_ACC1(0,0,0)) = 0.5_8*(struxl(OPS_ACC7(0,0,0))-acouxl(OPS_ACC6(0,0,0)))  &
-            *(bcl5xl(OPS_ACC4(0,0,0))-fornow)
-    bcl3xl(OPS_ACC2(0,0,0)) = struxl(OPS_ACC7(0,0,0))*bcl3xl(OPS_ACC2(0,0,0))
-    bcl4xl(OPS_ACC3(0,0,0)) = struxl(OPS_ACC7(0,0,0))*bcl4xl(OPS_ACC3(0,0,0))
-    bcl5xl(OPS_ACC4(0,0,0)) = 0.5_8*(struxl(OPS_ACC7(0,0,0))+acouxl(OPS_ACC6(0,0,0)))  &
-            *(bcl5xl(OPS_ACC4(0,0,0))+fornow)
-
-!   SUBTRACT FROM NEW VALUE OF L's
-!   L1X,L2X UNCHANGED
-    bcl3xl(OPS_ACC2(0,0,0)) = -dvdtxl(OPS_ACC9(0,0,0)) - bcl3xl(OPS_ACC2(0,0,0))
-    bcl4xl(OPS_ACC3(0,0,0)) = -dwdtxl(OPS_ACC10(0,0,0)) - bcl4xl(OPS_ACC3(0,0,0))
-    bcl5xl(OPS_ACC4(0,0,0)) = bcl1xl(OPS_ACC1(0,0,0))  &
-            - strdxl(OPS_ACC5(0,0,0))*acouxl(OPS_ACC6(0,0,0))*dudtxl(OPS_ACC8(0,0,0)) - bcl5xl(OPS_ACC4(0,0,0))
-
-END SUBROUTINE bounds_kernel_eqM_xl
-
-SUBROUTINE bounds_kernel_eqM_yl(bcl1yl,bcl3yl,bcl4yl,bcl5yl,strdyl,acouyl,strvyl,dudtyl,dvdtyl,dwdtyl)
-
-    real(kind=8), dimension(1) :: bcl1yl,bcl3yl,bcl4yl,bcl5yl
-    real(kind=8), dimension(1), intent(in) :: strdyl,acouyl,strvyl,dudtyl,dvdtyl,dwdtyl
-    real(kind=8) :: fornow
-
-!   OLD VALUE OF L's
-    fornow = strdyl(OPS_ACC5(0,0,0))*acouyl(OPS_ACC6(0,0,0))*bcl1yl(OPS_ACC1(0,0,0))
-    bcl1yl(OPS_ACC1(0,0,0)) = 0.5_8*(strvyl(OPS_ACC7(0,0,0))-acouyl(OPS_ACC6(0,0,0)))  &
-            *(bcl5yl(OPS_ACC4(0,0,0))-fornow)
-    bcl3yl(OPS_ACC2(0,0,0)) = strvyl(OPS_ACC7(0,0,0))*bcl3yl(OPS_ACC2(0,0,0))
-    bcl4yl(OPS_ACC3(0,0,0)) = strvyl(OPS_ACC7(0,0,0))*bcl4yl(OPS_ACC3(0,0,0))
-    bcl5yl(OPS_ACC4(0,0,0)) = 0.5_8*(strvyl(OPS_ACC7(0,0,0))+acouyl(OPS_ACC6(0,0,0)))  &
-            *(bcl5yl(OPS_ACC4(0,0,0))+fornow)
-
-!   SUBTRACT FROM NEW VALUE OF L's
-!   L1Y,L2Y UNCHANGED
-    bcl3yl(OPS_ACC2(0,0,0)) = -dudtyl(OPS_ACC9(0,0,0)) - bcl3yl(OPS_ACC2(0,0,0))
-    bcl4yl(OPS_ACC3(0,0,0)) = -dwdtyl(OPS_ACC10(0,0,0)) - bcl4yl(OPS_ACC3(0,0,0))
-    bcl5yl(OPS_ACC4(0,0,0)) = bcl1yl(OPS_ACC1(0,0,0))  &
-            - strdyl(OPS_ACC5(0,0,0))*acouyl(OPS_ACC6(0,0,0))*dvdtyl(OPS_ACC8(0,0,0)) - bcl5yl(OPS_ACC4(0,0,0))
-
-END SUBROUTINE bounds_kernel_eqM_yl
-
-SUBROUTINE bounds_kernel_eqM_zl(bcl1zl,bcl3zl,bcl4zl,bcl5zl,strdzl,acouzl,strwzl,dudtzl,dvdtzl,dwdtzl)
-
-    real(kind=8), dimension(1) :: bcl1zl,bcl3zl,bcl4zl,bcl5zl
-    real(kind=8), dimension(1), intent(in) :: strdzl,acouzl,strwzl,dudtzl,dvdtzl,dwdtzl
-    real(kind=8) :: fornow
-
-!   OLD VALUE OF L's
-    fornow = strdzl(OPS_ACC5(0,0,0))*acouzl(OPS_ACC6(0,0,0))*bcl1zl(OPS_ACC1(0,0,0))
-    bcl1zl(OPS_ACC1(0,0,0)) = 0.5_8*(strwzl(OPS_ACC7(0,0,0))-acouzl(OPS_ACC6(0,0,0)))  &
-            *(bcl5zl(OPS_ACC4(0,0,0))-fornow)
-    bcl3zl(OPS_ACC2(0,0,0)) = strwzl(OPS_ACC7(0,0,0))*bcl3zl(OPS_ACC2(0,0,0))
-    bcl4zl(OPS_ACC3(0,0,0)) = strwzl(OPS_ACC7(0,0,0))*bcl4zl(OPS_ACC3(0,0,0))
-    bcl5zl(OPS_ACC4(0,0,0)) = 0.5_8*(strwzl(OPS_ACC7(0,0,0))+acouzl(OPS_ACC6(0,0,0)))  &
-            *(bcl5zl(OPS_ACC4(0,0,0))+fornow)
-
-!   SUBTRACT FROM NEW VALUE OF L's
-!   L1Z,L2Z UNCHANGED
-    bcl3zl(OPS_ACC2(0,0,0)) = -dudtzl(OPS_ACC9(0,0,0)) - bcl3zl(OPS_ACC2(0,0,0))
-    bcl4zl(OPS_ACC3(0,0,0)) = -dvdtzl(OPS_ACC10(0,0,0)) - bcl4zl(OPS_ACC3(0,0,0))
-    bcl5zl(OPS_ACC4(0,0,0)) = bcl1zl(OPS_ACC1(0,0,0))  &
-            - strdzl(OPS_ACC5(0,0,0))*acouzl(OPS_ACC6(0,0,0))*dwdtzl(OPS_ACC8(0,0,0)) - bcl5zl(OPS_ACC4(0,0,0))
-
-END SUBROUTINE bounds_kernel_eqM_zl
-
-SUBROUTINE bounds_kernel_eqN_xl(bcl1xl,bcl2xl,bcl3xl,bcl4xl,bcl5xl,strdxl,acouxl,struxl,gam1xl,ova2xl,dtdtxl,strtxl,sorpxl,strpxl,dudtxl,dvdtxl,dwdtxl)
+SUBROUTINE bounds_kernel_eqM_xl(bcl1xl,bcl2xl,bcl3xl,bcl4xl,bcl5xl,strdxl,acouxl,struxl,ova2xl)
 
     real(kind=8), dimension(1) :: bcl1xl,bcl2xl,bcl3xl,bcl4xl,bcl5xl
-    real(kind=8), dimension(1), intent(in) :: strdxl,acouxl,struxl,gam1xl,ova2xl,dtdtxl,strtxl,sorpxl,strpxl,dudtxl,dvdtxl,dwdtxl
+    real(kind=8), dimension(1), intent(in) :: strdxl,acouxl,struxl,ova2xl
     real(kind=8) :: fornow
 
 !   OLD VALUE OF L's
     fornow = strdxl(OPS_ACC6(0,0,0))*acouxl(OPS_ACC7(0,0,0))*bcl1xl(OPS_ACC1(0,0,0))
     bcl1xl(OPS_ACC1(0,0,0)) = 0.5_8*(struxl(OPS_ACC8(0,0,0))-acouxl(OPS_ACC7(0,0,0)))  &
-            *(bcl5xl(OPS_ACC5(0,0,0))-fornow)
+                            * (bcl5xl(OPS_ACC5(0,0,0))-fornow)
     bcl2xl(OPS_ACC2(0,0,0)) = struxl(OPS_ACC8(0,0,0))  &
-            *(bcl2xl(OPS_ACC2(0,0,0))-bcl5xl(OPS_ACC5(0,0,0))*ova2xl(OPS_ACC10(0,0,0)))
-    bcl3xl(OPS_ACC3(0,0,0)) = struxl(OPS_ACC8(0,0,0))*bcl3xl(OPS_ACC3(0,0,0))
-    bcl4xl(OPS_ACC4(0,0,0)) = struxl(OPS_ACC8(0,0,0))*bcl4xl(OPS_ACC4(0,0,0))
+                            * (bcl2xl(OPS_ACC2(0,0,0))-bcl5xl(OPS_ACC5(0,0,0))*ova2xl(OPS_ACC9(0,0,0)))
+    bcl3xl(OPS_ACC3(0,0,0)) = struxl(OPS_ACC8(0,0,0)) * bcl3xl(OPS_ACC3(0,0,0))
+    bcl4xl(OPS_ACC4(0,0,0)) = struxl(OPS_ACC8(0,0,0)) * bcl4xl(OPS_ACC4(0,0,0))
     bcl5xl(OPS_ACC5(0,0,0)) = 0.5_8*(struxl(OPS_ACC8(0,0,0))+acouxl(OPS_ACC7(0,0,0)))  &
-            *(bcl5xl(OPS_ACC5(0,0,0))+fornow)
+                            * (bcl5xl(OPS_ACC5(0,0,0))+fornow)
 
 !   SUBTRACT FROM NEW VALUE OF L's
 !   L1X UNCHANGED
-    bcl3xl(OPS_ACC3(0,0,0)) = -dvdtxl(OPS_ACC16(0,0,0)) - bcl3xl(OPS_ACC3(0,0,0))
-    bcl4xl(OPS_ACC4(0,0,0)) = -dwdtxl(OPS_ACC17(0,0,0)) - bcl4xl(OPS_ACC4(0,0,0))
-    bcl5xl(OPS_ACC5(0,0,0)) = bcl1xl(OPS_ACC1(0,0,0))  &
-            - strdxl(OPS_ACC6(0,0,0))*acouxl(OPS_ACC7(0,0,0))*dudtxl(OPS_ACC15(0,0,0)) - bcl5xl(OPS_ACC5(0,0,0))
-    bcl2xl(OPS_ACC2(0,0,0)) = gam1xl(OPS_ACC9(0,0,0))*ova2xl(OPS_ACC10(0,0,0))  &
-            *(bcl1xl(OPS_ACC1(0,0,0))+bcl5xl(OPS_ACC5(0,0,0)))  &
-            + strdxl(OPS_ACC6(0,0,0))*(dtdtxl(OPS_ACC11(0,0,0))/strtxl(OPS_ACC12(0,0,0))  &
-            - sorpxl(OPS_ACC13(0,0,0))/strpxl(OPS_ACC14(0,0,0))) - bcl2xl(OPS_ACC2(0,0,0))
+    bcl3xl(OPS_ACC3(0,0,0)) = 0.0_8
+    bcl4xl(OPS_ACC4(0,0,0)) = 0.0_8
+!   NC SUGGESTION: IF NOT WORKING REMOVE SECOND LINE AS WELL
+    bcl5xl(OPS_ACC5(0,0,0)) = bcl1xl(OPS_ACC1(0,0,0)) - bcl5xl(OPS_ACC5(0,0,0))
+    bcl2xl(OPS_ACC2(0,0,0)) = 0.0_8
 
-END SUBROUTINE bounds_kernel_eqN_xl
+END SUBROUTINE bounds_kernel_eqM_xl
 
-SUBROUTINE bounds_kernel_eqN_yl(bcl1yl,bcl2yl,bcl3yl,bcl4yl,bcl5yl,strdyl,acouyl,strvyl,gam1yl,ova2yl,dtdtyl,strtyl,sorpyl,strpyl,dudtyl,dvdtyl,dwdtyl)
+SUBROUTINE bounds_kernel_eqM_yl(bcl1yl,bcl2yl,bcl3yl,bcl4yl,bcl5yl,strdyl,acouyl,strvyl,ova2yl)
 
     real(kind=8), dimension(1) :: bcl1yl,bcl2yl,bcl3yl,bcl4yl,bcl5yl
-    real(kind=8), dimension(1), intent(in) :: strdyl,acouyl,strvyl,gam1yl,ova2yl,dtdtyl,strtyl,sorpyl,strpyl,dudtyl,dvdtyl,dwdtyl
+    real(kind=8), dimension(1), intent(in) :: strdyl,acouyl,strvyl,ova2yl
     real(kind=8) :: fornow
 
 !   OLD VALUE OF L's
     fornow = strdyl(OPS_ACC6(0,0,0))*acouyl(OPS_ACC7(0,0,0))*bcl1yl(OPS_ACC1(0,0,0))
     bcl1yl(OPS_ACC1(0,0,0)) = 0.5_8*(strvyl(OPS_ACC8(0,0,0))-acouyl(OPS_ACC7(0,0,0)))  &
-            *(bcl5yl(OPS_ACC5(0,0,0))-fornow)
+                            * (bcl5yl(OPS_ACC5(0,0,0))-fornow)
     bcl2yl(OPS_ACC2(0,0,0)) = strvyl(OPS_ACC8(0,0,0))  &
-            *(bcl2yl(OPS_ACC2(0,0,0))-bcl5yl(OPS_ACC5(0,0,0))*ova2yl(OPS_ACC10(0,0,0)))
-    bcl3yl(OPS_ACC3(0,0,0)) = strvyl(OPS_ACC8(0,0,0))*bcl3yl(OPS_ACC3(0,0,0))
-    bcl4yl(OPS_ACC4(0,0,0)) = strvyl(OPS_ACC8(0,0,0))*bcl4yl(OPS_ACC4(0,0,0))
+                            * (bcl2yl(OPS_ACC2(0,0,0))-bcl5yl(OPS_ACC5(0,0,0))*ova2yl(OPS_ACC9(0,0,0)))
+    bcl3yl(OPS_ACC3(0,0,0)) = strvyl(OPS_ACC8(0,0,0)) * bcl3yl(OPS_ACC3(0,0,0))
+    bcl4yl(OPS_ACC4(0,0,0)) = strvyl(OPS_ACC8(0,0,0)) * bcl4yl(OPS_ACC4(0,0,0))
     bcl5yl(OPS_ACC5(0,0,0)) = 0.5_8*(strvyl(OPS_ACC8(0,0,0))+acouyl(OPS_ACC7(0,0,0)))  &
-            *(bcl5yl(OPS_ACC5(0,0,0))+fornow)
+                            * (bcl5yl(OPS_ACC5(0,0,0))+fornow)
 
 !   SUBTRACT FROM NEW VALUE OF L's
 !   L1Y UNCHANGED
-    bcl3yl(OPS_ACC3(0,0,0)) = -dudtyl(OPS_ACC16(0,0,0)) - bcl3yl(OPS_ACC3(0,0,0))
-    bcl4yl(OPS_ACC4(0,0,0)) = -dwdtyl(OPS_ACC17(0,0,0)) - bcl4yl(OPS_ACC4(0,0,0))
-    bcl5yl(OPS_ACC5(0,0,0)) = bcl1yl(OPS_ACC1(0,0,0))  &
-            - strdyl(OPS_ACC6(0,0,0))*acouyl(OPS_ACC7(0,0,0))*dvdtyl(OPS_ACC15(0,0,0)) - bcl5yl(OPS_ACC5(0,0,0))
-    bcl2yl(OPS_ACC2(0,0,0)) = gam1yl(OPS_ACC9(0,0,0))*ova2yl(OPS_ACC10(0,0,0))  &
-            *(bcl1yl(OPS_ACC1(0,0,0))+bcl5yl(OPS_ACC5(0,0,0)))  &
-            + strdyl(OPS_ACC6(0,0,0))*(dtdtyl(OPS_ACC11(0,0,0))/strtyl(OPS_ACC12(0,0,0))  &
-            - sorpyl(OPS_ACC13(0,0,0))/strpyl(OPS_ACC14(0,0,0))) - bcl2yl(OPS_ACC2(0,0,0))
+    bcl3yl(OPS_ACC3(0,0,0)) = 0.0_8
+    bcl4yl(OPS_ACC4(0,0,0)) = 0.0_8
+    bcl5yl(OPS_ACC5(0,0,0)) = bcl1yl(OPS_ACC1(0,0,0)) - bcl5yl(OPS_ACC5(0,0,0))
+    bcl2yl(OPS_ACC2(0,0,0)) = 0.0_8
 
-END SUBROUTINE bounds_kernel_eqN_yl
+END SUBROUTINE bounds_kernel_eqM_yl
 
-SUBROUTINE bounds_kernel_eqN_zl(bcl1zl,bcl2zl,bcl3zl,bcl4zl,bcl5zl,strdzl,acouzl,strwzl,gam1zl,ova2zl,dtdtzl,strtzl,sorpzl,strpzl,dudtzl,dvdtzl,dwdtzl)
+SUBROUTINE bounds_kernel_eqM_zl(bcl1zl,bcl2zl,bcl3zl,bcl4zl,bcl5zl,strdzl,acouzl,strwzl,ova2zl)
 
     real(kind=8), dimension(1) :: bcl1zl,bcl2zl,bcl3zl,bcl4zl,bcl5zl
-    real(kind=8), dimension(1), intent(in) :: strdzl,acouzl,strwzl,gam1zl,ova2zl,dtdtzl,strtzl,sorpzl,strpzl,dudtzl,dvdtzl,dwdtzl
+    real(kind=8), dimension(1), intent(in) :: strdzl,acouzl,strwzl,ova2zl
     real(kind=8) :: fornow
 
 !   OLD VALUE OF L's
     fornow = strdzl(OPS_ACC6(0,0,0))*acouzl(OPS_ACC7(0,0,0))*bcl1zl(OPS_ACC1(0,0,0))
     bcl1zl(OPS_ACC1(0,0,0)) = 0.5_8*(strwzl(OPS_ACC8(0,0,0))-acouzl(OPS_ACC7(0,0,0)))  &
-            *(bcl5zl(OPS_ACC5(0,0,0))-fornow)
+                            * (bcl5zl(OPS_ACC5(0,0,0))-fornow)
     bcl2zl(OPS_ACC2(0,0,0)) = strwzl(OPS_ACC8(0,0,0))  &
-            *(bcl2zl(OPS_ACC2(0,0,0))-bcl5zl(OPS_ACC5(0,0,0))*ova2zl(OPS_ACC10(0,0,0)))
-    bcl3zl(OPS_ACC3(0,0,0)) = strwzl(OPS_ACC8(0,0,0))*bcl3zl(OPS_ACC3(0,0,0))
-    bcl4zl(OPS_ACC4(0,0,0)) = strwzl(OPS_ACC8(0,0,0))*bcl4zl(OPS_ACC4(0,0,0))
+                            * (bcl2zl(OPS_ACC2(0,0,0))-bcl5zl(OPS_ACC5(0,0,0))*ova2zl(OPS_ACC9(0,0,0)))
+    bcl3zl(OPS_ACC3(0,0,0)) = strwzl(OPS_ACC8(0,0,0)) * bcl3zl(OPS_ACC3(0,0,0))
+    bcl4zl(OPS_ACC4(0,0,0)) = strwzl(OPS_ACC8(0,0,0)) * bcl4zl(OPS_ACC4(0,0,0))
     bcl5zl(OPS_ACC5(0,0,0)) = 0.5_8*(strwzl(OPS_ACC8(0,0,0))+acouzl(OPS_ACC7(0,0,0)))  &
-            *(bcl5zl(OPS_ACC5(0,0,0))+fornow)
+                            * (bcl5zl(OPS_ACC5(0,0,0))+fornow)
+
+!   SUBTRACT FROM NEW VALUE OF L's
+!   L1Y UNCHANGED
+    bcl3zl(OPS_ACC3(0,0,0)) = 0.0_8
+    bcl4zl(OPS_ACC4(0,0,0)) = 0.0_8
+    bcl5zl(OPS_ACC5(0,0,0)) = bcl1zl(OPS_ACC1(0,0,0)) - bcl5zl(OPS_ACC5(0,0,0))
+    bcl2zl(OPS_ACC2(0,0,0)) = 0.0_8
+
+END SUBROUTINE bounds_kernel_eqM_zl
+
+SUBROUTINE bounds_kernel_eqN_xl(bcl1xl,bcl2xl,bcl3xl,bcl4xl,bcl5xl,strdxl,acouxl,struxl,ova2xl)
+
+    real(kind=8), dimension(1) :: bcl1xl,bcl2xl,bcl3xl,bcl4xl,bcl5xl
+    real(kind=8), dimension(1), intent(in) :: strdxl,acouxl,struxl,ova2xl
+    real(kind=8) :: fornow
+
+!   OLD VALUE OF L's
+    fornow = strdxl(OPS_ACC6(0,0,0)) * acouxl(OPS_ACC7(0,0,0)) * bcl1xl(OPS_ACC1(0,0,0))
+    bcl1xl(OPS_ACC1(0,0,0)) = 0.5_8 * (struxl(OPS_ACC8(0,0,0))-acouxl(OPS_ACC7(0,0,0)))  &
+                            * (bcl5xl(OPS_ACC5(0,0,0))-fornow)
+    bcl2xl(OPS_ACC2(0,0,0)) = struxl(OPS_ACC8(0,0,0))  &
+                            * (bcl2xl(OPS_ACC2(0,0,0))-bcl5xl(OPS_ACC5(0,0,0))*ova2xl(OPS_ACC9(0,0,0)))
+    bcl3xl(OPS_ACC3(0,0,0)) = struxl(OPS_ACC8(0,0,0)) * bcl3xl(OPS_ACC3(0,0,0))
+    bcl4xl(OPS_ACC4(0,0,0)) = struxl(OPS_ACC8(0,0,0)) * bcl4xl(OPS_ACC4(0,0,0))
+    bcl5xl(OPS_ACC5(0,0,0)) = 0.5_8 * (struxl(OPS_ACC8(0,0,0))+acouxl(OPS_ACC7(0,0,0)))  &
+                            * (bcl5xl(OPS_ACC5(0,0,0))+fornow)
+
+!   SUBTRACT FROM NEW VALUE OF L's
+!   L1X UNCHANGED
+    bcl3xl(OPS_ACC3(0,0,0)) = 0.0_8
+    bcl4xl(OPS_ACC4(0,0,0)) = 0.0_8
+!   NC SUGGESTION: IF NOT WORKING REMOVE SECOND LINE AS WELL
+    bcl5xl(OPS_ACC5(0,0,0)) = bcl1xl(OPS_ACC1(0,0,0)) - bcl5xl(OPS_ACC5(0,0,0))
+    bcl2xl(OPS_ACC2(0,0,0)) = 0.0_8
+
+END SUBROUTINE bounds_kernel_eqN_xl
+
+SUBROUTINE bounds_kernel_eqN_yl(bcl1yl,bcl2yl,bcl3yl,bcl4yl,bcl5yl,strdyl,acouyl,strvyl,ova2yl)
+
+    real(kind=8), dimension(1) :: bcl1yl,bcl2yl,bcl3yl,bcl4yl,bcl5yl
+    real(kind=8), dimension(1), intent(in) :: strdyl,acouyl,strvyl,ova2yl
+    real(kind=8) :: fornow
+
+!   OLD VALUE OF L's
+    fornow = strdyl(OPS_ACC6(0,0,0)) * acouyl(OPS_ACC7(0,0,0)) * bcl1yl(OPS_ACC1(0,0,0))
+    bcl1yl(OPS_ACC1(0,0,0)) = 0.5_8 * (strvyl(OPS_ACC8(0,0,0))-acouyl(OPS_ACC7(0,0,0)))  &
+                            * (bcl5yl(OPS_ACC5(0,0,0))-fornow)
+    bcl2yl(OPS_ACC2(0,0,0)) = strvyl(OPS_ACC8(0,0,0))  &
+                            * (bcl2yl(OPS_ACC2(0,0,0))-bcl5yl(OPS_ACC5(0,0,0))*ova2yl(OPS_ACC9(0,0,0)))
+    bcl3yl(OPS_ACC3(0,0,0)) = strvyl(OPS_ACC8(0,0,0)) * bcl3yl(OPS_ACC3(0,0,0))
+    bcl4yl(OPS_ACC4(0,0,0)) = strvyl(OPS_ACC8(0,0,0)) * bcl4yl(OPS_ACC4(0,0,0))
+    bcl5yl(OPS_ACC5(0,0,0)) = 0.5_8 * (strvyl(OPS_ACC8(0,0,0))+acouyl(OPS_ACC7(0,0,0)))  &
+                            * (bcl5yl(OPS_ACC5(0,0,0))+fornow)
+
+!   SUBTRACT FROM NEW VALUE OF L's
+!   L1Y UNCHANGED
+    bcl3yl(OPS_ACC3(0,0,0)) = 0.0_8
+    bcl4yl(OPS_ACC4(0,0,0)) = 0.0_8
+    bcl5yl(OPS_ACC5(0,0,0)) = bcl1yl(OPS_ACC1(0,0,0)) - bcl5yl(OPS_ACC5(0,0,0))
+    bcl2yl(OPS_ACC2(0,0,0)) = 0.0_8
+
+END SUBROUTINE bounds_kernel_eqN_yl
+
+SUBROUTINE bounds_kernel_eqN_zl(bcl1zl,bcl2zl,bcl3zl,bcl4zl,bcl5zl,strdzl,acouzl,strwzl,ova2zl)
+
+    real(kind=8), dimension(1) :: bcl1zl,bcl2zl,bcl3zl,bcl4zl,bcl5zl
+    real(kind=8), dimension(1), intent(in) :: strdzl,acouzl,strwzl,ova2zl
+    real(kind=8) :: fornow
+
+!   OLD VALUE OF L's
+    fornow = strdzl(OPS_ACC6(0,0,0)) * acouzl(OPS_ACC7(0,0,0)) * bcl1zl(OPS_ACC1(0,0,0))
+    bcl1zl(OPS_ACC1(0,0,0)) = 0.5_8 * (strwzl(OPS_ACC8(0,0,0))-acouzl(OPS_ACC7(0,0,0)))  &
+                            * (bcl5zl(OPS_ACC5(0,0,0))-fornow)
+    bcl2zl(OPS_ACC2(0,0,0)) = strwzl(OPS_ACC8(0,0,0))  &
+                            * (bcl2zl(OPS_ACC2(0,0,0))-bcl5zl(OPS_ACC5(0,0,0))*ova2zl(OPS_ACC9(0,0,0)))
+    bcl3zl(OPS_ACC3(0,0,0)) = strwzl(OPS_ACC8(0,0,0)) * bcl3zl(OPS_ACC3(0,0,0))
+    bcl4zl(OPS_ACC4(0,0,0)) = strwzl(OPS_ACC8(0,0,0)) * bcl4zl(OPS_ACC4(0,0,0))
+    bcl5zl(OPS_ACC5(0,0,0)) = 0.5_8 * (strwzl(OPS_ACC8(0,0,0))+acouzl(OPS_ACC7(0,0,0)))  &
+                            * (bcl5zl(OPS_ACC5(0,0,0))+fornow)
 
 !   SUBTRACT FROM NEW VALUE OF L's
 !   L1Z UNCHANGED
-    bcl3zl(OPS_ACC3(0,0,0)) = -dudtzl(OPS_ACC16(0,0,0)) - bcl3zl(OPS_ACC3(0,0,0))
-    bcl4zl(OPS_ACC4(0,0,0)) = -dvdtzl(OPS_ACC17(0,0,0)) - bcl4zl(OPS_ACC4(0,0,0))
-    bcl5zl(OPS_ACC5(0,0,0)) = bcl1zl(OPS_ACC1(0,0,0))  &
-            - strdzl(OPS_ACC6(0,0,0))*acouzl(OPS_ACC7(0,0,0))*dwdtzl(OPS_ACC15(0,0,0)) - bcl5zl(OPS_ACC5(0,0,0))
-    bcl2zl(OPS_ACC2(0,0,0)) = gam1zl(OPS_ACC9(0,0,0))*ova2zl(OPS_ACC10(0,0,0))  &
-            *(bcl1zl(OPS_ACC1(0,0,0))+bcl5zl(OPS_ACC5(0,0,0)))  &
-            + strdzl(OPS_ACC6(0,0,0))*(dtdtzl(OPS_ACC11(0,0,0))/strtzl(OPS_ACC12(0,0,0))  &
-            - sorpzl(OPS_ACC13(0,0,0))/strpzl(OPS_ACC14(0,0,0))) - bcl2zl(OPS_ACC2(0,0,0))
+    bcl3zl(OPS_ACC3(0,0,0)) = 0.0_8
+    bcl4zl(OPS_ACC4(0,0,0)) = 0.0_8
+    bcl5zl(OPS_ACC5(0,0,0)) = bcl1zl(OPS_ACC1(0,0,0)) - bcl5zl(OPS_ACC5(0,0,0))
+    bcl2zl(OPS_ACC2(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqN_zl
 
-SUBROUTINE bounds_kernel_eqO_xl(bclyxl,bcl2xl,ratexl,struxl,strdxl,strrxl,rgspec,ispec)
+SUBROUTINE bounds_kernel_eqO_xl(bclyxl)
 
-    real(kind=8), dimension(1) ::  bclyxl,bcl2xl
-    real(kind=8), dimension(1), intent(in) :: ratexl,struxl,strdxl,strrxl
-    integer(kind=4), intent(in) :: ispec
-    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
+    real(kind=8), dimension(1) ::  bclyxl
 
-!   OLD VALUE OF LYX
-    bclyxl(OPS_ACC1(0,0,0)) = struxl(OPS_ACC4(0,0,0))*bclyxl(OPS_ACC1(0,0,0))
-
-!   UPDATE L2X
-    bcl2xl(OPS_ACC2(0,0,0)) = bcl2xl(OPS_ACC2(0,0,0)) + (ratexl(OPS_ACC3(0,0,0))  &
-              - strdxl(OPS_ACC5(0,0,0))*bclyxl(OPS_ACC1(0,0,0))) *rgspec(ispec)/strrxl(OPS_ACC6(0,0,0))
+    bclyxl(OPS_ACC1(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqO_xl
 
-SUBROUTINE bounds_kernel_eqO_yl(bclyyl,bcl2yl,rateyl,strvyl,strdyl,strryl,rgspec,ispec)
+SUBROUTINE bounds_kernel_eqO_yl(bclyyl)
 
-    real(kind=8), dimension(1) ::  bclyyl,bcl2yl
-    real(kind=8), dimension(1), intent(in) :: rateyl,strvyl,strdyl,strryl
-    integer(kind=4), intent(in) :: ispec
-    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
+    real(kind=8), dimension(1) ::  bclyyl
 
-!   OLD VALUE OF LYY
-    bclyyl(OPS_ACC1(0,0,0)) = strvyl(OPS_ACC4(0,0,0))*bclyyl(OPS_ACC1(0,0,0))
-
-!   UPDATE L2Y
-    bcl2yl(OPS_ACC2(0,0,0)) = bcl2yl(OPS_ACC2(0,0,0)) + (rateyl(OPS_ACC3(0,0,0))  &
-              - strdyl(OPS_ACC5(0,0,0))*bclyyl(OPS_ACC1(0,0,0))) *rgspec(ispec)/strryl(OPS_ACC6(0,0,0))
+    bclyyl(OPS_ACC1(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqO_yl
 
-SUBROUTINE bounds_kernel_eqO_zl(bclyzl,bcl2zl,ratezl,strwzl,strdzl,strrzl,rgspec,ispec)
+SUBROUTINE bounds_kernel_eqO_zl(bclyzl)
 
-    real(kind=8), dimension(1) ::  bclyzl,bcl2zl
-    real(kind=8), dimension(1), intent(in) :: ratezl,strwzl,strdzl,strrzl
-    integer(kind=4), intent(in) :: ispec
-    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
+    real(kind=8), dimension(1) ::  bclyzl
 
-!   OLD VALUE OF LYZ
-    bclyzl(OPS_ACC1(0,0,0)) = strwzl(OPS_ACC4(0,0,0))*bclyzl(OPS_ACC1(0,0,0))
-
-!   UPDATE L2Z
-    bcl2zl(OPS_ACC2(0,0,0)) = bcl2zl(OPS_ACC2(0,0,0)) + (ratezl(OPS_ACC3(0,0,0))  &
-              - strdzl(OPS_ACC5(0,0,0))*bclyzl(OPS_ACC1(0,0,0))) *rgspec(ispec)/strrzl(OPS_ACC6(0,0,0))
+    bclyzl(OPS_ACC1(0,0,0)) = 0.0_8 
 
 END SUBROUTINE bounds_kernel_eqO_zl
 
@@ -1323,82 +1295,89 @@ SUBROUTINE bounds_kernel_eqL_zr(bcl1zr,bcl2zr,bcl3zr,bcl4zr,bcl5zr,strdzr,acouzr
 
 END SUBROUTINE bounds_kernel_eqL_zr
 
-SUBROUTINE bounds_kernel_eqM_xr(bcl1xr,bcl3xr,bcl4xr,bcl5xr,strdxr,acouxr,struxr,dudtxr,dvdtxr,dwdtxr)
+SUBROUTINE bounds_kernel_eqM_xr(bcl1xr,bcl2xr,bcl3xr,bcl4xr,bcl5xr,strdxr,acouxr,struxr,ova2xr)
 
-    real(kind=8), dimension(1) :: bcl1xr,bcl3xr,bcl4xr,bcl5xr
-    real(kind=8), dimension(1), intent(in) :: strdxr,acouxr,struxr,dudtxr,dvdtxr,dwdtxr
+    real(kind=8), dimension(1) :: bcl1xr,bcl2xr,bcl3xr,bcl4xr,bcl5xr
+    real(kind=8), dimension(1), intent(in) :: strdxr,acouxr,struxr,ova2xr
     real(kind=8) :: fornow
 
 !   OLD VALUE OF L's
-    fornow = strdxr(OPS_ACC5(0,0,0))*acouxr(OPS_ACC6(0,0,0))*bcl1xr(OPS_ACC1(0,0,0))
-    bcl1xr(OPS_ACC1(0,0,0)) = 0.5_8*(struxr(OPS_ACC7(0,0,0))-acouxr(OPS_ACC6(0,0,0)))  &
-            *(bcl5xr(OPS_ACC4(0,0,0))-fornow)
-    bcl3xr(OPS_ACC2(0,0,0)) = struxr(OPS_ACC7(0,0,0))*bcl3xr(OPS_ACC2(0,0,0))
-    bcl4xr(OPS_ACC3(0,0,0)) = struxr(OPS_ACC7(0,0,0))*bcl4xr(OPS_ACC3(0,0,0))
-    bcl5xr(OPS_ACC4(0,0,0)) = 0.5_8*(struxr(OPS_ACC7(0,0,0))+acouxr(OPS_ACC6(0,0,0)))  &
-            *(bcl5xr(OPS_ACC4(0,0,0))+fornow)
+    fornow = strdxr(OPS_ACC6(0,0,0))*acouxr(OPS_ACC7(0,0,0))*bcl1xr(OPS_ACC1(0,0,0))
+    bcl1xr(OPS_ACC1(0,0,0)) = 0.5_8*(struxr(OPS_ACC8(0,0,0))-acouxr(OPS_ACC7(0,0,0)))  &
+            *(bcl5xr(OPS_ACC5(0,0,0))-fornow)
+    bcl2xr(OPS_ACC2(0,0,0)) = struxr(OPS_ACC8(0,0,0))  &
+            *(bcl2xr(OPS_ACC2(0,0,0))-bcl5xr(OPS_ACC5(0,0,0))*ova2xr(OPS_ACC9(0,0,0)))
+    bcl3xr(OPS_ACC3(0,0,0)) = struxr(OPS_ACC8(0,0,0)) * bcl3xr(OPS_ACC3(0,0,0))
+    bcl4xr(OPS_ACC4(0,0,0)) = struxr(OPS_ACC8(0,0,0)) * bcl4xr(OPS_ACC4(0,0,0))
+    bcl5xr(OPS_ACC5(0,0,0)) = 0.5_8*(struxr(OPS_ACC8(0,0,0))+acouxr(OPS_ACC7(0,0,0)))  &
+            *(bcl5xr(OPS_ACC5(0,0,0))+fornow)
 
 !   SUBTRACT FROM NEW VALUE OF L's
-!   L2X,L5X UNCHANGED
-    bcl1xr(OPS_ACC1(0,0,0)) = bcl5xr(OPS_ACC4(0,0,0))  &
-            + strdxr(OPS_ACC5(0,0,0))*acouxr(OPS_ACC6(0,0,0))*dudtxr(OPS_ACC8(0,0,0)) - bcl1xr(OPS_ACC1(0,0,0))
-    bcl3xr(OPS_ACC2(0,0,0)) = -dvdtxr(OPS_ACC9(0,0,0)) - bcl3xr(OPS_ACC2(0,0,0))
-    bcl4xr(OPS_ACC3(0,0,0)) = -dwdtxr(OPS_ACC10(0,0,0)) - bcl4xr(OPS_ACC3(0,0,0))
+!   L5X UNCHANGED
+!   NC SUGGESTION: IF NOT WORKING REMOVE SECOND LINE AS WELL
+    bcl1xr(OPS_ACC1(0,0,0)) = bcl5xr(OPS_ACC5(0,0,0)) - bcl1xr(OPS_ACC1(0,0,0))
+    bcl3xr(OPS_ACC3(0,0,0)) = 0.0_8
+    bcl4xr(OPS_ACC4(0,0,0)) = 0.0_8
+    bcl2xr(OPS_ACC2(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqM_xr
 
-SUBROUTINE bounds_kernel_eqM_yr(bcl1yr,bcl3yr,bcl4yr,bcl5yr,strdyr,acouyr,strvyr,dudtyr,dvdtyr,dwdtyr)
+SUBROUTINE bounds_kernel_eqM_yr(bcl1yr,bcl2yr,bcl3yr,bcl4yr,bcl5yr,strdyr,acouyr,strvyr,ova2yr)
 
-    real(kind=8), dimension(1) :: bcl1yr,bcl3yr,bcl4yr,bcl5yr
-    real(kind=8), dimension(1), intent(in) :: strdyr,acouyr,strvyr,dudtyr,dvdtyr,dwdtyr
+    real(kind=8), dimension(1) :: bcl1yr,bcl2yr,bcl3yr,bcl4yr,bcl5yr
+    real(kind=8), dimension(1), intent(in) :: strdyr,acouyr,strvyr,ova2yr
     real(kind=8) :: fornow
 
 !   OLD VALUE OF L's
-    fornow = strdyr(OPS_ACC5(0,0,0))*acouyr(OPS_ACC6(0,0,0))*bcl1yr(OPS_ACC1(0,0,0))
-    bcl1yr(OPS_ACC1(0,0,0)) = 0.5_8*(strvyr(OPS_ACC7(0,0,0))-acouyr(OPS_ACC6(0,0,0)))  &
-            *(bcl5yr(OPS_ACC4(0,0,0))-fornow)
-    bcl3yr(OPS_ACC2(0,0,0)) = strvyr(OPS_ACC7(0,0,0))*bcl3yr(OPS_ACC2(0,0,0))
-    bcl4yr(OPS_ACC3(0,0,0)) = strvyr(OPS_ACC7(0,0,0))*bcl4yr(OPS_ACC3(0,0,0))
-    bcl5yr(OPS_ACC4(0,0,0)) = 0.5_8*(strvyr(OPS_ACC7(0,0,0))+acouyr(OPS_ACC6(0,0,0)))  &
-            *(bcl5yr(OPS_ACC4(0,0,0))+fornow)
+    fornow = strdyr(OPS_ACC6(0,0,0))*acouyr(OPS_ACC7(0,0,0))*bcl1yr(OPS_ACC1(0,0,0))
+    bcl1yr(OPS_ACC1(0,0,0)) = 0.5_8*(strvyr(OPS_ACC8(0,0,0))-acouyr(OPS_ACC7(0,0,0)))  &
+                            * (bcl5yr(OPS_ACC5(0,0,0))-fornow)
+    bcl2yr(OPS_ACC2(0,0,0)) = strvyr(OPS_ACC8(0,0,0))  &
+                            * (bcl2yr(OPS_ACC2(0,0,0))-bcl5yr(OPS_ACC5(0,0,0))*ova2yr(OPS_ACC9(0,0,0)))
+    bcl3yr(OPS_ACC3(0,0,0)) = strvyr(OPS_ACC8(0,0,0)) * bcl3yr(OPS_ACC3(0,0,0))
+    bcl4yr(OPS_ACC4(0,0,0)) = strvyr(OPS_ACC8(0,0,0)) * bcl4yr(OPS_ACC4(0,0,0))
+    bcl5yr(OPS_ACC5(0,0,0)) = 0.5_8*(strvyr(OPS_ACC8(0,0,0))+acouyr(OPS_ACC7(0,0,0)))  &
+                            * (bcl5yr(OPS_ACC5(0,0,0))+fornow)
 
 !   SUBTRACT FROM NEW VALUE OF L's
-!   L2Y,L5Y UNCHANGED
-    bcl1yr(OPS_ACC1(0,0,0)) = bcl5yr(OPS_ACC4(0,0,0))  &
-            + strdyr(OPS_ACC5(0,0,0))*acouyr(OPS_ACC6(0,0,0))*dvdtyr(OPS_ACC8(0,0,0)) - bcl1yr(OPS_ACC1(0,0,0))
-    bcl3yr(OPS_ACC2(0,0,0)) = -dudtyr(OPS_ACC9(0,0,0)) - bcl3yr(OPS_ACC2(0,0,0))
-    bcl4yr(OPS_ACC3(0,0,0)) = -dwdtyr(OPS_ACC10(0,0,0)) - bcl4yr(OPS_ACC3(0,0,0))
+!   L5Y UNCHANGED
+    bcl1yr(OPS_ACC1(0,0,0)) = bcl5yr(OPS_ACC5(0,0,0)) - bcl1yr(OPS_ACC1(0,0,0))
+    bcl3yr(OPS_ACC3(0,0,0)) = 0.0_8
+    bcl4yr(OPS_ACC4(0,0,0)) = 0.0_8
+    bcl2yr(OPS_ACC2(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqM_yr
 
-SUBROUTINE bounds_kernel_eqM_zr(bcl1zr,bcl3zr,bcl4zr,bcl5zr,strdzr,acouzr,strwzr,dudtzr,dvdtzr,dwdtzr)
+SUBROUTINE bounds_kernel_eqM_zr(bcl1zr,bcl2zr,bcl3zr,bcl4zr,bcl5zr,strdzr,acouzr,strwzr,ova2zr)
 
-    real(kind=8), dimension(1) :: bcl1zr,bcl3zr,bcl4zr,bcl5zr
-    real(kind=8), dimension(1), intent(in) :: strdzr,acouzr,strwzr,dudtzr,dvdtzr,dwdtzr
+    real(kind=8), dimension(1) :: bcl1zr,bcl2zr,bcl3zr,bcl4zr,bcl5zr
+    real(kind=8), dimension(1), intent(in) :: strdzr,acouzr,strwzr,ova2zr
     real(kind=8) :: fornow
 
 !   OLD VALUE OF L's
-    fornow = strdzr(OPS_ACC5(0,0,0))*acouzr(OPS_ACC6(0,0,0))*bcl1zr(OPS_ACC1(0,0,0))
-    bcl1zr(OPS_ACC1(0,0,0)) = 0.5_8*(strwzr(OPS_ACC7(0,0,0))-acouzr(OPS_ACC6(0,0,0)))  &
-            *(bcl5zr(OPS_ACC4(0,0,0))-fornow)
-    bcl3zr(OPS_ACC2(0,0,0)) = strwzr(OPS_ACC7(0,0,0))*bcl3zr(OPS_ACC2(0,0,0))
-    bcl4zr(OPS_ACC3(0,0,0)) = strwzr(OPS_ACC7(0,0,0))*bcl4zr(OPS_ACC3(0,0,0))
-    bcl5zr(OPS_ACC4(0,0,0)) = 0.5_8*(strwzr(OPS_ACC7(0,0,0))+acouzr(OPS_ACC6(0,0,0)))  &
-            *(bcl5zr(OPS_ACC4(0,0,0))+fornow)
+    fornow = strdzr(OPS_ACC6(0,0,0))*acouzr(OPS_ACC7(0,0,0))*bcl1zr(OPS_ACC1(0,0,0))
+    bcl1zr(OPS_ACC1(0,0,0)) = 0.5_8*(strwzr(OPS_ACC8(0,0,0))-acouzr(OPS_ACC7(0,0,0)))  &
+                            * (bcl5zr(OPS_ACC5(0,0,0))-fornow)
+    bcl2zr(OPS_ACC2(0,0,0)) = strwzr(OPS_ACC8(0,0,0))  &
+                            * (bcl2zr(OPS_ACC2(0,0,0))-bcl5zr(OPS_ACC5(0,0,0))*ova2zr(OPS_ACC9(0,0,0)))
+    bcl3zr(OPS_ACC3(0,0,0)) = strwzr(OPS_ACC8(0,0,0)) * bcl3zr(OPS_ACC3(0,0,0))
+    bcl4zr(OPS_ACC4(0,0,0)) = strwzr(OPS_ACC8(0,0,0)) * bcl4zr(OPS_ACC4(0,0,0))
+    bcl5zr(OPS_ACC5(0,0,0)) = 0.5_8*(strwzr(OPS_ACC8(0,0,0))+acouzr(OPS_ACC7(0,0,0)))  &
+                            * (bcl5zr(OPS_ACC5(0,0,0))+fornow)
 
 !   SUBTRACT FROM NEW VALUE OF L's
-!   L2Z,L5Z UNCHANGED
-    bcl1zr(OPS_ACC1(0,0,0)) = bcl5zr(OPS_ACC4(0,0,0))  &
-            + strdzr(OPS_ACC5(0,0,0))*acouzr(OPS_ACC6(0,0,0))*dwdtzr(OPS_ACC8(0,0,0)) - bcl1zr(OPS_ACC1(0,0,0))
-    bcl3zr(OPS_ACC2(0,0,0)) = -dudtzr(OPS_ACC9(0,0,0)) - bcl3zr(OPS_ACC2(0,0,0))
-    bcl4zr(OPS_ACC3(0,0,0)) = -dvdtzr(OPS_ACC10(0,0,0)) - bcl4zr(OPS_ACC3(0,0,0))
+!   L5Z UNCHANGED
+    bcl1zr(OPS_ACC1(0,0,0)) = bcl5zr(OPS_ACC5(0,0,0)) - bcl1zr(OPS_ACC1(0,0,0))
+    bcl3zr(OPS_ACC3(0,0,0)) = 0.0_8
+    bcl4zr(OPS_ACC4(0,0,0)) = 0.0_8
+    bcl2zr(OPS_ACC2(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqM_zr
 
-SUBROUTINE bounds_kernel_eqN_xr(bcl1xr,bcl2xr,bcl3xr,bcl4xr,bcl5xr,strdxr,acouxr,struxr,ova2xr,dudtxr,dvdtxr,dwdtxr,gam1xr,dtdtxr,strtxr,sorpxr,strpxr)
+SUBROUTINE bounds_kernel_eqN_xr(bcl1xr,bcl2xr,bcl3xr,bcl4xr,bcl5xr,strdxr,acouxr,struxr,ova2xr)
 
     real(kind=8), dimension(1) :: bcl1xr,bcl2xr,bcl3xr,bcl4xr,bcl5xr
-    real(kind=8), dimension(1), intent(in) :: strdxr,acouxr,struxr,ova2xr,dudtxr,dvdtxr,dwdtxr,gam1xr,dtdtxr,strtxr,sorpxr,strpxr
+    real(kind=8), dimension(1), intent(in) :: strdxr,acouxr,struxr,ova2xr
     real(kind=8) :: fornow
 
 !   OLD VALUE OF L's
@@ -1414,21 +1393,18 @@ SUBROUTINE bounds_kernel_eqN_xr(bcl1xr,bcl2xr,bcl3xr,bcl4xr,bcl5xr,strdxr,acouxr
 
 !   SUBTRACT FROM NEW VALUE OF L's
 !   L5X UNCHANGED
-    bcl1xr(OPS_ACC1(0,0,0)) = bcl5xr(OPS_ACC5(0,0,0))  &
-            + strdxr(OPS_ACC6(0,0,0))*acouxr(OPS_ACC7(0,0,0))*dudtxr(OPS_ACC10(0,0,0)) - bcl1xr(OPS_ACC1(0,0,0))
-    bcl3xr(OPS_ACC3(0,0,0)) = -dvdtxr(OPS_ACC11(0,0,0)) - bcl3xr(OPS_ACC3(0,0,0))
-    bcl4xr(OPS_ACC4(0,0,0)) = -dwdtxr(OPS_ACC12(0,0,0)) - bcl4xr(OPS_ACC4(0,0,0))
-    bcl2xr(OPS_ACC2(0,0,0)) = gam1xr(OPS_ACC13(0,0,0))*ova2xr(OPS_ACC9(0,0,0))  &
-            *(bcl1xr(OPS_ACC1(0,0,0))+bcl5xr(OPS_ACC5(0,0,0)))  &
-            + strdxr(OPS_ACC6(0,0,0))*(dtdtxr(OPS_ACC14(0,0,0))/strtxr(OPS_ACC15(0,0,0))  &
-            - sorpxr(OPS_ACC16(0,0,0))/strpxr(OPS_ACC17(0,0,0))) - bcl2xr(OPS_ACC2(0,0,0))
+!   NC SUGGESTION: IF NOT WORKING REMOVE SECOND LINE AS WELL
+    bcl1xr(OPS_ACC1(0,0,0)) = bcl5xr(OPS_ACC5(0,0,0)) - bcl1xr(OPS_ACC1(0,0,0))
+    bcl3xr(OPS_ACC3(0,0,0)) = 0.0_8
+    bcl4xr(OPS_ACC4(0,0,0)) = 0.0_8
+    bcl2xr(OPS_ACC2(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqN_xr
 
-SUBROUTINE bounds_kernel_eqN_yr(bcl1yr,bcl2yr,bcl3yr,bcl4yr,bcl5yr,strdyr,acouyr,strvyr,ova2yr,dudtyr,dvdtyr,dwdtyr,gam1yr,dtdtyr,strtyr,sorpyr,strpyr)
+SUBROUTINE bounds_kernel_eqN_yr(bcl1yr,bcl2yr,bcl3yr,bcl4yr,bcl5yr,strdyr,acouyr,strvyr,ova2yr)
 
     real(kind=8), dimension(1) :: bcl1yr,bcl2yr,bcl3yr,bcl4yr,bcl5yr
-    real(kind=8), dimension(1), intent(in) :: strdyr,acouyr,strvyr,ova2yr,dudtyr,dvdtyr,dwdtyr,gam1yr,dtdtyr,strtyr,sorpyr,strpyr
+    real(kind=8), dimension(1), intent(in) :: strdyr,acouyr,strvyr,ova2yr
     real(kind=8) :: fornow
 
 !   OLD VALUE OF L's
@@ -1444,21 +1420,17 @@ SUBROUTINE bounds_kernel_eqN_yr(bcl1yr,bcl2yr,bcl3yr,bcl4yr,bcl5yr,strdyr,acouyr
 
 !   SUBTRACT FROM NEW VALUE OF L's
 !   L5Y UNCHANGED
-    bcl1yr(OPS_ACC1(0,0,0)) = bcl5yr(OPS_ACC5(0,0,0))  &
-            + strdyr(OPS_ACC6(0,0,0))*acouyr(OPS_ACC7(0,0,0))*dvdtyr(OPS_ACC10(0,0,0)) - bcl1yr(OPS_ACC1(0,0,0))
-    bcl3yr(OPS_ACC3(0,0,0)) = -dudtyr(OPS_ACC11(0,0,0)) - bcl3yr(OPS_ACC3(0,0,0))
-    bcl4yr(OPS_ACC4(0,0,0)) = -dwdtyr(OPS_ACC12(0,0,0)) - bcl4yr(OPS_ACC4(0,0,0))
-    bcl2yr(OPS_ACC2(0,0,0)) = gam1yr(OPS_ACC13(0,0,0))*ova2yr(OPS_ACC9(0,0,0))  &
-            *(bcl1yr(OPS_ACC1(0,0,0))+bcl5yr(OPS_ACC5(0,0,0)))  &
-            + strdyr(OPS_ACC6(0,0,0))*(dtdtyr(OPS_ACC14(0,0,0))/strtyr(OPS_ACC15(0,0,0))  &
-            - sorpyr(OPS_ACC16(0,0,0))/strpyr(OPS_ACC17(0,0,0))) - bcl2yr(OPS_ACC2(0,0,0))
+    bcl1yr(OPS_ACC1(0,0,0)) = bcl5yr(OPS_ACC5(0,0,0)) - bcl1yr(OPS_ACC1(0,0,0))
+    bcl3yr(OPS_ACC3(0,0,0)) = 0.0_8
+    bcl4yr(OPS_ACC4(0,0,0)) = 0.0_8
+    bcl2yr(OPS_ACC2(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqN_yr
 
-SUBROUTINE bounds_kernel_eqN_zr(bcl1zr,bcl2zr,bcl3zr,bcl4zr,bcl5zr,strdzr,acouzr,strwzr,ova2zr,dudtzr,dvdtzr,dwdtzr,gam1zr,dtdtzr,strtzr,sorpzr,strpzr)
+SUBROUTINE bounds_kernel_eqN_zr(bcl1zr,bcl2zr,bcl3zr,bcl4zr,bcl5zr,strdzr,acouzr,strwzr,ova2zr)
 
     real(kind=8), dimension(1) :: bcl1zr,bcl2zr,bcl3zr,bcl4zr,bcl5zr
-    real(kind=8), dimension(1), intent(in) :: strdzr,acouzr,strwzr,ova2zr,dudtzr,dvdtzr,dwdtzr,gam1zr,dtdtzr,strtzr,sorpzr,strpzr
+    real(kind=8), dimension(1), intent(in) :: strdzr,acouzr,strwzr,ova2zr
     real(kind=8) :: fornow
 
 !   OLD VALUE OF L's
@@ -1474,62 +1446,34 @@ SUBROUTINE bounds_kernel_eqN_zr(bcl1zr,bcl2zr,bcl3zr,bcl4zr,bcl5zr,strdzr,acouzr
 
 !   SUBTRACT FROM NEW VALUE OF L's
 !   L5Z UNCHANGED
-    bcl1zr(OPS_ACC1(0,0,0)) = bcl5zr(OPS_ACC5(0,0,0))  &
-            + strdzr(OPS_ACC6(0,0,0))*acouzr(OPS_ACC7(0,0,0))*dwdtzr(OPS_ACC10(0,0,0)) - bcl1zr(OPS_ACC1(0,0,0))
-    bcl3zr(OPS_ACC3(0,0,0)) = -dudtzr(OPS_ACC11(0,0,0)) - bcl3zr(OPS_ACC3(0,0,0))
-    bcl4zr(OPS_ACC4(0,0,0)) = -dvdtzr(OPS_ACC12(0,0,0)) - bcl4zr(OPS_ACC4(0,0,0))
-    bcl2zr(OPS_ACC2(0,0,0)) = gam1zr(OPS_ACC13(0,0,0))*ova2zr(OPS_ACC9(0,0,0))  &
-            *(bcl1zr(OPS_ACC1(0,0,0))+bcl5zr(OPS_ACC5(0,0,0)))  &
-            + strdzr(OPS_ACC6(0,0,0))*(dtdtzr(OPS_ACC14(0,0,0))/strtzr(OPS_ACC15(0,0,0))  &
-            - sorpzr(OPS_ACC16(0,0,0))/strpzr(OPS_ACC17(0,0,0))) - bcl2zr(OPS_ACC2(0,0,0))
+    bcl1zr(OPS_ACC1(0,0,0)) = bcl5zr(OPS_ACC5(0,0,0)) - bcl1zr(OPS_ACC1(0,0,0))
+    bcl3zr(OPS_ACC3(0,0,0)) = 0.0_8
+    bcl4zr(OPS_ACC4(0,0,0)) = 0.0_8
+    bcl2zr(OPS_ACC2(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqN_zr
 
-SUBROUTINE bounds_kernel_eqO_xr(bclyxr,bcl2xr,ratexr,struxr,strdxr,strrxr,rgspec,ispec)
+SUBROUTINE bounds_kernel_eqO_xr(bclyxr)
 
-    real(kind=8), dimension(1) :: bclyxr,bcl2xr
-    real(kind=8), dimension(1), intent(in) :: ratexr,struxr,strdxr,strrxr
-    integer(kind=4), intent(in) :: ispec
-    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
+    real(kind=8), dimension(1) :: bclyxr
 
-!   OLD VALUE OF LYX
-    bclyxr(OPS_ACC1(0,0,0)) = struxr(OPS_ACC4(0,0,0))*bclyxr(OPS_ACC1(0,0,0))
-
-!   UPDATE L2X
-    bcl2xr(OPS_ACC2(0,0,0)) = bcl2xr(OPS_ACC2(0,0,0)) + (ratexr(OPS_ACC3(0,0,0))  &
-              - strdxr(OPS_ACC5(0,0,0))*bclyxr(OPS_ACC1(0,0,0))) *rgspec(ispec)/strrxr(OPS_ACC6(0,0,0))
+    bclyxr(OPS_ACC1(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqO_xr
 
-SUBROUTINE bounds_kernel_eqO_yr(bclyyr,bcl2yr,rateyr,strvyr,strdyr,strryr,rgspec,ispec)
+SUBROUTINE bounds_kernel_eqO_yr(bclyyr)
 
-    real(kind=8), dimension(1) :: bclyyr,bcl2yr
-    real(kind=8), dimension(1), intent(in) :: rateyr,strvyr,strdyr,strryr
-    integer(kind=4), intent(in) :: ispec
-    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
+    real(kind=8), dimension(1) :: bclyyr
 
-!   OLD VALUE OF LYY
-    bclyyr(OPS_ACC1(0,0,0)) = strvyr(OPS_ACC4(0,0,0))*bclyyr(OPS_ACC1(0,0,0))
-
-!   UPDATE L2Y
-    bcl2yr(OPS_ACC2(0,0,0)) = bcl2yr(OPS_ACC2(0,0,0)) + (rateyr(OPS_ACC3(0,0,0))  &
-              - strdyr(OPS_ACC5(0,0,0))*bclyyr(OPS_ACC1(0,0,0))) *rgspec(ispec)/strryr(OPS_ACC6(0,0,0))
+    bclyyr(OPS_ACC1(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqO_yr
 
-SUBROUTINE bounds_kernel_eqO_zr(bclyzr,bcl2zr,ratezr,strwzr,strdzr,strrzr,rgspec,ispec)
+SUBROUTINE bounds_kernel_eqO_zr(bclyzr)
 
-    real(kind=8), dimension(1) :: bclyzr,bcl2zr
-    real(kind=8), dimension(1), intent(in) :: ratezr,strwzr,strdzr,strrzr
-    integer(kind=4), intent(in) :: ispec
-    real(kind=8), dimension(nspcmx), intent(in) :: rgspec
+    real(kind=8), dimension(1) :: bclyzr
 
-!   OLD VALUE OF LYZ
-    bclyzr(OPS_ACC1(0,0,0)) = strwzr(OPS_ACC4(0,0,0))*bclyzr(OPS_ACC1(0,0,0))
-
-!   UPDATE L2Z
-    bcl2zr(OPS_ACC2(0,0,0)) = bcl2zr(OPS_ACC2(0,0,0)) + (ratezr(OPS_ACC3(0,0,0))  &
-              - strdzr(OPS_ACC5(0,0,0))*bclyzr(OPS_ACC1(0,0,0))) *rgspec(ispec)/strrzr(OPS_ACC6(0,0,0))
+    bclyzr(OPS_ACC1(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqO_zr
 
@@ -2004,108 +1948,120 @@ SUBROUTINE bounds_kernel_eqV_zl(erhs,bclyzl,ratezl,dydtzl,strhzl,strdzl,strwzl)
 
 END SUBROUTINE bounds_kernel_eqV_zl
 
-SUBROUTINE bounds_kernel_eqW_xl(drhs,erhs,bcl3xl,bcl4xl,bcl5xl,strdxl,acouxl,strexl,struxl,strvxl,strwxl,ova2xl,ovgmxl)
+SUBROUTINE bounds_kernel_eqW_xl(drhs,urhs,vrhs,wrhs,erhs,bcl2xl,bcl5xl,ova2xl)
 
-    real(kind=8), dimension(1) :: drhs,erhs
-    real(kind=8), dimension(1), intent(in) :: bcl3xl,bcl4xl,bcl5xl,strdxl,acouxl,strexl,struxl,strvxl,strwxl,ova2xl,ovgmxl
+    real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
+    real(kind=8), dimension(1), intent(in) :: bcl2xl,bcl5xl,ova2xl
 
-    drhs(OPS_ACC1(0,0,0)) = drhs(OPS_ACC1(0,0,0)) - bcl5xl(OPS_ACC5(0,0,0))*ova2xl(OPS_ACC12(0,0,0))
-
-    erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0))  &
-            - bcl3xl(OPS_ACC3(0,0,0))*strdxl(OPS_ACC6(0,0,0))*strvxl(OPS_ACC10(0,0,0))  &
-            - bcl4xl(OPS_ACC4(0,0,0))*strdxl(OPS_ACC6(0,0,0))*strwxl(OPS_ACC11(0,0,0))  &
-            - bcl5xl(OPS_ACC5(0,0,0))*(ova2xl(OPS_ACC12(0,0,0))*strexl(OPS_ACC8(0,0,0))  &
-            + struxl(OPS_ACC9(0,0,0))/acouxl(OPS_ACC7(0,0,0)) + ovgmxl(OPS_ACC13(0,0,0)))
+    drhs(OPS_ACC1(0,0,0)) = drhs(OPS_ACC1(0,0,0)) - bcl2xl(OPS_ACC6(0,0,0))  &
+                          - bcl5xl(OPS_ACC7(0,0,0))*ova2xl(OPS_ACC8(0,0,0))
+    urhs(OPS_ACC2(0,0,0)) = 0.0_8
+    vrhs(OPS_ACC3(0,0,0)) = 0.0_8
+    wrhs(OPS_ACC4(0,0,0)) = 0.0_8
+    erhs(OPS_ACC5(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqW_xl
 
-SUBROUTINE bounds_kernel_eqW_yl(drhs,erhs,bcl3yl,bcl4yl,bcl5yl,strdyl,acouyl,streyl,struyl,strvyl,strwyl,ova2yl,ovgmyl)
+SUBROUTINE bounds_kernel_eqW_yl(drhs,urhs,vrhs,wrhs,erhs,bcl2yl,bcl5yl,ova2yl)
 
-    real(kind=8), dimension(1) :: drhs,erhs
-    real(kind=8), dimension(1), intent(in) :: bcl3yl,bcl4yl,bcl5yl,strdyl,acouyl,streyl,struyl,strvyl,strwyl,ova2yl,ovgmyl
+    real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
+    real(kind=8), dimension(1), intent(in) :: bcl2yl,bcl5yl,ova2yl
 
-    drhs(OPS_ACC1(0,0,0)) = drhs(OPS_ACC1(0,0,0)) - bcl5yl(OPS_ACC5(0,0,0))*ova2yl(OPS_ACC12(0,0,0))
-
-    erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0))  &
-            - bcl3yl(OPS_ACC3(0,0,0))*strdyl(OPS_ACC6(0,0,0))*struyl(OPS_ACC10(0,0,0))  &
-            - bcl4yl(OPS_ACC4(0,0,0))*strdyl(OPS_ACC6(0,0,0))*strwyl(OPS_ACC11(0,0,0))  &
-            - bcl5yl(OPS_ACC5(0,0,0))*(ova2yl(OPS_ACC12(0,0,0))*streyl(OPS_ACC8(0,0,0))  &
-            + strvyl(OPS_ACC9(0,0,0))/acouyl(OPS_ACC7(0,0,0)) + ovgmyl(OPS_ACC13(0,0,0)))
+    drhs(OPS_ACC1(0,0,0)) = drhs(OPS_ACC1(0,0,0)) - bcl2yl(OPS_ACC6(0,0,0))  &
+                          - bcl5yl(OPS_ACC7(0,0,0))*ova2yl(OPS_ACC8(0,0,0))
+    urhs(OPS_ACC2(0,0,0)) = 0.0_8
+    vrhs(OPS_ACC3(0,0,0)) = 0.0_8
+    wrhs(OPS_ACC4(0,0,0)) = 0.0_8
+    erhs(OPS_ACC5(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqW_yl
 
-SUBROUTINE bounds_kernel_eqW_zl(drhs,erhs,bcl3zl,bcl4zl,bcl5zl,strdzl,acouzl,strezl,struzl,strvzl,strwzl,ova2zl,ovgmzl)
+SUBROUTINE bounds_kernel_eqW_zl(drhs,urhs,vrhs,wrhs,erhs,bcl2zl,bcl5zl,ova2zl)
 
-    real(kind=8), dimension(1) :: drhs,erhs
-    real(kind=8), dimension(1), intent(in) :: bcl3zl,bcl4zl,bcl5zl,strdzl,acouzl,strezl,struzl,strvzl,strwzl,ova2zl,ovgmzl
+    real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
+    real(kind=8), dimension(1), intent(in) :: bcl2zl,bcl5zl,ova2zl
 
-    drhs(OPS_ACC1(0,0,0)) = drhs(OPS_ACC1(0,0,0)) - bcl5zl(OPS_ACC5(0,0,0))*ova2zl(OPS_ACC12(0,0,0))
-
-    erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0))  &
-            - bcl3zl(OPS_ACC3(0,0,0))*strdzl(OPS_ACC6(0,0,0))*struzl(OPS_ACC10(0,0,0))  &
-            - bcl4zl(OPS_ACC4(0,0,0))*strdzl(OPS_ACC6(0,0,0))*strvzl(OPS_ACC11(0,0,0))  &
-            - bcl5zl(OPS_ACC5(0,0,0))*(ova2zl(OPS_ACC12(0,0,0))*strezl(OPS_ACC8(0,0,0))  &
-            + strwzl(OPS_ACC9(0,0,0))/acouzl(OPS_ACC7(0,0,0)) + ovgmzl(OPS_ACC13(0,0,0)))
+    drhs(OPS_ACC1(0,0,0)) = drhs(OPS_ACC1(0,0,0)) - bcl2zl(OPS_ACC6(0,0,0))  &
+                          - bcl5zl(OPS_ACC7(0,0,0))*ova2zl(OPS_ACC8(0,0,0))
+    urhs(OPS_ACC2(0,0,0)) = 0.0_8
+    vrhs(OPS_ACC3(0,0,0)) = 0.0_8
+    wrhs(OPS_ACC4(0,0,0)) = 0.0_8
+    erhs(OPS_ACC5(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqW_zl
 
-SUBROUTINE bounds_kernel_eqX_xl(yrhs,stryxl,bcl5xl,ova2xl)
+SUBROUTINE bounds_kernel_eqX_xl(yrhs,stryxl,bcl2xl,bcl5xl,ova2xl)
 
     real(kind=8), dimension(1) :: yrhs
-    real(kind=8), dimension(1), intent(in) :: stryxl,bcl5xl,ova2xl
+    real(kind=8), dimension(1), intent(in) :: stryxl,bcl2xl,bcl5xl,ova2xl
 
     yrhs(OPS_ACC1(0,0,0)) = yrhs(OPS_ACC1(0,0,0))  &
-              - bcl5xl(OPS_ACC3(0,0,0))*ova2xl(OPS_ACC4(0,0,0))*stryxl(OPS_ACC2(0,0,0))
+                          - (bcl2xl(OPS_ACC3(0,0,0)) + bcl5xl(OPS_ACC4(0,0,0))*ova2xl(OPS_ACC5(0,0,0))) &
+                            * stryxl(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_eqX_xl
 
-SUBROUTINE bounds_kernel_eqX_yl(yrhs,stryyl,bcl5yl,ova2yl)
+SUBROUTINE bounds_kernel_eqX_yl(yrhs,stryyl,bcl2yl,bcl5yl,ova2yl)
 
     real(kind=8), dimension(1) :: yrhs
-    real(kind=8), dimension(1), intent(in) :: stryyl,bcl5yl,ova2yl
+    real(kind=8), dimension(1), intent(in) :: stryyl,bcl2yl,bcl5yl,ova2yl
 
     yrhs(OPS_ACC1(0,0,0)) = yrhs(OPS_ACC1(0,0,0))  &
-              - bcl5yl(OPS_ACC3(0,0,0))*ova2yl(OPS_ACC4(0,0,0))*stryyl(OPS_ACC2(0,0,0))
+                          - (bcl2yl(OPS_ACC3(0,0,0)) + bcl5yl(OPS_ACC4(0,0,0))*ova2yl(OPS_ACC5(0,0,0))) &
+                            * stryyl(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_eqX_yl
 
-SUBROUTINE bounds_kernel_eqX_zl(yrhs,stryzl,bcl5zl,ova2zl)
+SUBROUTINE bounds_kernel_eqX_zl(yrhs,stryzl,bcl2zl,bcl5zl,ova2zl)
 
     real(kind=8), dimension(1) :: yrhs
-    real(kind=8), dimension(1), intent(in) :: stryzl,bcl5zl,ova2zl
+    real(kind=8), dimension(1), intent(in) :: stryzl,bcl2zl,bcl5zl,ova2zl
 
     yrhs(OPS_ACC1(0,0,0)) = yrhs(OPS_ACC1(0,0,0))  &
-              - bcl5zl(OPS_ACC3(0,0,0))*ova2zl(OPS_ACC4(0,0,0))*stryzl(OPS_ACC2(0,0,0))
+                          - (bcl2zl(OPS_ACC3(0,0,0)) + bcl5zl(OPS_ACC4(0,0,0))*ova2zl(OPS_ACC5(0,0,0))) &
+                            * stryzl(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_eqX_zl
 
-SUBROUTINE bounds_kernel_eqY_xl(drhs,bcl2xl,bcl5xl,ova2xl)
+SUBROUTINE bounds_kernel_eqY_xl(drhs,bcl2xl,bcl5xl,ova2xl,urhs,vrhs,wrhs,erhs)
 
-    real(kind=8), dimension(1) :: drhs
+    real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl2xl,bcl5xl,ova2xl
 
     drhs(OPS_ACC1(0,0,0)) = drhs(OPS_ACC1(0,0,0)) - bcl2xl(OPS_ACC2(0,0,0))  &
             - bcl5xl(OPS_ACC3(0,0,0))*ova2xl(OPS_ACC4(0,0,0))
+    urhs(OPS_ACC5(0,0,0)) = 0.0_8
+    vrhs(OPS_ACC6(0,0,0)) = 0.0_8
+    wrhs(OPS_ACC7(0,0,0)) = 0.0_8
+    erhs(OPS_ACC8(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqY_xl
 
-SUBROUTINE bounds_kernel_eqY_yl(drhs,bcl2yl,bcl5yl,ova2yl)
+SUBROUTINE bounds_kernel_eqY_yl(drhs,bcl2yl,bcl5yl,ova2yl,urhs,vrhs,wrhs,erhs)
 
-    real(kind=8), dimension(1) :: drhs
+    real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl2yl,bcl5yl,ova2yl
 
     drhs(OPS_ACC1(0,0,0)) = drhs(OPS_ACC1(0,0,0)) - bcl2yl(OPS_ACC2(0,0,0))  &
             - bcl5yl(OPS_ACC3(0,0,0))*ova2yl(OPS_ACC4(0,0,0))
+    urhs(OPS_ACC5(0,0,0)) = 0.0_8
+    vrhs(OPS_ACC6(0,0,0)) = 0.0_8
+    wrhs(OPS_ACC7(0,0,0)) = 0.0_8
+    erhs(OPS_ACC8(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqY_yl
 
-SUBROUTINE bounds_kernel_eqY_zl(drhs,bcl2zl,bcl5zl,ova2zl)
+SUBROUTINE bounds_kernel_eqY_zl(drhs,bcl2zl,bcl5zl,ova2zl,urhs,vrhs,wrhs,erhs)
 
-    real(kind=8), dimension(1) :: drhs
+    real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl2zl,bcl5zl,ova2zl
 
     drhs(OPS_ACC1(0,0,0)) = drhs(OPS_ACC1(0,0,0)) - bcl2zl(OPS_ACC2(0,0,0))  &
             - bcl5zl(OPS_ACC3(0,0,0))*ova2zl(OPS_ACC4(0,0,0))
+    urhs(OPS_ACC5(0,0,0)) = 0.0_8
+    vrhs(OPS_ACC6(0,0,0)) = 0.0_8
+    wrhs(OPS_ACC7(0,0,0)) = 0.0_8
+    erhs(OPS_ACC8(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqY_zl
 
@@ -2631,108 +2587,120 @@ SUBROUTINE bounds_kernel_eqV_zr(erhs,bclyzr,ratezr,dydtzr,strhzr,strdzr,strwzr)
 
 END SUBROUTINE bounds_kernel_eqV_zr
 
-SUBROUTINE bounds_kernel_eqW_xr(drhs,erhs,bcl1xr,bcl3xr,bcl4xr,strdxr,acouxr,strexr,struxr,strvxr,strwxr,ova2xr,ovgmxr)
+SUBROUTINE bounds_kernel_eqW_xr(drhs,urhs,vrhs,wrhs,erhs,bcl1xr,bcl2xr,ova2xr)
 
-    real(kind=8), dimension(1) :: drhs,erhs
-    real(kind=8), dimension(1), intent(in) :: bcl1xr,bcl3xr,bcl4xr,strdxr,acouxr,strexr,struxr,strvxr,strwxr,ova2xr,ovgmxr
+    real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
+    real(kind=8), dimension(1), intent(in) :: bcl1xr,bcl2xr,ova2xr
 
-    drhs(OPS_ACC1(0,0,0)) = drhs(OPS_ACC1(0,0,0)) - bcl1xr(OPS_ACC3(0,0,0))*ova2xr(OPS_ACC12(0,0,0))
-
-    erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0))  &
-            - bcl1xr(OPS_ACC3(0,0,0))*(ova2xr(OPS_ACC12(0,0,0))*strexr(OPS_ACC8(0,0,0))  &
-            + struxr(OPS_ACC9(0,0,0))/acouxr(OPS_ACC7(0,0,0)) + ovgmxr(OPS_ACC13(0,0,0)))  &
-            - bcl3xr(OPS_ACC4(0,0,0))*strdxr(OPS_ACC6(0,0,0))*strvxr(OPS_ACC10(0,0,0))  &
-            - bcl4xr(OPS_ACC5(0,0,0))*strdxr(OPS_ACC6(0,0,0))*strwxr(OPS_ACC11(0,0,0))
+    drhs(OPS_ACC1(0,0,0)) = drhs(OPS_ACC1(0,0,0)) - bcl1xr(OPS_ACC6(0,0,0))*ova2xr(OPS_ACC8(0,0,0))  &
+                          - bcl2xr(OPS_ACC7(0,0,0))
+    urhs(OPS_ACC2(0,0,0)) = 0.0_8
+    vrhs(OPS_ACC3(0,0,0)) = 0.0_8
+    wrhs(OPS_ACC4(0,0,0)) = 0.0_8
+    erhs(OPS_ACC5(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqW_xr
 
-SUBROUTINE bounds_kernel_eqW_yr(drhs,erhs,bcl1yr,bcl3yr,bcl4yr,strdyr,acouyr,streyr,struyr,strvyr,strwyr,ova2yr,ovgmyr)
+SUBROUTINE bounds_kernel_eqW_yr(drhs,urhs,vrhs,wrhs,erhs,bcl1yr,bcl2yr,ova2yr)
 
-    real(kind=8), dimension(1) :: drhs,erhs
-    real(kind=8), dimension(1), intent(in) :: bcl1yr,bcl3yr,bcl4yr,strdyr,acouyr,streyr,struyr,strvyr,strwyr,ova2yr,ovgmyr
+    real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
+    real(kind=8), dimension(1), intent(in) :: bcl1yr,bcl2yr,ova2yr
 
-    drhs(OPS_ACC1(0,0,0)) = drhs(OPS_ACC1(0,0,0)) - bcl1yr(OPS_ACC3(0,0,0))*ova2yr(OPS_ACC12(0,0,0))
-
-    erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0))  &
-            - bcl1yr(OPS_ACC3(0,0,0))*(ova2yr(OPS_ACC12(0,0,0))*streyr(OPS_ACC8(0,0,0))  &
-            + strvyr(OPS_ACC9(0,0,0))/acouyr(OPS_ACC7(0,0,0)) + ovgmyr(OPS_ACC13(0,0,0)))  &
-            - bcl3yr(OPS_ACC4(0,0,0))*strdyr(OPS_ACC6(0,0,0))*struyr(OPS_ACC10(0,0,0))  &
-            - bcl4yr(OPS_ACC5(0,0,0))*strdyr(OPS_ACC6(0,0,0))*strwyr(OPS_ACC11(0,0,0))
+    drhs(OPS_ACC1(0,0,0)) = drhs(OPS_ACC1(0,0,0)) - bcl1yr(OPS_ACC6(0,0,0))*ova2yr(OPS_ACC8(0,0,0))  &
+                          - bcl2yr(OPS_ACC7(0,0,0))
+    urhs(OPS_ACC2(0,0,0)) = 0.0_8
+    vrhs(OPS_ACC3(0,0,0)) = 0.0_8
+    wrhs(OPS_ACC4(0,0,0)) = 0.0_8
+    erhs(OPS_ACC5(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqW_yr
 
-SUBROUTINE bounds_kernel_eqW_zr(drhs,erhs,bcl1zr,bcl3zr,bcl4zr,strdzr,acouzr,strezr,struzr,strvzr,strwzr,ova2zr,ovgmzr)
+SUBROUTINE bounds_kernel_eqW_zr(drhs,urhs,vrhs,wrhs,erhs,bcl1zr,bcl2zr,ova2zr)
 
-    real(kind=8), dimension(1) :: drhs,erhs
-    real(kind=8), dimension(1), intent(in) :: bcl1zr,bcl3zr,bcl4zr,strdzr,acouzr,strezr,struzr,strvzr,strwzr,ova2zr,ovgmzr
+    real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
+    real(kind=8), dimension(1), intent(in) :: bcl1zr,bcl2zr,ova2zr
 
-    drhs(OPS_ACC1(0,0,0)) = drhs(OPS_ACC1(0,0,0)) - bcl1zr(OPS_ACC3(0,0,0))*ova2zr(OPS_ACC12(0,0,0))
-
-    erhs(OPS_ACC2(0,0,0)) = erhs(OPS_ACC2(0,0,0))  &
-            - bcl1zr(OPS_ACC3(0,0,0))*(ova2zr(OPS_ACC12(0,0,0))*strezr(OPS_ACC8(0,0,0))  &
-            + strwzr(OPS_ACC9(0,0,0))/acouzr(OPS_ACC7(0,0,0)) + ovgmzr(OPS_ACC13(0,0,0)))  &
-            - bcl3zr(OPS_ACC4(0,0,0))*strdzr(OPS_ACC6(0,0,0))*struzr(OPS_ACC10(0,0,0))  &
-            - bcl4zr(OPS_ACC5(0,0,0))*strdzr(OPS_ACC6(0,0,0))*strvzr(OPS_ACC11(0,0,0))
+    drhs(OPS_ACC1(0,0,0)) = drhs(OPS_ACC1(0,0,0)) - bcl1zr(OPS_ACC6(0,0,0))*ova2zr(OPS_ACC8(0,0,0))  &
+                          - bcl2zr(OPS_ACC7(0,0,0))
+    urhs(OPS_ACC2(0,0,0)) = 0.0_8
+    vrhs(OPS_ACC3(0,0,0)) = 0.0_8
+    wrhs(OPS_ACC4(0,0,0)) = 0.0_8
+    erhs(OPS_ACC5(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqW_zr
 
-SUBROUTINE bounds_kernel_eqX_xr(yrhs,stryxr,bcl1xr,ova2xr)
+SUBROUTINE bounds_kernel_eqX_xr(yrhs,stryxr,bcl1xr,bcl2xr,ova2xr)
 
     real(kind=8), dimension(1) :: yrhs
-    real(kind=8), dimension(1), intent(in) :: stryxr,bcl1xr,ova2xr
+    real(kind=8), dimension(1), intent(in) :: stryxr,bcl1xr,bcl2xr,ova2xr
 
     yrhs(OPS_ACC1(0,0,0)) = yrhs(OPS_ACC1(0,0,0))  &
-              - bcl1xr(OPS_ACC3(0,0,0))*ova2xr(OPS_ACC4(0,0,0))*stryxr(OPS_ACC2(0,0,0))
+                          - (bcl2xr(OPS_ACC4(0,0,0)) + bcl1xr(OPS_ACC3(0,0,0))*ova2xr(OPS_ACC5(0,0,0))) &
+                             * stryxr(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_eqX_xr
 
-SUBROUTINE bounds_kernel_eqX_yr(yrhs,stryyr,bcl1yr,ova2yr)
+SUBROUTINE bounds_kernel_eqX_yr(yrhs,stryyr,bcl1yr,bcl2yr,ova2yr)
 
     real(kind=8), dimension(1) :: yrhs
-    real(kind=8), dimension(1), intent(in) :: stryyr,bcl1yr,ova2yr
+    real(kind=8), dimension(1), intent(in) :: stryyr,bcl1yr,bcl2yr,ova2yr
 
     yrhs(OPS_ACC1(0,0,0)) = yrhs(OPS_ACC1(0,0,0))  &
-              - bcl1yr(OPS_ACC3(0,0,0))*ova2yr(OPS_ACC4(0,0,0))*stryyr(OPS_ACC2(0,0,0))
+                          - (bcl2yr(OPS_ACC4(0,0,0)) + bcl1yr(OPS_ACC3(0,0,0))*ova2yr(OPS_ACC5(0,0,0))) &
+                             * stryyr(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_eqX_yr
 
-SUBROUTINE bounds_kernel_eqX_zr(yrhs,stryzr,bcl1zr,ova2zr)
+SUBROUTINE bounds_kernel_eqX_zr(yrhs,stryzr,bcl1zr,bcl2zr,ova2zr)
 
     real(kind=8), dimension(1) :: yrhs
-    real(kind=8), dimension(1), intent(in) :: stryzr,bcl1zr,ova2zr
+    real(kind=8), dimension(1), intent(in) :: stryzr,bcl1zr,bcl2zr,ova2zr
 
     yrhs(OPS_ACC1(0,0,0)) = yrhs(OPS_ACC1(0,0,0))  &
-              - bcl1zr(OPS_ACC3(0,0,0))*ova2zr(OPS_ACC4(0,0,0))*stryzr(OPS_ACC2(0,0,0))
+                          - (bcl2zr(OPS_ACC4(0,0,0)) + bcl1zr(OPS_ACC3(0,0,0))*ova2zr(OPS_ACC5(0,0,0))) &
+                             * stryzr(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bounds_kernel_eqX_zr
 
-SUBROUTINE bounds_kernel_eqY_xr(drhs,bcl1xr,bcl2xr,ova2xr)
+SUBROUTINE bounds_kernel_eqY_xr(drhs,bcl1xr,bcl2xr,ova2xr,urhs,vrhs,wrhs,erhs)
 
-    real(kind=8), dimension(1) :: drhs
+    real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl1xr,bcl2xr,ova2xr
 
     drhs(OPS_ACC1(0,0,0)) = drhs(OPS_ACC1(0,0,0)) - bcl1xr(OPS_ACC2(0,0,0))*ova2xr(OPS_ACC4(0,0,0))  &
                     - bcl2xr(OPS_ACC3(0,0,0))
+    urhs(OPS_ACC5(0,0,0)) = 0.0_8
+    vrhs(OPS_ACC6(0,0,0)) = 0.0_8
+    wrhs(OPS_ACC7(0,0,0)) = 0.0_8
+    erhs(OPS_ACC8(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqY_xr
 
-SUBROUTINE bounds_kernel_eqY_yr(drhs,bcl1yr,bcl2yr,ova2yr)
+SUBROUTINE bounds_kernel_eqY_yr(drhs,bcl1yr,bcl2yr,ova2yr,urhs,vrhs,wrhs,erhs)
 
-    real(kind=8), dimension(1) :: drhs
+    real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl1yr,bcl2yr,ova2yr
 
     drhs(OPS_ACC1(0,0,0)) = drhs(OPS_ACC1(0,0,0)) - bcl1yr(OPS_ACC2(0,0,0))*ova2yr(OPS_ACC4(0,0,0))  &
                     - bcl2yr(OPS_ACC3(0,0,0))
+    urhs(OPS_ACC5(0,0,0)) = 0.0_8
+    vrhs(OPS_ACC6(0,0,0)) = 0.0_8
+    wrhs(OPS_ACC7(0,0,0)) = 0.0_8
+    erhs(OPS_ACC8(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqY_yr
 
-SUBROUTINE bounds_kernel_eqY_zr(drhs,bcl1zr,bcl2zr,ova2zr)
+SUBROUTINE bounds_kernel_eqY_zr(drhs,bcl1zr,bcl2zr,ova2zr,urhs,vrhs,wrhs,erhs)
 
-    real(kind=8), dimension(1) :: drhs
+    real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
     real(kind=8), dimension(1), intent(in) :: bcl1zr,bcl2zr,ova2zr
 
     drhs(OPS_ACC1(0,0,0)) = drhs(OPS_ACC1(0,0,0)) - bcl1zr(OPS_ACC2(0,0,0))*ova2zr(OPS_ACC4(0,0,0))  &
                     - bcl2zr(OPS_ACC3(0,0,0))
+    urhs(OPS_ACC5(0,0,0)) = 0.0_8
+    vrhs(OPS_ACC6(0,0,0)) = 0.0_8
+    wrhs(OPS_ACC7(0,0,0)) = 0.0_8
+    erhs(OPS_ACC8(0,0,0)) = 0.0_8
 
 END SUBROUTINE bounds_kernel_eqY_zr
 
@@ -2814,4 +2782,227 @@ SUBROUTINE bounds_kernel_eqAA_zdir(tt1z, tt2z, tt5z, t1bz, t2bz, t51bz, t52bz, g
 
 END SUBROUTINE bounds_kernel_eqAA_zdir
 
+SUBROUTINE bounds_kernel_eqAB_xdir(bcl2x,bcl3x,bcl4x,bcl5x,bcl1x,strdx,acoux,ova2x,tt2x,tt3x,tt4x,tt5x,strrx,stlux,strux,stlvx,strvx,stlwx,strwx,stltx,strtx,xgdlen,nrieta2,nrieta3,nrieta4,nrieta5,m2max)
 
+    real(kind=8), dimension(1) :: bcl2x,bcl3x,bcl4x,bcl5x
+    real(kind=8), dimension(1), intent(in) :: bcl1x,strdx,acoux,ova2x,tt2x,tt3x,tt4x,tt5x
+    real(kind=8), dimension(1), intent(in) :: strrx,stlux,strux,stlvx,strvx,stlwx,strwx,stltx,strtx
+    real(kind=8), intent(in) :: xgdlen,nrieta2,nrieta3,nrieta4,nrieta5,m2max
+    real(kind=8) :: fornow
+
+!   OLD VALUE OF L's
+    fornow = strdx(OPS_ACC6(0,0,0))*acoux(OPS_ACC7(0,0,0))*bcl1x(OPS_ACC5(0,0,0))
+
+    bcl2x(OPS_ACC1(0,0,0)) = stlux(OPS_ACC14(0,0,0))  &
+                  * (bcl2x(OPS_ACC1(0,0,0))-bcl5x(OPS_ACC4(0,0,0))*ova2x(OPS_ACC8(0,0,0)))
+
+    bcl3x(OPS_ACC2(0,0,0)) = stlux(OPS_ACC14(0,0,0))*bcl3x(OPS_ACC2(0,0,0))
+
+    bcl4x(OPS_ACC3(0,0,0)) = stlux(OPS_ACC14(0,0,0))*bcl4x(OPS_ACC3(0,0,0))
+
+    bcl5x(OPS_ACC4(0,0,0)) = 0.5_8*(stlux(OPS_ACC14(0,0,0))+acoux(OPS_ACC7(0,0,0)))  &
+                  * (bcl5x(OPS_ACC4(0,0,0))+fornow)
+
+!   SUBTRACT FROM NEW VALUE OF L's
+!   L1X UNCHANGED
+    bcl2x(OPS_ACC1(0,0,0)) = nrieta2 * strdx(OPS_ACC6(0,0,0))  &
+                  * strrx(OPS_ACC13(0,0,0))/(xgdlen*acoux(OPS_ACC7(0,0,0)))  &
+                  * (stltx(OPS_ACC20(0,0,0))-strtx(OPS_ACC21(0,0,0)))  &
+                  + tt2x(OPS_ACC9(0,0,0))*ova2x(OPS_ACC8(0,0,0))-bcl2x(OPS_ACC1(0,0,0))
+
+    bcl3x(OPS_ACC2(0,0,0)) = nrieta3 * acoux(OPS_ACC7(0,0,0))  &
+                  / xgdlen*(stlvx(OPS_ACC16(0,0,0))-strvx(OPS_ACC17(0,0,0))) +tt3x(OPS_ACC10(0,0,0))-bcl3x(OPS_ACC2(0,0,0))
+
+    bcl4x(OPS_ACC3(0,0,0)) = nrieta4 * acoux(OPS_ACC7(0,0,0))  &
+                  / xgdlen*(stlwx(OPS_ACC18(0,0,0))-strwx(OPS_ACC19(0,0,0))) +tt4x(OPS_ACC11(0,0,0))-bcl4x(OPS_ACC3(0,0,0))
+
+    bcl5x(OPS_ACC4(0,0,0)) = nrieta5 *strdx(OPS_ACC6(0,0,0))*acoux(OPS_ACC7(0,0,0))  &
+                  * acoux(OPS_ACC7(0,0,0))*(1.0_8-m2max)/(2.0_8*xgdlen)  &
+                  * (stlux(OPS_ACC14(0,0,0))-strux(OPS_ACC15(0,0,0))) +0.5_8*tt5x(OPS_ACC12(0,0,0))  &
+                  - bcl5x(OPS_ACC4(0,0,0))
+
+END SUBROUTINE bounds_kernel_eqAB_xdir
+
+SUBROUTINE bounds_kernel_eqAC_xdir(bclyx,stlyx,stryx,tt6x,stlux,acoux,xgdlen,nrieta6)
+
+    real(kind=8), dimension(1) :: bclyx
+    real(kind=8), dimension(1), intent(in) :: stlyx,stryx,tt6x,stlux,acoux
+    real(kind=8), intent(in) :: xgdlen,nrieta6
+
+!   OLD VALUE OF L's
+    bclyx(OPS_ACC1(0,0,0)) = stlux(OPS_ACC5(0,0,0)) *bclyx(OPS_ACC1(0,0,0))
+
+!   SUBTRACT FROM NEW VALUE OF L's
+    bclyx(OPS_ACC1(0,0,0)) = nrieta6 *acoux(OPS_ACC6(0,0,0))/xgdlen  &
+                        * (stlyx(OPS_ACC2(0,0,0)) - stryx(OPS_ACC3(0,0,0)))  &
+                        + tt6x(OPS_ACC4(0,0,0)) - bclyx(OPS_ACC1(0,0,0))
+
+
+END SUBROUTINE bounds_kernel_eqAC_xdir
+
+SUBROUTINE bounds_kernel_eqAD_xdir(drhs,urhs,vrhs,wrhs,erhs,bcl2x,bcl3x,bcl4x,bcl5x,ova2x,acoux,ovgmx,stlux,stlvx,stlwx,strdx,strex)
+
+    real(kind=8), dimension(1) :: drhs,urhs,vrhs,wrhs,erhs
+    real(kind=8), dimension(1), intent(in) :: bcl2x,bcl3x,bcl4x,bcl5x
+    real(kind=8), dimension(1), intent(in) :: ova2x,acoux,ovgmx,stlux,stlvx,stlwx,strdx,strex
+
+    drhs(OPS_ACC1(0,0,0)) = drhs(OPS_ACC1(0,0,0)) - bcl2x(OPS_ACC6(0,0,0))  &
+                      - bcl5x(OPS_ACC9(0,0,0))*ova2x(OPS_ACC10(0,0,0))
+
+    urhs(OPS_ACC2(0,0,0)) = urhs(OPS_ACC2(0,0,0)) - bcl2x(OPS_ACC6(0,0,0))*stlux(OPS_ACC13(0,0,0))  &
+                      - bcl5x(OPS_ACC9(0,0,0))*ova2x(OPS_ACC10(0,0,0))*(stlux(OPS_ACC13(0,0,0)) + acoux(OPS_ACC11(0,0,0)))
+
+    vrhs(OPS_ACC3(0,0,0)) = vrhs(OPS_ACC3(0,0,0)) - bcl2x(OPS_ACC6(0,0,0))*stlvx(OPS_ACC14(0,0,0))  &
+                      - bcl3x(OPS_ACC7(0,0,0))*strdx(OPS_ACC16(0,0,0))  &
+                      - bcl5x(OPS_ACC9(0,0,0))*ova2x(OPS_ACC10(0,0,0))*stlvx(OPS_ACC14(0,0,0))
+
+    wrhs(OPS_ACC4(0,0,0)) = wrhs(OPS_ACC4(0,0,0)) - bcl2x(OPS_ACC6(0,0,0))*stlwx(OPS_ACC15(0,0,0))  &
+                      - bcl4x(OPS_ACC8(0,0,0))*strdx(OPS_ACC16(0,0,0))  &
+                      - bcl5x(OPS_ACC9(0,0,0))*ova2x(OPS_ACC10(0,0,0))*stlwx(OPS_ACC15(0,0,0))
+
+    erhs(OPS_ACC5(0,0,0)) = erhs(OPS_ACC5(0,0,0)) - bcl2x(OPS_ACC6(0,0,0))*strex(OPS_ACC17(0,0,0))  &
+                      - bcl3x(OPS_ACC7(0,0,0))*strdx(OPS_ACC16(0,0,0))*stlvx(OPS_ACC14(0,0,0))  &
+                      - bcl4x(OPS_ACC8(0,0,0))*strdx(OPS_ACC16(0,0,0))*stlwx(OPS_ACC15(0,0,0))  &
+                      - bcl5x(OPS_ACC9(0,0,0))*(ova2x(OPS_ACC10(0,0,0))*strex(OPS_ACC17(0,0,0))  &
+                                     + stlux(OPS_ACC13(0,0,0))/acoux(OPS_ACC11(0,0,0)) + ovgmx(OPS_ACC12(0,0,0)))
+
+END SUBROUTINE bounds_kernel_eqAD_xdir
+
+SUBROUTINE bounds_kernel_eqAE_xdir(erhs,yrhs,bclyx,stlyx,strhx,strdx,bcl2x,bcl5x,ova2x)
+
+    real(kind=8), dimension(1) :: erhs,yrhs
+    real(kind=8), dimension(1), intent(in) :: bclyx,stlyx,strhx,strdx,bcl2x,bcl5x,ova2x
+    real(kind=8) :: fornow
+
+    fornow = bclyx(OPS_ACC3(0,0,0))*strdx(OPS_ACC6(0,0,0))
+
+    erhs(OPS_ACC1(0,0,0)) = erhs(OPS_ACC1(0,0,0)) - fornow*strhx(OPS_ACC5(0,0,0))
+
+    yrhs(OPS_ACC2(0,0,0)) = yrhs(OPS_ACC2(0,0,0))  &
+                            - (bcl2x(OPS_ACC7(0,0,0)) + bcl5x(OPS_ACC8(0,0,0))*ova2x(OPS_ACC9(0,0,0)))*stlyx(OPS_ACC4(0,0,0))  &
+                            - fornow
+
+END SUBROUTINE bounds_kernel_eqAE_xdir
+
+SUBROUTINE bounds_kernel_eqAF_xl(strtxl,trun)
+
+    real(kind=8), dimension(1) :: strtxl, trun
+
+    strtxl(OPS_ACC1(0,0,0)) = (48.0_8*trun(OPS_ACC2(1,0,0)) - 36.0_8*trun(OPS_ACC2(2,0,0))  &
+                             + 16.0_8*trun(OPS_ACC2(3,0,0)) - 3.0_8*trun(OPS_ACC2(4,0,0)))/25.0_8
+
+    trun(OPS_ACC2(0,0,0)) = strtxl(OPS_ACC1(0,0,0))
+
+END SUBROUTINE bounds_kernel_eqAF_xl
+
+SUBROUTINE bounds_kernel_eqAF_xr(strtxr,trun)
+
+    real(kind=8), dimension(1) :: strtxr, trun
+
+    strtxr(OPS_ACC1(0,0,0)) = (48.0_8*trun(OPS_ACC2(-1,0,0)) - 36.0_8*trun(OPS_ACC2(-2,0,0))  &
+                             + 16.0_8*trun(OPS_ACC2(-3,0,0)) - 3.0_8*trun(OPS_ACC2(-4,0,0)))/25.0_8
+
+    trun(OPS_ACC2(0,0,0)) = strtxr(OPS_ACC1(0,0,0))
+
+END SUBROUTINE bounds_kernel_eqAF_xr
+
+SUBROUTINE bounds_kernel_eqAF_yl(strtyl,trun)
+
+    real(kind=8), dimension(1) :: strtyl, trun
+
+    strtyl(OPS_ACC1(0,0,0)) = (48.0_8*trun(OPS_ACC2(0,1,0)) - 36.0_8*trun(OPS_ACC2(0,2,0))  &
+                             + 16.0_8*trun(OPS_ACC2(0,3,0)) - 3.0_8*trun(OPS_ACC2(0,4,0)))/25.0_8
+
+    trun(OPS_ACC2(0,0,0)) = strtyl(OPS_ACC1(0,0,0))
+
+END SUBROUTINE bounds_kernel_eqAF_yl
+
+SUBROUTINE bounds_kernel_eqAF_yr(strtyr,trun)
+
+    real(kind=8), dimension(1) :: strtyr, trun
+
+    strtyr(OPS_ACC1(0,0,0)) = (48.0_8*trun(OPS_ACC2(0,-1,0)) - 36.0_8*trun(OPS_ACC2(0,-2,0))  &
+                             + 16.0_8*trun(OPS_ACC2(0,-3,0)) - 3.0_8*trun(OPS_ACC2(0,-4,0)))/25.0_8
+
+    trun(OPS_ACC2(0,0,0)) = strtyr(OPS_ACC1(0,0,0))
+
+END SUBROUTINE bounds_kernel_eqAF_yr
+
+SUBROUTINE bounds_kernel_eqAF_zl(strtzl,trun)
+
+    real(kind=8), dimension(1) :: strtzl, trun
+
+    strtzl(OPS_ACC1(0,0,0)) = (48.0_8*trun(OPS_ACC2(0,0,1)) - 36.0_8*trun(OPS_ACC2(0,0,2))  &
+                             + 16.0_8*trun(OPS_ACC2(0,0,3)) - 3.0_8*trun(OPS_ACC2(0,0,4)))/25.0_8
+
+    trun(OPS_ACC2(0,0,0)) = strtzl(OPS_ACC1(0,0,0))
+
+END SUBROUTINE bounds_kernel_eqAF_zl
+
+SUBROUTINE bounds_kernel_eqAF_zr(strtzr,trun)
+
+    real(kind=8), dimension(1) :: strtzr, trun
+
+    strtzr(OPS_ACC1(0,0,0)) = (48.0_8*trun(OPS_ACC2(0,0,-1)) - 36.0_8*trun(OPS_ACC2(0,0,-2))  &
+                             + 16.0_8*trun(OPS_ACC2(0,0,-3)) - 3.0_8*trun(OPS_ACC2(0,0,-4)))/25.0_8
+
+    trun(OPS_ACC2(0,0,0)) = strtzr(OPS_ACC1(0,0,0))
+
+END SUBROUTINE bounds_kernel_eqAF_zr
+
+SUBROUTINE bounds_kernel_eqAG_xdir(sorpx,strhx,ratex)
+
+    real(kind=8), dimension(1) :: sorpx
+    real(kind=8), dimension(1), intent(in) :: strhx,ratex
+
+    sorpx(OPS_ACC1(0,0,0)) = sorpx(OPS_ACC1(0,0,0))  &
+                           + strhx(OPS_ACC2(0,0,0))*ratex(OPS_ACC3(0,0,0))
+
+END SUBROUTINE bounds_kernel_eqAG_xdir
+
+SUBROUTINE bounds_kernel_eqAG_ydir(sorpy,strhy,ratey)
+
+    real(kind=8), dimension(1) :: sorpy
+    real(kind=8), dimension(1), intent(in) :: strhy,ratey
+
+    sorpy(OPS_ACC1(0,0,0)) = sorpy(OPS_ACC1(0,0,0))  &
+                           + strhy(OPS_ACC2(0,0,0))*ratey(OPS_ACC3(0,0,0))
+
+END SUBROUTINE bounds_kernel_eqAG_ydi
+
+SUBROUTINE bounds_kernel_eqAG_zdir(sorpz,strhz,ratez)
+
+    real(kind=8), dimension(1) :: sorpz
+    real(kind=8), dimension(1), intent(in) :: strhz,ratez
+
+    sorpz(OPS_ACC1(0,0,0)) = sorpz(OPS_ACC1(0,0,0))  &
+                           + strhz(OPS_ACC2(0,0,0))*ratez(OPS_ACC3(0,0,0))
+
+END SUBROUTINE bounds_kernel_eqAG_zdir
+
+SUBROUTINE bounds_kernel_eqAH_xdir(sorpx,gam1x)
+
+    real(kind=8), dimension(1) :: sorpx
+    real(kind=8), dimension(1), intent(in) :: gam1x
+
+    sorpx(OPS_ACC1(0,0,0)) = -sorpx(OPS_ACC1(0,0,0))*gam1x(OPS_ACC2(0,0,0))
+
+END SUBROUTINE bounds_kernel_eqAH_xdir
+
+SUBROUTINE bounds_kernel_eqAH_ydir(sorpy,gam1y)
+
+    real(kind=8), dimension(1) :: sorpy
+    real(kind=8), dimension(1), intent(in) :: gam1y
+
+    sorpy(OPS_ACC1(0,0,0)) = -sorpy(OPS_ACC1(0,0,0))*gam1y(OPS_ACC2(0,0,0))
+
+END SUBROUTINE bounds_kernel_eqAH_ydir
+
+SUBROUTINE bounds_kernel_eqAH_zdir(sorpz,gam1z)
+
+    real(kind=8), dimension(1) :: sorpz
+    real(kind=8), dimension(1), intent(in) :: gam1z
+
+    sorpz(OPS_ACC1(0,0,0)) = -sorpz(OPS_ACC1(0,0,0))*gam1z(OPS_ACC2(0,0,0))
+
+END SUBROUTINE bounds_kernel_eqAH_zdir

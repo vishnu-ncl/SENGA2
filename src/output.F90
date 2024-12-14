@@ -286,6 +286,27 @@ SUBROUTINE output
 !       RSC 11-JUL-2009 ADD A DUMP FORMAT SWITCH
         idflag = MOD(INT(itime/ntdump), 2) + 1
         IF( ndofmt == 0 ) THEN
+
+            IF (nxlprm(1) == 4) THEN
+                IF(ops_is_root() == 1)THEN
+                    OPEN(UNIT=ncdmpo,FILE='output/intran.dat',STATUS='unknown',  &
+                         FORM='FORMATTED')
+                    WRITE(ncdmpo,*)intran
+                    CLOSE(ncdmpo)
+                END IF
+
+                fname = 'output/inflow'//pnxhdf
+                call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
+                call ops_fetch_dat_hdf5_file(d_uinf2, trim(fname))
+                call ops_fetch_dat_hdf5_file(d_vinf2, trim(fname))
+                call ops_fetch_dat_hdf5_file(d_winf2, trim(fname))
+
+                DO ispec = 1,nspcmx
+                    call ops_fetch_dat_hdf5_file(d_yinf2(ispec), trim(fname))
+                END DO
+            
+            END IF
+
 !           UNFORMATTED DUMP OUTPUT
             OPEN(UNIT=ncdmpo, FILE=fndmpo(idflag), STATUS='OLD', FORM='UNFORMATTED')
 
@@ -365,21 +386,6 @@ SUBROUTINE output
     IF (ops_is_root() == 1) THEN
         WRITE(*,'(I7,1PE12.4,I5)')itime,tstep,inderr
     END IF
-
-    rangexyz = [3,3,11,11,7,7]
-    call ops_par_loop(maths_kernel_print_drhs, "print single value", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(itime, 1, "integer(kind=4)", OPS_READ))
-
-    rangexyz = [4,4,12,12,8,8]
-    call ops_par_loop(maths_kernel_print_erhs, "print single value", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(itime, 1, "integer(kind=4)", OPS_READ))
-
-    rangexyz = [5,5,13,13,9,9]
-    call ops_par_loop(maths_kernel_print_urhs, "print single value", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(itime, 1, "integer(kind=4)", OPS_READ))
 
 !   =========================================================================
 

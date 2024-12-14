@@ -620,7 +620,7 @@ SUBROUTINE maths_kernel_eqAY(out_arr1,out_arr2,out_arr3,in_arr1,in_arr2,racnst,r
 
 !   EVALUATE FCENT
     trats1 = in_arr1(OPS_ACC4(0,0,0))*ovtst1
-    trats2 = tstar2/in_arr1(OPS_ACC4(0,0,0))
+    trats2 = -tstar2/in_arr1(OPS_ACC4(0,0,0))
     trats3 = in_arr1(OPS_ACC4(0,0,0))*ovtst3
     ftcent = omalph*EXP(trats3) + talpha*EXP(trats1)  &
            + EXP(trats2)

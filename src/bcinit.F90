@@ -457,6 +457,51 @@ END IF
 
 !     =========================================================================
 
+!     INFLOW BC no 4
+!     --------------
+!     SUBSONIC NON-REFLECTING INFLOW
+!     FY - IMPLEMENTATION AS PER LODATO
+!     SPECIFY TEMPERATURE, VELOCITY AND MASS FRACTIONS
+
+!     X-LEFT
+IF(nsbcxl == nsbci4)THEN
+  fxlcnv = .true.
+  fxlvsn = .true.
+  fxltrb = .false.
+END IF
+
+!     X-RIGHT
+IF(nsbcxr == nsbci4)THEN
+  fxrcnv = .true.
+  fxrvsn = .true.
+END IF
+
+!     Y-LEFT
+IF(nsbcyl == nsbci4)THEN
+  fylcnv = .true.
+  fylvsn = .true.
+END IF
+
+!     Y-RIGHT
+IF(nsbcyr == nsbci4)THEN
+  fyrcnv = .true.
+  fyrvsn = .true.
+END IF
+
+!     Z-LEFT
+IF(nsbczl == nsbci4)THEN
+  fzlcnv = .true.
+  fzlvsn = .true.
+END IF
+
+!     Z-RIGHT
+IF(nsbczr == nsbci4)THEN
+  fzrcnv = .true.
+  fzrvsn = .true.
+END IF
+
+!     =========================================================================
+
 !     WALL BC No 1
 !     ------------
 !     NO-SLIP WALL - ADIABATIC
@@ -580,7 +625,7 @@ IF(nsbcyl == nsbcw2)THEN
 
   fylcnv = .true.
 !       RSC 23-JAN-2015
-  fyrdif = .true.
+  fyldif = .true.
 !       RSC 19-MAY-2015
   fyladw = .true.
   fyldfw = .true.

@@ -144,6 +144,11 @@ PROGRAM senga2
 
         itime = jtime
 
+!        IF(nxlprm(1) == 4) THEN
+!            CALL inflow
+!            CALL p_sync
+!        END IF
+
 !       =======================================================================
 
 !       RUNGE-KUTTA SUBSTEPS

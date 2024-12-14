@@ -171,6 +171,10 @@ IF(iproc == 0)THEN
   READ(nccont,*)
   READ(nccont,*)
   READ(nccont,*)ngbcxl,(nxlprm(ic),ic=1,nbcpri), (rxlprm(ic),ic=1,nbcprr)
+! FY - ADDED FOR READING OF EXTRA VARIABLES FOR NON-REFLECTING INFLOW
+  IF(ngbcxl == nsbci4)THEN
+    READ(nccont,*)(rxlprc(ic),ic=1,nbcprc)
+  END IF
   READ(nccont,*)ngbcxr,(nxrprm(ic),ic=1,nbcpri), (rxrprm(ic),ic=1,nbcprr)
   READ(nccont,*)ngbcyl,(nylprm(ic),ic=1,nbcpri), (rylprm(ic),ic=1,nbcprr)
   READ(nccont,*)ngbcyr,(nyrprm(ic),ic=1,nbcpri), (ryrprm(ic),ic=1,nbcprr)
@@ -290,6 +294,12 @@ IF(iproc == 0)THEN
     ncount = ncount + 1
     parray(ncount) = rxlprm(ic)
   END DO
+  IF(ngbcxl == nsbci4)THEN ! FY - ADDED FOR NSBCI4
+    DO ic = 1, nbcprc
+      ncount = ncount + 1
+      parray(ncount) = rxlprc(ic)
+    END DO
+  END IF
   ncount = ncount + 1
   parray(ncount) = REAL(ngbcxr,kind=8)
   DO ic = 1, nbcpri
@@ -473,6 +483,12 @@ IF(iproc /= 0)THEN
     ncount = ncount + 1
     rxlprm(ic) = parray(ncount)
   END DO
+  IF(ngbcxl == nsbci4)THEN ! FY - ADDED FOR NSBCI4
+    DO ic = 1, nbcprc
+      ncount = ncount + 1
+      rxlprc(ic) = parray(ncount)
+    END DO
+  END IF
   ncount = ncount + 1
   ngbcxr = nint(parray(ncount))
   DO ic = 1, nbcpri
