@@ -13,7 +13,7 @@ MODULE com_senga
     implicit none
 
 !   GLOBAL GRID SIZE
-    integer(kind=4), parameter :: nxglbl=504, nyglbl=252, nzglbl=252
+    integer(kind=4), parameter :: nxglbl=1152, nyglbl=288, nzglbl=288
 !   SET NGZMAX=MAX(NXGLBL,NYGLBL,NZGLBL)
     integer(kind=4), parameter :: ngzmax=nxglbl
     integer(kind=4), target :: nxglbl_ops=nxglbl, nyglbl_ops=nyglbl, nzglbl_ops=nzglbl
@@ -24,7 +24,7 @@ MODULE com_senga
     integer(kind=4), parameter :: nprmax=nxproc
 
 !   LOCAL GRID SIZE - MENTION SAME VALUE AS GLOBAL GRID SIZE
-    integer(kind=4), parameter :: nxsize=504, nysize=252, nzsize=252
+    integer(kind=4), parameter :: nxsize=1152, nysize=288, nzsize=288
 !   SET NSZMAX=MAX(NXSIZE,NYSIZE,NZSIZE)
     integer(kind=4), parameter :: nszmax=nxsize
 
