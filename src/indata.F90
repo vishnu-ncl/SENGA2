@@ -36,15 +36,15 @@ SUBROUTINE indata
 
 !     *************************************************************************
 
+#ifdef hdf5
+use hdf5io
+#endif
 
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-#ifdef HDF5
-use hdf5io
-#endif
-use com_espect
 
+use com_espect
 use com_senga
 !     -------------------------------------------------------------------------
 
@@ -92,8 +92,10 @@ CHARACTER (LEN=1) :: strcof
 !     RSC UPDATE NUMBER OF PROCESSORS
 CHARACTER (LEN=6) :: pnproc
 CHARACTER (LEN=1) :: pnflag
+CHARACTER (LEN=20) :: fname
 LOGICAL :: fxdump
 LOGICAL :: flgreq
+
 
 !     BEGIN
 !     =====
@@ -102,9 +104,10 @@ LOGICAL :: flgreq
 
 !     SET UP HDF5 I/O
 !     ===============
-#ifdef HDF5
+#ifdef hdf5
 CALL hdf5_init
 #endif
+
 !     SET UP FILE I/O
 !     ===============
 
@@ -126,22 +129,80 @@ fnradn = pnradn//pnxdat
 fnrept = pnrept//pnxres
 fnstat = pnstat//pnxres
 idflag = 0
-WRITE(pnflag,'(I1)')idflag
-fndmpo(1) = pndmpi//pnproc//pnflag//pnxdat
-#ifdef HDF5
+#ifdef hdf5
 h5_filename(1) = pndmpi//pnflag//".h5"
 #endif
+WRITE(pnflag,'(I1)')idflag
+fndmpo(1) = pndmpi//pnproc//pnflag//pnxdat
 idflag = 1
 WRITE(pnflag,'(I1)')idflag
 fndmpo(2) = pndmpi//pnproc//pnflag//pnxdat
-#ifdef HDF5
+#ifdef hdf5
 h5_filename(2) = pndmpi//pnflag//".h5"
 #endif
+
 !     =========================================================================
 
 !     GET THE RUN CONTROL DATA
 !     ========================
 CALL contin
+
+IF(nxlprm(1) == 4) THEN
+!     VM: SYNTHETIC DIGITAL FILTERING METHOD
+  DO jc=jstal,jstol
+    DO kc=kstal,kstol
+      uinf1(jc,kc) = zero
+      uinf2(jc,kc) = zero
+      vinf1(jc,kc) = zero
+      vinf2(jc,kc) = zero
+      winf1(jc,kc) = zero
+      winf2(jc,kc) = zero
+      DO ispec=1,nspec
+        yinf1(jc,kc,ispec)=zeros
+        yinf2(jc,kc,ispec)=zeros
+      END DO
+    END DO
+  END DO
+!     ATTENTION WHEN RESTART: THE SAME FILE EXTENSION MUST BE ENTERED HERE AS IN INFLOW!
+  IF (ncdmpi == 1 .AND. iproc == 0)THEN
+!     ACTUALLY, INTRAN0.DAT OR INTRAN1.DAT SHOULD BE HERE!
+    OPEN(UNIT=16,FILE='output/intran.dat',FORM='FORMATTED')
+    READ(16,*)intran
+    CLOSE(16)
+    passer=DBLE(intran)
+    CALL p_bcst(passer,1,1,0)
+  ELSE
+    intran=-1
+  END IF
+
+  CALL p_sync
+  intran=nint(passer)
+
+  IF(ncdmpi == 1)THEN
+    IF (ixproc == 0)THEN
+      WRITE(fname,'(A,I4.4,A)')'output/inflow'//pnproc//'.dat'
+      OPEN(UNIT=16,FILE=fname,STATUS='unknown',FORM='FORMATTED')
+      DO kc = 1,nzsize
+        DO jc = 1,nysize
+          READ(16,*)uinf2(jc,kc),vinf2(jc,kc),winf2(jc,kc),  &
+              (yinf2(jc,kc,ispec),ispec=1,nspec)
+        END DO
+      END DO
+      CLOSE(16)
+
+      DO jc=jstal,jstol
+        DO kc=kstal,kstol
+          uinf1(jc,kc)=uinf2(jc,kc)
+          vinf1(jc,kc)=vinf2(jc,kc)
+          winf1(jc,kc)=winf2(jc,kc)
+          DO ispec=1,nspec
+            yinf1(jc,kc,ispec)=yinf2(jc,kc,ispec)
+          END DO
+        END DO
+      END DO
+    END IF
+  END IF
+END IF
 
 !     =========================================================================
 
@@ -947,7 +1008,7 @@ itstat = 0
 
 !     CHECK AND INITIALISE DUMP FILES
 !     -------------------------------
-#ifndef HDF5
+#ifndef hdf5
 INQUIRE(FILE=fndmpo(1),EXIST=fxdump)
 IF(.NOT.fxdump)THEN
   IF(ndofmt == 0)THEN
@@ -970,8 +1031,6 @@ END IF
 CALL create_h5dump_files
 #endif
 
-
-
 !     ==========================================================================
 
 !     INITIALISE ADDITIONAL PARAMETERS
@@ -979,7 +1038,7 @@ CALL create_h5dump_files
 
 !     SET VALUE OF PI
 !     ---------------
-pi = FOUR*ATAN(ONE)
+pi = four*ATAN(one)
 
 !     SET VALUE OF LN(10)
 !     -------------------
@@ -1319,7 +1378,7 @@ END DO
 
 !     COLD START SWITCH
 !     -----------------
-    IF(ncdmpi == 1)THEN
+IF(ncdmpi == 1)THEN
   
 !   =======================================================================
 !   WARM START
@@ -1330,56 +1389,64 @@ END DO
 !   TO BLEND INITIAL VELOCITY AND SCALAR FIELDS
 !   WITH PREVIOUSLY DUMPED DATA
 !   -----------------------------------------------------------------------
+
+!Vishnu: Prevent overwriting TSTEP
+  tsold=tstep
   
 !   RESTART FROM FULL DUMP FILES
 !   ----------------------------
 !   READ THE DATA FROM DUMP INPUT FILE 1
 !   NOTE THAT URUN,VRUN,WRUN,ERUN AND YRUN ARE ALL IN CONSERVATIVE FORM
 !   RSC 11-JUL-2009 ADD A DUMP FORMAT SWITCH
-#ifndef HDF5
-        IF(ndifmt == 0)THEN
+#ifndef hdf5
+  IF(ndifmt == 0)THEN
     
-!           UNFORMATTED DUMP INPUT
-            OPEN(UNIT=ncdmpi,FILE=fndmpo(1),STATUS='OLD', FORM='UNFORMATTED')
-            READ(ncdmpi)nxdmax,nydmax,nzdmax,ndspec, drun,urun,vrun,wrun,erun,yrun,  &
-                etime,tstep,errold,errldr
+!         UNFORMATTED DUMP INPUT
+    OPEN(UNIT=ncdmpi,FILE=fndmpo(1),STATUS='OLD', FORM='UNFORMATTED')
+    READ(ncdmpi)nxdmax,nydmax,nzdmax,ndspec, drun,urun,vrun,wrun,erun,yrun,  &
+        etime,tstep,errold,errldr
     
-!           SIZE ERROR CHECK
-            IF(nxdmax /= nxnode)WRITE(6,*)'Dump input size error: x'
-            IF(nydmax /= nynode)WRITE(6,*)'Dump input size error: y'
-            IF(nzdmax /= nznode)WRITE(6,*)'Dump input size error: z'
-            IF(ndspec /= nspec)WRITE(6,*)'Dump input size error: species'
+!         SIZE ERROR CHECK
+    IF(nxdmax /= nxnode)WRITE(6,*)'Dump input size error: x'
+    IF(nydmax /= nynode)WRITE(6,*)'Dump input size error: y'
+    IF(nzdmax /= nznode)WRITE(6,*)'Dump input size error: z'
+    IF(ndspec /= nspec)WRITE(6,*)'Dump input size error: species'
     
-            CLOSE(ncdmpi)
-        ELSE
+    CLOSE(ncdmpi)
+
+  ELSE
     
-!           FORMATTED DUMP INPUT
-            OPEN(UNIT=ncdmpi,FILE=fndmpo(1),STATUS='OLD',FORM='FORMATTED')
-            READ(ncdmpi,*)nxdmax,nydmax,nzdmax,ndspec
+!         FORMATTED DUMP INPUT
+    OPEN(UNIT=ncdmpi,FILE=fndmpo(1),STATUS='OLD',FORM='FORMATTED')
+    READ(ncdmpi,*)nxdmax,nydmax,nzdmax,ndspec
     
-!           SIZE ERROR CHECK
-            IF(nxdmax /= nxnode)WRITE(6,*)'Dump input size error: x'
-            IF(nydmax /= nynode)WRITE(6,*)'Dump input size error: y'
-            IF(nzdmax /= nznode)WRITE(6,*)'Dump input size error: z'
-            IF(ndspec /= nspec)WRITE(6,*)'Dump input size error: species'
+!         SIZE ERROR CHECK
+    IF(nxdmax /= nxnode)WRITE(6,*)'Dump input size error: x'
+    IF(nydmax /= nynode)WRITE(6,*)'Dump input size error: y'
+    IF(nzdmax /= nznode)WRITE(6,*)'Dump input size error: z'
+    IF(ndspec /= nspec)WRITE(6,*)'Dump input size error: species'
     
-            DO kc = 1, nznode
-                DO jc = 1, nynode
-                    DO ic = 1, nxnode
-                        READ(ncdmpi,*)drun(ic,jc,kc),  &
-                            urun(ic,jc,kc),vrun(ic,jc,kc),wrun(ic,jc,kc), erun(ic,jc,kc),  &
-                            (yrun(ic,jc,kc,ispec),ispec=1,nspec)
-                    END DO
-                END DO
-            END DO
+    DO kc = 1, nznode
+      DO jc = 1, nynode
+        DO ic = 1, nxnode
+          READ(ncdmpi,*)drun(ic,jc,kc),  &
+              urun(ic,jc,kc),vrun(ic,jc,kc),wrun(ic,jc,kc), erun(ic,jc,kc),  &
+              (yrun(ic,jc,kc,ispec),ispec=1,nspec)
+        END DO
+      END DO
+    END DO
     
-            READ(ncdmpi,*)etime,tstep,errold,errldr
+    READ(ncdmpi,*)etime,tstep,errold,errldr
     
-            CLOSE(ncdmpi)
-        END IF
+    CLOSE(ncdmpi)
+
+  END IF
 #else
-        CALL read_h5dump_files
+  CALL read_h5dump_files
 #endif
+
+!Vishnu: TSTEP not overwritten
+IF(nstpsw==0) tstep=tsold
 
 !       =======================================================================
 !       WARM START COMPLETE

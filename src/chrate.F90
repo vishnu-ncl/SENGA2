@@ -336,7 +336,7 @@ DO istep = 1, nstep
           
 !               EVALUATE FCENT
           trats1 = trun(ic,jc,kc)*ovtst1
-          trats2 = tstar2/trun(ic,jc,kc)
+          trats2 = -tstar2/trun(ic,jc,kc)
           trats3 = trun(ic,jc,kc)*ovtst3
           ftcent = omalph*EXP(trats3) + talpha*EXP(trats1)  &
               + EXP(trats2)

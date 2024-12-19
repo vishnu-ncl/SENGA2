@@ -75,6 +75,17 @@ INTEGER :: flag_pio_xl,flag_pio_xr,flag_pio_yl,flag_pio_yr,  &
     flag_pio_zl,flag_pio_zr
 !VM: SWITCH TO TURN POINTWISE INFLOW-OUTFLOW ON/OFF
 !1 IS ON, 0 IS OFF
+
+!     FY - FOR NR INFLOW
+DOUBLE PRECISION :: m2max! = 0.001D0 ! SET VALUE OF MAXIMUM MACH NUMBER SQUARED
+DOUBLE PRECISION :: nrieta1,nrieta2,nrieta3,nrieta4,nrieta5,nrieta6
+DOUBLE PRECISION :: stluxl(nysize,nzsize),stlvxl(nysize,nzsize),  &
+    stlwxl(nysize,nzsize),stltxl(nysize,nzsize)
+DOUBLE PRECISION :: stlyxl(nysize,nzsize,nspcmx)
+
+!     SET VALUE OF MAXIMUM MACH NUMBER SQUARED
+m2max = 0.001D0
+
 bet=0.050D0
 
 !     BEGIN
@@ -623,71 +634,273 @@ IF(fxlcnv)THEN
     END DO
     
   END IF
+
+!       =======================================================================
+
+  IF(nsbcxl == nsbci4)THEN
+
+!         INFLOW BC No 4 - IMPLEMENTED BY FY
+!         SUBSONIC NON-REFLECTING INFLOW AS PER LODATO WITH TRANSVERSE TERMS INCLUDED
+
+!         ASSIGN NON-REFLECTING INFLOW COEFFICIENTS READ FROM CONTROL FILE
+    nrieta1 = rxlprc(1)
+    nrieta2 = rxlprc(2)
+    nrieta3 = rxlprc(3)
+    nrieta4 = rxlprc(4)
+    nrieta5 = rxlprc(5)
+    nrieta6 = rxlprc(6)
+
+!         STORE VELOCITY, TEMPERATURE MASS FRACTION VALUES AT THE BOUNDARY
+    DO kc = kstal,kstol
+      DO jc = jstal,jstol
+
+        stluxl(jc,kc) = struxl(jc,kc)
+        stlvxl(jc,kc) = strvxl(jc,kc)
+        stlwxl(jc,kc) = strwxl(jc,kc)
+        stltxl(jc,kc) = strtxl(jc,kc)
+
+      END DO
+    END DO
+
+    DO ispec = 1,nspec
+
+      DO kc = kstal,kstol
+        DO jc = jstal,jstol
+
+          stlyxl(jc,kc,ispec) = stryxl(jc,kc,ispec)
+
+        END DO
+      END DO
+
+    END DO
+
+!         SET VELOCITY, TEMPERATURE, MASS FRACTION TARGET VALUES
+    CALL bcutxl
+    CALL bcttxl
+    CALL bcytxl
+
+!         SPECIFY L's AS REQUIRED
+!         L2X-L5X
+    DO kc = kstal,kstol
+      DO jc = jstal,jstol
+
+!             OLD VALUE OF L's
+        fornow = strdxl(jc,kc)*acouxl(jc,kc)*bcl1xl(jc,kc)
+        bcl2xl(jc,kc) = stluxl(jc,kc)  &
+            *(bcl2xl(jc,kc)-bcl5xl(jc,kc)*ova2xl(jc,kc))
+        bcl3xl(jc,kc) = stluxl(jc,kc)*bcl3xl(jc,kc)
+        bcl4xl(jc,kc) = stluxl(jc,kc)*bcl4xl(jc,kc)
+        bcl5xl(jc,kc) = half*(stluxl(jc,kc)+acouxl(jc,kc))  &
+            *(bcl5xl(jc,kc)+fornow)
+
+!             STORE VALUE OF BCL2XL AFTER CALC
+        IF ((jc == 1).AND.(kc == 1)) temp3=bcl2xl(jc,kc)
+
+!             SUBTRACT FROM NEW VALUE OF L's
+!             L1X UNCHANGED
+        bcl2xl(jc,kc) = nrieta2*strdxl(jc,kc)  &
+            *strrxl(jc,kc)/(xgdlen*acouxl(jc,kc))  &
+            *(stltxl(jc,kc)-strtxl(jc,kc))  &
+            +tt2xl(jc,kc)*ova2xl(jc,kc)-bcl2xl(jc,kc)
+        bcl3xl(jc,kc) = nrieta3*acouxl(jc,kc)  &
+            /xgdlen*(stlvxl(jc,kc)-strvxl(jc,kc)) +tt3xl(jc,kc)-bcl3xl(jc,kc)
+        bcl4xl(jc,kc) = nrieta4*acouxl(jc,kc)  &
+            /xgdlen*(stlwxl(jc,kc)-strwxl(jc,kc)) +tt4xl(jc,kc)-bcl4xl(jc,kc)
+        bcl5xl(jc,kc) = nrieta5 *strdxl(jc,kc)*acouxl(jc,kc)  &
+            *acouxl(jc,kc)*(one-m2max)/(two*xgdlen)  &
+            *(stluxl(jc,kc)-struxl(jc,kc)) +half*tt5xl(jc,kc)  &
+            -bcl5xl(jc,kc)
+
+      END DO
+    END DO
+
+!         LYX
+    DO ispec = 1,nspec
+
+      DO kc = kstal,kstol
+        DO jc = jstal,jstol
+
+!               OLD VALUE OF L's
+          bclyxl(jc,kc,ispec) = stluxl(jc,kc) *bclyxl(jc,kc,ispec)
+
+!               SUBTRACT FROM NEW VALUE OF L's
+          bclyxl(jc,kc,ispec) = nrieta6 *acouxl(jc,kc)/xgdlen  &
+              *(stlyxl(jc,kc,ispec) -stryxl(jc,kc,ispec))  &
+              +tt6xl(jc,kc,ispec) -bclyxl(jc,kc,ispec)
+
+        END DO
+      END DO
+
+    END DO
+
+!         ADD TO CONSERVATIVE SOURCE TERMS
+!         APPLYING WAVE AMPLITUDE VARIATIONS TO CONSERVATIVE VARIABLES
+    DO kc = kstal,kstol
+      DO jc = jstal,jstol
+
+        drhs(istal,jc,kc) = drhs(istal,jc,kc) - bcl2xl(jc,kc)  &
+            - bcl5xl(jc,kc)*ova2xl(jc,kc)
+
+        urhs(istal,jc,kc) = urhs(istal,jc,kc) - bcl2xl(jc,kc)*stluxl(jc,kc)  &
+            - bcl5xl(jc,kc)*ova2xl(jc,kc)*(stluxl(jc,kc)+acouxl(jc,kc))
+
+        vrhs(istal,jc,kc) = vrhs(istal,jc,kc) - bcl2xl(jc,kc)*stlvxl(jc,kc)  &
+            - bcl3xl(jc,kc)*strdxl(jc,kc)  &
+            - bcl5xl(jc,kc)*ova2xl(jc,kc)*stlvxl(jc,kc)
+
+        wrhs(istal,jc,kc) = wrhs(istal,jc,kc) - bcl2xl(jc,kc)*stlwxl(jc,kc)  &
+            - bcl4xl(jc,kc)*strdxl(jc,kc)  &
+            - bcl5xl(jc,kc)*ova2xl(jc,kc)*stlwxl(jc,kc)
+
+        erhs(istal,jc,kc) = erhs(istal,jc,kc) - bcl2xl(jc,kc)*strexl(jc,kc)  &
+            - bcl3xl(jc,kc)*strdxl(jc,kc)*stlvxl(jc,kc)  &
+            - bcl4xl(jc,kc)*strdxl(jc,kc)*stlwxl(jc,kc)  &
+            - bcl5xl(jc,kc)*(ova2xl(jc,kc)*strexl(jc,kc)  &
+            + stluxl(jc,kc)/acouxl(jc,kc) + ovgmxl(jc,kc))
+
+      END DO
+    END DO
+
+    DO ispec = 1,nspec
+
+      DO kc = kstal,kstol
+        DO jc = jstal,jstol
+
+          fornow = bclyxl(jc,kc,ispec)*strdxl(jc,kc)
+
+          erhs(istal,jc,kc) = erhs(istal,jc,kc) - fornow*strhxl(jc,kc,ispec)
+
+          yrhs(istal,jc,kc,ispec) = yrhs(istal,jc,kc,ispec)  &
+              - (bcl2xl(jc,kc)+bcl5xl(jc,kc)*ova2xl(jc,kc))*stlyxl(jc,kc,ispec)  &
+              - fornow
+
+        END DO
+      END DO
+
+    END DO
+
+  END IF
   
 !       =======================================================================
   
 !       WALL BOUNDARY CONDITIONS
 !       ------------------------
-  
+
+!       VM & NC CHANGING ADIABATIC WALL TREATMENT
   IF(nsbcxl == nsbcw1)THEN
     
 !         WALL BOUNDARY CONDITION No 1
 !         NO-SLIP WALL - ADIABATIC
     
-!         ALL VELOCITY COMPONENTS IMPOSED
+!         VELOCITY AND TEMPERATURE IMPOSED
+!         AS FUNCTIONS OF TIME
 !         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
 !         SET IN SUBROUTINE BOUNDT
-    
-!         SPECIFY L's AS REQUIRED
-!         L1X,L3X-L5X
+
+    DO kc=kstal,kstol
+      DO jc=jstal,jstol
+        strtxl(jc,kc)=(48.0*trun(istal+1,jc,kc) -36.0*trun(istal+2,jc,kc)  &
+            +16.0*trun(istal+3,jc,kc) -3.0*trun(5,jc,kc))/25.0
+        trun(istal,jc,kc)=strtxl(jc,kc)
+      END DO
+    END DO
+
+!         PRECOMPUTE CHEMISTRY TERMS
     DO kc = kstal,kstol
       DO jc = jstal,jstol
-        
+
+        sorpxl(jc,kc) = zero
+
+      END DO
+    END DO
+
+    DO ispec = 1,nspec
+
+      DO kc = kstal,kstol
+        DO jc = jstal,jstol
+
+          sorpxl(jc,kc) = sorpxl(jc,kc)  &
+              + strhxl(jc,kc,ispec)*ratexl(jc,kc,ispec)
+
+        END DO
+      END DO
+
+    END DO
+
+    DO kc = kstal,kstol
+      DO jc = jstal,jstol
+
+        sorpxl(jc,kc) = -sorpxl(jc,kc)*gam1xl(jc,kc)
+
+      END DO
+    END DO
+
+!         SPECIFY L's AS REQUIRED
+!         L1X-L5X
+    DO kc = kstal,kstol
+      DO jc = jstal,jstol
+
 !             OLD VALUE OF L's
         fornow = strdxl(jc,kc)*acouxl(jc,kc)*bcl1xl(jc,kc)
         bcl1xl(jc,kc) = half*(struxl(jc,kc)-acouxl(jc,kc))  &
             *(bcl5xl(jc,kc)-fornow)
+        bcl2xl(jc,kc) = struxl(jc,kc)  &
+            *(bcl2xl(jc,kc)-bcl5xl(jc,kc)*ova2xl(jc,kc))
         bcl3xl(jc,kc) = struxl(jc,kc)*bcl3xl(jc,kc)
         bcl4xl(jc,kc) = struxl(jc,kc)*bcl4xl(jc,kc)
         bcl5xl(jc,kc) = half*(struxl(jc,kc)+acouxl(jc,kc))  &
             *(bcl5xl(jc,kc)+fornow)
-        
+
 !             SUBTRACT FROM NEW VALUE OF L's
-!             L1X,L2X UNCHANGED
-        bcl3xl(jc,kc) = -dvdtxl(jc,kc) - bcl3xl(jc,kc)
-        bcl4xl(jc,kc) = -dwdtxl(jc,kc) - bcl4xl(jc,kc)
-        bcl5xl(jc,kc) = bcl1xl(jc,kc)  &
-            - strdxl(jc,kc)*acouxl(jc,kc)*dudtxl(jc,kc) - bcl5xl(jc,kc)
-        
+!             L1X UNCHANGED
+        bcl3xl(jc,kc) = zero
+        bcl4xl(jc,kc) = zero
+!             NC SUGGESTION: IF NOT WORKING REMOVE SECOND LINE AS WELL
+        bcl5xl(jc,kc) = bcl1xl(jc,kc) - bcl5xl(jc,kc)
+        bcl2xl(jc,kc) = zero
+
       END DO
     END DO
-    
+
+!         LYX
+    DO ispec = 1,nspec
+
+      DO kc = kstal,kstol
+        DO jc = jstal,jstol
+
+!               OLD VALUE OF LYX
+          bclyxl(jc,kc,ispec) = zero
+
+        END DO
+      END DO
+
+    END DO
+
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO kc = kstal,kstol
       DO jc = jstal,jstol
-        
-        drhs(istal,jc,kc) = drhs(istal,jc,kc) - bcl5xl(jc,kc)*ova2xl(jc,kc)
-        
-        erhs(istal,jc,kc) = erhs(istal,jc,kc)  &
-            - bcl3xl(jc,kc)*strdxl(jc,kc)*strvxl(jc,kc)  &
-            - bcl4xl(jc,kc)*strdxl(jc,kc)*strwxl(jc,kc)  &
-            - bcl5xl(jc,kc)*(ova2xl(jc,kc)*strexl(jc,kc)  &
-            + struxl(jc,kc)/acouxl(jc,kc) + ovgmxl(jc,kc))
-        
+
+        drhs(istal,jc,kc) = drhs(istal,jc,kc) - bcl2xl(jc,kc)  &
+            - bcl5xl(jc,kc)*ova2xl(jc,kc)
+        urhs(istal,jc,kc) = zero
+        vrhs(istal,jc,kc) = zero
+        wrhs(istal,jc,kc) = zero
+        erhs(istal,jc,kc) = zero
+
       END DO
     END DO
-    
+
     DO ispec = 1,nspec
-      
+
       DO kc = kstal,kstol
         DO jc = jstal,jstol
-          
+
           yrhs(istal,jc,kc,ispec) = yrhs(istal,jc,kc,ispec)  &
-              - bcl5xl(jc,kc)*ova2xl(jc,kc)*stryxl(jc,kc,ispec)
-          
+              - (bcl2xl(jc,kc)+bcl5xl(jc,kc)*ova2xl(jc,kc))*stryxl(jc,kc,ispec)
+
         END DO
       END DO
-      
+
     END DO
     
   END IF
@@ -738,7 +951,7 @@ IF(fxlcnv)THEN
 !         L1X-L5X
     DO kc = kstal,kstol
       DO jc = jstal,jstol
-        
+
 !             OLD VALUE OF L's
         fornow = strdxl(jc,kc)*acouxl(jc,kc)*bcl1xl(jc,kc)
         bcl1xl(jc,kc) = half*(struxl(jc,kc)-acouxl(jc,kc))  &
@@ -749,62 +962,59 @@ IF(fxlcnv)THEN
         bcl4xl(jc,kc) = struxl(jc,kc)*bcl4xl(jc,kc)
         bcl5xl(jc,kc) = half*(struxl(jc,kc)+acouxl(jc,kc))  &
             *(bcl5xl(jc,kc)+fornow)
-        
+
 !             SUBTRACT FROM NEW VALUE OF L's
 !             L1X UNCHANGED
-        bcl3xl(jc,kc) = -dvdtxl(jc,kc) - bcl3xl(jc,kc)
-        bcl4xl(jc,kc) = -dwdtxl(jc,kc) - bcl4xl(jc,kc)
-        bcl5xl(jc,kc) = bcl1xl(jc,kc)  &
-            - strdxl(jc,kc)*acouxl(jc,kc)*dudtxl(jc,kc) - bcl5xl(jc,kc)
-        bcl2xl(jc,kc) = gam1xl(jc,kc)*ova2xl(jc,kc)  &
-            *(bcl1xl(jc,kc)+bcl5xl(jc,kc))  &
-            + strdxl(jc,kc)*(dtdtxl(jc,kc)/strtxl(jc,kc)  &
-            - sorpxl(jc,kc)/strpxl(jc,kc)) - bcl2xl(jc,kc)
-        
+        bcl3xl(jc,kc) = zero
+        bcl4xl(jc,kc) = zero
+!             NC SUGGESTION: IF NOT WORKING REMOVE SECOND LINE AS WELL
+        bcl5xl(jc,kc) = bcl1xl(jc,kc) - bcl5xl(jc,kc)
+        bcl2xl(jc,kc) = zero
+
       END DO
     END DO
     
 !         LYX
-    DO ispec = 1,nspec
-      
+   DO ispec = 1,nspec
+
       DO kc = kstal,kstol
         DO jc = jstal,jstol
-          
+
 !               OLD VALUE OF LYX
-          bclyxl(jc,kc,ispec) = struxl(jc,kc)*bclyxl(jc,kc,ispec)
-          
-!               UPDATE L2X
-          bcl2xl(jc,kc) = bcl2xl(jc,kc) + (ratexl(jc,kc,ispec)  &
-              - strdxl(jc,kc)*bclyxl(jc,kc,ispec)) *rgspec(ispec)/strrxl(jc,kc)
-          
+          bclyxl(jc,kc,ispec) = zero
+
         END DO
       END DO
-      
+
     END DO
-    
+
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO kc = kstal,kstol
       DO jc = jstal,jstol
-        
+
         drhs(istal,jc,kc) = drhs(istal,jc,kc) - bcl2xl(jc,kc)  &
             - bcl5xl(jc,kc)*ova2xl(jc,kc)
-        
+        urhs(istal,jc,kc) = zero
+        vrhs(istal,jc,kc) = zero
+        wrhs(istal,jc,kc) = zero
+        erhs(istal,jc,kc) = zero
+
       END DO
     END DO
-    
+
     DO ispec = 1,nspec
-      
+
       DO kc = kstal,kstol
         DO jc = jstal,jstol
-          
+
           yrhs(istal,jc,kc,ispec) = yrhs(istal,jc,kc,ispec)  &
               - (bcl2xl(jc,kc)+bcl5xl(jc,kc)*ova2xl(jc,kc))*stryxl(jc,kc,ispec)
-          
+
         END DO
       END DO
-      
+
     END DO
-    
+
   END IF
   
 !       =======================================================================
@@ -1359,66 +1569,123 @@ IF(fxrcnv)THEN
   
 !       WALL BOUNDARY CONDITIONS
 !       ------------------------
-  
+
+!       VM & NC CHANGING ADIABATIC WALL TREATMENT
   IF(nsbcxr == nsbcw1)THEN
     
 !         WALL BOUNDARY CONDITION No 1
 !         NO-SLIP WALL - ADIABATIC
-    
-!         ALL VELOCITY COMPONENTS IMPOSED
+
+!         VELOCITY AND TEMPERATURE IMPOSED
+!         AS FUNCTIONS OF TIME
 !         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
 !         SET IN SUBROUTINE BOUNDT
-    
-!         SPECIFY L's AS REQUIRED
-!         L1X,L3X-L5X
+
+    DO kc=kstal,kstol
+      DO jc=jstal,jstol
+        strtxr(jc,kc)=(48.0*trun(istol-1,jc,kc) -36.0*trun(istol-2,jc,kc)  &
+            +16.0*trun(istol-3,jc,kc) -3.0*trun(istol-4,jc,kc))/25.0
+        trun(istol,jc,kc)=strtxr(jc,kc)
+      END DO
+    END DO
+
+!         PRECOMPUTE CHEMISTRY TERMS
+
     DO kc = kstal,kstol
       DO jc = jstal,jstol
-        
+
+        sorpxr(jc,kc) = zero
+
+      END DO
+    END DO
+
+    DO ispec = 1,nspec
+
+      DO kc = kstal,kstol
+        DO jc = jstal,jstol
+
+          sorpxr(jc,kc) = sorpxr(jc,kc)  &
+              + strhxr(jc,kc,ispec)*ratexr(jc,kc,ispec)
+
+        END DO
+      END DO
+
+    END DO
+
+    DO kc = kstal,kstol
+      DO jc = jstal,jstol
+
+        sorpxr(jc,kc) = -sorpxr(jc,kc)*gam1xr(jc,kc)
+
+      END DO
+    END DO
+
+!         SPECIFY L's AS REQUIRED
+!         L1X-L5X
+    DO kc = kstal,kstol
+      DO jc = jstal,jstol
+
 !             OLD VALUE OF L's
         fornow = strdxr(jc,kc)*acouxr(jc,kc)*bcl1xr(jc,kc)
         bcl1xr(jc,kc) = half*(struxr(jc,kc)-acouxr(jc,kc))  &
             *(bcl5xr(jc,kc)-fornow)
+        bcl2xr(jc,kc) = struxr(jc,kc)  &
+            *(bcl2xr(jc,kc)-bcl5xr(jc,kc)*ova2xr(jc,kc))
         bcl3xr(jc,kc) = struxr(jc,kc)*bcl3xr(jc,kc)
         bcl4xr(jc,kc) = struxr(jc,kc)*bcl4xr(jc,kc)
         bcl5xr(jc,kc) = half*(struxr(jc,kc)+acouxr(jc,kc))  &
             *(bcl5xr(jc,kc)+fornow)
-        
+
 !             SUBTRACT FROM NEW VALUE OF L's
-!             L2X,L5X UNCHANGED
-        bcl1xr(jc,kc) = bcl5xr(jc,kc)  &
-            + strdxr(jc,kc)*acouxr(jc,kc)*dudtxr(jc,kc) - bcl1xr(jc,kc)
-        bcl3xr(jc,kc) = -dvdtxr(jc,kc) - bcl3xr(jc,kc)
-        bcl4xr(jc,kc) = -dwdtxr(jc,kc) - bcl4xr(jc,kc)
-        
+!             L5X UNCHANGED
+!             NC SUGGESTION: IF NOT WORKING REMOVE SECOND LINE AS WELL
+        bcl1xr(jc,kc) = bcl5xr(jc,kc) - bcl1xr(jc,kc)
+        bcl3xr(jc,kc) = zero
+        bcl4xr(jc,kc) = zero
+        bcl2xr(jc,kc) = zero
+
       END DO
     END DO
-    
+
+!         LYX
+    DO ispec = 1,nspec
+
+      DO kc = kstal,kstol
+        DO jc = jstal,jstol
+
+!               OLD VALUE OF LYX
+          bclyxr(jc,kc,ispec) = zero
+
+        END DO
+      END DO
+
+    END DO
+
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO kc = kstal,kstol
       DO jc = jstal,jstol
-        
-        drhs(istol,jc,kc) = drhs(istol,jc,kc) - bcl1xr(jc,kc)*ova2xr(jc,kc)
-        
-        erhs(istol,jc,kc) = erhs(istol,jc,kc)  &
-            - bcl1xr(jc,kc)*(ova2xr(jc,kc)*strexr(jc,kc)  &
-            + struxr(jc,kc)/acouxr(jc,kc) + ovgmxr(jc,kc))  &
-            - bcl3xr(jc,kc)*strdxr(jc,kc)*strvxr(jc,kc)  &
-            - bcl4xr(jc,kc)*strdxr(jc,kc)*strwxr(jc,kc)
-        
+
+        drhs(istol,jc,kc) = drhs(istol,jc,kc) - bcl1xr(jc,kc)*ova2xr(jc,kc)  &
+            - bcl2xr(jc,kc)
+        urhs(istol,jc,kc) = zero
+        vrhs(istol,jc,kc) = zero
+        wrhs(istol,jc,kc) = zero
+        erhs(istol,jc,kc) = zero
+
       END DO
     END DO
-    
+
     DO ispec = 1,nspec
-      
+
       DO kc = kstal,kstol
         DO jc = jstal,jstol
-          
+
           yrhs(istol,jc,kc,ispec) = yrhs(istol,jc,kc,ispec)  &
-              - bcl1xr(jc,kc)*ova2xr(jc,kc)*stryxr(jc,kc,ispec)
-          
+              - (bcl2xr(jc,kc)+bcl1xr(jc,kc)*ova2xr(jc,kc))*stryxr(jc,kc,ispec)
+
         END DO
       END DO
-      
+
     END DO
     
   END IF
@@ -1480,60 +1747,57 @@ IF(fxrcnv)THEN
         bcl4xr(jc,kc) = struxr(jc,kc)*bcl4xr(jc,kc)
         bcl5xr(jc,kc) = half*(struxr(jc,kc)+acouxr(jc,kc))  &
             *(bcl5xr(jc,kc)+fornow)
-        
+
 !             SUBTRACT FROM NEW VALUE OF L's
 !             L5X UNCHANGED
-        bcl1xr(jc,kc) = bcl5xr(jc,kc)  &
-            + strdxr(jc,kc)*acouxr(jc,kc)*dudtxr(jc,kc) - bcl1xr(jc,kc)
-        bcl3xr(jc,kc) = -dvdtxr(jc,kc) - bcl3xr(jc,kc)
-        bcl4xr(jc,kc) = -dwdtxr(jc,kc) - bcl4xr(jc,kc)
-        bcl2xr(jc,kc) = gam1xr(jc,kc)*ova2xr(jc,kc)  &
-            *(bcl1xr(jc,kc)+bcl5xr(jc,kc))  &
-            + strdxr(jc,kc)*(dtdtxr(jc,kc)/strtxr(jc,kc)  &
-            - sorpxr(jc,kc)/strpxr(jc,kc)) - bcl2xr(jc,kc)
+!             NC SUGGESTION: IF NOT WORKING REMOVE SECOND LINE AS WELL
+        bcl1xr(jc,kc) = bcl5xr(jc,kc) - bcl1xr(jc,kc)
+        bcl3xr(jc,kc) = zero
+        bcl4xr(jc,kc) = zero
+        bcl2xr(jc,kc) = zero
         
       END DO
     END DO
     
 !         LYX
     DO ispec = 1,nspec
-      
+
       DO kc = kstal,kstol
         DO jc = jstal,jstol
-          
+
 !               OLD VALUE OF LYX
-          bclyxr(jc,kc,ispec) = struxr(jc,kc)*bclyxr(jc,kc,ispec)
-          
-!               UPDATE L2X
-          bcl2xr(jc,kc) = bcl2xr(jc,kc) + (ratexr(jc,kc,ispec)  &
-              - strdxr(jc,kc)*bclyxr(jc,kc,ispec)) *rgspec(ispec)/strrxr(jc,kc)
-          
+          bclyxr(jc,kc,ispec) = zero
+
         END DO
       END DO
-      
+
     END DO
-    
+
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO kc = kstal,kstol
       DO jc = jstal,jstol
-        
+
         drhs(istol,jc,kc) = drhs(istol,jc,kc) - bcl1xr(jc,kc)*ova2xr(jc,kc)  &
             - bcl2xr(jc,kc)
-        
+        urhs(istol,jc,kc) = zero
+        vrhs(istol,jc,kc) = zero
+        wrhs(istol,jc,kc) = zero
+        erhs(istol,jc,kc) = zero
+
       END DO
     END DO
-    
+
     DO ispec = 1,nspec
-      
+
       DO kc = kstal,kstol
         DO jc = jstal,jstol
-          
+
           yrhs(istol,jc,kc,ispec) = yrhs(istol,jc,kc,ispec)  &
               - (bcl2xr(jc,kc)+bcl1xr(jc,kc)*ova2xr(jc,kc))*stryxr(jc,kc,ispec)
-          
+
         END DO
       END DO
-      
+
     END DO
     
   END IF
@@ -1712,8 +1976,8 @@ IF(fylcnv)THEN
               + cobcyl*acouyl(ic,kc)*(strpyl(ic,kc)-pinfyl)  &
               +0.5*(1.0-bet)*tt5yl(ic,kc)- bcl5yl(ic,kc)  &
               + 100.0*strdyl(ic,kc)*(one/ygdlen) &!ASK NC: CHANGED TO YGDLEN  &
-              *(acouyl(ic,kc)**2.0-strvyl(ic,kc)**2.0)*(strvyl(ic,kc)-0.0)
-          
+              *(acouyl(ic,kc)**2.0-strvyl(ic,kc)**2.0) *(strvyl(ic,kc)-0.0)
+
         ELSE
           bcl5yl(ic,kc)= half*sorpyl(ic,kc)  &
               + cobcyl*acouyl(ic,kc)*(strpyl(ic,kc)-pinfyl)  &
@@ -2085,71 +2349,125 @@ IF(fylcnv)THEN
   
 !       WALL BOUNDARY CONDITIONS
 !       ------------------------
-  
+
+!       VM & NC CHANGING ADIABATIC WALL TREATMENT
   IF(nsbcyl == nsbcw1)THEN
-    
+  
 !         WALL BOUNDARY CONDITION No 1
 !         NO-SLIP WALL - ADIABATIC
-    
-!         ALL VELOCITY COMPONENTS IMPOSED
+
+!         VELOCITY AND TEMPERATURE IMPOSED
+!         AS FUNCTIONS OF TIME
 !         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
 !         SET IN SUBROUTINE BOUNDT
-    
-!         SPECIFY L's AS REQUIRED
-!         L1Y,L3Y-L5Y
+
+    DO kc=kstal,kstol
+      DO ic=istal,istol
+        strtyl(ic,kc)=(48.0*trun(ic,jstal+1,kc) -36.0*trun(ic,jstal+2,kc)  &
+            +16.0*trun(ic,jstal+3,kc) -3.0*trun(ic,jstal+4,kc))/25.0
+        trun(ic,jstal,kc)=strtyl(ic,kc)
+      END DO
+    END DO
+
+!         PRECOMPUTE CHEMISTRY TERMS
     DO kc = kstal,kstol
       DO ic = istal,istol
-        
+
+        sorpyl(ic,kc) = zero
+
+      END DO
+    END DO
+
+    DO ispec = 1,nspec
+
+      DO kc = kstal,kstol
+        DO ic = istal,istol
+
+          sorpyl(ic,kc) = sorpyl(ic,kc)  &
+              + strhyl(ic,kc,ispec)*rateyl(ic,kc,ispec)
+
+        END DO
+      END DO
+
+    END DO
+
+    DO kc = kstal,kstol
+      DO ic = istal,istol
+
+        sorpyl(ic,kc) = -sorpyl(ic,kc)*gam1yl(ic,kc)
+
+      END DO
+    END DO
+
+!         SPECIFY L's AS REQUIRED
+!         L1Y-L5Y
+    DO kc = kstal,kstol
+      DO ic = istal,istol
+
 !             OLD VALUE OF L's
         fornow = strdyl(ic,kc)*acouyl(ic,kc)*bcl1yl(ic,kc)
         bcl1yl(ic,kc) = half*(strvyl(ic,kc)-acouyl(ic,kc))  &
             *(bcl5yl(ic,kc)-fornow)
+        bcl2yl(ic,kc) = strvyl(ic,kc)  &
+            *(bcl2yl(ic,kc)-bcl5yl(ic,kc)*ova2yl(ic,kc))
         bcl3yl(ic,kc) = strvyl(ic,kc)*bcl3yl(ic,kc)
         bcl4yl(ic,kc) = strvyl(ic,kc)*bcl4yl(ic,kc)
         bcl5yl(ic,kc) = half*(strvyl(ic,kc)+acouyl(ic,kc))  &
             *(bcl5yl(ic,kc)+fornow)
-        
+
 !             SUBTRACT FROM NEW VALUE OF L's
-!             L1Y,L2Y UNCHANGED
-        bcl3yl(ic,kc) = -dudtyl(ic,kc) - bcl3yl(ic,kc)
-        bcl4yl(ic,kc) = -dwdtyl(ic,kc) - bcl4yl(ic,kc)
-        bcl5yl(ic,kc) = bcl1yl(ic,kc)  &
-            - strdyl(ic,kc)*acouyl(ic,kc)*dvdtyl(ic,kc) - bcl5yl(ic,kc)
-        
+!             L1Y UNCHANGED
+        bcl3yl(ic,kc) = zero
+        bcl4yl(ic,kc) = zero
+        bcl5yl(ic,kc) = bcl1yl(ic,kc) - bcl5yl(ic,kc)
+        bcl2yl(ic,kc) = zero
+
       END DO
     END DO
-    
+
+!         LYY
+    DO ispec = 1,nspec
+
+      DO kc = kstal,kstol
+        DO ic = istal,istol
+
+!               OLD VALUE OF LYY
+          bclyyl(ic,kc,ispec) = zero
+
+        END DO
+      END DO
+
+    END DO
+
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO kc = kstal,kstol
       DO ic = istal,istol
-        
-        drhs(ic,jstal,kc) = drhs(ic,jstal,kc) - bcl5yl(ic,kc)*ova2yl(ic,kc)
-        
-        erhs(ic,jstal,kc) = erhs(ic,jstal,kc)  &
-            - bcl3yl(ic,kc)*strdyl(ic,kc)*struyl(ic,kc)  &
-            - bcl4yl(ic,kc)*strdyl(ic,kc)*strwyl(ic,kc)  &
-            - bcl5yl(ic,kc)*(ova2yl(ic,kc)*streyl(ic,kc)  &
-            + strvyl(ic,kc)/acouyl(ic,kc) + ovgmyl(ic,kc))
-        
+
+        drhs(ic,jstal,kc) = drhs(ic,jstal,kc) - bcl2yl(ic,kc)  &
+            - bcl5yl(ic,kc)*ova2yl(ic,kc)
+        urhs(ic,jstal,kc) = zero
+        vrhs(ic,jstal,kc) = zero
+        wrhs(ic,jstal,kc) = zero
+        erhs(ic,jstal,kc) = zero
+
       END DO
     END DO
-    
+
     DO ispec = 1,nspec
-      
+
       DO kc = kstal,kstol
         DO ic = istal,istol
-          
+
           yrhs(ic,jstal,kc,ispec) = yrhs(ic,jstal,kc,ispec)  &
-              - bcl5yl(ic,kc)*ova2yl(ic,kc)*stryyl(ic,kc,ispec)
-          
+              - (bcl2yl(ic,kc)+bcl5yl(ic,kc)*ova2yl(ic,kc))*stryyl(ic,kc,ispec)
+
         END DO
       END DO
-      
+
     END DO
-    
+
   END IF
-  
-  
+
 !       =======================================================================
   
   IF(nsbcyl == nsbcw2)THEN
@@ -2196,7 +2514,7 @@ IF(fylcnv)THEN
 !         L1Y-L5Y
     DO kc = kstal,kstol
       DO ic = istal,istol
-        
+
 !             OLD VALUE OF L's
         fornow = strdyl(ic,kc)*acouyl(ic,kc)*bcl1yl(ic,kc)
         bcl1yl(ic,kc) = half*(strvyl(ic,kc)-acouyl(ic,kc))  &
@@ -2207,62 +2525,58 @@ IF(fylcnv)THEN
         bcl4yl(ic,kc) = strvyl(ic,kc)*bcl4yl(ic,kc)
         bcl5yl(ic,kc) = half*(strvyl(ic,kc)+acouyl(ic,kc))  &
             *(bcl5yl(ic,kc)+fornow)
-        
+
 !             SUBTRACT FROM NEW VALUE OF L's
 !             L1Y UNCHANGED
-        bcl3yl(ic,kc) = -dudtyl(ic,kc) - bcl3yl(ic,kc)
-        bcl4yl(ic,kc) = -dwdtyl(ic,kc) - bcl4yl(ic,kc)
-        bcl5yl(ic,kc) = bcl1yl(ic,kc)  &
-            - strdyl(ic,kc)*acouyl(ic,kc)*dvdtyl(ic,kc) - bcl5yl(ic,kc)
-        bcl2yl(ic,kc) = gam1yl(ic,kc)*ova2yl(ic,kc)  &
-            *(bcl1yl(ic,kc)+bcl5yl(ic,kc))  &
-            + strdyl(ic,kc)*(dtdtyl(ic,kc)/strtyl(ic,kc)  &
-            - sorpyl(ic,kc)/strpyl(ic,kc)) - bcl2yl(ic,kc)
-        
+        bcl3yl(ic,kc) = zero
+        bcl4yl(ic,kc) = zero
+        bcl5yl(ic,kc) = bcl1yl(ic,kc) - bcl5yl(ic,kc)
+        bcl2yl(ic,kc) = zero
+
       END DO
     END DO
-    
+
 !         LYY
     DO ispec = 1,nspec
-      
+
       DO kc = kstal,kstol
         DO ic = istal,istol
-          
+
 !               OLD VALUE OF LYY
-          bclyyl(ic,kc,ispec) = strvyl(ic,kc)*bclyyl(ic,kc,ispec)
-          
-!               UPDATE L2Y
-          bcl2yl(ic,kc) = bcl2yl(ic,kc) + (rateyl(ic,kc,ispec)  &
-              - strdyl(ic,kc)*bclyyl(ic,kc,ispec)) *rgspec(ispec)/strryl(ic,kc)
-          
+          bclyyl(ic,kc,ispec) = zero
+
         END DO
       END DO
-      
+
     END DO
-    
+
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO kc = kstal,kstol
       DO ic = istal,istol
-        
+
         drhs(ic,jstal,kc) = drhs(ic,jstal,kc) - bcl2yl(ic,kc)  &
             - bcl5yl(ic,kc)*ova2yl(ic,kc)
-        
+        urhs(ic,jstal,kc) = zero
+        vrhs(ic,jstal,kc) = zero
+        wrhs(ic,jstal,kc) = zero
+        erhs(ic,jstal,kc) = zero
+
       END DO
     END DO
-    
+
     DO ispec = 1,nspec
-      
+
       DO kc = kstal,kstol
         DO ic = istal,istol
-          
+
           yrhs(ic,jstal,kc,ispec) = yrhs(ic,jstal,kc,ispec)  &
               - (bcl2yl(ic,kc)+bcl5yl(ic,kc)*ova2yl(ic,kc))*stryyl(ic,kc,ispec)
-          
+
         END DO
       END DO
-      
+
     END DO
-    
+
   END IF
   
 !       =======================================================================
@@ -2821,68 +3135,123 @@ IF(fyrcnv)THEN
   
 !       WALL BOUNDARY CONDITIONS
 !       ------------------------
-  
+
+!       VM & NC CHANGING ADIABATIC WALL TREATMENT
   IF(nsbcyr == nsbcw1)THEN
     
 !         WALL BOUNDARY CONDITION No 1
 !         NO-SLIP WALL - ADIABATIC
     
-!         ALL VELOCITY COMPONENTS IMPOSED
+!         VELOCITY AND TEMPERATURE IMPOSED
+!         AS FUNCTIONS OF TIME
 !         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
 !         SET IN SUBROUTINE BOUNDT
-    
-!         SPECIFY L's AS REQUIRED
-!         L1Y,L3Y-L5Y
+
+    DO kc=kstal,kstol
+      DO ic=istal,istol
+        strtyr(ic,kc)=(48.0*trun(ic,jstol-1,kc) -36.0*trun(ic,jstol-2,kc)  &
+            +16.0*trun(ic,jstol-3,kc) -3.0*trun(ic,jstol-4,kc))/25.0
+        trun(ic,jstol,kc)=strtyr(ic,kc)
+      END DO
+    END DO
+
+!         PRECOMPUTE CHEMISTRY TERMS
     DO kc = kstal,kstol
       DO ic = istal,istol
-        
+
+        sorpyr(ic,kc) = zero
+
+      END DO
+    END DO
+
+    DO ispec = 1,nspec
+
+      DO kc = kstal,kstol
+        DO ic = istal,istol
+
+          sorpyr(ic,kc) = sorpyr(ic,kc)  &
+              + strhyr(ic,kc,ispec)*rateyr(ic,kc,ispec)
+
+        END DO
+      END DO
+
+    END DO
+
+    DO kc = kstal,kstol
+      DO ic = istal,istol
+
+        sorpyr(ic,kc) = -sorpyr(ic,kc)*gam1yr(ic,kc)
+
+      END DO
+    END DO
+
+!         SPECIFY L's AS REQUIRED
+!         L1Y-L5Y
+    DO kc = kstal,kstol
+      DO ic = istal,istol
+
 !             OLD VALUE OF L's
         fornow = strdyr(ic,kc)*acouyr(ic,kc)*bcl1yr(ic,kc)
         bcl1yr(ic,kc) = half*(strvyr(ic,kc)-acouyr(ic,kc))  &
             *(bcl5yr(ic,kc)-fornow)
+        bcl2yr(ic,kc) = strvyr(ic,kc)  &
+            *(bcl2yr(ic,kc)-bcl5yr(ic,kc)*ova2yr(ic,kc))
         bcl3yr(ic,kc) = strvyr(ic,kc)*bcl3yr(ic,kc)
         bcl4yr(ic,kc) = strvyr(ic,kc)*bcl4yr(ic,kc)
         bcl5yr(ic,kc) = half*(strvyr(ic,kc)+acouyr(ic,kc))  &
             *(bcl5yr(ic,kc)+fornow)
-        
+
 !             SUBTRACT FROM NEW VALUE OF L's
-!             L2Y,L5Y UNCHANGED
-        bcl1yr(ic,kc) = bcl5yr(ic,kc)  &
-            + strdyr(ic,kc)*acouyr(ic,kc)*dvdtyr(ic,kc) - bcl1yr(ic,kc)
-        bcl3yr(ic,kc) = -dudtyr(ic,kc) - bcl3yr(ic,kc)
-        bcl4yr(ic,kc) = -dwdtyr(ic,kc) - bcl4yr(ic,kc)
-        
+!             L5Y UNCHANGED
+        bcl1yr(ic,kc) = bcl5yr(ic,kc) - bcl1yr(ic,kc)
+        bcl3yr(ic,kc) = zero
+        bcl4yr(ic,kc) = zero
+        bcl2yr(ic,kc) = zero
+
       END DO
     END DO
-    
+
+!         LYY
+    DO ispec = 1,nspec
+
+      DO kc = kstal,kstol
+        DO ic = istal,istol
+
+!               OLD VALUE OF LYY
+          bclyyr(ic,kc,ispec) = zero
+
+        END DO
+      END DO
+
+    END DO
+
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO kc = kstal,kstol
       DO ic = istal,istol
-        
-        drhs(ic,jstol,kc) = drhs(ic,jstol,kc) - bcl1yr(ic,kc)*ova2yr(ic,kc)
-        
-        erhs(ic,jstol,kc) = erhs(ic,jstol,kc)  &
-            - bcl1yr(ic,kc)*(ova2yr(ic,kc)*streyr(ic,kc)  &
-            + strvyr(ic,kc)/acouyr(ic,kc) + ovgmyr(ic,kc))  &
-            - bcl3yr(ic,kc)*strdyr(ic,kc)*struyr(ic,kc)  &
-            - bcl4yr(ic,kc)*strdyr(ic,kc)*strwyr(ic,kc)
-        
+
+        drhs(ic,jstol,kc) = drhs(ic,jstol,kc) - bcl1yr(ic,kc)*ova2yr(ic,kc)  &
+            - bcl2yr(ic,kc)
+        urhs(ic,jstol,kc) = zero
+        vrhs(ic,jstol,kc) = zero
+        wrhs(ic,jstol,kc) = zero
+        erhs(ic,jstol,kc) = zero
+
       END DO
     END DO
-    
+
     DO ispec = 1,nspec
-      
+
       DO kc = kstal,kstol
         DO ic = istal,istol
-          
+
           yrhs(ic,jstol,kc,ispec) = yrhs(ic,jstol,kc,ispec)  &
-              - bcl1yr(ic,kc)*ova2yr(ic,kc)*stryyr(ic,kc,ispec)
-          
+              - (bcl2yr(ic,kc)+bcl1yr(ic,kc)*ova2yr(ic,kc))*stryyr(ic,kc,ispec)
+
         END DO
       END DO
-      
+
     END DO
-    
+
   END IF
   
 !       =======================================================================
@@ -2931,7 +3300,7 @@ IF(fyrcnv)THEN
 !         L1Y-L5Y
     DO kc = kstal,kstol
       DO ic = istal,istol
-        
+
 !             OLD VALUE OF L's
         fornow = strdyr(ic,kc)*acouyr(ic,kc)*bcl1yr(ic,kc)
         bcl1yr(ic,kc) = half*(strvyr(ic,kc)-acouyr(ic,kc))  &
@@ -2942,62 +3311,58 @@ IF(fyrcnv)THEN
         bcl4yr(ic,kc) = strvyr(ic,kc)*bcl4yr(ic,kc)
         bcl5yr(ic,kc) = half*(strvyr(ic,kc)+acouyr(ic,kc))  &
             *(bcl5yr(ic,kc)+fornow)
-        
+
 !             SUBTRACT FROM NEW VALUE OF L's
 !             L5Y UNCHANGED
-        bcl1yr(ic,kc) = bcl5yr(ic,kc)  &
-            + strdyr(ic,kc)*acouyr(ic,kc)*dvdtyr(ic,kc) - bcl1yr(ic,kc)
-        bcl3yr(ic,kc) = -dudtyr(ic,kc) - bcl3yr(ic,kc)
-        bcl4yr(ic,kc) = -dwdtyr(ic,kc) - bcl4yr(ic,kc)
-        bcl2yr(ic,kc) = gam1yr(ic,kc)*ova2yr(ic,kc)  &
-            *(bcl1yr(ic,kc)+bcl5yr(ic,kc))  &
-            + strdyr(ic,kc)*(dtdtyr(ic,kc)/strtyr(ic,kc)  &
-            - sorpyr(ic,kc)/strpyr(ic,kc)) - bcl2yr(ic,kc)
-        
+        bcl1yr(ic,kc) = bcl5yr(ic,kc) - bcl1yr(ic,kc)
+        bcl3yr(ic,kc) = zero
+        bcl4yr(ic,kc) = zero
+        bcl2yr(ic,kc) = zero
+
       END DO
     END DO
-    
+
 !         LYY
     DO ispec = 1,nspec
-      
+
       DO kc = kstal,kstol
         DO ic = istal,istol
-          
+
 !               OLD VALUE OF LYY
-          bclyyr(ic,kc,ispec) = strvyr(ic,kc)*bclyyr(ic,kc,ispec)
-          
-!               UPDATE L2Y
-          bcl2yr(ic,kc) = bcl2yr(ic,kc) + (rateyr(ic,kc,ispec)  &
-              - strdyr(ic,kc)*bclyyr(ic,kc,ispec)) *rgspec(ispec)/strryr(ic,kc)
-          
+          bclyyr(ic,kc,ispec) = zero
+
         END DO
       END DO
-      
+
     END DO
-    
+
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO kc = kstal,kstol
       DO ic = istal,istol
-        
+
         drhs(ic,jstol,kc) = drhs(ic,jstol,kc) - bcl1yr(ic,kc)*ova2yr(ic,kc)  &
             - bcl2yr(ic,kc)
-        
+        urhs(ic,jstol,kc) = zero
+        vrhs(ic,jstol,kc) = zero
+        wrhs(ic,jstol,kc) = zero
+        erhs(ic,jstol,kc) = zero
+
       END DO
     END DO
-    
+
     DO ispec = 1,nspec
-      
+
       DO kc = kstal,kstol
         DO ic = istal,istol
-          
+
           yrhs(ic,jstol,kc,ispec) = yrhs(ic,jstol,kc,ispec)  &
               - (bcl2yr(ic,kc)+bcl1yr(ic,kc)*ova2yr(ic,kc))*stryyr(ic,kc,ispec)
-          
+
         END DO
       END DO
-      
+
     END DO
-    
+
   END IF
   
 !       =======================================================================
@@ -3541,68 +3906,123 @@ IF(fzlcnv)THEN
   
 !       WALL BOUNDARY CONDITIONS
 !       ------------------------
-  
+
+!       VM & NC CHANGING ADIABATIC WALL TREATMENT
   IF(nsbczl == nsbcw1)THEN
     
 !         WALL BOUNDARY CONDITION No 1
 !         NO-SLIP WALL - ADIABATIC
     
-!         ALL VELOCITY COMPONENTS IMPOSED
+!         VELOCITY AND TEMPERATURE IMPOSED
+!         AS FUNCTIONS OF TIME
 !         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
 !         SET IN SUBROUTINE BOUNDT
-    
-!         SPECIFY L's AS REQUIRED
-!         L1Z,L3Z-L5Z
+
+    DO jc=jstal,jstol
+      DO ic=istal,istol
+        strtzl(ic,jc)=(48.0*trun(ic,jc,kstal+1) -36.0*trun(ic,jc,kstal+2)  &
+            +16.0*trun(ic,jc,kstal+3) -3.0*trun(ic,jc,kstal+4))/25.0
+        trun(ic,jc,kstal)=strtzl(ic,jc)
+      END DO
+    END DO
+
+!         PRECOMPUTE CHEMISTRY TERMS
     DO jc = jstal,jstol
       DO ic = istal,istol
-        
+
+        sorpzl(ic,jc) = zero
+
+      END DO
+    END DO
+
+    DO ispec = 1,nspec
+
+      DO jc = jstal,jstol
+        DO ic = istal,istol
+
+          sorpzl(ic,jc) = sorpzl(ic,jc)  &
+              + strhzl(ic,jc,ispec)*ratezl(ic,jc,ispec)
+
+        END DO
+      END DO
+
+    END DO
+
+    DO jc = jstal,jstol
+      DO ic = istal,istol
+
+        sorpzl(ic,jc) = -sorpzl(ic,jc)*gam1zl(ic,jc)
+
+      END DO
+    END DO
+
+!         SPECIFY L's AS REQUIRED
+!         L1Z-L5Z
+    DO jc = jstal,jstol
+      DO ic = istal,istol
+
 !             OLD VALUE OF L's
         fornow = strdzl(ic,jc)*acouzl(ic,jc)*bcl1zl(ic,jc)
         bcl1zl(ic,jc) = half*(strwzl(ic,jc)-acouzl(ic,jc))  &
             *(bcl5zl(ic,jc)-fornow)
+        bcl2zl(ic,jc) = strwzl(ic,jc)  &
+            *(bcl2zl(ic,jc)-bcl5zl(ic,jc)*ova2zl(ic,jc))
         bcl3zl(ic,jc) = strwzl(ic,jc)*bcl3zl(ic,jc)
         bcl4zl(ic,jc) = strwzl(ic,jc)*bcl4zl(ic,jc)
         bcl5zl(ic,jc) = half*(strwzl(ic,jc)+acouzl(ic,jc))  &
             *(bcl5zl(ic,jc)+fornow)
-        
+
 !             SUBTRACT FROM NEW VALUE OF L's
-!             L1Z,L2Z UNCHANGED
-        bcl3zl(ic,jc) = -dudtzl(ic,jc) - bcl3zl(ic,jc)
-        bcl4zl(ic,jc) = -dvdtzl(ic,jc) - bcl4zl(ic,jc)
-        bcl5zl(ic,jc) = bcl1zl(ic,jc)  &
-            - strdzl(ic,jc)*acouzl(ic,jc)*dwdtzl(ic,jc) - bcl5zl(ic,jc)
-        
+!             L1Y UNCHANGED
+        bcl3zl(ic,jc) = zero
+        bcl4zl(ic,jc) = zero
+        bcl5zl(ic,jc) = bcl1zl(ic,jc) - bcl5zl(ic,jc)
+        bcl2zl(ic,jc) = zero
+
       END DO
     END DO
-    
+
+!         LYZ
+    DO ispec = 1,nspec
+
+      DO jc = jstal,jstol
+        DO ic = istal,istol
+
+!               OLD VALUE OF LYZ
+          bclyzl(ic,jc,ispec) = zero
+
+        END DO
+      END DO
+
+    END DO
+
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO jc = jstal,jstol
       DO ic = istal,istol
-        
-        drhs(ic,jc,kstal) = drhs(ic,jc,kstal) - bcl5zl(ic,jc)*ova2zl(ic,jc)
-        
-        erhs(ic,jc,kstal) = erhs(ic,jc,kstal)  &
-            - bcl3zl(ic,jc)*strdzl(ic,jc)*struzl(ic,jc)  &
-            - bcl4zl(ic,jc)*strdzl(ic,jc)*strvzl(ic,jc)  &
-            - bcl5zl(ic,jc)*(ova2zl(ic,jc)*strezl(ic,jc)  &
-            + strwzl(ic,jc)/acouzl(ic,jc) + ovgmzl(ic,jc))
-        
+
+        drhs(ic,jc,kstal) = drhs(ic,jc,kstal) - bcl2zl(ic,jc)  &
+            - bcl5zl(ic,jc)*ova2zl(ic,jc)
+        urhs(ic,jc,kstal) = zero
+        vrhs(ic,jc,kstal) = zero
+        wrhs(ic,jc,kstal) = zero
+        erhs(ic,jc,kstal) = zero
+
       END DO
     END DO
-    
+
     DO ispec = 1,nspec
-      
+
       DO jc = jstal,jstol
         DO ic = istal,istol
-          
+
           yrhs(ic,jc,kstal,ispec) = yrhs(ic,jc,kstal,ispec)  &
-              - bcl5zl(ic,jc)*ova2zl(ic,jc)*stryzl(ic,jc,ispec)
-          
+              - (bcl2zl(ic,jc)+bcl5zl(ic,jc)*ova2zl(ic,jc))*stryzl(ic,jc,ispec)
+
         END DO
       END DO
-      
+
     END DO
-    
+
   END IF
   
 !       =======================================================================
@@ -3651,7 +4071,7 @@ IF(fzlcnv)THEN
 !         L1Z-L5Z
     DO jc = jstal,jstol
       DO ic = istal,istol
-        
+
 !             OLD VALUE OF L's
         fornow = strdzl(ic,jc)*acouzl(ic,jc)*bcl1zl(ic,jc)
         bcl1zl(ic,jc) = half*(strwzl(ic,jc)-acouzl(ic,jc))  &
@@ -3662,62 +4082,58 @@ IF(fzlcnv)THEN
         bcl4zl(ic,jc) = strwzl(ic,jc)*bcl4zl(ic,jc)
         bcl5zl(ic,jc) = half*(strwzl(ic,jc)+acouzl(ic,jc))  &
             *(bcl5zl(ic,jc)+fornow)
-        
+
 !             SUBTRACT FROM NEW VALUE OF L's
 !             L1Y UNCHANGED
-        bcl3zl(ic,jc) = -dudtzl(ic,jc) - bcl3zl(ic,jc)
-        bcl4zl(ic,jc) = -dvdtzl(ic,jc) - bcl4zl(ic,jc)
-        bcl5zl(ic,jc) = bcl1zl(ic,jc)  &
-            - strdzl(ic,jc)*acouzl(ic,jc)*dwdtzl(ic,jc) - bcl5zl(ic,jc)
-        bcl2zl(ic,jc) = gam1zl(ic,jc)*ova2zl(ic,jc)  &
-            *(bcl1zl(ic,jc)+bcl5zl(ic,jc))  &
-            + strdzl(ic,jc)*(dtdtzl(ic,jc)/strtzl(ic,jc)  &
-            - sorpzl(ic,jc)/strpzl(ic,jc)) - bcl2zl(ic,jc)
-        
+        bcl3zl(ic,jc) = zero
+        bcl4zl(ic,jc) = zero
+        bcl5zl(ic,jc) = bcl1zl(ic,jc) - bcl5zl(ic,jc)
+        bcl2zl(ic,jc) = zero
+
       END DO
     END DO
-    
+
 !         LYZ
     DO ispec = 1,nspec
-      
+
       DO jc = jstal,jstol
         DO ic = istal,istol
-          
+
 !               OLD VALUE OF LYZ
-          bclyzl(ic,jc,ispec) = strwzl(ic,jc)*bclyzl(ic,jc,ispec)
-          
-!               UPDATE L2Z
-          bcl2zl(ic,jc) = bcl2zl(ic,jc) + (ratezl(ic,jc,ispec)  &
-              - strdzl(ic,jc)*bclyzl(ic,jc,ispec)) *rgspec(ispec)/strrzl(ic,jc)
-          
+          bclyzl(ic,jc,ispec) = zero
+
         END DO
       END DO
-      
+
     END DO
-    
+
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO jc = jstal,jstol
       DO ic = istal,istol
-        
+
         drhs(ic,jc,kstal) = drhs(ic,jc,kstal) - bcl2zl(ic,jc)  &
             - bcl5zl(ic,jc)*ova2zl(ic,jc)
-        
+        urhs(ic,jc,kstal) = zero
+        vrhs(ic,jc,kstal) = zero
+        wrhs(ic,jc,kstal) = zero
+        erhs(ic,jc,kstal) = zero
+
       END DO
     END DO
-    
+
     DO ispec = 1,nspec
-      
+
       DO jc = jstal,jstol
         DO ic = istal,istol
-          
+
           yrhs(ic,jc,kstal,ispec) = yrhs(ic,jc,kstal,ispec)  &
               - (bcl2zl(ic,jc)+bcl5zl(ic,jc)*ova2zl(ic,jc))*stryzl(ic,jc,ispec)
-          
+
         END DO
       END DO
-      
+
     END DO
-    
+
   END IF
   
 !       =======================================================================
@@ -4269,68 +4685,123 @@ IF(fzrcnv)THEN
   
 !       WALL BOUNDARY CONDITIONS
 !       ------------------------
-  
+
+!       VM & NC CHANGING ADIABATIC WALL TREATMENT
   IF(nsbczr == nsbcw1)THEN
     
 !         WALL BOUNDARY CONDITION No 1
 !         NO-SLIP WALL - ADIABATIC
-    
-!         ALL VELOCITY COMPONENTS IMPOSED
+
+!         VELOCITY AND TEMPERATURE IMPOSED
+!         AS FUNCTIONS OF TIME
 !         VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
 !         SET IN SUBROUTINE BOUNDT
-    
-!         SPECIFY L's AS REQUIRED
-!         L1Z,L3Z-L5Z
+
+    DO jc=jstal,jstol
+      DO ic=istal,istol
+        strtzr(ic,jc)=(48.0*trun(ic,jc,kstol-1) -36.0*trun(ic,jc,kstol-2)  &
+            +16.0*trun(ic,jc,kstol-3) -3.0*trun(ic,jc,kstol-4))/25.0
+        trun(ic,jc,kstol)=strtzr(ic,jc)
+      END DO
+    END DO
+
+!         PRECOMPUTE CHEMISTRY TERMS
     DO jc = jstal,jstol
       DO ic = istal,istol
-        
+
+        sorpzr(ic,jc) = zero
+
+      END DO
+    END DO
+
+    DO ispec = 1,nspec
+
+      DO jc = jstal,jstol
+        DO ic = istal,istol
+
+          sorpzr(ic,jc) = sorpzr(ic,jc)  &
+              + strhzr(ic,jc,ispec)*ratezr(ic,jc,ispec)
+
+        END DO
+      END DO
+
+    END DO
+
+    DO jc = jstal,jstol
+      DO ic = istal,istol
+
+        sorpzr(ic,jc) = -sorpzr(ic,jc)*gam1zr(ic,jc)
+
+      END DO
+    END DO
+
+!         SPECIFY L's AS REQUIRED
+!         L1Z-L5Z
+    DO jc = jstal,jstol
+      DO ic = istal,istol
+
 !             OLD VALUE OF L's
         fornow = strdzr(ic,jc)*acouzr(ic,jc)*bcl1zr(ic,jc)
         bcl1zr(ic,jc) = half*(strwzr(ic,jc)-acouzr(ic,jc))  &
             *(bcl5zr(ic,jc)-fornow)
+        bcl2zr(ic,jc) = strwzr(ic,jc)  &
+            *(bcl2zr(ic,jc)-bcl5zr(ic,jc)*ova2zr(ic,jc))
         bcl3zr(ic,jc) = strwzr(ic,jc)*bcl3zr(ic,jc)
         bcl4zr(ic,jc) = strwzr(ic,jc)*bcl4zr(ic,jc)
         bcl5zr(ic,jc) = half*(strwzr(ic,jc)+acouzr(ic,jc))  &
             *(bcl5zr(ic,jc)+fornow)
-        
+
 !             SUBTRACT FROM NEW VALUE OF L's
-!             L2Z,L5Z UNCHANGED
-        bcl1zr(ic,jc) = bcl5zr(ic,jc)  &
-            + strdzr(ic,jc)*acouzr(ic,jc)*dwdtzr(ic,jc) - bcl1zr(ic,jc)
-        bcl3zr(ic,jc) = -dudtzr(ic,jc) - bcl3zr(ic,jc)
-        bcl4zr(ic,jc) = -dvdtzr(ic,jc) - bcl4zr(ic,jc)
-        
+!             L5Z UNCHANGED
+        bcl1zr(ic,jc) = bcl5zr(ic,jc) - bcl1zr(ic,jc)
+        bcl3zr(ic,jc) = zero
+        bcl4zr(ic,jc) = zero
+        bcl2zr(ic,jc) = zero
+
       END DO
     END DO
-    
+
+!         LYZ
+    DO ispec = 1,nspec
+
+      DO jc = jstal,jstol
+        DO ic = istal,istol
+
+!               OLD VALUE OF LYZ
+          bclyzr(ic,jc,ispec) = zero
+
+        END DO
+      END DO
+
+    END DO
+
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO jc = jstal,jstol
       DO ic = istal,istol
-        
-        drhs(ic,jc,kstol) = drhs(ic,jc,kstol) - bcl1zr(ic,jc)*ova2zr(ic,jc)
-        
-        erhs(ic,jc,kstol) = erhs(ic,jc,kstol)  &
-            - bcl1zr(ic,jc)*(ova2zr(ic,jc)*strezr(ic,jc)  &
-            + strwzr(ic,jc)/acouzr(ic,jc) + ovgmzr(ic,jc))  &
-            - bcl3zr(ic,jc)*strdzr(ic,jc)*struzr(ic,jc)  &
-            - bcl4zr(ic,jc)*strdzr(ic,jc)*strvzr(ic,jc)
-        
+
+        drhs(ic,jc,kstol) = drhs(ic,jc,kstol) - bcl1zr(ic,jc)*ova2zr(ic,jc)  &
+            - bcl2zr(ic,jc)
+        urhs(ic,jc,kstol) = zero
+        vrhs(ic,jc,kstol) = zero
+        wrhs(ic,jc,kstol) = zero
+        erhs(ic,jc,kstol) = zero
+
       END DO
     END DO
-    
+
     DO ispec = 1,nspec
-      
+
       DO jc = jstal,jstol
         DO ic = istal,istol
-          
+
           yrhs(ic,jc,kstol,ispec) = yrhs(ic,jc,kstol,ispec)  &
-              - bcl1zr(ic,jc)*ova2zr(ic,jc)*stryzr(ic,jc,ispec)
-          
+              - (bcl2zr(ic,jc)+bcl1zr(ic,jc)*ova2zr(ic,jc))*stryzr(ic,jc,ispec)
+
         END DO
       END DO
-      
+
     END DO
-    
+
   END IF
   
 !       =======================================================================
@@ -4379,7 +4850,7 @@ IF(fzrcnv)THEN
 !         L1Z-L5Z
     DO jc = jstal,jstol
       DO ic = istal,istol
-        
+
 !             OLD VALUE OF L's
         fornow = strdzr(ic,jc)*acouzr(ic,jc)*bcl1zr(ic,jc)
         bcl1zr(ic,jc) = half*(strwzr(ic,jc)-acouzr(ic,jc))  &
@@ -4390,62 +4861,58 @@ IF(fzrcnv)THEN
         bcl4zr(ic,jc) = strwzr(ic,jc)*bcl4zr(ic,jc)
         bcl5zr(ic,jc) = half*(strwzr(ic,jc)+acouzr(ic,jc))  &
             *(bcl5zr(ic,jc)+fornow)
-        
+
 !             SUBTRACT FROM NEW VALUE OF L's
 !             L5Z UNCHANGED
-        bcl1zr(ic,jc) = bcl5zr(ic,jc)  &
-            + strdzr(ic,jc)*acouzr(ic,jc)*dwdtzr(ic,jc) - bcl1zr(ic,jc)
-        bcl3zr(ic,jc) = -dudtzr(ic,jc) - bcl3zr(ic,jc)
-        bcl4zr(ic,jc) = -dvdtzr(ic,jc) - bcl4zr(ic,jc)
-        bcl2zr(ic,jc) = gam1zr(ic,jc)*ova2zr(ic,jc)  &
-            *(bcl1zr(ic,jc)+bcl5zr(ic,jc))  &
-            + strdzr(ic,jc)*(dtdtzr(ic,jc)/strtzr(ic,jc)  &
-            - sorpzr(ic,jc)/strpzr(ic,jc)) - bcl2zr(ic,jc)
-        
+        bcl1zr(ic,jc) = bcl5zr(ic,jc) - bcl1zr(ic,jc)
+        bcl3zr(ic,jc) = zero
+        bcl4zr(ic,jc) = zero
+        bcl2zr(ic,jc) = zero
+
       END DO
     END DO
-    
+
 !         LYZ
     DO ispec = 1,nspec
-      
+
       DO jc = jstal,jstol
         DO ic = istal,istol
-          
+
 !               OLD VALUE OF LYZ
-          bclyzr(ic,jc,ispec) = strwzr(ic,jc)*bclyzr(ic,jc,ispec)
-          
-!               UPDATE L2Z
-          bcl2zr(ic,jc) = bcl2zr(ic,jc) + (ratezr(ic,jc,ispec)  &
-              - strdzr(ic,jc)*bclyzr(ic,jc,ispec)) *rgspec(ispec)/strrzr(ic,jc)
-          
+          bclyzr(ic,jc,ispec) = zero
+
         END DO
       END DO
-      
+
     END DO
-    
+
 !         ADD TO CONSERVATIVE SOURCE TERMS
     DO jc = jstal,jstol
       DO ic = istal,istol
-        
+
         drhs(ic,jc,kstol) = drhs(ic,jc,kstol) - bcl1zr(ic,jc)*ova2zr(ic,jc)  &
             - bcl2zr(ic,jc)
-        
+        urhs(ic,jc,kstol) = zero
+        vrhs(ic,jc,kstol) = zero
+        wrhs(ic,jc,kstol) = zero
+        erhs(ic,jc,kstol) = zero
+
       END DO
     END DO
-    
+
     DO ispec = 1,nspec
-      
+
       DO jc = jstal,jstol
         DO ic = istal,istol
-          
+
           yrhs(ic,jc,kstol,ispec) = yrhs(ic,jc,kstol,ispec)  &
               - (bcl2zr(ic,jc)+bcl1zr(ic,jc)*ova2zr(ic,jc))*stryzr(ic,jc,ispec)
-          
+
         END DO
       END DO
-      
+
     END DO
-    
+
   END IF
   
 !       =======================================================================

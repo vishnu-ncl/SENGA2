@@ -1,7 +1,7 @@
 SUBROUTINE boundt
  
 ! Code converted using TO_F90 by Alan Miller
-! Date: 2022-09-26  Time: 15:24:40
+! Date: 2024-11-08  Time: 05:05:55
 
 !     *************************************************************************
 
@@ -35,7 +35,7 @@ use com_senga
 
 !     LOCAL DATA
 !     ==========
-REAL(kind=8) :: fornow
+DOUBLE PRECISION :: fornow
 INTEGER :: jc,kc
 INTEGER :: ispec
 INTEGER :: iindex,ipower,icoef1,icoef2
@@ -224,18 +224,86 @@ IF(fxlcnv)THEN
 !         WALL BC No 1
 !         NO-SLIP WALL - ADIABATIC
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutxl
+    DO kc=kstal,kstol
+      DO jc=jstal,jstol
+        strtxl(jc,kc)=(48.0*trun(istal+1,jc,kc) -36.0*trun(istal+2,jc,kc)  &
+            +16.0*trun(istal+3,jc,kc) -3.0*trun(istal+4,jc,kc))/25.0
+        trun(istal,jc,kc)=strtxl(jc,kc)
+      END DO
+    END DO
     
+!         SET TEMPERATURE INTERVAL INDEX
+    DO kc = kstal,kstol
+      DO jc = jstal,jstol
+        
+        DO iindex = 1,nintmx
+          itndex(istal,jc,kc,iindex) = 0
+        END DO
+        
+        DO ispec = 1,nspec
+          
+          itint = 1
+          1101            CONTINUE
+          IF(strtxl(jc,kc) > tinthi(itint,ispec))THEN
+            IF(itint < ntint(ispec))THEN
+              itint = itint + 1
+              GO TO 1101
+            END IF
+          END IF
+!               END OF LOOP 1100
+          
+!               SET THE TEMPERATURE INTERVAL INDEX
+          iindex = 1 + (ispec-1)/nspimx
+          ipower = ispec - (iindex-1)*nspimx - 1
+          itndex(istal,jc,kc,iindex) = itndex(istal,jc,kc,iindex)  &
+              + (itint-1)*ntbase**ipower
+          
+        END DO
+        
+      END DO
+    END DO
+    
+!         NC SUGGESTION FOR WALL:
+!         IF ISSUES STILL PERSISTS, COPY LINCOM LAST STATEMENT ADDED FOR
+!         ENFORCING DY/DN=0,HERE
 !         CONSERVATIVE VARIABLES
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
-        urhs(istal,jc,kc) = drhs(istal,jc,kc)*struxl(jc,kc)
-        vrhs(istal,jc,kc) = drhs(istal,jc,kc)*strvxl(jc,kc)
-        wrhs(istal,jc,kc) = drhs(istal,jc,kc)*strwxl(jc,kc)
+        urhs(istal,jc,kc) = zero
+        vrhs(istal,jc,kc) = zero
+        wrhs(istal,jc,kc) = zero
+        erhs(istal,jc,kc) = zero
+        erhs(istal,jc,kc) = drhs(istal,jc,kc)*erhs(istal,jc,kc)
         
       END DO
+    END DO
+    
+    DO ispec = 1,nspec
+      
+!           TEMPERATURE INTERVAL INDEXING
+      iindex = 1 + (ispec-1)/nspimx
+      ipower = ispec - (iindex-1)*nspimx - 1
+      icoef2 = ntbase**ipower
+      icoef1 = icoef2*ntbase
+      
+      DO kc = kstal,kstol
+        DO jc = jstal,jstol
+          
+          itint = 1 +MOD(itndex(istal,jc,kc,iindex),icoef1)/icoef2
+          fornow = amasch(ncpoly(itint,ispec),itint,ispec)
+          DO icp = ncpom1(itint,ispec),1,-1
+            fornow = fornow*strtxl(jc,kc) + amasch(icp,itint,ispec)
+          END DO
+          fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
+              + fornow*strtxl(jc,kc)
+          
+          erhs(istal,jc,kc) = erhs(istal,jc,kc)  &
+              + (fornow-rgspec(ispec)*strtxl(jc,kc))*yrhs(istal,jc,kc,ispec)
+          
+        END DO
+      END DO
+      
     END DO
     
   END IF
@@ -247,11 +315,15 @@ IF(fxlcnv)THEN
 !         WALL BC No 1
 !         NO-SLIP WALL - ISOTHERMAL
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutxl
-    
-!         SET TEMPERATURE AND TIME DERIVATIVE
-    CALL bcttxl
+    DO kc = kstal,kstol
+      DO jc = jstal,jstol
+        
+        strtxl(jc,kc) = rxlprm(1)
+        
+        dtdtxl(jc,kc) = zero
+        
+      END DO
+    END DO
     
 !         SET TEMPERATURE INTERVAL INDEX
     DO kc = kstal,kstol
@@ -284,15 +356,17 @@ IF(fxlcnv)THEN
       END DO
     END DO
     
+!         NC SUGGESTION FOR WALL:
+!         IF ISSUES STILL PERSISTS, COPY LINCOM LAST STATEMENT ADDED FOR
+!         ENFORCING DY/DN=0,HERE
 !         CONSERVATIVE VARIABLES
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
-        urhs(istal,jc,kc) = drhs(istal,jc,kc)*struxl(jc,kc)
-        vrhs(istal,jc,kc) = drhs(istal,jc,kc)*strvxl(jc,kc)
-        wrhs(istal,jc,kc) = drhs(istal,jc,kc)*strwxl(jc,kc)
-        erhs(istal,jc,kc) = half*(struxl(jc,kc)*struxl(jc,kc)  &
-            + strvxl(jc,kc)*strvxl(jc,kc) + strwxl(jc,kc)*strwxl(jc,kc))
+        urhs(istal,jc,kc) = zero
+        vrhs(istal,jc,kc) = zero
+        wrhs(istal,jc,kc) = zero
+        erhs(istal,jc,kc) = zero
         erhs(istal,jc,kc) = drhs(istal,jc,kc)*erhs(istal,jc,kc)
         
       END DO
@@ -503,18 +577,83 @@ IF(fxrcnv)THEN
 !         WALL BC No 1
 !         NO-SLIP WALL - ADIABATIC
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutxr
+    DO kc=kstal,kstol
+      DO jc=jstal,jstol
+        strtxr(jc,kc)=(48.0*trun(istol-1,jc,kc) -36.0*trun(istol-2,jc,kc)  &
+            +16.0*trun(istol-3,jc,kc) -3.0*trun(istol-4,jc,kc))/25.0
+        trun(istol,jc,kc)=strtxr(jc,kc)
+      END DO
+    END DO
+    
+!         SET TEMPERATURE INTERVAL INDEX
+    DO kc = kstal,kstol
+      DO jc = jstal,jstol
+        
+        DO iindex = 1,nintmx
+          itndex(istol,jc,kc,iindex) = 0
+        END DO
+        
+        DO ispec = 1,nspec
+          
+          itint = 1
+          1601            CONTINUE
+          IF(strtxr(jc,kc) > tinthi(itint,ispec))THEN
+            IF(itint < ntint(ispec))THEN
+              itint = itint + 1
+              GO TO 1601
+            END IF
+          END IF
+!               END OF LOOP 1600
+          
+!               SET THE TEMPERATURE INTERVAL INDEX
+          iindex = 1 + (ispec-1)/nspimx
+          ipower = ispec - (iindex-1)*nspimx - 1
+          itndex(istol,jc,kc,iindex) = itndex(istol,jc,kc,iindex)  &
+              + (itint-1)*ntbase**ipower
+          
+        END DO
+        
+      END DO
+    END DO
     
 !         CONSERVATIVE VARIABLES
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
-        urhs(istol,jc,kc) = drhs(istol,jc,kc)*struxr(jc,kc)
-        vrhs(istol,jc,kc) = drhs(istol,jc,kc)*strvxr(jc,kc)
-        wrhs(istol,jc,kc) = drhs(istol,jc,kc)*strwxr(jc,kc)
+        urhs(istol,jc,kc) = zero
+        vrhs(istol,jc,kc) = zero
+        wrhs(istol,jc,kc) = zero
+        erhs(istol,jc,kc) = zero
+        erhs(istol,jc,kc) = drhs(istol,jc,kc)*erhs(istol,jc,kc)
         
       END DO
+    END DO
+    
+    DO ispec = 1,nspec
+      
+!           TEMPERATURE INTERVAL INDEXING
+      iindex = 1 + (ispec-1)/nspimx
+      ipower = ispec - (iindex-1)*nspimx - 1
+      icoef2 = ntbase**ipower
+      icoef1 = icoef2*ntbase
+      
+      DO kc = kstal,kstol
+        DO jc = jstal,jstol
+          
+          itint = 1 +MOD(itndex(istol,jc,kc,iindex),icoef1)/icoef2
+          fornow = amasch(ncpoly(itint,ispec),itint,ispec)
+          DO icp = ncpom1(itint,ispec),1,-1
+            fornow = fornow*strtxr(jc,kc) + amasch(icp,itint,ispec)
+          END DO
+          fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
+              + fornow*strtxr(jc,kc)
+          
+          erhs(istol,jc,kc) = erhs(istol,jc,kc)  &
+              + (fornow-rgspec(ispec)*strtxr(jc,kc))*yrhs(istol,jc,kc,ispec)
+          
+        END DO
+      END DO
+      
     END DO
     
   END IF
@@ -526,11 +665,15 @@ IF(fxrcnv)THEN
 !         WALL BC No 1
 !         NO-SLIP WALL - ISOTHERMAL
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutxr
-    
-!         SET TEMPERATURE AND TIME DERIVATIVE
-    CALL bcttxr
+    DO kc = kstal,kstol
+      DO jc = jstal,jstol
+        
+        strtxr(jc,kc) = rxrprm(1)
+        
+        dtdtxr(jc,kc) = zero
+        
+      END DO
+    END DO
     
 !         SET TEMPERATURE INTERVAL INDEX
     DO kc = kstal,kstol
@@ -567,11 +710,10 @@ IF(fxrcnv)THEN
     DO kc = kstal,kstol
       DO jc = jstal,jstol
         
-        urhs(istol,jc,kc) = drhs(istol,jc,kc)*struxr(jc,kc)
-        vrhs(istol,jc,kc) = drhs(istol,jc,kc)*strvxr(jc,kc)
-        wrhs(istol,jc,kc) = drhs(istol,jc,kc)*strwxr(jc,kc)
-        erhs(istol,jc,kc) = half*(struxr(jc,kc)*struxr(jc,kc)  &
-            + strvxr(jc,kc)*strvxr(jc,kc) + strwxr(jc,kc)*strwxr(jc,kc))
+        urhs(istol,jc,kc) = zero
+        vrhs(istol,jc,kc) = zero
+        wrhs(istol,jc,kc) = zero
+        erhs(istol,jc,kc) = zero
         erhs(istol,jc,kc) = drhs(istol,jc,kc)*erhs(istol,jc,kc)
         
       END DO
@@ -785,21 +927,86 @@ IF(fylcnv)THEN
   
   IF(nsbcyl == nsbcw1)THEN
     
-!         WALL BC No 1
+!         WALL BC No 2
 !         NO-SLIP WALL - ADIABATIC
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutyl
+    DO kc=kstal,kstol
+      DO ic=istal,istol
+        strtyl(ic,kc)=(48.0*trun(ic,jstal+1,kc) -36.0*trun(ic,jstal+2,kc)  &
+            +16.0*trun(ic,jstal+3,kc) -3.0*trun(ic,jstal+4,kc))/25.0
+        trun(ic,jstal,kc)=strtyl(ic,kc)
+      END DO
+    END DO
+    
+!         SET TEMPERATURE INTERVAL INDEX
+    DO kc = kstal,kstol
+      DO ic = istal,istol
+        
+        DO iindex = 1,nintmx
+          itndex(ic,jstal,kc,iindex) = 0
+        END DO
+        
+        DO ispec = 1,nspec
+          
+          itint = 1
+          2101            CONTINUE
+          IF(strtyl(ic,kc) > tinthi(itint,ispec))THEN
+            IF(itint < ntint(ispec))THEN
+              itint = itint + 1
+              GO TO 2101
+            END IF
+          END IF
+!               END OF LOOP 2100
+          
+!               SET THE TEMPERATURE INTERVAL INDEX
+          iindex = 1 + (ispec-1)/nspimx
+          ipower = ispec - (iindex-1)*nspimx - 1
+          itndex(ic,jstal,kc,iindex) = itndex(ic,jstal,kc,iindex)  &
+              + (itint-1)*ntbase**ipower
+          
+        END DO
+        
+      END DO
+    END DO
     
 !         CONSERVATIVE VARIABLES
     DO kc = kstal,kstol
       DO ic = istal,istol
         
-        urhs(ic,jstal,kc) = drhs(ic,jstal,kc)*struyl(ic,kc)
-        vrhs(ic,jstal,kc) = drhs(ic,jstal,kc)*strvyl(ic,kc)
-        wrhs(ic,jstal,kc) = drhs(ic,jstal,kc)*strwyl(ic,kc)
+        urhs(ic,jstal,kc) = zero
+        vrhs(ic,jstal,kc) = zero
+        wrhs(ic,jstal,kc) = zero
+        erhs(ic,jstal,kc) = zero
+        erhs(ic,jstal,kc) = drhs(ic,jstal,kc)*erhs(ic,jstal,kc)
         
       END DO
+    END DO
+    
+    DO ispec = 1,nspec
+      
+!           TEMPERATURE INTERVAL INDEXING
+      iindex = 1 + (ispec-1)/nspimx
+      ipower = ispec - (iindex-1)*nspimx - 1
+      icoef2 = ntbase**ipower
+      icoef1 = icoef2*ntbase
+      
+      DO kc = kstal,kstol
+        DO ic = istal,istol
+          
+          itint = 1 +MOD(itndex(ic,jstal,kc,iindex),icoef1)/icoef2
+          fornow = amasch(ncpoly(itint,ispec),itint,ispec)
+          DO icp = ncpom1(itint,ispec),1,-1
+            fornow = fornow*strtyl(ic,kc) + amasch(icp,itint,ispec)
+          END DO
+          fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
+              + fornow*strtyl(ic,kc)
+          
+          erhs(ic,jstal,kc) = erhs(ic,jstal,kc)  &
+              + (fornow-rgspec(ispec)*strtyl(ic,kc))*yrhs(ic,jstal,kc,ispec)
+          
+        END DO
+      END DO
+      
     END DO
     
   END IF
@@ -811,11 +1018,15 @@ IF(fylcnv)THEN
 !         WALL BC No 2
 !         NO-SLIP WALL - ISOTHERMAL
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutyl
-    
-!         SET TEMPERATURE AND TIME DERIVATIVE
-    CALL bcttyl
+    DO kc = kstal,kstol
+      DO ic = istal,istol
+        
+        strtyl(ic,kc) = rylprm(1)
+        
+        dtdtyl(ic,kc) = zero
+        
+      END DO
+    END DO
     
 !         SET TEMPERATURE INTERVAL INDEX
     DO kc = kstal,kstol
@@ -852,11 +1063,10 @@ IF(fylcnv)THEN
     DO kc = kstal,kstol
       DO ic = istal,istol
         
-        urhs(ic,jstal,kc) = drhs(ic,jstal,kc)*struyl(ic,kc)
-        vrhs(ic,jstal,kc) = drhs(ic,jstal,kc)*strvyl(ic,kc)
-        wrhs(ic,jstal,kc) = drhs(ic,jstal,kc)*strwyl(ic,kc)
-        erhs(ic,jstal,kc) = half*(struyl(ic,kc)*struyl(ic,kc)  &
-            + strvyl(ic,kc)*strvyl(ic,kc) + strwyl(ic,kc)*strwyl(ic,kc))
+        urhs(ic,jstal,kc) = zero
+        vrhs(ic,jstal,kc) = zero
+        wrhs(ic,jstal,kc) = zero
+        erhs(ic,jstal,kc) = zero
         erhs(ic,jstal,kc) = drhs(ic,jstal,kc)*erhs(ic,jstal,kc)
         
       END DO
@@ -1073,18 +1283,83 @@ IF(fyrcnv)THEN
 !         WALL BC No 1
 !         NO-SLIP WALL - ADIABATIC
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutyr
+    DO kc=kstal,kstol
+      DO ic=istal,istol
+        strtyr(ic,kc)=(48.0*trun(ic,jstol-1,kc) -36.0*trun(ic,jstol-2,kc)  &
+            +16.0*trun(ic,jstol-3,kc) -3.0*trun(ic,jstol-4,kc))/25.0
+        trun(ic,jstol,kc)=strtyr(ic,kc)
+      END DO
+    END DO
+    
+!         SET TEMPERATURE INTERVAL INDEX
+    DO kc = kstal,kstol
+      DO ic = istal,istol
+        
+        DO iindex = 1,nintmx
+          itndex(ic,jstol,kc,iindex) = 0
+        END DO
+        
+        DO ispec = 1,nspec
+          
+          itint = 1
+          2601            CONTINUE
+          IF(strtyr(ic,kc) > tinthi(itint,ispec))THEN
+            IF(itint < ntint(ispec))THEN
+              itint = itint + 1
+              GO TO 2601
+            END IF
+          END IF
+!               END OF LOOP 2600
+          
+!               SET THE TEMPERATURE INTERVAL INDEX
+          iindex = 1 + (ispec-1)/nspimx
+          ipower = ispec - (iindex-1)*nspimx - 1
+          itndex(ic,jstol,kc,iindex) = itndex(ic,jstol,kc,iindex)  &
+              + (itint-1)*ntbase**ipower
+          
+        END DO
+        
+      END DO
+    END DO
     
 !         CONSERVATIVE VARIABLES
     DO kc = kstal,kstol
       DO ic = istal,istol
         
-        urhs(ic,jstol,kc) = drhs(ic,jstol,kc)*struyr(ic,kc)
-        vrhs(ic,jstol,kc) = drhs(ic,jstol,kc)*strvyr(ic,kc)
-        wrhs(ic,jstol,kc) = drhs(ic,jstol,kc)*strwyr(ic,kc)
+        urhs(ic,jstol,kc) = zero
+        vrhs(ic,jstol,kc) = zero
+        wrhs(ic,jstol,kc) = zero
+        erhs(ic,jstol,kc) = zero
+        erhs(ic,jstol,kc) = drhs(ic,jstol,kc)*erhs(ic,jstol,kc)
         
       END DO
+    END DO
+    
+    DO ispec = 1,nspec
+      
+!           TEMPERATURE INTERVAL INDEXING
+      iindex = 1 + (ispec-1)/nspimx
+      ipower = ispec - (iindex-1)*nspimx - 1
+      icoef2 = ntbase**ipower
+      icoef1 = icoef2*ntbase
+      
+      DO kc = kstal,kstol
+        DO ic = istal,istol
+          
+          itint = 1 +MOD(itndex(ic,jstol,kc,iindex),icoef1)/icoef2
+          fornow = amasch(ncpoly(itint,ispec),itint,ispec)
+          DO icp = ncpom1(itint,ispec),1,-1
+            fornow = fornow*strtyr(ic,kc) + amasch(icp,itint,ispec)
+          END DO
+          fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
+              + fornow*strtyr(ic,kc)
+          
+          erhs(ic,jstol,kc) = erhs(ic,jstol,kc)  &
+              + (fornow-rgspec(ispec)*strtyr(ic,kc))*yrhs(ic,jstol,kc,ispec)
+          
+        END DO
+      END DO
+      
     END DO
     
   END IF
@@ -1096,11 +1371,15 @@ IF(fyrcnv)THEN
 !         WALL BC No 1
 !         NO-SLIP WALL - ISOTHERMAL
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutyr
-    
-!         SET TEMPERATURE AND TIME DERIVATIVE
-    CALL bcttyr
+    DO kc = kstal,kstol
+      DO ic = istal,istol
+        
+        strtyr(ic,kc) = ryrprm(1)
+        
+        dtdtyr(ic,kc) = zero
+        
+      END DO
+    END DO
     
 !         SET TEMPERATURE INTERVAL INDEX
     DO kc = kstal,kstol
@@ -1137,11 +1416,10 @@ IF(fyrcnv)THEN
     DO kc = kstal,kstol
       DO ic = istal,istol
         
-        urhs(ic,jstol,kc) = drhs(ic,jstol,kc)*struyr(ic,kc)
-        vrhs(ic,jstol,kc) = drhs(ic,jstol,kc)*strvyr(ic,kc)
-        wrhs(ic,jstol,kc) = drhs(ic,jstol,kc)*strwyr(ic,kc)
-        erhs(ic,jstol,kc) = half*(struyr(ic,kc)*struyr(ic,kc)  &
-            + strvyr(ic,kc)*strvyr(ic,kc) + strwyr(ic,kc)*strwyr(ic,kc))
+        urhs(ic,jstol,kc) = zero
+        vrhs(ic,jstol,kc) = zero
+        wrhs(ic,jstol,kc) = zero
+        erhs(ic,jstol,kc) = zero
         erhs(ic,jstol,kc) = drhs(ic,jstol,kc)*erhs(ic,jstol,kc)
         
       END DO
@@ -1353,23 +1631,89 @@ IF(fzlcnv)THEN
   
 !       =======================================================================
   
+  
   IF(nsbczl == nsbcw1)THEN
     
 !         WALL BC No 1
 !         NO-SLIP WALL - ADIABATIC
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutzl
+    DO jc=jstal,jstol
+      DO ic=istal,istol
+        strtzl(ic,jc)=(48.0*trun(ic,jc,kstal+1) -36.0*trun(ic,jc,kstal+2)  &
+            +16.0*trun(ic,jc,kstal+3) -3.0*trun(ic,jc,kstal+4))/25.0
+        trun(ic,jc,kstal)=strtzl(ic,jc)
+      END DO
+    END DO
+    
+!         SET TEMPERATURE INTERVAL INDEX
+    DO jc = jstal,jstol
+      DO ic = istal,istol
+        
+        DO iindex = 1,nintmx
+          itndex(ic,jc,kstal,iindex) = 0
+        END DO
+        
+        DO ispec = 1,nspec
+          
+          itint = 1
+          3101            CONTINUE
+          IF(strtzl(ic,jc) > tinthi(itint,ispec))THEN
+            IF(itint < ntint(ispec))THEN
+              itint = itint + 1
+              GO TO 3101
+            END IF
+          END IF
+!               END OF LOOP 3100
+          
+!               SET THE TEMPERATURE INTERVAL INDEX
+          iindex = 1 + (ispec-1)/nspimx
+          ipower = ispec - (iindex-1)*nspimx - 1
+          itndex(ic,jc,kstal,iindex) = itndex(ic,jc,kstal,iindex)  &
+              + (itint-1)*ntbase**ipower
+          
+        END DO
+        
+      END DO
+    END DO
     
 !         CONSERVATIVE VARIABLES
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        urhs(ic,jc,kstal) = drhs(ic,jc,kstal)*struzl(ic,jc)
-        vrhs(ic,jc,kstal) = drhs(ic,jc,kstal)*strvzl(ic,jc)
-        wrhs(ic,jc,kstal) = drhs(ic,jc,kstal)*strwzl(ic,jc)
+        urhs(ic,jc,kstal) = zero
+        vrhs(ic,jc,kstal) = zero
+        wrhs(ic,jc,kstal) = zero
+        erhs(ic,jc,kstal) = zero
+        erhs(ic,jc,kstal) = drhs(ic,jc,kstal)*erhs(ic,jc,kstal)
         
       END DO
+    END DO
+    
+    DO ispec = 1,nspec
+      
+!           TEMPERATURE INTERVAL INDEXING
+      iindex = 1 + (ispec-1)/nspimx
+      ipower = ispec - (iindex-1)*nspimx - 1
+      icoef2 = ntbase**ipower
+      icoef1 = icoef2*ntbase
+      
+      DO jc = jstal,jstol
+        DO ic = istal,istol
+          
+          itint = 1 +MOD(itndex(ic,jc,kstal,iindex),icoef1)/icoef2
+          fornow = amasch(ncpoly(itint,ispec),itint,ispec)
+          DO icp = ncpom1(itint,ispec),1,-1
+            fornow = fornow*strtzl(ic,jc) + amasch(icp,itint,ispec)
+          END DO
+          fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
+              + fornow*strtzl(ic,jc)
+          
+          erhs(ic,jc,kstal) = erhs(ic,jc,kstal)  &
+              + (fornow-rgspec(ispec)*strtzl(ic,jc))*yrhs(ic,jc,kstal,ispec)
+          
+        END DO
+      END DO
+      
     END DO
     
   END IF
@@ -1381,11 +1725,15 @@ IF(fzlcnv)THEN
 !         WALL BC No 1
 !         NO-SLIP WALL - ISOTHERMAL
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutzl
-    
-!         SET TEMPERATURE AND TIME DERIVATIVE
-    CALL bcttzl
+    DO jc = jstal,jstol
+      DO ic = istal,istol
+        
+        strtzl(ic,jc) = rzlprm(1)
+        
+        dtdtzl(ic,jc) = zero
+        
+      END DO
+    END DO
     
 !         SET TEMPERATURE INTERVAL INDEX
     DO jc = jstal,jstol
@@ -1422,11 +1770,10 @@ IF(fzlcnv)THEN
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        urhs(ic,jc,kstal) = drhs(ic,jc,kstal)*struzl(ic,jc)
-        vrhs(ic,jc,kstal) = drhs(ic,jc,kstal)*strvzl(ic,jc)
-        wrhs(ic,jc,kstal) = drhs(ic,jc,kstal)*strwzl(ic,jc)
-        erhs(ic,jc,kstal) = half*(struzl(ic,jc)*struzl(ic,jc)  &
-            + strvzl(ic,jc)*strvzl(ic,jc) + strwzl(ic,jc)*strwzl(ic,jc))
+        urhs(ic,jc,kstal) = zero
+        vrhs(ic,jc,kstal) = zero
+        wrhs(ic,jc,kstal) = zero
+        erhs(ic,jc,kstal) = zero
         erhs(ic,jc,kstal) = drhs(ic,jc,kstal)*erhs(ic,jc,kstal)
         
       END DO
@@ -1643,18 +1990,83 @@ IF(fzrcnv)THEN
 !         WALL BC No 1
 !         NO-SLIP WALL - ADIABATIC
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutzr
+    DO jc=jstal,jstol
+      DO ic=istal,istol
+        strtzr(ic,jc)=(48.0*trun(ic,jc,kstol-1) -36.0*trun(ic,jc,kstol-2)  &
+            +16.0*trun(ic,jc,kstol-3) -3.0*trun(ic,jc,kstol-4))/25.0
+        trun(ic,jc,kstol)=strtzr(ic,jc)
+      END DO
+    END DO
+    
+!         SET TEMPERATURE INTERVAL INDEX
+    DO jc = jstal,jstol
+      DO ic = istal,istol
+        
+        DO iindex = 1,nintmx
+          itndex(ic,jc,kstol,iindex) = 0
+        END DO
+        
+        DO ispec = 1,nspec
+          
+          itint = 1
+          3601            CONTINUE
+          IF(strtzr(ic,jc) > tinthi(itint,ispec))THEN
+            IF(itint < ntint(ispec))THEN
+              itint = itint + 1
+              GO TO 3601
+            END IF
+          END IF
+!               END OF LOOP 3600
+          
+!               SET THE TEMPERATURE INTERVAL INDEX
+          iindex = 1 + (ispec-1)/nspimx
+          ipower = ispec - (iindex-1)*nspimx - 1
+          itndex(ic,jc,kstol,iindex) = itndex(ic,jc,kstol,iindex)  &
+              + (itint-1)*ntbase**ipower
+          
+        END DO
+        
+      END DO
+    END DO
     
 !         CONSERVATIVE VARIABLES
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        urhs(ic,jc,kstol) = drhs(ic,jc,kstol)*struzr(ic,jc)
-        vrhs(ic,jc,kstol) = drhs(ic,jc,kstol)*strvzr(ic,jc)
-        wrhs(ic,jc,kstol) = drhs(ic,jc,kstol)*strwzr(ic,jc)
+        urhs(ic,jc,kstol) = zero
+        vrhs(ic,jc,kstol) = zero
+        wrhs(ic,jc,kstol) = zero
+        erhs(ic,jc,kstol) = zero
+        erhs(ic,jc,kstol) = drhs(ic,jc,kstol)*erhs(ic,jc,kstol)
         
       END DO
+    END DO
+    
+    DO ispec = 1,nspec
+      
+!           TEMPERATURE INTERVAL INDEXING
+      iindex = 1 + (ispec-1)/nspimx
+      ipower = ispec - (iindex-1)*nspimx - 1
+      icoef2 = ntbase**ipower
+      icoef1 = icoef2*ntbase
+      
+      DO jc = jstal,jstol
+        DO ic = istal,istol
+          
+          itint = 1 +MOD(itndex(ic,jc,kstol,iindex),icoef1)/icoef2
+          fornow = amasch(ncpoly(itint,ispec),itint,ispec)
+          DO icp = ncpom1(itint,ispec),1,-1
+            fornow = fornow*strtzr(ic,jc) + amasch(icp,itint,ispec)
+          END DO
+          fornow = amasch(ncenth(itint,ispec),itint,ispec)  &
+              + fornow*strtzr(ic,jc)
+          
+          erhs(ic,jc,kstol) = erhs(ic,jc,kstol)  &
+              + (fornow-rgspec(ispec)*strtzr(ic,jc))*yrhs(ic,jc,kstol,ispec)
+          
+        END DO
+      END DO
+      
     END DO
     
   END IF
@@ -1666,11 +2078,15 @@ IF(fzrcnv)THEN
 !         WALL BC No 1
 !         NO-SLIP WALL - ISOTHERMAL
     
-!         SET VELOCITY COMPONENTS AND TIME DERIVATIVES
-    CALL bcutzr
-    
-!         SET TEMPERATURE AND TIME DERIVATIVE
-    CALL bcttzr
+    DO jc = jstal,jstol
+      DO ic = istal,istol
+        
+        strtzr(ic,jc) = rzrprm(1)
+        
+        dtdtzr(ic,jc) = zero
+        
+      END DO
+    END DO
     
 !         SET TEMPERATURE INTERVAL INDEX
     DO jc = jstal,jstol
@@ -1707,11 +2123,10 @@ IF(fzrcnv)THEN
     DO jc = jstal,jstol
       DO ic = istal,istol
         
-        urhs(ic,jc,kstol) = drhs(ic,jc,kstol)*struzr(ic,jc)
-        vrhs(ic,jc,kstol) = drhs(ic,jc,kstol)*strvzr(ic,jc)
-        wrhs(ic,jc,kstol) = drhs(ic,jc,kstol)*strwzr(ic,jc)
-        erhs(ic,jc,kstol) = half*(struzr(ic,jc)*struzr(ic,jc)  &
-            + strvzr(ic,jc)*strvzr(ic,jc) + strwzr(ic,jc)*strwzr(ic,jc))
+        urhs(ic,jc,kstol) = zero
+        vrhs(ic,jc,kstol) = zero
+        wrhs(ic,jc,kstol) = zero
+        erhs(ic,jc,kstol) = zero
         erhs(ic,jc,kstol) = drhs(ic,jc,kstol)*erhs(ic,jc,kstol)
         
       END DO

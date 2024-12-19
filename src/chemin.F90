@@ -847,7 +847,9 @@ END DO
 DO itroe = 1, ntroe
   rctroe(1,itroe) = LOG(rctroe(1,itroe))
   rctroe(3,itroe) = rctroe(3,itroe)/rguniv
-  rctroe(5,itroe) = one/rctroe(5,itroe)
+  rctroe(5,itroe) = -one/rctroe(5,itroe)
+!       VM: CHANGE based on Khalil
+!        RCTROE(5,ITROE) = ONE/RCTROE(5,ITROE)
   rctroe(7,itroe) = -one/rctroe(7,itroe)
 END DO
 

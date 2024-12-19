@@ -20,21 +20,21 @@ real(kind=8) :: start_time, finish_time, total_time
 real(kind=8) :: start_comm_time, finish_comm_time, total_comm_time
 
 INTEGER :: nxglbl,nyglbl,nzglbl
-PARAMETER(nxglbl=384, nyglbl=384, nzglbl=384)
+PARAMETER(nxglbl=1152, nyglbl=288, nzglbl=288)
 INTEGER :: ngzmax
 !     SET NGZMAX=MAX(NXGLBL,NYGLBL,NZGLBL)
 PARAMETER(ngzmax=nxglbl)
 
 !     NUMBER OF PROCESSORS
 INTEGER :: nxproc,nyproc,nzproc
-PARAMETER(nxproc=8, nyproc=4, nzproc=4)
+PARAMETER(nxproc=64, nyproc=16, nzproc=16)
 INTEGER :: nprmax
 !     SET NPRMAX=MAX(NXPROC,NYPROC,NZPROC)
 PARAMETER(nprmax=nxproc)
 
 !     LOCAL GRID SIZE
 INTEGER :: nxsize,nysize,nzsize
-PARAMETER(nxsize=48, nysize=96, nzsize=96)
+PARAMETER(nxsize=18, nysize=18, nzsize=18)
 INTEGER :: nszmax
 !     SET NSZMAX=MAX(NXSIZE,NYSIZE,NZSIZE)
 PARAMETER(nszmax=nxsize)
@@ -58,6 +58,12 @@ INTEGER :: nxbigl,nxbigr,nybigl,nybigr,nzbigl,nzbigr
 PARAMETER(nxbigl=1-nhalox, nxbigr=nxsize+nhalox,  &
     nybigl=1-nhaloy, nybigr=nysize+nhaloy, nzbigl=1-nhaloz, nzbigr=nzsize+nhaloz)
 
+!     INFLOW TURBULENCE GENERATOR BY SYNTHETIC DIGITAL FILTERING
+INTEGER :: NFZ,NFY,LNX,LNY,LNZ
+PARAMETER(LNX=30,LNY=30,LNZ=30)
+!     NFY AND NFZ ARE TWICE OF LNY AND LNZ
+PARAMETER(NFY=60,NFZ=60)
+
 !     PHYDIM-------------------------------------------------------------------
 !     IFTURB-------------------------------------------------------------------
 
@@ -79,7 +85,7 @@ COMMON/ifturb/fftrow,ftpart,fftinx
 !     ==========
 !     MAX NO OF SPECIES, NO OF STEPS
 INTEGER :: nspcmx,nstpmx
-PARAMETER(nspcmx=2, nstpmx=1)
+PARAMETER(nspcmx=9, nstpmx=21)
 
 !     THERMODYNAMIC DATA
 !     MAX NO OF TEMPERATURE INTERVALS, THERMO POLYNOMIAL COEFFICIENTS
@@ -655,6 +661,8 @@ REAL(kind=8) :: acbcxl(ncbcsz),acbcxr(ncbcsz),  &
 COMMON/bcdifw/acbcxl,acbcxr,acbcyl,acbcyr,acbczl,acbczr
 
 !     X-DIRECTION LEFT-HAND END
+INTEGER :: INTRAN
+REAL(kind=8) :: PASSER
 REAL(kind=8) ::  &
     bclyxl(nysize,nzsize,nspcmx),stryxl(nysize,nzsize,nspcmx),  &
     dydtxl(nysize,nzsize,nspcmx),ratexl(nysize,nzsize,nspcmx),  &
@@ -673,12 +681,18 @@ REAL(kind=8) ::  &
     t1bxl(nysize,nzsize),t2bxl(nysize,nzsize),    &
     t3bxl(nysize,nzsize),t4bxl(nysize,nzsize),    &
     t51bxl(nysize,nzsize),t52bxl(nysize,nzsize),  &
-    t6bxl(nysize,nzsize,nspcmx)
+    t6bxl(nysize,nzsize,nspcmx), &
+    uinf1(nysize,nzsize),uinf2(nysize,nzsize), &
+    vinf1(nysize,nzsize),vinf2(nysize,nzsize), &
+    winf1(nysize,nzsize),winf2(nysize,nzsize), &
+    yinf1(nysize,nzsize,nspcmx),yinf2(nysize,nzsize,nspcmx), &
+    ustead(nysize,nzsize)
 COMMON/nbccxl/bclyxl,stryxl,dydtxl,ratexl,strhxl,  &
     bcl1xl,bcl2xl,bcl3xl,bcl4xl,bcl5xl,bcltxl,  &
     struxl,strvxl,strwxl,strpxl,strdxl,strtxl, strexl,strgxl,strrxl,  &
     dudtxl,dvdtxl,dwdtxl,dtdtxl,dddtxl, acouxl,ova2xl,gam1xl,ovgmxl,sydtxl,sorpxl, &
-    t1bxl,t2bxl,t3bxl,t4bxl,t51bxl,t52bxl,t6bxl
+    t1bxl,t2bxl,t3bxl,t4bxl,t51bxl,t52bxl,t6bxl,uinf1,uinf2,vinf1,vinf2,winf1,winf2, &
+    yinf1,yinf2,ustead
 
 !     X-DIRECTION RIGHT-HAND END
 REAL(kind=8) ::  &
@@ -696,10 +710,10 @@ REAL(kind=8) ::  &
     acouxr(nysize,nzsize),ova2xr(nysize,nzsize),  &
     gam1xr(nysize,nzsize),ovgmxr(nysize,nzsize),  &
     sydtxr(nysize,nzsize),sorpxr(nysize,nzsize), &
-    T1BXR(NYSIZE,NZSIZE),T2BXR(NYSIZE,NZSIZE), &
-    T3BXR(NYSIZE,NZSIZE),T4BXR(NYSIZE,NZSIZE), &
-    T51BXR(NYSIZE,NZSIZE),T52BXR(NYSIZE,NZSIZE), &
-    T6BXR(NYSIZE,NZSIZE,NSPCMX)
+    t1bxr(nysize,nzsize),t2bxr(nysize,nzsize), &
+    t3bxr(nysize,nzsize),t4bxr(nysize,nzsize), &
+    t51bxr(nysize,nzsize),t52bxr(nysize,nzsize), &
+    t6bxr(nysize,nzsize,nspcmx)
 COMMON/nbccxr/bclyxr,stryxr,dydtxr,ratexr,strhxr,  &
     bcl1xr,bcl2xr,bcl3xr,bcl4xr,bcl5xr,bcltxr,  &
     struxr,strvxr,strwxr,strpxr,strdxr,strtxr, strexr,strgxr,strrxr,  &
@@ -931,5 +945,13 @@ REAL(kind=8) :: dwtgvdz(nxsize,nysize,nzsize)
 common/tgv/dutgvdx,dutgvdy,dutgvdz,dvtgvdx,dvtgvdy,dvtgvdz, &
            dwtgvdx,dwtgvdy,dwtgvdz
 
+!     FY - FOR NON REFLECTING INFLOW
+INTEGER :: nbcprc
+PARAMETER(nbcprc=9)
+REAL(kind=8) :: rxplrc(nbcprc)
+
+common/ni/rxplrc
+
 END MODULE com_senga
+
 

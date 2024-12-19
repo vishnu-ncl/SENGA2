@@ -29,7 +29,7 @@ SRC =
 
 SRC_F90 = com_espect.F90 com_senga2.F90 senga2.F90 \
 	rhsvel.F90 dfinit.F90 dfbydy.F90 dfbydz.F90 pardom.F90 indata.F90 \
-    dtinit.F90 parfer.F90 tempin.F90 flinit.F90 output.F90 \
+    dtinit.F90 parfer.F90 tempin.F90 flinit.F90 output.F90 inflow.F90 \
     d2fdy2.F90 d2fdz2.F90 \
     d2fdxy.F90 d2fdxz.F90 d2fdyz.F90 dfmstr.F90 \
     exhalo.F90 inhalo.F90 exhals.F90 inhals.F90 \

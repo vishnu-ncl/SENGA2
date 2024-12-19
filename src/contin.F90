@@ -1,5 +1,5 @@
 SUBROUTINE contin
- 
+
 ! Code converted using TO_F90 by Alan Miller
 ! Date: 2022-09-26  Time: 15:25:00
 
@@ -30,7 +30,6 @@ SUBROUTINE contin
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-
 use com_espect
 use com_senga
 !     -------------------------------------------------------------------------
@@ -77,17 +76,17 @@ END DO
 
 !     LOWEST-RANKED PROCESSOR
 IF(iproc == 0)THEN
-  
+
 !       =======================================================================
-  
+
 !       READ THE RUN CONTROL DATA FILE
 !       ------------------------------
 !       -----------------------------------------------------------------------
-  
+
   OPEN(UNIT=nccont,FILE=fncont,STATUS='OLD',FORM='FORMATTED')
-  
+
 !       -----------------------------------------------------------------------
-  
+
 !       READ AND IGNORE THE HEADER
   READ(nccont,*)
   READ(nccont,*)
@@ -96,33 +95,33 @@ IF(iproc == 0)THEN
   READ(nccont,*)
 !       AND THE SUBSEQUENT BLANK LINE
   READ(nccont,*)
-  
+
 !       -----------------------------------------------------------------------
-  
+
 !       GRID SIZE DATA
 !       --------------
 !       REQUIRED GLOBAL GRID SIZE X,Y,Z
   READ(nccont,*)
   READ(nccont,*)xgdlen,ygdlen,zgdlen
   READ(nccont,*)
-  
+
 !       REQUIRED GLOBAL GRID SIZE NX,NY,NZ
   READ(nccont,*)
   READ(nccont,*)nxgreq,nygreq,nzgreq
   READ(nccont,*)
-  
+
 !       REQUIRED NUMBER OF PROCESSORS X,Y,Z
   READ(nccont,*)
   READ(nccont,*)nxpreq,nypreq,nzpreq
   READ(nccont,*)
-  
+
 !       TIME STEPPING DATA
 !       ------------------
 !       TIME STEP, START STEP, NO OF STEPS, STEP SWITCH
   READ(nccont,*)
   READ(nccont,*)tstep,ntime1,ntime,nstpsw
   READ(nccont,*)
-  
+
 !       INTERVALS BETWEEN DUMPS,REPORTS,STATISTICS
 !       ------------------------------------------
 !       DUMP OUTPUT FORMAT
@@ -130,7 +129,7 @@ IF(iproc == 0)THEN
   READ(nccont,*)
   READ(nccont,*)ntdump,ntrept,ntstat,ndofmt
   READ(nccont,*)
-  
+
 !       COLD START SWITCH (0=COLD START, 1=RESTART)
 !       -----------------
 !       DUMP INPUT FORMAT
@@ -138,7 +137,7 @@ IF(iproc == 0)THEN
   READ(nccont,*)
   READ(nccont,*)ncdmpi,ndifmt
   READ(nccont,*)
-  
+
 !       INITIAL TURBULENCE (0=INITIAL TURBULENCE OFF, 1=ON)
 !       ------------------
 !       RANDOM SEED, SPECTRUM PARAMETERS (FOUR)
@@ -146,13 +145,13 @@ IF(iproc == 0)THEN
   READ(nccont,*)
   READ(nccont,*)inturb,inseed,(sparam(ic),ic=1,nsparm)
   READ(nccont,*)
-  
+
 !       FLAME START OPTION (0=NO FLAME, 1=FLAME)
 !       ------------------
   READ(nccont,*)
   READ(nccont,*)inflam
   READ(nccont,*)
-  
+
 !       DEFAULT INITIAL CONDITIONS
 !       --------------------------
   READ(nccont,*)
@@ -164,7 +163,7 @@ IF(iproc == 0)THEN
     READ(nccont,*)jspec,yrin(ispec)
   END DO
   READ(nccont,*)
-  
+
 !       GLOBAL BOUNDARY CONDITION TYPES
 !       -------------------------------
   READ(nccont,*)
@@ -172,15 +171,19 @@ IF(iproc == 0)THEN
   READ(nccont,*)
   READ(nccont,*)
   READ(nccont,*)ngbcxl,(nxlprm(ic),ic=1,nbcpri), (rxlprm(ic),ic=1,nbcprr)
+! FY - ADDED FOR READING OF EXTRA VARIABLES FOR NON-REFLECTING INFLOW
+  IF(ngbcxl == nsbci4)THEN
+    READ(nccont,*)(rxlprc(ic),ic=1,nbcprc)
+  END IF
   READ(nccont,*)ngbcxr,(nxrprm(ic),ic=1,nbcpri), (rxrprm(ic),ic=1,nbcprr)
   READ(nccont,*)ngbcyl,(nylprm(ic),ic=1,nbcpri), (rylprm(ic),ic=1,nbcprr)
   READ(nccont,*)ngbcyr,(nyrprm(ic),ic=1,nbcpri), (ryrprm(ic),ic=1,nbcprr)
   READ(nccont,*)ngbczl,(nzlprm(ic),ic=1,nbcpri), (rzlprm(ic),ic=1,nbcprr)
   READ(nccont,*)ngbczr,(nzrprm(ic),ic=1,nbcpri), (rzrprm(ic),ic=1,nbcprr)
   READ(nccont,*)
-  
+
 !       -----------------------------------------------------------------------
-  
+
 !       RSC 01-MAY-2013
 !       READ MOLECULAR TRANSPORT CONTROL DATA
 !       RSC 21-JUL-2013
@@ -203,17 +206,17 @@ IF(iproc == 0)THEN
     READ(nccont,*)nfradn,trefrn
     READ(nccont,*)
   END IF
-  
+
 !       READ END-OF-FILE LINE
   READ(nccont,'(A)')eoflin
-  
+
   CLOSE(nccont)
-  
+
 !       =======================================================================
-  
+
 !       COMPRESS THE DATA
 !       -----------------
-  
+
 !       REQUIRED GLOBAL DOMAIN SIZE (x,y,z)
   ncount = 1
   parray(ncount) = xgdlen
@@ -221,7 +224,7 @@ IF(iproc == 0)THEN
   parray(ncount) = ygdlen
   ncount = ncount + 1
   parray(ncount) = zgdlen
-  
+
 !       TIME STEP, START STEP, NO OF STEPS, STEP SWITCH
   ncount = ncount + 1
   parray(ncount) = tstep
@@ -231,7 +234,7 @@ IF(iproc == 0)THEN
   parray(ncount) = REAL(ntime,kind=8)
   ncount = ncount + 1
   parray(ncount) = REAL(nstpsw,kind=8)
-  
+
 !       INTERVALS BETWEEN DUMPS,REPORTS,STATISTICS; DUMP OUTPUT SWITCH
 !       RSC 11-JUL-2009
   ncount = ncount + 1
@@ -242,14 +245,14 @@ IF(iproc == 0)THEN
   parray(ncount) = REAL(ntstat,kind=8)
   ncount = ncount + 1
   parray(ncount) = REAL(ndofmt,kind=8)
-  
+
 !       COLD START SWITCH; DUMP INPUT SWITCH
 !       RSC 11-JUL-2009
   ncount = ncount + 1
   parray(ncount) = REAL(ncdmpi,kind=8)
   ncount = ncount + 1
   parray(ncount) = REAL(ndifmt,kind=8)
-  
+
 !       INITIAL TURBULENCE
   ncount = ncount + 1
   parray(ncount) = REAL(inturb,kind=8)
@@ -259,11 +262,11 @@ IF(iproc == 0)THEN
     ncount = ncount + 1
     parray(ncount) = sparam(ispec)
   END DO
-  
+
 !       FLAME START OPTION
   ncount = ncount + 1
   parray(ncount) = REAL(inflam,kind=8)
-  
+
 !       DEFAULT INITIAL CONDITIONS
   ncount = ncount + 1
   parray(ncount) = prin
@@ -279,7 +282,7 @@ IF(iproc == 0)THEN
     ncount = ncount + 1
     parray(ncount) = yrin(ispec)
   END DO
-  
+
 !       GLOBAL BOUNDARY CONDITION TYPES
   ncount = ncount + 1
   parray(ncount) = REAL(ngbcxl,kind=8)
@@ -291,6 +294,12 @@ IF(iproc == 0)THEN
     ncount = ncount + 1
     parray(ncount) = rxlprm(ic)
   END DO
+  IF(ngbcxl == nsbci4)THEN ! FY - ADDED FOR NSBCI4
+    DO ic = 1, nbcprc
+      ncount = ncount + 1
+      parray(ncount) = rxlprc(ic)
+    END DO
+  END IF
   ncount = ncount + 1
   parray(ncount) = REAL(ngbcxr,kind=8)
   DO ic = 1, nbcpri
@@ -341,7 +350,7 @@ IF(iproc == 0)THEN
     ncount = ncount + 1
     parray(ncount) = rzrprm(ic)
   END DO
-  
+
 !       MIXTURE AVERAGED TRANSPORT
 !       RSC 05-MAY-2013
   ncount = ncount + 1
@@ -356,24 +365,24 @@ IF(iproc == 0)THEN
   parray(ncount) = REAL(nfmduf,kind=8)
   ncount = ncount + 1
   parray(ncount) = wmltdr
-  
+
 !       RADIATION TREATMENT
 !       RSC 21-JUL-2013
   ncount = ncount + 1
   parray(ncount) = REAL(nfradn,kind=8)
   ncount = ncount + 1
   parray(ncount) = trefrn
-  
+
 !       BROADCAST COUNTER
   pcount = REAL(ncount,kind=8)
-  
+
 !       CHECK BROADCAST COUNTER AGAINST BROADCAST ARRAY SIZE
   IF(ncount > nparay)THEN
     WRITE(ncrept,*)'Warning: INCONT: broadcast array size too small'
   END IF
-  
+
 !       =======================================================================
-  
+
 END IF
 
 !     =========================================================================
@@ -391,12 +400,12 @@ CALL p_bcst(parray,nparay,ncount,iroot)
 
 !     NOT THE LOWEST-RANKED PROCESSOR
 IF(iproc /= 0)THEN
-  
+
 !       =======================================================================
-  
+
 !       UNCOMPRESS THE DATA
 !       -------------------
-  
+
 !       REQUIRED GLOBAL GRID SIZE X,Y,Z
   ncount = 1
   xgdlen = parray(ncount)
@@ -404,7 +413,7 @@ IF(iproc /= 0)THEN
   ygdlen = parray(ncount)
   ncount = ncount + 1
   zgdlen = parray(ncount)
-  
+
 !       TIME STEP, START STEP, NO OF STEPS, STEP SWITCH
   ncount = ncount + 1
   tstep = parray(ncount)
@@ -414,7 +423,7 @@ IF(iproc /= 0)THEN
   ntime = nint(parray(ncount))
   ncount = ncount + 1
   nstpsw = nint(parray(ncount))
-  
+
 !       INTERVALS BETWEEN DUMPS,REPORTS,STATISTICS; DUMP OUTPUT SWITCH
 !       RSC 11-JUL-2009
   ncount = ncount + 1
@@ -425,14 +434,14 @@ IF(iproc /= 0)THEN
   ntstat = nint(parray(ncount))
   ncount = ncount + 1
   ndofmt = nint(parray(ncount))
-  
+
 !       COLD START SWITCH; DUMP INPUT SWITCH
 !       RSC 11-JUL-2009
   ncount = ncount + 1
   ncdmpi = nint(parray(ncount))
   ncount = ncount + 1
   ndifmt = nint(parray(ncount))
-  
+
 !       INITIAL TURBULENCE
   ncount = ncount + 1
   inturb = nint(parray(ncount))
@@ -442,11 +451,11 @@ IF(iproc /= 0)THEN
     ncount = ncount + 1
     sparam(ispec) = parray(ncount)
   END DO
-  
+
 !       FLAME START OPTION
   ncount = ncount + 1
   inflam = nint(parray(ncount))
-  
+
 !       DEFAULT INITIAL CONDITIONS
   ncount = ncount + 1
   prin = parray(ncount)
@@ -462,7 +471,7 @@ IF(iproc /= 0)THEN
     ncount = ncount + 1
     yrin(ispec) = parray(ncount)
   END DO
-  
+
 !       GLOBAL BOUNDARY CONDITION TYPES
   ncount = ncount + 1
   ngbcxl = nint(parray(ncount))
@@ -474,6 +483,12 @@ IF(iproc /= 0)THEN
     ncount = ncount + 1
     rxlprm(ic) = parray(ncount)
   END DO
+  IF(ngbcxl == nsbci4)THEN ! FY - ADDED FOR NSBCI4
+    DO ic = 1, nbcprc
+      ncount = ncount + 1
+      rxlprc(ic) = parray(ncount)
+    END DO
+  END IF
   ncount = ncount + 1
   ngbcxr = nint(parray(ncount))
   DO ic = 1, nbcpri
@@ -524,7 +539,7 @@ IF(iproc /= 0)THEN
     ncount = ncount + 1
     rzrprm(ic) = parray(ncount)
   END DO
-  
+
 !       MIXTURE AVERAGED TRANSPORT
 !       RSC 05-MAY-2013
   ncount = ncount + 1
@@ -539,16 +554,16 @@ IF(iproc /= 0)THEN
   nfmduf = nint(parray(ncount))
   ncount = ncount + 1
   wmltdr = parray(ncount)
-  
+
 !       RADIATION TREATMENT
 !       RSC 21-JUL-2013
   ncount = ncount + 1
   nfradn = nint(parray(ncount))
   ncount = ncount + 1
   trefrn = parray(ncount)
-  
+
 !       =======================================================================
-  
+
 END IF
 
 !     =========================================================================
