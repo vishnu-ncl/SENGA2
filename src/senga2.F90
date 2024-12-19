@@ -65,6 +65,7 @@ PROGRAM senga2
 !     ===========
 !     -------------------------------------------------------------------------
 use com_senga
+use omp_lib
 !     -------------------------------------------------------------------------
 
 
@@ -73,29 +74,57 @@ use com_senga
 !     RSC 29-DEC-2006 UPDATED INDEXING
 INTEGER :: jtime,jrkstp
 
-!     BEGIN
-!     =====
+!   Timings
+    DOUBLE PRECISION :: indata_stime, indata_etime, indata_ttime, &
+                    parfer_stime, parfer_etime, parfer_ttime, &
+                    rhscal_stime, rhscal_etime, rhscal_ttime, &
+                    rhsvel_stime, rhsvel_etime, rhsvel_ttime, &
+                    boundt_stime, boundt_etime, boundt_ttime, &
+                    bounds_stime, bounds_etime, bounds_ttime, &
+                    bountt_stime, bountt_etime, bountt_ttime, &
+                    lincom_stime, lincom_etime, lincom_ttime, &
+                    fincom_stime, fincom_etime, fincom_ttime, &
+                    adaptt_stime, adaptt_etime, adaptt_ttime
+
+    DOUBLE PRECISION :: total_stime, total_etime, total_ttime
+
+!   BEGIN
+!   =====
 
 !     =========================================================================
-total_time = 0.0_8
-total_comm_time = 0.0_8
+    indata_ttime = 0d0
+    parfer_ttime = 0d0
+    rhscal_ttime = 0d0
+    rhsvel_ttime = 0d0
+    boundt_ttime = 0d0
+    bounds_ttime = 0d0
+    bountt_ttime = 0d0
+    lincom_ttime = 0d0
+    fincom_ttime = 0d0
+    adaptt_ttime = 0d0
+    total_ttime  = 0d0
 
-!     INITIALISATION
-!     ==============
-!     PARALLEL DOMAIN DECOMPOSITION
-call cpu_time(start_time)
+!   INITIALISATION
+!   ==============
+
+    total_stime = omp_get_wtime()
+
+!   PARALLEL DOMAIN DECOMPOSITION
 CALL pardom
 
-!     INITIALISE THE DATA
+!   INITIALISE THE DATA
+indata_stime = omp_get_wtime()
 CALL indata
+indata_etime = omp_get_wtime()
+indata_ttime = indata_ttime + (indata_etime-indata_stime)
 
-!     RECORD INITIAL CONDITIONS
+!   RECORD INITIAL CONDITIONS
 CALL output
 
-!     =========================================================================
+!   =========================================================================
 
-!     TIME STEP LOOP
-!     ==============
+!   TIME STEP LOOP
+!   ==============
 
 !     RSC 29-DEC-2006 UPDATED INDEXING
 DO jtime = ntime1,ntime2
@@ -120,25 +149,40 @@ DO jtime = ntime1,ntime2
     irkstp = jrkstp
     
 !         APPLY BCS ON PRIMITIVE VARIABLES
+    boundt_stime = omp_get_wtime()
     CALL boundt
+    boundt_etime = omp_get_wtime()
+    boundt_ttime = boundt_ttime + (boundt_etime-boundt_stime)
     
 !         PARALLEL DATA TRANSFER
-    call cpu_time(start_comm_time)
+    parfer_stime = omp_get_wtime()
     CALL parfer
-    call cpu_time(finish_comm_time)
-    total_comm_time = total_comm_time + (finish_comm_time-start_comm_time)
+    parfer_etime = omp_get_wtime()
+    parfer_ttime = parfer_ttime + (parfer_etime-parfer_stime)
 
 !         EVALUATE RHS FOR SCALARS
+    rhscal_stime = omp_get_wtime()
     CALL rhscal
+    rhscal_etime = omp_get_wtime()
+    rhscal_ttime = rhscal_ttime + (rhscal_etime-rhscal_stime)
     
 !         EVALUATE RHS FOR VELOCITIES
+    rhsvel_stime = omp_get_wtime()
     CALL rhsvel
-    
+    rhsvel_etime = omp_get_wtime()
+    rhsvel_ttime = rhsvel_ttime + (rhsvel_etime-rhsvel_stime)
+
 !         APPLY BCS ON SOURCE TERMS
+    bounds_stime = omp_get_wtime()
     CALL bounds
+    bounds_etime = omp_get_wtime()
+    bounds_ttime = bounds_ttime + (bounds_etime-bounds_stime)
     
 !         RUNGE-KUTTA ADVANCEMENT
+    lincom_stime = omp_get_wtime()
     CALL lincom
+    lincom_etime = omp_get_wtime()
+    lincom_ttime = lincom_ttime + (lincom_etime-lincom_stime)
     
   END DO
   
@@ -149,26 +193,41 @@ DO jtime = ntime1,ntime2
   irkstp = nrkstp
   
 !       APPLY BCS ON PRIMITIVE VARIABLES
+  boundt_stime = omp_get_wtime()
   CALL boundt
+  boundt_etime = omp_get_wtime()
+  boundt_ttime = boundt_ttime + (boundt_etime-boundt_stime)
   
 !       PARALLEL DATA TRANSFER
-  call cpu_time(start_comm_time)
+  parfer_stime = omp_get_wtime()
   CALL parfer
-  call cpu_time(finish_comm_time)
-  total_comm_time = total_comm_time + (finish_comm_time-start_comm_time)
+  parfer_etime = omp_get_wtime()
+  parfer_ttime = parfer_ttime + (parfer_etime-parfer_stime)
 
 !       EVALUATE RHS FOR SCALARS
+  rhscal_stime = omp_get_wtime()
   CALL rhscal
+  rhscal_etime = omp_get_wtime()
+  rhscal_ttime = rhscal_ttime + (rhscal_etime-rhscal_stime)
   
 !       EVALUATE RHS FOR VELOCITIES
+  rhsvel_stime = omp_get_wtime()
   CALL rhsvel
-  
+  rhsvel_etime = omp_get_wtime()
+  rhsvel_ttime = rhsvel_ttime + (rhsvel_etime-rhsvel_stime)
+
 !       APPLY BCS ON SOURCE TERMS
+  bounds_stime = omp_get_wtime()
   CALL bounds
+  bounds_etime = omp_get_wtime()
+  bounds_ttime = bounds_ttime + (bounds_etime-bounds_stime)
   
 !       RUNGE-KUTTA ADVANCEMENT
+  fincom_stime = omp_get_wtime()
   CALL fincom
-  
+  fincom_etime = omp_get_wtime()
+  fincom_ttime = fincom_ttime + (fincom_etime-fincom_stime)
+
 !       =======================================================================
   
 !       UPDATE THE ELAPSED TIME
@@ -179,21 +238,27 @@ DO jtime = ntime1,ntime2
   
 !       SYNCHRONISE THE TIME-DEPENDENT BCS
 !       ==================================
+  bountt_stime = omp_get_wtime()
   CALL bountt
+  bountt_etime = omp_get_wtime()
+  bountt_ttime = bountt_ttime + (bountt_etime-bountt_stime)
   
 !       =======================================================================
   
 !       FILTER THE SOLUTION
 !       ===================
 !       RSC 30-AUG-2009 HIGH ORDER FILTERING
-!        CALL FLTREM
+!       CALL FLTREM
   
 !       =======================================================================
   
 !       ADJUST THE TIME STEP
 !       ====================
+  adaptt_stime = omp_get_wtime()
   CALL adaptt
-  
+  adaptt_etime = omp_get_wtime()
+  adaptt_ttime = adaptt_ttime + (adaptt_etime-adaptt_stime)
+
 !       =======================================================================
   
 !       PROCESS THE RESULTS
@@ -203,23 +268,33 @@ DO jtime = ntime1,ntime2
 !       =======================================================================
   
 END DO
-!     END OF TIME STEP LOOP
+!   END OF TIME STEP LOOP
 
-!     =========================================================================
+!   =========================================================================
 
-!     TERMINATION
-!     ===========
+!   TERMINATION
+!   ===========
 
-!     TERMINATE THE PROGRAM
+!   TERMINATE THE PROGRAM
 CALL finish
-call cpu_time(finish_time)
+total_etime = omp_get_wtime()
+total_ttime = total_etime - total_stime
 
-total_time = total_time + (finish_time-start_time)
+    IF (iproc == 0 ) THEN
+        write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,' indata_ttime  =', indata_ttime,' seconds'
+        write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,' parfer_ttime  =', parfer_ttime,' seconds'
+        write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,' rhscal_ttime  =', rhscal_ttime,' seconds'
+        write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,' rhsvel_ttime  =', rhsvel_ttime,' seconds'
+        write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,' boundt_ttime  =', boundt_ttime,' seconds'
+        write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,' bounds_ttime  =', bounds_ttime,' seconds'
+        write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,' bountt_ttime  =', bountt_ttime,' seconds'
+        write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,' lincom_ttime  =', lincom_ttime,' seconds'
+        write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,' fincom_ttime  =', fincom_ttime,' seconds'
+        write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,' adaptt_ttime  =', adaptt_ttime,' seconds'
+        write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,' total_ttime   =', total_ttime,' seconds'
+    END IF
 
-write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,'  total_runtime =', total_time,' seconds'
-write (*,'(a,i5,a,f16.7,a)') 'IPROC: ', iproc,'  total_comm_time =', total_comm_time,' seconds'
-
-!     =========================================================================
+!   =========================================================================
 
 
 STOP

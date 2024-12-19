@@ -16,9 +16,6 @@ MODULE com_senga
     
 
 !     GLOBAL GRID SIZE
-real(kind=8) :: start_time, finish_time, total_time
-real(kind=8) :: start_comm_time, finish_comm_time, total_comm_time
-
 INTEGER :: nxglbl,nyglbl,nzglbl
 PARAMETER(nxglbl=1152, nyglbl=288, nzglbl=288)
 INTEGER :: ngzmax
