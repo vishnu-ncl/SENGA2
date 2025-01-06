@@ -17,7 +17,7 @@ Time step; start step, no of steps, step switch (0=fixed, 1=adaptive))
  5.0D-10    440001   200000   0
 
 Intervals between dumps, reports, statistics, dump output (0/1=un/formatted)
- 40000    100    1000      0
+ 1000    100    1000      0
 
 Cold start switch (0=cold start, 1=restart), dump input (0/1=un/formatted),dump file number (0/1)
  1      0       0
