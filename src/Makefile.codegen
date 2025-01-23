@@ -25,15 +25,18 @@ OPS_FILES = senga2.F90 com_ops_senga2.F90 ops_data_init.F90 dfinit.F90 dfbydx.F9
 ifeq ($(OPS_COMPILER),gnu)
 #APP_FLAGS = -mcmodel=medium -fopt-info-vec -fopt-info-vec-optimized -fopt-info-vec-missed -funroll-loops -funroll-all-loops -finline-functions -ftree-vectorize -fstrict-aliasing
 APP_FLAGS = -mcmodel=medium -fallow-argument-mismatch
+APP_CXX_FLAGS = -mcmodel=medium #-fsanitize=undefined
 endif
 
 ifeq ($(OPS_COMPILER),intel)
 APP_FLAGS = -mcmodel=large -fp-model precise -fp-model source -no-fma -fimf-arch-consistency=true -fimf-precision=high
 #APP_FLAGS = -mcmodel=large -fp-model precise -fp-model source -no-fma -nolib-inline
+APP_CXX_FLAGS = -mcmodel=medium -fp-model precise -fp-model source -prec-div -prec-sqrt
 endif
 
 ifeq ($(OPS_COMPILER),pgi)
 APP_FLAGS = -Kieee -Mnofpapprox -mcmodel=medium -Ktrap=unf -Mnofprelaxed -m64 -pc 64
+APP_CXX_FLAGS = -mcmodel=medium -Kieee -nofma
 #-nofma
 endif
 
@@ -175,7 +178,7 @@ F2C_SEQ_KERNELS = $(wildcard f2c_mpi_openmp/*.F90)
 F2C_MPI_OBJ = $(MODULE_FILES:.F90=_f2c_mpi.o) $(OPS_MODULE_FILES:.F90=_f2c_mpi.o) $(OTHER_FILES:.F90=_f2c_mpi.o) $(CXX_MASTER_KERNELS:.cpp=_f2c_mpi.o) $(F2C_SEQ_KERNELS:.F90=_f2c_mpi.o) $(OPS_GENERATED:.F90=_f2c_mpi.o)
 
 f2c_mpi_openmp/f2c_mpi_openmp_kernels_f2c_mpi.o: f2c_mpi_openmp/f2c_mpi_openmp_kernels.cpp
-	$(MPICPP) $(CXXFLAGS) -mcmodel=medium -DOPS_FTN -DOPS_MPI $(I_MPI_INC) -I$(C_OPS_INC) -I. -c $< -o $@
+	$(MPICPP) $(CXXFLAGS) $(APP_CXX_FLAGS) -DOPS_FTN -DOPS_MPI $(I_MPI_INC) -I$(C_OPS_INC) -I. -c $< -o $@
 
 %_f2c_mpi.o: %.F90
 	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS) -DOPS_MPI -DOPS_F2C_INTEROP -c $< -o $@

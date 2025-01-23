@@ -172,7 +172,7 @@ SUBROUTINE maths_kernel_eqP(out_arr,in_arr,var,ispec)
     real(kind=8), dimension(nspcmx), intent(in) :: var
     real(kind=8) :: fornow
 
-    fornow = max(in_arr(OPS_ACC2(0,0,0))*var(ispec), 0.0_8)
+    fornow = MAX(in_arr(OPS_ACC2(0,0,0))*var(ispec), 0.0_8)
     out_arr(OPS_ACC1(0,0,0)) = out_arr(OPS_ACC1(0,0,0)) * fornow
 
 END SUBROUTINE maths_kernel_eqP
@@ -250,14 +250,14 @@ END SUBROUTINE maths_kernel_eqV
 
 SUBROUTINE maths_kernel_eqV_fused(out_arr1, out_arr2, out_arr3, out_arr4, in_arr)
 
-	real(kind=8), dimension(1) :: out_arr1, out_arr2, out_arr3, out_arr4
-	real(kind=8), dimension(1), intent(in) :: in_arr
+    real(kind=8), dimension(1) :: out_arr1, out_arr2, out_arr3, out_arr4
+    real(kind=8), dimension(1), intent(in) :: in_arr
 
-	out_arr1(OPS_ACC1(0,0,0)) = out_arr1(OPS_ACC1(0,0,0)) * in_arr(OPS_ACC5(0,0,0))
-	out_arr2(OPS_ACC2(0,0,0)) = out_arr2(OPS_ACC2(0,0,0)) * in_arr(OPS_ACC5(0,0,0))
-	out_arr3(OPS_ACC3(0,0,0)) = out_arr3(OPS_ACC3(0,0,0)) * in_arr(OPS_ACC5(0,0,0))
+    out_arr1(OPS_ACC1(0,0,0)) = out_arr1(OPS_ACC1(0,0,0)) * in_arr(OPS_ACC5(0,0,0))
+    out_arr2(OPS_ACC2(0,0,0)) = out_arr2(OPS_ACC2(0,0,0)) * in_arr(OPS_ACC5(0,0,0))
+    out_arr3(OPS_ACC3(0,0,0)) = out_arr3(OPS_ACC3(0,0,0)) * in_arr(OPS_ACC5(0,0,0))
 
-	out_arr4(OPS_ACC4(0,0,0)) = out_arr4(OPS_ACC4(0,0,0)) * in_arr(OPS_ACC5(0,0,0))
+    out_arr4(OPS_ACC4(0,0,0)) = out_arr4(OPS_ACC4(0,0,0)) * in_arr(OPS_ACC5(0,0,0))
 
 END SUBROUTINE maths_kernel_eqV_fused
 
