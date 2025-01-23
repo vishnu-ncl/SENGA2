@@ -1,7 +1,7 @@
 SUBROUTINE rhscal
  
 ! Code converted using TO_F90 by Alan Miller
-! Date: 2024-11-08  Time: 04:59:35
+! Date: 2025-01-23  Time: 08:55:10
 
 !     *************************************************************************
 
@@ -37,7 +37,6 @@ SUBROUTINE rhscal
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-
 use com_senga
 !     -------------------------------------------------------------------------
 
@@ -548,7 +547,6 @@ IF(flmavt)THEN
           combo2 = combo2 + fornow/ctrans(ispec)
           combo3 = combo3 + fornow
         END DO
-!             RSC/GVN 08-MAR-2014 BUG FIX
         combo3 = one/combo3
         combo1 = combo1*combo3
         combo2 = combo2*combo3
@@ -607,12 +605,6 @@ IF(fxlcnw)THEN
       fornow4 = store7(istal+4,jc,kc)*store1(istal+4,jc,kc)
       fornow = ((-25.0/12.0)*fornow0+(4.0)*fornow1-  &
           (3.0)*fornow2+(4.0/3.0)*fornow3- (1.0/4.0)*fornow4)/deltax
-!            DO IC = ISTAP1,ISTOW
-      
-!              FORNOW = FORNOW
-!     +            + ACBCXL(IC-1)*STORE7(IC,JC,KC)*STORE1(IC,JC,KC)
-      
-!            ENDDO
       erhs(istal,jc,kc) = erhs(istal,jc,kc) + fornow
       
     END DO
@@ -631,12 +623,6 @@ IF(fxrcnw)THEN
       fornow4 = store7(istol-4,jc,kc)*store1(istol-4,jc,kc)
       fornow = ((25.0/12.0)*fornow0-(4.0)*fornow1+  &
           (3.0)*fornow2-(4.0/3.0)*fornow3+ (1.0/4.0)*fornow4)/deltax
-!            DO IC = ISTAW,ISTOM1
-      
-!              FORNOW = FORNOW
-!     +            + ACBCXR(ISTOL-IC)*STORE7(IC,JC,KC)*STORE1(IC,JC,KC)
-      
-!            ENDDO
       erhs(istol,jc,kc) = erhs(istol,jc,kc) + fornow
       
     END DO
@@ -655,12 +641,6 @@ IF(fylcnw)THEN
       fornow4 = store7(ic,jstal+4,kc)*store2(ic,jstal+4,kc)
       fornow = ((-25.0/12.0)*fornow0+(4.0)*fornow1-  &
           (3.0)*fornow2+(4.0/3.0)*fornow3- (1.0/4.0)*fornow4)/deltay
-!            DO JC = JSTAP1,JSTOW
-      
-!              FORNOW = FORNOW
-!     +            + ACBCYL(JC-1)*STORE7(IC,JC,KC)*STORE2(IC,JC,KC)
-      
-!            ENDDO
       erhs(ic,jstal,kc) = erhs(ic,jstal,kc) + fornow
       
     END DO
@@ -2808,29 +2788,23 @@ DO ispec = 1,nspec
         DO kc = kstal,kstol
           DO jc = jstal,jstol
             
-            combo2 = trun(istal,jc,kc)*tdrmix(istal,jc,kc)
-            combo2 = combo2*store7(istal,jc,kc)*td1x(istal,jc,kc)
             fornow = zero
 !                 NC&VM: CALCULATING DERIVATIVE AT THE WALL
             combo1 = trun(istal,jc,kc)*tdrmix(istal,jc,kc)
             fornow0 = combo1*store7(istal,jc,kc)*td1x(istal,jc,kc)
-            fornow0 = rgspec(ispec)*(fornow0-combo2)
             
             combo1 = trun(istal+1,jc,kc)*tdrmix(istal+1,jc,kc)
             fornow1 = combo1*store7(istal+1,jc,kc) *td1x(istal+1,jc,kc)
-            fownow1 = rgspec(ispec)*(fornow1-combo2)
             
             combo1 = trun(istal+2,jc,kc)*tdrmix(istal+2,jc,kc)
             fornow2 = combo1*store7(istal+2,jc,kc) *td1x(istal+2,jc,kc)
-            fornow2 = rgspec(ispec)*(fornow2-combo2)
             
             combo1 = trun(istal+3,jc,kc)*tdrmix(istal+3,jc,kc)
             fornow3 = combo1*store7(istal+3,jc,kc) *td1x(istal+3,jc,kc)
-            fornow3 = rgspec(ispec)*(fornow3-combo2)
             
             combo1 = trun(istal+4,jc,kc)*tdrmix(istal+4,jc,kc)
             fornow4 = combo1*store7(istal+4,jc,kc) *td1x(istal+4,jc,kc)
-            fornow4 = rgspec(ispec)*(fornow4-combo2)
+            
             fornow = ((-25.0/12.0)*fornow0+(4.0)*fornow1-  &
                 (3.0)*fornow2+(4.0/3.0)*fornow3- (1.0/4.0)*fornow4)/deltax
             erhs(istal,jc,kc) = erhs(istal,jc,kc) + rgspec(ispec)*fornow
@@ -2842,29 +2816,23 @@ DO ispec = 1,nspec
         DO kc = kstal,kstol
           DO jc = jstal,jstol
             
-            combo2 = trun(istol,jc,kc)*tdrmix(istol,jc,kc)
-            combo2 = combo2*store7(istol,jc,kc)*td1x(istol,jc,kc)
             fornow = zero
 !                 NC&VM: CALCULATING DERIVATIVE AT THE WALL
             combo1 = trun(istol,jc,kc)*tdrmix(istol,jc,kc)
             fornow0 = combo1*store7(istol,jc,kc)*td1x(istol,jc,kc)
-            fornow0 = rgspec(ispec)*(fornow0-combo2)
             
             combo1 = trun(istol-1,jc,kc)*tdrmix(istol-1,jc,kc)
             fornow1 = combo1*store7(istol-1,jc,kc) *td1x(istol-1,jc,kc)
-            fornow1 = rgspec(ispec)*(fornow1-combo2)
             
             combo1 = trun(istol-2,jc,kc)*tdrmix(istol-2,jc,kc)
             fornow2 = combo1*store7(istol-2,jc,kc) *td1x(istol-2,jc,kc)
-            fornow2 = rgspec(ispec)*(fornow2-combo2)
             
             combo1 = trun(istol-3,jc,kc)*tdrmix(istol-3,jc,kc)
             fornow3 = combo1*store7(istol-3,jc,kc) *td1x(istol-3,jc,kc)
-            fornow3 = rgspec(ispec)*(fornow3-combo2)
             
             combo1 = trun(istol-4,jc,kc)*tdrmix(istol-4,jc,kc)
             fornow4 = combo1*store7(istol-4,jc,kc) *td1x(istol-4,jc,kc)
-            fornow4 = rgspec(ispec)*(fornow4-combo2)
+            
             fornow = ((25.0/12.0)*fornow0-(4.0)*fornow1+  &
                 (3.0)*fornow2-(4.0/3.0)*fornow3+ (1.0/4.0)*fornow4)/deltax
             erhs(istol,jc,kc) = erhs(istol,jc,kc) + rgspec(ispec)*fornow
@@ -2876,29 +2844,22 @@ DO ispec = 1,nspec
         DO kc = kstal,kstol
           DO ic = istal,istol
             
-            combo2 = trun(ic,jstal,kc)*tdrmix(ic,jstal,kc)
-            combo2 = combo2*store7(ic,jstal,kc)*td1y(ic,jstal,kc)
             fornow = zero
 !                 NC&VM: CALCULATING DERIVATIVE AT THE WALL
             combo1 = trun(ic,jstal,kc)*tdrmix(ic,jstal,kc)
             fornow0 = combo1*store7(ic,jstal,kc)*td1y(ic,jstal,kc)
-            fornow0 = rgspec(ispec)*(fornow0-combo2)
             
             combo1 = trun(ic,jstal+1,kc)*tdrmix(ic,jstal+1,kc)
             fornow1 = combo1*store7(ic,jstal+1,kc) *td1y(ic,jstal+1,kc)
-            fornow1 = rgspec(ispec)*(fornow1-combo2)
             
             combo1 = trun(ic,jstal+2,kc)*tdrmix(ic,jstal+2,kc)
             fornow2 = combo1*store7(ic,jstal+2,kc) *td1y(ic,jstal+2,kc)
-            fornow2 = rgspec(ispec)*(fornow2-combo2)
             
             combo1 = trun(ic,jstal+3,kc)*tdrmix(ic,jstal+3,kc)
             fornow3 = combo1*store7(ic,jstal+3,kc) *td1y(ic,jstal+3,kc)
-            fornow3 = rgspec(ispec)*(fornow3-combo2)
             
             combo1 = trun(ic,jstal+4,kc)*tdrmix(ic,jstal+4,kc)
             fornow4 = combo1*store7(ic,jstal+4,kc) *td1y(ic,jstal+4,kc)
-            fornow4 = rgspec(ispec)*(fornow4-combo2)
             
             fornow = ((-25.0/12.0)*fornow0+(4.0)*fornow1-  &
                 (3.0)*fornow2+(4.0/3.0)*fornow3- (1.0/4.0)*fornow4)/deltay
@@ -2911,29 +2872,23 @@ DO ispec = 1,nspec
         DO kc = kstal,kstol
           DO ic = istal,istol
             
-            combo2 = trun(ic,jstol,kc)*tdrmix(ic,jstol,kc)
-            combo2 = combo2*store7(ic,jstol,kc)*td1y(ic,jstol,kc)
             fornow = zero
 !                 NC&VM: CALCULATING DERIVATIVE AT THE WALL
             combo1 = trun(ic,jstol,kc)*tdrmix(ic,jstol,kc)
             fornow0 = combo1*store7(ic,jstol,kc)*td1x(ic,jstol,kc)
-            fornow0 = rgspec(ispec)*(fornow0-combo2)
             
             combo1 = trun(ic,jstol-1,kc)*tdrmix(ic,jstol-1,kc)
             fornow1 = combo1*store7(ic,jstol-1,kc) *td1x(ic,jstol-1,kc)
-            fornow1 = rgspec(ispec)*(fornow1-combo2)
             
             combo1 = trun(ic,jstol-2,kc)*tdrmix(ic,jstol-2,kc)
             fornow2 = combo1*store7(ic,jstol-2,kc) *td1x(ic,jstol-2,kc)
-            fornow2 = rgspec(ispec)*(fornow2-combo2)
             
             combo1 = trun(ic,jstol-3,kc)*tdrmix(ic,jstol-3,kc)
             fornow3 = combo1*store7(ic,jstol-3,kc) *td1x(ic,jstol-3,kc)
-            fornow3 = rgspec(ispec)*(fornow3-combo2)
             
             combo1 = trun(ic,jstol-4,kc)*tdrmix(ic,jstol-4,kc)
             fornow4 = combo1*store7(ic,jstol-4,kc) *td1x(ic,jstol-4,kc)
-            fornow4 = rgspec(ispec)*(fornow4-combo2)
+            
             fornow = ((25.0/12.0)*fornow0-(4.0)*fornow1+  &
                 (3.0)*fornow2-(4.0/3.0)*fornow3+ (1.0/4.0)*fornow4)/deltay
             erhs(ic,jstol,kc) = erhs(ic,jstol,kc) + rgspec(ispec)*fornow
@@ -2945,29 +2900,22 @@ DO ispec = 1,nspec
         DO jc = jstal,jstol
           DO ic = istal,istol
             
-            combo2 = trun(ic,jc,kstal)*tdrmix(ic,jc,kstal)
-            combo2 = combo2*store7(ic,jc,kstal)*td1z(ic,jc,kstal)
             fornow = zero
 !                 NC&VM: CALCULATING DERIVATIVE AT THE WALL
             combo1 = trun(ic,jc,kstal)*tdrmix(ic,jc,kstal)
             fornow0 = combo1*store7(ic,jc,kstal)*td1y(ic,jc,kstal)
-            fornow0 = rgspec(ispec)*(fornow0-combo2)
             
             combo1 = trun(ic,jc,kstal+1)*tdrmix(ic,jc,kstal+1)
             fornow1 = combo1*store7(ic,jc,kstal+1) *td1y(ic,jc,kstal+1)
-            fornow1 = rgspec(ispec)*(fornow1-combo2)
             
             combo1 = trun(ic,jc,kstal+2)*tdrmix(ic,jc,kstal+2)
             fornow2 = combo1*store7(ic,jc,kstal+2) *td1y(ic,jc,kstal+2)
-            fornow2 = rgspec(ispec)*(fornow2-combo2)
             
             combo1 = trun(ic,jc,kstal+3)*tdrmix(ic,jc,kstal+3)
             fornow3 = combo1*store7(ic,jc,kstal+3) *td1y(ic,jc,kstal+3)
-            fornow3 = rgspec(ispec)*(fornow3-combo2)
             
             combo1 = trun(ic,jc,kstal+4)*tdrmix(ic,jc,kstal+4)
             fornow4 = combo1*store7(ic,jc,kstal+4) *td1y(ic,jc,kstal+4)
-            fornow4 = rgspec(ispec)*(fornow4-combo2)
             
             fornow = ((-25.0/12.0)*fornow0+(4.0)*fornow1-  &
                 (3.0)*fornow2+(4.0/3.0)*fornow3- (1.0/4.0)*fornow4)/deltaz
@@ -2980,29 +2928,23 @@ DO ispec = 1,nspec
         DO jc = jstal,jstol
           DO ic = istal,istol
             
-            combo2 = trun(ic,jc,kstol)*tdrmix(ic,jc,kstol)
-            combo2 = combo2*store7(ic,jc,kstol)*td1z(ic,jc,kstol)
             fornow = zero
 !                 NC&VM: CALCULATING DERIVATIVE AT THE WALL
             combo1 = trun(ic,jc,kstol)*tdrmix(ic,jc,kstol)
             fornow0 = combo1*store7(ic,jc,kstol)*td1x(ic,jc,kstol)
-            fornow0 = rgspec(ispec)*(fornow0-combo2)
             
             combo1 = trun(ic,jc,kstol-1)*tdrmix(ic,jc,kstol-1)
             fornow1 = combo1*store7(ic,jc,kstol-1) *td1x(ic,jc,kstol-1)
-            fornow1 = rgspec(ispec)*(fornow1-combo2)
             
             combo1 = trun(ic,jc,kstol-2)*tdrmix(ic,jc,kstol-2)
             fornow2 = combo1*store7(ic,jc,kstol-2) *td1x(ic,jc,kstol-2)
-            fornow2 = rgspec(ispec)*(fornow2-combo2)
             
             combo1 = trun(ic,jc,kstol-3)*tdrmix(ic,jc,kstol-3)
             fornow3 = combo1*store7(ic,jc,kstol-3) *td1x(ic,jc,kstol-3)
-            fornow3 = rgspec(ispec)*(fornow3-combo2)
             
             combo1 = trun(ic,jc,kstol-4)*tdrmix(ic,jc,kstol-4)
             fornow4 = combo1*store7(ic,jc,kstol-4) *td1x(ic,jc,kstol-4)
-            fornow4 = rgspec(ispec)*(fornow4-combo2)
+            
             fornow = ((25.0/12.0)*fornow0-(4.0)*fornow1+  &
                 (3.0)*fornow2-(4.0/3.0)*fornow3+ (1.0/4.0)*fornow4)/deltaz
             erhs(ic,jc,kstol) = erhs(ic,jc,kstol) + rgspec(ispec)*fornow
@@ -3017,29 +2959,23 @@ DO ispec = 1,nspec
         DO kc = kstal,kstol
           DO jc = jstal,jstol
             
-            combo2 = trun(istal,jc,kc)*tdrmix(istal,jc,kc)
-            combo2 = combo2*store7(istal,jc,kc)*td1x(istal,jc,kc)
             fornow = zero
 !                 NC&VM: CALCULATING DERIVATIVE AT THE WALL
             combo1 = trun(istal,jc,kc)*tdrmix(istal,jc,kc)
             fornow0 = combo1*store7(istal,jc,kc)*td1x(istal,jc,kc)
-            fornow0 = rgspec(ispec)*(fornow0-combo2)
             
             combo1 = trun(istal+1,jc,kc)*tdrmix(istal+1,jc,kc)
             fornow1 = combo1*store7(istal+1,jc,kc) *td1x(istal+1,jc,kc)
-            fownow1 = rgspec(ispec)*(fornow1-combo2)
             
             combo1 = trun(istal+2,jc,kc)*tdrmix(istal+2,jc,kc)
             fornow2 = combo1*store7(istal+2,jc,kc) *td1x(istal+2,jc,kc)
-            fornow2 = rgspec(ispec)*(fornow2-combo2)
             
             combo1 = trun(istal+3,jc,kc)*tdrmix(istal+3,jc,kc)
             fornow3 = combo1*store7(istal+3,jc,kc) *td1x(istal+3,jc,kc)
-            fornow3 = rgspec(ispec)*(fornow3-combo2)
             
             combo1 = trun(istal+4,jc,kc)*tdrmix(istal+4,jc,kc)
             fornow4 = combo1*store7(istal+4,jc,kc) *td1x(istal+4,jc,kc)
-            fornow4 = rgspec(ispec)*(fornow4-combo2)
+            
             fornow = ((-25.0/12.0)*fornow0+(4.0)*fornow1-  &
                 (3.0)*fornow2+(4.0/3.0)*fornow3- (1.0/4.0)*fornow4)/deltax
             erhs(istal,jc,kc) = erhs(istal,jc,kc) + rgspec(ispec)*fornow
@@ -3051,29 +2987,23 @@ DO ispec = 1,nspec
         DO kc = kstal,kstol
           DO jc = jstal,jstol
             
-            combo2 = trun(istol,jc,kc)*tdrmix(istol,jc,kc)
-            combo2 = combo2*store7(istol,jc,kc)*td1x(istol,jc,kc)
             fornow = zero
 !                 NC&VM: CALCULATING DERIVATIVE AT THE WALL
             combo1 = trun(istol,jc,kc)*tdrmix(istol,jc,kc)
             fornow0 = combo1*store7(istol,jc,kc)*td1x(istol,jc,kc)
-            fornow0 = rgspec(ispec)*(fornow0-combo2)
             
             combo1 = trun(istol-1,jc,kc)*tdrmix(istol-1,jc,kc)
             fornow1 = combo1*store7(istol-1,jc,kc) *td1x(istol-1,jc,kc)
-            fornow1 = rgspec(ispec)*(fornow1-combo2)
             
             combo1 = trun(istol-2,jc,kc)*tdrmix(istol-2,jc,kc)
             fornow2 = combo1*store7(istol-2,jc,kc) *td1x(istol-2,jc,kc)
-            fornow2 = rgspec(ispec)*(fornow2-combo2)
             
             combo1 = trun(istol-3,jc,kc)*tdrmix(istol-3,jc,kc)
             fornow3 = combo1*store7(istol-3,jc,kc) *td1x(istol-3,jc,kc)
-            fornow3 = rgspec(ispec)*(fornow3-combo2)
             
             combo1 = trun(istol-4,jc,kc)*tdrmix(istol-4,jc,kc)
             fornow4 = combo1*store7(istol-4,jc,kc) *td1x(istol-4,jc,kc)
-            fornow4 = rgspec(ispec)*(fornow4-combo2)
+            
             fornow = ((25.0/12.0)*fornow0-(4.0)*fornow1+  &
                 (3.0)*fornow2-(4.0/3.0)*fornow3+ (1.0/4.0)*fornow4)/deltax
             erhs(istol,jc,kc) = erhs(istol,jc,kc) + rgspec(ispec)*fornow
@@ -3085,29 +3015,22 @@ DO ispec = 1,nspec
         DO kc = kstal,kstol
           DO ic = istal,istol
             
-            combo2 = trun(ic,jstal,kc)*tdrmix(ic,jstal,kc)
-            combo2 = combo2*store7(ic,jstal,kc)*td1y(ic,jstal,kc)
             fornow = zero
 !                 NC&VM: CALCULATING DERIVATIVE AT THE WALL
             combo1 = trun(ic,jstal,kc)*tdrmix(ic,jstal,kc)
             fornow0 = combo1*store7(ic,jstal,kc)*td1y(ic,jstal,kc)
-            fornow0 = rgspec(ispec)*(fornow0-combo2)
             
             combo1 = trun(ic,jstal+1,kc)*tdrmix(ic,jstal+1,kc)
             fornow1 = combo1*store7(ic,jstal+1,kc) *td1y(ic,jstal+1,kc)
-            fornow1 = rgspec(ispec)*(fornow1-combo2)
             
             combo1 = trun(ic,jstal+2,kc)*tdrmix(ic,jstal+2,kc)
             fornow2 = combo1*store7(ic,jstal+2,kc) *td1y(ic,jstal+2,kc)
-            fornow2 = rgspec(ispec)*(fornow2-combo2)
             
             combo1 = trun(ic,jstal+3,kc)*tdrmix(ic,jstal+3,kc)
             fornow3 = combo1*store7(ic,jstal+3,kc) *td1y(ic,jstal+3,kc)
-            fornow3 = rgspec(ispec)*(fornow3-combo2)
             
             combo1 = trun(ic,jstal+4,kc)*tdrmix(ic,jstal+4,kc)
             fornow4 = combo1*store7(ic,jstal+4,kc) *td1y(ic,jstal+4,kc)
-            fornow4 = rgspec(ispec)*(fornow4-combo2)
             
             fornow = ((-25.0/12.0)*fornow0+(4.0)*fornow1-  &
                 (3.0)*fornow2+(4.0/3.0)*fornow3- (1.0/4.0)*fornow4)/deltay
@@ -3120,29 +3043,23 @@ DO ispec = 1,nspec
         DO kc = kstal,kstol
           DO ic = istal,istol
             
-            combo2 = trun(ic,jstol,kc)*tdrmix(ic,jstol,kc)
-            combo2 = combo2*store7(ic,jstol,kc)*td1y(ic,jstol,kc)
             fornow = zero
 !                 NC&VM: CALCULATING DERIVATIVE AT THE WALL
             combo1 = trun(ic,jstol,kc)*tdrmix(ic,jstol,kc)
             fornow0 = combo1*store7(ic,jstol,kc)*td1x(ic,jstol,kc)
-            fornow0 = rgspec(ispec)*(fornow0-combo2)
             
             combo1 = trun(ic,jstol-1,kc)*tdrmix(ic,jstol-1,kc)
             fornow1 = combo1*store7(ic,jstol-1,kc) *td1x(ic,jstol-1,kc)
-            fornow1 = rgspec(ispec)*(fornow1-combo2)
             
             combo1 = trun(ic,jstol-2,kc)*tdrmix(ic,jstol-2,kc)
             fornow2 = combo1*store7(ic,jstol-2,kc) *td1x(ic,jstol-2,kc)
-            fornow2 = rgspec(ispec)*(fornow2-combo2)
             
             combo1 = trun(ic,jstol-3,kc)*tdrmix(ic,jstol-3,kc)
             fornow3 = combo1*store7(ic,jstol-3,kc) *td1x(ic,jstol-3,kc)
-            fornow3 = rgspec(ispec)*(fornow3-combo2)
             
             combo1 = trun(ic,jstol-4,kc)*tdrmix(ic,jstol-4,kc)
             fornow4 = combo1*store7(ic,jstol-4,kc) *td1x(ic,jstol-4,kc)
-            fornow4 = rgspec(ispec)*(fornow4-combo2)
+            
             fornow = ((25.0/12.0)*fornow0-(4.0)*fornow1+  &
                 (3.0)*fornow2-(4.0/3.0)*fornow3+ (1.0/4.0)*fornow4)/deltay
             erhs(ic,jstol,kc) = erhs(ic,jstol,kc) + rgspec(ispec)*fornow
@@ -3154,29 +3071,22 @@ DO ispec = 1,nspec
         DO jc = jstal,jstol
           DO ic = istal,istol
             
-            combo2 = trun(ic,jc,kstal)*tdrmix(ic,jc,kstal)
-            combo2 = combo2*store7(ic,jc,kstal)*td1z(ic,jc,kstal)
             fornow = zero
 !                 NC&VM: CALCULATING DERIVATIVE AT THE WALL
             combo1 = trun(ic,jc,kstal)*tdrmix(ic,jc,kstal)
             fornow0 = combo1*store7(ic,jc,kstal)*td1y(ic,jc,kstal)
-            fornow0 = rgspec(ispec)*(fornow0-combo2)
             
             combo1 = trun(ic,jc,kstal+1)*tdrmix(ic,jc,kstal+1)
             fornow1 = combo1*store7(ic,jc,kstal+1) *td1y(ic,jc,kstal+1)
-            fornow1 = rgspec(ispec)*(fornow1-combo2)
             
             combo1 = trun(ic,jc,kstal+2)*tdrmix(ic,jc,kstal+2)
             fornow2 = combo1*store7(ic,jc,kstal+2) *td1y(ic,jc,kstal+2)
-            fornow2 = rgspec(ispec)*(fornow2-combo2)
             
             combo1 = trun(ic,jc,kstal+3)*tdrmix(ic,jc,kstal+3)
             fornow3 = combo1*store7(ic,jc,kstal+3) *td1y(ic,jc,kstal+3)
-            fornow3 = rgspec(ispec)*(fornow3-combo2)
             
             combo1 = trun(ic,jc,kstal+4)*tdrmix(ic,jc,kstal+4)
             fornow4 = combo1*store7(ic,jc,kstal+4) *td1y(ic,jc,kstal+4)
-            fornow4 = rgspec(ispec)*(fornow4-combo2)
             
             fornow = ((-25.0/12.0)*fornow0+(4.0)*fornow1-  &
                 (3.0)*fornow2+(4.0/3.0)*fornow3- (1.0/4.0)*fornow4)/deltaz
@@ -3189,29 +3099,23 @@ DO ispec = 1,nspec
         DO jc = jstal,jstol
           DO ic = istal,istol
             
-            combo2 = trun(ic,jc,kstol)*tdrmix(ic,jc,kstol)
-            combo2 = combo2*store7(ic,jc,kstol)*td1z(ic,jc,kstol)
             fornow = zero
 !                 NC&VM: CALCULATING DERIVATIVE AT THE WALL
             combo1 = trun(ic,jc,kstol)*tdrmix(ic,jc,kstol)
             fornow0 = combo1*store7(ic,jc,kstol)*td1x(ic,jc,kstol)
-            fornow0 = rgspec(ispec)*(fornow0-combo2)
             
             combo1 = trun(ic,jc,kstol-1)*tdrmix(ic,jc,kstol-1)
             fornow1 = combo1*store7(ic,jc,kstol-1) *td1x(ic,jc,kstol-1)
-            fornow1 = rgspec(ispec)*(fornow1-combo2)
             
             combo1 = trun(ic,jc,kstol-2)*tdrmix(ic,jc,kstol-2)
             fornow2 = combo1*store7(ic,jc,kstol-2) *td1x(ic,jc,kstol-2)
-            fornow2 = rgspec(ispec)*(fornow2-combo2)
             
             combo1 = trun(ic,jc,kstol-3)*tdrmix(ic,jc,kstol-3)
             fornow3 = combo1*store7(ic,jc,kstol-3) *td1x(ic,jc,kstol-3)
-            fornow3 = rgspec(ispec)*(fornow3-combo2)
             
             combo1 = trun(ic,jc,kstol-4)*tdrmix(ic,jc,kstol-4)
             fornow4 = combo1*store7(ic,jc,kstol-4) *td1x(ic,jc,kstol-4)
-            fornow4 = rgspec(ispec)*(fornow4-combo2)
+            
             fornow = ((25.0/12.0)*fornow0-(4.0)*fornow1+  &
                 (3.0)*fornow2-(4.0/3.0)*fornow3+ (1.0/4.0)*fornow4)/deltaz
             erhs(ic,jc,kstol) = erhs(ic,jc,kstol) + rgspec(ispec)*fornow
