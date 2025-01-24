@@ -17,7 +17,7 @@ FC = ftn
 #FFLAGS = -pg -fno-silent -ftrapping-math -ftrapv -Wimplicit -Wall
 
 # Optimized compile
-FFLAGS = -O3 -g -fopenmp -ffree-form -ffree-line-length-none -fallow-argument-mismatch -mcmodel=medium
+FFLAGS = -O3 -g -fopenmp -ffree-form -ffree-line-length-none -fallow-argument-mismatch -mcmodel=medium -fimplicit-none
 
 # Optimized compile with profiling
 #FFLAGS = -pg -O3 -fno-silent -Wimplicit -Wall

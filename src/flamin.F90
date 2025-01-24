@@ -60,14 +60,16 @@ EXTERNAL erfunc
 REAL(kind=8) :: crin(1:nxsize)
 REAL(kind=8) :: yrinr(nspcmx),yrinp(nspcmx)
 REAL(kind=8) :: trinr,trinp
-REAL(kind=8) :: deltag,xcoord,argmnt
-REAL(kind=8) :: flxmas
+REAL(kind=8) :: angfrx,angfry,angfrz
+REAL(kind=8) :: deltagx,deltagy,deltagz
+REAL(kind=8) :: deltag,xcoord,ycoord,zcoord,argmnt
+REAL(kind=8) :: flxmas,rglocl,u0
 REAL(kind=8) :: xrgmnt,yrgmnt,zrgmnt
 INTEGER :: icproc
-INTEGER :: igofst
-INTEGER :: ix
+INTEGER :: igofstx,igofsty,igofstz
+INTEGER :: ix,iy,iz
 INTEGER :: ic,jc,kc
-INTEGER :: ispec
+INTEGER :: ispec,jspec
 
 
 !     BEGIN

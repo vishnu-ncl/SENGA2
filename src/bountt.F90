@@ -35,7 +35,7 @@ use com_senga
 !     LOCAL DATA
 !     ==========
 REAL(kind=8) :: fornow
-INTEGER :: jc,kc
+INTEGER :: ic,jc,kc
 INTEGER :: ispec
 INTEGER :: iindex,ipower,icoef1,icoef2
 INTEGER :: itint,icp

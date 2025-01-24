@@ -181,8 +181,8 @@ IF(fxlcnv)THEN
       tt5xl(jc,kc)=t51bxl(jc,kc)+ t52bxl(jc,kc)*(gam1xl(jc,kc)+1.0)+  &
           strdxl(jc,kc)* acouxl(jc,kc)*t2bxl(jc,kc)
       
-      DO is=1,nspec
-        tt6xl(jc,kc,is)=t6bxl(jc,kc,is)
+      DO ispec=1,nspec
+        tt6xl(jc,kc,ispec)=t6bxl(jc,kc,ispec)
       END DO
       
     END DO
@@ -694,7 +694,7 @@ IF(fxlcnv)THEN
             *(bcl5xl(jc,kc)+fornow)
 
 !             STORE VALUE OF BCL2XL AFTER CALC
-        IF ((jc == 1).AND.(kc == 1)) temp3=bcl2xl(jc,kc)
+!        IF ((jc == 1).AND.(kc == 1)) temp3=bcl2xl(jc,kc)
 
 !             SUBTRACT FROM NEW VALUE OF L's
 !             L1X UNCHANGED
@@ -1110,8 +1110,8 @@ IF(fxrcnv)THEN
       tt5xr(jc,kc)=t51bxr(jc,kc)+ t52bxr(jc,kc)*(gam1xr(jc,kc)+1.0)+  &
           strdxr(jc,kc)* acouxr(jc,kc)*t2bxr(jc,kc)
       
-      DO is=1,nspec
-        tt6xr(jc,kc,is)=t6bxr(jc,kc,is)
+      DO ispec=1,nspec
+        tt6xr(jc,kc,ispec)=t6bxr(jc,kc,ispec)
       END DO
       
       
@@ -1894,8 +1894,8 @@ IF(fylcnv)THEN
       tt5yl(ic,kc)=t51byl(ic,kc)+ t52byl(ic,kc)*(gam1yl(ic,kc)+1.0)+  &
           strdyl(ic,kc)* acouyl(ic,kc)*t2byl(ic,kc)
       
-      DO is=1,nspec
-        tt6yl(ic,kc,is)=t6byl(ic,kc,is)
+      DO ispec=1,nspec
+        tt6yl(ic,kc,ispec)=t6byl(ic,kc,ispec)
       END DO
       
       
@@ -2671,8 +2671,8 @@ IF(fyrcnv)THEN
       tt5yr(ic,kc)=t51byr(ic,kc)+ t52byr(ic,kc)*(gam1yr(ic,kc)+1.0)+  &
           strdyr(ic,kc)* acouyr(ic,kc)*t2byr(ic,kc)
       
-      DO is=1,nspec
-        tt6yr(ic,kc,is)=t6byr(ic,kc,is)
+      DO ispec=1,nspec
+        tt6yr(ic,kc,ispec)=t6byr(ic,kc,ispec)
       END DO
       
     END DO
@@ -3457,8 +3457,8 @@ IF(fzlcnv)THEN
       tt5zl(ic,jc)=t51bzl(ic,jc)+ t52bzl(ic,jc)*(gam1zl(ic,jc)+1.0)+  &
           strdzl(ic,jc)* acouzl(ic,jc)*t2bzl(ic,jc)
       
-      DO is=1,nspec
-        tt6zl(ic,jc,is)=t6bzl(ic,jc,is)
+      DO ispec=1,nspec
+        tt6zl(ic,jc,ispec)=t6bzl(ic,jc,ispec)
       END DO
       
     END DO
@@ -4228,8 +4228,8 @@ IF(fzrcnv)THEN
       tt5zr(ic,jc)=t51bzr(ic,jc)+ t52bzr(ic,jc)*(gam1zr(ic,jc)+1.0)+  &
           strdzr(ic,jc)* acouzr(ic,jc)*t2bzr(ic,jc)
       
-      DO is=1,nspec
-        tt6zr(ic,jc,is)=t6bzr(ic,jc,is)
+      DO ispec=1,nspec
+        tt6zr(ic,jc,ispec)=t6bzr(ic,jc,ispec)
       END DO
       
     END DO

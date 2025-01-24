@@ -36,7 +36,7 @@ use com_senga
 !     LOCAL DATA
 !     ==========
 DOUBLE PRECISION :: fornow
-INTEGER :: jc,kc
+INTEGER :: ic,jc,kc
 INTEGER :: ispec
 INTEGER :: iindex,ipower,icoef1,icoef2
 INTEGER :: itint,icp

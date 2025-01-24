@@ -28,7 +28,7 @@ SUBROUTINE inflow
 !     ===========
 !     -------------------------------------------------------------------------
 use com_senga
-!INCLUDE 'mpif.h'
+INCLUDE 'mpif.h'
 !INCLUDE 'com_senga2.h'
 !     -------------------------------------------------------------------------
 
@@ -65,10 +65,10 @@ DOUBLE PRECISION :: umeanglbl,sumumeanglbl
 
 INTEGER :: ic,jc,kc,jc2,kc2,yp,zp
 INTEGER :: jfiltstart,kfiltstart
-INTEGER :: tspc(2),nspc,ispec
+INTEGER :: tspc(2),ispc,nspc,ispec,ierror
 
 !     VM: CALCULATING USTEAD
-DOUBLE PRECISION :: rad,denom,sumdenom
+DOUBLE PRECISION :: rad,denom,sumdenom,yrms
 DOUBLE PRECISION :: zdist,ydist
 DOUBLE PRECISION :: yref(nspec)
 INTEGER :: kg,jg
