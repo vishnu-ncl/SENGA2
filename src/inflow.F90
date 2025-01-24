@@ -27,8 +27,9 @@ SUBROUTINE inflow
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-INCLUDE 'mpif.h'
-INCLUDE 'com_senga2.h'
+use com_senga
+!INCLUDE 'mpif.h'
+!INCLUDE 'com_senga2.h'
 !     -------------------------------------------------------------------------
 
 
@@ -47,7 +48,7 @@ PARAMETER (yinfl=1,yinfr=nyglbl, zinfl=1,zinfr=nzglbl)
 
 DOUBLE PRECISION :: ufilt(yinfl:nysize,zinfl:nzsize),  &
     vfilt(yinfl:nysize,zinfl:nzsize),  &
-    wfilt(yinfl:nysize,zinfl:nzsize),  ! filtered inflow data  &
+    wfilt(yinfl:nysize,zinfl:nzsize),  &
     yfilt(yinfl:nysize,zinfl:nzsize,nspec)
 
 DOUBLE PRECISION :: ufold(yinfl:nysize,zinfl-nfz:nzsize+nfz),  &
@@ -450,7 +451,7 @@ FUNCTION ran1(idum)
 
 INTEGER, INTENT(OUT)                     :: idum
 
-REAL :: ran1,
+REAL :: ran1
 INTEGER, PARAMETER :: ia=16807
 INTEGER, PARAMETER :: im=2147483647
 REAL, PARAMETER :: am=1./im

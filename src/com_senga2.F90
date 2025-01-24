@@ -945,9 +945,9 @@ common/tgv/dutgvdx,dutgvdy,dutgvdz,dvtgvdx,dvtgvdy,dvtgvdz, &
 !     FY - FOR NON REFLECTING INFLOW
 INTEGER :: nbcprc
 PARAMETER(nbcprc=9)
-REAL(kind=8) :: rxplrc(nbcprc)
+REAL(kind=8) :: rxlprc(nbcprc)
 
-common/ni/rxplrc
+common/ni/rxlprc
 
 END MODULE com_senga
 

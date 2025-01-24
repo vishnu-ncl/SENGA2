@@ -2875,19 +2875,19 @@ DO ispec = 1,nspec
             fornow = zero
 !                 NC&VM: CALCULATING DERIVATIVE AT THE WALL
             combo1 = trun(ic,jstol,kc)*tdrmix(ic,jstol,kc)
-            fornow0 = combo1*store7(ic,jstol,kc)*td1x(ic,jstol,kc)
+            fornow0 = combo1*store7(ic,jstol,kc)*td1y(ic,jstol,kc)
             
             combo1 = trun(ic,jstol-1,kc)*tdrmix(ic,jstol-1,kc)
-            fornow1 = combo1*store7(ic,jstol-1,kc) *td1x(ic,jstol-1,kc)
+            fornow1 = combo1*store7(ic,jstol-1,kc) *td1y(ic,jstol-1,kc)
             
             combo1 = trun(ic,jstol-2,kc)*tdrmix(ic,jstol-2,kc)
-            fornow2 = combo1*store7(ic,jstol-2,kc) *td1x(ic,jstol-2,kc)
+            fornow2 = combo1*store7(ic,jstol-2,kc) *td1y(ic,jstol-2,kc)
             
             combo1 = trun(ic,jstol-3,kc)*tdrmix(ic,jstol-3,kc)
-            fornow3 = combo1*store7(ic,jstol-3,kc) *td1x(ic,jstol-3,kc)
+            fornow3 = combo1*store7(ic,jstol-3,kc) *td1y(ic,jstol-3,kc)
             
             combo1 = trun(ic,jstol-4,kc)*tdrmix(ic,jstol-4,kc)
-            fornow4 = combo1*store7(ic,jstol-4,kc) *td1x(ic,jstol-4,kc)
+            fornow4 = combo1*store7(ic,jstol-4,kc) *td1y(ic,jstol-4,kc)
             
             fornow = ((25.0/12.0)*fornow0-(4.0)*fornow1+  &
                 (3.0)*fornow2-(4.0/3.0)*fornow3+ (1.0/4.0)*fornow4)/deltay
@@ -2903,19 +2903,19 @@ DO ispec = 1,nspec
             fornow = zero
 !                 NC&VM: CALCULATING DERIVATIVE AT THE WALL
             combo1 = trun(ic,jc,kstal)*tdrmix(ic,jc,kstal)
-            fornow0 = combo1*store7(ic,jc,kstal)*td1y(ic,jc,kstal)
+            fornow0 = combo1*store7(ic,jc,kstal)*td1z(ic,jc,kstal)
             
             combo1 = trun(ic,jc,kstal+1)*tdrmix(ic,jc,kstal+1)
-            fornow1 = combo1*store7(ic,jc,kstal+1) *td1y(ic,jc,kstal+1)
+            fornow1 = combo1*store7(ic,jc,kstal+1) *td1z(ic,jc,kstal+1)
             
             combo1 = trun(ic,jc,kstal+2)*tdrmix(ic,jc,kstal+2)
-            fornow2 = combo1*store7(ic,jc,kstal+2) *td1y(ic,jc,kstal+2)
+            fornow2 = combo1*store7(ic,jc,kstal+2) *td1z(ic,jc,kstal+2)
             
             combo1 = trun(ic,jc,kstal+3)*tdrmix(ic,jc,kstal+3)
-            fornow3 = combo1*store7(ic,jc,kstal+3) *td1y(ic,jc,kstal+3)
+            fornow3 = combo1*store7(ic,jc,kstal+3) *td1z(ic,jc,kstal+3)
             
             combo1 = trun(ic,jc,kstal+4)*tdrmix(ic,jc,kstal+4)
-            fornow4 = combo1*store7(ic,jc,kstal+4) *td1y(ic,jc,kstal+4)
+            fornow4 = combo1*store7(ic,jc,kstal+4) *td1z(ic,jc,kstal+4)
             
             fornow = ((-25.0/12.0)*fornow0+(4.0)*fornow1-  &
                 (3.0)*fornow2+(4.0/3.0)*fornow3- (1.0/4.0)*fornow4)/deltaz
@@ -2931,19 +2931,19 @@ DO ispec = 1,nspec
             fornow = zero
 !                 NC&VM: CALCULATING DERIVATIVE AT THE WALL
             combo1 = trun(ic,jc,kstol)*tdrmix(ic,jc,kstol)
-            fornow0 = combo1*store7(ic,jc,kstol)*td1x(ic,jc,kstol)
+            fornow0 = combo1*store7(ic,jc,kstol)*td1z(ic,jc,kstol)
             
             combo1 = trun(ic,jc,kstol-1)*tdrmix(ic,jc,kstol-1)
-            fornow1 = combo1*store7(ic,jc,kstol-1) *td1x(ic,jc,kstol-1)
+            fornow1 = combo1*store7(ic,jc,kstol-1) *td1z(ic,jc,kstol-1)
             
             combo1 = trun(ic,jc,kstol-2)*tdrmix(ic,jc,kstol-2)
-            fornow2 = combo1*store7(ic,jc,kstol-2) *td1x(ic,jc,kstol-2)
+            fornow2 = combo1*store7(ic,jc,kstol-2) *td1z(ic,jc,kstol-2)
             
             combo1 = trun(ic,jc,kstol-3)*tdrmix(ic,jc,kstol-3)
-            fornow3 = combo1*store7(ic,jc,kstol-3) *td1x(ic,jc,kstol-3)
+            fornow3 = combo1*store7(ic,jc,kstol-3) *td1z(ic,jc,kstol-3)
             
             combo1 = trun(ic,jc,kstol-4)*tdrmix(ic,jc,kstol-4)
-            fornow4 = combo1*store7(ic,jc,kstol-4) *td1x(ic,jc,kstol-4)
+            fornow4 = combo1*store7(ic,jc,kstol-4) *td1z(ic,jc,kstol-4)
             
             fornow = ((25.0/12.0)*fornow0-(4.0)*fornow1+  &
                 (3.0)*fornow2-(4.0/3.0)*fornow3+ (1.0/4.0)*fornow4)/deltaz
@@ -3046,19 +3046,19 @@ DO ispec = 1,nspec
             fornow = zero
 !                 NC&VM: CALCULATING DERIVATIVE AT THE WALL
             combo1 = trun(ic,jstol,kc)*tdrmix(ic,jstol,kc)
-            fornow0 = combo1*store7(ic,jstol,kc)*td1x(ic,jstol,kc)
+            fornow0 = combo1*store7(ic,jstol,kc)*td1y(ic,jstol,kc)
             
             combo1 = trun(ic,jstol-1,kc)*tdrmix(ic,jstol-1,kc)
-            fornow1 = combo1*store7(ic,jstol-1,kc) *td1x(ic,jstol-1,kc)
+            fornow1 = combo1*store7(ic,jstol-1,kc) *td1y(ic,jstol-1,kc)
             
             combo1 = trun(ic,jstol-2,kc)*tdrmix(ic,jstol-2,kc)
-            fornow2 = combo1*store7(ic,jstol-2,kc) *td1x(ic,jstol-2,kc)
+            fornow2 = combo1*store7(ic,jstol-2,kc) *td1y(ic,jstol-2,kc)
             
             combo1 = trun(ic,jstol-3,kc)*tdrmix(ic,jstol-3,kc)
-            fornow3 = combo1*store7(ic,jstol-3,kc) *td1x(ic,jstol-3,kc)
+            fornow3 = combo1*store7(ic,jstol-3,kc) *td1y(ic,jstol-3,kc)
             
             combo1 = trun(ic,jstol-4,kc)*tdrmix(ic,jstol-4,kc)
-            fornow4 = combo1*store7(ic,jstol-4,kc) *td1x(ic,jstol-4,kc)
+            fornow4 = combo1*store7(ic,jstol-4,kc) *td1y(ic,jstol-4,kc)
             
             fornow = ((25.0/12.0)*fornow0-(4.0)*fornow1+  &
                 (3.0)*fornow2-(4.0/3.0)*fornow3+ (1.0/4.0)*fornow4)/deltay
@@ -3074,19 +3074,19 @@ DO ispec = 1,nspec
             fornow = zero
 !                 NC&VM: CALCULATING DERIVATIVE AT THE WALL
             combo1 = trun(ic,jc,kstal)*tdrmix(ic,jc,kstal)
-            fornow0 = combo1*store7(ic,jc,kstal)*td1y(ic,jc,kstal)
+            fornow0 = combo1*store7(ic,jc,kstal)*td1z(ic,jc,kstal)
             
             combo1 = trun(ic,jc,kstal+1)*tdrmix(ic,jc,kstal+1)
-            fornow1 = combo1*store7(ic,jc,kstal+1) *td1y(ic,jc,kstal+1)
+            fornow1 = combo1*store7(ic,jc,kstal+1) *td1z(ic,jc,kstal+1)
             
             combo1 = trun(ic,jc,kstal+2)*tdrmix(ic,jc,kstal+2)
-            fornow2 = combo1*store7(ic,jc,kstal+2) *td1y(ic,jc,kstal+2)
+            fornow2 = combo1*store7(ic,jc,kstal+2) *td1z(ic,jc,kstal+2)
             
             combo1 = trun(ic,jc,kstal+3)*tdrmix(ic,jc,kstal+3)
-            fornow3 = combo1*store7(ic,jc,kstal+3) *td1y(ic,jc,kstal+3)
+            fornow3 = combo1*store7(ic,jc,kstal+3) *td1z(ic,jc,kstal+3)
             
             combo1 = trun(ic,jc,kstal+4)*tdrmix(ic,jc,kstal+4)
-            fornow4 = combo1*store7(ic,jc,kstal+4) *td1y(ic,jc,kstal+4)
+            fornow4 = combo1*store7(ic,jc,kstal+4) *td1z(ic,jc,kstal+4)
             
             fornow = ((-25.0/12.0)*fornow0+(4.0)*fornow1-  &
                 (3.0)*fornow2+(4.0/3.0)*fornow3- (1.0/4.0)*fornow4)/deltaz
@@ -3102,19 +3102,19 @@ DO ispec = 1,nspec
             fornow = zero
 !                 NC&VM: CALCULATING DERIVATIVE AT THE WALL
             combo1 = trun(ic,jc,kstol)*tdrmix(ic,jc,kstol)
-            fornow0 = combo1*store7(ic,jc,kstol)*td1x(ic,jc,kstol)
+            fornow0 = combo1*store7(ic,jc,kstol)*td1z(ic,jc,kstol)
             
             combo1 = trun(ic,jc,kstol-1)*tdrmix(ic,jc,kstol-1)
-            fornow1 = combo1*store7(ic,jc,kstol-1) *td1x(ic,jc,kstol-1)
+            fornow1 = combo1*store7(ic,jc,kstol-1) *td1z(ic,jc,kstol-1)
             
             combo1 = trun(ic,jc,kstol-2)*tdrmix(ic,jc,kstol-2)
-            fornow2 = combo1*store7(ic,jc,kstol-2) *td1x(ic,jc,kstol-2)
+            fornow2 = combo1*store7(ic,jc,kstol-2) *td1z(ic,jc,kstol-2)
             
             combo1 = trun(ic,jc,kstol-3)*tdrmix(ic,jc,kstol-3)
-            fornow3 = combo1*store7(ic,jc,kstol-3) *td1x(ic,jc,kstol-3)
+            fornow3 = combo1*store7(ic,jc,kstol-3) *td1z(ic,jc,kstol-3)
             
             combo1 = trun(ic,jc,kstol-4)*tdrmix(ic,jc,kstol-4)
-            fornow4 = combo1*store7(ic,jc,kstol-4) *td1x(ic,jc,kstol-4)
+            fornow4 = combo1*store7(ic,jc,kstol-4) *td1z(ic,jc,kstol-4)
             
             fornow = ((25.0/12.0)*fornow0-(4.0)*fornow1+  &
                 (3.0)*fornow2-(4.0/3.0)*fornow3+ (1.0/4.0)*fornow4)/deltaz
