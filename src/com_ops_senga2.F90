@@ -50,6 +50,7 @@ MODULE com_ops_senga
 
     TYPE(ops_dat) :: d_bclyxl(nspcmx), d_stryxl(nspcmx), d_dydtxl(nspcmx), d_ratexl(nspcmx), d_strhxl(nspcmx)
     TYPE(ops_dat) :: d_t6bxl(nspcmx), d_tt6xl(nspcmx)
+    TYPE(ops_dat) :: d_yinf1(nspcmx), d_yinf2(nspcmx), d_stlyxl(nspcmx)
     TYPE(ops_dat) :: d_bclyxr(nspcmx), d_stryxr(nspcmx), d_dydtxr(nspcmx), d_ratexr(nspcmx), d_strhxr(nspcmx)
     TYPE(ops_dat) :: d_t6bxr(nspcmx), d_tt6xr(nspcmx)
     TYPE(ops_dat) :: d_bclyyl(nspcmx), d_stryyl(nspcmx), d_dydtyl(nspcmx), d_rateyl(nspcmx), d_strhyl(nspcmx)
@@ -60,6 +61,8 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_t6bzl(nspcmx), d_tt6zl(nspcmx)
     TYPE(ops_dat) :: d_bclyzr(nspcmx), d_stryzr(nspcmx), d_dydtzr(nspcmx), d_ratezr(nspcmx), d_strhzr(nspcmx)
     TYPE(ops_dat) :: d_t6bzr(nspcmx), d_tt6zr(nspcmx)
+
+    TYPE(ops_dat) :: d_totyxl
 
     TYPE(ops_dat) :: d_bcl1xl, d_bcl2xl, d_bcl3xl, d_bcl4xl, d_bcl5xl, d_bcltxl
     TYPE(ops_dat) :: d_bcl1xr, d_bcl2xr, d_bcl3xr, d_bcl4xr, d_bcl5xr, d_bcltxr
@@ -78,8 +81,12 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_t1bxl, d_t2bxl, d_t3bxl, d_t4bxl, d_t51bxl, d_t52bxl
     TYPE(ops_dat) :: d_t1bxr, d_t2bxr, d_t3bxr, d_t4bxr, d_t51bxr, d_t52bxr
 
+    TYPE(ops_dat) :: d_uinf1, d_uinf2, d_vinf1, d_vinf2, d_winf1, d_winf2, d_ustead
+
     TYPE(ops_dat) :: d_tt1xl, d_tt2xl, d_tt3xl, d_tt4xl, d_tt5xl
     TYPE(ops_dat) :: d_tt1xr, d_tt2xr, d_tt3xr, d_tt4xr, d_tt5xr
+
+    TYPE(ops_dat) :: d_stluxl, d_stlvxl, d_stlwxl, d_stltxl
 
     TYPE(ops_dat) :: d_bcl1yl, d_bcl2yl, d_bcl3yl, d_bcl4yl, d_bcl5yl, d_bcltyl
     TYPE(ops_dat) :: d_bcl1yr, d_bcl2yr, d_bcl3yr, d_bcl4yr, d_bcl5yr, d_bcltyr
@@ -123,6 +130,12 @@ MODULE com_ops_senga
 
     TYPE(ops_dat) :: d_crin
 
+!------------------------------------------------------------------------------------------------------------
+
+    TYPE(ops_dat) :: d_ufilt, d_vfilt, d_wfilt, d_yfilt(nspcmx)
+    TYPE(ops_dat) :: d_ufold, d_vfold, d_wfold, d_yfold(nspcmx)
+    TYPE(ops_dat) :: d_urand, d_vrand, d_wrand, d_yrand(nspcmx)
+
 !   OPS dats - specific to TGV case
     TYPE(ops_dat) :: d_utgv, d_vtgv, d_wtgv
     TYPE(ops_dat) :: d_dutgvdx, d_dvtgvdx, d_dwtgvdx
@@ -133,6 +146,7 @@ MODULE com_ops_senga
 !   OPS reduction handles
     TYPE(ops_reduction) :: h_erdtot, h_erutot, h_ervtot, h_erwtot, h_eretot, h_erytot
     TYPE(ops_reduction) :: h_tket, h_tkes, h_enstro, h_ubart, h_vbart, h_wbart, h_uvart, h_vvart, h_wvart
+    TYPE(ops_reduction) :: h_umean, h_denom
 
 !------------------------------------------------------------------------------------------------------------
 !   OPS stencils

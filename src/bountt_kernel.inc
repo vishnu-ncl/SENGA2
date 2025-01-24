@@ -314,3 +314,56 @@ SUBROUTINE bountt_kernel_eqF_zdir(erhs,yrhs,yrun,yerr,itndex,drhs,strtz,stryz,am
                       + (fornow-rgspec(ispec)*strtz(OPS_ACC7(0,0,0)))*yrhs(OPS_ACC2(0,0,0))
 
 END SUBROUTINE bountt_kernel_eqF_zdir
+
+SUBROUTINE bountt_kernel_eqG_xyz(urhs,vrhs,wrhs,urun,vrun,wrun,uerr,verr,werr,erhs,drhs)
+
+    real(kind=8), dimension(1) :: urhs,vrhs,wrhs,urun,vrun,wrun,uerr,verr,werr,erhs
+    real(kind=8), dimension(1), intent(in) :: drhs
+
+    urhs(OPS_ACC1(0,0,0)) = 0.0_8
+    vrhs(OPS_ACC2(0,0,0)) = 0.0_8
+    wrhs(OPS_ACC3(0,0,0)) = 0.0_8
+
+    urun(OPS_ACC4(0,0,0)) = 0.0_8
+    vrun(OPS_ACC5(0,0,0)) = 0.0_8
+    wrun(OPS_ACC6(0,0,0)) = 0.0_8
+
+    uerr(OPS_ACC7(0,0,0)) = 0.0_8
+    verr(OPS_ACC8(0,0,0)) = 0.0_8
+    werr(OPS_ACC9(0,0,0)) = 0.0_8
+
+    erhs(OPS_ACC10(0,0,0)) = 0.0_8
+    erhs(OPS_ACC10(0,0,0)) = drhs(OPS_ACC11(0,0,0))*erhs(OPS_ACC10(0,0,0))
+
+END SUBROUTINE bountt_kernel_eqG_xyz
+
+SUBROUTINE bountt_kernel_eqH_xdir(strtx,dtdtx,val)
+
+    real(kind=8), dimension(1) :: strtx,dtdtx
+    real(kind=8), intent(in) :: val
+
+    strtx(OPS_ACC1(0,0,0)) = val
+    dtdtx(OPS_ACC2(0,0,0)) = 0.0_8
+
+END SUBROUTINE bountt_kernel_eqH_xdir
+
+SUBROUTINE bountt_kernel_eqH_ydir(strty,dtdty,val)
+
+    real(kind=8), dimension(1) :: strty,dtdty
+    real(kind=8), intent(in) :: val
+
+    strty(OPS_ACC1(0,0,0)) = val
+    dtdty(OPS_ACC2(0,0,0)) = 0.0_8
+
+END SUBROUTINE bountt_kernel_eqH_ydir
+
+SUBROUTINE bountt_kernel_eqH_zdir(strtz,dtdtz,val)
+
+    real(kind=8), dimension(1) :: strtz,dtdtz
+    real(kind=8), intent(in) :: val
+
+    strtz(OPS_ACC1(0,0,0)) = val
+    dtdtz(OPS_ACC2(0,0,0)) = 0.0_8
+
+END SUBROUTINE bountt_kernel_eqH_zdir
+

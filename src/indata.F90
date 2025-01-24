@@ -146,6 +146,63 @@ SUBROUTINE indata
 !   ========================
     call contin
 
+    IF(nxlprm(1) == 4) THEN
+!       VM: SYNTHETIC DIGITAL FILTERING METHOD
+        rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+        call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_uinf1, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
+        call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_vinf1, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
+        call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_winf1, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
+        DO ispec=1,nspec
+            call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_yinf1(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
+        END DO
+
+!       ATTENTION WHEN RESTART: THE SAME FILE EXTENSION MUST BE ENTERED HERE AS IN INFLOW!
+        IF (ncdmpi == 1)THEN
+!           ACTUALLY, INTRAN0.DAT OR INTRAN1.DAT SHOULD BE HERE!
+            OPEN(UNIT=16,FILE='output/intran.dat',FORM='FORMATTED')
+            READ(16,*)intran
+            CLOSE(16)
+            passer=REAL(intran,kind=8)
+        ELSE
+            intran=-1
+        END IF
+
+        IF(ncdmpi == 1) THEN
+            rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+            call ops_par_loop(copy_kernel_xxdir, "copy", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_uinf1, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_uinf2, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+            call ops_par_loop(copy_kernel_xxdir, "copy", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_vinf1, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_vinf2, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+            call ops_par_loop(copy_kernel_xxdir, "copy", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_winf1, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_winf2, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+            DO ispec=1,nspec
+                call ops_par_loop(copy_kernel_xxdir, "copy", senga_grid, 3, rangexyz, &
+                                ops_arg_dat(d_yinf1(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                                ops_arg_dat(d_yinf2(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+            END DO
+        ELSE
+            rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+            call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_uinf2, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
+            call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_vinf2, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
+            call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_winf2, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
+            DO ispec=1,nspec
+                call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_yinf2(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
+            END DO
+        END IF
+
+    END IF
+
 !   =========================================================================
 
 !   WRITE THE INITIAL REPORT
@@ -1209,6 +1266,9 @@ SUBROUTINE indata
 !       WITH PREVIOUSLY DUMPED DATA
 !       -----------------------------------------------------------------------
 
+!       Vishnu: Prevent overwriting TSTEP
+        tsold=tstep
+
 !       RESTART FROM FULL DUMP FILES
 !       ----------------------------
 !       READ THE DATA FROM DUMP INPUT FILE 1
@@ -1312,6 +1372,9 @@ SUBROUTINE indata
 !        DO ispec = 1,nspcmx
 !            call ops_fetch_dat_hdf5_file(d_yrun(ispec), trim(fname))
 !        END DO
+
+!       Vishnu: TSTEP not overwritten
+        IF(nstpsw == 0) tstep=tsold
 
 !       =======================================================================
 !       WARM START COMPLETE

@@ -57,6 +57,11 @@ SUBROUTINE bounds
     integer(kind=4) :: flag_pio_xl,flag_pio_xr,flag_pio_yl,flag_pio_yr
     integer(kind=4) :: flag_pio_zl,flag_pio_zr
 
+!   FY - FOR NR INFLOW
+    real(kind=8), parameter :: m2max=0.001_8
+    real(kind=8), target :: m2max_ops=m2max
+    real(kind=8) :: nrieta1,nrieta2,nrieta3,nrieta4,nrieta5,nrieta6
+
 !   BEGIN
 !   =====
 
@@ -488,6 +493,124 @@ SUBROUTINE bounds
         END IF
 
 !       =======================================================================
+        IF(nsbcxl == nsbci4)THEN
+
+!           INFLOW BC No 4 - IMPLEMENTED BY FY
+!           SUBSONIC NON-REFLECTING INFLOW AS PER LODATO WITH TRANSVERSE TERMS INCLUDED
+
+!           ASSIGN NON-REFLECTING INFLOW COEFFICIENTS READ FROM CONTROL FILE
+            nrieta1 = rxlprc(1)
+            nrieta2 = rxlprc(2)
+            nrieta3 = rxlprc(3)
+            nrieta4 = rxlprc(4)
+            nrieta5 = rxlprc(5)
+            nrieta6 = rxlprc(6)
+
+!           STORE VELOCITY, TEMPERATURE MASS FRACTION VALUES AT THE BOUNDARY
+            rangexyz = [1,1,1,nyglbl,1,nzglbl]
+            call ops_par_loop(copy_kernel_xxdir, "copy - BOUNDS 511", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_stluxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+            call ops_par_loop(copy_kernel_xxdir, "copy - BOUNDS 514", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_stlvxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+            call ops_par_loop(copy_kernel_xxdir, "copy - BOUNDS 517", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_stlwxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+            call ops_par_loop(copy_kernel_xxdir, "copy - BOUNDS 520", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_stltxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+            DO ispec = 1,nspec
+                call ops_par_loop(copy_kernel_xxdir, "copy - BOUNDS 524", senga_grid, 3, rangexyz, &
+                                ops_arg_dat(d_stlyxl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                                ops_arg_dat(d_stryxl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+            END DO
+
+!           SET VELOCITY, TEMPERATURE, MASS FRACTION TARGET VALUES
+            call bcutxl
+            call bcttxl
+            call bcytxl
+
+            rangexyz = [1,1,1,nyglbl,1,nzglbl]
+            call ops_par_loop(bounds_kernel_eqAB_xdir, "bounds_kernel_eqAB_xdir", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_bcl3xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_bcl4xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_bcl1xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_acouxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), & 
+                            ops_arg_dat(d_tt2xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_tt3xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_tt4xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_tt5xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_strrxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_stluxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_stlvxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_stlwxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_stltxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(xgdlen, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(nrieta2, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(nrieta3, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(nrieta4, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(nrieta5, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(m2max, 1, "real(kind=8)", OPS_READ))
+
+!           LYX
+            DO ispec = 1,nspec
+                rangexyz = [1,1,1,nyglbl,1,nzglbl]
+                call ops_par_loop(bounds_kernel_eqAC_xdir, "bounds_kernel_eqAC_xdir", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_bclyxl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_stlyxl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_stryxl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_tt6xl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_stluxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_acouxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(xgdlen, 1, "real(kind=8)", OPS_READ), &
+                            ops_arg_gbl(nrieta6, 1, "real(kind=8)", OPS_READ))
+            END DO
+
+            rangexyz = [1,1,1,nyglbl,1,nzglbl]
+            call ops_par_loop(bounds_kernel_eqAD_xdir, "bounds_kernel_eqAD_xdir", senga_grid, 3, rangexyz, &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                            ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_bcl3xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_bcl4xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_acouxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_ovgmxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_stluxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_stlvxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_stlwxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_strexl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+
+            DO ispec = 1,nspec
+                rangexyz = [1,1,1,nyglbl,1,nzglbl]
+                call ops_par_loop(bounds_kernel_eqAE_xdir, "bounds_kernel_eqAE_xdir", senga_grid, 3, rangexyz, &
+                                ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                                ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_INC), &
+                                ops_arg_dat(d_bclyxl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_stlyxl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_strhxl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+            END DO
+        END IF
+
+!       =======================================================================
 
 !       WALL BOUNDARY CONDITIONS
 !       ------------------------
@@ -497,47 +620,72 @@ SUBROUTINE bounds
 !           WALL BOUNDARY CONDITION No 1
 !           NO-SLIP WALL - ADIABATIC
 
-!           ALL VELOCITY COMPONENTS IMPOSED
+!           VELOCITY AND TEMPERATURE IMPOSED AS FUNCTIONS OF TIME
 !           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
 !           SET IN SUBROUTINE BOUNDT
 
-!           SPECIFY L's AS REQUIRED
-!           L1X,L3X-L5X
             rangexyz = [1,1,1,nyglbl,1,nzglbl]
-            call ops_par_loop(bounds_kernel_eqM_xl, "L1X and L3X to L5X", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqAF_xl, "bounds_kernel_eqAF_xl", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_trun, 1, s3d_000_to_p400_x, "real(kind=8)", OPS_RW))
+
+!           PRECOMPUTE CHEMISTRY TERMS 
+            rangexyz = [1,1,1,nyglbl,1,nzglbl]
+            call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_sorpxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
+
+            rangexyz = [1,1,1,nyglbl,1,nzglbl]
+            DO ispec = 1,nspec
+                call ops_par_loop(bounds_kernel_eqAG_xdir, "bounds_kernel_eqAG_xdir", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_INC), &
+                            ops_arg_dat(d_strhxl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_ratexl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+            END DO
+
+            rangexyz = [1,1,1,nyglbl,1,nzglbl]
+            call ops_par_loop(bounds_kernel_eqAH_xdir, "bounds_kernel_eqAH_xdir", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_gam1xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+
+!           SPECIFY L's AS REQUIRED
+!           L1X-L5X
+            rangexyz = [1,1,1,nyglbl,1,nzglbl]
+            call ops_par_loop(bounds_kernel_eqM_xl, "bounds_kernel_eqM_xl", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_bcl1xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl3xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl4xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_acouxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dudtxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dvdtxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+
+!           LYX: OLD VALUE OF LYX
+            rangexyz = [1,1,1,nyglbl,1,nzglbl]
+            DO ispec = 1,nspec
+                call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyxl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
+            END DO
 
 !           ADD TO CONSERVATIVE SOURCE TERMS
             rangexyz = [1,1,1,nyglbl,1,nzglbl]
-            call ops_par_loop(bounds_kernel_eqW_xl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqW_xl, "bounds_kernel_eqW_xl", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                            ops_arg_dat(d_bcl3xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_bcl4xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_acouxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strexl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strvxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strwxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ovgmxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
 
             DO ispec = 1,nspec
                 rangexyz = [1,1,1,nyglbl,1,nzglbl]
                 call ops_par_loop(bounds_kernel_eqX_xl, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_stryxl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
 
@@ -579,7 +727,7 @@ SUBROUTINE bounds
 !           SPECIFY L's AS REQUIRED
 !           L1X-L5X
             rangexyz = [1,1,1,nyglbl,1,nzglbl]
-            call ops_par_loop(bounds_kernel_eqN_xl, "L1X to L5X", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqN_xl, "bounds_kernel_eqN_xl", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_bcl1xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl3xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
@@ -588,38 +736,27 @@ SUBROUTINE bounds
                             ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_acouxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_gam1xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dtdtxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_sorpxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strpxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dudtxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dvdtxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dwdtxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
 
 !           LYX
             DO ispec = 1,nspec
                 rangexyz = [1,1,1,nyglbl,1,nzglbl]
-                call ops_par_loop(bounds_kernel_eqO_xl, "LYX", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_bclyxl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
-                                ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_INC), &
-                                ops_arg_dat(d_ratexl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_struxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_strdxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_strrxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                                ops_arg_gbl(rgspec, nspcmx, "real(kind=8)", OPS_READ), &
-                                ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+                call ops_par_loop(bounds_kernel_eqO_xl, "bounds_kernel_eqO_xl", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyxl(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
 
             END DO
 
 !           ADD TO CONSERVATIVE SOURCE TERMS
             rangexyz = [1,1,1,nyglbl,1,nzglbl]
-            call ops_par_loop(bounds_kernel_eqY_xl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqY_xl, "bounds_kernel_eqY_xl", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_bcl2xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_bcl5xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_ova2xl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE))
 
             DO ispec = 1,nspec
                 rangexyz = [1,1,1,nyglbl,1,nzglbl]
@@ -1077,41 +1214,65 @@ SUBROUTINE bounds
 !           WALL BOUNDARY CONDITION No 1
 !           NO-SLIP WALL - ADIABATIC
 
-!           ALL VELOCITY COMPONENTS IMPOSED
+!           VELOCITY AND TEMPERATURE IMPOSED AS FUNCTIONS OF TIME
 !           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
 !           SET IN SUBROUTINE BOUNDT
+
+            rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
+            call ops_par_loop(bounds_kernel_eqAF_xr, "bounds_kernel_eqAF_xr", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_trun, 1, s3d_000_to_m400_x, "real(kind=8)", OPS_RW))
+
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
+            call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_sorpxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
+
+            rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
+            DO ispec = 1,nspec
+                call ops_par_loop(bounds_kernel_eqAG_xdir, "bounds_kernel_eqAG_xdir", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_INC), &
+                            ops_arg_dat(d_strhxr(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_ratexr(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+            END DO
+
+            rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
+            call ops_par_loop(bounds_kernel_eqAH_xdir, "bounds_kernel_eqAH_xdir", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_gam1xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
 
 !           SPECIFY L's AS REQUIRED
 !           L1X,L3X-L5X
             rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
-            call ops_par_loop(bounds_kernel_eqM_xr, "L1X and L3X to L5X", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqM_xr, "bounds_kernel_eqM_xr", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_bcl2xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl3xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl4xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl5xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_acouxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dudtxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dvdtxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dwdtxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+
+!           LYX: OLD VALUE OF LYX
+            rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
+            DO ispec = 1,nspec
+                call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyxr(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
+            END DO
 
 !           ADD TO CONSERVATIVE SOURCE TERMS
             rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
-            call ops_par_loop(bounds_kernel_eqW_xr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqW_xr, "bounds_kernel_eqW_xr", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                             ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_bcl3xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_bcl4xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_acouxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strexr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strvxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strwxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ovgmxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_bcl2xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
 
             DO ispec = 1,nspec
                 rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
@@ -1119,6 +1280,7 @@ SUBROUTINE bounds
                                 ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_stryxr(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_bcl2xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
 
             END DO
@@ -1159,7 +1321,7 @@ SUBROUTINE bounds
 !           SPECIFY L's AS REQUIRED
 !           L1X-L5X
             rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
-            call ops_par_loop(bounds_kernel_eqN_xr, "L1X to L5X", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqN_xr, "bounds_kernel_eqN_xr", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl2xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl3xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
@@ -1168,38 +1330,27 @@ SUBROUTINE bounds
                             ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_acouxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dudtxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dvdtxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dwdtxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_gam1xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dtdtxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_sorpxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strpxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
 
 !           LYX
             DO ispec = 1,nspec
                 rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
-                call ops_par_loop(bounds_kernel_eqO_xr, "LYX", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_bclyxr(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_RW), &
-                                ops_arg_dat(d_bcl2xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_INC), &
-                                ops_arg_dat(d_ratexr(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_struxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_strdxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_strrxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                                ops_arg_gbl(rgspec, nspcmx, "real(kind=8)", OPS_READ), &
-                                ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+                call ops_par_loop(bounds_kernel_eqO_xr, "bounds_kernel_eqO_xr", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyxr(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
 
             END DO
 
 !           ADD TO CONSERVATIVE SOURCE TERMS
             rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
-            call ops_par_loop(bounds_kernel_eqY_xr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqY_xr, "bounds_kernel_eqY_xr", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_bcl1xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_bcl2xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_ova2xr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE))
 
             DO ispec = 1,nspec
                 rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
@@ -1657,47 +1808,72 @@ SUBROUTINE bounds
 !           WALL BOUNDARY CONDITION No 1
 !           NO-SLIP WALL - ADIABATIC
 
-!           ALL VELOCITY COMPONENTS IMPOSED
+!           VELOCITY AND TEMPERATURE IMPOSED AS FUNCTIONS OF TIME
 !           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
 !           SET IN SUBROUTINE BOUNDT
+
+            rangexyz = [1,nxglbl,1,1,1,nzglbl]
+            call ops_par_loop(bounds_kernel_eqAF_yl, "bounds_kernel_eqAF_yl", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_trun, 1, s3d_000_to_p040_y, "real(kind=8)", OPS_RW))
+
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = [1,nxglbl,1,1,1,nzglbl]
+            call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_sorpyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE))
+
+            rangexyz = [1,nxglbl,1,1,1,nzglbl]
+            DO ispec = 1,nspec
+                call ops_par_loop(bounds_kernel_eqAG_ydir, "bounds_kernel_eqAG_ydir", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_INC), &
+                            ops_arg_dat(d_strhyl(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_rateyl(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
+            END DO
+
+            rangexyz = [1,nxglbl,1,1,1,nzglbl]
+            call ops_par_loop(bounds_kernel_eqAH_ydir, "bounds_kernel_eqAH_ydir", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_gam1yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
 
 !           SPECIFY L's AS REQUIRED
 !           L1Y,L3Y-L5Y
             rangexyz = [1,nxglbl,1,1,1,nzglbl]
-            call ops_par_loop(bounds_kernel_eqM_yl, "L1Y and L3Y to L5Y", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqM_yl, "bounds_kernel_eqM_yl", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_bcl1yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_bcl2yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl3yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl4yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_acouyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dudtyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dvdtyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dwdtyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
+
+!           LYY: OLD VALUE OF LYY
+            rangexyz = [1,nxglbl,1,1,1,nzglbl]
+            DO ispec = 1,nspec
+                call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyyl(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE))
+            END DO
 
 !           ADD TO CONSERVATIVE SOURCE TERMS
             rangexyz = [1,nxglbl,1,1,1,nzglbl]
-            call ops_par_loop(bounds_kernel_eqW_yl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqW_yl, "bounds_kernel_eqW_yl", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                            ops_arg_dat(d_bcl3yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_bcl4yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_bcl2yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_acouyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_streyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_struyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strwyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ovgmyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
 
             DO ispec = 1,nspec
                 rangexyz = [1,nxglbl,1,1,1,nzglbl]
                 call ops_par_loop(bounds_kernel_eqX_yl, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_stryyl(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_bcl2yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
 
@@ -1739,7 +1915,7 @@ SUBROUTINE bounds
 !           SPECIFY L's AS REQUIRED
 !           L1Y-L5Y
             rangexyz = [1,nxglbl,1,1,1,nzglbl]
-            call ops_par_loop(bounds_kernel_eqN_yl, "L1Y to L5Y", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqN_yl, "bounds_kernel_eqN_yl", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_bcl1yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl2yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl3yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_RW), &
@@ -1748,38 +1924,27 @@ SUBROUTINE bounds
                             ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_acouyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_gam1yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dtdtyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_sorpyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strpyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dudtyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dvdtyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dwdtyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
 
 !           LYY
             DO ispec = 1,nspec
                 rangexyz = [1,nxglbl,1,1,1,nzglbl]
-                call ops_par_loop(bounds_kernel_eqO_yl, "LYY", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_bclyyl(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_RW), &
-                                ops_arg_dat(d_bcl2yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_INC), &
-                                ops_arg_dat(d_rateyl(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_strvyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_strdyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_strryl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                                ops_arg_gbl(rgspec, nspcmx, "real(kind=8)", OPS_READ), &
-                                ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+                call ops_par_loop(bounds_kernel_eqO_yl, "bounds_kernel_eqO_yl", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyyl(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE))
 
             END DO
 
 !           ADD TO CONSERVATIVE SOURCE TERMS
             rangexyz = [1,nxglbl,1,1,1,nzglbl]
-            call ops_par_loop(bounds_kernel_eqY_yl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqY_yl, "bounds_kernel_eqY_yl", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_bcl2yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_bcl5yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_ova2yl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE))
 
             DO ispec = 1,nspec
                 rangexyz = [1,nxglbl,1,1,1,nzglbl]
@@ -2237,41 +2402,65 @@ SUBROUTINE bounds
 !           WALL BOUNDARY CONDITION No 1
 !           NO-SLIP WALL - ADIABATIC
 
-!           ALL VELOCITY COMPONENTS IMPOSED
+!           VELOCITY AND TEMPERATURE IMPOSED AS FUNCTIONS OF TIME
 !           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
 !           SET IN SUBROUTINE BOUNDT
+
+            rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
+            call ops_par_loop(bounds_kernel_eqAF_yr, "bounds_kernel_eqAF_yr", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_trun, 1, s3d_000_to_m040_y, "real(kind=8)", OPS_RW))
+
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
+            call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_sorpyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE))
+
+            rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
+            DO ispec = 1,nspec
+                call ops_par_loop(bounds_kernel_eqAG_ydir, "bounds_kernel_eqAG_ydir", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_INC), &
+                            ops_arg_dat(d_strhyr(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_rateyr(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
+            END DO
+
+            rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
+            call ops_par_loop(bounds_kernel_eqAH_ydir, "bounds_kernel_eqAH_ydir", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_gam1yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
 
 !           SPECIFY L's AS REQUIRED
 !           L1Y,L3Y-L5Y
             rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
-            call ops_par_loop(bounds_kernel_eqM_yr, "L1Y and L3Y to L5Y", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqM_yr, "bounds_kernel_eqM_yr", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_bcl2yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl3yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl4yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl5yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_acouyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dudtyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dvdtyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dwdtyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
+
+!           LYY: OLD VALUE OF LYY
+            rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
+            DO ispec = 1,nspec
+                call ops_par_loop(set_zero_kernel_ydir, "set_zero", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyyr(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE))
+            END DO
 
 !           ADD TO CONSERVATIVE SOURCE TERMS
             rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
-            call ops_par_loop(bounds_kernel_eqW_yr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqW_yr, "bounds_kernel_eqW_yr", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                             ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_bcl3yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_bcl4yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_acouyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_streyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_struyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strwyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ovgmyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_bcl2yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
 
             DO ispec = 1,nspec
                 rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
@@ -2279,6 +2468,7 @@ SUBROUTINE bounds
                                 ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_stryyr(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_bcl2yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
 
             END DO
@@ -2319,7 +2509,7 @@ SUBROUTINE bounds
 !           SPECIFY L's AS REQUIRED
 !           L1Y-L5Y
             rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
-            call ops_par_loop(bounds_kernel_eqN_yr, "L1Y to L5Y", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqN_yr, "bounds_kernel_eqN_yr", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl2yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl3yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_RW), &
@@ -2328,38 +2518,27 @@ SUBROUTINE bounds
                             ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_acouyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dudtyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dvdtyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dwdtyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_gam1yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dtdtyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_sorpyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strpyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
 
 !           LYY
             DO ispec = 1,nspec
                 rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
-                call ops_par_loop(bounds_kernel_eqO_yr, "LYY", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_bclyyr(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_RW), &
-                                ops_arg_dat(d_bcl2yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_INC), &
-                                ops_arg_dat(d_rateyr(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_strvyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_strdyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_strryr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                                ops_arg_gbl(rgspec, nspcmx, "real(kind=8)", OPS_READ), &
-                                ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+                call ops_par_loop(bounds_kernel_eqO_yr, "bounds_kernel_eqO_yr", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyyr(ispec), 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE))
 
             END DO
 
 !           ADD TO CONSERVATIVE SOURCE TERMS
             rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
-            call ops_par_loop(bounds_kernel_eqY_yr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqY_yr, "bounds_kernel_eqY_yr", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_bcl1yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_bcl2yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_ova2yr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE))
 
             DO ispec = 1,nspec
                 rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
@@ -2816,47 +2995,72 @@ SUBROUTINE bounds
 !           WALL BOUNDARY CONDITION No 1
 !           NO-SLIP WALL - ADIABATIC
 
-!           ALL VELOCITY COMPONENTS IMPOSED
+!           VELOCITY AND TEMPERATURE IMPOSED AS FUNCTIONS OF TIME
 !           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
 !           SET IN SUBROUTINE BOUNDT
+
+            rangexyz = [1,nxglbl,1,nyglbl,1,1]
+            call ops_par_loop(bounds_kernel_eqAF_zl, "bounds_kernel_eqAF_zl", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_strtzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_trun, 1, s3d_000_to_p004_z, "real(kind=8)", OPS_RW))
+
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = [1,nxglbl,1,nyglbl,1,1]
+            call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_sorpzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE))
+
+            rangexyz = [1,nxglbl,1,nyglbl,1,1]
+            DO ispec = 1,nspec
+                call ops_par_loop(bounds_kernel_eqAG_zdir, "bounds_kernel_eqAG_zdir", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_INC), &
+                            ops_arg_dat(d_strhzl(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_ratezl(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
+            END DO
+
+            rangexyz = [1,nxglbl,1,nyglbl,1,1]
+            call ops_par_loop(bounds_kernel_eqAH_zdir, "bounds_kernel_eqAH_zdir", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_gam1zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
 
 !           SPECIFY L's AS REQUIRED
 !           L1Z,L3Z-L5Z
             rangexyz = [1,nxglbl,1,nyglbl,1,1]
-            call ops_par_loop(bounds_kernel_eqM_zl, "L1Z and L3Z to L5Z", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqM_zl, "bounds_kernel_eqM_zl", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_bcl1zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_bcl2zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl3zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl4zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_acouzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dudtzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dvdtzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dwdtzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
+
+!           LYZ: OLD VALUE OF LYZ
+            rangexyz = [1,nxglbl,1,nyglbl,1,1]
+            DO ispec = 1,nspec
+                call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyzl(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE))
+            END DO
 
 !           ADD TO CONSERVATIVE SOURCE TERMS
             rangexyz = [1,nxglbl,1,nyglbl,1,1]
-            call ops_par_loop(bounds_kernel_eqW_zl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqW_zl, "bounds_kernel_eqW_zl", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                            ops_arg_dat(d_bcl3zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_bcl4zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), & 
+                            ops_arg_dat(d_bcl2zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_acouzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strezl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_struzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strvzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ovgmzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
 
             DO ispec = 1,nspec
                 rangexyz = [1,nxglbl,1,nyglbl,1,1]
                 call ops_par_loop(bounds_kernel_eqX_zl, "EVALUATE ALL SPECIES", senga_grid, 3, rangexyz,  &
                                 ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_stryzl(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_bcl2zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
 
@@ -2898,7 +3102,7 @@ SUBROUTINE bounds
 !           SPECIFY L's AS REQUIRED
 !           L1Z-L5Z
             rangexyz = [1,nxglbl,1,nyglbl,1,1]
-            call ops_par_loop(bounds_kernel_eqN_zl, "L1Z to L5Z", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqN_zl, "bounds_kernel_eqN_zl", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_bcl1zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl2zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl3zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_RW), &
@@ -2907,38 +3111,27 @@ SUBROUTINE bounds
                             ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_acouzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_gam1zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dtdtzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strtzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_sorpzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strpzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dudtzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dvdtzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dwdtzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
 
 !           LYZ
             DO ispec = 1,nspec
                 rangexyz = [1,nxglbl,1,nyglbl,1,1]
-                call ops_par_loop(bounds_kernel_eqO_zl, "LYZ", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_bclyzl(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_RW), &
-                                ops_arg_dat(d_bcl2zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_INC), &
-                                ops_arg_dat(d_ratezl(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_strwzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_strdzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_strrzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                                ops_arg_gbl(rgspec, nspcmx, "real(kind=8)", OPS_READ), &
-                                ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+                call ops_par_loop(bounds_kernel_eqO_zl, "bounds_kernel_eqO_zl", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyzl(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE))
 
             END DO
 
 !           ADD TO CONSERVATIVE SOURCE TERMS
             rangexyz = [1,nxglbl,1,nyglbl,1,1]
-            call ops_par_loop(bounds_kernel_eqY_zl, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqY_zl, "bounds_kernel_eqY_zl", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_bcl2zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_bcl5zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_ova2zl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE))
 
             DO ispec = 1,nspec
                 rangexyz = [1,nxglbl,1,nyglbl,1,1]
@@ -3395,41 +3588,65 @@ SUBROUTINE bounds
 !           WALL BOUNDARY CONDITION No 1
 !           NO-SLIP WALL - ADIABATIC
 
-!           ALL VELOCITY COMPONENTS IMPOSED
+!           VELOCITY AND TEMPERATURE IMPOSED AS FUNCTIONS OF TIME
 !           VALUES AND TIME DERIVATIVES OF PRIMITIVE VARIABLES
 !           SET IN SUBROUTINE BOUNDT
+
+            rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
+            call ops_par_loop(bounds_kernel_eqAF_zr, "bounds_kernel_eqAF_zr", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_trun, 1, s3d_000_to_m004_z, "real(kind=8)", OPS_RW))
+
+!           PRECOMPUTE CHEMISTRY TERMS
+            rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
+            call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_sorpzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE))
+
+            rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
+            DO ispec = 1,nspec
+                call ops_par_loop(bounds_kernel_eqAG_zdir, "bounds_kernel_eqAG_zdir", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_INC), &
+                            ops_arg_dat(d_strhzr(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_ratezr(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
+            END DO
+
+            rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
+            call ops_par_loop(bounds_kernel_eqAH_zdir, "bounds_kernel_eqAH_zdir", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_sorpzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_gam1zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
 
 !           SPECIFY L's AS REQUIRED
 !           L1Z,L3Z-L5Z
             rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
-            call ops_par_loop(bounds_kernel_eqM_zr, "L1Z and L3Z to L5Z", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqM_zr, "bounds_kernel_eqM_zr", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_bcl2zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl3zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl4zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl5zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_acouzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dudtzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dvdtzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dwdtzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
+
+!           LYZ:  OLD VALUE OF LYZ
+            rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
+            DO ispec = 1,nspec
+                call ops_par_loop(set_zero_kernel_zdir, "set_zero", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyzr(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE))
+            END DO
 
 !           ADD TO CONSERVATIVE SOURCE TERMS
             rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
-            call ops_par_loop(bounds_kernel_eqW_zr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqW_zr, "bounds_kernel_eqW_zr", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                             ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_bcl3zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_bcl4zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_acouzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strezr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_struzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strvzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ovgmzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_bcl2zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
 
             DO ispec = 1,nspec
                 rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
@@ -3437,6 +3654,7 @@ SUBROUTINE bounds
                                 ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_stryzr(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_bcl2zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
 
             END DO
@@ -3477,7 +3695,7 @@ SUBROUTINE bounds
 !           SPECIFY L's AS REQUIRED
 !           L1Z-L5Z
             rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
-            call ops_par_loop(bounds_kernel_eqN_zr, "L1Z to L5Z", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqN_zr, "bounds_kernel_eqN_zr", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl2zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_bcl3zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_RW), &
@@ -3486,38 +3704,27 @@ SUBROUTINE bounds
                             ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_acouzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dudtzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dvdtzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dwdtzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_gam1zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_dtdtzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_sorpzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_strpzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
 
 !           LYZ
             DO ispec = 1,nspec
                 rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
-                call ops_par_loop(bounds_kernel_eqO_zr, "LYZ", senga_grid, 3, rangexyz,  &
-                                ops_arg_dat(d_bclyzr(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_RW), &
-                                ops_arg_dat(d_bcl2zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_INC), &
-                                ops_arg_dat(d_ratezr(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_strwzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_strdzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_strrzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                                ops_arg_gbl(rgspec, nspcmx, "real(kind=8)", OPS_READ), &
-                                ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+                call ops_par_loop(bounds_kernel_eqO_zr, "bounds_kernel_eqO_zr", senga_grid, 3, rangexyz,  &
+                                ops_arg_dat(d_bclyzr(ispec), 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE))
 
             END DO
 
 !           ADD TO CONSERVATIVE SOURCE TERMS
             rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
-            call ops_par_loop(bounds_kernel_eqY_zr, "ADD TO CONSERVATIVE SOURCE TERMS", senga_grid, 3, rangexyz,  &
+            call ops_par_loop(bounds_kernel_eqY_zr, "bounds_kernel_eqY_zr", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_bcl1zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_bcl2zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_ova2zr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_wrhs, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                            ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_WRITE))
 
             DO ispec = 1,nspec
                 rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]

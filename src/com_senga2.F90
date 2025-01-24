@@ -45,6 +45,10 @@ MODULE com_senga
                              nybigl=1-nhaloy, nybigr=nysize+nhaloy,  &
                              nzbigl=1-nhaloz, nzbigr=nzsize+nhaloz
 
+!   INFLOW TURBULENCE GENERATOR BY SYNTHETIC DIGITAL FILTERING
+    integer(kind=4), parameter :: nfy=60,nfz=60,lnx=30,lny=30,lnz=30
+!   NFY AND NFZ ARE TWICE OF LNY AND LNZ
+
 !   PHYDIM-------------------------------------------------------------------
 !   IFTURB-------------------------------------------------------------------
 
@@ -312,6 +316,8 @@ MODULE com_senga
                acbcyl(ncbcsz),acbcyr(ncbcsz), acbczl(ncbcsz),acbczr(ncbcsz)
 
 !   X-DIRECTION LEFT-HAND END
+    integer(kind=4) :: intran
+    real(kind=8) :: passer
     real(kind=8), dimension(:,:,:), allocatable :: struxl,strvxl,strwxl,dudtxl,dvdtxl,dwdtxl
 
 !   NSBCCL-------------------------------------------------------------------
@@ -347,6 +353,12 @@ MODULE com_senga
     integer(kind=4) :: itstim(nstore)
 
 !   STATIS-------------------------------------------------------------------
+
+!   FY - FOR NON REFLECTING INFLOW
+    integer(kind=4), parameter :: nbcprc=9
+    real(kind=8) :: rxlprc(nbcprc)
+
+!   -------------------------------------------------------------------------
 
 END MODULE com_senga
 
