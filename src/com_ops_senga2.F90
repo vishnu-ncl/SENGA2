@@ -137,6 +137,7 @@ MODULE com_ops_senga
     TYPE(ops_dat) :: d_urand, d_vrand, d_wrand, d_yrand(nspcmx)
 
 !   OPS dats - specific to TGV case
+    TYPE(ops_dat) :: d_psi
     TYPE(ops_dat) :: d_utgv, d_vtgv, d_wtgv
     TYPE(ops_dat) :: d_dutgvdx, d_dvtgvdx, d_dwtgvdx
     TYPE(ops_dat) :: d_dutgvdy, d_dvtgvdy, d_dwtgvdy

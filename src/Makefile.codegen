@@ -24,7 +24,7 @@ OPS_FILES = senga2.F90 com_ops_senga2.F90 ops_data_init.F90 dfinit.F90 dfbydx.F9
 
 ifeq ($(OPS_COMPILER),gnu)
 #APP_FLAGS = -mcmodel=medium -fopt-info-vec -fopt-info-vec-optimized -fopt-info-vec-missed -funroll-loops -funroll-all-loops -finline-functions -ftree-vectorize -fstrict-aliasing
-APP_FLAGS = -mcmodel=medium -fallow-argument-mismatch
+APP_FLAGS = -mcmodel=medium -fallow-argument-mismatch -fimplicit-none
 APP_CXX_FLAGS = -mcmodel=medium #-fsanitize=undefined
 endif
 

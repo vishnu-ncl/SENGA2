@@ -105,7 +105,6 @@ PROGRAM senga2
     lincom_ttime = 0d0
     fincom_ttime = 0d0
     adaptt_ttime = 0d0
-    total_ttime  = 0d0
 
 !   =========================================================================
 
