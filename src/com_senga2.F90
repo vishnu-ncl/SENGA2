@@ -928,19 +928,6 @@ COMMON/statis/umax,umin,vmax,vmin,wmax,wmin, ubar,vbar,wbar,uvar,vvar,wvar,  &
     itstim
 
 !     STATIS-------------------------------------------------------------------
-!     umod record data for tgv------------------------------
-REAL(kind=8) :: dutgvdx(nxsize,nysize,nzsize)
-REAL(kind=8) :: dutgvdy(nxsize,nysize,nzsize)
-REAL(kind=8) :: dutgvdz(nxsize,nysize,nzsize)
-REAL(kind=8) :: dvtgvdx(nxsize,nysize,nzsize)
-REAL(kind=8) :: dvtgvdy(nxsize,nysize,nzsize)
-REAL(kind=8) :: dvtgvdz(nxsize,nysize,nzsize)
-REAL(kind=8) :: dwtgvdx(nxsize,nysize,nzsize)
-REAL(kind=8) :: dwtgvdy(nxsize,nysize,nzsize)
-REAL(kind=8) :: dwtgvdz(nxsize,nysize,nzsize)
-
-common/tgv/dutgvdx,dutgvdy,dutgvdz,dvtgvdx,dvtgvdy,dvtgvdz, &
-           dwtgvdx,dwtgvdy,dwtgvdz
 
 !     FY - FOR NON REFLECTING INFLOW
 INTEGER :: nbcprc

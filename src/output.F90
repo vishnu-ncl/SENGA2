@@ -60,9 +60,6 @@ REAL(kind=8) :: deltag,fornow
 REAL(kind=8) :: ttemp(nxsize,nysize,nzsize)
 REAL(kind=8) :: ptemp(nxsize,nysize,nzsize)
 REAL(kind=8) :: ytemp(nxsize,nysize,nzsize,nspec)
-REAL(kind=8) :: utgv(nxsize,nysize,nzsize)
-REAL(kind=8) :: vtgv(nxsize,nysize,nzsize)
-REAL(kind=8) :: wtgv(nxsize,nysize,nzsize)
 REAL(kind=8) :: vort1(nxsize,nysize,nzsize)
 REAL(kind=8) :: vort2(nxsize,nysize,nzsize)
 REAL(kind=8) :: vort3(nxsize,nysize,nzsize)
@@ -387,102 +384,6 @@ IF(MOD(itime,ntdump) == 0)THEN
   END IF
   
 END IF
-!     ==========
-!     umod tgv stats
- deltagx = xgdlen/(real(nxglbl-1))
- deltagy = ygdlen/(real(nyglbl-1))
- deltagz = zgdlen/(real(nzglbl-1))
-
-do kc=kstal,kstol
-  do jc=jstal,jstol
-    do ic=istal,istol
-      utgv(ic,jc,kc)=urun(ic,jc,kc)/drun(ic,jc,kc)
-      vtgv(ic,jc,kc)=vrun(ic,jc,kc)/drun(ic,jc,kc)
-      wtgv(ic,jc,kc)=wrun(ic,jc,kc)/drun(ic,jc,kc)
-    end do
-  end do
-end do
-
-
-!kinetic energy
-!====================
-
-do kc = kstal, kstol
-  do jc = jstal, jstol
-    do ic = istal, istol
-
-      tkel(ic,jc,kc)=(utgv(ic,jc,kc)*utgv(ic,jc,kc))+ &
-                     (vtgv(ic,jc,kc)*vtgv(ic,jc,kc))+ &
-                     (wtgv(ic,jc,kc)*wtgv(ic,jc,kc))
-
-    end do
-  end do
-end do
-
-tkes=0.0d0
-
-do kc = kstal, kstol
-  do jc = jstal, jstol
-    do ic = istal, istol
-
-    tkes=tkes+(0.5d0*drun(ic,jc,kc)*tkel(ic,jc,kc) &
-              *deltagx*deltagy*deltagz)
-
-    end do
-  end do
-end do
-call p_summ(tkes,tkeg)
-
-!fornow = drin*xgdlen*ygdlen*zgdlen
-!fornow = 1.d0/fornow
-!tkeg=tkeg*fornow
-!
-!===================================================
-!enstrophy calculation
-
-
-do kc = kstal, kstol
- do jc = jstal, jstol
-  do ic = istal, istol
-
-   vort1(ic,jc,kc)= dwtgvdy(ic,jc,kc)-dvtgvdz(ic,jc,kc)
-   vort2(ic,jc,kc)= dutgvdz(ic,jc,kc)-dwtgvdx(ic,jc,kc)
-   vort3(ic,jc,kc)= dvtgvdx(ic,jc,kc)-dutgvdy(ic,jc,kc)
-
-   enstro(ic,jc,kc)=(vort1(ic,jc,kc)*vort1(ic,jc,kc))+&
-              (vort2(ic,jc,kc)*vort2(ic,jc,kc))+&
-              (vort3(ic,jc,kc)*vort3(ic,jc,kc))
-
-  end do
- end do
-end do
-
-enstrs=0.0d0
-
-do kc = kstal, kstol
- do jc = jstal, jstol
-  do ic = istal, istol
-
-   enstrs=enstrs+(0.5d0*drun(ic,jc,kc)*enstro(ic,jc,kc) &
-            *deltagx*deltagy*deltagz)
-
-  end do
- end do
-end do
-
-call p_summ(enstrs,enstrg)
-
-fornow = drin*xgdlen*ygdlen*zgdlen
-fornow = 1.d0/fornow
-!enstrg=enstrg*fornow
-if(iproc.eq.0)print*,tkeg, enstrg*fornow,enstrs
- if(iproc.eq.0) then
-  open(44,file='output/tgv_stat.res',access='append')
-    write(44,'(3e20.9)') etime,tkeg*fornow,enstrg*fornow
-  close(44)
-endif
-!umod tgv stats
-!========================
 
 !     =========================================================================
 

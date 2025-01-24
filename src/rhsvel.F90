@@ -63,20 +63,6 @@ DO kc = kstab,kstob
     END DO
   END DO
 END DO
-!     =========================================
-!     umod recording derivatives for tgv
-call dfbydx(utmp,dutgvdx)
-call dfbydy(utmp,dutgvdy)
-call dfbydz(utmp,dutgvdz)
-
-call dfbydx(vtmp,dvtgvdx)
-call dfbydy(vtmp,dvtgvdy)
-call dfbydz(vtmp,dvtgvdz)
-
-call dfbydx(wtmp,dwtgvdx)
-call dfbydy(wtmp,dwtgvdy)
-call dfbydz(wtmp,dwtgvdz)
-!     end umod
 
 !    EVALUATION OF TRANSVERSE CONDITIONS FOR B.C. (NC)
 
