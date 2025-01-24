@@ -46,7 +46,7 @@ use com_senga
 DOUBLE PRECISION :: ctrans(nspcmx)
 DOUBLE PRECISION :: fornow,combo1,combo2,combo3
 DOUBLE PRECISION :: fornow0,fornow1,fornow2,fornow3,fornow4
-INTEGER :: ic,jc,kc,ispec
+INTEGER :: ic,jc,kc,ispec,jspec
 INTEGER :: itint,icp,iindex,ipower,icoef1,icoef2
 LOGICAL :: flmtds
 

@@ -77,9 +77,9 @@ REAL(kind=8) :: ctrans(nspcmx,4)
 REAL(kind=8) :: dtrans(nspcmx)
 REAL(kind=8) :: rtin,durin,dvrin,dwrin,derin
 REAL(kind=8) :: ttemp(5),ttold(5)
-REAL(kind=8) :: fornow,tmplog
+REAL(kind=8) :: fornow,tmplog,tsold
 REAL(kind=8) :: combo1,combo2,combo3
-INTEGER :: iindex,ipower,icoef1,icoef2
+INTEGER :: iindex,ipower,icoeff,icoef1,icoef2
 INTEGER :: ic,jc,kc,ispec,istep,itint,icp
 INTEGER :: jspec,ncount
 INTEGER :: nxdmax,nydmax,nzdmax,ndspec
@@ -158,8 +158,8 @@ IF(nxlprm(1) == 4) THEN
       winf1(jc,kc) = zero
       winf2(jc,kc) = zero
       DO ispec=1,nspec
-        yinf1(jc,kc,ispec)=zeros
-        yinf2(jc,kc,ispec)=zeros
+        yinf1(jc,kc,ispec)=zero
+        yinf2(jc,kc,ispec)=zero
       END DO
     END DO
   END DO

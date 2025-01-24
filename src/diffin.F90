@@ -42,7 +42,7 @@ PARAMETER(wmltol = 0.001_8)
 !     ==========
 REAL(kind=8) :: pcount,fornow
 INTEGER :: ispec,jspec,kspec,icoeff
-INTEGER :: ncount
+INTEGER :: ncount,ndspec
 INTEGER :: iroot
 CHARACTER (LEN=10) :: spcdif(nspcmx)
 

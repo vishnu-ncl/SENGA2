@@ -47,7 +47,7 @@ PARAMETER(ten = 10.0_8)
 
 !     FUNCTIONS
 !     =========
-EXTERNAL espect,espovk,espksq
+EXTERNAL :: espect,espovk,espksq
 
 
 !     LOCAL DATA

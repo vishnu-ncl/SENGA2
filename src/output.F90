@@ -56,7 +56,7 @@ INTEGER :: iddump
 !     LOCAL DATA
 !     ==========
 !     DIAGNOSTICS
-REAL(kind=8) :: deltag,fornow
+REAL(kind=8) :: deltag,fornow,deltagx,deltagy,deltagz
 REAL(kind=8) :: ttemp(nxsize,nysize,nzsize)
 REAL(kind=8) :: ptemp(nxsize,nysize,nzsize)
 REAL(kind=8) :: ytemp(nxsize,nysize,nzsize,nspec)

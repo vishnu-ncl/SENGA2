@@ -5,15 +5,15 @@
  *****************************
  Species list:
     9
-    1   H2        
-    2   O2        
-    3   H2O       
-    4   O         
-    5   OH        
-    6   H         
-    7   HO2       
-    8   H2O2      
-    9   N2        
+    1   H2
+    2   O2
+    3   H2O
+    4   O
+    5   OH
+    6   H
+    7   HO2
+    8   H2O2
+    9   N2
  Species data:
   1.0000E+05
     1  2.0000E+00
@@ -543,8 +543,8 @@
    21    4 -1.0
  Third-body list:
     2
-    1   M1        
-    2   M2        
+    1   M1
+    2   M2
  Third-body step-list:
     1       0
     2       0

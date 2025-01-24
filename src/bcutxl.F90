@@ -90,11 +90,11 @@ IF(nxlprm(1) == 1)THEN
       dwdtxl(jc,kc) = zero
       
 !           WRITE ETIME, PRESSURE
-      IF (irkstp == nrkstp) THEN
-        OPEN(UNIT=16,FILE="vars.dat",ACCESS='APPEND')
-        WRITE(16,'(3E20.9E3)')etime,(strpxl(jc,1)-prin),strvel
-        CLOSE(16)
-      END IF
+!      IF (irkstp == nrkstp) THEN
+!        OPEN(UNIT=16,FILE="vars.dat",ACCESS='APPEND')
+!        WRITE(16,'(3E20.9E3)')etime,(strpxl(jc,1)-prin),strvel
+!        CLOSE(16)
+!      END IF
       
     END DO
   END DO
@@ -137,11 +137,11 @@ IF(nxlprm(1) == 2)THEN
         dwdtxl(jc,kc) = zero
         
 !               WRITE ETIME, PRESSURE
-        IF (irkstp == nrkstp) THEN
-          OPEN(UNIT=16,FILE="vars.dat",ACCESS='APPEND')
-          WRITE(16,'(3E20.9E3)')etime,(strpxl(jc,1)-prin),strvel
-          CLOSE(16)
-        END IF
+!        IF (irkstp == nrkstp) THEN
+!          OPEN(UNIT=16,FILE="vars.dat",ACCESS='APPEND')
+!          WRITE(16,'(3E20.9E3)')etime,(strpxl(jc,1)-prin),strvel
+!          CLOSE(16)
+!        END IF
         
 !             NXLPRM(4)=4 - OPTION FOR SINUSOIDAL VELOCITY IN TIME FOR PART OF XL FACE - ACTS AS A POINT SOURCE
       ELSE IF (nxlprm(4) == 4) THEN
@@ -162,11 +162,11 @@ IF(nxlprm(1) == 2)THEN
         dwdtxl(jc,kc) = zero
         
 !               WRITE ETIME, PRESSURE
-        IF (irkstp == nrkstp) THEN
-          OPEN(UNIT=16,FILE="vars.dat",ACCESS='APPEND')
-          WRITE(16,'(3E20.9E3)')etime,(strpxl(jc,1)-prin),strvel
-          CLOSE(16)
-        END IF
+!        IF (irkstp == nrkstp) THEN
+!          OPEN(UNIT=16,FILE="vars.dat",ACCESS='APPEND')
+!          WRITE(16,'(3E20.9E3)')etime,(strpxl(jc,1)-prin),strvel
+!          CLOSE(16)
+!        END IF
         
         
       END IF

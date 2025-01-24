@@ -17,21 +17,21 @@ MODULE com_senga
 
 !     GLOBAL GRID SIZE
 INTEGER :: nxglbl,nyglbl,nzglbl
-PARAMETER(nxglbl=1152, nyglbl=288, nzglbl=288)
+PARAMETER(nxglbl=384, nyglbl=384, nzglbl=384)
 INTEGER :: ngzmax
 !     SET NGZMAX=MAX(NXGLBL,NYGLBL,NZGLBL)
 PARAMETER(ngzmax=nxglbl)
 
 !     NUMBER OF PROCESSORS
 INTEGER :: nxproc,nyproc,nzproc
-PARAMETER(nxproc=64, nyproc=16, nzproc=16)
+PARAMETER(nxproc=8, nyproc=4, nzproc=4)
 INTEGER :: nprmax
 !     SET NPRMAX=MAX(NXPROC,NYPROC,NZPROC)
 PARAMETER(nprmax=nxproc)
 
 !     LOCAL GRID SIZE
 INTEGER :: nxsize,nysize,nzsize
-PARAMETER(nxsize=18, nysize=18, nzsize=18)
+PARAMETER(nxsize=48, nysize=96, nzsize=96)
 INTEGER :: nszmax
 !     SET NSZMAX=MAX(NXSIZE,NYSIZE,NZSIZE)
 PARAMETER(nszmax=nxsize)
