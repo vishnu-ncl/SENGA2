@@ -7,13 +7,13 @@ implicit none
 !===========================================#
 double precision, parameter :: Lx=1.0D-2
 
-integer, parameter :: nx=2000
-integer, parameter :: ny=1
-integer, parameter :: nz=1
+integer, parameter :: nx=384
+integer, parameter :: ny=384
+integer, parameter :: nz=384
 
-integer, parameter :: nxproc=40
-integer, parameter :: nyproc=1
-integer, parameter :: nzproc=1
+integer, parameter :: nxproc=8
+integer, parameter :: nyproc=4
+integer, parameter :: nzproc=4
 
 !-> NOTE: The number of species (nspec) is defined in the tags module
 !integer, parameter ::nspec=36
@@ -36,7 +36,7 @@ double precision, parameter :: deltax=Lx/(dble(nx-1))
 !===========================================#
 integer, parameter :: snap_start=0
 integer, parameter :: snap_step=1
-integer, parameter :: snap_end=200
+integer, parameter :: snap_end=0
 !---0=off 1=on----
 integer, parameter :: inplane=0
 integer, parameter :: midplane=0
