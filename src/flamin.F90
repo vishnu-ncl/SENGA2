@@ -65,13 +65,18 @@ REAL(kind=8) :: rpsi
 REAL(kind=8) :: xx
 REAL(kind=8) :: p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11
 
+INTEGER :: nl
+PARAMETER(nl=513)
+REAL :: xr(nl),tr(nl)
+DOUBLE PRECISION :: xl(nl),theta(nl)
+
 INTEGER :: icproc
 INTEGER :: igofstx
 INTEGER :: igofsty
 INTEGER :: igofstz
 INTEGER :: ix,iy,iz
 INTEGER :: ic,jc,kc
-INTEGER :: ispec
+INTEGER :: ispec,il
 
 !     BEGIN
 !     =====
@@ -86,7 +91,7 @@ INTEGER :: ispec
 !     -----------------------
 !     REACTANT TEMPERATURE SET IN CONTROL FILE
 trinr = trin
-u0=34.789806_8
+u0=4.0_8
 rpsi=1.0_8/8.0_8
 !     GLOBAL INDEXING
 !     ---------------
@@ -178,6 +183,16 @@ DO kc = kstal,kstol
   END DO
 END DO
 
+OPEN(UNIT=16,FILE='t_initial.dat',STATUS='unknown')
+DO il=1,nl
+  READ(16,*)xr(il),tr(il)
+END DO
+CLOSE(16)
+
+DO il=1,nl
+  xl(il)=REAL(xr(il))
+  theta(il)=REAL(tr(il))
+END DO
 
 !     SET TEMPERATURE PROFILE
 !     -----------------------
@@ -185,75 +200,25 @@ DO kc = kstal,kstol
   DO jc = jstal,jstol
     DO ic = istal,istol
       
-!      trun(ic,jc,kc) = trin
-    !            NEW ADDITION FOR REACTING CASE
+      trun(ic,jc,kc) = trin
+!            NEW ADDITION FOR REACTING CASE
 
       ix = igofstx + ic
 
       xcoord = REAL(ix-1)*deltagx
 
-      xx=ABS(xcoord-0.5*xgdlen)/xgdlen
+    DO il=1,nl-1
 
-      p1=307.0597
-      p2=-1.2003D3
-      p3=2.4698D5
-      p4=-1.4803D7
-      p5=4.5854D8
-      p6=-7.6293D9
-      p7=7.0736D10
-      p8=3.3643D11
-      p9=6.3734D11
+        IF((xl(il) <= xcoord).AND.(xl(il+1) > xcoord))THEN
 
-      IF((xx >= 0.0).AND.(xx <= 0.129)) THEN
+          fornow=(xcoord-xl(il))/(xl(il+1)-xl(il))
 
-        trun(ic,jc,kc)=p1+p2*xx+p3*xx**2+p4*xx**3 &
-        + p5*xx**4+p6*xx**5+p7*xx**6+p8*xx**7+p9*xx**8
+          trun(ic,jc,kc)=theta(il)+fornow*(theta(il+1)-theta(il))
 
-      END IF
+        END IF
 
-      p1=-1.5833D7
-      p2=7.332D8
-      p3=-1.5154D10
-      p4=1.8410D11
-      p5=-1.4565D12
-      p6=7.8424D12
-      p7=-2.9107D13
-      p8=7.3543D13
-      p9=-1.2107D14
-      p10=1.1730D14
-      p11=-5.0789D13
+      END DO
 
-      IF((xx >= 0.129).AND.(xx <= 0.3057)) THEN
-
-        trun(ic,jc,kc)=p1+p2*xx+p3*xx**2+p4*xx**3 &
-        + p5*xx**4+p6*xx**5+p7*xx**6+p8*xx**7+p9*xx**8 &
-        + p10*xx**9+p11*xx**10
-
-      END IF
-
-      p1=-5.0428D7
-      p2=1.273D9
-      p3=-1.4416D10
-      p4=9.6442D10
-      p5=-4.2210D11
-      p6=1.2629D12
-      p7=-2.6162D12
-      p8=3.7053D12
-      p9=-3.4337D12
-      p10=1.8802D12
-      p11=-4.6197D11
-
-      IF(xx > 0.3057) THEN
-
-        fornow=p1+p2*xx+p3*xx**2+p4*xx**3 &
-        + p5*xx**4+p6*xx**5+p7*xx**6+p8*xx**7+p9*xx**8 &
-        + p10*xx**9+p11*xx**10
-
-        trun(ic,jc,kc)=MAX(trin,fornow)
-
-      END IF
-
-      
     END DO
   END DO
 END DO
@@ -298,25 +263,25 @@ DO kc = kstal,kstol
   DO jc = jstal,jstol
     DO ic = istal,istol
 
-      ix = igofstx + ic
-      iy = igofsty + jc
-      iz = igofstz + kc
+    ix = igofstx + ic
+    iy = igofsty + jc
+    iz = igofstz + kc
 
-      xcoord = REAL(ix-1)*deltagx
-      ycoord = REAL(iy-1)*deltagy
-      zcoord = REAL(iz-1)*deltagz
+    xcoord = REAL(ix-1)*deltagx
+    ycoord = REAL(iy-1)*deltagy
+    zcoord = REAL(iz-1)*deltagz
 
-      xrgmnt = angfrx*xcoord
-      yrgmnt = angfry*ycoord
-      zrgmnt = angfrz*zcoord
+    xrgmnt = angfrx*xcoord
+    yrgmnt = angfry*ycoord
+    zrgmnt = angfrz*zcoord
 
 !       SET PRESSURE PROFILE ASSUMING CONSTANT DENSITY
-      xrgmnt = 2.0_8*xrgmnt
-      yrgmnt = 2.0_8*yrgmnt
-      zrgmnt = 2.0_8*zrgmnt
+    xrgmnt = 2.0_8*xrgmnt
+    yrgmnt = 2.0_8*yrgmnt
+    zrgmnt = 2.0_8*zrgmnt
 
-      prun(ic,jc,kc)=prin+((drun(ic,jc,kc)*u0*u0)/16.0_8)*  &
-          (COS(xrgmnt)+COS(yrgmnt))* (COS(zrgmnt)+2.0_8)
+    prun(ic,jc,kc)=prin+((drun(ic,jc,kc)*u0*u0)/16.0_8)*  &
+        (COS(xrgmnt)+COS(yrgmnt))* (COS(zrgmnt)+2.0_8)
 
 
     END DO
