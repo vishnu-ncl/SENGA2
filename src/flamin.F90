@@ -200,7 +200,7 @@ DO kc = kstal,kstol
   DO jc = jstal,jstol
     DO ic = istal,istol
       
-      trun(ic,jc,kc) = trin
+!      trun(ic,jc,kc) = trin
 !            NEW ADDITION FOR REACTING CASE
 
       ix = igofstx + ic
@@ -218,6 +218,8 @@ DO kc = kstal,kstol
         END IF
 
       END DO
+
+!    trun(ic,jc,kc) = max(trin,trun(ic,jc,kc))
 
     END DO
   END DO
@@ -253,7 +255,7 @@ DO kc = kstal,kstol
   DO jc = jstal,jstol
     DO ic = istal,istol
       
-      drun(ic,jc,kc) = prin/(store1(ic,jc,kc)*trun(ic,jc,kc))
+      drun(ic,jc,kc) = prin/(store1(ic,jc,kc)*trin)
  
     END DO
   END DO
@@ -288,6 +290,15 @@ DO kc = kstal,kstol
   END DO
 END DO
 
+DO kc = kstal,kstol
+  DO jc = jstal,jstol
+    DO ic = istal,istol
+
+      drun(ic,jc,kc) = prun(ic,jc,kc)/(store1(ic,jc,kc)*trun(ic,jc,kc))
+
+    END DO
+  END DO
+END DO
 
 
 !CC     SET VELOCITY PROFILE ASSUMING CONSTANT MASS FLUX
