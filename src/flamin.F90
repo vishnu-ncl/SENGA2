@@ -55,8 +55,11 @@ SUBROUTINE flamin
     real(kind=8), parameter :: cpsi = 3.0_8, cfo = 0.0556_8
     real(kind=8) :: rpsi,rgspec_ispec
 
-    integer(kind=4) :: ispec
+    integer(kind=4) :: ispec,il
     integer(kind=4) :: rangexyz(6)
+
+    real(kind=4) :: xr(nl),tr(nl)
+    real(kind=8) :: xl(nl),theta(nl)
 
 !   BEGIN
 !   =====
@@ -69,7 +72,7 @@ SUBROUTINE flamin
 !   SET PRODUCT TEMPERATURE
 !   -----------------------
 !   REACTANT TEMPERATURE SET IN CONTROL FILE
-    u0 = 34.789806_8
+    u0 = 4.0_8
     rpsi = 1.0_8/8.0_8
     rpsi = rpsi*xgdlen
 
@@ -90,8 +93,6 @@ SUBROUTINE flamin
                     ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                     ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                     ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                     ops_arg_dat(d_psi, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                     ops_arg_gbl(prin, 1, "real(kind=8)", OPS_READ), &
                     ops_arg_gbl(drin, 1, "real(kind=8)", OPS_READ), &
@@ -123,6 +124,26 @@ SUBROUTINE flamin
                     ops_arg_dat(d_psi, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_gbl(cfo, 1, "real(kind=8)", OPS_READ))
 
+    OPEN(UNIT=16,FILE='t_initial.dat',STATUS='unknown')
+    DO il = 1,nl
+        READ(16,*)xr(il),tr(il)
+    END DO
+    CLOSE(16)
+
+    DO il=1,nl
+        xl(il) = REAL(xr(il),kind=8)
+        theta(il) = REAL(tr(il),kind=8)
+    END DO
+
+!   SET TEMPERATURE PROFILE
+!   -----------------------
+    call ops_par_loop(flamin_kernel_eqD, "flamin_kernel_eqD",  senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_gbl(xl, nl, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(theta, nl, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(deltagx, 1, "real(kind=8)", OPS_READ), &
+                    ops_arg_idx())
+
 !   SET DENSITY PROFILE ASSUMING CONSTANT PRESSURE
 !   -------------------
 !   PRESSURE SET IN CONTROL FILE
@@ -138,6 +159,27 @@ SUBROUTINE flamin
                         ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_gbl(rgspec_ispec, 1, "real(kind=8)", OPS_READ))
     END DO
+
+    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+    call ops_par_loop(flamin_kernel_eqE, "flamin_kernel_eqE", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(prin, 1, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(trin, 1, "real(kind=8)", OPS_READ))
+
+    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+    call ops_par_loop(flamin_kernel_eqF, "flamin_kernel_eqF",  senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(prin, 1, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(u0, 1, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(deltagx, 1, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(deltagy, 1, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(deltagz, 1, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(angfrx, 1, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(angfry, 1, "real(kind=8)", OPS_READ), &
+                    ops_arg_gbl(angfrz, 1, "real(kind=8)", OPS_READ), &
+                    ops_arg_idx())
 
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     call ops_par_loop(flamin_kernel_eqC, "flamin_kernel_eqC", senga_grid, 3, rangexyz,  &
