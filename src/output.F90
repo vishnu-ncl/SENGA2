@@ -56,7 +56,8 @@ INTEGER :: iddump
 !     LOCAL DATA
 !     ==========
 !     DIAGNOSTICS
-REAL(kind=8) :: deltag,fornow,deltagx,deltagy,deltagz
+REAL(kind=8) :: deltag,fornow,ltmax,tmax
+REAL(kind=8) :: deltagx,deltagy,deltagz
 REAL(kind=8) :: ttemp(nxsize,nysize,nzsize)
 REAL(kind=8) :: ptemp(nxsize,nysize,nzsize)
 REAL(kind=8) :: ytemp(nxsize,nysize,nzsize,nspec)
@@ -385,6 +386,14 @@ IF(MOD(itime,ntdump) == 0)THEN
     CLOSE(nctixl)
     
   END IF
+
+   IF(inturb == 1.AND.itime == 0)THEN
+    WRITE(pnproc,'(I6.6)') iproc
+    fname = 'output/tcxl'//pnproc//'.dat'
+    OPEN(UNIT=16,FILE=trim(fname),FORM='UNFORMATTED',STATUS='NEW')
+    WRITE(16)drun,urun/drun,vrun/drun,wrun/drun
+    CLOSE(16)
+  END IF
   
 END IF
 !     ==========
@@ -474,11 +483,29 @@ call p_summ(enstrs,enstrg)
 
 fornow = drin*xgdlen*ygdlen*zgdlen
 fornow = 1.d0/fornow
+
+ltmax=0.0
+
+DO kc = kstal, kstol
+  DO jc = jstal, jstol
+    DO ic = istal, istol
+
+      IF(trun(ic,jc,kc) >= ltmax) THEN
+        ltmax=trun(ic,jc,kc)
+      END IF
+
+    END DO
+  END DO
+END DO
+
+CALL p_gmax(ltmax,tmax)
+
+
 !enstrg=enstrg*fornow
 if(iproc.eq.0)print*,tkeg, enstrg*fornow,enstrs
  if(iproc.eq.0) then
   open(44,file='output/tgv_stat.res',access='append')
-    write(44,'(3e20.9)') etime,tkeg*fornow,enstrg*fornow
+    write(44,'(3e20.9)') etime,tkeg*fornow,enstrg*fornow,tmax
   close(44)
 endif
 !umod tgv stats
