@@ -110,7 +110,11 @@ TARGETS += cuda mpi_cuda mpi_cuda_tiled
 endif
 
 ifdef CUDA_INSTALL_PATH
-TARGETS += f2c_cuda f2c_mpi_cuda f2c_mpi_cuda_tiled
+TARGETS += f2c_mpi_cuda
+endif
+
+ifdef HIP_INSTALL_PATH
+TARGETS += f2c_mpi_hip
 endif
 
 endif
@@ -158,6 +162,7 @@ F2C_HIPFLAGS = $(HIPFLAGS)
 ifneq ($(strip $(F2C_HIPFLAGS)),)
 F2C_HIPFLAGS := $(subst -std=c++11,-std=c++14,$(F2C_HIPFLAGS))
 #F2C_HIPFLAGS += --expt-relaxed-constexpr
+#F2C_HIPFLAGS += -Xcompiler="-mcmodel=medium"
 endif
 
 CXXFLAGS_NOOMP = $(CXXFLAGS)
@@ -232,7 +237,7 @@ F2C_CUDA_KERNELS = $(wildcard f2c_cuda/*.F90)
 F2C_MPI_CUDA_OBJ = $(MODULE_FILES:.F90=_f2c_mpi_cuda.o) $(OPS_MODULE_FILES:.F90=_f2c_mpi_cuda.o) $(OTHER_FILES:.F90=_f2c_mpi_cuda.o) $(CXX_CUDA_MASTER_KERNELS:.cu=_f2c_mpi_cuda.o) $(F2C_CUDA_KERNELS:.F90=_f2c_mpi_cuda.o) $(OPS_GENERATED:.F90=_f2c_mpi_cuda.o)
 
 f2c_cuda/f2c_cuda_kernels_f2c_mpi_cuda.o: f2c_cuda/f2c_cuda_kernels.cu
-	$(NVCC) $(F2C_NVCCFLAGS) -DOPS_FTN -I$(C_OPS_INC) -I. -c $< -o $@
+	$(NVCC) $(CXXFLAGS_NOOMP) $(F2C_NVCCFLAGS) -DOPS_FTN -DOPS_MPI -I$(C_OPS_INC) -I. -DMPICH_IGNORE_CXX_SEEK $(I_MPI_INC) -c $< -o $@
 
 %_f2c_mpi_cuda.o: %.F90
 	 $(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS_F2C_CUDA) -DOPS_MPI -DOPS_F2C_INTEROP -c $< -o $@
@@ -244,7 +249,7 @@ F2C_HIP_KERNELS = $(wildcard f2c_hip/*.F90)
 F2C_MPI_HIP_OBJ = $(MODULE_FILES:.F90=_f2c_mpi_hip.o) $(OPS_MODULE_FILES:.F90=_f2c_mpi_hip.o) $(OTHER_FILES:.F90=_f2c_mpi_hip.o) $(CXX_HIP_MASTER_KERNELS:.cpp=_f2c_mpi_hip.o) $(F2C_HIP_KERNELS:.F90=_f2c_mpi_hip.o) $(OPS_GENERATED:.F90=_f2c_mpi_hip.o)
 
 f2c_hip/f2c_hip_kernels_f2c_mpi_hip.o: f2c_hip/f2c_hip_kernels.cpp
-	$(HIPCC) $(CXXFLAGS_NOOMP) $(F2C_HIPFLAGS) -DOPS_FTN -I$(C_OPS_INC) -I. -c $< -o $@
+	$(HIPMPICPP) $(CXXFLAGS_NOOMP) $(F2C_HIPFLAGS) -DOPS_FTN -DOPS_MPI -I$(C_OPS_INC) -I. -DMPICH_IGNORE_CXX_SEEK $(I_MPI_INC) -c $< -o $@
 
 %_f2c_mpi_hip.o: %.F90
 	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS_F2C_HIP) -DOPS_MPI -DOPS_F2C_INTEROP -c $< -o $@
@@ -427,7 +432,7 @@ $(APP)_mpi_ompoffload_tiled: Makefile .generated $(OPS_INSTALL_PATH)/fortran/lib
 $(APP)_f2c_mpi_hip: Makefile .generated $(OPS_INSTALL_PATH)/fortran/lib/$(OPS_COMPILER)/libops_f2c_mpi_hip.a $(F2C_MPI_HIP_OBJ)
 	@echo ""
 	@echo ""
-	@echo "Building ${APP}_mpi_cuda"
+	@echo "Building ${APP}_mpi_hip"
 	@echo ""
 	$(MPIF90) $(FFLAGS) $(APP_FLAGS) -I$(C_OPS_INC) $(FMODS_F2C_HIP) $(I_MPI_INC) -DOPS_MPI $(F2C_MPI_HIP_OBJ) $(APP_LIBS) $(FLINK) -lops_f2c_mpi_hip $(F_HDF5_LIB_MPI) $(MPI_HIP_LINK) $(HIP_LINK) $(HIPRAND) $(L_MPI_LIB) $(MPI_LINK) -o $(APP)_f2c_mpi_hip
 
