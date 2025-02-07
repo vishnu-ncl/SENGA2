@@ -1794,6 +1794,7 @@ SUBROUTINE ops_data_init()
     nrsmax_opsconstant = nrsmax
     nbcpri_opsconstant = nbcpri
     ncfrmx_opsconstant = ncfrmx
+    nl_opsconstant = nl
 
 #endif
 
@@ -1816,5 +1817,6 @@ SUBROUTINE ops_data_init()
     call ops_decl_const("nrsmax", 1, "integer(kind=4)", nrsmax)
     call ops_decl_const("nbcpri", 1, "integer(kind=4)", nbcpri)
     call ops_decl_const("ncfrmx", 1, "integer(kind=4)", ncfrmx)
+    call ops_decl_const("nl", 1, "integer(kind=4)", nl)
 
 END SUBROUTINE ops_data_init
