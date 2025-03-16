@@ -237,7 +237,7 @@ F2C_CUDA_KERNELS = $(wildcard f2c_cuda/*.F90)
 F2C_MPI_CUDA_OBJ = $(MODULE_FILES:.F90=_f2c_mpi_cuda.o) $(OPS_MODULE_FILES:.F90=_f2c_mpi_cuda.o) $(OTHER_FILES:.F90=_f2c_mpi_cuda.o) $(CXX_CUDA_MASTER_KERNELS:.cu=_f2c_mpi_cuda.o) $(F2C_CUDA_KERNELS:.F90=_f2c_mpi_cuda.o) $(OPS_GENERATED:.F90=_f2c_mpi_cuda.o)
 
 f2c_cuda/f2c_cuda_kernels_f2c_mpi_cuda.o: f2c_cuda/f2c_cuda_kernels.cu
-	$(NVCC) $(CXXFLAGS_NOOMP) $(F2C_NVCCFLAGS) -DOPS_FTN -DOPS_MPI -I$(C_OPS_INC) -I. -DMPICH_IGNORE_CXX_SEEK $(I_MPI_INC) -c $< -o $@
+	$(NVCC) $(F2C_NVCCFLAGS) -DOPS_FTN -DOPS_MPI -I$(C_OPS_INC) -I. -DMPICH_IGNORE_CXX_SEEK $(I_MPI_INC) -c $< -o $@
 
 %_f2c_mpi_cuda.o: %.F90
 	 $(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS_F2C_CUDA) -DOPS_MPI -DOPS_F2C_INTEROP -c $< -o $@
