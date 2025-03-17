@@ -68,7 +68,9 @@ REAL(kind=8) :: p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11
 INTEGER :: nl
 PARAMETER(nl=513)
 REAL :: xr(nl),tr(nl)
+REAL :: yrunr(nl,nspcmx)
 DOUBLE PRECISION :: xl(nl),theta(nl)
+DOUBLE PRECISION :: dyrunr(nl,nspcmx)
 
 INTEGER :: icproc
 INTEGER :: igofstx
@@ -171,13 +173,62 @@ DO ispec = 1, nspec
   END DO
 END DO
 
+OPEN(UNIT=14,FILE='TGV_species.dat',STATUS='unknown')
+!DO il=1,nl
+!  print*, "il=",il
+!  READ(14,*) xr(il)
+!  xl(il)=REAL(xr(il))
+!
+!  DO ispec=1,nspec
+!  READ(14,*) yrunr(il,ispec)
+!  dyrunr(il,ispec) = REAL(yrunr(il,ispec))
+!  END DO
+!
+!END DO
+!CLOSE(14)
+
+DO il = 1, nl
+   ! Read xr(il) and the nspec values for yrunr(il,:)
+   READ(14,*) xr(il), (yrunr(il,ispec), ispec=1,nspec)
+
+   ! Convert to REAL if needed (often not strictly necessary in modern compilers)
+   xl(il) = REAL(xr(il))
+   DO ispec=1,nspec
+      dyrunr(il,ispec) = REAL( yrunr(il,ispec) )
+   END DO
+END DO
+CLOSE(14)
+
 DO kc = kstal,kstol
   DO jc = jstal,jstol
     DO ic = istal,istol
-      
-      yrun(ic,jc,kc,1) = cfo*(1.0_8-psi(ic,jc,kc))
-      yrun(ic,jc,kc,2) = 0.233_8*psi(ic,jc,kc)
-      yrun(ic,jc,kc,nspec)=1.0_8-yrun(ic,jc,kc,1) -yrun(ic,jc,kc,2)
+
+!            NEW ADDITION FOR REACTING CASE
+
+      ix = igofstx + ic
+
+      xcoord = REAL(ix-1)*deltagx
+
+    DO il=1,nl-1
+
+        IF((xl(il) <= xcoord).AND.(xl(il+1) > xcoord))THEN
+
+        yrun(ic,jc,kc,nspec) = 1.0_8
+        DO ispec=1,nspec-1
+          fornow=(xcoord-xl(il))/(xl(il+1)-xl(il))
+
+          yrun(ic,jc,kc,ispec)=dyrunr(il,ispec)+fornow*( &
+            dyrunr(il+1,ispec)-dyrunr(il,ispec))
+
+          yrun(ic,jc,kc,nspec)=yrun(ic,jc,kc,nspec)-yrun(ic,jc,kc,ispec)
+        END DO
+        END IF
+
+      END DO
+
+!      yrun(ic,jc,kc,1) = cfo*(1.0_8-psi(ic,jc,kc))
+!      yrun(ic,jc,kc,2) = 0.233_8*psi(ic,jc,kc)
+!      yrun(ic,jc,kc,nspec)=1.0_8-yrun(ic,jc,kc,1) -yrun(ic,jc,kc,2)
       
     END DO
   END DO
