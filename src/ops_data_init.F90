@@ -840,6 +840,7 @@ SUBROUTINE ops_data_init()
     call ops_decl_reduction_handle(8, h_wvart, "real(kind=8)", "wvart")
     call ops_decl_reduction_handle(8, h_umean, "real(kind=8)", "umean")
     call ops_decl_reduction_handle(8, h_denom, "real(kind=8)", "denom")
+    call ops_decl_reduction_handle(8, h_tmax, "real(kind=8)", "tmax")
 
 !------------------------------------OPS Stencil-------------------------------------------------------------
 

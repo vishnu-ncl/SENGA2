@@ -41,15 +41,38 @@ SUBROUTINE flamin_kernel_set_velocity_tgv(urun,vrun,wrun,psi,prin,drin,u0,deltag
 
 END SUBROUTINE flamin_kernel_set_velocity_tgv
 
-SUBROUTINE flamin_kernel_eqA(yrun_1,yrun_2,yrun_9,psi,cfo)
+SUBROUTINE flamin_kernel_eqA(yrun,yrunl,xl,deltagx,nspec,idx)
 
-    real(kind=8), dimension(1) :: yrun_1,yrun_2,yrun_9
-    real(kind=8), dimension(1), intent(in) :: psi 
-    real(kind=8), intent(in) :: cfo
+    real(kind=8), dimension(1) :: yrun
 
-    yrun_1(OPS_ACC1(0,0,0)) = cfo * (1.0_8 - psi(OPS_ACC4(0,0,0)))
-    yrun_2(OPS_ACC2(0,0,0)) = 0.233_8 * psi(OPS_ACC4(0,0,0))
-    yrun_9(OPS_ACC3(0,0,0)) = 1.0_8 - yrun_1(OPS_ACC1(0,0,0)) - yrun_2(OPS_ACC2(0,0,0)) 
+    real(kind=8), intent(in), dimension(nl,nspcmx) :: yrunl
+    real(kind=8), intent(in), dimension(nl) :: xl
+    real(kind=8), intent(in) :: deltagx
+    integer(kind=4), intent(in) :: nspec
+    integer(kind=4), dimension(3), intent(in) :: idx
+
+    real(kind=8) :: fornow
+    real(kind=8) :: xcoord
+    integer(kind=4) :: ix,il,ispec
+
+    ix = idx(1)
+
+    xcoord = REAL(ix-1,kind=8)*deltagx
+
+    DO il = 1,nl-1
+        IF( (xl(il) <= xcoord) .AND. (xl(il+1) > xcoord) )THEN
+            yrun(OPS_ACC_MD1(nspec,0,0,0)) = 1.0_8
+
+            DO ispec = 1,nspec-1
+                fornow = (xcoord-xl(il)) / (xl(il+1)-xl(il))
+
+                yrun(OPS_ACC_MD1(ispec,0,0,0)) = yrunl(il,ispec) &
+                                               + fornow*(yrunl(il+1,ispec)-yrunl(il,ispec))
+
+                yrun(OPS_ACC_MD1(nspec,0,0,0)) = yrun(OPS_ACC_MD1(nspec,0,0,0))-yrun(OPS_ACC_MD1(ispec,0,0,0))
+            END DO
+        END IF
+    END DO
 
 END SUBROUTINE flamin_kernel_eqA
 

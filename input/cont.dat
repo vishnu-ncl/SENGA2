@@ -14,10 +14,10 @@ No. of processors (x,y,z)
  1      1      1
 
 Time step; start step, no of steps, step switch (0=fixed, 1=adaptive))
- 1.0D-12    1   500   1
+ 1.0D-12    1   1   1
 
 Intervals between dumps, reports, statistics, dump output (0/1=un/formatted)
- 1000    1    1      0
+ 1    100    100      0
 
 Cold start switch (0=cold start, 1=restart), dump input (0/1=un/formatted)
  0      0
@@ -34,15 +34,15 @@ pressure, temperature, velocity components u,v,w
  1.0D5   3.0D2   0.0D0  0.0D0  0.0D0
 mass fractions
  9
- 1    5.560D-2
- 2    2.230D-1
+ 1    0.0D0
+ 2    0.0D0
  3    0.0D0
  4    0.0D0
  5    0.0D0
  6    0.0D0
  7    0.0D0
  8    0.0D0
- 9    7.214D-1
+ 9    0.0D0
 
 Global boundary condition types
 one per line: x-left; x-right; y-left; y-right; z-left; z-right

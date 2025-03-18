@@ -55,10 +55,7 @@ SUBROUTINE output
 !   ==========
 !   DIAGNOSTICS
     real(kind=8) :: deltag, deltagx, deltagy, deltagz, fornow
-!    real(kind=8) :: ttemp(nxsize,nysize,nzsize)
-!    real(kind=8) :: ptemp(nxsize,nysize,nzsize)
-!    real(kind=8) :: ytemp(nspec,nxsize,nysize,nzsize)
-    real(kind=8) :: tkeg,enstrg
+    real(kind=8) :: tkeg,enstrg,gtmax
 
     integer(kind=4) :: ispec
     integer(kind=4) :: ic, jc, kc
@@ -393,19 +390,29 @@ SUBROUTINE output
     deltagy = ygdlen/(REAL(nyglbl-1))
     deltagz = zgdlen/(REAL(nzglbl-1))
 
+!    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+!    call ops_par_loop(maths_kernel_eqU, "A = B/C", senga_grid, 3, rangexyz,  &
+!                    ops_arg_dat(d_utgv, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                    ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+!    call ops_par_loop(maths_kernel_eqU, "A = B/C", senga_grid, 3, rangexyz,  &
+!                    ops_arg_dat(d_vtgv, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                    ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+!    call ops_par_loop(maths_kernel_eqU, "A = B/C", senga_grid, 3, rangexyz,  &
+!                    ops_arg_dat(d_wtgv, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                    ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ))
+
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
-    call ops_par_loop(maths_kernel_eqU, "A = B/C", senga_grid, 3, rangexyz,  &
+    call ops_par_loop(maths_kernel_eqU_fused, "A = B/C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_utgv, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ))
-
-    call ops_par_loop(maths_kernel_eqU, "A = B/C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_vtgv, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ))
-
-    call ops_par_loop(maths_kernel_eqU, "A = B/C", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_wtgv, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ))
 
@@ -423,27 +430,37 @@ SUBROUTINE output
 !-----ENSTROPHY CALCULATION-------------------
     enstrg = zero
     call ops_par_loop(maths_kernel_eqCQ, "Calculating enstrophy",senga_grid, 3,rangexyz, &
-                     ops_arg_dat(d_dvtgvdx, 1, s3d_000, "real(kind=8)",OPS_READ), &
-                     ops_arg_dat(d_dwtgvdx, 1, s3d_000, "real(kind=8)",OPS_READ), &
-                     ops_arg_dat(d_dutgvdy, 1, s3d_000, "real(kind=8)",OPS_READ), &
-                     ops_arg_dat(d_dwtgvdy, 1, s3d_000, "real(kind=8)",OPS_READ), &
-                     ops_arg_dat(d_dutgvdz, 1, s3d_000, "real(kind=8)",OPS_READ), &
-                     ops_arg_dat(d_dvtgvdz, 1, s3d_000, "real(kind=8)",OPS_READ), &
-                     ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                     ops_arg_gbl(deltagx, 1, "real(kind=8)", OPS_READ), &
-                     ops_arg_gbl(deltagy, 1, "real(kind=8)", OPS_READ), &
-                     ops_arg_gbl(deltagz, 1, "real(kind=8)", OPS_READ), &
-                     ops_arg_reduce(h_enstro, 1, "real(kind=8)",OPS_INC))
+                  &  ops_arg_dat(d_dvtgvdx, 1, s3d_000, "real(kind=8)",OPS_READ), &
+                  &  ops_arg_dat(d_dwtgvdx, 1, s3d_000, "real(kind=8)",OPS_READ), &
+                  &  ops_arg_dat(d_dutgvdy, 1, s3d_000, "real(kind=8)",OPS_READ), &
+                  &  ops_arg_dat(d_dwtgvdy, 1, s3d_000, "real(kind=8)",OPS_READ), &
+                  &  ops_arg_dat(d_dutgvdz, 1, s3d_000, "real(kind=8)",OPS_READ), &
+                  &  ops_arg_dat(d_dvtgvdz, 1, s3d_000, "real(kind=8)",OPS_READ), &
+                  &  ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                  &  ops_arg_gbl(deltagx, 1, "real(kind=8)", OPS_READ), &
+                  &  ops_arg_gbl(deltagy, 1, "real(kind=8)", OPS_READ), &
+                  &  ops_arg_gbl(deltagz, 1, "real(kind=8)", OPS_READ), &
+                  &  ops_arg_reduce(h_enstro, 1, "real(kind=8)",OPS_INC))
     call ops_reduction_result(h_enstro, enstrg)                     
 
+    fornow = drin*xgdlen*ygdlen*zgdlen
+    fornow = 1.0_8/fornow
+
+    gtmax = zero
+    call ops_par_loop(maths_kernel_eqCR, "Max temparature",senga_grid, 3,rangexyz, &
+                  &  ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)",OPS_READ), &
+                  &  ops_arg_reduce(h_tmax, 1, "real(kind=8)",OPS_MAX))
+    call ops_reduction_result(h_tmax, gtmax)
+
     IF (ops_is_root() == 1) THEN
+!        print *,tkeg, enstrg*fornow,enstrs
         INQUIRE(FILE="output/tgv_stat.dat",EXIST=file_exist)
         IF ( file_exist ) THEN
             OPEN(UNIT=1011,FILE="output/tgv_stat.dat",STATUS='OLD',POSITION='APPEND',FORM='FORMATTED')
         ELSE
             OPEN(UNIT=1011,FILE="output/tgv_stat.dat",STATUS='NEW',FORM='FORMATTED')
         END IF
-        WRITE(1011,*) etime, tkeg, enstrg
+        WRITE(1011,'(3e20.9)') etime, tkeg*fornow, enstrg*fornow, gtmax
         CLOSE(1011)
     END IF
 
@@ -454,7 +471,7 @@ SUBROUTINE output
 
 !   STATISTICS MASTER SWITCH
 !   ------------------------
-!ops    IF(ntstat >= 0) THEN
+    IF(ntstat >= 0) THEN
 
 !       =========================================================================
 
@@ -463,33 +480,33 @@ SUBROUTINE output
 
 !       STATISTICS ON ONE PROCESSOR ONLY
 !       ----------
-!ops        IF(iproc == 0) THEN
+        IF(iproc == 0) THEN
 
-!ops            IF(MOD(itime,ntstat) == 0) THEN
+            IF(MOD(itime,ntstat) == 0) THEN
 
-!ops                OPEN(UNIT=ncstat,FILE=fnstat,STATUS='OLD',FORM='FORMATTED')
+                OPEN(UNIT=ncstat,FILE=fnstat,STATUS='OLD',FORM='FORMATTED')
 
 !               GO TO EOF
-!ops                2000        CONTINUE
-!ops                READ(ncstat,9200,END=2010)
-!ops                GO TO 2000
-!ops                2010        BACKSPACE(ncstat)
+                2000        CONTINUE
+                READ(ncstat,9200,END=2010)
+                GO TO 2000
+                2010        BACKSPACE(ncstat)
 
-!ops                WRITE(ncstat,9100)itime
+                WRITE(ncstat,9100)itime
 
-!ops                CLOSE(ncstat)
+                CLOSE(ncstat)
 
-!ops            END IF
+            END IF
 
-!ops        END IF
+        END IF
 
 !       RESET STORAGE INDEX
-!ops        itstat = 0
+        itstat = 0
 
 !       =========================================================================
 
 !   STATISTICS MASTER SWITCH
-!ops    END IF
+    END IF
 
 !   =========================================================================
 

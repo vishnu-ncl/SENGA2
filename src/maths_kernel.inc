@@ -1229,9 +1229,19 @@ SUBROUTINE maths_kernel_eqCQ(dvtgvdx, dwtgvdx, dutgvdy, dwtgvdy, dutgvdz, dvtgvd
     vort2 = dutgvdz(OPS_ACC5(0,0,0))-dwtgvdx(OPS_ACC2(0,0,0))
     vort3 = dvtgvdx(OPS_ACC1(0,0,0))-dutgvdy(OPS_ACC3(0,0,0))
     enstrs = vort1*vort1+vort2*vort2+vort3*vort3
-    enstro = enstro+0.5_8*drun(OPS_ACC7(0,0,0))*enstrs*deltagx*deltagy*deltagz
+    enstro = enstro + (0.5_8*drun(OPS_ACC7(0,0,0))*enstrs* &
+                        deltagx*deltagy*deltagz)
 
 END SUBROUTINE maths_kernel_eqCQ
+
+SUBROUTINE maths_kernel_eqCR(trun,tmax)
+
+    real(kind=8), dimension(1), intent(in) :: trun
+    real(kind=8) :: tmax
+
+    tmax = MAX(tmax, trun(OPS_ACC1(0,0,0)))
+
+END SUBROUTINE maths_kernel_eqCR
 
 SUBROUTINE maths_kernel_eqtau(out_arr1,out_arr2,in_arr1,in_arr2,in_arr3,var)
 
