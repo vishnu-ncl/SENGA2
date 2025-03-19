@@ -132,9 +132,7 @@ SUBROUTINE flamin
         xl(il) = REAL(xr(il),kind=8)
         DO ispec=1,nspec
             yrunl(il,ispec) = REAL(yrunr(il,ispec),kind=8)
-            print *, "yrun(",il,",",ispec,"): ",yrunl(il,ispec)
         END DO
-        STOP
     END DO
     CLOSE(14)
 
