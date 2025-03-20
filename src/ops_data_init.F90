@@ -739,7 +739,11 @@ SUBROUTINE ops_data_init()
     READ(nccont,*)
 !   COLD START SWITCH (0=COLD START, 1=RESTART), DUMP INPUT FORMAT
     READ(nccont,*)ncdmpi,ndifmt
-    DO line = 1,12
+    DO line = 1,6
+        READ(nccont,*)
+    END DO
+    READ(nccont,*)inflam
+    DO line = 1,5
         READ(nccont,*)
     END DO
     READ(nccont,*)nspreq
@@ -819,6 +823,17 @@ SUBROUTINE ops_data_init()
             END DO
 
         END IF
+    END IF
+
+!   For testing on GPU - reading TGV species from file generated using CPU version
+    IF(inflam == 1) THEN
+
+        fname = 'TGV_species_flamin_cpu'//pnxhdf
+        DO ispec = 1,nspcmx
+            WRITE(buf,"(A4,I2.2)") "YRUN",ispec
+             call ops_decl_dat_hdf5(d_yrun_dump(ispec), senga_grid, 1, "real(kind=8)", trim(buf), trim(fname), status)
+        END DO
+
     END IF
 
 !------------------------------------OPS Reduction Handles---------------------------------------------------

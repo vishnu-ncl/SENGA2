@@ -123,42 +123,49 @@ SUBROUTINE flamin
                           ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE))
     END DO
 
-    OPEN(UNIT=14,FILE='TGV_species.dat',STATUS='unknown')
-    DO il = 1, nl
-!       Read xr(il) and the nspec values for yrunr(il,:)
-        READ(14,*) xr(il), (yrunr(il,ispec), ispec=1,nspec)
+!    OPEN(UNIT=14,FILE='TGV_species.dat',STATUS='unknown')
+!    DO il = 1, nl
+!!       Read xr(il) and the nspec values for yrunr(il,:)
+!        READ(14,*) xr(il), (yrunr(il,ispec), ispec=1,nspec)
+!
+!!       Convert to REAL if needed (often not strictly necessary in modern compilers)
+!        xl(il) = REAL(xr(il),kind=8)
+!        DO ispec=1,nspec
+!            yrunl(il,ispec) = REAL(yrunr(il,ispec),kind=8)
+!        END DO
+!    END DO
+!    CLOSE(14)
 
-!       Convert to REAL if needed (often not strictly necessary in modern compilers)
-        xl(il) = REAL(xr(il),kind=8)
-        DO ispec=1,nspec
-            yrunl(il,ispec) = REAL(yrunr(il,ispec),kind=8)
-        END DO
-    END DO
-    CLOSE(14)
+!    DO ispec = 1,nspcmx
+!        rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+!        call ops_par_loop(copy_kernel_sdim_to_mdim, "A_multidim(ispec) = B", senga_grid, 3, rangexyz,  &
+!                        ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                        ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+!                        ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+!    END DO
+!
+!    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+!    call ops_par_loop(flamin_kernel_eqA, "flamin_kernel_eqA", senga_grid, 3, rangexyz,  &
+!                    ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_RW), &
+!                    ops_arg_gbl(yrunl, nl*nspcmx, "real(kind=8)", OPS_READ), &
+!                    ops_arg_gbl(xl, nl, "real(kind=8)", OPS_READ), &
+!                    ops_arg_gbl(deltagx, 1, "real(kind=8)", OPS_READ), &
+!                    ops_arg_gbl(nspcmx, 1, "integer(kind=4)", OPS_READ), &
+!                    ops_arg_idx())
+!
+!    DO ispec = 1,nspcmx
+!        rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+!        call ops_par_loop(copy_kernel_mdim_to_sdim, "A = B_multidim(ispec)", senga_grid, 3, rangexyz,  &
+!                        ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+!                        ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_READ), &
+!                        ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+!    END DO
 
     DO ispec = 1,nspcmx
         rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
-        call ops_par_loop(copy_kernel_sdim_to_mdim, "A_multidim(ispec) = B", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
-    END DO
-
-    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
-    call ops_par_loop(flamin_kernel_eqA, "flamin_kernel_eqA", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_RW), &
-                    ops_arg_gbl(yrunl, nl*nspcmx, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(xl, nl, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(deltagx, 1, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(nspcmx, 1, "integer(kind=4)", OPS_READ), &
-                    ops_arg_idx())
-
-    DO ispec = 1,nspcmx
-        rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
-        call ops_par_loop(copy_kernel_mdim_to_sdim, "A = B_multidim(ispec)", senga_grid, 3, rangexyz,  &
+        call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                        ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_READ), &
-                        ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
+                        ops_arg_dat(d_yrun_dump(ispec), 1, s3d_000, "real(kind=8)", OPS_READ))
     END DO
 
     OPEN(UNIT=16,FILE='t_initial.dat',STATUS='unknown')
