@@ -235,6 +235,7 @@ MODULE OPS_CONSTANTS
     integer(kind=4), parameter :: nbcpri=4,  nbcprr=4
     integer(kind=4), parameter :: ncbcsz=5
     integer(kind=4), parameter :: nl = 513
+    integer(kind=4), parameter :: nhalos = 5
 
 !---------------------------------------------------------------------------------------------------------------------------------
 #else
@@ -367,7 +368,7 @@ MODULE OPS_CONSTANTS
     integer(kind=4), parameter :: nbcpri=4,  nbcprr=4
     integer(kind=4), parameter :: ncbcsz=5
     integer(kind=4), parameter :: nl = 513
-
+    integer(kind=4), parameter :: nhalos = 5
 !-------------------------------------------------------------------
 
 #endif

@@ -50,7 +50,7 @@ use OPS_Fortran_Reference
 !   TENTH ORDER EXPLICIT DIFFERENCES
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     call ops_par_loop(dfbydx_kernel_main, "dfbydx_main_scheme", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(functn, 1, s3d_p500_to_m500_x, "real(kind=8)", OPS_READ),  &
+                    ops_arg_dat(functn, 1, s3d_000, "real(kind=8)", OPS_READ),  &
                     ops_arg_dat(fderiv, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                     ops_arg_gbl(nxglbl_ops, 1, "integer(kind=4)", OPS_READ), &
                     ops_arg_gbl(nendxl, 1, "integer(kind=4)", OPS_READ), &

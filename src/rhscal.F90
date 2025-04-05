@@ -595,8 +595,8 @@ SUBROUTINE rhscal
         rangexyz = [1,1,1,nyglbl,1,nzglbl]
         call ops_par_loop(hf_kernel_eqA, "hf_kernel_eqA - RHSCAL 512", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                        ops_arg_dat(d_store1, 1, s3d_000_to_p400_x, "real(kind=8)", OPS_READ), &
-                        ops_arg_dat(d_store7, 1, s3d_000_to_p400_x, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_gbl(deltax, 1, "real(kind=8)", OPS_READ))
 
     END IF
@@ -604,8 +604,8 @@ SUBROUTINE rhscal
         rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(hf_kernel_eqB, "hf_kernel_eqB - RHSCAL 521", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                    ops_arg_dat(d_store1, 1, s3d_000_to_m400_x, "real(kind=8)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000_to_m400_x, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_gbl(deltax, 1, "real(kind=8)", OPS_READ))
 
     END IF
@@ -613,8 +613,8 @@ SUBROUTINE rhscal
         rangexyz = [1,nxglbl,1,1,1,nzglbl]
         call ops_par_loop(hf_kernel_eqC, "hf_kernel_eqC - RHSCAL 530", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                    ops_arg_dat(d_store2, 1, s3d_000_to_p040_y, "real(kind=8)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000_to_p040_y, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_gbl(deltay, 1, "real(kind=8)", OPS_READ))
 
     END IF
@@ -622,8 +622,8 @@ SUBROUTINE rhscal
         rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
         call ops_par_loop(hf_kernel_eqD, "hf_kernel_eqD - RHSCAL 539", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                    ops_arg_dat(d_store2, 1, s3d_000_to_m040_y, "real(kind=8)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000_to_m040_y, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_gbl(deltay, 1, "real(kind=8)", OPS_READ))
 
     END IF
@@ -631,8 +631,8 @@ SUBROUTINE rhscal
         rangexyz = [1,nxglbl,1,nyglbl,1,1]
         call ops_par_loop(hf_kernel_eqE, "hf_kernel_eqE - RHSCAL 548", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                    ops_arg_dat(d_store3, 1, s3d_000_to_p004_z, "real(kind=8)", OPS_READ), &
-                    ops_arg_dat(d_store7, 1, s3d_000_to_p004_z, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_gbl(deltaz, 1, "real(kind=8)", OPS_READ))
 
     END IF
@@ -640,8 +640,8 @@ SUBROUTINE rhscal
         rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
         call ops_par_loop(hf_kernel_eqF, "hf_kernel_eqF - RHSCAL 557", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                        ops_arg_dat(d_store3, 1, s3d_000_to_m004_z, "real(kind=8)", OPS_READ), &
-                        ops_arg_dat(d_store7, 1, s3d_000_to_m004_z, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_gbl(deltaz, 1, "real(kind=8)", OPS_READ))
     END IF
 
@@ -1552,8 +1552,8 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_store7, 1, s3d_000_to_p400_x, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_store1, 1, s3d_000_to_p400_x, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(deltax, 1, "real(kind=8)", OPS_READ))
 
         END IF
@@ -1564,8 +1564,8 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_store7, 1, s3d_000_to_m400_x, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_store1, 1, s3d_000_to_m400_x, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(deltax, 1, "real(kind=8)", OPS_READ))
 
         END IF
@@ -1576,8 +1576,8 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_store7, 1, s3d_000_to_p040_y, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_store2, 1, s3d_000_to_p040_y, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(deltay, 1, "real(kind=8)", OPS_READ))
 
         END IF
@@ -1588,8 +1588,8 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_store7, 1, s3d_000_to_m040_y, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_store2, 1, s3d_000_to_m040_y, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store2, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(deltay, 1, "real(kind=8)", OPS_READ))
 
         END IF
@@ -1600,8 +1600,8 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_store7, 1, s3d_000_to_p004_z, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_store3, 1, s3d_000_to_p004_z, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(deltaz, 1, "real(kind=8)", OPS_READ))
 
         END IF
@@ -1612,8 +1612,8 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_INC), &
                             ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_store7, 1, s3d_000_to_m004_z, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_store3, 1, s3d_000_to_m004_z, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(deltaz, 1, "real(kind=8)", OPS_READ))
 
         END IF
@@ -1851,8 +1851,8 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_store7, 1, s3d_000_to_p400_x, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_wd1x, 1, s3d_000_to_p400_x, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_wd1x, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(deltax, 1, "real(kind=8)", OPS_READ))
 
             END IF
@@ -1863,8 +1863,8 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_store7, 1, s3d_000_to_m400_x, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_wd1x, 1, s3d_000_to_m400_x, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_wd1x, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(deltax, 1, "real(kind=8)", OPS_READ))
 
             END IF
@@ -1875,8 +1875,8 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_store7, 1, s3d_000_to_p040_y, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_wd1y, 1, s3d_000_to_p040_y, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_wd1y, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(deltay, 1, "real(kind=8)", OPS_READ))
 
             END IF
@@ -1887,8 +1887,8 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_store7, 1, s3d_000_to_m040_y, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_wd1y, 1, s3d_000_to_m040_y, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_wd1y, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(deltay, 1, "real(kind=8)", OPS_READ))
 
             END IF
@@ -1899,8 +1899,8 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_store7, 1, s3d_000_to_p004_z, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_wd1z, 1, s3d_000_to_p004_z, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_wd1z, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(deltaz, 1, "real(kind=8)", OPS_READ))
 
             END IF
@@ -1911,8 +1911,8 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_store7, 1, s3d_000_to_m004_z, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_wd1z, 1, s3d_000_to_m004_z, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_wd1z, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(deltaz, 1, "real(kind=8)", OPS_READ))
 
             END IF
@@ -2128,8 +2128,8 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_store7, 1, s3d_000_to_p400_x, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_pd1x, 1, s3d_000_to_p400_x, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_pd1x, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(deltax, 1, "real(kind=8)", OPS_READ))
 
             END IF
@@ -2140,8 +2140,8 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_store7, 1, s3d_000_to_m400_x, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_pd1x, 1, s3d_000_to_m400_x, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_pd1x, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(deltax, 1, "real(kind=8)", OPS_READ))
 
             END IF
@@ -2152,8 +2152,8 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_store7, 1, s3d_000_to_p040_y, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_pd1y, 1, s3d_000_to_p040_y, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_pd1y, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(deltay, 1, "real(kind=8)", OPS_READ))
 
             END IF
@@ -2164,8 +2164,8 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_store7, 1, s3d_000_to_m040_y, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_pd1y, 1, s3d_000_to_m040_y, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_pd1y, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(deltay, 1, "real(kind=8)", OPS_READ))
 
             END IF
@@ -2176,8 +2176,8 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_store7, 1, s3d_000_to_p004_z, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_pd1z, 1, s3d_000_to_p004_z, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_pd1z, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(deltaz, 1, "real(kind=8)", OPS_READ))
 
             END IF
@@ -2188,8 +2188,8 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_vtmp, 1, s3d_000, "real(kind=8)", OPS_INC), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_store7, 1, s3d_000_to_m004_z, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_pd1z, 1, s3d_000_to_m004_z, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_pd1z, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(deltaz, 1, "real(kind=8)", OPS_READ))
 
             END IF
@@ -2423,8 +2423,8 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_tdrmix, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_store7, 1, s3d_000_to_p400_x, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_td1x, 1, s3d_000_to_p400_x, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_td1x, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(deltax, 1, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(rgspec_ispec, 1, "real(kind=8)", OPS_READ))
 
@@ -2439,8 +2439,8 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_tdrmix, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_store7, 1, s3d_000_to_m400_x, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_td1x, 1, s3d_000_to_m400_x, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_td1x, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(deltax, 1, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(rgspec_ispec, 1, "real(kind=8)", OPS_READ))
 
@@ -2455,8 +2455,8 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_tdrmix, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_store7, 1, s3d_000_to_p040_y, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_td1y, 1, s3d_000_to_p040_y, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_td1y, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(deltay, 1, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(rgspec_ispec, 1, "real(kind=8)", OPS_READ))
 
@@ -2471,8 +2471,8 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_tdrmix, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_store7, 1, s3d_000_to_m040_y, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_td1y, 1, s3d_000_to_m040_y, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_td1y, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(deltay, 1, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(rgspec_ispec, 1, "real(kind=8)", OPS_READ))
 
@@ -2487,8 +2487,8 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_tdrmix, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_store7, 1, s3d_000_to_p004_z, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_td1z, 1, s3d_000_to_p004_z, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_td1z, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(deltaz, 1, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(rgspec_ispec, 1, "real(kind=8)", OPS_READ))
 
@@ -2503,8 +2503,8 @@ SUBROUTINE rhscal
                                 ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_tdrmix, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_dat(d_utmp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_store7, 1, s3d_000_to_m004_z, "real(kind=8)", OPS_READ), &
-                                ops_arg_dat(d_td1z, 1, s3d_000_to_m004_z, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                ops_arg_dat(d_td1z, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(deltaz, 1, "real(kind=8)", OPS_READ), &
                                 ops_arg_gbl(rgspec_ispec, 1, "real(kind=8)", OPS_READ))
 
@@ -2520,10 +2520,10 @@ SUBROUTINE rhscal
                     rangexyz = [1,1,1,nyglbl,1,nzglbl]
                     call ops_par_loop(hf_kernel_eqG, "hf_kernel_eqG - RHSCAL 2521", senga_grid, 3, rangexyz,  &
                                     ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                                    ops_arg_dat(d_trun, 1, s3d_000_to_p400_x, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_tdrmix, 1, s3d_000_to_p400_x, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_store7, 1, s3d_000_to_p400_x, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_td1x, 1, s3d_000_to_p400_x, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_td1x, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(rgspec_ispec, 1, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(deltax, 1, "real(kind=8)", OPS_READ))
                 END IF
@@ -2532,10 +2532,10 @@ SUBROUTINE rhscal
                     rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
                     call ops_par_loop(hf_kernel_eqH, "hf_kernel_eqH - RHSCAL 2533", senga_grid, 3, rangexyz,  &
                                     ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                                    ops_arg_dat(d_trun, 1, s3d_000_to_m400_x, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_tdrmix, 1, s3d_000_to_m400_x, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_store7, 1, s3d_000_to_m400_x, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_td1x, 1, s3d_000_to_m400_x, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_td1x, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(rgspec_ispec, 1, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(deltax, 1, "real(kind=8)", OPS_READ))
                 END IF
@@ -2544,10 +2544,10 @@ SUBROUTINE rhscal
                     rangexyz = [1,nxglbl,1,1,1,nzglbl]
                     call ops_par_loop(hf_kernel_eqI, "hf_kernel_eqI - RHSCAL 2545", senga_grid, 3, rangexyz,  &
                                     ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                                    ops_arg_dat(d_trun, 1, s3d_000_to_p040_y, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_tdrmix, 1, s3d_000_to_p040_y, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_store7, 1, s3d_000_to_p040_y, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_td1y, 1, s3d_000_to_p040_y, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_td1y, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(rgspec_ispec, 1, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(deltay, 1, "real(kind=8)", OPS_READ))
                 END IF
@@ -2556,10 +2556,10 @@ SUBROUTINE rhscal
                     rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
                     call ops_par_loop(hf_kernel_eqJ, "hf_kernel_eqJ - RHSCAL 2557", senga_grid, 3, rangexyz,  &
                                     ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                                    ops_arg_dat(d_trun, 1, s3d_000_to_m040_y, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_tdrmix, 1, s3d_000_to_m040_y, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_store7, 1, s3d_000_to_m040_y, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_td1y, 1, s3d_000_to_m040_y, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_td1y, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(rgspec_ispec, 1, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(deltay, 1, "real(kind=8)", OPS_READ))
 
@@ -2569,10 +2569,10 @@ SUBROUTINE rhscal
                     rangexyz = [1,nxglbl,1,nyglbl,1,1]
                     call ops_par_loop(hf_kernel_eqK, "hf_kernel_eqK - RHSCAL 2570", senga_grid, 3, rangexyz,  &
                                     ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                                    ops_arg_dat(d_trun, 1, s3d_000_to_p004_z, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_tdrmix, 1, s3d_000_to_p004_z, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_store7, 1, s3d_000_to_p004_z, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_td1z, 1, s3d_000_to_p004_z, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_td1z, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(rgspec_ispec, 1, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(deltaz, 1, "real(kind=8)", OPS_READ))
 
@@ -2582,10 +2582,10 @@ SUBROUTINE rhscal
                     rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
                     call ops_par_loop(hf_kernel_eqL, "hf_kernel_eqL - RHSCAL 2583", senga_grid, 3, rangexyz,  &
                                     ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                                    ops_arg_dat(d_trun, 1, s3d_000_to_m004_z, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_tdrmix, 1, s3d_000_to_m004_z, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_store7, 1, s3d_000_to_m004_z, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_td1z, 1, s3d_000_to_m004_z, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_td1z, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(rgspec_ispec, 1, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(deltaz, 1, "real(kind=8)", OPS_READ))
 
@@ -2598,10 +2598,10 @@ SUBROUTINE rhscal
                     rangexyz = [1,1,1,nyglbl,1,nzglbl]
                     call ops_par_loop(hf_kernel_eqG, "hf_kernel_eqG - RHSCAL 2521", senga_grid, 3, rangexyz,  &
                                     ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                                    ops_arg_dat(d_trun, 1, s3d_000_to_p400_x, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_tdrmix, 1, s3d_000_to_p400_x, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_store7, 1, s3d_000_to_p400_x, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_td1x, 1, s3d_000_to_p400_x, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_td1x, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(rgspec_ispec, 1, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(deltax, 1, "real(kind=8)", OPS_READ))
 
@@ -2611,10 +2611,10 @@ SUBROUTINE rhscal
                     rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
                     call ops_par_loop(hf_kernel_eqH, "hf_kernel_eqH - RHSCAL 2533", senga_grid, 3, rangexyz,  &
                                     ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                                    ops_arg_dat(d_trun, 1, s3d_000_to_m400_x, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_tdrmix, 1, s3d_000_to_m400_x, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_store7, 1, s3d_000_to_m400_x, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_td1x, 1, s3d_000_to_m400_x, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_td1x, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(rgspec_ispec, 1, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(deltax, 1, "real(kind=8)", OPS_READ))
 
@@ -2624,10 +2624,10 @@ SUBROUTINE rhscal
                     rangexyz = [1,nxglbl,1,1,1,nzglbl]
                     call ops_par_loop(hf_kernel_eqI, "hf_kernel_eqI - RHSCAL 2545", senga_grid, 3, rangexyz,  &
                                     ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                                    ops_arg_dat(d_trun, 1, s3d_000_to_p040_y, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_tdrmix, 1, s3d_000_to_p040_y, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_store7, 1, s3d_000_to_p040_y, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_td1y, 1, s3d_000_to_p040_y, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_td1y, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(rgspec_ispec, 1, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(deltay, 1, "real(kind=8)", OPS_READ))
 
@@ -2637,10 +2637,10 @@ SUBROUTINE rhscal
                     rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
                     call ops_par_loop(hf_kernel_eqJ, "hf_kernel_eqJ - RHSCAL 2557", senga_grid, 3, rangexyz,  &
                                     ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                                    ops_arg_dat(d_trun, 1, s3d_000_to_m040_y, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_tdrmix, 1, s3d_000_to_m040_y, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_store7, 1, s3d_000_to_m040_y, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_td1y, 1, s3d_000_to_m040_y, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_td1y, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(rgspec_ispec, 1, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(deltay, 1, "real(kind=8)", OPS_READ))
 
@@ -2650,10 +2650,10 @@ SUBROUTINE rhscal
                     rangexyz = [1,nxglbl,1,nyglbl,1,1]
                     call ops_par_loop(hf_kernel_eqK, "hf_kernel_eqK - RHSCAL 2570", senga_grid, 3, rangexyz,  &
                                     ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                                    ops_arg_dat(d_trun, 1, s3d_000_to_p004_z, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_tdrmix, 1, s3d_000_to_p004_z, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_store7, 1, s3d_000_to_p004_z, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_td1z, 1, s3d_000_to_p004_z, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_td1z, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(rgspec_ispec, 1, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(deltaz, 1, "real(kind=8)", OPS_READ))
 
@@ -2663,10 +2663,10 @@ SUBROUTINE rhscal
                     rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
                     call ops_par_loop(hf_kernel_eqL, "hf_kernel_eqL - RHSCAL 2583", senga_grid, 3, rangexyz,  &
                                     ops_arg_dat(d_erhs, 1, s3d_000, "real(kind=8)", OPS_INC), &
-                                    ops_arg_dat(d_trun, 1, s3d_000_to_m004_z, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_tdrmix, 1, s3d_000_to_m004_z, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_store7, 1, s3d_000_to_m004_z, "real(kind=8)", OPS_READ), &
-                                    ops_arg_dat(d_td1z, 1, s3d_000_to_m004_z, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_tdrmix, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ), &
+                                    ops_arg_dat(d_td1z, 1, s3d_000, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(rgspec_ispec, 1, "real(kind=8)", OPS_READ), &
                                     ops_arg_gbl(deltaz, 1, "real(kind=8)", OPS_READ))
 

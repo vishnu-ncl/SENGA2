@@ -88,7 +88,7 @@ SUBROUTINE tempin
                         ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
     END DO
-
+    print *, "TEMPIN COPY FROM SDIM"
     call ops_par_loop(tempin_kernel_main, "tempin kernel", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
@@ -107,14 +107,14 @@ SUBROUTINE tempin
                     ops_arg_gbl(nspec, 1, "integer(kind=4)", OPS_READ), &
                     ops_arg_gbl(iproc, 1, "integer(kind=4)", OPS_READ), &
                     ops_arg_idx())
-
+    print *, "TEMPIN MAIN"
     DO ispec = 1,nspcmx
         call ops_par_loop(copy_kernel_mdim_to_sdim, "A = B_multidim(ispec)", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
     END DO
-
+    print *, "TEMPIN COPY FROM MDIM"
 !   CONSTRUCT THE TEMPERATURE INTERVAL INDEX
 !   EVALUATE PRESSURE
 !   EVALUATE MIXTURE SPECIFIC HEAT CP
@@ -154,7 +154,7 @@ SUBROUTINE tempin
                         ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
 
     END DO
-
+    print *, "TEMPIN EQ E AND C"
 !   =========================================================================
 
     call ops_par_loop(temper_kernel_eqF, "temper eq F", senga_grid, 3, rangexyz,  &
@@ -163,7 +163,7 @@ SUBROUTINE tempin
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_READ))
-
+    print *, "TEMPIN EQ F"
 !   =========================================================================
 
 !    call ops_free_dat(d_yrhs_mdim)

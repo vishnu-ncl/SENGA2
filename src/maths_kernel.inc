@@ -1294,3 +1294,40 @@ SUBROUTINE maths_kernel_print_urhs(out_arr, itime)
 #endif
 
 END SUBROUTINE maths_kernel_print_urhs
+
+SUBROUTINE maths_kernel_set_dirty(out_arr)
+
+    real(kind=8), dimension(1) :: out_arr
+    real(kind=8) :: fornow
+
+    fornow = 0.0_8
+
+END SUBROUTINE maths_kernel_set_dirty
+
+SUBROUTINE maths_kernel_halo_exchange_xdir(in_arr)
+
+    real(kind=8), dimension(1), intent(in) :: in_arr
+    real(kind=8) :: fornow
+
+    fornow = 0.0_8
+
+END SUBROUTINE maths_kernel_halo_exchange_xdir
+
+SUBROUTINE maths_kernel_halo_exchange_ydir(in_arr)
+
+    real(kind=8), dimension(1), intent(in) :: in_arr
+    real(kind=8) :: fornow
+
+    fornow = 0.0_8
+
+END SUBROUTINE maths_kernel_halo_exchange_ydir
+
+SUBROUTINE maths_kernel_halo_exchange_zdir(in_arr)
+
+    real(kind=8), dimension(1), intent(in) :: in_arr
+    real(kind=8) :: fornow
+
+    fornow = 0.0_8
+
+END SUBROUTINE maths_kernel_halo_exchange_zdir
+

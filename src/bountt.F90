@@ -243,7 +243,7 @@ SUBROUTINE bountt
             rangexyz = [1,1,1,nyglbl,1,nzglbl]
             call ops_par_loop(bounds_kernel_eqAF_xl, "bounds_kernel_eqAF_xl", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_strtxl, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_trun, 1, s3d_000_to_p400_x, "real(kind=8)", OPS_RW))
+                            ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_RW))
 
             DO iindex = 1,nintmx
                 rangexyz = [1,1,1,nyglbl,1,nzglbl]
@@ -592,7 +592,7 @@ SUBROUTINE bountt
             rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
             call ops_par_loop(bounds_kernel_eqAF_xr, "bounds_kernel_eqAF_xr", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_strtxr, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_trun, 1, s3d_000_to_m400_x, "real(kind=8)", OPS_RW))
+                            ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_RW))
 
             DO iindex = 1,nintmx
                 rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
@@ -944,7 +944,7 @@ SUBROUTINE bountt
             rangexyz = [1,nxglbl,1,1,1,nzglbl]
             call ops_par_loop(bounds_kernel_eqAF_yl, "bounds_kernel_eqAF_yl", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_strtyl, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_trun, 1, s3d_000_to_p040_y, "real(kind=8)", OPS_RW))
+                            ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_RW))
 
             DO iindex = 1,nintmx
                 rangexyz = [1,nxglbl,1,1,1,nzglbl]
@@ -1297,7 +1297,7 @@ SUBROUTINE bountt
             rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
             call ops_par_loop(bounds_kernel_eqAF_yr, "bounds_kernel_eqAF_yr", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_strtyr, 1, s3d_000_strid3d_xz, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_trun, 1, s3d_000_to_m040_y, "real(kind=8)", OPS_RW))
+                            ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_RW))
 
             DO iindex = 1,nintmx
                 rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
@@ -1650,7 +1650,7 @@ SUBROUTINE bountt
             rangexyz = [1,nxglbl,1,nyglbl,1,1]
             call ops_par_loop(bounds_kernel_eqAF_zl, "bounds_kernel_eqAF_zl", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_strtzl, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_trun, 1, s3d_000_to_p004_z, "real(kind=8)", OPS_RW))
+                            ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_RW))
 
             DO iindex = 1,nintmx
                 rangexyz = [1,nxglbl,1,nyglbl,1,1]
@@ -2003,7 +2003,7 @@ SUBROUTINE bountt
             rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
             call ops_par_loop(bounds_kernel_eqAF_zr, "bounds_kernel_eqAF_zr", senga_grid, 3, rangexyz,  &
                             ops_arg_dat(d_strtzr, 1, s3d_000_strid3d_xy, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_trun, 1, s3d_000_to_m004_z, "real(kind=8)", OPS_RW))
+                            ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_RW))
 
             DO iindex = 1,nintmx
                 rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]

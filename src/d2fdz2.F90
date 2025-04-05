@@ -58,7 +58,7 @@ use OPS_Fortran_Reference
 
         rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(d2fdz2_kernel_main, "d2fdz2_main_scheme", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(functn, 1, s3d_p005_to_m005_z, "real(kind=8)", OPS_READ),  &
+                        ops_arg_dat(functn, 1, s3d_000, "real(kind=8)", OPS_READ),  &
                         ops_arg_dat(fderiv, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                         ops_arg_gbl(nzglbl_ops, 1, "integer(kind=4)", OPS_READ), &
                         ops_arg_gbl(nendzl, 1, "integer(kind=4)", OPS_READ), &

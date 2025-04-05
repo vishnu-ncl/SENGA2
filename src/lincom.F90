@@ -190,8 +190,8 @@ SUBROUTINE lincom
             rangexyz = [1,1,1,nyglbl,1,nzglbl]
             call ops_par_loop(lincom_kernel_eqA, "lincom_kernel_eqA", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000_to_p400_x, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_drhs, 1, s3d_000_to_p400_x, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ))
             call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_READ))
@@ -205,8 +205,8 @@ SUBROUTINE lincom
             rangexyz = [nxglbl,nxglbl,1,nyglbl,1,nzglbl]
             call ops_par_loop(lincom_kernel_eqB, "lincom_kernel_eqB", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000_to_m400_x, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_drhs, 1, s3d_000_to_m400_x, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ))
             call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_READ))
@@ -219,8 +219,8 @@ SUBROUTINE lincom
             rangexyz = [1,nxglbl,1,1,1,nzglbl]
             call ops_par_loop(lincom_kernel_eqC, "lincom_kernel_eqC", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000_to_p040_y, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_drhs, 1, s3d_000_to_p040_y, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ))
             call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_READ))
@@ -233,8 +233,8 @@ SUBROUTINE lincom
             rangexyz = [1,nxglbl,nyglbl,nyglbl,1,nzglbl]
             call ops_par_loop(lincom_kernel_eqD, "lincom_kernel_eqD", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000_to_m040_y, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_drhs, 1, s3d_000_to_m040_y, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ))
             call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_READ))
@@ -248,8 +248,8 @@ SUBROUTINE lincom
             rangexyz = [1,nxglbl,1,nyglbl,1,1]
             call ops_par_loop(lincom_kernel_eqE, "lincom_kernel_eqE", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000_to_p004_z, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_drhs, 1, s3d_000_to_p004_z, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ))
             call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_READ))
@@ -263,8 +263,8 @@ SUBROUTINE lincom
             rangexyz = [1,nxglbl,1,nyglbl,nzglbl,nzglbl]
             call ops_par_loop(lincom_kernel_eqF, "lincom_kernel_eqF", senga_grid, 3, rangexyz, &
                             ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000_to_m004_z, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_drhs, 1, s3d_000_to_m004_z, "real(kind=8)", OPS_READ))
+                            ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ))
             call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_READ))
