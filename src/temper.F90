@@ -70,6 +70,10 @@ SUBROUTINE temper
     IF (nsbczr == nsbco1 .or. nsbczr == nsbci1 .or. nsbczr == nsbci2 .or. &
         nsbczr == nsbci3 .or. nsbczr == nsbcw1 .or. nsbczr == nsbcw2) rangexyz(6) = nzglbl
 
+!    IF (ops_is_root() == 1) THEN
+!        print *, "x: ",rangexyz(1),"-",rangexyz(2), "y: ",rangexyz(3),"-",rangexyz(4), "z: ",rangexyz(5),"-",rangexyz(6)
+!    END IF
+
 !   INITIALISE COEFFICIENTS OF TEMPERATURE POLYNOMIAL
 !   AND ITS DERIVATIVE
     call ops_par_loop(temper_kernel_eqA, "temper eq A", senga_grid, 3, rangexyz,  &

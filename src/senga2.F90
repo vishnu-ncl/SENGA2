@@ -134,6 +134,10 @@ PROGRAM senga2
 !   INITIALISE CONSTANT USED IN KERNEL FUNCTIONS FOR CUDA
     call cuda_const_init
 
+#ifdef OPS_LAZY
+    call ops_execute()
+#endif
+
 !   =========================================================================
 
 !   TIME STEP LOOP
@@ -172,15 +176,15 @@ PROGRAM senga2
             call parfer
             parfer_etime = omp_get_wtime()
             parfer_ttime = parfer_ttime + (parfer_etime-parfer_stime)
+#ifdef OPS_LAZY
+    call ops_execute()
+#endif
 
 !           EVALUATE RHS FOR SCALARS
             rhscal_stime = omp_get_wtime()
             call rhscal
             rhscal_etime = omp_get_wtime()
             rhscal_ttime = rhscal_ttime + (rhscal_etime-rhscal_stime)
-!#ifdef OPS_LAZY
-!    call ops_execute()
-!#endif
 
 !           EVALUATE RHS FOR VELOCITIES
             rhsvel_stime = omp_get_wtime()
@@ -199,7 +203,9 @@ PROGRAM senga2
             call lincom
             lincom_etime = omp_get_wtime()
             lincom_ttime = lincom_ttime + (lincom_etime-lincom_stime)
-
+#ifdef OPS_LAZY
+    call ops_execute()
+#endif
         END DO
 
 !       =======================================================================
@@ -219,15 +225,16 @@ PROGRAM senga2
         call parfer
         parfer_etime = omp_get_wtime()
         parfer_ttime = parfer_ttime + (parfer_etime-parfer_stime)
+#ifdef OPS_LAZY
+    call ops_execute()
+#endif
 
 !       EVALUATE RHS FOR SCALARS
         rhscal_stime = omp_get_wtime()
         call rhscal
         rhscal_etime = omp_get_wtime()
         rhscal_ttime = rhscal_ttime + (rhscal_etime-rhscal_stime)
-!#ifdef OPS_LAZY
-!    call ops_execute()
-!#endif
+
 !       EVALUATE RHS FOR VELOCITIES
         rhsvel_stime = omp_get_wtime()
         call rhsvel
@@ -280,6 +287,9 @@ PROGRAM senga2
 !            call print_dats()
 !            IF (itime == 1000) STOP
 !        END IF
+#ifdef OPS_LAZY
+    call ops_execute()
+#endif
 
 !       =======================================================================
     END DO

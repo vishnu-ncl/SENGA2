@@ -84,7 +84,7 @@ SUBROUTINE tempin
 
     DO ispec = 1,nspcmx
         call ops_par_loop(copy_kernel_sdim_to_mdim, "A_multidim(ispec) = B", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_RW), &
                         ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
     END DO
