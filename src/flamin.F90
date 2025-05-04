@@ -36,23 +36,8 @@ SUBROUTINE flamin
 !   -------------------------------------------------------------------------
 !   -------------------------------------------------------------------------
 
-!   PARAMETERS
-!   ==========
-!   ESTIMATED FLAME LOCATION AND THICKNESS
-    real(kind=8), parameter :: clocat = 0.0025_8, cthick = 0.0005_8
-
-!   FUNCTION
-!   ========
-    real(kind=8) :: erfunc
-    EXTERNAL erfunc
-
 !   LOCAL DATA
 !   ==========
-    real(kind=8) :: trinr,u0
-    real(kind=8) :: deltagx,deltagy,deltagz
-    real(kind=8) :: rglocl
-    real(kind=8) :: angfrx,angfry,angfrz
-    integer(kind=4) :: jspec
     integer(kind=4) :: rangexyz(6)
 
 !   BEGIN
@@ -60,68 +45,36 @@ SUBROUTINE flamin
 
 !   =========================================================================
 
-!   SPECIFY INITIAL THERMOCHEMICAL FIELD HERE
-!   =========================================
-
-!   SET PRODUCT TEMPERATURE
-!   -----------------------
-!   REACTANT TEMPERATURE SET IN CONTROL FILE
-    trinr = trin
-    u0 = 34.789806_8
-
-!   Mixture gas constant
-    rglocl = zero
-    do jspec = 1,nspec
-        rglocl = rglocl + rgspec(jspec)*yrin(jspec)
-    end do
-
-!   Times (constant) density
-    rglocl  = drin*rglocl
-
-!   Global indexing
-!   ---------------
-    deltagx = xgdlen/(REAL(nxglbl-1,kind=8))
-    deltagy = ygdlen/(REAL(nyglbl-1,kind=8))
-    deltagz = zgdlen/(REAL(nzglbl-1,kind=8))
-
-!   SET THE VELOCITY PROFILE FOR TGV
-!   --------------------------------
-    angfrx = 8.0_8*atan(1.0_8)/xgdlen
-    angfry = 8.0_8*atan(1.0_8)/ygdlen
-    angfrz = 8.0_8*atan(1.0_8)/zgdlen
-
+!   POPULATE DATA FROM THE FLAMIN INDATA GENERATED FROM STANDALONE ROUTINE
+!   ======================================================================
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
-    call ops_par_loop(flamin_kernel_set_velocity_tgv, "SET THE VELOCITY PROFILE FOR TGV",  senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_gbl(prin, 1, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(drin, 1, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(u0, 1, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(deltagx, 1, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(deltagy, 1, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(deltagz, 1, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(angfrx, 1, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(angfry, 1, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(angfrz, 1, "real(kind=8)", OPS_READ), &
-                    ops_arg_idx())
-
-!   set temperature profile assuming constant density
-    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
-    call ops_par_loop(flamin_kernel_eqA, "A = B/var", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                    ops_arg_gbl(rglocl, 1, "real(kind=8)", OPS_READ))
-
-!   set constant density
-    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
-    call ops_par_loop(maths_kernel_eqD, "set constant density",  senga_grid, 3, rangexyz,  &
+    call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_gbl(drin, 1, "real(kind=8)", OPS_READ))
+                    ops_arg_dat(d_drun_dump, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+    call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_urun_dump, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+    call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_vrun_dump, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+    call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_wrun_dump, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+    call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+                    ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_trun_dump, 1, s3d_000, "real(kind=8)", OPS_READ))
+
+    DO ispec = 1,nspcmx
+        rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+        call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
+                        ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_yrun_dump(ispec), 1, s3d_000, "real(kind=8)", OPS_READ))
+    END DO
 
 !   =========================================================================
-
-9000  FORMAT(a)
 
 END SUBROUTINE flamin

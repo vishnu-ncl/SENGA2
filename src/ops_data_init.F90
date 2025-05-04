@@ -724,7 +724,11 @@ SUBROUTINE ops_data_init()
     READ(nccont,*)
 !   COLD START SWITCH (0=COLD START, 1=RESTART), DUMP INPUT FORMAT
     READ(nccont,*)ncdmpi,ndifmt
-    DO line = 1,12
+    DO line = 1,6
+        READ(nccont,*)
+    END DO
+    READ(nccont,*)inflam
+    DO line = 1,5
         READ(nccont,*)
     END DO
     READ(nccont,*)nspreq
@@ -804,6 +808,23 @@ SUBROUTINE ops_data_init()
             END DO
 
         END IF
+    END IF
+
+    IF(inflam == 1) THEN
+
+        fname = 'input/flame_init'//pnxhdf
+
+        call ops_decl_dat_hdf5(d_drun_dump, senga_grid, 1, "real(kind=8)", "DRUN", trim(fname), status)
+        call ops_decl_dat_hdf5(d_urun_dump, senga_grid, 1, "real(kind=8)", "URUN", trim(fname), status)
+        call ops_decl_dat_hdf5(d_vrun_dump, senga_grid, 1, "real(kind=8)", "VRUN", trim(fname), status)
+        call ops_decl_dat_hdf5(d_wrun_dump, senga_grid, 1, "real(kind=8)", "WRUN", trim(fname), status)
+        call ops_decl_dat_hdf5(d_trun_dump, senga_grid, 1, "real(kind=8)", "TRUN", trim(fname), status)
+
+        DO ispec = 1,nspcmx
+            WRITE(buf,"(A4,I2.2)") "YRUN",ispec
+             call ops_decl_dat_hdf5(d_yrun_dump(ispec), senga_grid, 1, "real(kind=8)", trim(buf), trim(fname), status)
+        END DO
+
     END IF
 
 !------------------------------------OPS Reduction Handles---------------------------------------------------
