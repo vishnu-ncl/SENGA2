@@ -6,12 +6,13 @@ module decl_var
    real(kind=8),allocatable, dimension(:,:,:) :: urun,vrun,wrun
    real(kind=8),allocatable, dimension(:,:,:) :: prun,trun,drun
    real(kind=8),allocatable, dimension(:,:,:,:) :: yrun
+   real(kind=8),allocatable, dimension(:,:,:,:) :: rrte
    real(kind=8) :: xlen,ylen,zlen,deltax,deltay,deltaz
 
    integer :: nx,ny,nz,nspec,nxproc,nyproc,nzproc
-   integer :: fstart = 1
-   integer :: fstop = 1
-   integer :: fstep = 1
+   integer :: fstart = 0
+   integer :: fstop = 100
+   integer :: fstep = 10
  
    integer :: hdferr
    integer(hid_t)  :: file_id, dset_id

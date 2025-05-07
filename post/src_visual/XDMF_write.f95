@@ -94,17 +94,17 @@ do i=1,nspec
   write(10,"(6x,a)") '</Attribute>'
 enddo
 
-!do i=1,nspec
-!  write(10,"(6x,a,a,a)") '<Attribute Name="',trim(wrtrrt(i)%wrtdst),          &
-!                         '" AttributeType="Scalar" Center="Node">'
-!  ! In hdf5 files, x/y/z is written as z/y/x
-!  write(10,"(8x,2a,2(x,a),a)") '<DataItem Dimensions="',                      &
-!                  trim(adjustl(snz)),trim(adjustl(sny)), trim(adjustl(snx)),  &
-!                          '" NumberType="Float" Precision="8" Format="HDF">'  
-!  write(10,"(10x,a)") trim(fname)//'.h5:/Field/'//trim(wrtrrt(i)%wrtdst)
-!  write(10,"(8x,a)") '</DataItem>'
-!  write(10,"(6x,a)") '</Attribute>'
-!enddo
+do i=1,nspec
+  write(10,"(6x,a,a,a)") '<Attribute Name="',trim(wrtrrt(i)%wrtdst),          &
+                         '" AttributeType="Scalar" Center="Node">'
+  ! In hdf5 files, x/y/z is written as z/y/x
+  write(10,"(8x,2a,2(x,a),a)") '<DataItem Dimensions="',                      &
+                  trim(adjustl(snz)),trim(adjustl(sny)), trim(adjustl(snx)),  &
+                          '" NumberType="Float" Precision="8" Format="HDF">'  
+  write(10,"(10x,a)") trim(fname)//'.h5:/Field/'//trim(wrtrrt(i)%wrtdst)
+  write(10,"(8x,a)") '</DataItem>'
+  write(10,"(6x,a)") '</Attribute>'
+enddo
 !==============================================================================
 
 write(10,"(4x,a)") '</Grid>'

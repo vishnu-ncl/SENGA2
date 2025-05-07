@@ -168,20 +168,20 @@ do i=1,nspec
   call h5dclose_f(d_id, hdferr)
 enddo
 
-!do i=1,nspec
-!  dummy = 0.0d0
-!  dummy(:,:,:) = rrte(:,:,:,i)
-!  ! create the dataspace for the dataset.
-!  call h5screate_simple_f(ndim, gdim, dspace, hdferr)
-!  ! create a dataset in group "mygroup" with default properties.
-!  call h5dcreate_f(f_id, trim(wrtrrt(i)%wrtdst), h5t_native_real, dspace, d_id, hdferr)
-!  ! write the dataset.
-!  call h5dwrite_f(d_id, h5t_native_real, real(dummy), gdim, hdferr)
-!  ! close the dataspace for the dataset.
-!  call h5sclose_f(dspace, hdferr)
-!  ! close the dataset.
-!  call h5dclose_f(d_id, hdferr)
-!enddo
+do i=1,nspec
+  dummy = 0.0d0
+  dummy(:,:,:) = rrte(:,:,:,i)
+  ! create the dataspace for the dataset.
+  call h5screate_simple_f(ndim, gdim, dspace, hdferr)
+  ! create a dataset in group "mygroup" with default properties.
+  call h5dcreate_f(f_id, trim(wrtrrt(i)%wrtdst), h5t_native_real, dspace, d_id, hdferr)
+  ! write the dataset.
+  call h5dwrite_f(d_id, h5t_native_real, real(dummy), gdim, hdferr)
+  ! close the dataspace for the dataset.
+  call h5sclose_f(dspace, hdferr)
+  ! close the dataset.
+  call h5dclose_f(d_id, hdferr)
+enddo
 
 ! close group /Field
 call h5gclose_f(f_id,hdferr)

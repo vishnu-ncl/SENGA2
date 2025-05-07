@@ -54,6 +54,7 @@ subroutine read_cont()
    allocate(prun(nx,ny,nz))
    allocate(trun(nx,ny,nz))
    allocate(yrun(nx,ny,nz,nspec))
+   allocate(rrte(nx,ny,nz,nspec))
    allocate(wrtspc(nspec))
    allocate(wrtrrt(nspec))
 end subroutine read_cont
