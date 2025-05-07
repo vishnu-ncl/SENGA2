@@ -1,63 +1,85 @@
-*************************************************
+************************************************
 **                                             **
 **       SENGA2: Run control data file         **
 **                                             **
 *************************************************
 
 Global domain size (x,y,z) in metres
- 2.4D-2   1.0D-3   1.0D-3
+ 1.881D-2   6.27D-3   6.27D-3
 
 Global domain size (nx,ny,nz)
- 3000    1     1
+ 780    216     216
 
 No. of processors (x,y,z)
  1      1      1
 
 Time step; start step, no of steps, step switch (0=fixed, 1=adaptive)
- 1.0D-12    1   1000000   1
+ 1.0D-10   1   400000   0
 
 Intervals between dumps, reports, statistics, dump output (0/1=un/formatted)
- 10000    1000    100      0
+ 10000    100   100      1
 
 Cold start switch (0=cold start, 1=restart), dump input (0/1=un/formatted),dump file number (0/1)
- 0      0       0
+ 0     1      1 
 
 Initial turbulence generator
 switch (0=off, 1=on); random seed; spectrum parameters
- 0      0      8.51064D0   5.0D0  0.0D0  0.0D0
+ 0      1      318.117D0   1.99471D0  0.0D0  0.0D0
 
 Flame generator switch (0=off, 1=on) 
  1
 
 Default initial conditions
 pressure, temperature, velocity components u,v,w
- 1.0D5   3.0D2   0.205D0  0.0D0  0.0D0
+ 1.0D5   5.2D2   0.0D0 0.0D0  0.0D0
 mass fractions
- 9
- 1    0.0201379863
- 2    0.2283075701
- 3    0.0D0
+ 31
+ 1    0.06157929
+ 2    0.20789079
+ 3    0.72232947
  4    0.0D0
- 5    0.0D0
+ 5    0.00820044
  6    0.0D0
  7    0.0D0
  8    0.0D0
- 9    0.7515544436
+ 9    0.0D0
+ 10   0.0D0
+ 11   0.0D0
+ 12   0.0D0
+ 13   0.0D0
+ 14   0.0D0
+ 15   0.0D0
+ 16   0.0D0  
+ 17   0.0D0  
+ 18   0.0D0  
+ 19   0.0D0  
+ 20   0.0D0  
+ 21   0.0D0  
+ 22   0.0D0  
+ 23   0.0D0
+ 24   0.0D0  
+ 25   0.0D0  
+ 26   0.0D0  
+ 27   0.0D0  
+ 28   0.0D0  
+ 29   0.0D0
+ 30   0.0D0
+ 31   0.0D0
 
 Global boundary condition types
 one per line: x-left; x-right; y-left; y-right; z-left; z-right
 (1=periodic; 1a=inlet; 2b=outlet; 3c=wall; a,b,c denotes BC subtype)
 (four integer and four real parameters allowed for each)
-13    1    0    0   0   1.3500D0    0.0D0    0.0D0     0.0D0
-21    0    0    0   0   1.0D5     2.87D-1  1.0D-3    0.0D0
-1     0    0    0   0   0.0D0     0.0D0    0.0D0     0.0D0
-1     0    0    0   0   0.0D0     0.0D0    0.0D0     0.0D0
-1     0    0    0   0   0.0D0     0.0D0    0.0D0     0.0D0
-1     0    0    0   0   0.0D0     0.0D0    0.0D0     0.0D0
+21    1    0    0   0   1.0D5   2.87D-1  1.0D-3    0.0D0
+21    1    0    0   0   1.0D5   2.87D-1  1.0D-3    0.0D0
+1     0    0    0   0   0.0D0   0.0D0    0.0D0     0.0D0
+1     0    0    0   0   0.0D0   0.0D0    0.0D0     0.0D0
+1     0    0    0   0   0.0D0   0.0D0    0.0D0     0.0D0
+1     0    0    0   0   0.0D0   0.0D0    0.0D0     0.0D0
 
 Molecular transport control data
 switches: mix.av, mol.mass, pressure, Soret, Dufour; mol.mass limit
-1     1    1    0   0   5.0D0
+1     1    1    1   1   5.0D0
 
 Radiation control data
 switch, reference temperature

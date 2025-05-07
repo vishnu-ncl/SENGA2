@@ -62,8 +62,8 @@ SUBROUTINE rhscal
 !   EVALUATE THE TEMPERATURE
 !   ------------------------
 !   ALSO PRESSURE, MIXTURE CP AND MIXTURE GAS CONSTANT
-!    call temper
-    call temper_fused
+    call temper
+!    call temper_fused      - need to update when nintmx=3, currently working when it is 2
 
 !                                                             PRUN,TRUN = P,T
 !                                                         STORE7 = RHO*MIX RG
@@ -534,7 +534,7 @@ SUBROUTINE rhscal
 !        rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
 !        DO jspec = 1, nspec
 !            call ops_par_loop(copy_kernel_sdim_to_mdim, "A_multidim(ispec) = B", senga_grid, 3, rangexyz,  &
-!                            ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_RW), &
+!                            ops_arg_dat(d_yrhs_mdim, 31, s3d_000, "real(kind=8)", OPS_RW), &
 !                            ops_arg_dat(d_yrhs(jspec), 1, s3d_000, "real(kind=8)", OPS_READ), &
 !                            ops_arg_gbl(jspec, 1, "integer(kind=4)", OPS_READ))
 !        END DO
@@ -545,7 +545,7 @@ SUBROUTINE rhscal
 !                        ops_arg_dat(d_wmomix, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
 !                        ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
 !                        ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
-!                        ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_READ), &
+!                        ops_arg_dat(d_yrhs_mdim, 31, s3d_000, "real(kind=8)", OPS_READ), &
 !                        ops_arg_gbl(condco, nccfmx*nspcmx, "real(kind=8)", OPS_READ), &
 !                        ops_arg_gbl(ovwmol, nspcmx, "real(kind=8)", OPS_READ), &
 !                        ops_arg_gbl(tdifgb, 1, "real(kind=8)", OPS_READ), &
@@ -1201,7 +1201,7 @@ SUBROUTINE rhscal
             rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
             DO jspec = 1, nspec
                 call ops_par_loop(copy_kernel_sdim_to_mdim, "A_multidim(ispec) = B", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_RW), &
+                        ops_arg_dat(d_yrhs_mdim, 31, s3d_000, "real(kind=8)", OPS_RW), &
                         ops_arg_dat(d_yrhs(jspec), 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_gbl(jspec, 1, "integer(kind=4)", OPS_READ))
             END DO
@@ -1211,7 +1211,7 @@ SUBROUTINE rhscal
                             ops_arg_dat(d_store7, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                             ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                            ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_READ), &
+                            ops_arg_dat(d_yrhs_mdim, 31, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_wmomix, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(diffco, ndcfmx*nspcmx*nspcmx, "real(kind=8)", OPS_READ), &
@@ -2878,7 +2878,7 @@ SUBROUTINE rhscal
         rangexyz = [1-nhalox,nxglbl+nhalox,1-nhaloy,nyglbl+nhaloy,1-nhaloz,nzglbl+nhaloz]
         DO jspec = 1, nspec
             call ops_par_loop(copy_kernel_sdim_to_mdim, "A_multidim(ispec) = B", senga_grid, 3, rangexyz,  &
-                            ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_RW), &
+                            ops_arg_dat(d_yrhs_mdim, 31, s3d_000, "real(kind=8)", OPS_RW), &
                             ops_arg_dat(d_yrhs(jspec), 1, s3d_000, "real(kind=8)", OPS_READ), &
                             ops_arg_gbl(jspec, 1, "integer(kind=4)", OPS_READ))
         END DO
@@ -2886,7 +2886,7 @@ SUBROUTINE rhscal
         call ops_par_loop(maths_kernel_eqBIJK, "STORE VISCOSITY IN DIFMIX - RHSCAL 2849", senga_grid, 3, rangexyz,  &
                         ops_arg_dat(d_difmix, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_transp, 1, s3d_000, "real(kind=8)", OPS_READ), &
-                        ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_READ), &
+                        ops_arg_dat(d_yrhs_mdim, 31, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_gbl(viscco, nvcfmx*nspcmx, "real(kind=8)", OPS_READ), &
                         ops_arg_gbl(wilko1, nspcmx*nspcmx, "real(kind=8)", OPS_READ), &
                         ops_arg_gbl(wilko2, nspcmx*nspcmx, "real(kind=8)", OPS_READ), &

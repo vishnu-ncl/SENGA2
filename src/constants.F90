@@ -223,10 +223,10 @@ MODULE OPS_CONSTANTS
     integer(kind=4), constant :: nbcpri_opsconstant,nbcprr_opsconstant
     integer(kind=4), constant :: ncbcsz_opsconstant
 
-    integer(kind=4), parameter :: nspcmx=9,  nstpmx=21
+    integer(kind=4), parameter :: nspcmx=31,  nstpmx=203
     integer(kind=4), parameter :: ntinmx=2,  ncofmx=7
     integer(kind=4), parameter :: nctmax=5,  nctmm1=nctmax-1
-    integer(kind=4), parameter :: nspimx=15, ntbase=4, nintmx=2
+    integer(kind=4), parameter :: nspimx=15, ntbase=4, nintmx=3
     integer(kind=4), parameter :: nssmax=10, nrsmax=10
     integer(kind=4), parameter :: ndcfmx=4,  nvcfmx=4, nccfmx = 4
     integer(kind=4), parameter :: ncfrmx=6
@@ -354,10 +354,10 @@ MODULE OPS_CONSTANTS
 
 !-------------------------------------------------------------------
 
-    integer(kind=4), parameter :: nspcmx=9,  nstpmx=21
+    integer(kind=4), parameter :: nspcmx=31,  nstpmx=203
     integer(kind=4), parameter :: ntinmx=2,  ncofmx=7
     integer(kind=4), parameter :: nctmax=5,  nctmm1=nctmax-1
-    integer(kind=4), parameter :: nspimx=15, ntbase=4, nintmx=2
+    integer(kind=4), parameter :: nspimx=15, ntbase=4, nintmx=3
     integer(kind=4), parameter :: nssmax=10, nrsmax=10
     integer(kind=4), parameter :: ndcfmx=4,  nvcfmx=4, nccfmx = 4
     integer(kind=4), parameter :: ncfrmx=6
