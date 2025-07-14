@@ -87,6 +87,16 @@ subroutine read_h5()
        call h5dread_f(dset_id, h5t_native_double, yrun(:,:,:,i), gdim, hdferr)
      end do
 
+    do i=1,nspec
+       write(spec,"(A4,I2.2)") "RRTE",i
+       dataset2="SENGA_GRID/"//spec
+       call h5dopen_f(file_id, dataset2, dset_id, hdferr)
+
+       !Read the data using the default properties.
+       call h5dread_f(dset_id, h5t_native_double, rrte(:,:,:,i), gdim, hdferr)
+     end do
+
+
      !Close and release resources.
      call h5dclose_f(dset_id , hdferr)
      call h5fclose_f(file_id , hdferr)
