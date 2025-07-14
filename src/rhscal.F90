@@ -62,8 +62,8 @@ SUBROUTINE rhscal
 !   EVALUATE THE TEMPERATURE
 !   ------------------------
 !   ALSO PRESSURE, MIXTURE CP AND MIXTURE GAS CONSTANT
-!    call temper
-    call temper_fused
+    call temper
+!    call temper_fused
 
 !                                                             PRUN,TRUN = P,T
 !                                                         STORE7 = RHO*MIX RG

@@ -32,6 +32,7 @@ MODULE com_ops_senga
 
     TYPE(ops_dat) :: d_drun, d_urun, d_vrun, d_wrun, d_erun
     TYPE(ops_dat) :: d_drun_dump, d_urun_dump, d_vrun_dump, d_wrun_dump, d_erun_dump
+    TYPE(ops_dat) :: d_trun_dump
     TYPE(ops_dat) :: d_drhs, d_urhs, d_vrhs, d_wrhs, d_erhs
     TYPE(ops_dat) :: d_derr, d_uerr, d_verr, d_werr, d_eerr
     TYPE(ops_dat) :: d2prun, d2trun

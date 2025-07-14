@@ -78,7 +78,7 @@ SUBROUTINE indata
     real(kind=8) :: dtrans(nspcmx)
     real(kind=8) :: rtin,durin,dvrin,dwrin,derin
     real(kind=8) :: ttemp(5),ttold(5)
-    real(kind=8) :: fornow,tmplog
+    real(kind=8) :: fornow,tmplog,tsold
     real(kind=8) :: combo1,combo2,combo3
     integer(kind=4) :: iindex,ipower,icoeff,icoef1,icoef2
     integer(kind=4) :: ic,jc,kc,ispec,istep,itint,icp
