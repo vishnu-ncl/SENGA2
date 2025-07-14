@@ -18,6 +18,11 @@ module load cray-hdf5-parallel/1.12.2.1
 export MPI_INSTALL_PATH=$CRAY_MPICH_DIR
 export LD_LIBRARY_PATH=$MPI_INSTALL_PATH/lib:$LD_LIBRARY_PATH
 
+export ROCM_PATH=/opt/rocm-5.2.3
+export LD_LIBRARY_PATH=$ROCM_PATH/llvm/lib:$LD_LIBRARY_PATH
+export HIP_INSTALL_PATH=$ROCM_PATH
+export AOMP=$ROCM_PATH/llvm
+
 export MPICC=cc
 export MPICPP=CC
 export MPICXX=CC
