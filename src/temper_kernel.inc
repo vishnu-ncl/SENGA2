@@ -160,6 +160,7 @@ SUBROUTINE temper_kernel_eqE(transp, itndex, yrhs, trun, amascp, ncpoly, ncpom1,
 !   ==========
     real(kind=8) :: cpfory
     integer(kind=4) :: itint,icp
+    real(kind=8) :: power_result
 
     itint = 1
 
@@ -167,8 +168,9 @@ SUBROUTINE temper_kernel_eqE(transp, itndex, yrhs, trun, amascp, ncpoly, ncpom1,
         itint = itint + 1
     END DO
 
+    power_result = REAL(ntbase,kind=8)**REAL(ipower,kind=8)
     itndex(OPS_ACC2(0,0,0)) = itndex(OPS_ACC2(0,0,0))  &
-                                    +(itint-1)*ntbase**ipower
+                                    +(itint-1)*INT(power_result)
 
 !   =================================================================
 

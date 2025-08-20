@@ -1121,13 +1121,15 @@ SUBROUTINE maths_kernel_eqBO(itndex,trun,tinthi,ntint,ipower,ispec)
     integer(kind=4), dimension(nspcmx), intent(in) :: ntint
 
     integer(kind=4) :: itint
+    real(kind=8) :: power_result
 
     itint = 1
     DO WHILE (trun(OPS_ACC2(0,0,0)) > tinthi(itint,ispec) .and. itint < ntint(ispec))
         itint = itint + 1
     END DO
 
-    itndex(OPS_ACC1(0,0,0)) = itndex(OPS_ACC1(0,0,0)) + (itint-1)*ntbase**ipower
+    power_result = REAL(ntbase,kind=8)**REAL(ipower,kind=8)
+    itndex(OPS_ACC1(0,0,0)) = itndex(OPS_ACC1(0,0,0)) + (itint-1)*INT(power_result)
 
 END SUBROUTINE maths_kernel_eqBO
 

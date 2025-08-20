@@ -117,6 +117,10 @@ ifdef HIP_INSTALL_PATH
 TARGETS += f2c_mpi_hip
 endif
 
+ifdef SYCL_INSTALL_PATH
+TARGETS += f2c_mpi_sycl
+endif
+
 endif
 
 ifneq (,$(filter ompoffload mpi_ompoffload mpi_ompoffload_tiled,$(TARGETS)))
@@ -253,6 +257,19 @@ f2c_hip/f2c_hip_kernels_f2c_mpi_hip.o: f2c_hip/f2c_hip_kernels.cpp
 
 %_f2c_mpi_hip.o: %.F90
 	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS_F2C_HIP) -DOPS_MPI -DOPS_F2C_INTEROP -c $< -o $@
+
+
+CXX_SYCL_MASTER_KERNELS = f2c_sycl/f2c_sycl_kernels.cpp
+F2C_SYCL_KERNELS = $(wildcard f2c_sycl/*.F90)
+
+F2C_MPI_SYCL_OBJ = $(MODULE_FILES:.F90=_f2c_mpi_sycl.o) $(OPS_MODULE_FILES:.F90=_f2c_mpi_sycl.o) $(OTHER_FILES:.F90=_f2c_mpi_sycl.o) $(CXX_SYCL_MASTER_KERNELS:.cpp=_f2c_mpi_sycl.o) $(F2C_SYCL_KERNELS:.F90=_f2c_mpi_sycl.o) $(OPS_GENERATED:.F90=_f2c_mpi_sycl.o)
+
+f2c_sycl/f2c_sycl_kernels_f2c_mpi_sycl.o: f2c_sycl/f2c_sycl_kernels.cpp
+	$(SYCLMPICXX) $(CXXFLAGS) $(SYCL_FLAGS) -DOPS_FTN -DOPS_MPI -I$(C_OPS_INC) -I. -DMPICH_IGNORE_CXX_SEEK $(I_MPI_INC) -c $< -o $@
+
+%_f2c_mpi_sycl.o: %.F90
+	$(MPIF90) $(FFLAGS) $(APP_FLAGS) $(FMODS_F2C_SYCL) -DOPS_MPI -DOPS_F2C_INTEROP -c $< -o $@
+
 
 #=========================================================================================================================
 
@@ -438,8 +455,17 @@ $(APP)_f2c_mpi_hip: Makefile .generated $(OPS_INSTALL_PATH)/fortran/lib/$(OPS_CO
 
 #=========================================================================================================================
 
+$(APP)_f2c_mpi_sycl: Makefile .generated $(OPS_INSTALL_PATH)/fortran/lib/$(OPS_COMPILER)/libops_f2c_mpi_sycl.a $(F2C_MPI_SYCL_OBJ)
+	@echo ""
+	@echo ""
+	@echo "Building ${APP}_mpi_sycl"
+	@echo ""
+	$(MPIF90) $(FFLAGS) $(SYCL_FLAGS) $(APP_FLAGS) -I$(C_OPS_INC) $(FMODS_F2C_SYCL) $(I_MPI_INC) -DOPS_MPI $(F2C_MPI_SYCL_OBJ) $(APP_LIBS) $(FLINK) -lops_f2c_mpi_sycl $(F_HDF5_LIB_MPI) $(L_MPI_LIB) $(MPI_LINK) -o $(APP)_f2c_mpi_sycl
+
+#=========================================================================================================================
+
 cleanall: clean
-	rm -rf ./mpi_openmp ./cuda ./openmp_offload ./f2c_mpi_openmp ./f2c_cuda ./f2c_hip
+	rm -rf ./mpi_openmp ./cuda ./openmp_offload ./f2c_mpi_openmp ./f2c_cuda ./f2c_hip ./f2c_sycl
 
 clean:
 	rm -f .generated
@@ -457,4 +483,5 @@ clean:
 	rm -f $(APP)_f2c_mpi
 	rm -f $(APP)_f2c_mpi_cuda
 	rm -f $(APP)_f2c_mpi_hip
+	rm -f $(APP)_f2c_mpi_sycl
 
