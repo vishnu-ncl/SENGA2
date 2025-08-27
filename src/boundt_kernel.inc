@@ -142,13 +142,15 @@ SUBROUTINE boundt_kernel_eqE_xdir(strtx,itndex,tinthi,ntint,ipower,ispec)
     real(kind=8), dimension(ntinmx,nspcmx), intent(in) :: tinthi
     integer(kind=4), dimension(nspcmx), intent(in) :: ntint
     integer(kind=4) :: itint
+    real(kind=8) :: power_result
 
     itint = 1
     DO WHILE (strtx(OPS_ACC1(0,0,0)) > tinthi(itint,ispec) .and. itint < ntint(ispec))
         itint = itint + 1
     END DO
 
-    itndex(OPS_ACC2(0,0,0)) = itndex(OPS_ACC2(0,0,0)) + (itint-1)*ntbase**ipower
+    power_result = REAL(ntbase,kind=8)**REAL(ipower,kind=8)
+    itndex(OPS_ACC2(0,0,0)) = itndex(OPS_ACC2(0,0,0)) + (itint-1)*INT(power_result)
 
 END SUBROUTINE boundt_kernel_eqE_xdir
 
@@ -161,13 +163,15 @@ SUBROUTINE boundt_kernel_eqE_ydir(strty,itndex,tinthi,ntint,ipower,ispec)
     real(kind=8), dimension(ntinmx,nspcmx), intent(in) :: tinthi
     integer(kind=4), dimension(nspcmx), intent(in) :: ntint
     integer(kind=4) :: itint
+    real(kind=8) :: power_result
 
     itint = 1
     DO WHILE (strty(OPS_ACC1(0,0,0)) > tinthi(itint,ispec) .and. itint < ntint(ispec))
         itint = itint + 1
     END DO
 
-    itndex(OPS_ACC2(0,0,0)) = itndex(OPS_ACC2(0,0,0)) + (itint-1)*ntbase**ipower
+    power_result = REAL(ntbase,kind=8)**REAL(ipower,kind=8)
+    itndex(OPS_ACC2(0,0,0)) = itndex(OPS_ACC2(0,0,0)) + (itint-1)*INT(power_result)
 
 END SUBROUTINE boundt_kernel_eqE_ydir
 
@@ -180,13 +184,15 @@ SUBROUTINE boundt_kernel_eqE_zdir(strtz,itndex,tinthi,ntint,ipower,ispec)
     real(kind=8), dimension(ntinmx,nspcmx), intent(in) :: tinthi
     integer(kind=4), dimension(nspcmx), intent(in) :: ntint
     integer(kind=4) :: itint
+    real(kind=8) :: power_result
 
     itint = 1
     DO WHILE (strtz(OPS_ACC1(0,0,0)) > tinthi(itint,ispec) .and. itint < ntint(ispec))
         itint = itint + 1
     END DO
 
-    itndex(OPS_ACC2(0,0,0)) = itndex(OPS_ACC2(0,0,0)) + (itint-1)*ntbase**ipower
+    power_result = REAL(ntbase,kind=8)**REAL(ipower,kind=8)
+    itndex(OPS_ACC2(0,0,0)) = itndex(OPS_ACC2(0,0,0)) + (itint-1)*INT(power_result)
 
 END SUBROUTINE boundt_kernel_eqE_zdir
 
