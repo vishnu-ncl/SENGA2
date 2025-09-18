@@ -38,7 +38,7 @@ MODULE com_senga
 !                               (NYSIZE+2*NHALOY)*(NZSIZE+2*NHALOZ))
 !   AND ALSO LARGE ENOUGH FOR PARALLEL BROADCAST OF CHEMICAL DATA
 !   AND ALSO LARGE ENOUGH FOR PARALLEL TRANSFER OF INITIAL TURBULENCE DATA
-    integer(kind=4), parameter :: nparay=8000000
+    integer(kind=4), parameter :: nparay=8000
 
 !   LOCAL BIG ARRAY SIZE
     integer(kind=4), parameter :: nxbigl=1-nhalox, nxbigr=nxsize+nhalox,  &
