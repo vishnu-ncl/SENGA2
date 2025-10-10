@@ -48,6 +48,8 @@ MODULE com_senga
 !   INFLOW TURBULENCE GENERATOR BY SYNTHETIC DIGITAL FILTERING
     integer(kind=4), parameter :: nfy=60,nfz=60,lnx=30,lny=30,lnz=30
 !   NFY AND NFZ ARE TWICE OF LNY AND LNZ
+    integer(kind=4), parameter :: nspc=2
+    integer(kind=4) :: tspc(2) = [1,2]
 
 !   PHYDIM-------------------------------------------------------------------
 !   IFTURB-------------------------------------------------------------------

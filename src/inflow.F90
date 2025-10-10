@@ -31,34 +31,31 @@ SUBROUTINE inflow
 !     GLOBAL DATA
 !     ===========
 !     -------------------------------------------------------------------------
-INCLUDE 'mpif.h'
-INCLUDE 'com_senga2.h'
 !     -------------------------------------------------------------------------
 
 
 !     LOCAL DATA
 !     ==========
-REAL :: ran1        ! Random number Generator
 
-DOUBLE PRECISION :: norm,ay(-nfy:nfy),az(-nfz:nfz)  ! filter coefficients
+    real(kind=8) :: norm,ay(-nfy:nfy),az(-nfz:nfz)  ! filter coefficients
 
-LOGICAL :: periy,periz!,TRADIT
-PARAMETER (periy=.true.,periz=.false.)!,TRADIT=.TRUE.)
+    logical :: periy,periz!,TRADIT
+    parameter (periy=.true.,periz=.false.)!,TRADIT=.TRUE.)
 
 
-INTEGER :: ic,jc,kc,jc2,kc2,yp,zp
-INTEGER :: jfiltstart,kfiltstart
-INTEGER :: tspc(2),nspc,ispec
+    integer(kind=4) :: ic,jc,kc,jc2,kc2,yp,zp
+    integer(kind=4) :: jfiltstart,kfiltstart
+    integer(kind=4) :: ispec
 
-!     VM: CALCULATING USTEAD
-DOUBLE PRECISION :: rad
-DOUBLE PRECISION :: zdist,ydist
-INTEGER :: kg,jg
-INTEGER :: yoffset,zoffset,ymidpnt,zmidpnt
-!     VM: DEBUG
-INTEGER :: snap,icproc
-CHARACTER (LEN=40) :: fname
-CHARACTER (LEN=4) :: psnap
+!   VM: CALCULATING USTEAD
+    real(kind=8) :: rad
+    real(kind=8) :: zdist,ydist
+    integer(kind=4) :: kg,jg
+    integer(kind=4) :: yoffset,zoffset,ymidpnt,zmidpnt
+!   VM: DEBUG
+    integer(kind=4) :: snap,icproc
+    character (len=40) :: fname
+    character (len=4) :: psnap
 
     real(kind=8) :: urms,yrms,phi,delx,umean,lenx,leny,lenz,tstp,theta
     real(kind=8) :: sum_umean, sum_denom
@@ -86,144 +83,71 @@ CHARACTER (LEN=4) :: psnap
     jfiltstart = yp*nysize
     kfiltstart = zp*nzsize
 
-    tspc = [1,2]
-    nspc = 2
     DO ispec = 1,nspec
         yref(ispec) = 0.0_8
     END DO
     yref(1) = 1.0_8
     yref(2) = 0.233_8
 
-!     ------------------------------------------------------------------
+!   ------------------------------------------------------------------
 
-!C    URMS=MAX(5.0D0,3.0D0+FLOAT(ITIME)/10000.D0*1.0D0)
-!     CHECK RAMP UP OF VELOCITY
-!      IF (NXLPRM(2).EQ.1)THEN
-!         TO BE DONE
-!      END IF
-pi = four*ATAN(1.0D0)
-!     CALCULATE FILTER COEFFICIENTS
-norm=0.0
-DO jc=-nfy,nfy
-  ay(jc)=EXP(-pi*jc*jc/(2*lny*lny))
-  norm=norm+ay(jc)**2
-END DO
-norm=SQRT(norm)
-DO jc=-nfy,nfy
-  ay(jc)=ay(jc)/norm
-END DO
+!   URMS=MAX(5.0D0,3.0D0+FLOAT(ITIME)/10000.D0*1.0D0)
+!   CHECK RAMP UP OF VELOCITY
+!   IF (NXLPRM(2).EQ.1)THEN
+!       TO BE DONE
+!   END IF
+    pi = four*ATAN(1.0D0)
 
-norm=0.0
-DO kc=-nfz,nfz
-  az(kc)=EXP(-pi*kc*kc/(2*lnz*lnz))
-  norm=norm+az(kc)**2
-END DO
-norm=SQRT(norm)
-DO kc=-nfz,nfz
-  az(kc)=az(kc)/norm
-END DO
+!   CALCULATE FILTER COEFFICIENTS
+    norm=0.0
+    DO jc=-nfy,nfy
+        ay(jc)=EXP(-pi*jc*jc/(2*lny*lny))
+        norm=norm+ay(jc)**2
+    END DO
 
-intran = itime
+    norm=SQRT(norm)
+    DO jc=-nfy,nfy
+        ay(jc)=ay(jc)/norm
+    END DO
+
+    norm=0.0
+    DO kc=-nfz,nfz
+        az(kc)=EXP(-pi*kc*kc/(2*lnz*lnz))
+        norm=norm+az(kc)**2
+    END DO
+
+    norm=SQRT(norm)
+    DO kc=-nfz,nfz
+        az(kc)=az(kc)/norm
+    END DO
 
 !   INITIALIZE RANDOM ARRAYS
-    rangexyz = [1,nxglbl,1-nfy,nyglbl+nfy,1-nfz,nzglbl+nfz]
-    call ops_par_loop(, "", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_gbl(intran, 1, "integer(kind=4)", OPS_READ))
+    call ops_fill_random_uniform(d_urand)
+    call ops_fill_random_uniform(d_vrand)
+    call ops_fill_random_uniform(d_wrand)
 
-
-DO jc=1-nfy,nyglbl+nfy
-  DO kc=1-nfz,nzglbl+nfz
-    urand(jc,kc)=ran1(intran)
-    vrand(jc,kc)=ran1(intran)
-    wrand(jc,kc)=ran1(intran)
-  END DO
-END DO
-IF(nxlprm(2)==1)THEN
-  DO jc=1-nfy,nyglbl+nfy
-    DO kc=1-nfz,nzglbl+nfz
-      yrand(jc,kc,:)=0.0D0
-      DO ispc = 1,nspc
-        ispec = tspc(ispc)
-        yrand(jc,kc,ispec)=ran1(intran)
-      END DO
-    END DO
-  END DO
-END IF
-
-IF (periy) THEN   ! overwrite in a periodic manner
-  DO jc=-nfy+1,0
-    DO kc=1-nfz,nzglbl+nfz
-      urand(jc,kc)=urand(jc+nyglbl,kc)
-      vrand(jc,kc)=vrand(jc+nyglbl,kc)
-      wrand(jc,kc)=wrand(jc+nyglbl,kc)
-    END DO
-  END DO
-  DO jc=nyglbl+1,nyglbl+nfy
-    DO kc=1-nfz,nzglbl+nfz
-      urand(jc,kc)=urand(jc-nyglbl,kc)
-      vrand(jc,kc)=vrand(jc-nyglbl,kc)
-      wrand(jc,kc)=wrand(jc-nyglbl,kc)
-    END DO
-  END DO
-  IF(nxlprm(2)==1)THEN
-    DO jc=-nfy+1,0
-      DO kc=1-nfz,nzglbl+nfz
-        DO ispc = 1,nspc
-          ispec = tspc(ispc)
-          yrand(jc,kc,ispec)=yrand(jc+nyglbl,kc,ispec)
+    IF(nxlprm(2)==1)THEN
+        DO ispec = 1,nspcmx
+            rangexyz = [1,nxglbl,1-nfy,nyglbl+nfy,1-nfz,nzglbl+nfz]
+            call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
+                            ops_arg_dat(d_yrand(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
         END DO
-      END DO
-    END DO
-    DO jc=nyglbl+1,nyglbl+nfy
-      DO kc=1-nfz,nzglbl+nfz
-        DO ispc = 1,nspc
-          ispec = tspc(ispc)
-          yrand(jc,kc,ispec)=yrand(jc-nyglbl,kc,ispec)
-        END DO
-      END DO
-    END DO
-  END IF
-END IF
 
-IF (periz) THEN   ! overwrite in a periodic manner
-  DO kc=-nfz+1,0
-    DO jc=1-nfy,nyglbl+nfy
-      urand(jc,kc)=urand(jc,kc+nzglbl)
-      vrand(jc,kc)=vrand(jc,kc+nzglbl)
-      wrand(jc,kc)=wrand(jc,kc+nzglbl)
-    END DO
-  END DO
-  DO kc=nzglbl+1,nzglbl+nfz
-    DO jc=1-nfy,nyglbl+nfy
-      urand(jc,kc)=urand(jc,kc-nzglbl)
-      vrand(jc,kc)=vrand(jc,kc-nzglbl)
-      wrand(jc,kc)=wrand(jc,kc-nzglbl)
-    END DO
-  END DO
-  IF(nxlprm(2)==1)THEN
-    DO kc=-nfz+1,0
-      DO jc=1-nfy,nyglbl+nfy
         DO ispc = 1,nspc
-          ispec = tspc(ispc)
-          yrand(jc,kc,ispec)=yrand(jc,kc+nzglbl,ispec)
+            ispec = tspc(ispc)
+            call ops_fill_random_uniform(d_yrand(ispec))
         END DO
-      END DO
-    END DO
-    DO kc=nzglbl+1,nzglbl+nfz
-      DO jc=1-nfy,nyglbl+nfy
-        DO ispc = 1,nspc
-          ispec = tspc(ispc)
-          yrand(jc,kc,ispec)=yrand(jc,kc-nzglbl,ispec)
-        END DO
-      END DO
-    END DO
-  END IF
-END IF
+    END IF
 
-    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+    IF (periy) THEN   ! overwrite in a periodic manner
+        call ops_halo_transfer(halos_grp_y_inflow)
+    END IF
+
+    IF (periz) THEN   ! overwrite in a periodic manner
+        call ops_halo_transfer(halos_grp_z_inflow)
+    END IF
+
+    rangexyz = [1,1,1,nyglbl,1,nzglbl]
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_ufilt, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
@@ -235,7 +159,7 @@ END IF
                         ops_arg_dat(d_yfilt(ispec), 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
     END DO
 
-    rangexyz = [1,nxglbl,1,nyglbl,1-nfz,nzglbl+nfz]
+    rangexyz = [1,1,1,nyglbl,1-nfz,nzglbl+nfz]
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_ufold, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE))
     call ops_par_loop(set_zero_kernel_xdir, "set_zero", senga_grid, 3, rangexyz,  &
@@ -299,7 +223,7 @@ IF(nxlprm(2)==1)THEN
 END IF
 
 !   Turbulence intensity
-    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+    rangexyz = [1,1,1,nyglbl,1,nzglbl]
     call ops_par_loop(inflow_kernel_eqH, "inflow_kernel_eqH", senga_grid, 3, rangexyz,  &
                     ops_arg_dat(d_ufilt, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
                     ops_arg_dat(d_vfilt, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
@@ -308,7 +232,7 @@ END IF
                     ops_arg_gbl(phi, 1, "real(kind=8)", OPS_READ))
 
     IF(nxlprm(2)==1)THEN
-        rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+        rangexyz = [1,1,1,nyglbl,1,nzglbl]
         DO ispc = 1,nspc
             ispec = tspc(ispc)
             yref_ispec = yref(ispec)
@@ -320,7 +244,7 @@ END IF
         END DO
     END IF
 
-    rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
+    rangexyz = [1,1,1,nyglbl,1,nzglbl]
     call ops_par_loop(copy_kernel_xxdir, "copy", senga_grid, 3, rangexyz, &
                         ops_arg_dat(d_uinf1, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_WRITE), &
                         ops_arg_dat(d_uinf2, 1, s3d_000_strid3d_yz, "real(kind=8)", OPS_READ))
@@ -464,46 +388,3 @@ END IF
 !   -------------------------------------------------------------------------
 
 END SUBROUTINE inflow
-
-!     ==================================================================
-
-FUNCTION ran1(idum)
-
-INTEGER, INTENT(OUT)                     :: idum
-
-REAL :: ran1,
-INTEGER, PARAMETER :: ia=16807
-INTEGER, PARAMETER :: im=2147483647
-REAL, PARAMETER :: am=1./im
-INTEGER, PARAMETER :: iq=127773
-INTEGER, PARAMETER :: ir=2836
-INTEGER, PARAMETER :: ntab=32
-INTEGER, PARAMETER :: ndiv=1+(im-1)/ntab
-REAL, PARAMETER :: eps=1.2E-7
-REAL, PARAMETER :: rnmx=1.-eps
-INTEGER :: j,k,iv(ntab),iy
-SAVE iv,iy
-DATA iv /ntab*0/, iy /0/
-
-IF (idum <= 0.OR.iy == 0) THEN
-  idum=MAX(-idum,1)
-  DO  j=ntab+8,1,-1
-    k=idum/iq
-    idum=ia*(idum-k*iq)-ir*k
-    IF (idum < 0) idum=idum+im
-    IF (j <= ntab) iv(j)=idum
-  END DO
-  iy=iv(1)
-END IF
-k=idum/iq
-idum=ia*(idum-k*iq)-ir*k
-IF (idum < 0) idum=idum+im
-j=1+iy/ndiv
-iy=iv(j)
-iv(j)=idum
-ran1=MIN(am*iy,rnmx)
-ran1=(ran1*2.0-1.0)/0.577
-RETURN
-END FUNCTION ran1
-!     ==================================================================
-

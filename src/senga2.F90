@@ -118,6 +118,8 @@ PROGRAM senga2
 
     call ops_data_init
 
+    call ops_randomgen_init(0, 0)
+
 !   PARALLEL DOMAIN DECOMPOSITION
     call pardom
 
@@ -308,6 +310,8 @@ PROGRAM senga2
     call finish
 
 !   =========================================================================
+
+    call ops_randomgen_exit( )
 
     call ops_exit( )
 

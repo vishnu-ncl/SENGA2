@@ -199,9 +199,11 @@ MODULE com_ops_senga
 !------------------------------------------------------------------------------------------------------------
 !   ops_halos
     TYPE(ops_halo) :: halos_x(10+2*nspcmx), halos_y(10+2*nspcmx), halos_z(10+2*nspcmx)
+    TYPE(ops_halo) :: halos_y_inflow(6+2*nspc), halos_z_inflow(6+2*nspc)
 
 !------------------------------------------------------------------------------------------------------------
 !   ops_halo group
     TYPE(ops_halo_group) :: halos_grp_x, halos_grp_y, halos_grp_z
+    TYPE(ops_halo_group) :: halos_grp_y_inflow, halos_grp_z_inflow
 
 END MODULE com_ops_senga

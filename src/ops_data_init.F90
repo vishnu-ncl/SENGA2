@@ -16,7 +16,7 @@ SUBROUTINE ops_data_init()
     real(kind=8), dimension(:), allocatable :: temp_real_null
     integer(kind=4), dimension(:), allocatable :: temp_int_null
 
-    integer(kind=4) :: ispec,jspec,iindex,line,status,ic
+    integer(kind=4) :: ispec,jspec,iindex,line,status,ic,ispc
     integer(kind=4) :: rangexyz(6)
 
     character(len=20) :: buf
@@ -1179,6 +1179,110 @@ SUBROUTINE ops_data_init()
     END DO
 
     call ops_decl_halo_group(halo_idx, halos_z, halos_grp_z)
+
+!------------------------------------------------------------------------------------------------------------
+
+!   Y-DIRECTION : RIGHT INNER HALO SET EQUAL TO LEFT OUTER HALO
+    iter_size = [1,nfy,nzglbl+2*nfz]
+    base_from = [1,nyglbl-nfy+1,1-nfz]
+    base_to   = [1,1-nfy,1-nfz]
+
+    halo_idx = 0
+
+    halo_idx = halo_idx+1
+    call ops_decl_halo(d_urand, d_urand, iter_size, base_from, base_to, dir_from, dir_to, halos_y_inflow(halo_idx))
+
+    halo_idx = halo_idx+1
+    call ops_decl_halo(d_vrand, d_vrand, iter_size, base_from, base_to, dir_from, dir_to, halos_y_inflow(halo_idx))
+
+    halo_idx = halo_idx+1
+    call ops_decl_halo(d_wrand, d_wrand, iter_size, base_from, base_to, dir_from, dir_to, halos_y_inflow(halo_idx))
+
+    IF (nxlprm(2)==1) THEN
+        DO ispc = 1,nspc
+            ispec = tspc(ispc)
+
+            halo_idx = halo_idx+1
+            call ops_decl_halo(d_yrand(ispec), d_yrand(ispec), iter_size, base_from, base_to, dir_from, dir_to, halos_y_inflow(halo_idx))
+        END DO
+    END IF
+
+!   Y-DIRECTION : LEFT INNER HALO SET EQUAL TO RIGHT OUTER HALO
+    iter_size = [1,nfy,nzglbl+2*nfz]
+    base_from = [1,1,1-nfz]
+    base_to   = [1,nyglbl+1,1-nfz]
+
+    halo_idx = halo_idx+1
+    call ops_decl_halo(d_urand, d_urand, iter_size, base_from, base_to, dir_from, dir_to, halos_y_inflow(halo_idx))
+
+    halo_idx = halo_idx+1
+    call ops_decl_halo(d_vrand, d_vrand, iter_size, base_from, base_to, dir_from, dir_to, halos_y_inflow(halo_idx))
+
+    halo_idx = halo_idx+1
+    call ops_decl_halo(d_wrand, d_wrand, iter_size, base_from, base_to, dir_from, dir_to, halos_y_inflow(halo_idx))
+
+    IF (nxlprm(2)==1) THEN
+        DO ispc = 1,nspc
+            ispec = tspc(ispc)
+
+            halo_idx = halo_idx+1
+            call ops_decl_halo(d_yrand(ispec), d_yrand(ispec), iter_size, base_from, base_to, dir_from, dir_to, halos_y_inflow(halo_idx))
+        END DO
+    END IF
+
+    call ops_decl_halo_group(halo_idx, halos_y_inflow, halos_grp_y_inflow)
+
+!------------------------------------------------------------------------------------------------------------
+
+!   Z-DIRECTION : RIGHT INNER HALO SET EQUAL TO LEFT OUTER HALO
+    iter_size = [1,nyglbl+2*nfy,nfz]
+    base_from = [1,1-nfy,nzglbl-nfz+1]
+    base_to   = [1,1-nfy,1-nfz]
+
+    halo_idx = 0
+
+    halo_idx = halo_idx+1
+    call ops_decl_halo(d_urand, d_urand, iter_size, base_from, base_to, dir_from, dir_to, halos_z_inflow(halo_idx))
+
+    halo_idx = halo_idx+1
+    call ops_decl_halo(d_vrand, d_vrand, iter_size, base_from, base_to, dir_from, dir_to, halos_z_inflow(halo_idx))
+
+    halo_idx = halo_idx+1
+    call ops_decl_halo(d_wrand, d_wrand, iter_size, base_from, base_to, dir_from, dir_to, halos_z_inflow(halo_idx))
+
+    IF (nxlprm(2)==1) THEN
+        DO ispc = 1,nspc
+            ispec = tspc(ispc)
+
+            halo_idx = halo_idx+1
+            call ops_decl_halo(d_yrand(ispec), d_yrand(ispec), iter_size, base_from, base_to, dir_from, dir_to, halos_z_inflow(halo_idx))
+        END DO
+    END IF
+
+!   Z-DIRECTION : LEFT INNER HALO SET EQUAL TO RIGHT OUTER HALO
+    iter_size = [1,nyglbl+2*nfy,nfz]
+    base_from = [1,1-nfy,1]
+    base_to   = [1,1-nfy,nzglbl+1]
+
+    halo_idx = halo_idx+1
+    call ops_decl_halo(d_urand, d_urand, iter_size, base_from, base_to, dir_from, dir_to, halos_z_inflow(halo_idx))
+
+    halo_idx = halo_idx+1
+    call ops_decl_halo(d_vrand, d_vrand, iter_size, base_from, base_to, dir_from, dir_to, halos_z_inflow(halo_idx))
+
+    halo_idx = halo_idx+1
+    call ops_decl_halo(d_wrand, d_wrand, iter_size, base_from, base_to, dir_from, dir_to, halos_z_inflow(halo_idx))
+
+    IF (nxlprm(2)==1) THEN
+        DO ispc = 1,nspc
+            ispec = tspc(ispc)
+
+            halo_idx = halo_idx+1
+            call ops_decl_halo(d_yrand(ispec), d_yrand(ispec), iter_size, base_from, base_to, dir_from, dir_to, halos_z_inflow(halo_idx))
+        END DO
+    END IF
+
+    call ops_decl_halo_group(halo_idx, halos_z_inflow, halos_grp_z_inflow)
 
 !------------------------------------------------------------------------------------------------------------
 
