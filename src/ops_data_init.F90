@@ -826,15 +826,15 @@ SUBROUTINE ops_data_init()
     END IF
 
 !   For testing on GPU - reading TGV species from file generated using CPU version
-    IF(inflam == 1) THEN
-
-        fname = 'TGV_species_flamin_cpu'//pnxhdf
-        DO ispec = 1,nspcmx
-            WRITE(buf,"(A4,I2.2)") "YRUN",ispec
-             call ops_decl_dat_hdf5(d_yrun_dump(ispec), senga_grid, 1, "real(kind=8)", trim(buf), trim(fname), status)
-        END DO
-
-    END IF
+!    IF(inflam == 1) THEN
+!
+!        fname = 'TGV_species_flamin_cpu'//pnxhdf
+!        DO ispec = 1,nspcmx
+!            WRITE(buf,"(A4,I2.2)") "YRUN",ispec
+!             call ops_decl_dat_hdf5(d_yrun_dump(ispec), senga_grid, 1, "real(kind=8)", trim(buf), trim(fname), status)
+!        END DO
+!
+!    END IF
 
 !------------------------------------OPS Reduction Handles---------------------------------------------------
 
