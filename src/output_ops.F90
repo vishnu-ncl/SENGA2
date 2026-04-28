@@ -1,0 +1,444 @@
+
+! Auto-generated at 2026-04-28 18:43:09.650535 by ops-translator
+SUBROUTINE output
+
+  USE ops_fortran_declarations
+  USE ops_fortran_rt_support
+  USE OPS_Fortran_hdf5_Declarations
+  USE OPS_CONSTANTS
+
+  USE, INTRINSIC :: ISO_C_BINDING
+
+  USE com_senga
+  USE com_ops_senga
+
+  !   *************************************************************************
+
+  !   OUTPUT
+  !   ======
+
+  !   AUTHOR
+  !   ------
+  !   R.S.CANT - CAMBRIDGE UNIVERSITY ENGINEERING DEPARTMENT
+
+  !   CHANGE RECORD
+  !   -------------
+  !   01-AUG-1996:  CREATED
+  !   28-DEC-2003:  RSC MODIFIED FOR SENGA2
+  !   11-JUL-2009:  RSC ADD A DUMP FORMAT SWITCH; REPORT THE DUMP
+  !   29-AUG-2009:  RSC UPDATE NUMBER OF PROCESSORS
+
+  !   DESCRIPTION
+  !   -----------
+  !   DNS CODE SENGA2
+  !   PROCESSES THE RESULTS
+
+  !   FILES: REPORT FILE       - UNIT NCREPT - NAME FNREPT  - FORMATTED
+  !          DUMP OUTPUT FILES - UNIT NCDMPO - NAMES FNDMPO - UNFORMATTED
+  !          STATISTICS FILE   - UNIT NCSTAT - NAME FNSTAT  - FORMATTED
+
+  !   *************************************************************************
+
+  !   GLOBAL DATA
+  !   ===========
+  !   -------------------------------------------------------------------------
+
+  !   LOCAL parameters
+  !   ================
+  !   DIAGNOSTICS
+  CHARACTER(LEN = 4) :: pnxres
+  PARAMETER(pnxres = '.res')
+  CHARACTER(LEN = 2) :: pnxryf
+  PARAMETER(pnxryf = 'yf')
+  INTEGER(KIND = 4) :: ncdiag
+  PARAMETER(ncdiag = 11)
+  INTEGER(KIND = 4) :: iddump
+
+  !   LOCAL DATA
+  !   ==========
+  !   DIAGNOSTICS
+  REAL(KIND = 8) :: deltag, deltagx, deltagy, deltagz, fornow
+  !    real(kind=8) :: ttemp(nxsize,nysize,nzsize)
+  !    real(kind=8) :: ptemp(nxsize,nysize,nzsize)
+  !    real(kind=8) :: ytemp(nspec,nxsize,nysize,nzsize)
+  REAL(KIND = 8) :: tkeg, enstrg
+
+  INTEGER(KIND = 4) :: ispec
+  INTEGER(KIND = 4) :: ic, jc, kc
+  INTEGER(KIND = 4) :: ix
+  INTEGER(KIND = 4) :: rangexyz(6)
+  CHARACTER(LEN = 21) :: fndiag
+
+  !   RSC UPDATE NUMBER OF PROCESSORS
+  CHARACTER(LEN = 6) :: pnproc
+  CHARACTER(LEN = 11) :: strqty
+  CHARACTER(LEN = 2) :: strspc
+  LOGICAL :: bcflag, file_exist
+
+  CHARACTER(LEN = 60) :: fname
+  CHARACTER(LEN = 4) :: proc
+  CHARACTER(LEN = 5) :: ipdump
+
+  CHARACTER(LEN = 25) :: fndump
+  CHARACTER(LEN = 16) :: pndump
+  CHARACTER(LEN = 3) :: pnxhdf
+  PARAMETER(pndump = 'output/dmpi_dats', pnxhdf = '.h5')
+
+  !   BEGIN
+  !   =====
+
+  !   =========================================================================
+
+  !   REPORT OUTPUT
+  !   =============
+  IF (MOD(itime, ntrept) == 0) THEN
+
+      !       REPORT ON PROCESSOR NO.1 ONLY
+      !       ------
+      IF (ops_is_root() == 1) THEN
+
+      OPEN(UNIT = ncrept, FILE = fnrept, STATUS = 'OLD', FORM = 'FORMATTED')
+
+      !           GO TO EOF
+1000  CONTINUE
+      READ(ncrept, 9000, END = 1010)
+      GO TO 1000
+1010  BACKSPACE(UNIT = ncrept)
+
+      WRITE(ncrept, 9100) itime
+      WRITE(ncrept, 9110) etime, tstep
+      CLOSE(UNIT = ncrept)
+
+    END IF
+
+    !       =======================================================================
+
+    !       DIAGNOSTICS
+    !ops        jc = MAX(nyglbl/2,1)
+    !ops        kc = MAX(nzglbl/2,1)
+
+    !ops        WRITE(pnproc,'(I6.6)')iproc
+
+    !       GLOBAL INDEXING
+    !ops        deltag = xgdlen/(REAL(nxglbl-1))
+
+    !        STRQTY = 'output/pres'
+    !        FNDIAG = STRQTY//PNPROC//PNXRES
+    !        OPEN(UNIT=NCDIAG,FILE=FNDIAG,FORM='FORMATTED')
+    !C       GO TO EOF
+    !8000    CONTINUE
+    !          READ(NCDIAG,9000,END=8001)
+    !          GOTO 8000
+    !8001    BACKSPACE(NCDIAG)
+    !        DO IC = ISTAL,ISTOL
+    !          IX = IGOFST + IC
+    !          WRITE(NCDIAG,9300)REAL(IX-1)*DELTAG,PRUN(IC,JC,KC)
+    !        ENDDO
+    !        WRITE(NCDIAG,*)
+    !        CLOSE(NCDIAG)
+
+    !        STRQTY = 'output/uvel'
+    !        FNDIAG = STRQTY//PNPROC//PNXRES
+    !        OPEN(UNIT=NCDIAG,FILE=FNDIAG,FORM='FORMATTED')
+    !C       GO TO EOF
+    !8010    CONTINUE
+    !          READ(NCDIAG,9000,END=8011)
+    !          GOTO 8010
+    !8011    BACKSPACE(NCDIAG)
+    !        DO IC = ISTAL,ISTOL
+    !          IX = IGOFST + IC
+    !          WRITE(NCDIAG,9300)REAL(IX-1)*DELTAG,
+    !     +                      URUN(IC,JC,KC)/DRUN(IC,JC,KC)
+    !        ENDDO
+    !        WRITE(NCDIAG,*)
+    !        CLOSE(NCDIAG)
+
+    !        STRQTY = 'output/temp'
+    !        FNDIAG = STRQTY//PNPROC//PNXRES
+    !        OPEN(UNIT=NCDIAG,FILE=FNDIAG,FORM='FORMATTED')
+    !C       GO TO EOF
+    !8020    CONTINUE
+    !          READ(NCDIAG,9000,END=8021)
+    !          GOTO 8020
+    !8021    BACKSPACE(NCDIAG)
+    !        DO IC = ISTAL,ISTOL
+    !          IX = IGOFST + IC
+    !          WRITE(NCDIAG,9300)REAL(IX-1)*DELTAG,TRUN(IC,JC,KC)
+    !        ENDDO
+    !        WRITE(NCDIAG,*)
+    !        CLOSE(NCDIAG)
+
+    !        STRQTY = 'output/dens'
+    !        FNDIAG = STRQTY//PNPROC//PNXRES
+    !        OPEN(UNIT=NCDIAG,FILE=FNDIAG,FORM='FORMATTED')
+    !C       GO TO EOF
+    !8030    CONTINUE
+    !          READ(NCDIAG,9000,END=8031)
+    !          GOTO 8030
+    !8031    BACKSPACE(NCDIAG)
+    !        DO IC = ISTAL,ISTOL
+    !          IX = IGOFST + IC
+    !          WRITE(NCDIAG,9300)REAL(IX-1)*DELTAG,DRUN(IC,JC,KC)
+    !        ENDDO
+    !        WRITE(NCDIAG,*)
+    !        CLOSE(NCDIAG)
+
+    !        STRQTY = 'output/ener'
+    !        FNDIAG = STRQTY//PNPROC//PNXRES
+    !        OPEN(UNIT=NCDIAG,FILE=FNDIAG,FORM='FORMATTED')
+    !C       GO TO EOF
+    !8040    CONTINUE
+    !          READ(NCDIAG,9000,END=8041)
+    !          GOTO 8040
+    !8041    BACKSPACE(NCDIAG)
+    !        DO IC = ISTAL,ISTOL
+    !          IX = IGOFST + IC
+    !          WRITE(NCDIAG,9300)REAL(IX-1)*DELTAG,
+    !     +                      ERUN(IC,JC,KC)/DRUN(IC,JC,KC)
+    !        ENDDO
+    !        WRITE(NCDIAG,*)
+    !        CLOSE(NCDIAG)
+
+    !        DO ISPEC = 1, NSPEC
+
+    !          WRITE(STRSPC,'(I2.2)')ISPEC
+    !          STRQTY = 'output/'//PNXRYF//STRSPC
+    !          FNDIAG = STRQTY//PNPROC//PNXRES
+    !          OPEN(UNIT=NCDIAG,FILE=FNDIAG,FORM='FORMATTED')
+    !C         GO TO EOF
+    !8050      CONTINUE
+    !            READ(NCDIAG,9000,END=8051)
+    !            GOTO 8050
+    !8051      BACKSPACE(NCDIAG)
+    !          DO IC = ISTAL,ISTOL
+    !            IX = IGOFST + IC
+    !              FORNOW = YRUN(IC,JC,KC,ISPEC)/DRUN(IC,JC,KC)
+    !              FORNOW = MAX(FORNOW,1.0D-30)
+    !            WRITE(NCDIAG,9300)REAL(IX-1)*DELTAG,FORNOW
+    !C     +                        YRUN(IC,JC,KC,ISPEC)/DRUN(IC,JC,KC)
+    !          ENDDO
+    !          WRITE(NCDIAG,*)
+    !          CLOSE(NCDIAG)
+
+    !        ENDDO
+
+    !C        ISPEC = NSPEC
+    !C        WRITE(STRSPC,'(I2.2)')ISPEC
+    !C        STRQTY = PNXRYF//STRSPC
+    !C        FNDIAG = STRQTY//PNPROC//PNXRES
+    !C        OPEN(UNIT=NCDIAG,FILE=FNDIAG,FORM='FORMATTED')
+    !CC       GO TO EOF
+    !C8050    CONTINUE
+    !C          READ(NCDIAG,9000,END=8051)
+    !C          GOTO 8050
+    !C8051    BACKSPACE(NCDIAG)
+    !C        DO IC = ISTAL,ISTOL
+    !C          IX = IGOFST + IC
+    !C          WRITE(NCDIAG,9300)REAL(IX-1)*DELTAG,
+    !C     +                      YRUN(IC,JC,KC,ISPEC)/DRUN(IC,JC,KC)
+    !C        ENDDO
+    !C        WRITE(NCDIAG,*)
+    !C        CLOSE(NCDIAG)
+
+  END IF
+
+    !   =========================================================================
+    !   UMOD START
+    !   DATA OUTPUT FOR POST-PROCESSING
+    !   ======
+    !ops    IF(MOD(itime,ntdump) == 0) THEN
+    !ops        iddump=itime/ntdump
+    !ops        WRITE(ipdump,'(I5.5)') iddump
+    !ops        WRITE(proc,'(I4.4)') iproc
+
+    !ops        fname = 'output/out'//ipdump//proc//pnxres
+
+
+    !ops        DO kc = 1,nzsize
+    !ops            DO jc = 1,nysize
+    !ops                DO ic = 1,nxsize
+    !ops                    DO ispec =1,nspec
+    !ops                        ytemp(ispec,ic,jc,kc)=yrun(ispec,ic,jc,kc)/drun(ic,jc,kc)
+    !ops                    END DO
+    !ops                    ttemp(ic,jc,kc)=trun(ic,jc,kc)
+    !ops                    ptemp(ic,jc,kc)=prun(ic,jc,kc)
+    !ops                END DO
+    !ops            END DO
+    !ops        END DO
+
+    !ops        OPEN(UNIT=16,FILE=trim(fname),FORM='UNFORMATTED',STATUS='NEW')
+    !ops        WRITE(16)drun,urun/drun,vrun/drun,wrun/drun,erun/drun,ttemp,  &
+    !ops                 ptemp,ytemp,rrte,etime
+    !ops        CLOSE(16)
+    !ops    END IF
+
+    !   UMOD END
+    !   =====
+
+    !   FULL DUMP OUTPUT
+    !   ================
+    !    IF( MOD(itime,ntdump) == 0 .and. (.not. (((itime == ntime1) .or. (itime == 0)) .and. ncdmpi == 1)) ) THEN
+    IF (MOD(itime, ntdump) == 0) THEN
+
+    !       CARRY OUT A FULL DUMP
+    !       ---------------------
+    !       Datasets dumped for output visualization as well as for restart purpose
+    CALL print_output
+
+    !       USE THE DUMP FILE INDICATED BY IDFLAG
+    !       RSC 11-JUL-2009 ADD A DUMP FORMAT SWITCH
+    idflag = MOD(INT(itime / ntdump), 2) + 1
+    IF (ndofmt == 0) THEN
+
+        IF (nxlprm(1) == 4) THEN
+        IF (ops_is_root() == 1) THEN
+          OPEN(UNIT = ncdmpo, FILE = 'output/intran.dat', STATUS = 'unknown', FORM = 'FORMATTED')
+          WRITE(ncdmpo, *) intran
+          CLOSE(UNIT = ncdmpo)
+        END IF
+
+        fname = 'output/inflow' // pnxhdf
+        CALL ops_fetch_block_hdf5_file(senga_grid, TRIM(fname))
+        CALL ops_fetch_dat_hdf5_file(d_uinf2, TRIM(fname))
+        CALL ops_fetch_dat_hdf5_file(d_vinf2, TRIM(fname))
+        CALL ops_fetch_dat_hdf5_file(d_winf2, TRIM(fname))
+
+          DO ispec = 1, nspcmx
+          CALL ops_fetch_dat_hdf5_file(d_yinf2(ispec), TRIM(fname))
+        END DO
+
+      END IF
+
+      !           UNFORMATTED DUMP OUTPUT
+      OPEN(UNIT = ncdmpo, FILE = fndmpo(idflag), STATUS = 'OLD', FORM = 'UNFORMATTED')
+
+        IF (ops_is_root() == 1) THEN
+        WRITE(*, *) "Writing run information to file(unformatted): ", TRIM(fndmpo(idflag)), "  idflag: ", idflag
+      END IF
+
+      REWIND(UNIT = ncdmpo)
+      WRITE(ncdmpo) nxglbl, nyglbl, nzglbl, nspec, etime, tstep, errold, errldr
+      CLOSE(UNIT = ncdmpo)
+    ELSE
+      !           FORMATTED DUMP OUTPUT
+      OPEN(UNIT = ncdmpo, FILE = fndmpo(idflag), STATUS = 'OLD', FORM = 'FORMATTED')
+
+        IF (ops_is_root() == 1) THEN
+        WRITE(*, *) "Writing run information to file(formatted): ", TRIM(fndmpo(idflag)), "  idflag: ", idflag
+      END IF
+
+      REWIND(UNIT = ncdmpo)
+      WRITE(ncdmpo, *) nxglbl, nyglbl, nzglbl, nspec
+      WRITE(ncdmpo, *) etime, tstep, errold, errldr
+      CLOSE(UNIT = ncdmpo)
+    END IF
+
+      !       REPORT THE DUMP
+      !       RSC 11-JUL-2009
+      IF (ops_is_root() == 1) THEN
+
+      OPEN(UNIT = ncrept, FILE = fnrept, STATUS = 'OLD', FORM = 'FORMATTED')
+3000  CONTINUE
+      READ(ncrept, 9000, END = 3010)
+      GO TO 3000
+3010  BACKSPACE(UNIT = ncrept)
+      WRITE(ncrept, 9120) fndmpo(idflag)
+      CLOSE(UNIT = ncrept)
+
+    END IF
+
+      IF (ops_is_root() == 1) THEN
+      INQUIRE(FILE = "output/filed_time.dat", EXIST = file_exist)
+      IF (file_exist) THEN
+        OPEN(UNIT = 1011, FILE = "output/filed_time.dat", STATUS = 'OLD', POSITION = 'APPEND', FORM = 'FORMATTED')
+      ELSE
+        OPEN(UNIT = 1011, FILE = "output/filed_time.dat", STATUS = 'NEW', FORM = 'FORMATTED')
+      END IF
+      WRITE(1011, *) INT(itime / ntdump), etime
+      CLOSE(UNIT = 1011)
+    END IF
+
+  END IF
+
+    !   =========================================================================
+
+    !   DUMP BC INFORMATION AS REQUIRED
+    !   ===============================
+    !ops    IF(MOD(itime,ntdump) == 0) THEN
+
+    !ops        bcflag = (nsbcxl == nsbci2).OR.(nsbcxl == nsbci3)
+    !ops        bcflag = bcflag.AND.(nxlprm(1) == 3)
+
+    !ops        IF(bcflag) THEN
+
+    !           DUMP THE INLET TURBULENT VELOCITY FIELD
+    !ops            OPEN(UNIT=nctixl,FILE=fntixl,STATUS='OLD', FORM='UNFORMATTED')
+    !ops            REWIND(nctixl)
+    !ops            WRITE(nctixl)ufxl,vfxl,wfxl,slocxl,svelxl,bvelxl
+    !ops            CLOSE(nctixl)
+
+    !ops        END IF
+
+    !ops    END IF
+
+    !   =========================================================================
+
+    !   TIME STEP HISTORY
+    IF (ops_is_root() == 1) THEN
+    WRITE(*, '(I7,1PE12.4,I5)') itime, tstep, inderr
+  END IF
+
+  !   =========================================================================
+
+  !   STATISTICS ON THE FLY
+  !   =====================
+
+  !   STATISTICS MASTER SWITCH
+  !   ------------------------
+  !ops    IF(ntstat >= 0) THEN
+
+  !       =========================================================================
+
+  !       OUTPUT STATISTICS
+  !       =================
+
+  !       STATISTICS ON ONE PROCESSOR ONLY
+  !       ----------
+  !ops        IF(iproc == 0) THEN
+
+  !ops            IF(MOD(itime,ntstat) == 0) THEN
+
+  !ops                OPEN(UNIT=ncstat,FILE=fnstat,STATUS='OLD',FORM='FORMATTED')
+
+  !               GO TO EOF
+  !ops                2000        CONTINUE
+  !ops                READ(ncstat,9200,END=2010)
+  !ops                GO TO 2000
+  !ops                2010        BACKSPACE(ncstat)
+
+  !ops                WRITE(ncstat,9100)itime
+
+  !ops                CLOSE(ncstat)
+
+  !ops            END IF
+
+  !ops        END IF
+
+  !       RESET STORAGE INDEX
+  !ops        itstat = 0
+
+  !       =========================================================================
+
+  !   STATISTICS MASTER SWITCH
+  !ops    END IF
+
+  !   =========================================================================
+
+9000 FORMAT(A)
+9100 FORMAT('Time step number: ', I7)
+9110 FORMAT('Elapsed time: ', 1P, E12.4, ';', 2X, 'next time step:', 1P, E12.4)
+9120 FORMAT('Dump completed: ', A)
+9200 FORMAT(I5, /, 5X, 6(1P, E12.4), /, 5X, 6(1P, E12.4), /, 5X, 6(1P, E12.4), /, 5X, 4(1P, E12.4), /, 5X, 3(1P, E12.4), /, 5X, 3(1P, E12.4), /, 5X, 3(1P, E12.4), /, 5X, 3(1P, E12.4), /, 5X, 3(1P, E12.4), /, 5X, 2(1P, E12.4))
+9300 FORMAT(2(1P, E15.7))
+
+END SUBROUTINE output
