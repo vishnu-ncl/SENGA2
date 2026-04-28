@@ -75,7 +75,7 @@ SUBROUTINE temper_fused
 
     DO ispec = 1, nspec
         call ops_par_loop(copy_kernel_sdim_to_mdim, "A_multidim(ispec) = B", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_yrhs_mdim, 31, s3d_000, "real(kind=8)", OPS_RW), &
+                        ops_arg_dat(d_yrhs_mdim, 22, s3d_000, "real(kind=8)", OPS_RW), &
                         ops_arg_dat(d_yrhs(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
     END DO
@@ -83,7 +83,7 @@ SUBROUTINE temper_fused
 !   INITIALISE COEFFICIENTS OF TEMPERATURE POLYNOMIAL
 !   AND ITS DERIVATIVE
     call ops_par_loop(temper_fused_kernel_main, "temper fused main", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_yrhs_mdim, 31, s3d_000, "real(kind=8)", OPS_READ), &
+                    ops_arg_dat(d_yrhs_mdim, 22, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_urhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_vrhs, 1, s3d_000, "real(kind=8)", OPS_READ), &
