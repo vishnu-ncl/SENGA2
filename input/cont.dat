@@ -14,10 +14,10 @@ No. of processors (x,y,z)
  1      1      1
 
 Time step; start step, no of steps, step switch (0=fixed, 1=adaptive)
- 1.0D-10   1   1000   0
+ 1.0D-10   1   10   0
 
 Intervals between dumps, reports, statistics, dump output (0/1=un/formatted)
- 100    10   10      1
+ 10    10   10      1
 
 Cold start switch (0=cold start, 1=restart), dump input (0/1=un/formatted),dump file number (0/1)
  0     1      1 
