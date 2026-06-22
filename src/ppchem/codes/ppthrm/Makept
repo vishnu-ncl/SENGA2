@@ -4,7 +4,7 @@
 #
 #
 #g77 -O -fno-silent -Wimplicit -o ppthrm \
-ftn -O3 -o ppthrm \
+$F90 -O3 -o ppthrm \
 ppthrm.f parser.f chkstr.f erhand.f -lm
 #
 exit

@@ -3,6 +3,8 @@
 #
 #
 #
+export F90=gfortran
+export MPIF90=mpif90
 cd ppchem/codes/ppthrm
 ./Makept
 cp ppthrm ../..
