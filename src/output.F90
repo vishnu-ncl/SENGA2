@@ -394,7 +394,7 @@ SUBROUTINE output
 
 !   STATISTICS MASTER SWITCH
 !   ------------------------
-!ops    IF(ntstat >= 0) THEN
+    IF(ntstat >= 0) THEN
 
 !       =========================================================================
 
@@ -403,33 +403,33 @@ SUBROUTINE output
 
 !       STATISTICS ON ONE PROCESSOR ONLY
 !       ----------
-!ops        IF(iproc == 0) THEN
+        IF(iproc == 0) THEN
 
-!ops            IF(MOD(itime,ntstat) == 0) THEN
+            IF(MOD(itime,ntstat) == 0) THEN
 
-!ops                OPEN(UNIT=ncstat,FILE=fnstat,STATUS='OLD',FORM='FORMATTED')
+                OPEN(UNIT=ncstat,FILE=fnstat,STATUS='OLD',FORM='FORMATTED')
 
 !               GO TO EOF
-!ops                2000        CONTINUE
-!ops                READ(ncstat,9200,END=2010)
-!ops                GO TO 2000
-!ops                2010        BACKSPACE(ncstat)
+                2000        CONTINUE
+                READ(ncstat,9200,END=2010)
+                GO TO 2000
+                2010        BACKSPACE(ncstat)
 
-!ops                WRITE(ncstat,9100)itime
+                WRITE(ncstat,9100)itime
 
-!ops                CLOSE(ncstat)
+                CLOSE(ncstat)
 
-!ops            END IF
+            END IF
 
-!ops        END IF
+        END IF
 
 !       RESET STORAGE INDEX
-!ops        itstat = 0
+        itstat = 0
 
 !       =========================================================================
 
 !   STATISTICS MASTER SWITCH
-!ops    END IF
+    END IF
 
 !   =========================================================================
 

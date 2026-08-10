@@ -26,7 +26,14 @@ SUBROUTINE rhscal
 !   14-JUL-2013:  RSC RADIATION HEAT LOSS
 !   08-JUN-2015:  RSC REMOVE Nth SPECIES TREATMENT
 !   08-JUN-2015:  RSC UPDATED WALL BCS
+!   01-APR-2022:  RSC REFITTED TRANSPORT COEFFICIENTS
 !   01-DEC-2022:  VM CONSERVATIVE-PRIMITIVE FIX/SORET FIX
+!   18-SEP-2022:  RSC BC TRANSVERSE TERMS
+!   19-MAY-2023:  RSC BUG FIX GRADIENTS OF LN(TEMPERATURE)
+!   26-MAY-2023:  RSC BUG FIX THERMAL DIFFUSION RATIO
+!   13-JUN-2023:  RSC/PJB BUG FIX J-INDEX
+!   13-JUN-2023:  RSC/PJB BUG FIX J-INDEX
+!   22-MAR-2026:  RSC BUG FIX THERMAL DIFFUSION RATIO
 
 !   DESCRIPTION
 !   -----------
@@ -62,8 +69,8 @@ SUBROUTINE rhscal
 !   EVALUATE THE TEMPERATURE
 !   ------------------------
 !   ALSO PRESSURE, MIXTURE CP AND MIXTURE GAS CONSTANT
-!    call temper
-    call temper_fused
+    call temper
+!    call temper_fused      - need to update when nintmx=3, currently working when it is 2
 
 !                                                             PRUN,TRUN = P,T
 !                                                         STORE7 = RHO*MIX RG
@@ -2253,6 +2260,8 @@ SUBROUTINE rhscal
 !       =======================================================================
 
 !       SORET EFFECT (THERMAL DIFFUSION) TERMS
+!       RSC 16-JUN-2023 BUG FIX THERMAL DIFFUSION RATIO
+!       RSC 22-MAR-2026 BUG FIX THERMAL DIFFUSION RATIO
         IF(flmsor(ispec))THEN
 !           FIRST AND SECOND DERIVATIVES OF LN(TEMPERATURE) ALREADY STORED
 
