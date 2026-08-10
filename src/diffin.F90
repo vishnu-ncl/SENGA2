@@ -12,6 +12,9 @@ SUBROUTINE diffin
 !   CHANGE RECORD
 !   -------------
 !   06-JAN-2013:  CREATED
+!   01-APR-2022:  RSC REFITTED TRANSPORT COEFFICIENTS
+!   26-MAY-2023:  RSC BUG FIX THERMAL DIFFUSION RATIO
+!   22-MAR-2026:  RSC BUG FIX THERMAL DIFFUSION RATIO
 
 !   DESCRIPTION
 !   -----------
@@ -343,19 +346,21 @@ SUBROUTINE diffin
                 tdrcco(icoeff,ispec,ispec) = zero
             END DO
 
+!           RSC 22-MAR-2026
 !           MATRIX IS ANTISYMMETRIC
 !           ELEMENTS OF THE MATRIX TRANSPOSE ARE STORED
-            DO jspec = 1, ispec-1
-                DO icoeff = 1, ncotdr
-                    fornow = tdrcco(icoeff,jspec,ispec)
-                    tdrcco(icoeff,jspec,ispec) = -fornow
-                END DO
-            END DO
+!            DO jspec = 1, ispec-1
+!                DO icoeff = 1, ncotdr
+!                    fornow = tdrcco(icoeff,jspec,ispec)
+!                    tdrcco(icoeff,jspec,ispec) = -fornow
+!                END DO
+!            END DO
 
             DO jspec = ispec+1, nspec
                 DO icoeff = 1, ncotdr
                     fornow = tdrcco(icoeff,ispec,jspec)
-                    tdrcco(icoeff,jspec,ispec) = fornow
+!                    tdrcco(icoeff,jspec,ispec) = fornow
+                    tdrcco(icoeff,jspec,ispec) = -fornow
                 END DO
             END DO
         END DO
