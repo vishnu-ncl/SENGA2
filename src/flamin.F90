@@ -97,10 +97,10 @@ SUBROUTINE flamin
 
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     call ops_par_loop(flamin_kernel_set_velocity_tgv, "SET THE VELOCITY PROFILE FOR TGV",  senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
-                    ops_arg_dat(d_psi, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_urun, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_dat(d_vrun, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_dat(d_wrun, 1, s3d_000, "real(kind=8)", OPS_RW), &
+                    ops_arg_dat(d_psi, 1, s3d_000, "real(kind=8)", OPS_RW), &
                     ops_arg_gbl(prin, 1, "real(kind=8)", OPS_READ), &
                     ops_arg_gbl(drin, 1, "real(kind=8)", OPS_READ), &
                     ops_arg_gbl(u0, 1, "real(kind=8)", OPS_READ), &
@@ -139,7 +139,7 @@ SUBROUTINE flamin
     DO ispec = 1,nspcmx
         rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
         call ops_par_loop(copy_kernel_sdim_to_mdim, "A_multidim(ispec) = B", senga_grid, 3, rangexyz,  &
-                        ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_WRITE), &
+                        ops_arg_dat(d_yrhs_mdim, 9, s3d_000, "real(kind=8)", OPS_RW), &
                         ops_arg_dat(d_yrun(ispec), 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_gbl(ispec, 1, "integer(kind=4)", OPS_READ))
     END DO
@@ -206,14 +206,14 @@ SUBROUTINE flamin
 
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     call ops_par_loop(flamin_kernel_eqE, "flamin_kernel_eqE", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_RW), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_gbl(prin, 1, "real(kind=8)", OPS_READ), &
                     ops_arg_gbl(trin, 1, "real(kind=8)", OPS_READ))
 
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     call ops_par_loop(flamin_kernel_eqF, "flamin_kernel_eqF",  senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_RW), &
                     ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_gbl(prin, 1, "real(kind=8)", OPS_READ), &
                     ops_arg_gbl(u0, 1, "real(kind=8)", OPS_READ), &
@@ -227,7 +227,7 @@ SUBROUTINE flamin
 
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     call ops_par_loop(flamin_kernel_eqC, "flamin_kernel_eqC", senga_grid, 3, rangexyz,  &
-                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
+                    ops_arg_dat(d_drun, 1, s3d_000, "real(kind=8)", OPS_RW), &
                     ops_arg_dat(d_prun, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ), &
                     ops_arg_dat(d_store1, 1, s3d_000, "real(kind=8)", OPS_READ))
