@@ -70,6 +70,7 @@ SUBROUTINE rhscal
 !   ------------------------
 !   ALSO PRESSURE, MIXTURE CP AND MIXTURE GAS CONSTANT
     call temper
+    call ops_execute()
 
 !                                                             PRUN,TRUN = P,T
 !                                                         STORE7 = RHO*MIX RG
@@ -219,6 +220,8 @@ SUBROUTINE rhscal
 !   =========================================================================
 !   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 !   =========================================================================
+
+    call ops_execute()
 
 !   INTERNAL ENERGY EQUATION
 !   ========================
@@ -394,6 +397,8 @@ SUBROUTINE rhscal
 !   -------------------------------------
 !   E EQUATION: CONVECTIVE TERMS COMPLETE
 !   -------------------------------------
+
+    call ops_execute()
 !                                                            ALL STORES CLEAR
 !   =========================================================================
 
@@ -704,6 +709,8 @@ SUBROUTINE rhscal
 !   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 !   =========================================================================
 
+    call ops_execute()
+
 !   SPECIES MASS FRACTION EQUATIONS
 !   ===============================
 
@@ -910,6 +917,7 @@ SUBROUTINE rhscal
                         ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ))
 
     END DO
+    call ops_execute()
 
     DO ispec = 1,nspec
 
@@ -2747,6 +2755,7 @@ SUBROUTINE rhscal
 !   Y-EQUATION: DIFFUSION CORRECTION VELOCITY TERMS EVALUATED BELOW
 !   ----------------------------------------------------------------
 
+        call ops_execute()
     END DO ! END of ispec loop
 !   RSC 08-AUG-2012 EVALUATE ALL SPECIES
 !   END OF RUN THROUGH ALL SPECIES
@@ -2908,6 +2917,8 @@ SUBROUTINE rhscal
 
 !   =========================================================================
 
+    call ops_execute()
+
 !   RUN THROUGH ALL SPECIES
 !   -----------------------
 !   RSC 08-AUG-2012 EVALUATE ALL SPECIES
@@ -2955,6 +2966,7 @@ SUBROUTINE rhscal
                         ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_wcor, 1, s3d_000, "real(kind=8)", OPS_READ))
 
+        call ops_execute()
     END DO
 
 !   RSC 08-AUG-2012 EVALUATE ALL SPECIES

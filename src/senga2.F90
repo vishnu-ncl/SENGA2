@@ -167,33 +167,35 @@ PROGRAM senga2
             call boundt
             boundt_etime = omp_get_wtime()
             boundt_ttime = boundt_ttime + (boundt_etime-boundt_stime)
+            call ops_execute()
 
 !           PARALLEL DATA TRANSFER
             parfer_stime = omp_get_wtime()
             call parfer
             parfer_etime = omp_get_wtime()
             parfer_ttime = parfer_ttime + (parfer_etime-parfer_stime)
+            call ops_execute()
 
 !           EVALUATE RHS FOR SCALARS
             rhscal_stime = omp_get_wtime()
             call rhscal
             rhscal_etime = omp_get_wtime()
             rhscal_ttime = rhscal_ttime + (rhscal_etime-rhscal_stime)
-!#ifdef OPS_LAZY
-!    call ops_execute()
-!#endif
+            call ops_execute()
 
 !           EVALUATE RHS FOR VELOCITIES
             rhsvel_stime = omp_get_wtime()
             call rhsvel
             rhsvel_etime = omp_get_wtime()
             rhsvel_ttime = rhsvel_ttime + (rhsvel_etime-rhsvel_stime)
+            call ops_execute()
 
 !           APPLY BCS ON SOURCE TERMS
             bounds_stime = omp_get_wtime()
             call bounds
             bounds_etime = omp_get_wtime()
             bounds_ttime = bounds_ttime + (bounds_etime-bounds_stime)
+            call ops_execute()
 
 !           RUNGE-KUTTA ADVANCEMENT
             lincom_stime = omp_get_wtime()
@@ -214,32 +216,35 @@ PROGRAM senga2
         call boundt
         boundt_etime = omp_get_wtime()
         boundt_ttime = boundt_ttime + (boundt_etime-boundt_stime)
+        call ops_execute()
 
 !       PARALLEL DATA TRANSFER
         parfer_stime = omp_get_wtime()
         call parfer
         parfer_etime = omp_get_wtime()
         parfer_ttime = parfer_ttime + (parfer_etime-parfer_stime)
+        call ops_execute()
 
 !       EVALUATE RHS FOR SCALARS
         rhscal_stime = omp_get_wtime()
         call rhscal
         rhscal_etime = omp_get_wtime()
         rhscal_ttime = rhscal_ttime + (rhscal_etime-rhscal_stime)
-!#ifdef OPS_LAZY
-!    call ops_execute()
-!#endif
+        call ops_execute()
+
 !       EVALUATE RHS FOR VELOCITIES
         rhsvel_stime = omp_get_wtime()
         call rhsvel
         rhsvel_etime = omp_get_wtime()
         rhsvel_ttime = rhsvel_ttime + (rhsvel_etime-rhsvel_stime)
+        call ops_execute()
 
 !       APPLY BCS ON SOURCE TERMS
         bounds_stime = omp_get_wtime()
         call bounds
         bounds_etime = omp_get_wtime()
         bounds_ttime = bounds_ttime + (bounds_etime-bounds_stime)
+        call ops_execute()
 
 !       RUNGE-KUTTA ADVANCEMENT
         fincom_stime = omp_get_wtime()

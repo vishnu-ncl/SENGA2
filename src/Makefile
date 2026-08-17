@@ -36,7 +36,7 @@ OPS_GENERATED = com_ops_senga2_ops.F90 senga2_ops.F90 ops_data_init_ops.F90 dfin
 APP_FLAGS = -g -cpp -O3 -Wall -fallow-argument-mismatch #-mcmodel=medium -fp-model strict -fp-model source -prec-div -prec-sqrt
 #APP_FLAGS = -g -fcheck=all -cpp -O3 -Wall -fallow-argument-mismatch #-mcmodel=medium -fp-model strict -fp-model source -prec-div -prec-sqrt
 #APP_FLAGS = -Kieee
-APP_LIBS = fftlib/fftlib.a rndlib/rndlib.a parlib/parlib.a -lm
+APP_LIBS = fftlib/fftlib.a rndlib/rndlib.a parlib/parlib.a -lm -fopenmp
 
 APP = senga2
 MAIN_SRC=senga2

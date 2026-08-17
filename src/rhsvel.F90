@@ -348,6 +348,8 @@ SUBROUTINE rhsvel
 !   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 !   =========================================================================
 
+    call ops_execute()
+
 !   MOMENTUM EQUATIONS: CONVECTIVE TERMS
 !   ------------------------------------
 !   RHO U U
@@ -874,6 +876,8 @@ SUBROUTINE rhsvel
     END IF
 
 !   -------------------------------------------------------------------------
+
+    call ops_execute()
 
 !   VISCOUS TERMS: TAUXXb,e,f
 !   -------------
@@ -1974,6 +1978,8 @@ SUBROUTINE rhsvel
 !   =========================================================================
 !   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 !   =========================================================================
+
+    call ops_execute()
 
 !   CONTINUITY EQUATION
 !   -------------------
