@@ -2775,9 +2775,15 @@ SUBROUTINE rhscal
 !   VRHS, WRHS, YRHS, WTMP (INC) — intermediates original SENGA never exchanged
 !   in parfer (only DRHS, URHS, VRHS, WRHS, ERHS, YRHS, once per RK stage).
 !   Large tiles do not reduce that volume; they just move a full halo of those
-!   extra deps every species. Default is off (comms over cache); restore with
-!   SENGA_OPS_EXEC=+ispec.
-      if (exec_rhscal_ispec) call ops_execute()
+!   extra deps every species.
+!   Default (ispec off): ops_tiling_break — same comms as a fused chain (one
+!   halo at the next ops_execute) but CACHE_SIZE tiles from this species only.
+!   SENGA_OPS_EXEC=+ispec restores the old coupled ops_execute (re-exchange).
+      if (exec_rhscal_ispec) then
+        call ops_execute()
+      else
+        call ops_tiling_break()
+      end if
     END DO ! END of ispec loop
 !   RSC 08-AUG-2012 EVALUATE ALL SPECIES
 !   END OF RUN THROUGH ALL SPECIES

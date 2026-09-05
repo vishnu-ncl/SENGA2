@@ -35,14 +35,22 @@ and restores the original on exit. Last-step HDF5 dumps stay off.
 | `base` | `-OPS_DIAGS=2` only | default (`ispec` off) |
 | `largetile` | `MAXDEPTH=6 TILESIZE=1000` | default |
 | `cache1` | `MAXDEPTH=6 CACHE_SIZE=1` | default |
-| `cache2` | `MAXDEPTH=6 CACHE_SIZE=2` | default |
+| `cache2` | `MAXDEPTH=6 CACHE_SIZE=2` | default (`tiling_break`) |
 | `cache4` | `MAXDEPTH=6 CACHE_SIZE=4` | default |
 | `cache2_ispec` | `MAXDEPTH=6 CACHE_SIZE=2` | `+ispec` |
 | `cache2_all` | `MAXDEPTH=6 CACHE_SIZE=2` | `all` |
 
 Default exec (unset `SENGA_OPS_EXEC`) is the comms-optimised set: keepers on,
-**`ispec` off**. `+ispec` restores the per-species flush (more MPI, better
-cache tiles). `all` turns every manual execute site on.
+**`ispec` off**. That now calls `ops_tiling_break` at the old per-species
+site: one halo for the fused chain, cache-blocked segments at the `+ispec`
+points. `SENGA_OPS_EXEC=+ispec` restores the coupled per-species
+`ops_execute` (about 2× MPI). `all` turns every manual execute site on.
+
+Local check of the decoupling (256³ / 3 steps / 32 ranks):
+
+```bash
+scripts/test_tiling_break.sh
+```
 
 ## 4. Bring results back
 

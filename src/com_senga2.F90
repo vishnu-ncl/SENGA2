@@ -382,6 +382,8 @@ contains
         exec_rhscal_econv = .false.
         exec_rhscal_chrate = .true.
         exec_rhscal_ysplit = .true.
+        ! ispec off: ops_tiling_break at the old per-species site (one halo,
+        ! cache-blocked segments). SENGA_OPS_EXEC=+ispec restores ops_execute.
         exec_rhscal_ispec = .false.
         exec_rhscal_difmix = .false.
         exec_rhscal_ycorr = .false.
