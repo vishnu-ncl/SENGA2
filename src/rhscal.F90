@@ -70,7 +70,10 @@ SUBROUTINE rhscal
 !   ------------------------
 !   ALSO PRESSURE, MIXTURE CP AND MIXTURE GAS CONSTANT
     call temper
-    call ops_execute()
+!   TRADE-OFF: isolate temper (hottest kernels) so later stencil chains do not
+!   extend it into the halo. Costs a later TRUN/PRUN exchange; original SENGA
+!   never exchanged those, it recomputed T in the halo.
+    if (exec_rhscal_temper) call ops_execute()
 
 !                                                             PRUN,TRUN = P,T
 !                                                         STORE7 = RHO*MIX RG
@@ -221,7 +224,8 @@ SUBROUTINE rhscal
 !   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 !   =========================================================================
 
-    call ops_execute()
+!   Default off: mass-flux (DIVM) has no RAW stencil dep into E-conversion.
+    if (exec_rhscal_massflux) call ops_execute()
 
 !   INTERNAL ENERGY EQUATION
 !   ========================
@@ -398,7 +402,10 @@ SUBROUTINE rhscal
 !   E EQUATION: CONVECTIVE TERMS COMPLETE
 !   -------------------------------------
 
-    call ops_execute()
+!   Default off: E-convective does not write TRUN; heat-flux first-access
+!   of TRUN is exchanged either way.
+    if (exec_rhscal_econv) call ops_execute()
+
 !                                                            ALL STORES CLEAR
 !   =========================================================================
 
@@ -709,7 +716,9 @@ SUBROUTINE rhscal
 !   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 !   =========================================================================
 
-    call ops_execute()
+!   TRADE-OFF: keep chemistry (chrate, ~hundreds of pointwise loops) out of the
+!   subsequent derivative chains so CACHE_SIZE tiles stay large enough.
+    if (exec_rhscal_chrate) call ops_execute()
 
 !   SPECIES MASS FRACTION EQUATIONS
 !   ===============================
@@ -917,7 +926,9 @@ SUBROUTINE rhscal
                         ops_arg_dat(d_drhs, 1, s3d_000, "real(kind=8)", OPS_READ))
 
     END DO
-    call ops_execute()
+!   TRADE-OFF: start the per-species convective/diffusive chain here. Fusing
+!   with chemistry keeps every YRHS/RATE live and shrinks cache tiles.
+    if (exec_rhscal_ysplit) call ops_execute()
 
     DO ispec = 1,nspec
 
@@ -2755,7 +2766,18 @@ SUBROUTINE rhscal
 !   Y-EQUATION: DIFFUSION CORRECTION VELOCITY TERMS EVALUATED BELOW
 !   ----------------------------------------------------------------
 
-        call ops_execute()
+!   TRADE-OFF (main comms vs cache-block site):
+!   Flushing per species keeps only one YRHS/RATE plus the STORE/UTMP set live,
+!   so CACHE_SIZE tiles still work (42-loop plans, ~8x intra-species store7 WAW
+!   skew). It also stops the WTMP/UCOR/VTMP INC chain from being skewed all
+!   the way into the post-loop dfbydx(WTMP).
+!   Cost: each new species first-accesses halo-extended TRANSP, TRUN, URHS,
+!   VRHS, WRHS, YRHS, WTMP (INC) — intermediates original SENGA never exchanged
+!   in parfer (only DRHS, URHS, VRHS, WRHS, ERHS, YRHS, once per RK stage).
+!   Large tiles do not reduce that volume; they just move a full halo of those
+!   extra deps every species. Default is off (comms over cache); restore with
+!   SENGA_OPS_EXEC=+ispec.
+      if (exec_rhscal_ispec) call ops_execute()
     END DO ! END of ispec loop
 !   RSC 08-AUG-2012 EVALUATE ALL SPECIES
 !   END OF RUN THROUGH ALL SPECIES
@@ -2917,7 +2939,9 @@ SUBROUTINE rhscal
 
 !   =========================================================================
 
-    call ops_execute()
+!   Default off: DIFMIX is written pointwise over the halo; the Y-correction
+!   loop below does not read it.
+    if (exec_rhscal_difmix) call ops_execute()
 
 !   RUN THROUGH ALL SPECIES
 !   -----------------------
@@ -2966,7 +2990,7 @@ SUBROUTINE rhscal
                         ops_arg_dat(d_store3, 1, s3d_000, "real(kind=8)", OPS_READ), &
                         ops_arg_dat(d_wcor, 1, s3d_000, "real(kind=8)", OPS_READ))
 
-        call ops_execute()
+        if (exec_rhscal_ycorr) call ops_execute()
     END DO
 
 !   RSC 08-AUG-2012 EVALUATE ALL SPECIES

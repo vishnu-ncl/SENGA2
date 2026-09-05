@@ -113,6 +113,7 @@ PROGRAM senga2
 
     call ops_init(6)
     call ops_set_soa(1)
+    call senga_init_ops_exec()
 
     call ops_timers ( startTime )
 
@@ -122,6 +123,7 @@ PROGRAM senga2
 
 !   PARALLEL DOMAIN DECOMPOSITION
     call pardom
+    IF (ops_is_root() == 1) call senga_print_ops_exec()
 
 !   INITIALISE THE DATA
     indata_stime = omp_get_wtime()
@@ -130,7 +132,7 @@ PROGRAM senga2
     indata_ttime = indata_ttime + (indata_etime-indata_stime)
 
 !   RECORD INITIAL CONDITIONS
-    call output
+!    call output
 
 !   INITIALISE CONSTANT USED IN KERNEL FUNCTIONS FOR CUDA
     call cuda_const_init
@@ -167,35 +169,35 @@ PROGRAM senga2
             call boundt
             boundt_etime = omp_get_wtime()
             boundt_ttime = boundt_ttime + (boundt_etime-boundt_stime)
-            call ops_execute()
+            if (exec_drv_boundt) call ops_execute()
 
 !           PARALLEL DATA TRANSFER
             parfer_stime = omp_get_wtime()
             call parfer
             parfer_etime = omp_get_wtime()
             parfer_ttime = parfer_ttime + (parfer_etime-parfer_stime)
-            call ops_execute()
+            if (exec_drv_parfer) call ops_execute()
 
 !           EVALUATE RHS FOR SCALARS
             rhscal_stime = omp_get_wtime()
             call rhscal
             rhscal_etime = omp_get_wtime()
             rhscal_ttime = rhscal_ttime + (rhscal_etime-rhscal_stime)
-            call ops_execute()
+            if (exec_drv_rhscal) call ops_execute()
 
 !           EVALUATE RHS FOR VELOCITIES
             rhsvel_stime = omp_get_wtime()
             call rhsvel
             rhsvel_etime = omp_get_wtime()
             rhsvel_ttime = rhsvel_ttime + (rhsvel_etime-rhsvel_stime)
-            call ops_execute()
+            if (exec_drv_rhsvel) call ops_execute()
 
 !           APPLY BCS ON SOURCE TERMS
             bounds_stime = omp_get_wtime()
             call bounds
             bounds_etime = omp_get_wtime()
             bounds_ttime = bounds_ttime + (bounds_etime-bounds_stime)
-            call ops_execute()
+            if (exec_drv_bounds) call ops_execute()
 
 !           RUNGE-KUTTA ADVANCEMENT
             lincom_stime = omp_get_wtime()
@@ -216,35 +218,35 @@ PROGRAM senga2
         call boundt
         boundt_etime = omp_get_wtime()
         boundt_ttime = boundt_ttime + (boundt_etime-boundt_stime)
-        call ops_execute()
+        if (exec_drv_boundt) call ops_execute()
 
 !       PARALLEL DATA TRANSFER
         parfer_stime = omp_get_wtime()
         call parfer
         parfer_etime = omp_get_wtime()
         parfer_ttime = parfer_ttime + (parfer_etime-parfer_stime)
-        call ops_execute()
+        if (exec_drv_parfer) call ops_execute()
 
 !       EVALUATE RHS FOR SCALARS
         rhscal_stime = omp_get_wtime()
         call rhscal
         rhscal_etime = omp_get_wtime()
         rhscal_ttime = rhscal_ttime + (rhscal_etime-rhscal_stime)
-        call ops_execute()
+        if (exec_drv_rhscal) call ops_execute()
 
 !       EVALUATE RHS FOR VELOCITIES
         rhsvel_stime = omp_get_wtime()
         call rhsvel
         rhsvel_etime = omp_get_wtime()
         rhsvel_ttime = rhsvel_ttime + (rhsvel_etime-rhsvel_stime)
-        call ops_execute()
+        if (exec_drv_rhsvel) call ops_execute()
 
 !       APPLY BCS ON SOURCE TERMS
         bounds_stime = omp_get_wtime()
         call bounds
         bounds_etime = omp_get_wtime()
         bounds_ttime = bounds_ttime + (bounds_etime-bounds_stime)
-        call ops_execute()
+        if (exec_drv_bounds) call ops_execute()
 
 !       RUNGE-KUTTA ADVANCEMENT
         fincom_stime = omp_get_wtime()
@@ -280,12 +282,7 @@ PROGRAM senga2
 
 !       PROCESS THE RESULTS
 !       ===================
-        call output
-
-!        IF (itime == 1 .or. itime == 500 .or. itime == 1000) THEN
-!            call print_dats()
-!            IF (itime == 1000) STOP
-!        END IF
+        IF (itime == ntime2 .and. senga_dump_last) call print_output()
 
 !       =======================================================================
     END DO

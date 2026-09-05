@@ -12,8 +12,11 @@ MODULE com_senga
     use OPS_CONSTANTS
     implicit none
 
-!   GLOBAL GRID SIZE
-    integer(kind=4), parameter :: nxglbl=256, nyglbl=256, nzglbl=256
+!   GLOBAL GRID SIZE (override at compile time: -DSENGA_NX=512)
+#ifndef SENGA_NX
+#define SENGA_NX 256
+#endif
+    integer(kind=4), parameter :: nxglbl=SENGA_NX, nyglbl=SENGA_NX, nzglbl=SENGA_NX
 !   SET NGZMAX=MAX(NXGLBL,NYGLBL,NZGLBL)
     integer(kind=4), parameter :: ngzmax=nxglbl
     integer(kind=4), target :: nxglbl_ops=nxglbl, nyglbl_ops=nyglbl, nzglbl_ops=nzglbl
@@ -24,7 +27,7 @@ MODULE com_senga
     integer(kind=4), parameter :: nprmax=nxproc
 
 !   LOCAL GRID SIZE - MENTION SAME VALUE AS GLOBAL GRID SIZE
-    integer(kind=4), parameter :: nxsize=256, nysize=256, nzsize=256
+    integer(kind=4), parameter :: nxsize=SENGA_NX, nysize=SENGA_NX, nzsize=SENGA_NX
 !   SET NSZMAX=MAX(NXSIZE,NYSIZE,NZSIZE)
     integer(kind=4), parameter :: nszmax=nxsize
 
@@ -361,6 +364,162 @@ MODULE com_senga
     real(kind=8) :: rxlprc(nbcprc)
 
 !   -------------------------------------------------------------------------
+!   Manual ops_execute() site flags. SENGA_OPS_EXEC selects a preset and/or
+!   comma-separated +/- names (see senga_init_ops_exec).
+    logical :: exec_rhscal_temper, exec_rhscal_massflux, exec_rhscal_econv
+    logical :: exec_rhscal_chrate, exec_rhscal_ysplit, exec_rhscal_ispec
+    logical :: exec_rhscal_difmix, exec_rhscal_ycorr
+    logical :: exec_rhsvel_bc, exec_rhsvel_visc, exec_rhsvel_cont
+    logical :: exec_drv_boundt, exec_drv_parfer, exec_drv_rhscal
+    logical :: exec_drv_rhsvel, exec_drv_bounds
+    logical :: senga_dump_last
+
+contains
+
+    subroutine senga_set_ops_exec_default()
+        exec_rhscal_temper = .true.
+        exec_rhscal_massflux = .false.
+        exec_rhscal_econv = .false.
+        exec_rhscal_chrate = .true.
+        exec_rhscal_ysplit = .true.
+        exec_rhscal_ispec = .false.
+        exec_rhscal_difmix = .false.
+        exec_rhscal_ycorr = .false.
+        exec_rhsvel_bc = .true.
+        exec_rhsvel_visc = .true.
+        exec_rhsvel_cont = .false.
+        exec_drv_boundt = .true.
+        exec_drv_parfer = .false.
+        exec_drv_rhscal = .true.
+        exec_drv_rhsvel = .true.
+        exec_drv_bounds = .true.
+    end subroutine senga_set_ops_exec_default
+
+    subroutine senga_set_ops_exec_all(on)
+        logical, intent(in) :: on
+        exec_rhscal_temper = on
+        exec_rhscal_massflux = on
+        exec_rhscal_econv = on
+        exec_rhscal_chrate = on
+        exec_rhscal_ysplit = on
+        exec_rhscal_ispec = on
+        exec_rhscal_difmix = on
+        exec_rhscal_ycorr = on
+        exec_rhsvel_bc = on
+        exec_rhsvel_visc = on
+        exec_rhsvel_cont = on
+        exec_drv_boundt = on
+        exec_drv_parfer = on
+        exec_drv_rhscal = on
+        exec_drv_rhsvel = on
+        exec_drv_bounds = on
+    end subroutine senga_set_ops_exec_all
+
+    subroutine senga_apply_ops_exec_token(tok)
+        character(len=*), intent(in) :: tok
+        character(len=32) :: name
+        logical :: val
+        integer :: n
+        n = len_trim(tok)
+        if (n == 0) return
+        val = .true.
+        name = tok(1:n)
+        if (tok(1:1) == '+') then
+            name = tok(2:n)
+        else if (tok(1:1) == '-') then
+            val = .false.
+            name = tok(2:n)
+        end if
+        select case (trim(name))
+        case ('all')
+            call senga_set_ops_exec_all(.true.)
+        case ('none')
+            call senga_set_ops_exec_all(.false.)
+        case ('default')
+            call senga_set_ops_exec_default()
+        case ('temper')
+            exec_rhscal_temper = val
+        case ('massflux')
+            exec_rhscal_massflux = val
+        case ('econv')
+            exec_rhscal_econv = val
+        case ('chrate')
+            exec_rhscal_chrate = val
+        case ('ysplit')
+            exec_rhscal_ysplit = val
+        case ('ispec')
+            exec_rhscal_ispec = val
+        case ('difmix')
+            exec_rhscal_difmix = val
+        case ('ycorr')
+            exec_rhscal_ycorr = val
+        case ('velbc')
+            exec_rhsvel_bc = val
+        case ('velvisc')
+            exec_rhsvel_visc = val
+        case ('velcont')
+            exec_rhsvel_cont = val
+        case ('boundt')
+            exec_drv_boundt = val
+        case ('parfer')
+            exec_drv_parfer = val
+        case ('rhscal')
+            exec_drv_rhscal = val
+        case ('rhsvel')
+            exec_drv_rhsvel = val
+        case ('bounds')
+            exec_drv_bounds = val
+        case default
+            write(*,*) 'SENGA_OPS_EXEC: unknown token ', trim(tok)
+        end select
+    end subroutine senga_apply_ops_exec_token
+
+    subroutine senga_init_ops_exec()
+        character(len=1024) :: spec
+        character(len=32) :: tok
+        integer :: ios, i, start, n
+        call senga_set_ops_exec_default()
+        senga_dump_last = .false.
+        spec = ''
+        call get_environment_variable('SENGA_DUMP_LAST', spec, status=ios)
+        if (ios == 0) then
+            spec = adjustl(spec)
+            if (spec == '1' .or. spec == 'yes' .or. spec == 'on' .or. spec == 'true') then
+                senga_dump_last = .true.
+            end if
+        end if
+        spec = ''
+        call get_environment_variable('SENGA_OPS_EXEC', spec, status=ios)
+        if (ios /= 0) return
+        n = len_trim(spec)
+        if (n == 0) return
+        start = 1
+        do i = 1, n
+            if (spec(i:i) == ',' .or. i == n) then
+                if (i == n .and. spec(i:i) /= ',') then
+                    tok = spec(start:i)
+                else
+                    tok = spec(start:i-1)
+                end if
+                call senga_apply_ops_exec_token(adjustl(tok))
+                start = i + 1
+            end if
+        end do
+    end subroutine senga_init_ops_exec
+
+    subroutine senga_print_ops_exec()
+        write(*,*) 'SENGA_OPS_EXEC temper=', exec_rhscal_temper, &
+            ' massflux=', exec_rhscal_massflux, ' econv=', exec_rhscal_econv, &
+            ' chrate=', exec_rhscal_chrate, ' ysplit=', exec_rhscal_ysplit, &
+            ' ispec=', exec_rhscal_ispec, ' difmix=', exec_rhscal_difmix, &
+            ' ycorr=', exec_rhscal_ycorr
+        write(*,*) 'SENGA_OPS_EXEC velbc=', exec_rhsvel_bc, &
+            ' velvisc=', exec_rhsvel_visc, ' velcont=', exec_rhsvel_cont, &
+            ' boundt=', exec_drv_boundt, ' parfer=', exec_drv_parfer, &
+            ' rhscal=', exec_drv_rhscal, ' rhsvel=', exec_drv_rhsvel, &
+            ' bounds=', exec_drv_bounds
+        write(*,*) 'SENGA_DUMP_LAST=', senga_dump_last, ' nxglbl=', nxglbl
+    end subroutine senga_print_ops_exec
 
 END MODULE com_senga
 

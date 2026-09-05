@@ -348,7 +348,11 @@ SUBROUTINE rhsvel
 !   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 !   =========================================================================
 
-    call ops_execute()
+!   TRADE-OFF: conversion writes U/V/WTMP over the halo, then many BC
+!   derivatives (28-loop plan). Flushing before convective store7*U WAW
+!   chains keeps that 11x skew from inheriting the conversion/BC tiles.
+!   Cost: next chain first-accesses UTMP/VTMP/WTMP — not parfer fields.
+    if (exec_rhsvel_bc) call ops_execute()
 
 !   MOMENTUM EQUATIONS: CONVECTIVE TERMS
 !   ------------------------------------
@@ -877,7 +881,10 @@ SUBROUTINE rhsvel
 
 !   -------------------------------------------------------------------------
 
-    call ops_execute()
+!   TRADE-OFF: isolate the viscous-stress chain (~105 loops, well blocked)
+!   from the convective/pressure WAW skew. Cost: STORE1-3 (velocity
+!   gradients) and TRANSP are first-accessed in the next plan and exchanged.
+    if (exec_rhsvel_visc) call ops_execute()
 
 !   VISCOUS TERMS: TAUXXb,e,f
 !   -------------
@@ -1979,7 +1986,7 @@ SUBROUTINE rhsvel
 !   XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 !   =========================================================================
 
-    call ops_execute()
+    if (exec_rhsvel_cont) call ops_execute()
 
 !   CONTINUITY EQUATION
 !   -------------------

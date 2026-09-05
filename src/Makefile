@@ -33,7 +33,8 @@ OPS_GENERATED = com_ops_senga2_ops.F90 senga2_ops.F90 ops_data_init_ops.F90 dfin
     indata_ops.F90 dtinit_ops.F90 chemin_ops.F90 espini_ops.F90 turbin_ops.F90 temper_ops.F90 pardom_ops.F90 \
     tempin_ops.F90 parfer_ops.F90 output_ops.F90 print_dats_ops.F90 print_alldats_ops.F90 print_output_ops.F90
 
-APP_FLAGS = -g -cpp -O3 -Wall -fallow-argument-mismatch #-mcmodel=medium -fp-model strict -fp-model source -prec-div -prec-sqrt
+SENGA_NX ?= 256
+APP_FLAGS = -g -cpp -O3 -Wall -fallow-argument-mismatch -DSENGA_NX=$(SENGA_NX)
 #APP_FLAGS = -g -fcheck=all -cpp -O3 -Wall -fallow-argument-mismatch #-mcmodel=medium -fp-model strict -fp-model source -prec-div -prec-sqrt
 #APP_FLAGS = -Kieee
 APP_LIBS = fftlib/fftlib.a rndlib/rndlib.a parlib/parlib.a -lm -fopenmp

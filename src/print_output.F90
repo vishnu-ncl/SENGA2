@@ -8,15 +8,14 @@ SUBROUTINE print_output()
     use com_senga
     use com_ops_senga
 
-    integer(kind=4) :: ispec,dtime
+    integer(kind=4) :: ispec
     character(len=60) :: fname
     character(len=3) :: pnxhdf
     parameter(pnxhdf = '.h5')
     character(len=8) :: citime
     integer(kind=4) :: rangexyz(6)
 
-    dtime=INT(itime/ntdump)
-    WRITE(citime,'(I8.8)') dtime
+    WRITE(citime,'(I8.8)') itime
 
     rangexyz = [1,nxglbl,1,nyglbl,1,nzglbl]
     call ops_par_loop(copy_kernel, "copy", senga_grid, 3, rangexyz,  &
