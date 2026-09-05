@@ -243,14 +243,14 @@ SUBROUTINE flamin
                     ops_arg_dat(d2trun, 1, s3d_000, "real(kind=8)", OPS_WRITE), &
                     ops_arg_dat(d_trun, 1, s3d_000, "real(kind=8)", OPS_READ))
 
-    call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
+!    call ops_fetch_block_hdf5_file(senga_grid, trim(fname))
 
-    DO ispec = 1,nspcmx
-        call ops_fetch_dat_hdf5_file(d_yrun(ispec), trim(fname))
-    END DO
+!    DO ispec = 1,nspcmx
+!        call ops_fetch_dat_hdf5_file(d_yrun(ispec), trim(fname))
+!    END DO
 
-    call ops_fetch_dat_hdf5_file(d2trun, trim(fname))
-    call ops_fetch_dat_hdf5_file(d2prun, trim(fname))
+!    call ops_fetch_dat_hdf5_file(d2trun, trim(fname))
+!    call ops_fetch_dat_hdf5_file(d2prun, trim(fname))
 
 9000  FORMAT(a)
 
