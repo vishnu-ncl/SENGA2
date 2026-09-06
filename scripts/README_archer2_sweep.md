@@ -52,6 +52,25 @@ Local check of the decoupling (256³ / 3 steps / 32 ranks):
 scripts/test_tiling_break.sh
 ```
 
+## 2b. Performance + correctness (tiling_break)
+
+8-node 512³ job that times the usual tiling axis, then dumps last-step
+fields for default (`ops_tiling_break`) vs `+ispec` and `h5diff`s them.
+Also asserts one-halo / 10-segment plans, ~2× MPI on `+ispec`, and no
+terminal-read sanity-check spam.
+
+```bash
+# rebuild OPS on feature/tiling_comm_separate, then:
+cd /work/e647/e647/ireguly5/SENGA2_OPS/src
+make senga2_mpi_tiled SENGA_NX=512 -j8
+cd ..
+mkdir -p results
+sbatch scripts/submit_archer2_tiling_break.sh
+```
+
+Dumps stay in `results/dumps/` (tens of GB) and are **not** in the tarball.
+Copy back `results/archer2_tiling_break_results.tgz` and `results/correctness.txt`.
+
 ## 4. Bring results back
 
 ```bash
